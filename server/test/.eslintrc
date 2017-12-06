@@ -1,0 +1,17 @@
+{
+	"env": {
+    "mocha": true
+  },
+  "globals": {
+    "ko": true,
+    "fruits": true,
+    "clock": true,
+    "testEl": true,
+    "click": true,
+    "testSetup": true,
+    "addFruits": true,
+    "attributesFor": true,
+    "textNodesFor": true,
+    "searchFor": true
+  }
+}

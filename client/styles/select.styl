@@ -1,0 +1,34 @@
+@require "./definitions"
+
+main .v-select
+  font-family inherit
+  color text-color
+
+  .dropdown-toggle
+    border-radius 0
+    border input-border
+    padding 4px
+
+  .open-indicator
+    height 24px
+
+  &.unsearchable input[type="search"]
+    width 10px !important
+
+  ul.dropdown-menu
+    max-height initial !important
+    overflow auto
+    border input-border
+    box-shadow none
+    padding 0
+    li
+      a
+        line-height 2.5em
+        transition none
+      &:nth-child(2n)
+        background none
+      &.highlight > a
+        background-color uber-blue
+      .active > a
+        color #333
+        background rgba(50, 50, 50, .1)
