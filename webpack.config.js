@@ -10,7 +10,7 @@ module.exports = {
   devtool: 'source-map',
   entry: [
     development && 'webpack-hot-middleware/client',
-    './client/main.js'
+    process.env.TEST_RUN ? './client/test/index' : './client/main'
   ].filter(x => x),
   output: {
     path: path.join(__dirname, 'dist'),

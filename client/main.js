@@ -11,20 +11,22 @@ import Intro from './routes/Intro.vue'
 import Workflows from './routes/Workflows.vue'
 import History from './routes/History.vue'
 
+const routes = [{
+  path: '/',
+  component: Intro
+}, {
+  name: 'workflows',
+  path: '/domain/:domain/workflows',
+  component: Workflows
+}, {
+  name: 'history',
+  path: '/domain/:domain/history',
+  component: History
+}]
+
 const router = new Router({
   mode: 'history',
-  routes: [{
-    path: '/',
-    component: Intro
-  }, {
-    name: 'workflows',
-    path: '/domain/:domain/workflows',
-    component: Workflows
-  }, {
-    name: 'history',
-    path: '/domain/:domain/history',
-    component: History
-  }]
+  routes
 })
 
 Object.getPrototypeOf(router).replaceQueryParam = function(prop, val) {
@@ -37,7 +39,11 @@ Object.getPrototypeOf(router).replaceQueryParam = function(prop, val) {
 
 Vue.mixin({
   created: function () {
-    this.$http = http.global
+    if (typeof Scenario === 'undefined') {
+      this.$http = http.global
+    } else if (this.$parent && this.$parent.$http) {
+      this.$http = this.$parent.$http
+    }
   }
 })
 
@@ -47,24 +53,28 @@ Vue.use(AsyncComputed)
 Vue.component('v-select', vSelect)
 Vue.component('date-range-picker', DateRangePicker)
 
-if (!document.querySelector('main')) {
-  document.body.appendChild(document.createElement('main'))
-}
+if (typeof mocha === 'undefined') {
+  if (!document.querySelector('main')) {
+    document.body.appendChild(document.createElement('main'))
+  }
 
-new Vue({
-  el: 'main',
-  router,
-  template: '<App/>',
-  components: { App }
-})
-
-if (module.hot) {
-  module.hot.addStatusHandler(function(status) {
-    if (status === 'apply') {
-      document.querySelectorAll('link[href][rel=stylesheet]').forEach((link) => {
-        const nextStyleHref = link.href.replace(/(\?\d+)?$/, `?${Date.now()}`)
-        link.href = nextStyleHref
-      })
-    }
+  new Vue({
+    el: 'main',
+    router,
+    template: '<App/>',
+    components: { App }
   })
+
+  if (module.hot) {
+    module.hot.addStatusHandler(function(status) {
+      if (status === 'apply') {
+        document.querySelectorAll('link[href][rel=stylesheet]').forEach((link) => {
+          const nextStyleHref = link.href.replace(/(\?\d+)?$/, `?${Date.now()}`)
+          link.href = nextStyleHref
+        })
+      }
+    })
+  }
 }
+
+export default { App, routes }
