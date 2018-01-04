@@ -26,6 +26,8 @@ describe('Intro page', function() {
     domainInput.value.should.be.empty
     domainInput.value = 'ci-tests'
     domainInput.trigger('input')
+
+    scenario.withDomain('ci-tests').withWorkflows('open')
     domainInput.trigger('keydown', { code: 13, keyCode: 13, key: 'Enter' })
 
     var workflowsEl = await testEl.waitUntilExists('section.workflows'),

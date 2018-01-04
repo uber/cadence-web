@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import infiniteScroll from 'vue-infinite-scroll'
 import AsyncComputed from 'vue-async-computed'
 import vSelect from 'vue-select'
+import qs from 'friendly-querystring'
 import DateRangePicker from './widgets/date-range-picker.vue'
 import http from './http'
 
@@ -26,7 +27,9 @@ const routes = [{
 
 const router = new Router({
   mode: 'history',
-  routes
+  routes,
+  parseQuery: qs.parse.bind(qs),
+  stringifyQuery: qs.stringify.bind(qs),
 })
 
 Object.getPrototypeOf(router).replaceQueryParam = function(prop, val) {

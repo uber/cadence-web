@@ -1,6 +1,8 @@
 import Router from 'vue-router'
 import Vue from 'vue'
+import moment from 'moment'
 import fetchMock from 'fetch-mock'
+import qs from 'friendly-querystring'
 
 import main from '../main'
 import http from '../http'
@@ -19,12 +21,14 @@ export default function Scenario(test) {
 }
 
 Scenario.prototype.render = function() {
-  Scenario.http = http.bind(null, this.api)
-  Scenario.http.post = http.post.bind(null, this.api)
+  var $http = http.bind(null, this.api)
+  $http.post = http.post.bind(null, this.api)
 
   this.router = new Router({
     mode: 'abstract',
-    routes: main.routes
+    routes: main.routes,
+    parseQuery: qs.parse.bind(qs),
+    stringifyQuery: qs.stringify.bind(qs),
   })
   this.router.push(this.initialUrl || '/')
 
@@ -36,7 +40,7 @@ Scenario.prototype.render = function() {
     components: { App: main.App },
     mixins: [{
       created: function() {
-        this.$dummy = 'dummy'
+        this.$http = $http
       }
     }]
   })
@@ -76,5 +80,28 @@ Object.defineProperty(Scenario.prototype, 'location', {
     return this.router.history.getCurrentLocation()
   }
 })
+
+Scenario.prototype.withDomain = function(domain) {
+  this.domain = domain
+  return this
+}
+
+Scenario.prototype.withWorkflows = function(status, query, workflows) {
+  if (!workflows) {
+    workflows = JSON.parse(JSON.stringify(fixtures.workflows[status]))
+  }
+
+  var url = `/api/domain/${this.domain}/workflows/${status}?${qs.stringify(Object.assign({
+      startTime: moment().startOf('minute').subtract(1, 'day').toISOString(),
+      endTime: moment().startOf('minute').toISOString(),
+    }, query))}`
+
+  var response = Array.isArray(workflows) ? { executions: workflows } : workflows
+
+  this.api.getOnce(url, response)
+
+  return this
+}
+
 
 window.Scenario = Scenario

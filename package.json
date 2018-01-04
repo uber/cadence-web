@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "deepmerge": "^2.0.0",
+    "friendly-querystring": "^0.2.0",
     "koa": "^2.3.0",
     "koa-better-error-handler": "^1.3.0",
     "koa-bodyparser": "^4.2.0",
@@ -53,7 +54,6 @@
     "html-webpack-plugin": "^2.30.1",
     "koa-webpack": "^1.0.0",
     "mocha": "^4.0.1",
-    "mocha-finalize-each": "^1.0.0",
     "nathanboktae-browser-test-utils": "^0.1.0",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.1",
