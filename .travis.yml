@@ -1,4 +1,10 @@
+sudo: required # https://github.com/travis-ci/travis-ci/issues/8836
 language: node_js
 node_js:
   - 8
-sudo: false
+
+addons:
+  chrome: stable
+
+before_script:
+  - "TEST_RUN=ci NODE_ENV=ci node server.js &;sleep 5"
