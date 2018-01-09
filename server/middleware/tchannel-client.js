@@ -47,8 +47,7 @@ module.exports = async function(ctx, next) {
         tchannelAsThrift.request({
           serviceName: process.env.CADENCE_TCHANNEL_SERVICE || 'cadence-frontend',
           headers: {
-            cn: 'cadence-web',
-            'x-uber-source': 'cadence-web'
+            cn: 'cadence-web'
           },
           hasNoParent: true,
           timeout: 10000,

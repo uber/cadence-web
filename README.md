@@ -16,7 +16,7 @@ Set these environment variables if you need to change their defaults
 | ------------------------- | --------------------------------------------- | ----------------- |
 | CADENCE_TCHANNEL_PEERS    | Comma-delmited list of tchannel peers         | 127.0.0.1:7933    |
 | CADENCE_TCHANNEL_SERVICE  | Name of the cadence tchannel service to call  | cadence-frontend  |
-| UBER_PORT_HTTP            | HTTP port to serve on                         | 8088              |
+| CADENCE_WEB_PORT          | HTTP port to serve on                         | 8088              |
 
 
 ### Staring locally
