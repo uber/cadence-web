@@ -7,4 +7,5 @@ addons:
   chrome: stable
 
 before_script:
-  - "TEST_RUN=ci NODE_ENV=ci node server.js &;sleep 5"
+  - TEST_RUN=ci NODE_ENV=ci node server.js &
+  - sleep 5
