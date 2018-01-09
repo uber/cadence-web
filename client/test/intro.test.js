@@ -1,4 +1,4 @@
-describe('Intro page', function() {
+describe('Intro', function() {
   it('should provide links to learn about cadence', async function() {
     var testEl = new Scenario(this.test).render(),
         introEl = await testEl.waitUntilExists('section.intro')
@@ -24,8 +24,7 @@ describe('Intro page', function() {
         domainInput = await testEl.waitUntilExists('.intro input')
 
     domainInput.value.should.be.empty
-    domainInput.value = 'ci-tests'
-    domainInput.trigger('input')
+    domainInput.input('ci-tests')
 
     scenario.withDomain('ci-tests').withWorkflows('open')
     domainInput.trigger('keydown', { code: 13, keyCode: 13, key: 'Enter' })

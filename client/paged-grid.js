@@ -21,8 +21,9 @@ export default function(vue) {
     },
     methods: {
       debouncedSetQuery: debounce(function(e) {
-          this.$router.replaceQueryParam(e.target.getAttribute('name'), e.target.value)
-        }, 300, { maxWait: 3000 }),
+          var target = e.target || e.testTarget // test hook since Event.target is readOnly and unsettable
+          this.$router.replaceQueryParam(target.getAttribute('name'), target.value)
+        }, typeof Mocha === 'undefined' ? 300 : 1, { maxWait: 3000 }),
       nextPage() {
         this.nextPageToken = this.npt
       }

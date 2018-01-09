@@ -45,27 +45,21 @@ Scenario.prototype.render = function() {
     }]
   })
 
-  /*this.el.addEventListener('click', e => {
-    if (e.target && e.target.tagName === 'A') {
-      var href = e.target.getAttribute('href')
-      if (href && href.startsWith('/')) {
-        e.preventDefault()
-        this.el.history.push(href)
-      }
-    }
-  })*/
-
-  this.el = this.vm.$el
-  return this.el
+  return this.vm.$el
 }
 
 Scenario.prototype.go = function() {
   return [this.render(), this]
 }
 
+Scenario.prototype.startingAt = function(url) {
+  this.initialUrl = url
+  return this
+}
+
 Scenario.prototype.tearDown = function() {
-  if (this.el && this.el.parentElement) {
-    this.el.parentElement.removeChild(this.el)
+  if (this.vm && this.vm.$el && this.vm.$el.parentElement) {
+    this.vm.$el.parentElement.removeChild(this.vm.$el)
   }
 
   var { unmatched } = this.api.calls()

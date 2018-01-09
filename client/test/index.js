@@ -56,10 +56,26 @@ window.it = function(name, func) {
   }
 }
 
+HTMLInputElement.prototype.input = function(text) {
+  this.value = text
+  this.trigger('input', { testTarget: this })
+}
+
+HTMLElement.prototype.selectItem = async function(text) {
+  var openDropdown = new MouseEvent('mousedown')
+  this.querySelector('.dropdown-toggle').dispatchEvent(openDropdown)
+
+  var itemToClick = Array.from(await this.waitUntilAllExist('ul.dropdown-menu li a')).find(a => a.innerText.trim() === text),
+      selectItem = new MouseEvent('mousedown')
+
+  itemToClick.dispatchEvent(selectItem)
+}
+
 require('./scenario')
 
 mocha.checkLeaks()
 
-require('./intro.tests.js')
+require('./intro.test')
+require('./workflows.test')
 
 mocha.run()
