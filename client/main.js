@@ -6,6 +6,7 @@ import vSelect from 'vue-select'
 import qs from 'friendly-querystring'
 import DateRangePicker from './widgets/date-range-picker.vue'
 import http from './http'
+import detailList from './widgets/detail-list.vue'
 
 import App from './App.vue'
 import Intro from './routes/Intro.vue'
@@ -22,14 +23,17 @@ const routes = [{
 }, {
   name: 'history',
   path: '/domain/:domain/history',
-  component: History
+  component: History,
+  props: ({ query }) => ({
+    format: query.format || 'compact'
+  })
 }]
 
 const router = new Router({
   mode: 'history',
   routes,
   parseQuery: qs.parse.bind(qs),
-  stringifyQuery: qs.stringify.bind(qs),
+  stringifyQuery: q => `?${qs.stringify(q)}`,
 })
 
 Object.getPrototypeOf(router).replaceQueryParam = function(prop, val) {
@@ -55,6 +59,7 @@ Vue.use(infiniteScroll)
 Vue.use(AsyncComputed)
 Vue.component('v-select', vSelect)
 Vue.component('date-range-picker', DateRangePicker)
+Vue.component('details-list', detailList)
 
 if (typeof mocha === 'undefined') {
   if (!document.querySelector('main')) {

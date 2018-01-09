@@ -134,7 +134,7 @@ main
     display flex
     flex-direction column
     flex 1 1 auto
-    > *:not(:last-child)
+    > header:last-of-type
       margin-bottom layout-spacing-small
     > header
       display flex

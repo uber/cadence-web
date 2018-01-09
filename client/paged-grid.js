@@ -5,7 +5,7 @@ export default function(vue) {
   return deepmerge({
     asyncComputed: {
       results() {
-        return this.fetch(true)
+        return this.fetch('asyncComputed')
       }
     },
     computed: {

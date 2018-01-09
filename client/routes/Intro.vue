@@ -39,8 +39,12 @@ section.intro
   width 95vw
   max-width 800px
   margin layout-spacing-large auto 0
+  h1
+    margin-bottom base-font-size
+  > p, > ul
+    margin 1em 0
   li
-    line-height 2em
+    line-height 2.5em
     &:nth-child(2n)
       background none
 </style>

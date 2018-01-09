@@ -1,3 +1,5 @@
+'use strict'
+
 const
   TChannelAsThrift = require('tchannel/as/thrift'),
   TChannel = require('tchannel'),
@@ -29,7 +31,7 @@ function transform(item) {
 
 module.exports = async function(ctx, next) {
   const
-    client = TChannel();
+    client = TChannel(),
     cadenceChannel = client.makeSubChannel({
       serviceName: 'cadence-frontend',
       peers: process.env.CADENCE_TCHANNEL_PEERS ?
