@@ -4,7 +4,7 @@
 
 Cadence is a distributed, scalable, durable, and highly available orchestration engine we developed at Uber Engineering to execute asynchronous long-running business logic in a scalable and resilient way.
 
-This web UI is used to visualize workflows from [Cadence][cadence].
+This web UI is used to view workflows from [Cadence][cadence], see what's running, and explore and debug workflow executions.
 
 ## Getting Started
 
@@ -19,18 +19,16 @@ Set these environment variables if you need to change their defaults
 | CADENCE_WEB_PORT          | HTTP port to serve on                         | 8088              |
 
 
-### Staring locally
-
-```
-npm i
-npm start
-```
-
 ### Developing locally
 
+`cadence-web` uses all the standard [npm scripts](https://docs.npmjs.com/misc/scripts) to install dependencies, run the server, and run tests. Additionally to develop locally with webpack hot reloading and other conveniences, use
+
 ```
-npm i
 npm run dev
 ```
+
+### Licence
+
+MIT License, please see [LICENSE](https://github.com/uber/cadence-web/blob/master/LICENSE) for details.
 
 [cadence]: https://github.com/uber/cadence
