@@ -1,10 +1,12 @@
 {
   "env": {
-    "browser": true,
-    "amd": true
+    "es6": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 8
   },
   "rules": {
-    "brace-style": [1, { "allowSingleLine": true }],
+    "brace-style": ["error", "1tbs", { "allowSingleLine": true }],
     "camelcase": 0,
     "comma-spacing": 0,
     "curly": 0,

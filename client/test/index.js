@@ -11,7 +11,7 @@ require('mocha/mocha')
 var mochaDiv = document.createElement('div')
 mochaDiv.id = 'mocha'
 document.body.appendChild(mochaDiv)
-document.querySelector('[rel="stylesheet"]').href="https://cdnjs.cloudflare.com/ajax/libs/mocha/3.4.2/mocha.css"
+document.querySelector('[rel="stylesheet"]').href = 'https://cdnjs.cloudflare.com/ajax/libs/mocha/3.4.2/mocha.css'
 document.title = 'Cadence Tests'
 
 var chai = window.chai = require('chai')

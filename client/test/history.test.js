@@ -112,7 +112,7 @@ describe('History', function() {
         fixtures.history.emailRun1.map(e => e.timestamp)
       )
       historyEl.textNodes('table tbody td:nth-child(4)').should.deep.equal(
-        ["", "", "", "1s", "2s", "3s", "8s", "19s", "30s", "41s", "52s", "1m 4s"]
+        ['', '', '', '1s', '2s', '3s', '8s', '19s', '30s', '41s', '52s', '1m 4s']
       )
     })
 
