@@ -22,9 +22,9 @@
     <header class="actions">
       <label for="workflowId">View Format</label>
       <div class="view-formats">
-        <a href="#" @click.prevent="setFormat('compact')" :class="format === 'compact' ? 'active' : ''">Compact</a>
-        <a href="#" @click.prevent="setFormat('grid')" :class="format === 'grid' ? 'active' : ''">Grid</a>
-        <a href="#" @click.prevent="setFormat('json')" :class="format === 'json' ? 'active' : ''">JSON</a>
+        <a href="#" class="compact" @click.prevent="setFormat('compact')" :class="format === 'compact' ? 'active' : ''">Compact</a>
+        <a href="#" class="grid" @click.prevent="setFormat('grid')" :class="format === 'grid' ? 'active' : ''">Grid</a>
+        <a href="#" class="json" @click.prevent="setFormat('json')" :class="format === 'json' ? 'active' : ''">JSON</a>
       </div>
     </header>
     <section class="results"
@@ -49,7 +49,7 @@
           </tr>
         </tbody>
       </table>
-      <pre v-if="format === 'json'">{{JSON.stringify(results, null, 2)}}</pre>
+      <pre class="json" v-if="format === 'json'">{{JSON.stringify(results, null, 2)}}</pre>
       <div class="compact-view" v-if="format === 'compact'">
         <event-node v-for="hr in hierarchialResults" :node="hr" :key="hr.eventId" />
       </div>
@@ -101,11 +101,12 @@ export default pagedGrid({
         started: 1
       }, hash = {}, hierarchy = []
 
-      console.log('hierarchialResults')
       if (Array.isArray(this.results)) {
         this.results.forEach(r => {
           hash[r.eventId] = r
-          r.children = []
+          Object.defineProperty(r, 'children', {
+            value: []
+          })
         })
 
         for (let r of this.results) {
@@ -142,10 +143,7 @@ export default pagedGrid({
           data.timestamp = moment(data.timestamp)
           return data
         }))
-        /*if (this.format === 'compact' && this.npt && this.prevResults.length < 1000) {
-          setTimeout(() => this.nextPageToken = this.npt, 1)
-        }*/
-        console.log(`returning ${this.prevResults.length} results`)
+
         return this.prevResults
       }).catch(e => {
         this.npt = undefined

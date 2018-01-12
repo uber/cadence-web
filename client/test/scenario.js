@@ -28,7 +28,7 @@ Scenario.prototype.render = function() {
     mode: 'abstract',
     routes: main.routes,
     parseQuery: qs.parse.bind(qs),
-    stringifyQuery: qs.stringify.bind(qs),
+    stringifyQuery: q => `?${qs.stringify(q)}`,
   })
   this.router.push(this.initialUrl || '/')
 
@@ -91,6 +91,19 @@ Scenario.prototype.withWorkflows = function(status, query, workflows) {
     }, query))}`
 
   var response = Array.isArray(workflows) ? { executions: workflows } : workflows
+
+  this.api.getOnce(url, response)
+
+  return this
+}
+
+Scenario.prototype.withHistory = function(workflowId, runId, events)  {
+  if (!events) {
+    events = JSON.parse(JSON.stringify(fixtures.history.emailRun1))
+  }
+
+  var url = `/api/domain/${this.domain}/workflows/history/${encodeURIComponent(workflowId)}/${encodeURIComponent(runId)}`,
+      response = Array.isArray(events) ? { history: { events } } : events
 
   this.api.getOnce(url, response)
 

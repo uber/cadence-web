@@ -36,7 +36,9 @@ export default {
         h('a', {
           attrs: { href: '#', 'data-event-id': node.eventId },
           class: 'event-id' + (isActive ? ' active' : ''),
-          on: { click: e => { e.preventDefault(); router.replaceQueryParam('eventId', node.eventId) } }
+          on: { click: e => {
+            e.preventDefault();
+            router.replaceQueryParam('eventId', node.eventId) } }
         }, [titleForNode(node)]),
         !groupTitle && detailsList,
         h('span', { class: 'event-children' }, node.children.map(c => eventNode(c, noGroup && !groupTitle))),

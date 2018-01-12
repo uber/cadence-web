@@ -77,5 +77,6 @@ mocha.checkLeaks()
 
 require('./intro.test')
 require('./workflows.test')
+require('./history.test')
 
 mocha.run()

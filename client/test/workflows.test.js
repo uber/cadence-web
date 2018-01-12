@@ -39,16 +39,16 @@ describe('Workflows', function() {
     ])
 
     resultsEl.textNodes('tbody td:first-child').should.deep.equal([
-      'email-daily-summaries',
-      'example'
+      'github.com/uber/cadence-web/email-daily-summaries-2',
+      'github.com/uber/cadence-web/example-1'
     ])
     resultsEl.textNodes('tbody td:nth-child(2)').should.deep.equal([
       'ef2c889e-e709-4d50-99ee-3748dfa0a101',
       'db8da3c0-b7d3-48b7-a9b3-b6f566e58207'
     ])
     resultsEl.textNodes('tbody td:nth-child(3)').should.deep.equal([
-      'github.com/uber/cadence-web/email-daily-summaries',
-      'github.com/uber/cadence-web/example'
+      'email-daily-summaries',
+      'example'
     ])
     resultsEl.textNodes('tbody td:nth-child(4)').should.deep.equal(['open', 'open'])
     resultsEl.textNodes('tbody td:nth-child(5)').should.deep.equal(
