@@ -101,7 +101,7 @@ describe('History', function() {
       var [historyEl, scenario] = await historyTest(this.test)
       await historyEl.waitUntilExists('.results tbody tr:nth-child(4)')
 
-      historyEl.textNodes('table thead th').should.deep.equal(['ID', 'Type', 'Time', 'Details'])
+      historyEl.textNodes('table thead th').should.deep.equal(['ID', 'Type', 'Timestamp', 'Elapsed', 'Details'])
       historyEl.textNodes('table tbody td:nth-child(1)').should.deep.equal(
         new Array(12).fill('').map((_, i) => String(i + 1))
       )
@@ -109,13 +109,16 @@ describe('History', function() {
         'WorkflowExecutionStarted', 'DecisionTaskScheduled', 'DecisionTaskStarted'
       ])
       historyEl.textNodes('table tbody td:nth-child(3)').should.deep.equal(
-        fixtures.history.emailRun1.map(e => moment(e.timestamp).format('lll'))
+        fixtures.history.emailRun1.map(e => e.timestamp)
+      )
+      historyEl.textNodes('table tbody td:nth-child(4)').should.deep.equal(
+        ["", "", "", "1s", "2s", "3s", "8s", "19s", "30s", "41s", "52s", "1m 4s"]
       )
     })
 
     it('should show details as flattened key-value pairs from parsed json', async function () {
       var [historyEl, scenario] = await historyTest(this.test),
-          startDetails = await historyEl.waitUntilExists('.results tbody tr:first-child td:nth-child(4)')
+          startDetails = await historyEl.waitUntilExists('.results tbody tr:first-child td:nth-child(5)')
 
       startDetails.textNodes('dl.details dt').should.deep.equal([
         'workflowType.name', 'taskList.name', 'input', 'executionStartToCloseTimeoutSeconds', 'taskStartToCloseTimeoutSeconds'

@@ -37,14 +37,16 @@
         <thead>
           <th>ID</th>
           <th>Type</th>
-          <th>Time</th>
+          <th>Timestamp</th>
+          <th>Elapsed</th>
           <th>Details</th>
         </thead>
         <tbody>
           <tr v-for="he in results">
             <td>{{he.eventId}}</td>
             <td>{{he.eventType}}</td>
-            <td>{{he.timestamp.format('lll')}}</td>
+            <td>{{he.timestamp.toISOString()}}</span>
+            <td>{{elapsed(he.timestamp)}} </td>
             <td><details-list :item="he.details" /></td>
           </tr>
         </tbody>
@@ -171,6 +173,13 @@ export default pagedGrid({
       this.$router.replace({
         query: Object.assign({}, this.$route.query, { format })
       })
+    },
+    elapsed(ts) {
+      return moment.duration(ts - this.results[0].timestamp)
+        .toString().toLowerCase()
+        .replace(/[pt]/g, '')
+        .replace(/([hmd])/g, '$1 ')
+        .replace('0d ', '')
     }
   },
   components: {
