@@ -6,6 +6,8 @@ Cadence is a distributed, scalable, durable, and highly available orchestration 
 
 This web UI is used to view workflows from [Cadence][cadence], see what's running, and explore and debug workflow executions.
 
+![Demo Usage](https://s3-us-west-2.amazonaws.com/uber-common-public/svc-cadence-web/cadence-web-demo.gif)
+
 ## Getting Started
 
 ### Configuration
