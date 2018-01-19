@@ -46,7 +46,7 @@ All options are optional.
 For example, here is how you would add a request count metric using `uber-statsd-client`:
 
 ```javascript
-var app = require('cadence-web/server/index')
+var app = require('cadence-web')
 var createStatsd = require('uber-statsd-client')
 var sdc = createStatsd({
     host: 'statsd.example.com'

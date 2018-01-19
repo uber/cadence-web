@@ -2,7 +2,7 @@
   "name": "cadence-web",
   "version": "0.6.0",
   "description": "Cadence Web UI",
-  "main": "index.js",
+  "main": "server/index.js",
   "licence": "MIT",
   "scripts": {
     "dev": "NODE_ENV=development node server.js",
