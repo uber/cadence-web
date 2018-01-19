@@ -9,8 +9,7 @@ const
 module.exports = {
   devtool: 'source-map',
   entry: [
-    development && 'webpack-hot-middleware/client',
-    process.env.TEST_RUN ? './client/test/index' : './client/main'
+    path.join(__dirname, process.env.TEST_RUN ? 'client/test/index' : 'client/main')
   ].filter(x => x),
   output: {
     path: path.join(__dirname, 'dist'),
@@ -23,12 +22,15 @@ module.exports = {
         NODE_ENV: '"production"'
       }
     }),
-    development && new webpack.HotModuleReplacementPlugin(),
     new ExtractTextPlugin({ filename: development ? 'cadence.css' : 'cadence.[hash].css', allChunks: true }),
     new HtmlWebpackPlugin({
       title: 'Cadence',
       filename: 'index.html',
-      favicon: 'favicon.ico'
+      favicon: 'favicon.ico',
+      inject: false,
+      template: require('html-webpack-template'),
+      lang: 'en-US',
+      scripts: (process.env.CADENCE_EXTERNAL_SCRIPTS || '').split(',').filter(x => x)
     })
   ].filter(x => x),
   module: {

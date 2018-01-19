@@ -1,12 +1,12 @@
 {
   "name": "cadence-web",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Cadence Web UI",
-  "main": "index.js",
+  "main": "server/index.js",
   "licence": "MIT",
   "scripts": {
     "dev": "NODE_ENV=development node server.js",
-    "start": "NODE_ENV=production node server.js",
+    "start": "npm run build && NODE_ENV=production node server.js",
     "test": "mocha server/test && mocha-chrome http://localhost:8088",
     "build": "webpack",
     "build-production": "NODE_ENV=production npm run build"
@@ -19,12 +19,17 @@
   ],
   "author": "Nathan Black <nathanbl@uber.com>",
   "engines": {
-    "node": "8.9.0",
-    "npm": "5.5.1"
+    "node": "^8",
+    "npm": "^5"
   },
   "dependencies": {
+    "css-loader": "^0.28.7",
     "deepmerge": "^2.0.0",
+    "extract-text-webpack-plugin": "^3.0.1",
+    "file-loader": "^1.1.5",
     "friendly-querystring": "^0.2.0",
+    "html-webpack-plugin": "^2.30.1",
+    "html-webpack-template": "^6.1.0",
     "koa": "^2.3.0",
     "koa-better-error-handler": "^1.3.0",
     "koa-bodyparser": "^4.2.0",
@@ -33,33 +38,30 @@
     "koa-router": "^7.2.1",
     "koa-send": "^4.1.1",
     "koa-static": "^4.0.1",
+    "koa-webpack": "^2.0.3",
     "lodash-es": "^4.17.4",
     "long": "^3.2.0",
     "moment": "^2.19.1",
+    "stylus": "^0.54.5",
+    "stylus-loader": "^3.0.1",
     "tchannel": "^3.9.11",
     "vue": "^2.5.2",
     "vue-async-computed": "^3.3.1",
     "vue-date-range": "^2.2.6",
     "vue-infinite-scroll": "^2.0.2",
+    "vue-loader": "^13.3.0",
     "vue-router": "^3.0.1",
-    "vue-select": "^2.3.0"
+    "vue-select": "^2.3.0",
+    "vue-template-compiler": "^2.5.2",
+    "webpack": "^3.10.0"
   },
   "devDependencies": {
     "chai": "^4.1.2",
     "chai-dom": "^1.7.0",
-    "css-loader": "^0.28.7",
-    "extract-text-webpack-plugin": "^3.0.1",
     "fetch-mock": "^5.13.1",
-    "file-loader": "^1.1.5",
-    "html-webpack-plugin": "^2.30.1",
-    "koa-webpack": "^1.0.0",
     "mocha": "^4.0.1",
     "mocha-chrome": "^1.0.3",
     "nathanboktae-browser-test-utils": "^0.1.0",
-    "stylus": "^0.54.5",
-    "stylus-loader": "^3.0.1",
-    "supertest": "^3.0.0",
-    "vue-loader": "^13.3.0",
-    "vue-template-compiler": "^2.5.2"
+    "supertest": "^3.0.0"
   }
 }

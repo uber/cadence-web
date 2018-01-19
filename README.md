@@ -19,15 +19,49 @@ Set these environment variables if you need to change their defaults
 | CADENCE_TCHANNEL_PEERS    | Comma-delmited list of tchannel peers         | 127.0.0.1:7933    |
 | CADENCE_TCHANNEL_SERVICE  | Name of the cadence tchannel service to call  | cadence-frontend  |
 | CADENCE_WEB_PORT          | HTTP port to serve on                         | 8088              |
+| CADENCE_EXTERNAL_SCRIPTS     | Addtional JavaScript tags to serve in the UI  |                   |
 
+### Running locally
 
-### Developing locally
-
-`cadence-web` uses all the standard [npm scripts](https://docs.npmjs.com/misc/scripts) to install dependencies, run the server, and run tests. Additionally to develop locally with webpack hot reloading and other conveniences, use
+`cadence-web` uses all the standard [npm scripts](https://docs.npmjs.com/misc/scripts) to install dependencies, run the server, and run tests. Additionally to run locally with webpack hot reloading and other conveniences, use
 
 ```
 npm run dev
 ```
+
+For development and contributing to `cadence-web`, please see the [contributing guide](https://github.com/uber/cadence-web/blob/master/CONTRIBUTING.md).
+
+### API
+
+If you need to extend `cadence-web` to add middleware to the server, you can install `cadence-web` as a dependecy, and it will export the [Koa](http://koajs.com/) web server that has not yet been started or configured. It includes an additional `init` function that will then compose the built-in middleware. This gives you an option to add middleware before or after you call `init` so it will add the middleware at the beginning or the end of the chain, respectively.
+
+#### `init(options)`
+
+All options are optional.
+
+`useWebpack`: If `true`, starts webpack and adds the middleware, otherwise if `false`, it assumes the UI bundle was already built and serves it statically. Defaults to `process.env.NODE_ENV === 'production'`.
+
+`logErrors`: If `true`, thrown errors are logged to `console.error`. Defaults to `true`.
+
+For example, here is how you would add a request count metric using `uber-statsd-client`:
+
+```javascript
+var app = require('cadence-web')
+var createStatsd = require('uber-statsd-client')
+var sdc = createStatsd({
+    host: 'statsd.example.com'
+})
+
+app.use(async function(ctx, next) {
+  sdc.increment('http.request')
+  await next()
+})
+.init()
+.listen(7000)
+```
+
+
+The [webpack](https://webpack.js.org/) configuration is also exported as `webpackConfig`, and can be modified before calling `init()`.
 
 ### Licence
 
