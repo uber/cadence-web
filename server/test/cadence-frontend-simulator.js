@@ -41,7 +41,7 @@ before(function(done) {
   process.env.CADENCE_TCHANNEL_PEERS = '127.0.0.1:11343'
   tchanServer.listen(11343, '127.0.0.1', () => done())
 
-  global.app = require('../').init(true).listen()
+  global.app = require('../').init({ useWebpack: false, logErrors: false }).listen()
 })
 
 after(function() {

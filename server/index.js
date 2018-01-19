@@ -7,19 +7,23 @@ const
   app = new Koa(),
   router = require('./routes')
 
-app.init = function(ciTest) {
-  const production = !!ciTest || process.env.NODE_ENV === 'production'
-  if (!production) {
+app.webpackConfig = require('../webpack.config')
+
+app.init = function(options) {
+  options = options || {}
+
+  const useWebpack = 'useWebpack' in options ? options.useWebpack : process.env.NODE_ENV !== 'production'
+  if (useWebpack) {
     var Webpack = require('webpack'),
         koaWebpack = require('koa-webpack'),
-        compiler = Webpack(require('../webpack.config'))
+        compiler = Webpack(app.webpackConfig)
   }
 
   app.use(async (ctx, next) => {
     try {
       await next()
     } catch (err) {
-      if (!ciTest) {
+      if (options.logErrors !== false) {
         console.error(err)
       }
       ctx.status = err.statusCode || err.status || 500
@@ -31,12 +35,12 @@ app.init = function(ciTest) {
     filter: contentType => !contentType.startsWith('text/event-stream')
   }))
   .use(require('./middleware/tchannel-client'))
-  .use(production ?
-    require('koa-static')(staticRoot) :
+  .use(useWebpack ?
     koaWebpack({
       compiler,
       dev: { stats: { colors: true } }
-    }))
+    }) :
+    require('koa-static')(staticRoot))
   .use(router.routes())
   .use(router.allowedMethods())
   .use(async function (ctx, next) {
@@ -46,12 +50,12 @@ app.init = function(ciTest) {
         ctx.set('X-Frame-Options', 'SAMEORIGIN')
         ctx.set('X-XSS-Protection', '1; mode=block')
 
-        if (production) {
-          done = await send(ctx, 'index.html', { root: staticRoot })
-        } else {
+        if (useWebpack) {
           var filename = path.join(compiler.outputPath, 'index.html')
           ctx.set('content-type', 'text/html')
           ctx.body = compiler.outputFileSystem.readFileSync(filename)
+        } else {
+          done = await send(ctx, 'index.html', { root: staticRoot })
         }
       } catch (err) {
         if (err.status !== 404) {
