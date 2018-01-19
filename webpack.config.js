@@ -27,6 +27,7 @@ module.exports = {
       title: 'Cadence',
       filename: 'index.html',
       favicon: 'favicon.ico',
+      inject: false,
       template: require('html-webpack-template'),
       lang: 'en-US',
       scripts: (process.env.CADENCE_EXTERNAL_SCRIPTS || '').split(',').filter(x => x)

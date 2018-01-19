@@ -6,7 +6,7 @@
   "licence": "MIT",
   "scripts": {
     "dev": "NODE_ENV=development node server.js",
-    "start": "NODE_ENV=production node server.js",
+    "start": "npm run build && NODE_ENV=production node server.js",
     "test": "mocha server/test && mocha-chrome http://localhost:8088",
     "build": "webpack",
     "build-production": "NODE_ENV=production npm run build"
