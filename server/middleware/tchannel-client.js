@@ -5,7 +5,9 @@ const
   TChannel = require('tchannel'),
   path = require('path'),
   Long = require('long'),
-  moment = require('moment')
+  moment = require('moment'),
+  dns = require('dns'),
+  isIPv4 = require('is-ipv4-node')
 
 function transform(item) {
   if (!item || typeof item !== 'object') return item
@@ -29,15 +31,40 @@ function transform(item) {
   return item
 }
 
+const lookupAsync = host => new Promise(function (resolve, reject) {
+  dns.lookup(host, { family: 4 }, function (err, ip) {
+    if (err) {
+      reject(err)
+    } else {
+      resolve(ip)
+    }
+  })
+})
+
+const peers = process.env.CADENCE_TCHANNEL_PEERS ?
+  process.env.CADENCE_TCHANNEL_PEERS.split(',') :
+  ['127.0.0.1:7933']
+
+async function makeChannel(client) {
+  var ipPeers = await Promise.all(peers.map(peer => {
+    var [host, port] = peer.split(':')
+    if (!isIPv4(host)) {
+      return lookupAsync(host).then(ip => [ip, port].join(':'))
+    } else {
+      return peer
+    }
+  }))
+
+  return client.makeSubChannel({
+    serviceName: 'cadence-frontend',
+    peers: ipPeers
+  })
+}
+
 module.exports = async function(ctx, next) {
   const
     client = TChannel(),
-    cadenceChannel = client.makeSubChannel({
-      serviceName: 'cadence-frontend',
-      peers: process.env.CADENCE_TCHANNEL_PEERS ?
-        process.env.CADENCE_TCHANNEL_PEERS.split(',') :
-        ['127.0.0.1:7933']
-    }),
+    cadenceChannel = await makeChannel(client),
     tchannelAsThrift = TChannelAsThrift({
       channel: cadenceChannel,
       entryPoint: path.join(__dirname, '../idl/cadence.thrift')
