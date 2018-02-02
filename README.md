@@ -31,6 +31,8 @@ npm run dev
 
 For development and contributing to `cadence-web`, please see the [contributing guide](https://github.com/uber/cadence-web/blob/master/CONTRIBUTING.md).
 
+You may also use docker by pulling [ubercadence/web](https://hub.docker.com/r/ubercadence/web/). It is also included in the Cadence server's [local docker setup](https://github.com/uber/cadence/tree/master/docker).
+
 ### API
 
 If you need to extend `cadence-web` to add middleware to the server, you can install `cadence-web` as a dependecy, and it will export the [Koa](http://koajs.com/) web server that has not yet been started or configured. It includes an additional `init` function that will then compose the built-in middleware. This gives you an option to add middleware before or after you call `init` so it will add the middleware at the beginning or the end of the chain, respectively.
