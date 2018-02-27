@@ -11,7 +11,8 @@ wfHistoryThrift = [{
       name: 'github.com/uber/cadence/demo'
     },
     taskList: {
-      name: 'ci-task-queue'
+      name: 'ci-task-queue',
+      kind: null
     },
     identity: null,
     input: null,
@@ -24,8 +25,10 @@ wfHistoryThrift = [{
   eventType: 'DecisionTaskScheduled',
   decisionTaskScheduledEventAttributes: {
     startToCloseTimeoutSeconds: 180,
+    attempt: 1,
     taskList: {
-      name: 'canary-task-queue'
+      name: 'canary-task-queue',
+      kind: null
     }
   }
 }, {
@@ -66,13 +69,15 @@ describe('Workflow History', function() {
   it('should forward the request to the cadence frontend with workflowId and runId', function() {
     this.test.GetWorkflowExecutionHistory = ({ getRequest }) => {
       getRequest.should.deep.equal({
+        HistoryEventFilterType: null,
         domain: 'canary',
         execution: {
           workflowId: 'ci/demo',
           runId: 'run1'
         },
         maximumPageSize: 100,
-        nextPageToken: null
+        nextPageToken: null,
+        waitForNewEvent: null
       })
 
       return {
@@ -105,6 +110,22 @@ describe('Workflow History', function() {
         history: { events: [] },
         nextPageToken: 'cGFnZTM='
       })
+  })
+
+  it('should support long polling by forwarding the waitForNewEvent flag', function() {
+    this.test.GetWorkflowExecutionHistory = ({ getRequest }) => {
+      getRequest.waitForNewEvent.should.be.true
+      return { history: { events: [{ eventId: 1 }] } }
+    }
+
+    return request(global.app)
+      .get('/api/domain/canary/workflows/history/ci%2Fdemo/run1?waitForNewEvent=true')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .then(() =>  request(global.app)
+        .get('/api/domain/canary/workflows/history/ci%2Fdemo/run1?waitForNewEvent')
+        .expect(200)
+      )
   })
 
   it('should transform Long numbers to JavaScript numbers, and Long dates to ISO date strings', function() {

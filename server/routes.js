@@ -35,7 +35,8 @@ router.get('/api/domain/:domain/workflows/history/:workflowId/:runId', async fun
       workflowId: ctx.params.workflowId,
       runId: ctx.params.runId
     },
-    nextPageToken: q.nextPageToken ? Buffer.from(q.nextPageToken, 'base64') : undefined
+    nextPageToken: q.nextPageToken ? Buffer.from(q.nextPageToken, 'base64') : undefined,
+    waitForNewEvent: 'waitForNewEvent' in q ? true : undefined
   })
 
   if (Array.isArray(ctx.body.history && ctx.body.history.events)) {
