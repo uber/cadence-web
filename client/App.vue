@@ -3,7 +3,16 @@ export default {
   data () {
     return {
       domain: '',
-      editing: false
+      editing: false,
+      recentDomains: JSON.tryParse(localStorage.getItem('recent-domains')) || []
+    }
+  },
+  created() {
+    this.recordDomain(this.$route.params.domain)
+  },
+  watch: {
+    '$route'() {
+      this.recordDomain(this.$route.params.domain)
     }
   },
   methods: {
@@ -13,6 +22,16 @@ export default {
         query: this.$router.currentRoute.query
       })
       this.editing = false
+      this.recordDomain(this.domain)
+    },
+    recordDomain(domain) {
+      console.log(`recordDomain: ${domain}`)
+      if (domain) {
+        this.recentDomains = this.recentDomains.filter(d => d && d !== domain)
+        this.recentDomains.unshift(domain)
+        console.dir(this.recentDomains)
+        localStorage.setItem('recent-domains', JSON.stringify(this.recentDomains))
+      }
     },
     clearEdit() {
       this.editing = false
@@ -21,7 +40,11 @@ export default {
       this.editing = true
       setTimeout(() => this.$refs.domain.focus(), 10)
     },
-    clientNavigation(e) {
+    globalClick(e) {
+      if (this.editing && !this.$refs.domaincontainer.contains(e.target)) {
+        this.clearEdit()
+      }
+
       if (e.target.tagName === 'A') {
         var href = e.target.getAttribute('href')
         if (href && href.startsWith('/')) {
@@ -36,16 +59,16 @@ export default {
 </script>
 
 <template>
-  <main @click="clientNavigation">
+  <main @click="globalClick">
     <header class="top-bar">
       <a href="/" class="uber-icon"><h2>Cadence</h2></a>
       <nav v-if="$route.params.domain">
         <router-link :to="{ name: 'workflows' }">Workflows</router-link>
         <router-link :to="{ name: 'history' }">History</router-link>
       </nav>
-      <div class="domain" v-if="$route.params.domain">
+      <div class="domain" v-if="$route.params.domain" ref="domaincontainer">
         <span v-if="!editing" @click="edit">{{!editing && $route.params.domain}}</span>
-        <input type="text" name="domain"
+        <input type="text" name="domain" spellcheck="false" autocorrect="off"
            v-if="editing"
            v-model="domain"
            ref="domain"
