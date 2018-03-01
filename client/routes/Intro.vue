@@ -9,29 +9,19 @@
     <a href="https://github.com/uber/cadence"
       target="_blank" rel="noopener noreferrer">Source code on GitHub</a>
     <p>Otherwise, provide your team's domain to get started</p>
-    <input type="text"
-      placeholder="cadence-canary"
-      v-model="domain"
-      @keydown.enter="goToDomain"
-    />
-    <ul class="recent-domains" v-if="$parent.recentDomains.length">
-      <h3>Recent Domains</h3>
-      <li v-for="domain in $parent.recentDomains">
-        <a :href="`/domain/${domain}/workflows`">{{domain}}</a>
-      </li>
-    </ul>
+    <domain-navigation type="text" placeholder="cadence-canary" />
   </section>
 </template>
 
 <script>
+import domainNav from '../widgets/domain-navigate.vue'
+
 export default {
   data() {
-    return { domain: '' }
+    return {}
   },
-  methods: {
-    goToDomain: function() {
-      this.$router.push(`/domain/${this.domain}/workflows`)
-    }
+  components: {
+    'domain-navigation': domainNav
   }
 }
 </script>
@@ -45,14 +35,17 @@ section.intro
   margin layout-spacing-large auto 0
   h1
     margin-bottom base-font-size
-  p, h3
+  p, h3, .domain-navigation
     margin 1em 0
   a
     line-height 2.5em
     &:nth-child(2n)
       background none
+  .domain-navigation
+    max-width 400px
+    input
+      margin 0
   .recent-domains
-    margin-top layout-spacing-large
     li
       padding 0 inline-spacing-medium
 </style>
