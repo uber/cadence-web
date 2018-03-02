@@ -47,11 +47,9 @@ export default {
   },
   methods: {
     recordDomain(domain) {
-      console.log(`recordDomain: ${domain}`)
       if (domain) {
         this.recentDomains = this.recentDomains.filter(d => d && d !== domain).slice(0, 9)
         this.recentDomains.unshift(domain)
-        console.dir(this.recentDomains)
         localStorage.setItem('recent-domains', JSON.stringify(this.recentDomains))
       }
     },
