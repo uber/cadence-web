@@ -1,4 +1,6 @@
 <script>
+import domainNav from './widgets/domain-navigate.vue'
+
 export default {
   data () {
     return {
@@ -7,21 +9,18 @@ export default {
     }
   },
   methods: {
-    changeDomain() {
-      this.$router.push({
-        path: `/domain/${this.domain}/workflows`,
-        query: this.$router.currentRoute.query
-      })
-      this.editing = false
-    },
     clearEdit() {
       this.editing = false
     },
     edit() {
       this.editing = true
-      setTimeout(() => this.$refs.domain.focus(), 10)
+      setTimeout(() => this.$refs.domain.querySelector('input').focus(), 10)
     },
-    clientNavigation(e) {
+    globalClick(e) {
+      if (this.editing && !this.$refs.domain.contains(e.target)) {
+        this.clearEdit()
+      }
+
       if (e.target.tagName === 'A') {
         var href = e.target.getAttribute('href')
         if (href && href.startsWith('/')) {
@@ -31,26 +30,26 @@ export default {
         }
       }
     }
+  },
+  components: {
+    'domain-navigate': domainNav
   }
 }
 </script>
 
 <template>
-  <main @click="clientNavigation">
+  <main @click="globalClick">
     <header class="top-bar">
       <a href="/" class="uber-icon"><h2>Cadence</h2></a>
       <nav v-if="$route.params.domain">
         <router-link :to="{ name: 'workflows' }">Workflows</router-link>
         <router-link :to="{ name: 'history' }">History</router-link>
       </nav>
-      <div class="domain" v-if="$route.params.domain">
+      <div class="domain" v-if="$route.params.domain" ref="domain">
         <span v-if="!editing" @click="edit">{{!editing && $route.params.domain}}</span>
-        <input type="text" name="domain"
-           v-if="editing"
-           v-model="domain"
-           ref="domain"
-           @keydown.enter="changeDomain"
-           @keydown.esc="clearEdit"
+        <domain-navigate v-if="editing"
+          @navigate="clearEdit"
+          @cacnel="clearEdit"
         />
       </div>
     </header>
@@ -108,6 +107,27 @@ header.top-bar
     input
       background-color alpha(white, 10%)
       color inverted-text-color
+    .validation
+      display none
+    ul.recent-domains
+      position absolute
+      top 100%
+      width 100%
+      left inline-spacing-medium
+      background-color uber-black
+      border 1px solid uber-black-80
+      z-index 5
+      h3
+        font-size 11px
+        text-transform uppercase
+        font-weight 500
+        padding 8px
+      a
+        line-height 2em
+        padding 0 inline-spacing-small
+        text-transform none
+      li:nth-child(2n)
+        background-color rgba(255,255,255,0.1)
     span
       cursor pointer
       transition smooth-transition

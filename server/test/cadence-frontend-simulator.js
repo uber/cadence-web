@@ -29,6 +29,8 @@ before(function(done) {
     var body = currTest[mockName](body, req)
     if (body instanceof Error) {
       cb(body)
+    } else if (body && body.ok === false) {
+      cb(null, body)
     } else {
       cb(null, { ok: true, head, body })
     }
@@ -37,6 +39,7 @@ before(function(done) {
   tchan.register(tchanServer, 'WorkflowService::ListOpenWorkflowExecutions', {}, handler)
   tchan.register(tchanServer, 'WorkflowService::ListClosedWorkflowExecutions', {}, handler)
   tchan.register(tchanServer, 'WorkflowService::GetWorkflowExecutionHistory', {}, handler)
+  tchan.register(tchanServer, 'WorkflowService::DescribeDomain', {}, handler)
 
   process.env.CADENCE_TCHANNEL_PEERS = '127.0.0.1:11343'
   tchanServer.listen(11343, '127.0.0.1', () => done())

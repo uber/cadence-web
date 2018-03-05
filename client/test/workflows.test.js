@@ -161,7 +161,7 @@ describe('Workflows', function() {
     workflowsEl.querySelector('header.filters .status .selected-tag').should.have.trimmed.text('Failed')
   })
 
-  it('should query for new workflows when the domain changes', async function () {
+  it('should query for new workflows when the domain changes, updating recent domains', async function () {
     var [workflowsEl, scenario] = await workflowsTest(this.test),
         headerBar = scenario.vm.$el.querySelector('header.top-bar'),
         domainEl = headerBar.querySelector('.domain span')
@@ -170,14 +170,25 @@ describe('Workflows', function() {
     domainEl.should.have.trimmed.text('ci-test')
 
     domainEl.trigger('click')
-    var input = await headerBar.waitUntilExists('input[name="domain"]')
+    var domainNav = await headerBar.waitUntilExists('.domain-navigation'),
+        input = domainNav.querySelector('input')
+    domainNav.should.have.class('validation-unknown')
     input.value.should.be.empty
+    domainNav.textNodes('ul.recent-domains li a').should.deep.equal(['ci-test'])
+
+    scenario.api.getOnce('/api/domain/another-domain', 200)
     input.input('another-domain')
+    await headerBar.waitUntilExists('.domain-navigation.validation-valid')
 
     scenario.withDomain('another-domain').withWorkflows('open', null, demoWf)
     input.trigger('keydown', { keyCode: 13, code: 13, key: 'Enter' })
 
     await retry(() => workflowsEl.textNodes('.results tbody td:first-child').should.deep.equal(['demoWfId']))
     headerBar.querySelector('.domain span').should.have.trimmed.text('another-domain')
+    localStorage.getItem('recent-domains').should.equal('["another-domain","ci-test"]')
+
+    headerBar.querySelector('.domain span').trigger('click')
+    await retry(() => headerBar.textNodes('ul.recent-domains li a')
+      .should.deep.equal(['another-domain', 'ci-test']))
   })
 })
