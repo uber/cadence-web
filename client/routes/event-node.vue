@@ -46,12 +46,6 @@ export default {
       ])
     }
 
-    function bleck(l, n) {
-      console.log(new Array(l).fill('  ').join('') + n.eventId)
-      n.children.forEach(c => bleck(l + 2, c))
-    }
-    //bleck(0, this.node)
-
     return eventNode(this.node, true)
   }
 }

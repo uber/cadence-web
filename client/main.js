@@ -44,6 +44,12 @@ Object.getPrototypeOf(router).replaceQueryParam = function(prop, val) {
   this.replace({ query: newQuery })
 }
 
+JSON.tryParse = function() {
+  try {
+    return JSON.parse.apply(this, arguments)
+  } catch (e) {}
+}
+
 Vue.mixin({
   created: function () {
     if (typeof Scenario === 'undefined') {

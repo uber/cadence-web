@@ -106,9 +106,7 @@ export default pagedGrid({
       if (Array.isArray(this.results)) {
         this.results.forEach(r => {
           hash[r.eventId] = r
-          Object.defineProperty(r, 'children', {
-            value: []
-          })
+          r.children.length = 0
         })
 
         for (let r of this.results) {
@@ -143,6 +141,9 @@ export default pagedGrid({
         this.loading = false
         this.prevResults = (this.prevResults || []).concat(res.history.events.map(data => {
           data.timestamp = moment(data.timestamp)
+          Object.defineProperty(data, 'children', {
+            value: []
+          })
           return data
         }))
 

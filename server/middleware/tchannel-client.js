@@ -70,7 +70,7 @@ module.exports = async function(ctx, next) {
       entryPoint: path.join(__dirname, '../idl/cadence.thrift')
     })
 
-  function req(method, reqName) {
+  function req(method, reqName, bodyTransform) {
     return (body) => new Promise(function(resolve, reject) {
       try {
         tchannelAsThrift.request({
@@ -83,10 +83,7 @@ module.exports = async function(ctx, next) {
           retryFlags: { onConnectionError: true },
           retryLimit: Number(process.env.CADENCE_TCHANNEL_RETRY_LIMIT || 3)
         }).send(`WorkflowService::${method}`, {}, {
-          [`${reqName}Request`]: Object.assign({
-            domain: ctx.params.domain,
-            maximumPageSize: 100
-          }, body)
+          [`${reqName}Request`]: typeof bodyTransform === 'function' ? bodyTransform(body) : body
         }, function (err, res) {
           try {
             if (err) {
@@ -94,7 +91,7 @@ module.exports = async function(ctx, next) {
             } else if (res.ok) {
               resolve(transform(res.body))
             } else {
-              ctx.throw(res.body || res, 400)
+              ctx.throw(res.typeName === 'entityNotExistError' ? 404 : 400, null, res.body || res)
             }
           } catch (e) {
             reject(e)
@@ -106,10 +103,16 @@ module.exports = async function(ctx, next) {
     })
   }
 
+  const withDomainPaging = body => Object.assign({
+    domain: ctx.params.domain,
+    maximumPageSize: 100
+  }, body)
+
   ctx.cadence = {
-    openWorkflows: req('ListOpenWorkflowExecutions', 'list'),
-    closedWorkflows: req('ListClosedWorkflowExecutions', 'list'),
-    getHistory: req('GetWorkflowExecutionHistory', 'get')
+    openWorkflows: req('ListOpenWorkflowExecutions', 'list', withDomainPaging),
+    closedWorkflows: req('ListClosedWorkflowExecutions', 'list', withDomainPaging),
+    getHistory: req('GetWorkflowExecutionHistory', 'get', withDomainPaging),
+    describeDomain: req('DescribeDomain', 'describe')
   }
 
   try {

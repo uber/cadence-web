@@ -5,6 +5,13 @@ const
   Long = require('long'),
   momentToLong = m => Long.fromValue(m.unix()).mul(1000000000)
 
+router.get('/api/domain/:domain', async function (ctx) {
+  const domainInfo = await ctx.cadence.describeDomain({ name: ctx.params.domain })
+  if (domainInfo) {
+    ctx.body = domainInfo.domainInfo
+  }
+})
+
 async function listWorkflows(state, ctx) {
   var q = ctx.query || {},
       startTime = moment(q.startTime || NaN),
