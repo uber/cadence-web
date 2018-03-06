@@ -70,6 +70,7 @@ export default pagedGrid({
     var q = this.$route.query || {}
     return {
       loading: false,
+      results: [],
       error: undefined,
       nextPageToken: undefined,
       statuses: [
@@ -93,6 +94,7 @@ export default pagedGrid({
     if (!q.startDate || !q.endDate) {
       this.setRange(this.range)
     }
+    this.$watch(this.fetch.bind(this), () => {}, { immediate: true })
   },
   computed: {
     status() {
@@ -107,7 +109,6 @@ export default pagedGrid({
         q = this.$route.query
 
       this.nextPageToken = undefined
-      this.prevResults = []
       return {
         domain,
         startTime: q.startTime,
@@ -116,28 +117,6 @@ export default pagedGrid({
         workflowId: q.workflowId,
         workflowName: q.workflowName
       }
-    },
-  },
-  methods: {
-    setStatus(status) {
-      if (status) {
-        this.$router.replace({
-          query: Object.assign({}, this.$route.query, { status: status.value })
-        })
-      }
-    },
-    setRange(r) {
-      if (r) {
-        this.$router.replace({
-          query: Object.assign({}, this.$route.query, {
-            startTime: r.startDate.toISOString(),
-            endTime: r.endDate.toISOString()
-          })
-        })
-      }
-    },
-    historyLinkFor(wf) {
-      return `/domain/${this.$route.params.domain}/history?workflowId=${encodeURIComponent(wf.workflowId)}&runId=${encodeURIComponent(wf.runId)}`
     },
     fetch() {
       var
@@ -159,22 +138,43 @@ export default pagedGrid({
       .then(res => {
         this.npt = res.nextPageToken
         this.loading = false
-        return this.prevResults = this.prevResults.concat(
-          res.executions.map(data => ({
-            workflowId: data.execution.workflowId,
-            runId: data.execution.runId,
-            workflowName: data.type.name,
-            startTime: moment(data.startTime).format('lll'),
-            endTime: data.closeTime ? moment(data.closeTime).format('lll') : '',
-            status: (data.closeStatus || 'open').toLowerCase(),
-          }))
-        )
+        var formattedResults = res.executions.map(data => ({
+          workflowId: data.execution.workflowId,
+          runId: data.execution.runId,
+          workflowName: data.type.name,
+          startTime: moment(data.startTime).format('lll'),
+          endTime: data.closeTime ? moment(data.closeTime).format('lll') : '',
+          status: (data.closeStatus || 'open').toLowerCase(),
+        }))
+        return this.results = q.nextPageToken ? this.results.concat(formattedResults) : formattedResults
       }).catch(e => {
         this.npt = undefined
         this.loading = false
         this.error = (e.json && e.json.message) || e.status || e.message
         return []
       })
+    }
+  },
+  methods: {
+    setStatus(status) {
+      if (status) {
+        this.$router.replace({
+          query: Object.assign({}, this.$route.query, { status: status.value })
+        })
+      }
+    },
+    setRange(r) {
+      if (r) {
+        this.$router.replace({
+          query: Object.assign({}, this.$route.query, {
+            startTime: r.startDate.toISOString(),
+            endTime: r.endDate.toISOString()
+          })
+        })
+      }
+    },
+    historyLinkFor(wf) {
+      return `/domain/${this.$route.params.domain}/history?workflowId=${encodeURIComponent(wf.workflowId)}&runId=${encodeURIComponent(wf.runId)}`
     }
   }
 })

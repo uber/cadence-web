@@ -1,5 +1,5 @@
 <template>
-  <section :class="{ history: true, loading: loading }">
+  <section :class="{ history: true, loading, 'has-results': !!this.results.length }">
     <header class="criteria">
       <div class="field workflow-id">
         <input type="text"
@@ -17,7 +17,7 @@
           @input="debouncedSetQuery" />
           <label for="runId">Run ID</label>
       </div>
-      <a href="#" class="export" v-show="this.results && this.results.length" @click="exportResults">Export</a>
+      <a href="#" class="export" @click="exportResults">Export</a>
     </header>
     <header class="actions">
       <label for="workflowId">View Format</label>
@@ -32,6 +32,8 @@
       infinite-scroll-disabled="disableInfiniteScroll"
       infinite-scroll-distance="20"
       infinite-scroll-immediate-check="true"
+      infinite-scroll-listen-for-event="longpoll"
+      ref="results"
     >
       <table v-show="format === 'grid' && showTable">
         <thead>
@@ -73,14 +75,14 @@ export default pagedGrid({
       loading: false,
       error: undefined,
       nextPageToken: undefined,
-      pagedQueryUrl: undefined,
+      results: [],
       get queryUrl() {
         var
           domain = vm.$route.params.domain,
           q = vm.$route.query || {}
 
         if (!q.workflowId || !q.runId) return ''
-        return `/api/domain/${domain}/workflows/history/${encodeURIComponent(q.workflowId)}/${encodeURIComponent(q.runId)}`
+        return `/api/domain/${domain}/workflows/history/${encodeURIComponent(q.workflowId)}/${encodeURIComponent(q.runId)}?waitForNewEvent=true`
       }
     }
   },
@@ -88,11 +90,11 @@ export default pagedGrid({
   created() {
     this.$watch(() => {
       if (!this.nextPageToken) return this.queryUrl
-      return this.queryUrl + '?nextPageToken=' + encodeURIComponent(this.nextPageToken)
-    }, v => this.pagedQueryUrl = v, { immediate: true })
+      return this.queryUrl + '&nextPageToken=' + encodeURIComponent(this.nextPageToken)
+    }, v => this.fetch(v), { immediate: true })
 
     this.$watch('queryUrl', (v, old) => {
-      this.prevResults = []
+      this.results = []
       this.nextPageToken = undefined
     })
   },
@@ -103,13 +105,9 @@ export default pagedGrid({
         started: 1
       }, hash = {}, hierarchy = []
 
-      if (Array.isArray(this.results)) {
-        this.results.forEach(r => {
-          hash[r.eventId] = r
-          r.children.length = 0
-        })
-
-        for (let r of this.results) {
+      this.results
+        .map(r => hash[r.eventId] = Object.assign({ children: [] }, r))
+        .forEach(r => {
           let parentEventName = Object.keys(r.details || {})
             .map(k => (k.match(/(\S+)EventId/) || [])[1])
             .filter(k => k)
@@ -124,30 +122,43 @@ export default pagedGrid({
           if (parentEventName in r.details && !hash[parentEventId]) {
             console.warn('referenced but not found: ' + parentEventId)
           }
-        }
-      }
+        })
 
       return hierarchy
     }
   },
   methods: {
-    fetch(what) {
-      if (!this.pagedQueryUrl) return
-      this.loading = true
-      this.error = undefined
+    fetch(pagedQueryUrl) {
+      if (!pagedQueryUrl) return
 
-      return this.$http(this.pagedQueryUrl).then(res => {
-        this.npt = res.nextPageToken
+      this.error = undefined
+      this.loading = true
+      this.pqu = pagedQueryUrl
+      return this.$http(pagedQueryUrl).then(res => {
+        if (this._isDestroyed) return
+        if (this.npt === res.nextPageToken && this.pqu === pagedQueryUrl) {
+          // nothing happened, and same query is still valid, so let's long pool again
+          return this.fetch(pagedQueryUrl)
+        }
+
+        if (res.nextPageToken) {
+          this.npt = res.nextPageToken
+        }
         this.loading = false
-        this.prevResults = (this.prevResults || []).concat(res.history.events.map(data => {
+        this.results = this.results.concat(res.history.events.map(data => {
           data.timestamp = moment(data.timestamp)
-          Object.defineProperty(data, 'children', {
-            value: []
-          })
           return data
         }))
 
-        return this.prevResults
+        let resultsEl = this.$refs.results,
+            snapped = resultsEl.scrollHeight - resultsEl.scrollTop - resultsEl.offsetHeight < 10
+        setImmediate(() => {
+          this.$emit('longpoll')
+          if (snapped) {
+            this.$refs.results.scrollTop = resultsEl.scrollHeight - resultsEl.offsetHeight
+          }
+        })
+        return this.results
       }).catch(e => {
         this.npt = undefined
         this.loading = false
@@ -156,7 +167,7 @@ export default pagedGrid({
       })
     },
     exportResults(e) {
-      if (!this.results || !this.results.length || !this.$route.query) return
+      if (!this.results.length || !this.$route.query) return
 
       var downloadEl = document.createElement('a')
       downloadEl.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(this.results)))
@@ -209,6 +220,12 @@ section.history
           background-color darken(uber-blue, 20%)
 
   paged-grid()
+
+  &:not(.has-results) a.export
+    display none
+  &.loading.has-results
+    &::after
+      content none
 
   table
     td:nth-child(3)

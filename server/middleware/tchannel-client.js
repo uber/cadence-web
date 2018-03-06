@@ -79,7 +79,7 @@ module.exports = async function(ctx, next) {
             cn: 'cadence-web'
           },
           hasNoParent: true,
-          timeout: 10000,
+          timeout: 1000 * 60 * 5,
           retryFlags: { onConnectionError: true },
           retryLimit: Number(process.env.CADENCE_TCHANNEL_RETRY_LIMIT || 3)
         }).send(`WorkflowService::${method}`, {}, {

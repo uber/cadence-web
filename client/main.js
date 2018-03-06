@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import infiniteScroll from 'vue-infinite-scroll'
-import AsyncComputed from 'vue-async-computed'
 import vSelect from 'vue-select'
 import qs from 'friendly-querystring'
 import DateRangePicker from './widgets/date-range-picker.vue'
@@ -62,7 +61,6 @@ Vue.mixin({
 
 Vue.use(Router)
 Vue.use(infiniteScroll)
-Vue.use(AsyncComputed)
 Vue.component('v-select', vSelect)
 Vue.component('date-range-picker', DateRangePicker)
 Vue.component('details-list', detailList)

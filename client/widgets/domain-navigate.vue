@@ -14,7 +14,7 @@
     <ul class="recent-domains" v-if="recentDomains.length">
       <h3>Recent Domains</h3>
       <li v-for="domain in recentDomains">
-        <a :href="`/domain/${domain}/workflows`" :data-domain="domain" @click="goToRecentDomain">{{domain}}</a>
+        <a :href="domainLink(domain)" :data-domain="domain" @click="goToRecentDomain">{{domain}}</a>
       </li>
     </ul>
   </div>
@@ -22,6 +22,7 @@
 
 <script>
 import debounce from 'lodash-es/debounce'
+import { stringify } from 'friendly-querystring'
 
 const validationMessages = {
   valid: d => `${d} exists`,
@@ -63,10 +64,13 @@ export default {
         this.$emit('navigate', this.d)
       }
     },
+    domainLink(d) {
+      return `/domain/${d}/workflows?${stringify(this.$router.currentRoute.query)}`
+    },
     goToRecentDomain(e) {
-      this.d = e.target.getAttribute('data-domain')
-      this.validation = 'valid'
-      this.changeDomain()
+      var domain = e.target.getAttribute('data-domain')
+      this.recordDomain(domain)
+      this.$emit('navigate', domain)
     },
     checkValidity: debounce(function (x) {
       const check = newDomain => {
