@@ -33,7 +33,7 @@
       infinite-scroll-distance="20"
       infinite-scroll-immediate-check="true"
       infinite-scroll-listen-for-event="longpoll"
-      ref="results"
+      v-snapscroll
     >
       <table v-show="format === 'grid' && showTable">
         <thead>
@@ -150,14 +150,8 @@ export default pagedGrid({
           return data
         }))
 
-        let resultsEl = this.$refs.results,
-            snapped = resultsEl.scrollHeight - resultsEl.scrollTop - resultsEl.offsetHeight < 10
-        setImmediate(() => {
-          this.$emit('longpoll')
-          if (snapped) {
-            this.$refs.results.scrollTop = resultsEl.scrollHeight - resultsEl.offsetHeight
-          }
-        })
+        // https://github.com/ElemeFE/vue-infinite-scroll/issues/89
+        setImmediate(() => this.$emit('longpoll'))
         return this.results
       }).catch(e => {
         this.npt = undefined

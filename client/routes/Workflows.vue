@@ -94,7 +94,7 @@ export default pagedGrid({
     if (!q.startDate || !q.endDate) {
       this.setRange(this.range)
     }
-    this.$watch(this.fetch.bind(this), () => {}, { immediate: true })
+    this.$watch('fetch', () => {}, { immediate: true })
   },
   computed: {
     status() {
