@@ -20,7 +20,7 @@ export default function Scenario(test) {
   })
 }
 
-Scenario.prototype.render = function() {
+Scenario.prototype.render = function(attachToBody) {
   var $http = http.bind(null, this.api)
   $http.post = http.post.bind(null, this.api)
 
@@ -32,9 +32,14 @@ Scenario.prototype.render = function() {
   })
   this.router.push(this.initialUrl || '/')
 
+  var el = document.createElement('div')
+  if (attachToBody) {
+    document.body.appendChild(el)
+  }
+
   this.vm = new Vue({
     // vue just throws this away, not sure why
-    el: document.createElement('div'),
+    el,
     router: this.router,
     template: '<App/>',
     components: { App: main.App },
@@ -49,7 +54,7 @@ Scenario.prototype.render = function() {
 }
 
 Scenario.prototype.go = function() {
-  return [this.render(), this]
+  return [this.render.apply(this, arguments), this]
 }
 
 Scenario.prototype.startingAt = function(url) {
@@ -57,8 +62,10 @@ Scenario.prototype.startingAt = function(url) {
   return this
 }
 
-Scenario.prototype.tearDown = function() {
-  if (this.vm && this.vm.$el && this.vm.$el.parentElement) {
+Scenario.prototype.tearDown = function(mochaTest) {
+  if (this.vm && this.vm.$el && this.vm.$el.parentElement
+    // as a convience, if debugging just this test, don't remove the test app
+    && !window.location.search.includes(encodeURIComponent(mochaTest.fullTitle()))) {
     this.vm.$el.parentElement.removeChild(this.vm.$el)
   }
 
@@ -97,13 +104,27 @@ Scenario.prototype.withWorkflows = function(status, query, workflows) {
   return this
 }
 
-Scenario.prototype.withHistory = function(workflowId, runId, events)  {
+Scenario.prototype.withHistory = function(workflowId, runId, events, hasMorePages)  {
   if (!events) {
     events = JSON.parse(JSON.stringify(fixtures.history.emailRun1))
   }
+  if (!this.historyNpt) {
+    this.historyNpt = {}
+  }
 
-  var url = `/api/domain/${this.domain}/workflows/history/${encodeURIComponent(workflowId)}/${encodeURIComponent(runId)}`,
+  const makeToken = () => btoa(JSON.stringify({ NextEventId: this.historyNpt[runId], IsWorkflowRunning: true }))
+
+  var url = `/api/domain/${this.domain}/workflows/history/${encodeURIComponent(workflowId)}/${encodeURIComponent(runId)}?waitForNewEvent=true`,
       response = Array.isArray(events) ? { history: { events } } : events
+
+  if (this.historyNpt[runId]) {
+    url += `&nextPageToken=${encodeURIComponent(makeToken())}`
+  }
+
+  if (hasMorePages) {
+    this.historyNpt[runId] = (this.historyNpt[runId] || 0) + response.history.events.length + 1
+    response.nextPageToken = makeToken()
+  }
 
   this.api.getOnce(url, response)
 

@@ -1,5 +1,6 @@
 import fixtures from './fixtures'
 import moment from 'moment'
+import qs from 'friendly-querystring'
 
 describe('Workflows', function() {
   async function workflowsTest(mochaTest, initialWorkflows) {
@@ -161,7 +162,7 @@ describe('Workflows', function() {
     workflowsEl.querySelector('header.filters .status .selected-tag').should.have.trimmed.text('Failed')
   })
 
-  it('should query for new workflows when the domain changes, updating recent domains', async function () {
+  it('should query for new workflows when a new domain is navigated to, updating recent domains', async function () {
     var [workflowsEl, scenario] = await workflowsTest(this.test),
         headerBar = scenario.vm.$el.querySelector('header.top-bar'),
         domainEl = headerBar.querySelector('.domain span')
@@ -190,5 +191,34 @@ describe('Workflows', function() {
     headerBar.querySelector('.domain span').trigger('click')
     await retry(() => headerBar.textNodes('ul.recent-domains li a')
       .should.deep.equal(['another-domain', 'ci-test']))
+  })
+
+
+  it('should query for new workflows when a recent domain is clicked, updating recent domains', async function () {
+    localStorage.setItem('recent-domains', '["foo", "bar"]')
+    var [workflowsEl, scenario] = await workflowsTest(this.test),
+        headerBar = scenario.vm.$el.querySelector('header.top-bar'),
+        domainEl = headerBar.querySelector('.domain span')
+
+    domainEl.trigger('click')
+    var domainNav = await headerBar.waitUntilExists('.domain-navigation')
+    domainNav.textNodes('ul.recent-domains li a').should.deep.equal(['ci-test', 'foo', 'bar'])
+    localStorage.getItem('recent-domains').should.equal('["ci-test","foo","bar"]')
+
+    scenario.withDomain('bar').withWorkflows('open', null, demoWf)
+    domainNav.querySelector('ul.recent-domains li:nth-of-type(3) a').trigger('click')
+
+    await retry(() => workflowsEl.textNodes('.results tbody td:first-child').should.deep.equal(['demoWfId']))
+    headerBar.querySelector('.domain span').should.have.trimmed.text('bar')
+    localStorage.getItem('recent-domains').should.equal('["bar","ci-test","foo"]')
+    scenario.location.should.equal(`/domain/bar/workflows?${qs.stringify({
+      startTime: moment().startOf('minute').subtract(1, 'day').toISOString(),
+      endTime: moment().startOf('minute').toISOString(),
+      status: 'OPEN'
+    })}`)
+
+    headerBar.querySelector('.domain span').trigger('click')
+    await retry(() => headerBar.textNodes('ul.recent-domains li a')
+      .should.deep.equal(['bar', 'ci-test', 'foo']))
   })
 })

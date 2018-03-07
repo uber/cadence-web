@@ -13,6 +13,18 @@ describe('History', function() {
     return [historyEl, scenario]
   }
 
+  function generateActivityEvents(count, offset) {
+    return new Array(count).fill('').map((_, i) => ({
+      timestamp: moment().add(offset + i, 'second').toISOString(),
+      eventType: 'ActivityTaskScheduled',
+      eventId: (offset || 0) + i + 2,
+      details: {
+        activityId: String(i),
+        activityType: { name: 'send-emails' }
+      }
+    }))
+  }
+
   it('should have empty inputs and not run a query if directly navigated to', async function () {
     var testEl = new Scenario(this.test)
       .withDomain('ci-test')
@@ -94,6 +106,30 @@ describe('History', function() {
       scenario.location.should.equal('/domain/ci-test/history?workflowId=email-daily-summaries&runId=emailRun1&eventId=7')
       historyEl.textNodes('.compact-view dl.details dt').should.deep.equal(['scheduledEventId', 'requestId'])
     })
+
+    it('should request more pages until it fills up scroll area', async function () {
+      var [testEl, scenario] = new Scenario(this.test)
+        .withDomain('ci-test')
+        .startingAt('/domain/ci-test/history?workflowId=long-running-op-1&runId=theRunId')
+        .withHistory('long-running-op-1', 'theRunId', [{
+          timestamp: moment().toISOString(),
+          eventType: 'WorkflowExecutionStarted',
+          eventId: 1,
+          details: {
+            workflowType: {
+              name: 'long-running-op'
+            }
+          }
+        }].concat(generateActivityEvents(2)), true)
+        .withHistory('long-running-op-1', 'theRunId', generateActivityEvents(3, 2), true)
+        .withHistory('long-running-op-1', 'theRunId', generateActivityEvents(5, 5), true)
+        .go(true)
+
+      var historyEl = await testEl.waitUntilExists('section.history')
+      await retry(() => historyEl.querySelectorAll('.compact-view a[data-event-id]').should.have.length(11))
+
+      await Promise.delay(100)
+    })
   })
 
   describe('Grid View', function() {
@@ -126,6 +162,37 @@ describe('History', function() {
       startDetails.textNodes('dl.details dd').should.deep.equal([
         'email-daily-summaries', 'ci-task-queue', '839134\n{Env:prod}', '360', '180'
       ])
+    })
+
+
+    it('should request more pages only when the user scrolls to the bottom', async function () {
+      var [testEl, scenario] = new Scenario(this.test)
+        .withDomain('ci-test')
+        .startingAt('/domain/ci-test/history?workflowId=long-running-op-2&runId=theRunId&format=grid')
+        .withHistory('long-running-op-2', 'theRunId', [{
+          timestamp: moment().toISOString(),
+          eventType: 'WorkflowExecutionStarted',
+          eventId: 1,
+          details: {
+            workflowType: {
+              name: 'long-running-op'
+            }
+          }
+        }].concat(generateActivityEvents(15)), true)
+        .go(true)
+
+      var resultsEl = await testEl.waitUntilExists('section.history section.results')
+      await retry(() => resultsEl.querySelectorAll('tbody tr').should.have.length(16))
+
+      resultsEl.scrollTop = 100
+      await Promise.delay(50)
+
+      resultsEl.scrollTop = resultsEl.scrollHeight - resultsEl.offsetHeight - 100
+      await Promise.delay(100)
+
+      scenario.withHistory('long-running-op-2', 'theRunId', generateActivityEvents(8, 15))
+      resultsEl.scrollTop = resultsEl.scrollHeight - resultsEl.offsetHeight
+      await Promise.delay(100)
     })
   })
 })

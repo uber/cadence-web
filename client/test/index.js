@@ -11,7 +11,29 @@ require('mocha/mocha')
 var mochaDiv = document.createElement('div')
 mochaDiv.id = 'mocha'
 document.body.appendChild(mochaDiv)
-document.querySelector('[rel="stylesheet"]').href = 'https://cdnjs.cloudflare.com/ajax/libs/mocha/3.4.2/mocha.css'
+
+var mochaCss = document.createElement('link')
+mochaCss.setAttribute('rel', 'stylesheet')
+mochaCss.setAttribute('href', 'https://cdnjs.cloudflare.com/ajax/libs/mocha/3.4.2/mocha.css')
+document.head.appendChild(mochaCss)
+
+var extraStyling = document.createElement('style')
+extraStyling.setAttribute('type', 'text/css')
+extraStyling.textContent = `
+#mocha li:nth-child(2n) {
+  background: none;
+}
+
+#mocha h2 {
+  padding: 0;
+}
+
+main {
+  width: 1800px;
+  height: 900px;
+}
+`
+document.head.appendChild(extraStyling)
 document.title = 'Cadence Tests'
 
 var chai = window.chai = require('chai')
@@ -41,11 +63,11 @@ window.it = function(name, func) {
       if (result && typeof result.then === 'function') {
         var currScenario = this.test.scenario
         return result.then(
-          () => currScenario && currScenario.tearDown(),
-          e => currScenario ? currScenario.tearDown().then(() => Promise.reject(e), () => Promise.reject(e)) : Promise.reject(e)
+          () => currScenario && currScenario.tearDown(this.test),
+          e => currScenario ? currScenario.tearDown(this.test).then(() => Promise.reject(e), () => Promise.reject(e)) : Promise.reject(e)
         )
       } else {
-        return scenario && scenario.tearDown().then(() => result)
+        return scenario && scenario.tearDown(this.test).then(() => result)
       }
     }
     wrapperFunc.toString = origFunc.toString.bind(origFunc)

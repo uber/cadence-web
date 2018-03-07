@@ -136,7 +136,7 @@ export default pagedGrid({
       this.pqu = pagedQueryUrl
       return this.$http(pagedQueryUrl).then(res => {
         if (this._isDestroyed) return
-        if (this.npt === res.nextPageToken && this.pqu === pagedQueryUrl) {
+        if (res.nextPageToken && this.npt === res.nextPageToken && this.pqu === pagedQueryUrl) {
           // nothing happened, and same query is still valid, so let's long pool again
           return this.fetch(pagedQueryUrl)
         }

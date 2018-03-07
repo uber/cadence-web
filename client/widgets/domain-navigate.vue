@@ -14,7 +14,7 @@
     <ul class="recent-domains" v-if="recentDomains.length">
       <h3>Recent Domains</h3>
       <li v-for="domain in recentDomains">
-        <a :href="domainLink(domain)" :data-domain="domain" @click="goToRecentDomain">{{domain}}</a>
+        <a :href="domainLink(domain)" :data-domain="domain" @click="recordDomainFromClick">{{domain}}</a>
       </li>
     </ul>
   </div>
@@ -67,7 +67,7 @@ export default {
     domainLink(d) {
       return `/domain/${d}/workflows?${stringify(this.$router.currentRoute.query)}`
     },
-    goToRecentDomain(e) {
+    recordDomainFromClick(e) {
       var domain = e.target.getAttribute('data-domain')
       this.recordDomain(domain)
       this.$emit('navigate', domain)
