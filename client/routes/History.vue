@@ -26,6 +26,7 @@
         <a href="#" class="grid" @click.prevent="setFormat('grid')" :class="format === 'grid' ? 'active' : ''">Grid</a>
         <a href="#" class="json" @click.prevent="setFormat('json')" :class="format === 'json' ? 'active' : ''">JSON</a>
       </div>
+      <span class="is-running" :data-is-running="JSON.stringify(isWorkflowRunning)"><bar-loader /> Workflow </span>
     </header>
     <section class="results"
       v-infinite-scroll="nextPage"
@@ -76,13 +77,14 @@ export default pagedGrid({
       error: undefined,
       nextPageToken: undefined,
       results: [],
+      isWorkflowRunning: undefined,
       get queryUrl() {
         var
           domain = vm.$route.params.domain,
           q = vm.$route.query || {}
 
         if (!q.workflowId || !q.runId) return ''
-        return `/api/domain/${domain}/workflows/history/${encodeURIComponent(q.workflowId)}/${encodeURIComponent(q.runId)}?waitForNewEvent=true`
+        return `/api/domain/${domain}/workflows/${encodeURIComponent(q.workflowId)}/${encodeURIComponent(q.runId)}/history?waitForNewEvent=true`
       }
     }
   },
@@ -143,6 +145,9 @@ export default pagedGrid({
 
         if (res.nextPageToken) {
           this.npt = res.nextPageToken
+          this.isWorkflowRunning = JSON.parse(atob(res.nextPageToken)).IsWorkflowRunning
+        } else {
+          this.isWorkflowRunning = false
         }
         this.loading = false
         this.results = this.results.concat(res.history.events.map(data => {
@@ -220,6 +225,16 @@ section.history
   &.loading.has-results
     &::after
       content none
+
+  span.is-running
+    &:not([data-is-running="true"]) loader.bar
+      display none
+    &[data-is-running="true"]
+      &::after
+        content 'is executing...'
+    &[data-is-running="false"]
+      &::after
+        content 'finished'
 
   table
     td:nth-child(3)

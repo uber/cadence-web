@@ -3,9 +3,12 @@ import Router from 'vue-router'
 import infiniteScroll from 'vue-infinite-scroll'
 import vSelect from 'vue-select'
 import qs from 'friendly-querystring'
-import DateRangePicker from './widgets/date-range-picker.vue'
 import http from './http'
+
+import DateRangePicker from './widgets/date-range-picker.vue'
 import detailList from './widgets/detail-list.vue'
+import barLoader from './widgets/bar-loader.vue'
+
 import snapscroll from './directives/snapscroll'
 
 import App from './App.vue'
@@ -65,6 +68,7 @@ Vue.use(infiniteScroll)
 Vue.component('v-select', vSelect)
 Vue.component('date-range-picker', DateRangePicker)
 Vue.component('details-list', detailList)
+Vue.component('bar-loader', barLoader)
 Vue.directive('snapscroll', snapscroll)
 
 if (typeof mocha === 'undefined') {
