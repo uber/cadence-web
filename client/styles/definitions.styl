@@ -137,11 +137,25 @@ action-button(color = primary-color)
   font-weight 600
   color white
   background-color color
+  white-space nowrap
   &:hover:not([aria-disabled="true"])
     background-color darken(color, 20%)
   &[aria-disabled="true"]
     opacity 0.5
     cursor not-allowed
+
+icon(charcode)
+  &::before
+    font-family 'uber-icons'
+    content charcode
+    margin-right 0.2em
+
+icon-download()
+  icon('\ea21')
+icon-trips()
+  icon('\ea6d')
+icon-delete()
+  icon('\ea1e')
 
 paged-grid()
   .filters, span.error, span.no-results

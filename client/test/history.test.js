@@ -36,8 +36,9 @@ describe('History', function() {
     historyEl.querySelector('input[name="runId"]').value.should.be.empty
 
     historyEl.querySelector('section.results table').should.not.be.displayed
-    historyEl.textNodes('header.actions .view-formats a').should.deep.equal(['Compact', 'Grid', 'JSON'])
+    historyEl.textNodes('header.controls .view-formats a').should.deep.equal(['Compact', 'Grid', 'JSON'])
     historyEl.querySelector('.view-formats .compact').should.have.class('active')
+    historyEl.querySelector('header.controls').should.not.contain('a.stack-trace')
 
     await Promise.delay(100)
   })
@@ -73,6 +74,10 @@ describe('History', function() {
     resultsEl.should.not.have.descendant('.compact-view')
     scenario.location.should.equal('/domain/ci-test/history?workflowId=email-daily-summaries&runId=emailRun1&format=json')
   })
+
+  it('should reset state if workflow id and run id are cleared')
+  it('should allow a stack trace to be viewed for a running workflow')
+  it('should download the currently loaded history events as json when export is clicked')
 
   describe('Compact View', function() {
     it('should build a heiarchy of events', async function () {
