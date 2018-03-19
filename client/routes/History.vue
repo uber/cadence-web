@@ -198,9 +198,10 @@ export default pagedGrid({
       downloadEl.style.display = 'none'
       document.body.appendChild(downloadEl)
 
-      downloadEl.click()
-
-      document.body.removeChild(downloadEl)
+      if (typeof Mocha === 'undefined') {
+        downloadEl.click()
+        document.body.removeChild(downloadEl)
+      }
     },
     viewStackTrace() {
       var domain = this.$route.params.domain, q = this.$route.query || {}
