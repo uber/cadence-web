@@ -36,10 +36,13 @@ before(function(done) {
     }
   }
 
-  tchan.register(tchanServer, 'WorkflowService::ListOpenWorkflowExecutions', {}, handler)
-  tchan.register(tchanServer, 'WorkflowService::ListClosedWorkflowExecutions', {}, handler)
-  tchan.register(tchanServer, 'WorkflowService::GetWorkflowExecutionHistory', {}, handler)
-  tchan.register(tchanServer, 'WorkflowService::DescribeDomain', {}, handler)
+  [
+    'ListOpenWorkflowExecutions',
+    'ListClosedWorkflowExecutions',
+    'GetWorkflowExecutionHistory',
+    'DescribeDomain',
+    'QueryWorkflow'
+  ].forEach(endpoint => tchan.register(tchanServer, 'WorkflowService::' + endpoint, {}, handler))
 
   process.env.CADENCE_TCHANNEL_PEERS = '127.0.0.1:11343'
   tchanServer.listen(11343, '127.0.0.1', () => done())

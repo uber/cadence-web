@@ -43,27 +43,25 @@ wfHistoryThrift = [{
 }],
 
 wfHistoryJson = [{
-    eventId: 1,
-    timestamp: '2017-11-14T23:24:10.351Z',
-    eventType: 'WorkflowExecutionStarted',
-    details: wfHistoryThrift[0].workflowExecutionStartedEventAttributes
-  }, {
-    eventId: 2,
-    timestamp: '2017-11-14T23:24:10.351Z',
-    eventType: 'DecisionTaskScheduled',
-    details: wfHistoryThrift[1].decisionTaskScheduledEventAttributes
-  },
-  {
-    eventId: 3,
-    timestamp: '2017-11-14T23:24:27.531Z',
-    eventType: 'DecisionTaskStarted',
-    details: {
-      identity: 'box1@ci-task-queue',
-      requestId: 'fafa095d-b4ca-423a-a812-223e62b5ccf8',
-      scheduledEventId: 2,
-    }
+  eventId: 1,
+  timestamp: '2017-11-14T23:24:10.351Z',
+  eventType: 'WorkflowExecutionStarted',
+  details: wfHistoryThrift[0].workflowExecutionStartedEventAttributes
+}, {
+  eventId: 2,
+  timestamp: '2017-11-14T23:24:10.351Z',
+  eventType: 'DecisionTaskScheduled',
+  details: wfHistoryThrift[1].decisionTaskScheduledEventAttributes
+}, {
+  eventId: 3,
+  timestamp: '2017-11-14T23:24:27.531Z',
+  eventType: 'DecisionTaskStarted',
+  details: {
+    identity: 'box1@ci-task-queue',
+    requestId: 'fafa095d-b4ca-423a-a812-223e62b5ccf8',
+    scheduledEventId: 2,
   }
-]
+}]
 
 describe('Workflow History', function() {
   it('should forward the request to the cadence frontend with workflowId and runId', function() {
@@ -87,7 +85,7 @@ describe('Workflow History', function() {
     }
 
     return request(global.app)
-      .get('/api/domain/canary/workflows/history/ci%2Fdemo/run1')
+      .get('/api/domain/canary/workflows/ci%2Fdemo/run1/history')
       .expect(200)
       .expect('Content-Type', /json/)
   })
@@ -103,7 +101,7 @@ describe('Workflow History', function() {
     }
 
     return request(global.app)
-      .get('/api/domain/canary/workflows/history/ci%2Fdemo/run1?nextPageToken=cGFnZTI%3D')
+      .get('/api/domain/canary/workflows/ci%2Fdemo/run1/history?nextPageToken=cGFnZTI%3D')
       .expect(200)
       .expect('Content-Type', /json/)
       .expect({
@@ -119,11 +117,11 @@ describe('Workflow History', function() {
     }
 
     return request(global.app)
-      .get('/api/domain/canary/workflows/history/ci%2Fdemo/run1?waitForNewEvent=true')
+      .get('/api/domain/canary/workflows/ci%2Fdemo/run1/history?waitForNewEvent=true')
       .expect(200)
       .expect('Content-Type', /json/)
       .then(() =>  request(global.app)
-        .get('/api/domain/canary/workflows/history/ci%2Fdemo/run1?waitForNewEvent')
+        .get('/api/domain/canary/workflows/ci%2Fdemo/run1/history?waitForNewEvent')
         .expect(200)
       )
   })
@@ -134,9 +132,8 @@ describe('Workflow History', function() {
       nextPageToken: new Buffer('page2')
     })
 
-
     return request(global.app)
-      .get('/api/domain/canary/workflows/history/ci%2Fdemo/run1')
+      .get('/api/domain/canary/workflows/ci%2Fdemo/run1/history')
       .expect(200)
       .expect({
         history: { events: wfHistoryJson },

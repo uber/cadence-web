@@ -19,15 +19,14 @@ function transform(item) {
       if (m.isValid() && m.isAfter('2017-01-01')) {
         item[subkey] = m.toISOString()
       }
+    } else if (Buffer.isBuffer(subvalue)) {
+      item[subkey] = subvalue.toString('base64')
     } else if (Array.isArray(subvalue)) {
       subvalue.forEach(transform)
     } else if (subvalue && typeof subvalue === 'object') {
       transform(subvalue)
     }
   })
-  if (item.nextPageToken) {
-    item.nextPageToken = item.nextPageToken.toString('base64') || undefined
-  }
   return item
 }
 
@@ -106,12 +105,20 @@ module.exports = async function(ctx, next) {
   const withDomainPaging = body => Object.assign({
     domain: ctx.params.domain,
     maximumPageSize: 100
+  }, body),
+  withWorkflowExecution = body => Object.assign({
+    domain: ctx.params.domain,
+    execution: {
+      workflowId: ctx.params.workflowId,
+      runId: ctx.params.runId
+    },
   }, body)
 
   ctx.cadence = {
     openWorkflows: req('ListOpenWorkflowExecutions', 'list', withDomainPaging),
     closedWorkflows: req('ListClosedWorkflowExecutions', 'list', withDomainPaging),
-    getHistory: req('GetWorkflowExecutionHistory', 'get', withDomainPaging),
+    getHistory: req('GetWorkflowExecutionHistory', 'get', b => Object.assign(withDomainPaging(b), withWorkflowExecution(b))),
+    queryWorkflow: req('QueryWorkflow', 'query', withWorkflowExecution),
     describeDomain: req('DescribeDomain', 'describe')
   }
 

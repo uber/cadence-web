@@ -1,11 +1,15 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import infiniteScroll from 'vue-infinite-scroll'
-import vSelect from 'vue-select'
+import vueSelect from 'vue-select'
+import vueModal from 'vue-js-modal'
 import qs from 'friendly-querystring'
-import DateRangePicker from './widgets/date-range-picker.vue'
 import http from './http'
+
+import DateRangePicker from './widgets/date-range-picker.vue'
 import detailList from './widgets/detail-list.vue'
+import barLoader from './widgets/bar-loader.vue'
+
 import snapscroll from './directives/snapscroll'
 
 import App from './App.vue'
@@ -62,10 +66,13 @@ Vue.mixin({
 
 Vue.use(Router)
 Vue.use(infiniteScroll)
-Vue.component('v-select', vSelect)
+Vue.use(vueModal)
+Vue.component('v-select', vueSelect)
 Vue.component('date-range-picker', DateRangePicker)
 Vue.component('details-list', detailList)
+Vue.component('bar-loader', barLoader)
 Vue.directive('snapscroll', snapscroll)
+Vue.config.ignoredElements = ['loader']
 
 if (typeof mocha === 'undefined') {
   if (!document.querySelector('main')) {

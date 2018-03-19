@@ -1,0 +1,30 @@
+@require "./definitions"
+
+body .v--modal-overlay
+  display flex
+  justify-content center
+  align-items center
+.v--modal-box.v--modal
+  top initial !important
+  left initial !important
+  width auto !important
+  height auto !important
+  max-width 95vw
+  padding layout-spacing-medium
+  display flex
+  flex-direction column
+  header
+    flex 0 0 auto
+    display flex
+    align-items center
+    margin-bottom layout-spacing-small
+    & > *
+      margin-right 0.2em
+  a.close
+    position absolute
+    color base-text-color
+    icon-delete()
+    vertical-align middle
+    right inline-spacing-medium
+    top layout-spacing-medium
+    padding 4px

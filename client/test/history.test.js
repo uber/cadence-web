@@ -25,6 +25,25 @@ describe('History', function() {
     }))
   }
 
+  async function runningWfHistoryTest(mochaTest) {
+    var [testEl, scenario] = new Scenario(mochaTest)
+      .withDomain('ci-test')
+      .startingAt('/domain/ci-test/history?workflowId=long-running-op-2&runId=theRunId&format=grid')
+      .withHistory('long-running-op-2', 'theRunId', [{
+        timestamp: moment().toISOString(),
+        eventType: 'WorkflowExecutionStarted',
+        eventId: 1,
+        details: {
+          workflowType: {
+            name: 'long-running-op'
+          }
+        }
+      }].concat(generateActivityEvents(15)), true)
+      .go(true)
+
+    return [await testEl.waitUntilExists('section.history section.results'), scenario]
+  }
+
   it('should have empty inputs and not run a query if directly navigated to', async function () {
     var testEl = new Scenario(this.test)
       .withDomain('ci-test')
@@ -36,8 +55,9 @@ describe('History', function() {
     historyEl.querySelector('input[name="runId"]').value.should.be.empty
 
     historyEl.querySelector('section.results table').should.not.be.displayed
-    historyEl.textNodes('header.actions .view-formats a').should.deep.equal(['Compact', 'Grid', 'JSON'])
+    historyEl.textNodes('header.controls .view-formats a').should.deep.equal(['Compact', 'Grid', 'JSON'])
     historyEl.querySelector('.view-formats .compact').should.have.class('active')
+    historyEl.querySelector('header.controls').should.not.contain('a.stack-trace')
 
     await Promise.delay(100)
   })
@@ -74,10 +94,60 @@ describe('History', function() {
     scenario.location.should.equal('/domain/ci-test/history?workflowId=email-daily-summaries&runId=emailRun1&format=json')
   })
 
+  it('should reset state if workflow id and run id are cleared', async function() {
+    var [resultsEl, scenario] = await runningWfHistoryTest(this.test),
+        historyEl = scenario.vm.$el.querySelector('section.history')
+
+    await historyEl.waitUntilExists('.results tbody tr:nth-child(4)')
+    historyEl.should.have.class('has-results').and.have.descendant('a.stack-trace')
+
+    scenario.vm.$el.querySelector('header.top-bar a.history').trigger('click')
+    await retry(() => scenario.location.should.equal('/domain/ci-test/history?'))
+
+    historyEl.should.not.have.class('has-results').and.not.have.descendant('a.stack-trace')
+    await Promise.delay(100)
+  })
+
+  it('should allow a stack trace to be viewed for a running workflow', async function () {
+    var [resultsEl, scenario] = await runningWfHistoryTest(this.test),
+        stackTrace = await scenario.vm.$el.waitUntilExists('section.history .controls a.stack-trace')
+
+    stackTrace.should.have.trimmed.text('Stack Trace')
+    scenario.api.post('/api/domain/ci-test/workflows/long-running-op-2/theRunId/query/__stack_trace', {
+      queryResult: btoa(JSON.stringify('goroutine 1:\n\tat foo.go:56'))
+    })
+    stackTrace.trigger('click')
+
+    var modal = await scenario.vm.$el.waitUntilExists('section.history [data-modal="stack-trace"]')
+    await retry(() => modal.should.have.descendant('header h2').and.have.trimmed.text('Stack Trace'))
+    modal.querySelector('header span').should.contain.text(`as of ${moment().format('ll')}`)
+    modal.querySelector('pre').should.have.text('goroutine 1:\n\tat foo.go:56')
+
+    modal.querySelector('a.close').trigger('click')
+    await retry(() => scenario.vm.$el.querySelector('section.history').should.not.contain('[data-modal="stack-trace"]'))
+  })
+
+  it('should download the currently loaded history events as json when export is clicked', async function () {
+    var [historyEl, scenario] = await historyTest(this.test),
+        exportEl = await scenario.vm.$el.waitUntilExists('section.history .controls a.export')
+
+    exportEl.trigger('click')
+    var downloadEl = document.body.querySelector('a[download]')
+    downloadEl.should.have.attr('download', 'email daily summaries - emailRun1.json')
+
+    var href = decodeURIComponent(downloadEl.getAttribute('href'))
+    var eventsJson = JSON.parse(decodeURIComponent(href).replace('data:text/plain;charset=utf-8,', ''))
+
+    eventsJson.length.should.equal(12)
+    eventsJson.map(e => e.eventType).slice(3,6).should.deep.equal([
+      'DecisionTaskCompleted', 'MarkerRecorded', 'ActivityTaskScheduled'
+    ])
+  })
+
   describe('Compact View', function() {
     it('should build a heiarchy of events', async function () {
       var [historyEl, scenario] = await historyTest(this.test)
-      await historyEl.waitUntilExists('.results tbody tr:nth-child(4)')
+      await historyEl.waitUntilExists('.compact-view > .event-node')
 
       historyEl.textNodes('.compact-view > .event-node > a[data-event-id]').should.deep.equal([
         'WorkflowExecutionStarted', 'DecisionTaskScheduled', 'DecisionTaskScheduled'
@@ -166,22 +236,7 @@ describe('History', function() {
 
 
     it('should request more pages only when the user scrolls to the bottom', async function () {
-      var [testEl, scenario] = new Scenario(this.test)
-        .withDomain('ci-test')
-        .startingAt('/domain/ci-test/history?workflowId=long-running-op-2&runId=theRunId&format=grid')
-        .withHistory('long-running-op-2', 'theRunId', [{
-          timestamp: moment().toISOString(),
-          eventType: 'WorkflowExecutionStarted',
-          eventId: 1,
-          details: {
-            workflowType: {
-              name: 'long-running-op'
-            }
-          }
-        }].concat(generateActivityEvents(15)), true)
-        .go(true)
-
-      var resultsEl = await testEl.waitUntilExists('section.history section.results')
+      var [resultsEl, scenario] = await runningWfHistoryTest(this.test)
       await retry(() => resultsEl.querySelectorAll('tbody tr').should.have.length(16))
 
       resultsEl.scrollTop = 100

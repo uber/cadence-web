@@ -34,14 +34,10 @@ async function listWorkflows(state, ctx) {
 router.get('/api/domain/:domain/workflows/open', listWorkflows.bind(null, 'open'))
 router.get('/api/domain/:domain/workflows/closed', listWorkflows.bind(null, 'closed'))
 
-router.get('/api/domain/:domain/workflows/history/:workflowId/:runId', async function (ctx) {
+router.get('/api/domain/:domain/workflows/:workflowId/:runId/history', async function (ctx) {
   var q = ctx.query || {}
 
   ctx.body = await ctx.cadence.getHistory({
-    execution: {
-      workflowId: ctx.params.workflowId,
-      runId: ctx.params.runId
-    },
     nextPageToken: q.nextPageToken ? Buffer.from(q.nextPageToken, 'base64') : undefined,
     waitForNewEvent: 'waitForNewEvent' in q ? true : undefined
   })
@@ -69,6 +65,14 @@ router.get('/api/domain/:domain/workflows/history/:workflowId/:runId', async fun
       }
     })
   }
+})
+
+router.post('/api/domain/:domain/workflows/:workflowId/:runId/query/:queryType', async function (ctx) {
+  ctx.body = await ctx.cadence.queryWorkflow({
+    query: {
+      queryType: ctx.params.queryType
+    }
+  })
 })
 
 router.get('/health', ctx => ctx.body = 'OK')

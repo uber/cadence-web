@@ -42,8 +42,8 @@ export default {
     <header class="top-bar">
       <a href="/" class="uber-icon"><h2>Cadence</h2></a>
       <nav v-if="$route.params.domain">
-        <router-link :to="{ name: 'workflows' }">Workflows</router-link>
-        <router-link :to="{ name: 'history' }">History</router-link>
+        <router-link class="workflows" :to="{ name: 'workflows' }">Workflows</router-link>
+        <router-link class="history" :to="{ name: 'history' }">History</router-link>
       </nav>
       <div class="domain" v-if="$route.params.domain" ref="domain">
         <span v-if="!editing" @click="edit">{{!editing && $route.params.domain}}</span>
@@ -59,7 +59,7 @@ export default {
 
 <style lang="stylus">
 @import "https://d1a3f4spazzrp4.cloudfront.net/uber-fonts/4.0.0/superfine.css"
-@import "https://d1a3f4spazzrp4.cloudfront.net/uber-icons/3.13.0/uber-icons.css"
+@import "https://d1a3f4spazzrp4.cloudfront.net/uber-icons/3.14.0/uber-icons.css"
 @require "./styles/definitions"
 @require "./styles/reset"
 
@@ -67,6 +67,7 @@ global-reset()
 
 @import "./styles/base"
 @import "./styles/select"
+@import "./styles/modal"
 
 header.top-bar
   display flex

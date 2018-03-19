@@ -114,7 +114,7 @@ Scenario.prototype.withHistory = function(workflowId, runId, events, hasMorePage
 
   const makeToken = () => btoa(JSON.stringify({ NextEventId: this.historyNpt[runId], IsWorkflowRunning: true }))
 
-  var url = `/api/domain/${this.domain}/workflows/history/${encodeURIComponent(workflowId)}/${encodeURIComponent(runId)}?waitForNewEvent=true`,
+  var url = `/api/domain/${this.domain}/workflows/${encodeURIComponent(workflowId)}/${encodeURIComponent(runId)}/history?waitForNewEvent=true`,
       response = Array.isArray(events) ? { history: { events } } : events
 
   if (this.historyNpt[runId]) {
