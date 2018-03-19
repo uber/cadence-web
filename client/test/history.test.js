@@ -98,6 +98,7 @@ describe('History', function() {
     var [resultsEl, scenario] = await runningWfHistoryTest(this.test),
         historyEl = scenario.vm.$el.querySelector('section.history')
 
+    await historyEl.waitUntilExists('.results tbody tr:nth-child(4)')
     historyEl.should.have.class('has-results').and.have.descendant('a.stack-trace')
 
     scenario.vm.$el.querySelector('header.top-bar a.history').trigger('click')
