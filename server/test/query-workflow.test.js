@@ -38,10 +38,10 @@ describe('Query Workflow', function() {
 
     return request(global.app)
       .post('/api/domain/canary/workflows/ci%2Fdemo/run1/query/state')
-      .expect(200)
+      .expect(400)
       .expect('Content-Type', /json/)
       .expect({
-        queryResult: Buffer.from('foobar').toString('base64')
+        message: 'that does not make sense'
       })
   })
 })
