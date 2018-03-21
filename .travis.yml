@@ -17,7 +17,9 @@ before_script:
   - sleep 5
 
 deploy:
-  if: tag IS present
+  provider: script
+  on:
+    tags: true
   script:
     - docker login -u ubercadence -p $DOCKER_PASS
     - docker build . -t ubercadence/web:$TRAVIS_TAG
