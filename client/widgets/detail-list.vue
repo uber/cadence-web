@@ -23,6 +23,8 @@ export default {
           var key = prefix ? `${prefix}.${k}` : k
           if (value && typeof value === 'object') {
             flatten(key, value)
+          } else if (key === 'input' && typeof value === 'string') {
+            kvps.push({ key, value: atob(value) })
           } else {
             kvps.push({ key, value })
           }
