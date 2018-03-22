@@ -82,7 +82,7 @@ module.exports = async function(ctx, next) {
           retryFlags: { onConnectionError: true },
           retryLimit: Number(process.env.CADENCE_TCHANNEL_RETRY_LIMIT || 3)
         }).send(`WorkflowService::${method}`, {}, {
-          [`${reqName}Request`]: typeof bodyTransform === 'function' ? bodyTransform(body) : body
+          [`${reqName ? reqName + 'R' : 'r'}equest`]: typeof bodyTransform === 'function' ? bodyTransform(body) : body
         }, function (err, res) {
           try {
             if (err) {
@@ -118,8 +118,10 @@ module.exports = async function(ctx, next) {
     openWorkflows: req('ListOpenWorkflowExecutions', 'list', withDomainPaging),
     closedWorkflows: req('ListClosedWorkflowExecutions', 'list', withDomainPaging),
     getHistory: req('GetWorkflowExecutionHistory', 'get', b => Object.assign(withDomainPaging(b), withWorkflowExecution(b))),
+    describeWorkflow: req('DescribeWorkflowExecution', 'describe', withWorkflowExecution),
     queryWorkflow: req('QueryWorkflow', 'query', withWorkflowExecution),
-    describeDomain: req('DescribeDomain', 'describe')
+    describeDomain: req('DescribeDomain', 'describe'),
+    describeTaskList: req('DescribeTaskList'),
   }
 
   try {

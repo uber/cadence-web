@@ -34,6 +34,10 @@ async function listWorkflows(state, ctx) {
 router.get('/api/domain/:domain/workflows/open', listWorkflows.bind(null, 'open'))
 router.get('/api/domain/:domain/workflows/closed', listWorkflows.bind(null, 'closed'))
 
+router.get('/api/domain/:domain/workflows/:workflowId/:runId', async function (ctx) {
+  ctx.body = await ctx.cadence.describeWorkflow()
+})
+
 router.get('/api/domain/:domain/workflows/:workflowId/:runId/history', async function (ctx) {
   var q = ctx.query || {}
 
@@ -68,11 +72,34 @@ router.get('/api/domain/:domain/workflows/:workflowId/:runId/history', async fun
 })
 
 router.post('/api/domain/:domain/workflows/:workflowId/:runId/query/:queryType', async function (ctx) {
-  ctx.body = await ctx.cadence.queryWorkflow({
+  ctx.body = await ctx.cadence.describeWorkflow({
     query: {
       queryType: ctx.params.queryType
     }
   })
+})
+
+router.get('/api/domain/:domain/task-list/:taskList/pollers', async function (ctx) {
+  const descTaskList = async (taskListType) => (await ctx.cadence.describeTaskList({
+    domain: ctx.params.domain,
+    taskList: { name: ctx.params.taskList },
+    taskListType
+  })).pollers
+
+  const r = type => (o, poller) => {
+    let i = o[poller.identity] || {}
+    o[poller.identity] = {
+      lastAccessTime: !i.lastAccessTime || i.lastAccessTime < poller.lastAccessTime ?
+        poller.lastAccessTime : i.lastAccessTime,
+      taskListTypes: i.taskListTypes ? i.taskListTypes.concat([type]) : [type]
+    }
+    return o
+  }
+
+  const activityL = await descTaskList('Activity'),
+  decisionL = await descTaskList('Decision')
+
+  ctx.body = activityL.reduce(r('activity'), decisionL.reduce(r('decision'), {}))
 })
 
 router.get('/health', ctx => ctx.body = 'OK')
