@@ -1,12 +1,14 @@
 const
+  supertest = require('supertest'),
   TChannel = require('tchannel'),
   TChannelAsThrift = require('tchannel/as/thrift'),
   Long = require('long'),
   path = require('path')
 
-var tchanServer, currTest, client
+var tchanServer, currTest, client, app
 
 global.should = require('chai').should()
+global.dateToLong = d => Long.fromValue(Number(new Date(d))).mul(1000000)
 
 before(function(done) {
   tchanServer = new TChannel({ serviceName: 'cadence-frontend' })
@@ -49,11 +51,12 @@ before(function(done) {
   process.env.CADENCE_TCHANNEL_PEERS = '127.0.0.1:11343'
   tchanServer.listen(11343, '127.0.0.1', () => done())
 
-  global.app = require('../').init({ useWebpack: false, logErrors: false }).listen()
+  app = require('../').init({ useWebpack: false, logErrors: false }).listen()
+  global.request = supertest.bind(supertest, app)
 })
 
 after(function() {
-  global.app.close()
+  app.close()
   tchanServer.close()
   client.close()
 })

@@ -34,10 +34,6 @@ async function listWorkflows(state, ctx) {
 router.get('/api/domain/:domain/workflows/open', listWorkflows.bind(null, 'open'))
 router.get('/api/domain/:domain/workflows/closed', listWorkflows.bind(null, 'closed'))
 
-router.get('/api/domain/:domain/workflows/:workflowId/:runId', async function (ctx) {
-  ctx.body = await ctx.cadence.describeWorkflow()
-})
-
 router.get('/api/domain/:domain/workflows/:workflowId/:runId/history', async function (ctx) {
   var q = ctx.query || {}
 
@@ -72,11 +68,15 @@ router.get('/api/domain/:domain/workflows/:workflowId/:runId/history', async fun
 })
 
 router.post('/api/domain/:domain/workflows/:workflowId/:runId/query/:queryType', async function (ctx) {
-  ctx.body = await ctx.cadence.describeWorkflow({
+  ctx.body = await ctx.cadence.queryWorkflow({
     query: {
       queryType: ctx.params.queryType
     }
   })
+})
+
+router.get('/api/domain/:domain/workflows/:workflowId/:runId', async function (ctx) {
+  ctx.body = await ctx.cadence.describeWorkflow()
 })
 
 router.get('/api/domain/:domain/task-list/:taskList/pollers', async function (ctx) {

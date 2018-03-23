@@ -8,6 +8,14 @@
 </template>
 
 <script>
+function decodeIfNeeded(s) {
+  try {
+    return atob(s)
+  } catch() {
+    return s
+  }
+}
+
 export default {
   name: 'details-list',
   props: ['item'],
@@ -23,8 +31,8 @@ export default {
           var key = prefix ? `${prefix}.${k}` : k
           if (value && typeof value === 'object') {
             flatten(key, value)
-          } else if (key === 'input' && typeof value === 'string') {
-            kvps.push({ key, value: atob(value) })
+          } else if (typeof value === 'string') {
+            kvps.push({ key, value: decodeIfNeeded(value) })
           } else {
             kvps.push({ key, value })
           }

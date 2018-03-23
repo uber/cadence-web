@@ -1,6 +1,4 @@
-const
-  request = require('supertest'),
-  Long = require('long'),
+const Long = require('long'),
 
 wfHistoryThrift = [{
   eventId: new Long(1),
@@ -84,7 +82,7 @@ describe('Workflow History', function() {
       }
     }
 
-    return request(global.app)
+    return request()
       .get('/api/domain/canary/workflows/ci%2Fdemo/run1/history')
       .expect(200)
       .expect('Content-Type', /json/)
@@ -100,7 +98,7 @@ describe('Workflow History', function() {
       }
     }
 
-    return request(global.app)
+    return request()
       .get('/api/domain/canary/workflows/ci%2Fdemo/run1/history?nextPageToken=cGFnZTI%3D')
       .expect(200)
       .expect('Content-Type', /json/)
@@ -116,11 +114,11 @@ describe('Workflow History', function() {
       return { history: { events: [{ eventId: 1 }] } }
     }
 
-    return request(global.app)
+    return request()
       .get('/api/domain/canary/workflows/ci%2Fdemo/run1/history?waitForNewEvent=true')
       .expect(200)
       .expect('Content-Type', /json/)
-      .then(() =>  request(global.app)
+      .then(() =>  request()
         .get('/api/domain/canary/workflows/ci%2Fdemo/run1/history?waitForNewEvent')
         .expect(200)
       )
@@ -132,7 +130,7 @@ describe('Workflow History', function() {
       nextPageToken: new Buffer('page2')
     })
 
-    return request(global.app)
+    return request()
       .get('/api/domain/canary/workflows/ci%2Fdemo/run1/history')
       .expect(200)
       .expect({

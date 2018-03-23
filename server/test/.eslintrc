@@ -1,5 +1,10 @@
 {
 	"env": {
     "mocha": true
+  },
+  "globals": {
+    "app": true,
+    "request": true,
+    "dateToLong": true
   }
 }

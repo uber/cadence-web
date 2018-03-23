@@ -1,8 +1,3 @@
-const
-  request = require('supertest'),
-  Long = require('long'),
-  dateToLong = d => Long.fromValue(Number(new Date(d))).mul(1000000)
-
 describe('Task List Pollers', function() {
   it('should aggregate decision and activity pollers together by instance', function() {
     this.test.DescribeTaskList = ({ request }) => {
@@ -26,7 +21,7 @@ describe('Task List Pollers', function() {
       }
     }
 
-    return request(global.app)
+    return request()
       .get('/api/domain/canary/task-list/demo-task-list/pollers')
       .expect(200)
       .expect('Content-Type', /json/)
