@@ -11,7 +11,7 @@
 function decodeIfNeeded(s) {
   try {
     return atob(s)
-  } catch() {
+  } catch(e) {
     return s
   }
 }

@@ -13,6 +13,7 @@ export default {
 
 loader.bar
   display inline-block
+  flex 0 0 auto
   > div
     display inline-block
     vertical-align middle

@@ -22,6 +22,7 @@
 
 <script>
 import debounce from 'lodash-es/debounce'
+import omit from 'lodash-es/omit'
 import { stringify } from 'friendly-querystring'
 
 const validationMessages = {
@@ -58,7 +59,7 @@ export default {
       if (this.validation === 'valid') {
         this.$router.push({
           path: `/domain/${this.d}/workflows`,
-          query: this.$router.currentRoute.query
+          query: omit(this.$router.currentRoute.query, 'workflowId', 'runId', 'workflowName')
         })
         this.recordDomain(this.d)
         this.$emit('navigate', this.d)

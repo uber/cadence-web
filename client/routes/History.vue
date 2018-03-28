@@ -1,22 +1,58 @@
 <template>
   <section :class="{ history: true, loading, 'has-results': !!this.results.length }">
-    <header class="criteria">
-      <div class="field workflow-id">
-        <input type="text"
-          placeholder=" "
-          name="workflowId"
-          v-bind:value="$route.query.workflowId"
-          @input="debouncedSetQuery" />
-          <label for="workflowId">Workflow ID</label>
+    <header>
+      <div class="criteria" v-if="editing">
+        <div class="field workflow-id">
+          <input type="text"
+            placeholder=" "
+            name="workflowId"
+            v-bind:value="$route.query.workflowId"
+            @input="debouncedSetQuery" />
+            <label for="workflowId">Workflow ID</label>
+        </div>
+        <div class="field run-id">
+          <input type="text"
+            placeholder=" "
+            name="runId"
+            v-bind:value="$route.query.runId"
+            @input="debouncedSetQuery" />
+            <label for="runId">Run ID</label>
+        </div>
       </div>
-      <div class="field run-id">
-        <input type="text"
-          placeholder=" "
-          name="runId"
-          v-bind:value="$route.query.runId"
-          @input="debouncedSetQuery" />
-          <label for="runId">Run ID</label>
+      <dl v-if="!editing">
+        <div class="workflow-name" v-if="results[0]">
+          <dt>Workflow Name</dt>
+          <dd>{{results[0].details.workflowType.name}}</dd>
+        </div>
+        <div class="started-at" v-if="results[0]">
+          <dt>Started At</dt>
+          <dd>{{results[0].timestamp.format('llll')}}</dd>
+        </div>
+        <div class="workflow-status" v-if="results[0]">
+          <dt>Status</dt>
+          <dd><bar-loader v-if="isWorkflowRunning" /> {{workflowStatus()}}</dd>
+        </div>
+        <div class="workflow-id" v-if="false">
+          <dt>Workflow Id</dt>
+          <dd>{{$route.query.workflowId}}</dd>
+        </div>
+        <div class="run-id">
+          <dt>Run Id</dt>
+          <dd>{{$route.query.runId}}</dd>
+        </div>
+        <div class="started-at" v-if="results[0]">
+          <dt>Task List</dt>
+          <dd>{{results[0].details.taskList.name}}</dd>
+        </div>
+      </dl>
+      <div class="workflow-input" v-if="results[0]">
+        <pre>{{fmtInput()}}</pre>
       </div>
+      <nav>
+        <a href="" class="history router-link-active">History</a>
+        <a href="" class="pollers">Pollers</a>
+        <a href="" class="stack-trace">Stack Trace</a>
+      </nav>
     </header>
     <header class="controls">
       <div class="view-format">
@@ -26,10 +62,8 @@
           <a href="#" class="grid" @click.prevent="setFormat('grid')" :class="format === 'grid' ? 'active' : ''">Grid</a>
           <a href="#" class="json" @click.prevent="setFormat('json')" :class="format === 'json' ? 'active' : ''">JSON</a>
         </div>
-        <span class="is-running" :data-is-running="JSON.stringify(isWorkflowRunning)"><bar-loader /></span>
       </div>
       <div class="actions">
-        <a href="#" class="stack-trace" @click="viewStackTrace" v-if="isWorkflowRunning">Stack Trace</a>
         <a href="#" class="export" @click="exportResults">Export</a>
       </div>
     </header>
@@ -50,7 +84,7 @@
           <th>Details</th>
         </thead>
         <tbody>
-          <tr v-for="he in results">
+          <tr v-for="he in results" :data-event-type="he.eventType">
             <td>{{he.eventId}}</td>
             <td>{{he.eventType}}</td>
             <td>{{he.timestamp.toISOString()}}</span>
@@ -90,6 +124,7 @@ export default pagedGrid({
     return {
       loading: false,
       error: undefined,
+      editing: !this.$route.query.workflowId || !this.$route.query.runId,
       nextPageToken: undefined,
       results: [],
       isWorkflowRunning: undefined,
@@ -145,7 +180,24 @@ export default pagedGrid({
         })
 
       return hierarchy
-    }
+    }/*,
+    headerProps() {
+      var execStarted = this.results[0]
+      if (!execStarted || !execStarted.details) {
+        return []
+      }
+
+      return [{
+        name: 'Workflow Name',
+        value: execStarted.details.workflowType.name
+      }, {
+        name: 'Started At',
+        value: moment(execStarted.ts).format('lll')
+      }, {
+        name: 'Started At',
+        value: moment(execStarted.ts).format('lll')
+      }]
+    }*/
   },
   methods: {
     fetch(pagedQueryUrl) {
@@ -222,6 +274,23 @@ export default pagedGrid({
         .replace(/[pt]/g, '')
         .replace(/([hmd])/g, '$1 ')
         .replace('0d ', '')
+    },
+    workflowStatus() {
+      if (!this.results.length) return ''
+      if (this.isWorkflowRunning) return 'Running'
+
+      var lastEventType = this.results[this.results.length - 1].eventType
+      if (!lastEventType || !lastEventType.startsWith('WorkflowExecution')) {
+        return 'Unknown'
+      }
+      return lastEventType.replace('WorkflowExecution', '')
+    },
+    fmtInput() {
+      try {
+        return atob(this.results[0].details.input)
+      } catch(e) {
+        return (this.results[0] && results[0].details.input) || ''
+      }
     }
   },
   components: {
@@ -235,10 +304,7 @@ export default pagedGrid({
 
 section.history
   > header
-    padding inline-spacing-large
     flex-wrap wrap
-    a
-      action-button()
     .field
       flex 1 1 auto
     &.controls
@@ -248,14 +314,69 @@ section.history
         align-items center
         & > *
           margin inline-spacing-small
-    .view-formats
+  > header:first-child
+    background-color uber-black
+    color base-ui-color
+    padding 0 inline-spacing-large
+    dl
       display flex
+      flex-wrap wrap
+      & > div
+        margin 0.3em 0.5em
+        flex 3 3 auto
+        &.run-id
+          flex 1 1 auto
+        dt, dd
+          display block
+        dt
+          text-transform uppercase
+          font-size 11px
+          color uber-black-60
+        dd
+          one-liner-ellipsis()
+          line-height 1.3em
+          font-size 16px
+    .workflow-input
+      superlabel()
+      margin-top 0.5em
+      flex 1 1 auto
+      min-width 0
+      &::before
+        top (1 - inline-spacing-small)
+        left inline-spacing-small
+        content 'input'
+      pre
+        margin inline-spacing-small
+        padding inline-spacing-small
+        border 1px solid uber-black-60
+        background-color uber-black-80
+        max-height 90px
+    nav
+      display flex
+      width 100%
+      margin 1em 0 0 0
       a
-        flex 0 0 auto
-        margin 0
-        text-transform none
-        &.active
-          background-color darken(uber-blue, 20%)
+        text-transform uppercase
+        padding 12px 16px
+        border-bottom 4px solid transparent
+        font-weight 500
+        &.router-link-active
+          border-bottom 4px solid uber-blue
+        &:hover, &.router-link-active
+          color uber-blue
+
+  header.controls
+    padding inline-spacing-large
+    a
+      action-button()
+  .view-formats
+    display flex
+    a
+      flex 0 0 auto
+      margin 0
+      text-transform none
+      &.active
+        background-color darken(uber-blue, 20%)
 
   paged-grid()
 
@@ -269,13 +390,19 @@ section.history
     icon-download()
   a.stack-trace
     icon-trips()
+  a.history
+    icon-history()
+  a.pollers
+    icon-cloud()
 
-  [data-modal="stack-trace"]
-    pre
-      padding inline-spacing-small
-      border 1px solid uber-black-60
-      background-color uber-white-20
-      flex 1 1 auto
+  section pre
+    border 1px solid uber-black-60
+    background-color uber-white-20
+    overflow auto
+
+  [data-modal="stack-trace"] pre
+    padding inline-spacing-small
+    flex 1 1 auto
 
   span.is-running
     &:not([data-is-running="true"]) loader.bar
@@ -293,12 +420,12 @@ section.history
   table
     td:nth-child(3)
       one-liner-ellipsis()
+    tr[data-event-type*="Failed"] td
+      &:first-child, &:nth-child(2)
+        color uber-orange
   section.results pre
     margin layout-spacing-small
     padding layout-spacing-small
-    border 1px solid uber-black-60
-    background-color uber-white-40
-    overflow auto
   .compact-view
     padding layout-spacing-small
     & > .event-node

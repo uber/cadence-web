@@ -41,16 +41,15 @@ export default {
   <main @click="globalClick">
     <header class="top-bar">
       <a href="/" class="uber-icon"><h2>Cadence</h2></a>
-      <nav v-if="$route.params.domain">
-        <router-link class="workflows" :to="{ name: 'workflows' }">Workflows</router-link>
-        <router-link class="history" :to="{ name: 'history' }">History</router-link>
-      </nav>
       <div class="domain" v-if="$route.params.domain" ref="domain">
-        <span v-if="!editing" @click="edit">{{!editing && $route.params.domain}}</span>
+        <span @click="edit">{{editing ? '' : $route.params.domain}}</span>
         <domain-navigate v-if="editing"
           @navigate="clearEdit"
           @cacnel="clearEdit"
         />
+      </div>
+      <div class="workflow-id" v-if="$route.query.workflowId && !editing">
+        <span>{{$route.query.workflowId}}</span>
       </div>
     </header>
     <router-view></router-view>
@@ -86,22 +85,12 @@ header.top-bar
     text-transform uppercase
     h2
       color uber-white-80
-  nav
-    display inline-flex
-    align-items stretch
-    height top-nav-height
-    a
-      color white
-      font-weight 500
-      padding page-margin-y inline-spacing-large
-      border-top 4px solid transparent
-      &.router-link-active
-        border-top 4px solid uber-blue
-      &:hover, &.router-link-active
-        color uber-blue
+  spacing = 1.3em
+  & > div
+    margin-right spacing
   div.domain
-    position absolute
-    right page-margin-x
+    display flex
+    align-items center
     span, input
       font-size 16px
       font-weight 200
@@ -132,15 +121,26 @@ header.top-bar
     span
       cursor pointer
       transition smooth-transition
+      color uber-blue
       &:hover
-        color uber-blue
+        color lighten(uber-blue, 15%)
       &::before
         content 'DOMAIN'
-        font-size 9px
-        font-weight normal
-        vertical-align middle
-        color uber-white-40
-        margin-right 1.3em
+  & > div > span::before
+    content 'DOMAIN'
+    font-size 9px
+    font-weight normal
+    vertical-align middle
+    color uber-white-40
+    margin-right spacing
+  div.workflow-id
+    icon('\ea5b')
+    &::before
+      display inline-block
+      transform scale(1.5)
+      margin-right spacing
+    span::before
+      content 'WORKFLOW ID'
 
 body, main
   height 100%
