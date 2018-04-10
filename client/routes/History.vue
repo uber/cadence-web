@@ -293,12 +293,9 @@ section.history
   table
     td:nth-child(3)
       one-liner-ellipsis()
-  section.results pre
+  section.results pre.json
     margin layout-spacing-small
     padding layout-spacing-small
-    border 1px solid uber-black-60
-    background-color uber-white-40
-    overflow auto
   .compact-view
     padding layout-spacing-small
     & > .event-node

@@ -20,6 +20,11 @@ function transform(item) {
         item[subkey] = m.toISOString()
       }
     } else if (Buffer.isBuffer(subvalue)) {
+      if (subkey === 'nextPageToken') {
+        item.nextPageToken = subvalue.toString('base64')
+        return
+      }
+
       let stringval = subvalue.toString('utf8')
       try {
         // most of Cadence's uses of buffer is just line-delimited JSON.
@@ -29,9 +34,7 @@ function transform(item) {
         }
       } catch(e) {
         item[subkey] = subvalue.toString('base64')
-        if (subkey !== 'nextPageToken') {
-          item[`${subkey}_utf8`] = stringval
-        }
+        item[`${subkey}_utf8`] = stringval
       }
     } else if (Array.isArray(subvalue)) {
       subvalue.forEach(transform)

@@ -52,7 +52,7 @@ export default {
           taskList: {
             name: 'ci-task-queue'
           },
-          input: btoa('839134\n{"Env":"prod"}'),
+          input:[839134, { env: "prod" }],
           executionStartToCloseTimeoutSeconds: 360,
           taskStartToCloseTimeoutSeconds: 180
         }

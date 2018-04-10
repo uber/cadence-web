@@ -222,16 +222,18 @@ describe('History', function() {
       )
     })
 
-    it('should show details as flattened key-value pairs from parsed json', async function () {
+    it('should show details as flattened key-value pairs from parsed json, except for result and input', async function () {
       var [historyEl, scenario] = await historyTest(this.test),
-          startDetails = await historyEl.waitUntilExists('.results tbody tr:first-child td:nth-child(5)')
+          startDetails = await historyEl.waitUntilExists('.results tbody tr:first-child td:nth-child(5)'),
+          inputPreText = JSON.stringify(fixtures.history.emailRun1[0].details.input, null, 2)
 
       startDetails.textNodes('dl.details dt').should.deep.equal([
         'workflowType.name', 'taskList.name', 'input', 'executionStartToCloseTimeoutSeconds', 'taskStartToCloseTimeoutSeconds'
       ])
       startDetails.textNodes('dl.details dd').should.deep.equal([
-        'email-daily-summaries', 'ci-task-queue', '839134\n{Env:prod}', '360', '180'
+        'email-daily-summaries', 'ci-task-queue', inputPreText, '360', '180'
       ])
+      startDetails.textNodes('dl.details dd pre').should.deep.equal([inputPreText])
     })
 
 
