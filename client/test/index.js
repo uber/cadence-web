@@ -20,7 +20,8 @@ document.head.appendChild(mochaCss)
 var extraStyling = document.createElement('style')
 extraStyling.setAttribute('type', 'text/css')
 extraStyling.textContent = `
-#mocha li:nth-child(2n) {
+#mocha li:nth-child(2n),
+#mocha pre {
   background: none;
 }
 

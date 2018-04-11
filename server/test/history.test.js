@@ -13,7 +13,10 @@ wfHistoryThrift = [{
       kind: null
     },
     identity: null,
-    input: null,
+    input: Buffer.from(JSON.stringify({
+      emails: ['jane@example.com', 'bob@example.com'],
+      includeFooter: true
+    })),
     taskStartToCloseTimeoutSeconds: 30,
     executionStartToCloseTimeoutSeconds: 1080
   }
@@ -44,7 +47,12 @@ wfHistoryJson = [{
   eventId: 1,
   timestamp: '2017-11-14T23:24:10.351Z',
   eventType: 'WorkflowExecutionStarted',
-  details: wfHistoryThrift[0].workflowExecutionStartedEventAttributes
+  details: Object.assign({}, wfHistoryThrift[0].workflowExecutionStartedEventAttributes, {
+    input: {
+      emails: ['jane@example.com', 'bob@example.com'],
+      includeFooter: true
+    }
+  })
 }, {
   eventId: 2,
   timestamp: '2017-11-14T23:24:10.351Z',
@@ -124,7 +132,7 @@ describe('Workflow History', function() {
       )
   })
 
-  it('should transform Long numbers to JavaScript numbers, and Long dates to ISO date strings', function() {
+  it('should transform Long numbers to JavaScript numbers, Long dates to ISO date strings, and line-delimited JSON buffers to JSON', function() {
     this.test.GetWorkflowExecutionHistory = ({ getRequest }) => ({
       history: { events: wfHistoryThrift },
       nextPageToken: new Buffer('page2')

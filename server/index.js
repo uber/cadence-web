@@ -38,7 +38,8 @@ app.init = function(options) {
   .use(useWebpack ?
     koaWebpack({
       compiler,
-      dev: { stats: { colors: true } }
+      dev: { stats: { colors: true } },
+      hot: { port: process.env.TEST_RUN ? 8082 : 8081 }
     }) :
     require('koa-static')(staticRoot))
   .use(router.routes())

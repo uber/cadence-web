@@ -258,7 +258,7 @@ export default pagedGrid({
     viewStackTrace() {
       var domain = this.$route.params.domain, q = this.$route.query || {}
       this.$http.post(`/api/domain/${this.$route.params.domain}/workflows/${encodeURIComponent(q.workflowId)}/${encodeURIComponent(q.runId)}/query/__stack_trace`).then(({ queryResult }) => {
-        this.stackTrace = JSON.parse(atob(queryResult))
+        this.stackTrace = queryResult
         this.stackTraceTimestamp = moment()
         this.$modal.show('stack-trace')
       }).catch(e => this.stackTrace = new Error(e))
@@ -420,10 +420,17 @@ section.history
   table
     td:nth-child(3)
       one-liner-ellipsis()
-    tr[data-event-type*="Failed"] td
-      &:first-child, &:nth-child(2)
+    tr[data-event-type*="Started"] td:nth-child(2)
+      color uber-blue-120
+    tr[data-event-type*="Failed"]
+      td:nth-child(2)
         color uber-orange
-  section.results pre
+      td:nth-child(5) div
+        &[data-prop="reason"] dd, &[data-prop="details"] dd
+          color uber-orange
+    tr[data-event-type*="Completed"] td:nth-child(2)
+      color uber-green
+  section.results pre.json
     margin layout-spacing-small
     padding layout-spacing-small
   .compact-view

@@ -46,12 +46,13 @@ describe('Workflow Execution', function() {
         return { queryResult: Buffer.from('foobar') }
       }
 
-      return request()
+      return request(global.app)
         .post('/api/domain/canary/workflows/ci%2Fdemo/run1/query/state')
         .expect(200)
         .expect('Content-Type', /json/)
         .expect({
-          queryResult: Buffer.from('foobar').toString('base64')
+          queryResult: 'foobar',
+          queryResult_base64: Buffer.from('foobar').toString('base64')
         })
     })
 

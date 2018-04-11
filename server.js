@@ -1,5 +1,5 @@
 var app = require('./server/index'),
-    port = port = Number(process.env.CADENCE_WEB_PORT) || 8088,
+    port = Number(process.env.CADENCE_WEB_PORT) || 8088,
     production = process.env.NODE_ENV === 'production'
 
 app.init().listen(port)
