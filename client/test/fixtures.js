@@ -104,7 +104,7 @@ export default {
           taskList: {
             name: 'ci-task-queue'
           },
-          input: btoa('12345\n"bob@example.com"\n"jane@somewhere.com"'),
+          input: [12345, ["bob@example.com", "jane@somewhere.com"]],
           scheduleToCloseTimeoutSeconds: 360,
           scheduleToStartTimeoutSeconds: 180,
           startToCloseTimeoutSeconds: 180,

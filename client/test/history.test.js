@@ -114,7 +114,7 @@ describe('History', function() {
 
     stackTrace.should.have.trimmed.text('Stack Trace')
     scenario.api.post('/api/domain/ci-test/workflows/long-running-op-2/theRunId/query/__stack_trace', {
-      queryResult: btoa(JSON.stringify('goroutine 1:\n\tat foo.go:56'))
+      queryResult: 'goroutine 1:\n\tat foo.go:56'
     })
     stackTrace.trigger('click')
 
