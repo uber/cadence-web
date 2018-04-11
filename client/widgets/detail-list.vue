@@ -1,20 +1,5 @@
-<template>
-  <dl class="details">
-    <div v-for="kvp in kvps">
-      <dt>{{kvp.key}}</dt>
-      <dd>{{format(kvp.value)}}</dd>
-    </div>
-  </dl>
-</template>
-
 <script>
-function decodeIfNeeded(s) {
-  try {
-    return atob(s)
-  } catch(e) {
-    return s
-  }
-}
+const jsonKeys = ['result', 'input']
 
 export default {
   name: 'details-list',
@@ -29,11 +14,9 @@ export default {
       function flatten(prefix, obj) {
         Object.entries(obj).forEach(([k, value]) => {
           var key = prefix ? `${prefix}.${k}` : k
-          if (value && typeof value === 'object') {
+          if (value && typeof value === 'object' && !jsonKeys.includes(key)) {
             flatten(key, value)
-          } else if (typeof value === 'string') {
-            kvps.push({ key, value: decodeIfNeeded(value) })
-          } else {
+          } else if (value) {
             kvps.push({ key, value })
           }
         })
@@ -47,6 +30,14 @@ export default {
     format(val) {
       return val == null ? '' : (String(val) || '""')
     }
+  },
+  render(h) {
+    return h('dl', { class: 'details' }, this.kvps.map(kvp => h('div', null, [
+      h('dt', null, kvp.key),
+      h('dd', null, typeof kvp.value === 'object' ?
+        [h('pre', null, JSON.stringify(kvp.value, null, 2))] :
+        kvp.value)
+    ])))
   }
 }
 </script>

@@ -23,7 +23,8 @@ describe('Query Workflow', function() {
       .expect(200)
       .expect('Content-Type', /json/)
       .expect({
-        queryResult: Buffer.from('foobar').toString('base64')
+        queryResult: 'foobar',
+        queryResult_base64: Buffer.from('foobar').toString('base64')
       })
   })
 

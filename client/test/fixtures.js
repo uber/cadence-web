@@ -52,7 +52,7 @@ export default {
           taskList: {
             name: 'ci-task-queue'
           },
-          input: btoa('839134\n{Env:prod}'),
+          input:[839134, { env: "prod" }],
           executionStartToCloseTimeoutSeconds: 360,
           taskStartToCloseTimeoutSeconds: 180
         }
@@ -104,7 +104,7 @@ export default {
           taskList: {
             name: 'ci-task-queue'
           },
-          input: btoa('12345\n{SliceVal:[bob@example.com,jane@somewhere.com]}'),
+          input: [12345, ["bob@example.com", "jane@somewhere.com"]],
           scheduleToCloseTimeoutSeconds: 360,
           scheduleToStartTimeoutSeconds: 180,
           startToCloseTimeoutSeconds: 180,

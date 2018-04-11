@@ -30,7 +30,7 @@ describe('Listing Workflows', function() {
       should.not.exist(listRequest.typeFilter)
       return {
         executions: [demoExecThrift],
-        nextPageToken: new Buffer('opentoken')
+        nextPageToken: new Buffer('{"IsWorkflowRunning":true,NextEventId:37}')
       }
     }
 
@@ -40,7 +40,7 @@ describe('Listing Workflows', function() {
       .expect('Content-Type', /json/)
       .expect({
         executions: [demoExecJson],
-        nextPageToken: 'b3BlbnRva2Vu'
+        nextPageToken: 'eyJJc1dvcmtmbG93UnVubmluZyI6dHJ1ZSxOZXh0RXZlbnRJZDozN30='
       })
   })
 
@@ -53,7 +53,7 @@ describe('Listing Workflows', function() {
       should.not.exist(listRequest.typeFilter)
       return {
         executions: [demoExecThrift],
-        nextPageToken: new Buffer('closetoken')
+        nextPageToken: new Buffer('{"IsWorkflowRunning":false}')
       }
     }
 
@@ -63,7 +63,7 @@ describe('Listing Workflows', function() {
       .expect('Content-Type', /json/)
       .expect({
         executions: [demoExecJson],
-        nextPageToken: 'Y2xvc2V0b2tlbg=='
+        nextPageToken: 'eyJJc1dvcmtmbG93UnVubmluZyI6ZmFsc2V9'
       })
   })
 
