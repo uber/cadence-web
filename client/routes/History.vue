@@ -50,7 +50,7 @@
           <th>Details</th>
         </thead>
         <tbody>
-          <tr v-for="he in results">
+          <tr v-for="he in results" :data-event-type="he.eventType">
             <td>{{he.eventId}}</td>
             <td>{{he.eventType}}</td>
             <td>{{he.timestamp.toISOString()}}</span>
@@ -293,6 +293,16 @@ section.history
   table
     td:nth-child(3)
       one-liner-ellipsis()
+    tr[data-event-type*="Started"] td:nth-child(2)
+      color uber-blue-120
+    tr[data-event-type*="Failed"]
+      td:nth-child(2)
+        color uber-orange
+      td:nth-child(5) div
+        &[data-prop="reason"] dd, &[data-prop="details"] dd
+          color uber-orange
+    tr[data-event-type*="Completed"] td:nth-child(2)
+      color uber-green
   section.results pre.json
     margin layout-spacing-small
     padding layout-spacing-small
