@@ -33,8 +33,8 @@ function transform(item) {
           item[subkey] = item[subkey][0]
         }
       } catch(e) {
-        item[subkey] = subvalue.toString('base64')
-        item[`${subkey}_utf8`] = stringval
+        item[`${subkey}_base64`] = subvalue.toString('base64')
+        item[subkey] = stringval
       }
     } else if (Array.isArray(subvalue)) {
       subvalue.forEach(transform)

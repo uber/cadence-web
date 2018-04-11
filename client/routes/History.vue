@@ -206,7 +206,7 @@ export default pagedGrid({
     viewStackTrace() {
       var domain = this.$route.params.domain, q = this.$route.query || {}
       this.$http.post(`/api/domain/${this.$route.params.domain}/workflows/${encodeURIComponent(q.workflowId)}/${encodeURIComponent(q.runId)}/query/__stack_trace`).then(({ queryResult }) => {
-        this.stackTrace = JSON.parse(atob(queryResult))
+        this.stackTrace = queryResult
         this.stackTraceTimestamp = moment()
         this.$modal.show('stack-trace')
       }).catch(e => this.stackTrace = new Error(e))
