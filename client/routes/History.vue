@@ -79,16 +79,14 @@
         <thead>
           <th>ID</th>
           <th>Type</th>
-          <th>Timestamp</th>
           <th>Elapsed</th>
           <th>Details</th>
         </thead>
         <tbody>
-          <tr v-for="he in results" :data-event-type="he.eventType">
+          <tr v-for="(he, i) in results" :data-event-type="he.eventType">
             <td>{{he.eventId}}</td>
             <td>{{he.eventType}}</td>
-            <td>{{he.timestamp.toISOString()}}</span>
-            <td>{{elapsed(he.timestamp)}} </td>
+            <td>{{timeCol(he.timestamp, i)}} </td>
             <td><details-list :item="he.details" /></td>
           </tr>
         </tbody>
@@ -117,6 +115,14 @@
 import moment from 'moment'
 import pagedGrid from '../paged-grid'
 import eventNode from './event-node.vue'
+
+function fmtduration(d) {
+  return d.toString().toLowerCase()
+    .replace(/[pt]/g, '')
+    .replace(/([hmd])/g, '$1 ')
+    .replace(/\.\d{1,3}s/, 's')
+    .replace('0d ', '')
+}
 
 export default pagedGrid({
   data() {
@@ -268,13 +274,6 @@ export default pagedGrid({
         query: Object.assign({}, this.$route.query, { format })
       })
     },
-    elapsed(ts) {
-      return moment.duration(ts - this.results[0].timestamp)
-        .toString().toLowerCase()
-        .replace(/[pt]/g, '')
-        .replace(/([hmd])/g, '$1 ')
-        .replace('0d ', '')
-    },
     workflowStatus() {
       if (!this.results.length) return ''
       if (this.isWorkflowRunning) return 'Running'
@@ -285,12 +284,18 @@ export default pagedGrid({
       }
       return lastEventType.replace('WorkflowExecution', '')
     },
-    fmtInput() {
-      try {
-        return atob(this.results[0].details.input)
-      } catch(e) {
-        return (this.results[0] && results[0].details.input) || ''
+    timeCol(ts, i) {
+      if (i === 0) {
+        return ts.format('MMM Do h:mm:ss a')
       }
+
+      let deltaFromPrev = moment.duration(ts - this.results[i - 1].timestamp),
+          elapsed = fmtduration(moment.duration(ts - this.results[0].timestamp))
+
+      if (deltaFromPrev.asSeconds() >= 1) {
+        elapsed += ` (+${fmtduration(deltaFromPrev)})`
+      }
+      return elapsed
     }
   },
   components: {
