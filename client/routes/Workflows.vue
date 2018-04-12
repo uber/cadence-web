@@ -47,7 +47,7 @@
         <tbody>
           <tr v-for="wf in results">
             <td>{{wf.workflowId}}</td>
-            <td><a :href="historyLinkFor(wf)">{{wf.runId}}</a></td>
+            <td><router-link :to="{ name: 'execution/summary', params: { runId: wf.runId, workflowId: wf.workflowId }}">{{wf.runId}}</router-link></td>
             <td>{{wf.workflowName}}</td>
             <td :class="wf.status">{{wf.status}}</td>
             <td>{{wf.startTime}}</td>

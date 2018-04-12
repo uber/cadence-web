@@ -1,21 +1,9 @@
 <script>
-import domainNav from './widgets/domain-navigate.vue'
-
 export default {
   data () {
-    return {
-      domain: '',
-      editing: false
-    }
+    return {}
   },
   methods: {
-    clearEdit() {
-      this.editing = false
-    },
-    edit() {
-      this.editing = true
-      setTimeout(() => this.$refs.domain.querySelector('input').focus(), 10)
-    },
     globalClick(e) {
       if (this.editing && !this.$refs.domain.contains(e.target)) {
         this.clearEdit()
@@ -30,9 +18,6 @@ export default {
         }
       }
     }
-  },
-  components: {
-    'domain-navigate': domainNav
   }
 }
 </script>
@@ -41,12 +26,8 @@ export default {
   <main @click="globalClick">
     <header class="top-bar">
       <a href="/" class="uber-icon"><h2>Cadence</h2></a>
-      <div class="domain" v-if="$route.params.domain" ref="domain">
-        <span @click="edit">{{editing ? '' : $route.params.domain}}</span>
-        <domain-navigate v-if="editing"
-          @navigate="clearEdit"
-          @cacnel="clearEdit"
-        />
+      <div class="domain" v-if="$route.params.domain">
+        <a :href="`/domain/${$route.params.domain}/workflows`" :class="{'router-link-active': $route.path === `/domain/${$route.params.domain}/workflows`}">{{$route.params.domain}}</a>
       </div>
       <div class="workflow-id" v-if="$route.query.workflowId && !editing">
         <span>{{$route.query.workflowId}}</span>
@@ -82,57 +63,35 @@ header.top-bar
     padding page-margin-y inline-spacing-large page-margin-y 0
   a
     display inline-block
-    text-transform uppercase
     h2
       color uber-white-80
   spacing = 1.3em
   & > div
     margin-right spacing
   div.domain
-    display flex
-    align-items center
-    span, input
-      font-size 16px
-      font-weight 200
-    input
-      background-color alpha(white, 10%)
-      color inverted-text-color
-    .validation
-      display none
-    ul.recent-domains
-      position absolute
-      top 100%
-      width 100%
-      left inline-spacing-medium
-      background-color uber-black
-      border 1px solid uber-black-80
-      z-index 5
-      h3
-        font-size 11px
-        text-transform uppercase
-        font-weight 500
-        padding 8px
-      a
-        line-height 2em
-        padding 0 inline-spacing-small
-        text-transform none
-      li:nth-child(2n)
-        background-color rgba(255,255,255,0.1)
+    &::before
+      content 'DOMAIN'
+      font-size 9px
+      font-weight normal
+      vertical-align middle
+      color uber-white-40
+      margin-right spacing
+    a:hover
+      color lighten(uber-blue, 15%)
+    .router-link-active
+      pointer-events none
+    // display flex
+    // align-items center
+    // span, input
+    //   font-size 16px
+    //   font-weight 200
+    // input
+    //   background-color alpha(white, 10%)
+    //   color inverted-text-color
     span
       cursor pointer
       transition smooth-transition
       color uber-blue
-      &:hover
-        color lighten(uber-blue, 15%)
-      &::before
-        content 'DOMAIN'
-  & > div > span::before
-    content 'DOMAIN'
-    font-size 9px
-    font-weight normal
-    vertical-align middle
-    color uber-white-40
-    margin-right spacing
   div.workflow-id
     icon('\ea5b')
     &::before

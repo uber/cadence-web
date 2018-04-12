@@ -5,6 +5,7 @@ import vueSelect from 'vue-select'
 import vueModal from 'vue-js-modal'
 import qs from 'friendly-querystring'
 import http from './http'
+import moment from 'moment'
 
 import DateRangePicker from './widgets/date-range-picker.vue'
 import detailList from './widgets/detail-list.vue'
@@ -15,7 +16,9 @@ import snapscroll from './directives/snapscroll'
 import App from './App.vue'
 import Intro from './routes/Intro.vue'
 import Workflows from './routes/Workflows.vue'
+import Execution from './routes/Execution.vue'
 import History from './routes/History.vue'
+import ExecutionSummary from './routes/ExecutionSummary.vue'
 
 const routes = [{
   path: '/',
@@ -25,19 +28,31 @@ const routes = [{
   path: '/domain/:domain/workflows',
   component: Workflows
 }, {
-  name: 'history',
-  path: '/domain/:domain/history',
-  component: History,
-  props: ({ query }) => ({
-    format: query.format || 'compact'
-  })
+  name: 'execution',
+  path: '/domain/:domain/workflows/:workflowId/:runId',
+  component: Execution,
+  children: [{
+    name: 'execution/summary',
+    path: '/domain/:domain/workflows/:workflowId/:runId/summary',
+    component: ExecutionSummary
+  }, {
+    name: 'execution/history',
+    path: '/domain/:domain/workflows/:workflowId/:runId/history',
+    component: History,
+    props: ({ query }) => ({
+      format: query.format || 'grid'
+    })
+  }]
 }]
 
 const router = new Router({
   mode: 'history',
   routes,
   parseQuery: qs.parse.bind(qs),
-  stringifyQuery: q => `?${qs.stringify(q)}`,
+  stringifyQuery: query => {
+    let q = qs.stringify(query)
+    return q ? '?' + q : ''
+  },
 })
 
 Object.getPrototypeOf(router).replaceQueryParam = function(prop, val) {
@@ -56,6 +71,7 @@ JSON.tryParse = function() {
 
 Vue.mixin({
   created: function () {
+    this.$moment = moment
     if (typeof Scenario === 'undefined') {
       this.$http = http.global
     } else if (this.$parent && this.$parent.$http) {
