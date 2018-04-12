@@ -207,24 +207,23 @@ describe('History', function() {
       var [historyEl, scenario] = await historyTest(this.test)
       await historyEl.waitUntilExists('.results tbody tr:nth-child(4)')
 
-      historyEl.textNodes('table thead th').should.deep.equal(['ID', 'Type', 'Timestamp', 'Elapsed', 'Details'])
+      historyEl.textNodes('table thead th').should.deep.equal(['ID', 'Type', 'Elapsed', 'Details'])
       historyEl.textNodes('table tbody td:nth-child(1)').should.deep.equal(
         new Array(12).fill('').map((_, i) => String(i + 1))
       )
       historyEl.textNodes('table tbody td:nth-child(2)').slice(0, 3).should.deep.equal([
         'WorkflowExecutionStarted', 'DecisionTaskScheduled', 'DecisionTaskStarted'
       ])
-      historyEl.textNodes('table tbody td:nth-child(3)').should.deep.equal(
-        fixtures.history.emailRun1.map(e => e.timestamp)
-      )
-      historyEl.textNodes('table tbody td:nth-child(4)').should.deep.equal(
-        ['', '', '', '1s', '2s', '3s', '8s', '19s', '30s', '41s', '52s', '1m 4s']
-      )
+      historyEl.textNodes('table tbody td:nth-child(3)').should.deep.equal([
+        moment(fixtures.history.emailRun1[0].timestamp).format('MMM Do h:mm:ss a'),
+        '', '', '1s (+1s)', '2s (+1s)', '3s (+1s)', '8s (+5s)', '19s (+11s)',
+        '30s (+11s)', '41s (+11s)', '52s (+11s)', '1m 4s (+12s)'
+      ])
     })
 
     it('should show details as flattened key-value pairs from parsed json, except for result and input', async function () {
       var [historyEl, scenario] = await historyTest(this.test),
-          startDetails = await historyEl.waitUntilExists('.results tbody tr:first-child td:nth-child(5)'),
+          startDetails = await historyEl.waitUntilExists('.results tbody tr:first-child td:nth-child(4)'),
           inputPreText = JSON.stringify(fixtures.history.emailRun1[0].details.input, null, 2)
 
       startDetails.textNodes('dl.details dt').should.deep.equal([
