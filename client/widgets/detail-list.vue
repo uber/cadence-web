@@ -16,6 +16,8 @@ export default {
           var key = prefix ? `${prefix}.${k}` : k
           if (value && typeof value === 'object' && !jsonKeys.includes(key)) {
             flatten(key, value)
+          } else if (key === 'newExecutionRunId') {
+            kvps.push({ key, routeLink: { name: 'execution/history', params: { runId: value } } })
           } else if (value) {
             kvps.push({ key, value })
           }
@@ -34,9 +36,11 @@ export default {
   render(h) {
     return h('dl', { class: 'details' }, this.kvps.map(kvp => h('div', { attrs: { 'data-prop': kvp.key } }, [
       h('dt', null, kvp.key),
-      h('dd', null, typeof kvp.value === 'object' ?
-        [h('pre', null, JSON.stringify(kvp.value, null, 2))] :
-        kvp.value)
+      h('dd', null, kvp.routeLink ?
+        h('route-link', { to: kvp.routeLink })
+        : (typeof kvp.value === 'object' ?
+          [h('pre', null, JSON.stringify(kvp.value, null, 2))] :
+          kvp.value))
     ])))
   }
 }

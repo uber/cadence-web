@@ -29,8 +29,8 @@ export default {
       <div class="domain" v-if="$route.params.domain">
         <a :href="`/domain/${$route.params.domain}/workflows`" :class="{'router-link-active': $route.path === `/domain/${$route.params.domain}/workflows`}">{{$route.params.domain}}</a>
       </div>
-      <div class="workflow-id" v-if="$route.query.workflowId && !editing">
-        <span>{{$route.query.workflowId}}</span>
+      <div class="workflow-id" v-if="$route.params.workflowId">
+        <span>{{$route.params.workflowId}}</span>
       </div>
     </header>
     <router-view></router-view>
@@ -65,41 +65,40 @@ header.top-bar
     display inline-block
     h2
       color uber-white-80
+
   spacing = 1.3em
+  nav-label-color = uber-white-40
+  nav-label-font-size = 11px
   & > div
     margin-right spacing
   div.domain
     &::before
       content 'DOMAIN'
-      font-size 9px
+      font-size nav-label-font-size
       font-weight normal
       vertical-align middle
-      color uber-white-40
+      color nav-label-color
       margin-right spacing
     a:hover
       color lighten(uber-blue, 15%)
     .router-link-active
       pointer-events none
-    // display flex
-    // align-items center
-    // span, input
-    //   font-size 16px
-    //   font-weight 200
-    // input
-    //   background-color alpha(white, 10%)
-    //   color inverted-text-color
     span
       cursor pointer
       transition smooth-transition
       color uber-blue
   div.workflow-id
     icon('\ea5b')
+    one-liner-ellipsis()
     &::before
       display inline-block
       transform scale(1.5)
       margin-right spacing
     span::before
+      font-size nav-label-font-size
       content 'WORKFLOW ID'
+      color nav-label-color
+      margin-right spacing
 
 body, main
   height 100%

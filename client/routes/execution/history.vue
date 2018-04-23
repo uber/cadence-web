@@ -44,22 +44,12 @@
     </section>
     <span class="error" v-if="error">{{error}}</span>
     <span class="no-results" v-if="showNoResults">No Results</span>
-    <modal name="stack-trace">
-      <header>
-        <h2>Stack Trace</h2>
-        <span v-if="stackTraceTimestamp">as of {{stackTraceTimestamp.format('lll')}}</span>
-        <a href="#" class="close" @click="$modal.hide('stack-trace')"></a>
-      </header>
-
-      <pre v-if="typeof stackTrace === 'string'">{{stackTrace}}</pre>
-      <span class="error" v-if="stackTrace && stackTrace.message">{{JSON.stringify(stackTrace)}}</span>
-    </modal>
   </section>
 </template>
 
 <script>
 import moment from 'moment'
-import pagedGrid from '../paged-grid'
+import pagedGrid from '../../paged-grid'
 import eventNode from './event-node.vue'
 
 function fmtduration(d) {
@@ -77,31 +67,18 @@ export default pagedGrid({
       loading: false,
       error: undefined,
       nextPageToken: undefined,
-      results: [],
-      stackTrace: undefined,
-      stackTraceTimestamp: undefined,
-      get queryUrl() {
-        var
-          domain = vm.$route.params.domain,
-          q = vm.$route.query || {}
-
-        if (!q.workflowId || !q.runId) return ''
-        return `/api/domain/${domain}/workflows/${encodeURIComponent(q.workflowId)}/${encodeURIComponent(q.runId)}/history?waitForNewEvent=true`
-      }
+      results: []
     }
   },
   props: ['format'],
   created() {
     this.$watch(() => {
-      if (!this.nextPageToken || !this.queryUrl) return this.queryUrl
-      return this.queryUrl + '&nextPageToken=' + encodeURIComponent(this.nextPageToken)
-    }, v => this.fetch(v), { immediate: true })
+      let queryUrl = this.$parent.baseAPIURL + '/history?waitForNewEvent=true'
 
-    this.$watch('queryUrl', (v, old) => {
-      this.results = []
-      this.nextPageToken = undefined
-      this.isWorkflowRunning = undefined
-    })
+      if (!this.nextPageToken) return queryUrl
+
+      return queryUrl + '&nextPageToken=' + encodeURIComponent(this.nextPageToken)
+    }, v => this.fetch(v), { immediate: true })
   },
   computed: {
     hierarchialResults() {
@@ -188,14 +165,6 @@ export default pagedGrid({
         document.body.removeChild(downloadEl)
       }
     },
-    viewStackTrace() {
-      var domain = this.$route.params.domain, q = this.$route.query || {}
-      this.$http.post(`/api/domain/${this.$route.params.domain}/workflows/${encodeURIComponent(q.workflowId)}/${encodeURIComponent(q.runId)}/query/__stack_trace`).then(({ queryResult }) => {
-        this.stackTrace = queryResult
-        this.stackTraceTimestamp = moment()
-        this.$modal.show('stack-trace')
-      }).catch(e => this.stackTrace = new Error(e))
-    },
     setFormat(format) {
       this.$router.replace({
         query: Object.assign({}, this.$route.query, { format })
@@ -222,15 +191,21 @@ export default pagedGrid({
 </script>
 
 <style lang="stylus">
-@require "../styles/definitions.styl"
+@require "../../styles/definitions.styl"
 
 section.history
+  display flex
+  flex-direction column
+  flex 1 1 auto
+
   header.controls
+    display flex
     flex-wrap wrap
+    justify-content space-between
     padding inline-spacing-large
+    flex 0 0 auto
     .field
       flex 1 1 auto
-    justify-content space-between
     & > div
       display flex
       align-items center
@@ -257,34 +232,11 @@ section.history
 
   a.export
     icon-download()
-  a.stack-trace
-    icon-trips()
-  a.history
-    icon-history()
-  a.pollers
-    icon-cloud()
 
   section pre
     border 1px solid uber-black-60
     background-color uber-white-20
     overflow auto
-
-  [data-modal="stack-trace"] pre
-    padding inline-spacing-small
-    flex 1 1 auto
-
-  span.is-running
-    &:not([data-is-running="true"]) loader.bar
-      display none
-    &::after
-      vertical-align middle
-    @media (min-width: 900px)
-      &[data-is-running="true"]
-        &::after
-          content ' Workflow is executing...'
-      &[data-is-running="false"]
-        &::after
-          content ' Workflow finished'
 
   table
     td:nth-child(3)
@@ -299,6 +251,9 @@ section.history
           color uber-orange
     tr[data-event-type*="Completed"] td:nth-child(2)
       color uber-green
+    pre
+      max-height 15vh
+
   section.results pre.json
     margin layout-spacing-small
     padding layout-spacing-small

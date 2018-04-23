@@ -172,9 +172,6 @@ export default pagedGrid({
           })
         })
       }
-    },
-    historyLinkFor(wf) {
-      return `/domain/${this.$route.params.domain}/history?workflowId=${encodeURIComponent(wf.workflowId)}&runId=${encodeURIComponent(wf.runId)}`
     }
   }
 })

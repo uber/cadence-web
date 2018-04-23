@@ -150,6 +150,8 @@ icon(charcode)
     content charcode
     margin-right 0.4em
 
+icon-cancel()
+  icon('\ea0b')
 icon-cloud()
   icon('\ea17')
 icon-delete()
@@ -158,6 +160,10 @@ icon-download()
   icon('\ea21')
 icon-history()
   icon('\ea6c')
+icon-refresh()
+  icon('\ea5a')
+  &::before
+    transform rotate(45deg)
 icon-trips()
   icon('\ea6d')
 
@@ -165,7 +171,7 @@ paged-grid()
   .filters, span.error, span.no-results
     padding inline-spacing-large
 
-  section.loading section.results table
+  &.loading section.results table
     opacity 0.7
 
   section.results

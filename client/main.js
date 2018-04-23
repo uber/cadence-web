@@ -16,9 +16,10 @@ import snapscroll from './directives/snapscroll'
 import App from './App.vue'
 import Intro from './routes/Intro.vue'
 import Workflows from './routes/Workflows.vue'
-import Execution from './routes/Execution.vue'
-import History from './routes/History.vue'
-import ExecutionSummary from './routes/ExecutionSummary.vue'
+import ExecutionTabs from './routes/execution/index.vue'
+import ExecutionSummary from './routes/execution/summary.vue'
+import History from './routes/execution/history.vue'
+import StackTrace from './routes/execution/stack-trace.vue'
 
 const routes = [{
   path: '/',
@@ -30,7 +31,7 @@ const routes = [{
 }, {
   name: 'execution',
   path: '/domain/:domain/workflows/:workflowId/:runId',
-  component: Execution,
+  component: ExecutionTabs,
   children: [{
     name: 'execution/summary',
     path: '/domain/:domain/workflows/:workflowId/:runId/summary',
@@ -42,6 +43,10 @@ const routes = [{
     props: ({ query }) => ({
       format: query.format || 'grid'
     })
+  }, {
+    name: 'execution/stack-trace',
+    path: '/domain/:domain/workflows/:workflowId/:runId/stack-trace',
+    component: StackTrace
   }]
 }]
 
