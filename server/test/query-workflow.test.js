@@ -1,5 +1,3 @@
-const request = require('supertest')
-
 describe('Query Workflow', function() {
   it('should forward the query to the workflow', async function () {
     this.test.QueryWorkflow = ({ queryRequest }) => {
