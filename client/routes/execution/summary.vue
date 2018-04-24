@@ -1,18 +1,5 @@
 <template>
   <section class="execution-summary">
-    <div class="actions">
-      <a href="" class="restart" v-if="$parent.input && wfStatus() !== 'running'" @click.prevent="$modal.show('restart')">Restart</a>
-      <modal name="restart">
-        <h2>Restart Workflow</h2>
-        <article>
-          <p>Not yet implemented</p>
-        </article>
-        <footer>
-          <a href="" class="restart" @click.prevent="$modal.hide('restart')">Restart</a>
-          <a href="" class="cancel" @click.prevent="$modal.hide('restart')">Cancel</a>
-        </footer>
-      </modal>
-    </div>
     <dl v-if="$parent.workflow">
       <div class="workflow-name">
         <dt>Workflow Name</dt>
@@ -89,15 +76,6 @@ export default {
 section.execution-summary
   overflow auto
   padding layout-spacing-small
-
-  .actions
-    float right
-    a.restart
-      action-button()
-      icon-refresh()
-    a.cancel
-      action-button(uber-black-60)
-      icon-cancel()
 
   dl:not(.details)
     & > div

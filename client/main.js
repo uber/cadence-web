@@ -95,8 +95,8 @@ Object.getPrototypeOf(moment.duration(2, 'seconds')).format = function() {
     .replace(/([hmd])/g, '$1 ')
     .replace(/\.\d{1,3}s/, 's')
     .replace('0d ', '')
+    .trim()
 }
-
 
 JSON.tryParse = function() {
   try {
