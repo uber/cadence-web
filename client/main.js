@@ -89,6 +89,15 @@ Object.getPrototypeOf(router).replaceQueryParam = function(prop, val) {
   this.replace({ query: newQuery })
 }
 
+Object.getPrototypeOf(moment.duration(2, 'seconds')).format = function() {
+  return this.toString().toLowerCase()
+    .replace(/[pt]/g, '')
+    .replace(/([hmd])/g, '$1 ')
+    .replace(/\.\d{1,3}s/, 's')
+    .replace('0d ', '')
+}
+
+
 JSON.tryParse = function() {
   try {
     return JSON.parse.apply(this, arguments)

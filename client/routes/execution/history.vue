@@ -52,14 +52,6 @@ import moment from 'moment'
 import pagedGrid from '../../paged-grid'
 import eventNode from './event-node.vue'
 
-function fmtduration(d) {
-  return d.toString().toLowerCase()
-    .replace(/[pt]/g, '')
-    .replace(/([hmd])/g, '$1 ')
-    .replace(/\.\d{1,3}s/, 's')
-    .replace('0d ', '')
-}
-
 export default pagedGrid({
   data() {
     var endTime = moment(), vm = this
@@ -132,7 +124,6 @@ export default pagedGrid({
         } else {
           this.isWorkflowRunning = false
         }
-        this.loading = false
         this.results = this.results.concat(res.history.events.map(data => {
           data.timestamp = moment(data.timestamp)
           return data
@@ -144,10 +135,9 @@ export default pagedGrid({
       }).catch(e => {
         if (this._isDestroyed || this.pqu !== pagedQueryUrl) return
         this.npt = undefined
-        this.loading = false
         this.error = (e.json && e.json.message) || e.status || e.message
         return []
-      })
+      }).finally(() => this.loading = false)
     },
     exportResults(e) {
       if (!this.results.length || !this.$route.query) return
@@ -176,10 +166,10 @@ export default pagedGrid({
       }
 
       let deltaFromPrev = moment.duration(ts - this.results[i - 1].timestamp),
-          elapsed = fmtduration(moment.duration(ts - this.results[0].timestamp))
+          elapsed = moment.duration(ts - this.results[0].timestamp).format()
 
       if (deltaFromPrev.asSeconds() >= 1) {
-        elapsed += ` (+${fmtduration(deltaFromPrev)})`
+        elapsed += ` (+${deltaFromPrev.format()})`
       }
       return elapsed
     }

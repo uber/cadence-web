@@ -192,6 +192,9 @@ section.workflows
 
   paged-grid()
 
+  &.loading section.results table
+    opacity 0.7
+
   table
     td:nth-child(4)
       text-transform capitalize

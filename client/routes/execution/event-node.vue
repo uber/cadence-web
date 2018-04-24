@@ -1,6 +1,10 @@
 <script>
-const titlesForGroups = {
-  ActivityTaskScheduled: n => `Activity ${n.details.activityId} - ${n.details.activityType && n.details.activityType.name}`,
+import moment from 'moment'
+
+const shortActivityName = a => (a || '').split(/[\.\/]/g).pop(),
+titlesForGroups = {
+  ActivityTaskScheduled: n => `Activity ${n.details.activityId} - ${shortActivityName(n.details.activityType && n.details.activityType.name)}`,
+  TimerStarted: n => `Timer ${n.details.timerId} (${moment.duration(n.details.startToFireTimeoutSeconds, 'seconds').format()})`,
   StartChildWorkflowExecutionInitiated: n => `Child Workflow ${n.details.workflowType.name}`
 },
 groupEvents = Object.keys(titlesForGroups)
@@ -64,11 +68,13 @@ export default {
       display none
     > .event-children > div
       margin-left 0
-  &.ActivityTaskScheduled, &.TimerTaskScheduled, &.StartChildWorkflowExecutionInitiated
+  &.ActivityTaskScheduled, &.TimerStarted, &.StartChildWorkflowExecutionInitiated
     position relative
     border input-border
     background-color uber-white-20
     padding 6px
+    &.active
+      border-color uber-black-60
   a.event-id
     display inline-block
     border-bottom 2px solid transparent
