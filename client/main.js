@@ -21,44 +21,65 @@ import ExecutionSummary from './routes/execution/summary.vue'
 import History from './routes/execution/history.vue'
 import StackTrace from './routes/execution/stack-trace.vue'
 
-const routes = [{
-  path: '/',
-  component: Intro
-}, {
-  name: 'workflows',
-  path: '/domain/:domain/workflows',
-  component: Workflows
-}, {
-  name: 'execution',
-  path: '/domain/:domain/workflows/:workflowId/:runId',
-  component: ExecutionTabs,
-  children: [{
-    name: 'execution/summary',
-    path: '/domain/:domain/workflows/:workflowId/:runId/summary',
-    component: ExecutionSummary
-  }, {
-    name: 'execution/history',
-    path: '/domain/:domain/workflows/:workflowId/:runId/history',
-    component: History,
-    props: ({ query }) => ({
-      format: query.format || 'grid'
-    })
-  }, {
-    name: 'execution/stack-trace',
-    path: '/domain/:domain/workflows/:workflowId/:runId/stack-trace',
-    component: StackTrace
-  }]
-}]
-
-const router = new Router({
+const routeOpts = {
   mode: 'history',
-  routes,
+  routes: [{
+    path: '/',
+    component: Intro
+  }, {
+    name: 'workflows',
+    path: '/domain/:domain/workflows',
+    component: Workflows
+  }, {
+    name: 'execution',
+    path: '/domain/:domain/workflows/:workflowId/:runId',
+    component: ExecutionTabs,
+    children: [{
+      name: 'execution/summary',
+      path: '/domain/:domain/workflows/:workflowId/:runId/summary',
+      component: ExecutionSummary
+    }, {
+      name: 'execution/history',
+      path: '/domain/:domain/workflows/:workflowId/:runId/history',
+      component: History,
+      props: ({ query }) => ({
+        format: query.format || 'grid'
+      })
+    }, {
+      name: 'execution/stack-trace',
+      path: '/domain/:domain/workflows/:workflowId/:runId/stack-trace',
+      component: StackTrace
+    }]
+  }, {
+    path: '/domain/:domain/history',
+    redirect: ({ params, query }) => {
+      if (!query.runId || !query.workflowId) {
+        return { name: 'workflows', params }
+      }
+
+      var newParams = {
+        runId: query.runId,
+        workflowId: query.workflowId,
+        domain: params.domain
+      }
+      delete query.runId
+      delete query.workflowId
+
+      return {
+        name: 'execution/history',
+        params: newParams,
+        query
+      }
+    }
+  }],
   parseQuery: qs.parse.bind(qs),
   stringifyQuery: query => {
     let q = qs.stringify(query)
-    return q ? '?' + q : ''
-  },
-})
+    return q ? ('?' + q) : ''
+  }
+}
+
+const router = new Router(routeOpts)
 
 Object.getPrototypeOf(router).replaceQueryParam = function(prop, val) {
   var newQuery = Object.assign({}, this.currentRoute.query, { [prop]: val })
@@ -119,4 +140,4 @@ if (typeof mocha === 'undefined') {
   }
 }
 
-export default { App, routes }
+export default { App, routeOpts }

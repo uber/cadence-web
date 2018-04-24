@@ -58,7 +58,6 @@ describe('Intro', function() {
     var workflowsEl = await testEl.waitUntilExists('section.workflows'),
         headerBar = testEl.querySelector('header.top-bar')
 
-    headerBar.should.have.descendant('nav')
     headerBar.should.have.descendant('div.domain').that.contains.text('ci-test')
     scenario.location.should.contain('/domain/ci-tests/workflows')
     localStorage.getItem('recent-domains').should.equal('["ci-tests"]')

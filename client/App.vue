@@ -29,6 +29,7 @@ export default {
       <div class="domain" v-if="$route.params.domain">
         <a :href="`/domain/${$route.params.domain}/workflows`" :class="{'router-link-active': $route.path === `/domain/${$route.params.domain}/workflows`}">{{$route.params.domain}}</a>
       </div>
+      <div class="list-workflows" v-if="!$route.params.workflowId">Workflows</div>
       <div class="workflow-id" v-if="$route.params.workflowId">
         <span>{{$route.params.workflowId}}</span>
       </div>
@@ -87,14 +88,14 @@ header.top-bar
       cursor pointer
       transition smooth-transition
       color uber-blue
-  div.workflow-id
-    icon('\ea5b')
-    one-liner-ellipsis()
-    &::before
-      display inline-block
-      transform scale(1.5)
-      margin-right spacing
-    span::before
+    & + div
+      icon('\ea5b')
+      one-liner-ellipsis()
+      &::before
+        display inline-block
+        transform scale(1.5)
+        margin-right spacing
+  div.workflow-id span::before
       font-size nav-label-font-size
       content 'WORKFLOW ID'
       color nav-label-color

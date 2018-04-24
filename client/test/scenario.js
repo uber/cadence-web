@@ -11,6 +11,7 @@ import fixtures from './fixtures'
 
 export default function Scenario(test) {
   test.scenario = this
+  this.mochaTest = test
   this.api = fetchMock.sandbox().catch(function(url, req, opts) {
     var msg = `Unexpected request: ${url}${opts && opts.query ? '?' + opts.query : ''}`
     if (req.body) {
@@ -20,20 +21,19 @@ export default function Scenario(test) {
   })
 }
 
+Scenario.prototype.isDebuggingJustThisTest = function() {
+  return window.location.search.includes(encodeURIComponent(this.mochaTest.fullTitle()))
+}
+
 Scenario.prototype.render = function(attachToBody) {
   var $http = http.bind(null, this.api)
   $http.post = http.post.bind(null, this.api)
 
-  this.router = new Router({
-    mode: 'abstract',
-    routes: main.routes,
-    parseQuery: qs.parse.bind(qs),
-    stringifyQuery: q => `?${qs.stringify(q)}`,
-  })
+  this.router = new Router(Object.assign({}, main.routeOpts, { mode: 'abstract' }))
   this.router.push(this.initialUrl || '/')
 
   var el = document.createElement('div')
-  if (attachToBody) {
+  if (attachToBody || this.isDebuggingJustThisTest()) {
     document.body.appendChild(el)
   }
 
@@ -62,10 +62,10 @@ Scenario.prototype.startingAt = function(url) {
   return this
 }
 
-Scenario.prototype.tearDown = function(mochaTest) {
+Scenario.prototype.tearDown = function() {
   if (this.vm && this.vm.$el && this.vm.$el.parentElement
     // as a convience, if debugging just this test, don't remove the test app
-    && !window.location.search.includes(encodeURIComponent(mochaTest.fullTitle()))) {
+    && !this.isDebuggingJustThisTest()) {
     this.vm.$el.parentElement.removeChild(this.vm.$el)
   }
 
@@ -104,6 +104,40 @@ Scenario.prototype.withWorkflows = function(status, query, workflows) {
   return this
 }
 
+Scenario.prototype.execApiBase = function(workflowId, runId) {
+  return `/api/domain/${this.domain}/workflows/${encodeURIComponent(workflowId)}/${encodeURIComponent(runId)}`
+}
+
+Scenario.prototype.withExecution = function(workflowId, runId, description)  {
+  this.api.getOnce(this.execApiBase(workflowId, runId), Object.assign({
+    executionConfiguration: {
+      taskList: { name: 'ci_task_list' },
+      executionStartToCloseTimeoutSeconds: 3600,
+      taskStartToCloseTimeoutSeconds: 10,
+      childPolicy: 'TERMINATE'
+    },
+    workflowExecutionInfo: {
+      execution: { workflowId, runId },
+      type: { name: 'CIDemoWorkflow' },
+      startTime: moment().startOf('hour').subtract(2, 'minutes'),
+      historyLength: 14
+    }
+  }, description || {}))
+  return this
+}
+
+Scenario.prototype.withSummaryInput = function(workflowId, runId, input)  {
+  this.api.getOnce(`${this.execApiBase(workflowId, runId)}/history`, {
+    history: {
+      events: [{
+        eventType: 'WorkflowExecutionStarted',
+        details: { input }
+      }]
+    }
+  })
+  return this
+}
+
 Scenario.prototype.withHistory = function(workflowId, runId, events, hasMorePages)  {
   if (!events) {
     events = JSON.parse(JSON.stringify(fixtures.history.emailRun1))
@@ -114,7 +148,7 @@ Scenario.prototype.withHistory = function(workflowId, runId, events, hasMorePage
 
   const makeToken = () => btoa(JSON.stringify({ NextEventId: this.historyNpt[runId], IsWorkflowRunning: true }))
 
-  var url = `/api/domain/${this.domain}/workflows/${encodeURIComponent(workflowId)}/${encodeURIComponent(runId)}/history?waitForNewEvent=true`,
+  var url = `${this.execApiBase(workflowId, runId)}/history?waitForNewEvent=true`,
       response = Array.isArray(events) ? { history: { events } } : events
 
   if (this.historyNpt[runId]) {
@@ -130,6 +164,5 @@ Scenario.prototype.withHistory = function(workflowId, runId, events, hasMorePage
 
   return this
 }
-
 
 window.Scenario = Scenario

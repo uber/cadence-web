@@ -155,7 +155,7 @@ export default pagedGrid({
       var downloadEl = document.createElement('a')
       downloadEl.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(this.results)))
       downloadEl.setAttribute('download',
-        `${this.$route.query.workflowId.replace(/[\\~#%&*{}\/:<>?|\"-]/g, ' ')} - ${this.$route.query.runId}.json`)
+        `${this.$route.params.workflowId.replace(/[\\~#%&*{}\/:<>?|\"-]/g, ' ')} - ${this.$route.params.runId}.json`)
 
       downloadEl.style.display = 'none'
       document.body.appendChild(downloadEl)

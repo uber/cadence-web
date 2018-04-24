@@ -47,6 +47,10 @@ describe('Workflows', function() {
       'ef2c889e-e709-4d50-99ee-3748dfa0a101',
       'db8da3c0-b7d3-48b7-a9b3-b6f566e58207'
     ])
+    resultsEl.attrValues('tbody td:nth-child(2) a', 'href').should.deep.equal([
+      '/domain/ci-test/workflows/github.com%2Fuber%2Fcadence-web%2Femail-daily-summaries-2/ef2c889e-e709-4d50-99ee-3748dfa0a101/summary',
+      '/domain/ci-test/workflows/github.com%2Fuber%2Fcadence-web%2Fexample-1/db8da3c0-b7d3-48b7-a9b3-b6f566e58207/summary'
+    ])
     resultsEl.textNodes('tbody td:nth-child(3)').should.deep.equal([
       'email-daily-summaries',
       'example'
@@ -160,65 +164,5 @@ describe('Workflows', function() {
     var workflowsEl = await testEl.waitUntilExists('section.workflows')
     workflowsEl.querySelector('header.filters input[name="workflowName"]').value.should.equal('demo')
     workflowsEl.querySelector('header.filters .status .selected-tag').should.have.trimmed.text('Failed')
-  })
-
-  it('should query for new workflows when a new domain is navigated to, updating recent domains', async function () {
-    var [workflowsEl, scenario] = await workflowsTest(this.test),
-        headerBar = scenario.vm.$el.querySelector('header.top-bar'),
-        domainEl = headerBar.querySelector('.domain span')
-
-    headerBar.should.not.contain('input[name="domain"]')
-    domainEl.should.have.trimmed.text('ci-test')
-
-    domainEl.trigger('click')
-    var domainNav = await headerBar.waitUntilExists('.domain-navigation'),
-        input = domainNav.querySelector('input')
-    domainNav.should.have.class('validation-unknown')
-    input.value.should.be.empty
-    domainNav.textNodes('ul.recent-domains li a').should.deep.equal(['ci-test'])
-
-    scenario.api.getOnce('/api/domain/another-domain', 200)
-    input.input('another-domain')
-    await headerBar.waitUntilExists('.domain-navigation.validation-valid')
-
-    scenario.withDomain('another-domain').withWorkflows('open', null, demoWf)
-    input.trigger('keydown', { keyCode: 13, code: 13, key: 'Enter' })
-
-    await retry(() => workflowsEl.textNodes('.results tbody td:first-child').should.deep.equal(['demoWfId']))
-    headerBar.querySelector('.domain span').should.have.trimmed.text('another-domain')
-    localStorage.getItem('recent-domains').should.equal('["another-domain","ci-test"]')
-
-    headerBar.querySelector('.domain span').trigger('click')
-    await retry(() => headerBar.textNodes('ul.recent-domains li a')
-      .should.deep.equal(['another-domain', 'ci-test']))
-  })
-
-
-  it('should query for new workflows when a recent domain is clicked, updating recent domains', async function () {
-    localStorage.setItem('recent-domains', '["foo", "bar"]')
-    var [workflowsEl, scenario] = await workflowsTest(this.test),
-        headerBar = scenario.vm.$el.querySelector('header.top-bar'),
-        domainEl = headerBar.querySelector('.domain span')
-
-    domainEl.trigger('click')
-    var domainNav = await headerBar.waitUntilExists('.domain-navigation')
-    domainNav.textNodes('ul.recent-domains li a').should.deep.equal(['ci-test', 'foo', 'bar'])
-    localStorage.getItem('recent-domains').should.equal('["ci-test","foo","bar"]')
-
-    scenario.withDomain('bar').withWorkflows('open', null, demoWf)
-    domainNav.querySelector('ul.recent-domains li:nth-of-type(3) a').trigger('click')
-
-    await retry(() => workflowsEl.textNodes('.results tbody td:first-child').should.deep.equal(['demoWfId']))
-    headerBar.querySelector('.domain span').should.have.trimmed.text('bar')
-    localStorage.getItem('recent-domains').should.equal('["bar","ci-test","foo"]')
-    scenario.location.should.equal(`/domain/bar/workflows?${qs.stringify({
-      startTime: moment().startOf('minute').subtract(1, 'day').toISOString(),
-      endTime: moment().startOf('minute').toISOString(),
-      status: 'OPEN'
-    })}`)
-
-    headerBar.querySelector('.domain span').trigger('click')
-    await retry(() => headerBar.textNodes('ul.recent-domains li a')
-      .should.deep.equal(['bar', 'ci-test', 'foo']))
   })
 })

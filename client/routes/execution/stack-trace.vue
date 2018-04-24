@@ -6,7 +6,7 @@
     </header>
 
     <pre v-if="typeof stackTrace === 'string'">{{stackTrace}}</pre>
-    <span class="error" v-if="stackTrace && stackTrace.message">{{JSON.stringify(stackTrace)}}</span>
+    <span class="error" v-if="stackTrace && stackTrace.error">{{stackTrace.error}}</span>
   </section>
 </template>
 
@@ -32,8 +32,8 @@ export default {
         this.stackTraceTimestamp = moment()
       })
       .catch(e => {
-        console.dir(e)
-        this.stackTrace = new Error(e)
+        console.error(e)
+        this.stackTrace = { error: (e.json && e.json.message) || e.status || e.message }
       })
       .finally(() => this.loading = false)
     }
