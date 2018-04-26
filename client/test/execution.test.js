@@ -18,7 +18,7 @@ describe('Execution', function() {
   async function summaryTest(mochaTest, o) {
     var [scenario, opts] = executionTest(mochaTest, Object.assign({ view: 'summary' }, o))
 
-    scenario.withSummaryInput(opts.workflowId, opts.runId, opts.input || null)
+    scenario.withSummaryInput(opts.input || null)
 
     var summaryEl = await scenario.render().waitUntilExists('section.execution section.execution-summary')
     return [summaryEl, scenario]
@@ -39,10 +39,12 @@ describe('Execution', function() {
     scenario.vm.$el.attrValues('section.execution > nav a', 'href').should.deep.equal([
       '/domain/ci-test/workflows/email-daily-summaries/emailRun1/summary',
       '/domain/ci-test/workflows/email-daily-summaries/emailRun1/history',
-      '/domain/ci-test/workflows/email-daily-summaries/emailRun1/stack-trace'
+      '/domain/ci-test/workflows/email-daily-summaries/emailRun1/stack-trace',
+      '/domain/ci-test/workflows/email-daily-summaries/emailRun1/queries'
     ])
     scenario.vm.$el.querySelector('section.execution > nav a.summary').should.have.class('router-link-active')
     scenario.vm.$el.querySelector('section.execution > nav a.stack-trace').should.not.be.displayed
+    scenario.vm.$el.querySelector('section.execution > nav a.queries').should.not.be.displayed
   })
 
   it('should also show a stack trace tab for running workflows', async function () {
@@ -50,8 +52,11 @@ describe('Execution', function() {
     scenario.vm.$el.attrValues('section.execution > nav a', 'href').should.deep.equal([
       '/domain/ci-test/workflows/email-daily-summaries/emailRun1/summary',
       '/domain/ci-test/workflows/email-daily-summaries/emailRun1/history',
-      '/domain/ci-test/workflows/email-daily-summaries/emailRun1/stack-trace'
+      '/domain/ci-test/workflows/email-daily-summaries/emailRun1/stack-trace',
+      '/domain/ci-test/workflows/email-daily-summaries/emailRun1/queries'
     ])
+    scenario.vm.$el.querySelector('section.execution > nav a.stack-trace').should.be.displayed
+    scenario.vm.$el.querySelector('section.execution > nav a.queries').should.be.displayed
   })
 
   describe('Summary', function() {
@@ -105,7 +110,7 @@ describe('Execution', function() {
     async function historyTest(mochaTest, o) {
       var [scenario, opts] = executionTest(mochaTest, Object.assign({ view: 'history' }, o))
 
-      scenario.withHistory(opts.workflowId, opts.runId)
+      scenario.withHistory()
 
       var historyEl = await scenario.render().waitUntilExists('section.history')
       return [historyEl, scenario]
@@ -128,8 +133,8 @@ describe('Execution', function() {
           workflowId: 'long-running-op-2',
           runId: 'theRunId',
           view: 'history'
-        })[0].withExecution('long-running-op-2', 'theRunId')
-        .withHistory('long-running-op-2', 'theRunId', [{
+        })[0]
+        .withHistory([{
           timestamp: moment().toISOString(),
           eventType: 'WorkflowExecutionStarted',
           eventId: 1,
@@ -221,7 +226,7 @@ describe('Execution', function() {
           .withDomain('ci-test')
           .startingAt('/domain/ci-test/workflows/long-running-op-1/theRunId/history?format=compact')
           .withExecution('long-running-op-1', 'theRunId')
-          .withHistory('long-running-op-1', 'theRunId', [{
+          .withHistory([{
             timestamp: moment().toISOString(),
             eventType: 'WorkflowExecutionStarted',
             eventId: 1,
@@ -231,8 +236,8 @@ describe('Execution', function() {
               }
             }
           }].concat(generateActivityEvents(2)), true)
-          .withHistory('long-running-op-1', 'theRunId', generateActivityEvents(3, 2), true)
-          .withHistory('long-running-op-1', 'theRunId', generateActivityEvents(5, 5), true)
+          .withHistory(generateActivityEvents(3, 2), true)
+          .withHistory(generateActivityEvents(5, 5), true)
           .go(true)
 
         var historyEl = await testEl.waitUntilExists('section.history')
@@ -285,7 +290,7 @@ describe('Execution', function() {
         resultsEl.scrollTop = resultsEl.scrollHeight - resultsEl.offsetHeight - 100
         await Promise.delay(100)
 
-        scenario.withHistory('long-running-op-2', 'theRunId', generateActivityEvents(8, 15))
+        scenario.withHistory(generateActivityEvents(8, 15))
         resultsEl.scrollTop = resultsEl.scrollHeight - resultsEl.offsetHeight
         await Promise.delay(100)
       })
@@ -296,7 +301,7 @@ describe('Execution', function() {
     it('should show the current stack trace', async function () {
       var [scenario, opts] = executionTest(this.test, { view: 'stack-trace' })
 
-      scenario.api.postOnce(`/api/domain/ci-test/workflows/${encodeURIComponent(opts.workflowId)}/${encodeURIComponent(opts.runId)}/query/__stack_trace`, {
+      scenario.api.postOnce(`${scenario.execApiBase()}/queries/__stack_trace`, {
         queryResult: 'goroutine 1:\n\tat foo.go:56'
       })
 
@@ -310,7 +315,7 @@ describe('Execution', function() {
       var [scenario, opts] = executionTest(this.test, { view: 'stack-trace' }),
           called = 0
 
-      scenario.api.post(`/api/domain/ci-test/workflows/${encodeURIComponent(opts.workflowId)}/${encodeURIComponent(opts.runId)}/query/__stack_trace`, () => {
+      scenario.api.post(`${scenario.execApiBase()}/queries/__stack_trace`, () => {
         if (++called === 1) {
           return { queryResult: 'goroutine 1:\n\tat foo.go:56' }
         } else if (called === 2) {
@@ -325,6 +330,63 @@ describe('Execution', function() {
 
       stackTraceEl.querySelector('a.refresh').trigger('click')
       await retry(() =>  stackTraceEl.querySelector('pre').should.have.text('goroutine 1:\n\tat foo.go:56\n\n\tgoroutine 2:\n\tat bar.go:42'))
+    })
+  })
+
+  describe('Queries', function() {
+    async function queriesTest(mochaTest, queries) {
+      var [scenario, opts] = executionTest(mochaTest, { view: 'queries' })
+
+      scenario.withQueries(queries)
+
+      var queriesEl = await scenario.render().waitUntilExists('section.execution section.queries')
+      return [queriesEl, scenario]
+    }
+
+    it('should query the list of stack traces, and show it in the dropdown, enabling run as appropriate', async function () {
+      var [queriesEl] = await queriesTest(this.test, ['__stack_trace', 'foo', 'bar'])
+
+      var queriesDropdown = await queriesEl.waitUntilExists('.query-name .dropdown')
+      var options = await queriesDropdown.selectOptions()
+      options.should.deep.equal(['foo', 'bar'])
+    })
+
+    it('should show an error if queries could not be listed', async function () {
+      var [queriesEl] = await queriesTest(this.test, { status: 400, body: { message: 'I do not understand' } })
+
+      await retry(() => queriesEl.querySelector('span.error').should.have.text('I do not understand'))
+      queriesEl.should.not.contain('header .query-name')
+    })
+
+    it('should run a query and show the result', async function () {
+      var [queriesEl, scenario] = await queriesTest(this.test)
+
+      var queriesDropdown = await queriesEl.waitUntilExists('.query-name .dropdown'),
+          runButton = queriesEl.querySelector('a.run')
+
+      runButton.should.not.have.attr('href', '#')
+      queriesDropdown.selectItem('status')
+      await retry(() => runButton.should.have.attr('href', '#'))
+
+      scenario.withQueryResult('status', 'All is good!')
+      runButton.trigger('click')
+      await retry(() => queriesEl.querySelector('pre').should.have.text('All is good!'))
+    })
+
+    it('should show an error if there was an error running the query', async function () {
+      var [queriesEl, scenario] = await queriesTest(this.test)
+
+      var queriesDropdown = await queriesEl.waitUntilExists('.query-name .dropdown'),
+          runButton = queriesEl.querySelector('a.run')
+
+      queriesDropdown.selectItem('status')
+      await retry(() => runButton.should.have.attr('href', '#'))
+
+      scenario.withQueryResult('status', { status: 503, body: { message: 'Server Unavailable' } })
+      runButton.trigger('click')
+
+      await retry(() => queriesEl.querySelector('span.error').should.have.text('Server Unavailable'))
+      queriesEl.should.not.have.descendant('pre')
     })
   })
 })

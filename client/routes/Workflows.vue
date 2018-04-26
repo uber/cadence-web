@@ -84,8 +84,8 @@ export default pagedGrid({
         { value: 'TIMED_OUT', label: 'Timed Out'}
       ],
       range: {
-        startDate: q.startDate ? moment(q.startDate) : moment().subtract(1, 'day').startOf('minute'),
-        endDate: moment(q.startDate).startOf('minute')
+        startDate: q.startDate ? moment(q.startDate) : moment().subtract(3, 'months').startOf('day'),
+        endDate: moment(q.startDate).endOf('day')
       }
     }
   },

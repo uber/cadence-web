@@ -23,7 +23,7 @@ app.init = function(options) {
     try {
       await next()
     } catch (err) {
-      if (options.logErrors !== false && (err.statusCode !== 'number' || err.statusCode >= 500)) {
+      if (options.logErrors !== false && (typeof err.statusCode !== 'number' || err.statusCode >= 500)) {
         console.error(err)
       }
       ctx.status = err.statusCode || err.status || 500

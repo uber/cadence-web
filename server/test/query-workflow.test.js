@@ -1,4 +1,6 @@
 describe('Query Workflow', function() {
+  it('should list workflows using a temporary hack of parsing out the available workflows from a NotFoundError')
+
   it('should forward the query to the workflow', async function () {
     this.test.QueryWorkflow = ({ queryRequest }) => {
       queryRequest.should.deep.equal({
@@ -17,7 +19,7 @@ describe('Query Workflow', function() {
     }
 
     return request(global.app)
-      .post('/api/domain/canary/workflows/ci%2Fdemo/run1/query/state')
+      .post('/api/domain/canary/workflows/ci%2Fdemo/run1/queries/state')
       .expect(200)
       .expect('Content-Type', /json/)
       .expect({
@@ -36,7 +38,7 @@ describe('Query Workflow', function() {
     })
 
     return request(global.app)
-      .post('/api/domain/canary/workflows/ci%2Fdemo/run1/query/state')
+      .post('/api/domain/canary/workflows/ci%2Fdemo/run1/queries/state')
       .expect(400)
       .expect('Content-Type', /json/)
       .expect({

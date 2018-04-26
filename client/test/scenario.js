@@ -93,8 +93,8 @@ Scenario.prototype.withWorkflows = function(status, query, workflows) {
   }
 
   var url = `/api/domain/${this.domain}/workflows/${status}?${qs.stringify(Object.assign({
-      startTime: moment().startOf('minute').subtract(1, 'day').toISOString(),
-      endTime: moment().startOf('minute').toISOString(),
+      startTime: moment().subtract(3, 'months').startOf('day').toISOString(),
+      endTime: moment().endOf('day').toISOString(),
     }, query))}`
 
   var response = Array.isArray(workflows) ? { executions: workflows } : workflows
@@ -105,11 +105,14 @@ Scenario.prototype.withWorkflows = function(status, query, workflows) {
 }
 
 Scenario.prototype.execApiBase = function(workflowId, runId) {
-  return `/api/domain/${this.domain}/workflows/${encodeURIComponent(workflowId)}/${encodeURIComponent(runId)}`
+  return `/api/domain/${this.domain}/workflows/${encodeURIComponent(workflowId || this.workflowId)}/${encodeURIComponent(runId || this.runId)}`
 }
 
 Scenario.prototype.withExecution = function(workflowId, runId, description)  {
-  this.api.getOnce(this.execApiBase(workflowId, runId), Object.assign({
+  this.workflowId = workflowId
+  this.runId = runId
+
+  this.api.getOnce(this.execApiBase(), Object.assign({
     executionConfiguration: {
       taskList: { name: 'ci_task_list' },
       executionStartToCloseTimeoutSeconds: 3600,
@@ -123,11 +126,12 @@ Scenario.prototype.withExecution = function(workflowId, runId, description)  {
       historyLength: 14
     }
   }, description || {}))
+
   return this
 }
 
-Scenario.prototype.withSummaryInput = function(workflowId, runId, input)  {
-  this.api.getOnce(`${this.execApiBase(workflowId, runId)}/history`, {
+Scenario.prototype.withSummaryInput = function(input)  {
+  this.api.getOnce(`${this.execApiBase()}/history`, {
     history: {
       events: [{
         eventType: 'WorkflowExecutionStarted',
@@ -138,7 +142,7 @@ Scenario.prototype.withSummaryInput = function(workflowId, runId, input)  {
   return this
 }
 
-Scenario.prototype.withHistory = function(workflowId, runId, events, hasMorePages)  {
+Scenario.prototype.withHistory = function(events, hasMorePages)  {
   if (!events) {
     events = JSON.parse(JSON.stringify(fixtures.history.emailRun1))
   }
@@ -146,22 +150,32 @@ Scenario.prototype.withHistory = function(workflowId, runId, events, hasMorePage
     this.historyNpt = {}
   }
 
-  const makeToken = () => btoa(JSON.stringify({ NextEventId: this.historyNpt[runId], IsWorkflowRunning: true }))
+  const makeToken = () => btoa(JSON.stringify({ NextEventId: this.historyNpt[this.runId], IsWorkflowRunning: true }))
 
-  var url = `${this.execApiBase(workflowId, runId)}/history?waitForNewEvent=true`,
+  var url = `${this.execApiBase()}/history?waitForNewEvent=true`,
       response = Array.isArray(events) ? { history: { events } } : events
 
-  if (this.historyNpt[runId]) {
+  if (this.historyNpt[this.runId]) {
     url += `&nextPageToken=${encodeURIComponent(makeToken())}`
   }
 
   if (hasMorePages) {
-    this.historyNpt[runId] = (this.historyNpt[runId] || 0) + response.history.events.length + 1
+    this.historyNpt[this.runId] = (this.historyNpt[this.runId] || 0) + response.history.events.length + 1
     response.nextPageToken = makeToken()
   }
 
   this.api.getOnce(url, response)
 
+  return this
+}
+
+Scenario.prototype.withQueries = function(queries) {
+  this.api.getOnce(`${this.execApiBase()}/queries`, queries || ['__stack_trace', 'status'])
+  return this
+}
+
+Scenario.prototype.withQueryResult = function(query, result) {
+  this.api.postOnce(`${this.execApiBase()}/queries/${query}`, result && result.status ? result : { queryResult: result })
   return this
 }
 

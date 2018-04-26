@@ -20,6 +20,7 @@ import ExecutionTabs from './routes/execution/index.vue'
 import ExecutionSummary from './routes/execution/summary.vue'
 import History from './routes/execution/history.vue'
 import StackTrace from './routes/execution/stack-trace.vue'
+import Queries from './routes/execution/queries.vue'
 
 const routeOpts = {
   mode: 'history',
@@ -49,6 +50,10 @@ const routeOpts = {
       name: 'execution/stack-trace',
       path: '/domain/:domain/workflows/:workflowId/:runId/stack-trace',
       component: StackTrace
+    }, {
+      name: 'execution/queries',
+      path: '/domain/:domain/workflows/:workflowId/:runId/queries',
+      component: Queries
     }]
   }, {
     path: '/domain/:domain/history',

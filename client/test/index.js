@@ -94,6 +94,14 @@ HTMLElement.prototype.selectItem = async function(text) {
   itemToClick.dispatchEvent(selectItem)
 }
 
+HTMLElement.prototype.selectOptions = async function(text) {
+  var openDropdown = new MouseEvent('mousedown')
+  this.querySelector('.dropdown-toggle').dispatchEvent(openDropdown)
+
+  await this.waitUntilAllExist('ul.dropdown-menu li a')
+  return this.textNodes('ul.dropdown-menu li a')
+}
+
 require('./scenario')
 
 mocha.checkLeaks()
