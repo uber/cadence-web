@@ -1,5 +1,22 @@
 describe('Query Workflow', function() {
-  it('should list workflows using a temporary hack of parsing out the available workflows from a NotFoundError')
+  it('should list workflows using a temporary hack of parsing out the available workflows from a NotFoundError', async function () {
+    this.timeout(50000)
+    this.test.QueryWorkflow = ({ queryRequest }) => {
+      queryRequest.query.queryType.should.equal('__cadence_web_list')
+
+      return {
+        ok: false,
+        body: { message: '__cadence_web_list not found. KnownQueryTypes=[foo,bar]' },
+        typeName: 'badRequestError'
+      }
+    }
+
+    return request(global.app)
+      .get('/api/domain/canary/workflows/ci%2Fdemo/run1/queries')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .expect(['foo', 'bar'])
+  })
 
   it('should forward the query to the workflow', async function () {
     this.test.QueryWorkflow = ({ queryRequest }) => {
