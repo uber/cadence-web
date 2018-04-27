@@ -10,10 +10,14 @@ titlesForGroups = {
 groupEvents = Object.keys(titlesForGroups)
 
 
-function findActiveGroupNode(parent, id, topLevel) {
-  if (parent.eventId == id) return parent
-  if (!topLevel && groupEvents.includes(parent.eventType)) return
-  return parent.children.find(c => findActiveGroupNode(c, id))
+function findActiveGroupNode(node, id, topLevel) {
+  if (node.eventId == id) return node
+  if (!topLevel && groupEvents.includes(node.eventType)) return
+
+  for (var c of node.children) {
+    let activeChild = findActiveGroupNode(c, id)
+    if (activeChild) return activeChild
+  }
 }
 
 function titleForNode(n) {
