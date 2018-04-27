@@ -67,7 +67,21 @@ router.get('/api/domain/:domain/workflows/:workflowId/:runId/history', async fun
   }
 })
 
-router.post('/api/domain/:domain/workflows/:workflowId/:runId/query/:queryType', async function (ctx) {
+router.get('/api/domain/:domain/workflows/:workflowId/:runId/queries', async function (ctx) {
+  try {
+    await ctx.cadence.queryWorkflow({
+      query: {
+        queryType: '__cadence_web_list'
+      }
+    })
+
+    ctx.throw(500)
+  } catch(e) {
+    ctx.body = ((e.message || '').match(/KnownQueryTypes=\[(.*)\]/) || [null, ''])[1].split(',')
+  }
+})
+
+router.post('/api/domain/:domain/workflows/:workflowId/:runId/queries/:queryType', async function (ctx) {
   ctx.body = await ctx.cadence.queryWorkflow({
     query: {
       queryType: ctx.params.queryType

@@ -29,7 +29,7 @@ export default {
       <div class="domain" v-if="$route.params.domain">
         <a :href="`/domain/${$route.params.domain}/workflows`" :class="{'router-link-active': $route.path === `/domain/${$route.params.domain}/workflows`}">{{$route.params.domain}}</a>
       </div>
-      <div class="list-workflows" v-if="!$route.params.workflowId">Workflows</div>
+      <div class="list-workflows" v-if="$route.name === 'workflows'">Workflows</div>
       <div class="workflow-id" v-if="$route.params.workflowId">
         <span>{{$route.params.workflowId}}</span>
       </div>

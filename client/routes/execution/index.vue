@@ -4,6 +4,7 @@
       <router-link :to="{ name: 'execution/summary' }" class="summary">Summary</router-link>
       <router-link :to="{ name: 'execution/history' }" class="history">History</router-link>
       <router-link :to="{ name: 'execution/stack-trace' }" class="stack-trace" v-show="isWorkflowRunning">Stack Trace</router-link>
+      <router-link :to="{ name: 'execution/queries' }" class="queries" v-show="isWorkflowRunning">Queries</router-link>
     </nav>
     <router-view></router-view>
   </section>
@@ -58,4 +59,6 @@ section.execution
       icon-history()
     a.summary
       icon('\ea59')
+    a.queries
+      icon('\ea40')
 </style>
