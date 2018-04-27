@@ -18,9 +18,5 @@ before_script:
 
 deploy:
   provider: script
-  on:
-    tags: true
   script:
-    - docker login -u ubercadence -p $DOCKER_PASS
-    - docker build . -t ubercadence/web:$TRAVIS_TAG
-    - docker push ubercadence/web:$TRAVIS_TAG
+    - docker build . -t ubercadence/web:travis-test
