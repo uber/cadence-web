@@ -34,7 +34,12 @@ export default {
   },
   created() {
     this.$http(this.$parent.baseAPIURL + '/queries').then(
-      r => this.queries = r.filter(r => r !== '__stack_trace'),
+      r => {
+        this.queries = r.filter(r => r !== '__stack_trace')
+        if (!this.queryName) {
+          this.queryName = this.queries[0]
+        }
+      },
       e => this.error = (e.json && e.json.message) || e.status || e.message
     )
   },

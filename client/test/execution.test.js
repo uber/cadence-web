@@ -364,8 +364,6 @@ describe('Execution', function() {
       var queriesDropdown = await queriesEl.waitUntilExists('.query-name .dropdown'),
           runButton = queriesEl.querySelector('a.run')
 
-      runButton.should.not.have.attr('href', '#')
-      queriesDropdown.selectItem('status')
       await retry(() => runButton.should.have.attr('href', '#'))
 
       scenario.withQueryResult('status', 'All is good!')
@@ -379,7 +377,6 @@ describe('Execution', function() {
       var queriesDropdown = await queriesEl.waitUntilExists('.query-name .dropdown'),
           runButton = queriesEl.querySelector('a.run')
 
-      queriesDropdown.selectItem('status')
       await retry(() => runButton.should.have.attr('href', '#'))
 
       scenario.withQueryResult('status', { status: 503, body: { message: 'Server Unavailable' } })
