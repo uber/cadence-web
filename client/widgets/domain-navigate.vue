@@ -50,7 +50,7 @@ export default {
   methods: {
     recordDomain(domain) {
       if (domain) {
-        this.recentDomains = this.recentDomains.filter(d => d && d !== domain).slice(0, 9)
+        this.recentDomains = this.recentDomains.filter(d => d && d !== domain).slice(0, 15)
         this.recentDomains.unshift(domain)
         localStorage.setItem('recent-domains', JSON.stringify(this.recentDomains))
       }
