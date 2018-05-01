@@ -1,7 +1,7 @@
 <template>
   <section :class="{ workflows: true, loading: loading }">
     <header class="filters">
-      <div class="field">
+      <div class="field workflow-id">
         <input type="search" class="workflow-id"
           placeholder=" "
           name="workflowId"
@@ -83,16 +83,16 @@ export default pagedGrid({
         { value: 'CONTINUED_AS_NEW', label: 'Continued As New' },
         { value: 'TIMED_OUT', label: 'Timed Out'}
       ],
-      range: {
-        startDate: q.startDate ? moment(q.startDate) : moment().subtract(3, 'months').startOf('day'),
-        endDate: moment(q.startDate).endOf('day')
-      }
+      range: q.startTime && q.endTime ? {
+        startTime: moment(q.startTime),
+        endTime: moment(q.startTime)
+      } : q.range
     }
   },
   created() {
     var q = this.$route.query || {}
-    if (!q.startDate || !q.endDate) {
-      this.setRange(this.range)
+    if (!q.range || /^last-\d{1,2}-(hour|day|month)s?$/.test(q.range)) {
+      this.setRange('last-30-days')
     }
     this.$watch('fetch', () => {}, { immediate: true })
   },
@@ -106,13 +106,20 @@ export default pagedGrid({
     criteria() {
       var
         domain = this.$route.params.domain,
-        q = this.$route.query
+        q = this.$route.query,
+        { startTime, endTime } = q
+
+      if (!startTime || !endTime) {
+        let [,count,unit] = (q.range || 'last-30-days').split('-')
+        startTime = moment().subtract(count, unit).startOf(unit)
+        endTime = moment().endOf(unit)
+      }
 
       this.nextPageToken = undefined
       return {
         domain,
-        startTime: q.startTime,
-        endTime: q.endTime,
+        startTime,
+        endTime,
         status: q.status,
         workflowId: q.workflowId,
         workflowName: q.workflowName
@@ -163,14 +170,19 @@ export default pagedGrid({
         })
       }
     },
-    setRange(r) {
-      if (r) {
-        this.$router.replace({
-          query: Object.assign({}, this.$route.query, {
-            startTime: r.startDate.toISOString(),
-            endTime: r.endDate.toISOString()
-          })
-        })
+    setRange(range) {
+      if (range) {
+        var query = Object.assign({}, this.$route.query)
+        if (typeof range === 'string') {
+          query.range = range
+          delete query.startTime
+          delete query.endTime
+        } else {
+          query.startTime = range.startTime.toISOString()
+          query.endTime = range.endTime.toISOString()
+          delete query.range
+        }
+        this.$router.replace({ query })
       }
     }
   }
@@ -184,9 +196,9 @@ section.workflows
   .filters
     flex-wrap wrap
     > .field
-      flex 3 1 auto
-    > .time-picker
-      flex 1 1 340px
+      flex 1 1 auto
+    .date-range-picker
+      flex 1 1 auto
     .v-select
       flex 1 1 240px
 

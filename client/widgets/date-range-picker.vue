@@ -1,33 +1,60 @@
 <template>
   <div class="date-range-picker" @focusout="onClickOrFocusOut">
-    <input type="text" class="date-range" :value="display" @focus="visible = true" @blur>
-    <daterange
-      v-show="visible"
-      :sync-range="dateRange"
-      @change="onChange"
-      lang="en"
-      monthYearFormat="MMMM YYYY"
+    <v-select
+      :value="relativeRange"
+      :options="relativeRangeOptions"
+      :on-change="onRelativeRangeChange"
+      :searchable="false"
     />
+    <div class="custom-range" v-show="customVisible">
+      <input type="text" class="date-range" :value="display" @focus="datePickerVisible = true" @blur>
+      <daterange
+        v-show="datePickerVisible"
+        :sync-range="customRange"
+        @change="onDateRangeChange"
+        lang="en"
+        monthYearFormat="MMMM YYYY"
+      />
+    </div>
   </div>
 </template>
 
 <script>
 import {DateRange} from 'vue-date-range'
+import moment from 'moment'
 
 export default {
   props: ['dateRange'],
   data() {
+    var isCustom = typeof this.dateRange !== 'string',
+    customRange = {
+      startDate: this.dateRange.startTime || moment().subtract(30, 'days').startOf('day'),
+      endDate: this.dateRange.endTime || moment().endOf('day')
+    }
+
     return {
-      visible: false,
-      display: this.formatDisplay(this.dateRange)
+      relativeRange: isCustom ? 'custom' : this.dateRange,
+      relativeRangeOptions: [
+        { label: 'Last 3 hours', value: 'last-3-hours' },
+        { label: 'Last 24 hours', value: 'last-24-hours' },
+        { label: 'Last 7 days', value: 'last-7-days' },
+        { label: 'Last 30 days', value: 'last-30-days' },
+        { label: 'Last 3 months', value: 'last-3-months' },
+        { label: 'Custom range', value: 'custom' }
+      ],
+      customRange,
+      customVisible: isCustom,
+      datePickerVisible: false,
+      display: this.formatDisplay(customRange)
     }
   },
   created() {
     this.onClickOrFocusOut = e => {
       if (!this.$el.contains(e.relatedTarget || e.target)) {
-        this.visible = false
+        this.datePickerVisible = false
       }
     }
+    this.onR
   },
   mounted() {
     document.body.addEventListener('click', this.onClickOrFocusOut)
@@ -36,9 +63,19 @@ export default {
     document.body.removeEventListener('click', this.onClickOrFocusOut)
   },
   methods: {
-    onChange(r) {
+    onRelativeRangeChange(r) {
+      if (r === 'custom') {
+        let [,count,unit] = (this.relativeRangeOptions.map(o => o.value).find(o => o === this.dateRange) || 'last-30-days').split('-')
+        this.customRange = { startDate: moment().subtract(count, unit).startOf(unit), endDate: moment().endOf(unit) }
+        this.customVisible = true
+      } else {
+        this.customVisible = false
+        this.$emit('change', r)
+      }
+    },
+    onDateRangeChange(r) {
       this.display = this.formatDisplay(r)
-      this.$emit('change', r)
+      this.$emit('change', { startTime: r.startDate, endTime: r.endDate })
     },
     formatDisplay(d) {
       return `${d.startDate.format('MMM Do')} - ${d.endDate.format('MMM Do')}`
@@ -54,13 +91,14 @@ export default {
 @require "../styles/definitions"
 
 .date-range-picker
-  position relative
+  display flex
 
   bkgnd-color = #f2f2f4
   cell-size = 36px
   header-height = 46px
   brdr = 1px solid uber-white-40
-  input
+  .custom-range
+    position relative
     width 252px
   .ayou-date-range
     position absolute

@@ -1,5 +1,5 @@
 <template>
-  <section class="queries">
+  <section :class="{ queries: true, loading }">
     <header v-if="queries && queries.length">
       <div class="query-name">
         <v-select
@@ -24,6 +24,7 @@ import moment from 'moment'
 export default {
   data() {
     return {
+      loading: false,
       queryName: undefined,
       queryInput: undefined,
       queries: undefined,
@@ -33,6 +34,7 @@ export default {
     }
   },
   created() {
+    this.loading = true
     this.$http(this.$parent.baseAPIURL + '/queries').then(
       r => {
         this.queries = r.filter(r => r !== '__stack_trace')
@@ -41,7 +43,7 @@ export default {
         }
       },
       e => this.error = (e.json && e.json.message) || e.status || e.message
-    )
+    ).finally(() => this.loading = false)
   },
   methods: {
     setQuery(queryName) {
