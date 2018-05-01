@@ -83,7 +83,6 @@ export default {
       }
     },
     onDateRangeChange(r) {
-      this.display = this.formatDisplay(r)
       this.$emit('change', { startTime: r.startDate, endTime: r.endDate })
     }
   },

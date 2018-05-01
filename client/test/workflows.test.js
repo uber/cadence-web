@@ -3,11 +3,11 @@ import moment from 'moment'
 import qs from 'friendly-querystring'
 
 describe('Workflows', function() {
-  async function workflowsTest(mochaTest, initialWorkflows) {
+  async function workflowsTest(mochaTest, initialWorkflows, query) {
     var [testEl, scenario] = new Scenario(mochaTest)
       .withDomain('ci-test')
       .startingAt('/domain/ci-test/workflows')
-      .withWorkflows('open', null, initialWorkflows)
+      .withWorkflows('open', query, initialWorkflows)
       .go()
 
     var workflows = await testEl.waitUntilExists('section.workflows')
@@ -22,7 +22,7 @@ describe('Workflows', function() {
     type: { name: 'demo' }
   }]
 
-  it('should query for open workflows in the last day by default', async function() {
+  it('should query for open workflows in the last 30 days by default', async function() {
     var [workflowsEl, scenario] = await workflowsTest(this.test),
         resultsEl = workflowsEl.querySelector('section.results')
 
@@ -61,6 +61,33 @@ describe('Workflows', function() {
     )
 
     resultsEl.should.not.contain('span.no-results').and.not.contain('span.error')
+
+    scenario.location.should.equal('/domain/ci-test/workflows?range=last-30-days&status=OPEN')
+  })
+
+  it('should load and save last relative time ranges in localStorage', async function () {
+    localStorage.setItem('ci-test:workflows-time-range', 'last-7-days')
+
+    var [workflowsEl, scenario] = await workflowsTest(this.test, null, {
+        startTime: moment().subtract(7, 'days').startOf('day').toISOString()
+      }),
+      dateRangePicker = workflowsEl.querySelector('header.filters .date-range-picker')
+
+    await retry(() => workflowsEl.querySelectorAll('section.results tbody tr').should.have.length(2))
+    scenario.location.should.equal('/domain/ci-test/workflows?range=last-7-days&status=OPEN')
+
+    dateRangePicker.querySelector('.selected-tag').should.have.trimmed.text('Last 7 days')
+
+    scenario.withWorkflows('open', {
+      startTime: moment().subtract(3, 'months').startOf('month').toISOString(),
+      endTime: moment().endOf('month').toISOString()
+    }, [fixtures.workflows.open[0]])
+    dateRangePicker.selectItem('Last 3 months')
+
+    await retry(() => workflowsEl.querySelectorAll('section.results tbody tr').should.have.length(1))
+    scenario.location.should.equal('/domain/ci-test/workflows?range=last-3-months&status=OPEN')
+    localStorage.getItem('ci-test:workflows-time-range').should.equal('last-3-months')
+    dateRangePicker.querySelector('.selected-tag').should.have.trimmed.text('Last 3 months')
   })
 
   it('should allow filtering by workflow id', async function () {
@@ -82,6 +109,21 @@ describe('Workflows', function() {
     wfIdEl.input('1234')
 
     await retry(() => workflowsEl.textNodes('.results tbody td:nth-child(3)').should.deep.equal(['demo']))
+  })
+
+  it('should respect query parameters for range and status', async function () {
+    var [testEl, scenario] = new Scenario(this.test)
+      .withDomain('ci-test')
+      .startingAt('/domain/ci-test/workflows?status=FAILED&range=last-24-hours')
+      .withWorkflows('closed', {
+        startTime: moment().subtract(24, 'hours').startOf('hour').toISOString(),
+        endTime: moment().endOf('hour').toISOString(),
+        status: 'FAILED'
+      })
+      .go()
+
+    await retry(() => testEl.querySelectorAll('section.workflows section.results tbody tr').should.have.length(1))
+    await Promise.delay(50)
   })
 
   it('should allow filtering by workflow name', async function() {

@@ -102,7 +102,7 @@ export default pagedGrid({
       var q = this.$route.query || {}
       return q.startTime && q.endTime ? {
         startTime: moment(q.startTime),
-        endTime: moment(q.startTime)
+        endTime: moment(q.endTime)
       } : q.range
     },
     criteria() {
@@ -113,8 +113,8 @@ export default pagedGrid({
 
       if (q.range && typeof q.range === 'string') {
         let [,count,unit] = q.range.split('-')
-        startTime = moment().subtract(count, unit).startOf(unit)
-        endTime = moment().endOf(unit)
+        startTime = moment().subtract(count, unit).startOf(unit).toISOString()
+        endTime = moment().endOf(unit).toISOString()
       }
 
       this.nextPageToken = undefined
