@@ -6,7 +6,7 @@ describe('Query Workflow', function() {
 
       return {
         ok: false,
-        body: { message: '__cadence_web_list not found. KnownQueryTypes=[foo bar]' },
+        body: { message: '__cadence_web_list not found. KnownQueryTypes=[foo bar ]' },
         typeName: 'badRequestError'
       }
     }
