@@ -1,5 +1,5 @@
 <template>
-  <section :class="{ workflows: true, loading: loading }">
+  <section :class="{ workflows: true, loading }">
     <header class="filters">
       <div class="field workflow-id">
         <input type="search" class="workflow-id"
@@ -67,7 +67,6 @@ import pagedGrid from '../paged-grid'
 
 export default pagedGrid({
   data() {
-    var q = this.$route.query || {}
     return {
       loading: false,
       results: [],
@@ -82,17 +81,13 @@ export default pagedGrid({
         { value: 'TERMINATED', label: 'Terminated' },
         { value: 'CONTINUED_AS_NEW', label: 'Continued As New' },
         { value: 'TIMED_OUT', label: 'Timed Out'}
-      ],
-      range: q.startTime && q.endTime ? {
-        startTime: moment(q.startTime),
-        endTime: moment(q.startTime)
-      } : q.range
+      ]
     }
   },
   created() {
     var q = this.$route.query || {}
-    if (!q.range || /^last-\d{1,2}-(hour|day|month)s?$/.test(q.range)) {
-      this.setRange('last-30-days')
+    if (!q.range || !/^last-\d{1,2}-(hour|day|month)s?$/.test(q.range)) {
+      this.setRange(localStorage.getItem(`${this.$route.params.domain}:workflows-time-range`) || 'last-30-days')
     }
     this.$watch('fetch', () => {}, { immediate: true })
   },
@@ -103,14 +98,21 @@ export default pagedGrid({
       }
       return this.statuses.find(s => s.value === this.$route.query.status)
     },
+    range() {
+      var q = this.$route.query || {}
+      return q.startTime && q.endTime ? {
+        startTime: moment(q.startTime),
+        endTime: moment(q.startTime)
+      } : q.range
+    },
     criteria() {
       var
         domain = this.$route.params.domain,
         q = this.$route.query,
         { startTime, endTime } = q
 
-      if (!startTime || !endTime) {
-        let [,count,unit] = (q.range || 'last-30-days').split('-')
+      if (q.range && typeof q.range === 'string') {
+        let [,count,unit] = q.range.split('-')
         startTime = moment().subtract(count, unit).startOf(unit)
         endTime = moment().endOf(unit)
       }
@@ -177,6 +179,7 @@ export default pagedGrid({
           query.range = range
           delete query.startTime
           delete query.endTime
+          localStorage.setItem(`${this.$route.params.domain}:workflows-time-range`, range)
         } else {
           query.startTime = range.startTime.toISOString()
           query.endTime = range.endTime.toISOString()

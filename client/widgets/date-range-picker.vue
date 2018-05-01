@@ -7,7 +7,7 @@
       :searchable="false"
     />
     <div class="custom-range" v-show="customVisible">
-      <input type="text" class="date-range" :value="display" @focus="datePickerVisible = true" @blur>
+      <input type="text" class="date-range" :value="customRangeDisplay" @focus="datePickerVisible = true" @blur>
       <daterange
         v-show="datePickerVisible"
         :sync-range="customRange"
@@ -23,29 +23,22 @@
 import {DateRange} from 'vue-date-range'
 import moment from 'moment'
 
+const relativeRangeOptions = [
+  { label: 'Last 3 hours', value: 'last-3-hours' },
+  { label: 'Last 24 hours', value: 'last-24-hours' },
+  { label: 'Last 7 days', value: 'last-7-days' },
+  { label: 'Last 30 days', value: 'last-30-days' },
+  { label: 'Last 3 months', value: 'last-3-months' },
+  { label: 'Custom range', value: 'custom' }
+]
+
 export default {
   props: ['dateRange'],
   data() {
-    var isCustom = typeof this.dateRange !== 'string',
-    customRange = {
-      startDate: this.dateRange.startTime || moment().subtract(30, 'days').startOf('day'),
-      endDate: this.dateRange.endTime || moment().endOf('day')
-    }
-
     return {
-      relativeRange: isCustom ? 'custom' : this.dateRange,
-      relativeRangeOptions: [
-        { label: 'Last 3 hours', value: 'last-3-hours' },
-        { label: 'Last 24 hours', value: 'last-24-hours' },
-        { label: 'Last 7 days', value: 'last-7-days' },
-        { label: 'Last 30 days', value: 'last-30-days' },
-        { label: 'Last 3 months', value: 'last-3-months' },
-        { label: 'Custom range', value: 'custom' }
-      ],
-      customRange,
-      customVisible: isCustom,
-      datePickerVisible: false,
-      display: this.formatDisplay(customRange)
+      relativeRangeOptions,
+      customVisible: this.isCustom,
+      datePickerVisible: false
     }
   },
   created() {
@@ -54,7 +47,6 @@ export default {
         this.datePickerVisible = false
       }
     }
-    this.onR
   },
   mounted() {
     document.body.addEventListener('click', this.onClickOrFocusOut)
@@ -62,23 +54,37 @@ export default {
   destroyed() {
     document.body.removeEventListener('click', this.onClickOrFocusOut)
   },
+  computed: {
+    isCustom() {
+      return typeof this.dateRange !== 'string'
+    },
+    relativeRange() {
+      return this.isCustom ?
+        relativeRangeOptions[relativeRangeOptions.length - 1] :
+        relativeRangeOptions.find(o => o.value === this.dateRange)
+    },
+    customRange() {
+      return {
+        startDate: (this.dateRange && this.dateRange.startTime) || moment().subtract(30, 'days').startOf('day'),
+        endDate: (this.dateRange && this.dateRange.endTime) || moment().endOf('day')
+      }
+    },
+    customRangeDisplay(d) {
+      return `${this.customRange.startDate.format('MMM Do')} - ${this.customRange.endDate.format('MMM Do')}`
+    }
+  },
   methods: {
     onRelativeRangeChange(r) {
-      if (r === 'custom') {
-        let [,count,unit] = (this.relativeRangeOptions.map(o => o.value).find(o => o === this.dateRange) || 'last-30-days').split('-')
-        this.customRange = { startDate: moment().subtract(count, unit).startOf(unit), endDate: moment().endOf(unit) }
+      if (r.value === 'custom') {
         this.customVisible = true
       } else {
         this.customVisible = false
-        this.$emit('change', r)
+        this.$emit('change', r.value)
       }
     },
     onDateRangeChange(r) {
       this.display = this.formatDisplay(r)
       this.$emit('change', { startTime: r.startDate, endTime: r.endDate })
-    },
-    formatDisplay(d) {
-      return `${d.startDate.format('MMM Do')} - ${d.endDate.format('MMM Do')}`
     }
   },
   components: {
@@ -99,6 +105,8 @@ export default {
   brdr = 1px solid uber-white-40
   .custom-range
     position relative
+    flex 0 0 252px
+  input, .custom-range
     width 252px
   .ayou-date-range
     position absolute
