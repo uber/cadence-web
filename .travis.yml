@@ -15,12 +15,3 @@ env:
 before_script:
   - TEST_RUN=ci NODE_ENV=ci node server.js &
   - sleep 5
-
-deploy:
-  provider: script
-  on:
-    tags: true
-  script:
-    - docker login -u ubercadence -p $DOCKER_PASS
-    - docker build . -t ubercadence/web:$TRAVIS_TAG
-    - docker push ubercadence/web:$TRAVIS_TAG
