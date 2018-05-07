@@ -30,8 +30,11 @@ export default {
         <a :href="`/domain/${$route.params.domain}/workflows`" :class="{'router-link-active': $route.path === `/domain/${$route.params.domain}/workflows`}">{{$route.params.domain}}</a>
       </div>
       <div class="list-workflows" v-if="$route.name === 'workflows'">Workflows</div>
-      <div class="workflow-id" v-if="$route.params.workflowId">
+      <div class="detail-view workflow-id" v-if="$route.params.workflowId">
         <span>{{$route.params.workflowId}}</span>
+      </div>
+      <div class="detail-view task-list" v-if="$route.params.taskList">
+        <span>{{$route.params.taskList}}</span>
       </div>
     </header>
     <router-view></router-view>
@@ -95,11 +98,14 @@ header.top-bar
         display inline-block
         transform scale(1.5)
         margin-right spacing
+  .detail-view span::before
+    font-size nav-label-font-size
+    color nav-label-color
+    margin-right spacing
   div.workflow-id span::before
-      font-size nav-label-font-size
       content 'WORKFLOW ID'
-      color nav-label-color
-      margin-right spacing
+  div.task-list span::before
+      content 'TASK LIST'
 
 body, main
   height 100%

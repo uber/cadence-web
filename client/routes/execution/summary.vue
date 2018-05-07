@@ -27,7 +27,7 @@
       </div>
       <div class="task-list">
         <dt>Task List</dt>
-        <dd>{{$parent.workflow.executionConfiguration.taskList.name}}</dd>
+        <dd><router-link :to="{ name: 'task-list', params: { taskList: $parent.workflow.executionConfiguration.taskList.name }}">{{$parent.workflow.executionConfiguration.taskList.name}}</router-link></dd>
       </div>
       <div class="history-length">
         <dt>History Events</dt>

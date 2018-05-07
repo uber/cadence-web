@@ -96,7 +96,7 @@ router.get('/api/domain/:domain/workflows/:workflowId/:runId', async function (c
   ctx.body = await ctx.cadence.describeWorkflow()
 })
 
-router.get('/api/domain/:domain/task-list/:taskList/pollers', async function (ctx) {
+router.get('/api/domain/:domain/task-lists/:taskList/pollers', async function (ctx) {
   const descTaskList = async (taskListType) => (await ctx.cadence.describeTaskList({
     domain: ctx.params.domain,
     taskList: { name: ctx.params.taskList },

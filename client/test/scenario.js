@@ -179,4 +179,22 @@ Scenario.prototype.withQueryResult = function(query, result) {
   return this
 }
 
+Scenario.prototype.withTaskListPollers = function(taskList, pollers) {
+  this.api.getOnce(`/api/domain/${this.domain}/task-lists/${taskList}/pollers`, pollers || {
+    node1: {
+      lastAccessTime: moment().startOf('hour').add(5, 'minutes'),
+      taskListTypes: ['decision', 'activity']
+    },
+    node2: {
+      lastAccessTime: moment().startOf('hour').add(3, 'minutes'),
+      taskListTypes: ['decision']
+    },
+    node3: {
+      lastAccessTime: moment().startOf('hour').add(4, 'minutes'),
+      taskListTypes: ['activity']
+    }
+  })
+  return this
+}
+
 window.Scenario = Scenario
