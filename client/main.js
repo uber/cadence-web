@@ -21,6 +21,7 @@ import ExecutionSummary from './routes/execution/summary.vue'
 import History from './routes/execution/history.vue'
 import StackTrace from './routes/execution/stack-trace.vue'
 import Queries from './routes/execution/queries.vue'
+import TaskList from './routes/task-list.vue'
 
 const routeOpts = {
   mode: 'history',
@@ -55,6 +56,10 @@ const routeOpts = {
       path: '/domain/:domain/workflows/:workflowId/:runId/queries',
       component: Queries
     }]
+  }, {
+    name: 'task-list',
+    path: '/domain/:domain/task-lists/:taskList',
+    component: TaskList
   }, {
     path: '/domain/:domain/history',
     redirect: ({ params, query }) => {
