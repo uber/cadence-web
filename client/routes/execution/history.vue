@@ -234,13 +234,11 @@ section.history
     tr[data-event-type*="Started"] td:nth-child(2)
       color uber-blue-120
     tr[data-event-type*="Failed"]
-      td:nth-child(2)
+      td:nth-child(2), [data-prop="reason"], [data-prop="details"]
         color uber-orange
-      td:nth-child(5) div
-        &[data-prop="reason"] dd, &[data-prop="details"] dd
-          color uber-orange
-    tr[data-event-type*="Completed"] td:nth-child(2)
-      color uber-green
+    tr[data-event-type*="Completed"]
+      td:nth-child(2), [data-prop="result"] dt
+        color uber-green
     pre
       max-height 15vh
 
