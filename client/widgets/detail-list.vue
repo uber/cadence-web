@@ -1,5 +1,6 @@
 <script>
-const jsonKeys = ['result', 'input']
+const jsonKeys = ['result', 'input'],
+      preKeys = jsonKeys.concat(['stackTrace', 'details.stackTrace'])
 
 export default {
   name: 'details-list',
@@ -38,7 +39,7 @@ export default {
       h('dt', null, kvp.key),
       h('dd', null, kvp.routeLink ?
         h('route-link', { to: kvp.routeLink })
-        : (typeof kvp.value === 'object' ?
+        : (preKeys.includes(kvp.key) ?
           [h('pre', null, JSON.stringify(kvp.value, null, 2))] :
           kvp.value))
     ])))
