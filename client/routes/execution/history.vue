@@ -20,8 +20,9 @@
       infinite-scroll-immediate-check="true"
       infinite-scroll-listen-for-event="longpoll"
       v-snapscroll
+      ref="results"
     >
-      <table v-show="format === 'grid' && showTable">
+      <table v-if="format === 'grid' && showTable">
         <thead>
           <th>ID</th>
           <th>Type</th>
@@ -29,8 +30,8 @@
           <th>Details</th>
         </thead>
         <tbody>
-          <tr v-for="(he, i) in results" :data-event-type="he.eventType">
-            <td>{{he.eventId}}</td>
+          <tr v-for="(he, i) in results" :data-event-type="he.eventType" :data-event-id="he.eventId" :class="{ active: he.eventId === $route.query.eventId }">
+            <td><a href="#" @click.prevent="$router.replaceQueryParam('eventId', he.eventId)">{{he.eventId}}</a></td>
             <td>{{he.eventType}}</td>
             <td>{{timeCol(he.timestamp, i)}} </td>
             <td><details-list :item="he.details" /></td>
@@ -71,6 +72,7 @@ export default pagedGrid({
 
       return queryUrl + '&nextPageToken=' + encodeURIComponent(this.nextPageToken)
     }, v => this.fetch(v), { immediate: true })
+    this.$watch('format', this.scrollEventIntoView.bind(this))
   },
   computed: {
     hierarchialResults() {
@@ -124,13 +126,19 @@ export default pagedGrid({
         } else {
           this.isWorkflowRunning = false
         }
+
+        var shouldScrollIntoView = this.$route.query.eventId && this.results.length <= this.$route.query.eventId
         this.results = this.results.concat(res.history.events.map(data => {
           data.timestamp = moment(data.timestamp)
           return data
         }))
 
+        if (shouldScrollIntoView) {
+          this.scrollEventIntoView()
+        }
         // https://github.com/ElemeFE/vue-infinite-scroll/issues/89
         setImmediate(() => this.$emit('longpoll'))
+
         return this.results
       }).catch(e => {
         if (this._isDestroyed || this.pqu !== pagedQueryUrl) return
@@ -172,6 +180,14 @@ export default pagedGrid({
         elapsed += ` (+${deltaFromPrev.format()})`
       }
       return elapsed
+    },
+    scrollEventIntoView(eventId) {
+      setTimeout(() => {
+        var eventRow = this.$refs.results.querySelector(`[data-event-id="${this.$route.query.eventId}"]`)
+        if (eventRow) {
+          eventRow.scrollIntoView()
+        }
+      }, 100)
     }
   },
   components: {
@@ -239,6 +255,9 @@ section.history
     tr[data-event-type*="Completed"]
       td:nth-child(2), [data-prop="result"] dt
         color uber-green
+    tr.active
+      border 1px solid uber-black-60
+      background-color alpha(uber-blue, 5%)
     pre
       max-height 15vh
 

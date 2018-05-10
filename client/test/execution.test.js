@@ -163,7 +163,7 @@ describe('Execution', function() {
       await retry(() => historyEl.querySelectorAll('.compact-view .event-node').should.have.length(12))
 
       resultsEl.should.not.have.descendant('pre.json')
-      resultsEl.querySelector('table').should.not.be.displayed
+      resultsEl.should.not.have.descendant('table')
       scenario.location.should.equal('/domain/ci-test/workflows/email-daily-summaries/emailRun1/history?format=compact')
       historyEl.querySelector('.view-formats a.json').trigger('click')
 
@@ -295,6 +295,37 @@ describe('Execution', function() {
         scenario.withHistory(generateActivityEvents(8, 15))
         resultsEl.scrollTop = resultsEl.scrollHeight - resultsEl.offsetHeight
         await Promise.delay(100)
+      })
+
+      it('should scroll the selected event id from compact view into view', async function () {
+        var [testEl, scenario] = new Scenario(this.test)
+          .withDomain('ci-test')
+          .startingAt('/domain/ci-test/workflows/long-running-op-1/theRunId/history?format=compact')
+          .withExecution('long-running-op-1', 'theRunId')
+          .withHistory([{
+            timestamp: moment().toISOString(),
+            eventType: 'WorkflowExecutionStarted',
+            eventId: 1,
+            details: {
+              workflowType: {
+                name: 'long-running-op'
+              }
+            }
+          }].concat(generateActivityEvents(100)))
+          .go(true)
+
+        var historyEl = await testEl.waitUntilExists('section.history')
+        await retry(() => historyEl.querySelectorAll('.compact-view a[data-event-id]').should.have.length(101))
+
+        historyEl.querySelector('.compact-view a[data-event-id="78"]').trigger('click')
+        await retry(() => scenario.location.should.equal('/domain/ci-test/workflows/long-running-op-1/theRunId/history?format=compact&eventId=78'))
+        await Promise.delay(100)
+
+        testEl.querySelector('.view-formats a.grid').trigger('click')
+        await retry(() => {
+          testEl.querySelectorAll('section.results tbody tr').should.have.length(101)
+          testEl.querySelector('section.results').scrollTop.should.be.above(5000)
+        })
       })
     })
   })
