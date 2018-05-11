@@ -15,7 +15,7 @@
     "no-comma-dangle": 0,
     "no-multi-spaces": 0,
     "no-multi-str": 0,
-    "no-return-assign": 1,
+    "no-return-assign": 0,
     "no-shadow": 1,
     "no-trailing-spaces": 1,
     "no-underscore-dangle": 0,

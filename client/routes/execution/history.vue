@@ -26,11 +26,14 @@
         <thead>
           <th>ID</th>
           <th>Type</th>
-          <th>Elapsed</th>
+          <th>
+            <a class="elapsed" :href="tsFormat === 'elapsed' ? null : '#'" @click.prevent="setTsFormat('elapsed')">Elapsed</a> / 
+            <a class="ts" :href="tsFormat === 'elapsed' ? '#' : null" @click.prevent="setTsFormat('ts')">Time</a>
+          </th>
           <th>Details</th>
         </thead>
         <tbody>
-          <tr v-for="(he, i) in results" :data-event-type="he.eventType" :data-event-id="he.eventId" :class="{ active: he.eventId === $route.query.eventId }">
+          <tr v-for="(he, i) in results" :key="he.eventId" :data-event-type="he.eventType" :data-event-id="he.eventId" :class="{ active: he.eventId === $route.query.eventId }">
             <td><a href="#" @click.prevent="$router.replaceQueryParam('eventId', he.eventId)">{{he.eventId}}</a></td>
             <td>{{he.eventType}}</td>
             <td>{{timeCol(he.timestamp, i)}} </td>
@@ -60,6 +63,7 @@ export default pagedGrid({
       loading: false,
       error: undefined,
       nextPageToken: undefined,
+      tsFormat: localStorage.getItem(`${this.$route.params.domain}:history-ts-col-format`) || 'elapsed',
       results: []
     }
   },
@@ -168,8 +172,12 @@ export default pagedGrid({
         query: Object.assign({}, this.$route.query, { format })
       })
     },
+    setTsFormat(tsFormat) {
+      this.tsFormat = tsFormat
+      localStorage.setItem(`${this.$route.params.domain}:history-ts-col-format`, tsFormat)
+    },
     timeCol(ts, i) {
-      if (i === 0) {
+      if (i === 0 || this.tsFormat !== 'elapsed') {
         return ts.format('MMM Do h:mm:ss a')
       }
 
@@ -245,6 +253,8 @@ section.history
     overflow auto
 
   table
+    th a:not([href])
+      border-bottom 1px solid black
     td:nth-child(3)
       one-liner-ellipsis()
     tr[data-event-type*="Started"] td:nth-child(2)

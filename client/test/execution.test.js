@@ -254,7 +254,7 @@ describe('Execution', function() {
         var [historyEl, scenario] = await historyTest(this.test)
         await historyEl.waitUntilExists('.results tbody tr:nth-child(4)')
 
-        historyEl.textNodes('table thead th').should.deep.equal(['ID', 'Type', 'Elapsed', 'Details'])
+        historyEl.textNodes('table thead th:not(:nth-child(3))').should.deep.equal(['ID', 'Type', 'Details'])
         historyEl.textNodes('table tbody td:nth-child(1)').should.deep.equal(
           new Array(12).fill('').map((_, i) => String(i + 1))
         )
@@ -266,6 +266,31 @@ describe('Execution', function() {
           '', '', '1s (+1s)', '2s (+1s)', '3s (+1s)', '8s (+5s)', '19s (+11s)',
           '30s (+11s)', '41s (+11s)', '52s (+11s)', '1m 4s (+12s)'
         ])
+      })
+
+      it('should allow toggling of the time column between elapsed and local timestamp', async function() {
+        var [historyEl, scenario] = await historyTest(this.test)
+        await historyEl.waitUntilExists('.results tbody tr:nth-child(4)')
+
+        var [elapsedEl, tsEl] = historyEl.querySelectorAll('thead th:nth-child(3) a')
+        elapsedEl.should.have.text('Elapsed').and.not.have.attr('href')
+        tsEl.should.have.text('Time').and.have.attr('href', '#')
+
+        tsEl.trigger('click')
+        await retry(() => historyEl.textNodes('table tbody td:nth-child(3)').should.deep.equal(
+          fixtures.history.emailRun1.map(e => moment(e.timestamp).format('MMM Do h:mm:ss a'))
+        ))
+        localStorage.getItem('ci-test:history-ts-col-format').should.equal('ts')
+      })
+
+      it('should use the timestamp format from local storage if available', async function() {
+        localStorage.setItem('ci-test:history-ts-col-format', 'ts')
+        var [historyEl, scenario] = await historyTest(this.test)
+        await historyEl.waitUntilExists('.results tbody tr:nth-child(4)')
+
+        historyEl.textNodes('table tbody td:nth-child(3)').should.deep.equal(
+          fixtures.history.emailRun1.map(e => moment(e.timestamp).format('MMM Do h:mm:ss a'))
+        )
       })
 
       it('should show details as flattened key-value pairs from parsed json, except for result and input', async function () {
