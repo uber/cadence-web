@@ -33,6 +33,7 @@ exception ShardOwnershipLostError {
 
 struct ParentExecutionInfo {
   10: optional string domainUUID
+  15: optional string domain
   20: optional shared.WorkflowExecution execution
   30: optional i64 (js.type = "Long") initiatedId
 }
@@ -60,6 +61,17 @@ struct GetMutableStateResponse {
   80: optional string clientFeatureVersion
   90: optional string clientImpl
   100: optional bool isWorkflowRunning
+  110: optional i32 stickyTaskListScheduleToStartTimeout
+}
+
+struct ResetStickyTaskListRequest {
+  10: optional string domainUUID
+  20: optional shared.WorkflowExecution execution
+}
+
+struct ResetStickyTaskListResponse {
+  // The reason to keep this response is to allow returning
+  // information in the future.
 }
 
 struct RespondDecisionTaskCompletedRequest {
@@ -102,8 +114,10 @@ struct RecordActivityTaskStartedRequest {
 }
 
 struct RecordActivityTaskStartedResponse {
-  10: optional shared.HistoryEvent startedEvent
   20: optional shared.HistoryEvent scheduledEvent
+  30: optional i64 (js.type = "Long") startedTimestamp
+  40: optional i64 (js.type = "Long") attempt
+  50: optional i64 (js.type = "Long") scheduledTimestampOfThisAttempt
 }
 
 struct RecordDecisionTaskStartedRequest {
@@ -131,6 +145,11 @@ struct SignalWorkflowExecutionRequest {
   20: optional shared.SignalWorkflowExecutionRequest signalRequest
   30: optional shared.WorkflowExecution externalWorkflowExecution
   40: optional bool childWorkflowOnly
+}
+
+struct SignalWithStartWorkflowExecutionRequest {
+  10: optional string domainUUID
+  20: optional shared.SignalWithStartWorkflowExecutionRequest signalWithStartRequest
 }
 
 struct RemoveSignalMutableStateRequest {
@@ -177,6 +196,23 @@ struct RecordChildExecutionCompletedRequest {
   50: optional shared.HistoryEvent completionEvent
 }
 
+struct ReplicationInfo {
+  10: optional i64 (js.type = "Long") version
+  20: optional i64 (js.type = "Long") lastEventId
+}
+
+struct ReplicateEventsRequest {
+  10:  optional string sourceCluster
+  20: optional string domainUUID
+  30: optional shared.WorkflowExecution workflowExecution
+  40: optional i64 (js.type = "Long") firstEventId
+  50: optional i64 (js.type = "Long") nextEventId
+  60: optional i64 (js.type = "Long") version
+  70: optional map<string, ReplicationInfo> replicationInfo
+  80: optional shared.History history
+  90: optional shared.History newRunHistory
+}
+
 /**
 * HistoryService provides API to start a new long running workflow instance, as well as query and update the history
 * of workflow instances already created.
@@ -194,6 +230,7 @@ service HistoryService {
       2: shared.InternalServiceError internalServiceError,
       3: shared.WorkflowExecutionAlreadyStartedError sessionAlreadyExistError,
       4: ShardOwnershipLostError shardOwnershipLostError,
+      5: shared.DomainNotActiveError domainNotActiveError,
     )
 
   /**
@@ -201,6 +238,23 @@ service HistoryService {
   * It fails with 'EntityNotExistError' if specified workflow execution in unknown to the service.
   **/
   GetMutableStateResponse GetMutableState(1: GetMutableStateRequest getRequest)
+    throws (
+      1: shared.BadRequestError badRequestError,
+      2: shared.InternalServiceError internalServiceError,
+      3: shared.EntityNotExistsError entityNotExistError,
+      4: ShardOwnershipLostError shardOwnershipLostError,
+    )
+
+  /**
+  * Reset the sticky tasklist related information in mutable state of a given workflow.
+  * Things cleared are:
+  * 1. StickyTaskList
+  * 2. StickyScheduleToStartTimeout
+  * 3. ClientLibraryVersion
+  * 4. ClientFeatureVersion
+  * 5. ClientImpl
+  **/
+  ResetStickyTaskListResponse ResetStickyTaskList(1: ResetStickyTaskListRequest resetRequest)
     throws (
       1: shared.BadRequestError badRequestError,
       2: shared.InternalServiceError internalServiceError,
@@ -220,6 +274,7 @@ service HistoryService {
       3: EventAlreadyStartedError eventAlreadyStartedError,
       4: shared.EntityNotExistsError entityNotExistError,
       5: ShardOwnershipLostError shardOwnershipLostError,
+      6: shared.DomainNotActiveError domainNotActiveError,
     )
 
   /**
@@ -234,6 +289,7 @@ service HistoryService {
       3: EventAlreadyStartedError eventAlreadyStartedError,
       4: shared.EntityNotExistsError entityNotExistError,
       5: ShardOwnershipLostError shardOwnershipLostError,
+      6: shared.DomainNotActiveError domainNotActiveError,
     )
 
   /**
@@ -249,6 +305,7 @@ service HistoryService {
       2: shared.InternalServiceError internalServiceError,
       3: shared.EntityNotExistsError entityNotExistError,
       4: ShardOwnershipLostError shardOwnershipLostError,
+      5: shared.DomainNotActiveError domainNotActiveError,
     )
 
   /**
@@ -262,6 +319,7 @@ service HistoryService {
       2: shared.InternalServiceError internalServiceError,
       3: shared.EntityNotExistsError entityNotExistError,
       4: ShardOwnershipLostError shardOwnershipLostError,
+      5: shared.DomainNotActiveError domainNotActiveError,
     )
 
   /**
@@ -277,6 +335,7 @@ service HistoryService {
       2: shared.InternalServiceError internalServiceError,
       3: shared.EntityNotExistsError entityNotExistError,
       4: ShardOwnershipLostError shardOwnershipLostError,
+      5: shared.DomainNotActiveError domainNotActiveError,
     )
 
   /**
@@ -292,6 +351,7 @@ service HistoryService {
       2: shared.InternalServiceError internalServiceError,
       3: shared.EntityNotExistsError entityNotExistError,
       4: ShardOwnershipLostError shardOwnershipLostError,
+      5: shared.DomainNotActiveError domainNotActiveError,
     )
 
   /**
@@ -307,6 +367,7 @@ service HistoryService {
       2: shared.InternalServiceError internalServiceError,
       3: shared.EntityNotExistsError entityNotExistError,
       4: ShardOwnershipLostError shardOwnershipLostError,
+      5: shared.DomainNotActiveError domainNotActiveError,
     )
 
   /**
@@ -322,6 +383,7 @@ service HistoryService {
       2: shared.InternalServiceError internalServiceError,
       3: shared.EntityNotExistsError entityNotExistError,
       4: ShardOwnershipLostError shardOwnershipLostError,
+      5: shared.DomainNotActiveError domainNotActiveError,
     )
 
   /**
@@ -334,6 +396,22 @@ service HistoryService {
       2: shared.InternalServiceError internalServiceError,
       3: shared.EntityNotExistsError entityNotExistError,
       4: ShardOwnershipLostError shardOwnershipLostError,
+      5: shared.DomainNotActiveError domainNotActiveError,
+    )
+
+  /**
+  * SignalWithStartWorkflowExecution is used to ensure sending a signal event to a workflow execution.
+  * If workflow is running, this results in WorkflowExecutionSignaled event recorded in the history
+  * and a decision task being created for the execution.
+  * If workflow is not running or not found, this results in WorkflowExecutionStarted and WorkflowExecutionSignaled
+  * event recorded in history, and a decision task being created for the execution
+  **/
+  shared.StartWorkflowExecutionResponse SignalWithStartWorkflowExecution(1: SignalWithStartWorkflowExecutionRequest signalWithStartRequest)
+    throws (
+      1: shared.BadRequestError badRequestError,
+      2: shared.InternalServiceError internalServiceError,
+      3: ShardOwnershipLostError shardOwnershipLostError,
+      4: shared.DomainNotActiveError domainNotActiveError,
     )
 
   /**
@@ -346,6 +424,7 @@ service HistoryService {
       2: shared.InternalServiceError internalServiceError,
       3: shared.EntityNotExistsError entityNotExistError,
       4: ShardOwnershipLostError shardOwnershipLostError,
+      5: shared.DomainNotActiveError domainNotActiveError,
     )
 
   /**
@@ -358,6 +437,7 @@ service HistoryService {
       2: shared.InternalServiceError internalServiceError,
       3: shared.EntityNotExistsError entityNotExistError,
       4: ShardOwnershipLostError shardOwnershipLostError,
+      5: shared.DomainNotActiveError domainNotActiveError,
     )
 
   /**
@@ -373,6 +453,7 @@ service HistoryService {
       3: shared.EntityNotExistsError entityNotExistError,
       4: ShardOwnershipLostError shardOwnershipLostError,
       5: shared.CancellationAlreadyRequestedError cancellationAlreadyRequestedError,
+      6: shared.DomainNotActiveError domainNotActiveError,
     )
 
   /**
@@ -387,6 +468,7 @@ service HistoryService {
       2: shared.InternalServiceError internalServiceError,
       3: shared.EntityNotExistsError entityNotExistError,
       4: ShardOwnershipLostError shardOwnershipLostError,
+      5: shared.DomainNotActiveError domainNotActiveError,
     )
 
   /**
@@ -399,6 +481,7 @@ service HistoryService {
       2: shared.InternalServiceError internalServiceError,
       3: shared.EntityNotExistsError entityNotExistError,
       4: ShardOwnershipLostError shardOwnershipLostError,
+      5: shared.DomainNotActiveError domainNotActiveError,
     )
 
   /**
@@ -412,4 +495,11 @@ service HistoryService {
       4: ShardOwnershipLostError shardOwnershipLostError,
     )
 
+  void ReplicateEvents(1: ReplicateEventsRequest replicateRequest)
+    throws (
+      1: shared.BadRequestError badRequestError,
+      2: shared.InternalServiceError internalServiceError,
+      3: shared.EntityNotExistsError entityNotExistError,
+      4: ShardOwnershipLostError shardOwnershipLostError,
+    )
 }
