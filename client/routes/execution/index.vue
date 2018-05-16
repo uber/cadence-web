@@ -11,25 +11,92 @@
 </template>
 
 <script>
+import moment from 'moment'
+const resultThreshold = 1000
+
 export default {
   data() {
-    var { domain, workflowId, runId } = this.$route.params
     return {
       workflow: undefined,
       input: undefined,
-      error: undefined,
-      baseAPIURL: `/api/domain/${domain}/workflows/${encodeURIComponent(workflowId)}/${encodeURIComponent(runId)}`,
+      wfError: undefined,
       wfLoading: true,
-      isWorkflowRunning: undefined
+      historyError: undefined,
+      historyLoading: undefined,
+      isWorkflowRunning: undefined,
+      results: []
     }
   },
   created() {
-    this.$http(this.baseAPIURL).then(
+    this.$watch('baseAPIURL', u => this.$http(u).then(
       wf => { this.workflow = wf; this.isWorkflowRunning = !wf.workflowExecutionInfo.closeTime },
-      e => this.error = (e.json && e.json.message) || e.status || e.message
-    ).finally(() => this.wfLoading = false)
+      e => this.wfError = (e.json && e.json.message) || e.status || e.message
+    ).finally(() => this.wfLoading = false), { immediate: true })
+
+    this.$watch(() => {
+      let queryUrl = this.baseAPIURL + '/history?waitForNewEvent=true'
+      if (!this.nextPageToken) return queryUrl
+
+      return queryUrl + '&nextPageToken=' + encodeURIComponent(this.nextPageToken)
+    }, v => this.fetchHistoryPage(v), { immediate: true })
   },
-  methods: {}
+  computed: {
+    baseAPIURL() {
+      var { domain, workflowId, runId } = this.$route.params
+      return `/api/domain/${domain}/workflows/${encodeURIComponent(workflowId)}/${encodeURIComponent(runId)}`
+    }
+  },
+  methods: {
+    fetchHistoryPage(pagedQueryUrl) {
+      this.historyError = undefined
+      if (!pagedQueryUrl) {
+        this.historyLoading = false
+        return
+      }
+
+      this.historyLoading = true
+      this.pqu = pagedQueryUrl
+      return this.$http(pagedQueryUrl).then(res => {
+        if (this._isDestroyed || this.pqu !== pagedQueryUrl) return
+        if (res.nextPageToken && this.npt === res.nextPageToken) {
+          // nothing happened, and same query is still valid, so let's long pool again
+          return this.fetch(pagedQueryUrl)
+        }
+
+        if (res.nextPageToken) {
+          this.isWorkflowRunning = JSON.parse(atob(res.nextPageToken)).IsWorkflowRunning
+          if (this.results.length < resultThreshold) {
+            setImmediate(() => this.nextPageToken = res.nextPageToken)
+          }
+        } else {
+          this.isWorkflowRunning = false
+        }
+
+        var shouldHighlightEventId = this.$route.query.eventId && this.results.length <= this.$route.query.eventId
+        this.results = this.results.concat(res.history.events.map(data => {
+          data.timestamp = moment(data.timestamp)
+          return data
+        }))
+
+        if (shouldHighlightEventId) {
+          this.$emit('highlight-event-id', this.$route.query.eventId)
+        }
+        // // https://github.com/ElemeFE/vue-infinite-scroll/issues/89
+        // setImmediate(() => this.$emit('longpoll'))
+
+        return this.results
+      }).catch(e => {
+        console.error(e)
+        if (this._isDestroyed || this.pqu !== pagedQueryUrl) return
+        this.historyError = (e.json && e.json.message) || e.status || e.message
+        return []
+      }).finally(() => {
+        if (this._isDestroyed || this.pqu !== pagedQueryUrl) {
+          this.historyLoading = false
+        }
+      })
+    }
+  }
 }
 </script>
 

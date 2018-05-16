@@ -9,13 +9,17 @@
         <dt>Started At</dt>
         <dd>{{$moment($parent.workflow.workflowExecutionInfo.startTime).format('dddd MMMM Do, h:mm:ss a')}}</dd>
       </div>
-      <div class="workflow-status" :data-status="wfStatus()">
-        <dt>Status</dt>
-        <dd><bar-loader v-if="!$parent.workflow.workflowExecutionInfo.closeTime" /> {{wfStatus()}}</dd>
-      </div>
       <div class="close-time" v-if="$parent.workflow.workflowExecutionInfo.closeTime">
         <dt>Closed Time</dt>
         <dd>{{$moment($parent.workflow.workflowExecutionInfo.closeTime).format('dddd MMMM Do, h:mm:ss a')}}</dd>
+      </div>
+      <div class="workflow-status" :data-status="wfStatus">
+        <dt>Status</dt>
+        <dd><bar-loader v-if="!$parent.workflow.workflowExecutionInfo.closeTime" /> {{wfStatus}}</dd>
+      </div>
+      <div class="workflow-result" v-if="!!workflowCompletedEvent">
+        <dt>Result</dt>
+        <dd><prism language="json">{{workflowCompletedEvent.details.result || workflowCompletedEvent.details}}</prism></dd>
       </div>
       <div class="workflow-id">
         <dt>Workflow Id</dt>
@@ -24,6 +28,10 @@
       <div class="run-id">
         <dt>Run Id</dt>
         <dd>{{$route.params.runId}}</dd>
+      </div>
+      <div class="parent-workflow" v-if="parentWorkflowRoute">
+        <dt>Parent Workflow</dt>
+        <dd><router-link :to="parentWorkflowRoute.to">{{parentWorkflowRoute.text}}</router-link></dd>
       </div>
       <div class="task-list">
         <dt>Task List</dt>
@@ -35,7 +43,7 @@
       </div>
       <div class="workflow-input">
         <dt>Input</dt>
-        <dd><pre v-if="$parent.input !== undefined">{{JSON.stringify($parent.input, null, 2)}}</pre></dd>
+        <dd><prism language="json" v-if="$parent.input !== undefined">{{$parent.input}}</prism></dd>
       </div>
       <div class="pending-activities" v-if="$parent.workflow.pendingActivities">
         <dt>Pending Activities</dt>
@@ -47,6 +55,8 @@
 </template>
 
 <script>
+import shortName from '../../short-name'
+
 export default {
   data() {
     return {
@@ -62,9 +72,29 @@ export default {
       ).finally(() => this.inputLoading = false)
     }
   },
-  methods: {
+  computed: {
     wfStatus() {
       return ((this.$parent.workflow && this.$parent.workflow.workflowExecutionInfo.closeStatus) || 'running').toLowerCase()
+    },
+    workflowCompletedEvent() {
+       return this.$parent.results.length > 1 && this.$parent.results[this.$parent.results.length - 1].eventType.startsWith('WorkflowExecution') ?
+          this.$parent.results[this.$parent.results.length - 1] : undefined
+    },
+    parentWorkflowRoute() {
+      var wfStart = this.$parent.results && this.$parent.results[0]
+      if (wfStart && wfStart.details && wfStart.details.parentWorkflowExecution) {
+        return {
+          to: {
+            name: 'execution/summary',
+            params: {
+              domain: wfStart.details.parentWorkflowDomain || this.$route.params.domain,
+              workflowId: wfStart.details.parentWorkflowExecution.workflowId,
+              runId: wfStart.details.parentWorkflowExecution.runId
+            }
+          },
+          text: `${shortName(wfStart.details.workflowType.name)} - ${wfStart.details.parentWorkflowExecution.workflowId}`
+        }
+      }
     }
   }
 }
