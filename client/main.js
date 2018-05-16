@@ -10,6 +10,9 @@ import moment from 'moment'
 import DateRangePicker from './widgets/date-range-picker.vue'
 import detailList from './widgets/detail-list.vue'
 import barLoader from './widgets/bar-loader.vue'
+import 'prismjs'
+import 'prismjs/components/prism-json'
+import Prism from 'vue-prism-component'
 
 import snapscroll from './directives/snapscroll'
 
@@ -132,6 +135,7 @@ Vue.component('v-select', vueSelect)
 Vue.component('date-range-picker', DateRangePicker)
 Vue.component('details-list', detailList)
 Vue.component('bar-loader', barLoader)
+Vue.component('prism', Prism)
 Vue.directive('snapscroll', snapscroll)
 Vue.config.ignoredElements = ['loader']
 
