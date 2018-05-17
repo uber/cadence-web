@@ -18,7 +18,6 @@ export default {
   data() {
     return {
       workflow: undefined,
-      input: undefined,
       wfError: undefined,
       wfLoading: true,
       historyError: undefined,

@@ -130,22 +130,7 @@ Scenario.prototype.withExecution = function(workflowId, runId, description)  {
   return this
 }
 
-Scenario.prototype.withSummaryInput = function(input)  {
-  this.api.getOnce(`${this.execApiBase()}/history`, {
-    history: {
-      events: [{
-        eventType: 'WorkflowExecutionStarted',
-        details: { input }
-      }]
-    }
-  })
-  return this
-}
-
 Scenario.prototype.withHistory = function(events, hasMorePages)  {
-  if (!events) {
-    events = JSON.parse(JSON.stringify(fixtures.history.emailRun1))
-  }
   if (!this.historyNpt) {
     this.historyNpt = {}
   }
@@ -167,6 +152,15 @@ Scenario.prototype.withHistory = function(events, hasMorePages)  {
   this.api.getOnce(url, response)
 
   return this
+}
+
+Scenario.prototype.withFullHistory = function(events) {
+  var events = JSON.parse(JSON.stringify(events || fixtures.history.emailRun1)),
+      third = Math.floor(events.length / 3)
+
+  return this.withHistory(events.slice(0, third), true)
+    .withHistory(events.slice(third, third + third), true)
+    .withHistory(events.slice(third + third))
 }
 
 Scenario.prototype.withQueries = function(queries) {

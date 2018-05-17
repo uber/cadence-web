@@ -43,7 +43,7 @@
       </div>
       <div class="workflow-input">
         <dt>Input</dt>
-        <dd><prism language="json" v-if="$parent.input !== undefined">{{$parent.input}}</prism></dd>
+        <dd><prism language="json" v-if="input !== undefined">{{input}}</prism></dd>
       </div>
       <div class="pending-activities" v-if="$parent.workflow.pendingActivities">
         <dt>Pending Activities</dt>
@@ -59,20 +59,12 @@ import shortName from '../../short-name'
 
 export default {
   data() {
-    return {
-      inputLoading: false
-    }
-  },
-  created() {
-    if (!this.$parent.input) {
-      this.inputLoading = true
-      this.$http(this.$parent.baseAPIURL + '/history').then(
-        res => this.$parent.input = res.history.events[0].details.input,
-        e => this.$parent.input = (e.json && e.json.message) || e.status || e.message
-      ).finally(() => this.inputLoading = false)
-    }
+    return {}
   },
   computed: {
+    input() {
+      return this.$parent.results[0] && this.$parent.results[0].details.input
+    },
     wfStatus() {
       return ((this.$parent.workflow && this.$parent.workflow.workflowExecutionInfo.closeStatus) || 'running').toLowerCase()
     },
