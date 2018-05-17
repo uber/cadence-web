@@ -10,9 +10,11 @@ const titlesForGroups = {
         name = shortName(n.details.workflowType.name)
 
     return childWf ? ['Child Workflow ', h('router-link', {
-      to: {
-        name: 'execution/summary',
-        params: { workflowId: childWf.workflowId, runId: childWf.runId }
+      props: {
+        to: {
+          name: 'execution/summary',
+          params: { workflowId: childWf.workflowId, runId: childWf.runId }
+        }
       }
     }, name)] : `Child Workflow ${name}`
   }

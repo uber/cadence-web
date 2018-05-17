@@ -24,14 +24,19 @@ export default {
       historyError: undefined,
       historyLoading: undefined,
       isWorkflowRunning: undefined,
+      nextPageToken: undefined,
       results: []
     }
   },
   created() {
-    this.$watch('baseAPIURL', u => this.$http(u).then(
-      wf => { this.workflow = wf; this.isWorkflowRunning = !wf.workflowExecutionInfo.closeTime },
-      e => this.wfError = (e.json && e.json.message) || e.status || e.message
-    ).finally(() => this.wfLoading = false), { immediate: true })
+    this.$watch('baseAPIURL', u => {
+      this.results = []
+      this.nextPageToken = undefined
+      return this.$http(u).then(
+        wf => { this.workflow = wf; this.isWorkflowRunning = !wf.workflowExecutionInfo.closeTime },
+        e => this.wfError = (e.json && e.json.message) || e.status || e.message
+      ).finally(() => this.wfLoading = false)
+    }, { immediate: true })
 
     this.$watch(() => {
       let queryUrl = this.baseAPIURL + '/history?waitForNewEvent=true'

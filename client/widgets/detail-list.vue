@@ -4,7 +4,7 @@ const jsonKeys = ['result', 'input'],
 
 export default {
   name: 'details-list',
-  props: ['item'],
+  props: ['item', 'highlight'],
   data() {
     return {}
   },
@@ -19,14 +19,22 @@ export default {
             flatten(key, value, root)
           } else if (key === 'newExecutionRunId') {
             kvps.push({ key, value, routeLink: {
-              name: 'execution/history', params: { runId: value } }
+              name: 'execution/summary', params: { runId: value } }
             })
           } else if (key === 'parentWorkflowExecution.runId') {
             kvps.push({ key, value, routeLink: {
-              name: 'execution/history',
+              name: 'execution/summary',
               params: {
                 domain: root.parentWorkflowDomain,
                 workflowId: root.parentWorkflowExecution.workflowId,
+                runId: value,
+              }
+            }})
+          } else if (key === 'workflowExecution.runId') {
+            kvps.push({ key, value, routeLink: {
+              name: 'execution/summary',
+              params: {
+                workflowId: root.workflowExecution.workflowId,
                 runId: value,
               }
             }})
@@ -50,13 +58,21 @@ export default {
     }
   },
   render(h) {
+    var highlight = this.highlight
+    function dd(kvp) {
+      if (kvp.routeLink) {
+        return [h('router-link', { props: { to: kvp.routeLink } }, kvp.value)]
+      }
+      if (preKeys.includes(kvp.key)) {
+        let code = JSON.stringify(kvp.value, null, 2)
+        return [highlight !== false ? h('prism', { props: { language: 'json', code } }) : h('pre', null, code)]
+      }
+      return kvp.value
+    }
+
     return h('dl', { class: 'details' }, this.kvps.map(kvp => h('div', { attrs: { 'data-prop': kvp.key } }, [
       h('dt', null, kvp.key),
-      h('dd', null, kvp.routeLink ?
-        [h('router-link', { props: { to: kvp.routeLink } }, kvp.value)]
-        : (preKeys.includes(kvp.key) ?
-          [h('pre', null, JSON.stringify(kvp.value, null, 2))] :
-          kvp.value))
+      h('dd', null, dd(kvp))
     ])))
   }
 }

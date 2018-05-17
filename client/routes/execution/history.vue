@@ -2,7 +2,7 @@
   <section :class="{ history: true, loading: $parent.historyLoading, 'has-results': !!$parent.results.length }">
     <header class="controls">
       <div class="view-format">
-        <label for="format">View Format {{this.$parent.results.length}} {{this.$parent.historyLoading}}</label>
+        <label for="format">View Format</label>
         <div class="view-formats">
           <a href="#" class="compact" @click.prevent="setFormat('compact')" :class="format === 'compact' ? 'active' : ''">Compact</a>
           <a href="#" class="grid" @click.prevent="setFormat('grid')" :class="format === 'grid' ? 'active' : ''">Grid</a>
@@ -29,16 +29,17 @@
             <td><a href="#" @click.prevent="$router.replaceQueryParam('eventId', he.eventId)">{{he.eventId}}</a></td>
             <td>{{he.eventType}}</td>
             <td>{{timeCol(he.timestamp, i)}} </td>
-            <td><details-list :item="he.details" /></td>
+            <td><details-list :item="he.details" :highlight="$parent.results.length < 100" /></td>
           </tr>
         </tbody>
       </table>
-      <pre class="json" v-if="format === 'json'">{{JSON.stringify($parent.results, null, 2)}}</pre>
+      <prism language="json" v-if="format === 'json' && $parent.results.length < 90">{{JSON.stringify($parent.results, null, 2)}}</prism>
+      <pre class="json" v-if="format === 'json' && $parent.results.length >= 90">{{JSON.stringify($parent.results, null, 2)}}</pre>
       <div class="compact-view" v-if="format === 'compact'">
         <event-node v-for="hr in hierarchialResults" :node="hr" :key="hr.eventId" />
       </div>
     </section>
-    <span class="error" v-if="error">{{error}}</span>
+    <span class="error" v-if="$parent.historyError">{{$parent.historyError}}</span>
     <span class="no-results" v-if="showNoResults">No Results</span>
   </section>
 </template>
@@ -50,14 +51,12 @@ import eventNode from './event-node.vue'
 export default {
   data() {
     return {
-      error: undefined,
-      nextPageToken: undefined,
       tsFormat: localStorage.getItem(`${this.$route.params.domain}:history-ts-col-format`) || 'elapsed'
     }
   },
   props: ['format'],
   created() {
-    this.$watch('format', this.scrollEventIntoView.bind(this))
+    this.$watch('format', this.scrollEventIntoView.bind(this)) 
   },
   computed: {
     hierarchialResults() {
@@ -71,7 +70,7 @@ export default {
         .forEach(r => {
           let parentEventName = Object.keys(r.details || {})
             .map(k => (k.match(/(\S+)EventId/) || [])[1])
-            .filter(k => k)
+            .filter(k => k && k !== 'parentInitiated')
             .sort((a, b) => (rank[b] || 0) - (rank[a] || 0))[0] + 'EventId',
           parentEventId = r.details[parentEventName]
 
@@ -80,8 +79,8 @@ export default {
           } else {
             hierarchy.push(r)
           }
-          if (parentEventName in r.details && !hash[parentEventId]) {
-            console.warn('referenced but not found: ' + parentEventId)
+          if (parentEventName in r.details && !hash[parentEventId] && parentEventId !== 0) {
+            console.warn(`referenced but not found: "${parentEventName}": ${parentEventId}`)
           }
         })
 
@@ -215,7 +214,7 @@ section.history
     pre
       max-height 15vh
 
-  section.results pre.json
+  section.results > pre
     margin layout-spacing-small
     padding layout-spacing-small
   .compact-view

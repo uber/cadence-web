@@ -106,6 +106,12 @@ describe('Execution', function() {
         color: 'blue'
       }, null, 2))
     })
+
+    it('should show the result of the workflow if completed')
+    it('should show the failure result from a failed workflow')
+    it('should have a link to a parent workflow if applicable')
+    it('should have links to any child workflows')
+    it('should show the result of the last failed activity')
   })
 
   describe('History', function() {
