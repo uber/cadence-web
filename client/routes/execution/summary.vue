@@ -15,7 +15,7 @@
       </div>
       <div class="workflow-status" :data-status="wfStatus">
         <dt>Status</dt>
-        <dd><bar-loader v-if="!$parent.workflow.workflowExecutionInfo.closeTime" /> {{wfStatus}}</dd>
+        <dd><bar-loader v-if="wfStatus === 'running'" /> {{wfStatus}}</dd>
       </div>
       <div class="workflow-result" v-if="!!workflowCompletedEvent">
         <dt>Result</dt>
@@ -65,12 +65,16 @@ export default {
     input() {
       return this.$parent.results[0] && this.$parent.results[0].details.input
     },
-    wfStatus() {
-      return ((this.$parent.workflow && this.$parent.workflow.workflowExecutionInfo.closeStatus) || 'running').toLowerCase()
-    },
     workflowCompletedEvent() {
        return this.$parent.results.length > 1 && this.$parent.results[this.$parent.results.length - 1].eventType.startsWith('WorkflowExecution') ?
           this.$parent.results[this.$parent.results.length - 1] : undefined
+    },
+    wfStatus() {
+      if (this.$parent.isWorkflowRunning) return 'running'
+      return (this.workflowCompletedEvent ?
+        this.workflowCompletedEvent.eventType.replace('WorkflowExecution', '') :
+        (this.$parent.workflow && this.$parent.workflow.workflowExecutionInfo.closeStatus) || 'running'
+      ).toLowerCase()
     },
     parentWorkflowRoute() {
       var wfStart = this.$parent.results && this.$parent.results[0]

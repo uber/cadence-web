@@ -18,7 +18,7 @@ describe('Execution', function() {
   async function summaryTest(mochaTest, o) {
     var [scenario, opts] = executionTest(mochaTest, Object.assign({ view: 'summary' }, o))
 
-    scenario.withFullHistory()
+    scenario.withFullHistory(opts.events)
 
     var summaryEl = await scenario.render().waitUntilExists('section.execution section.execution-summary')
     return [summaryEl, scenario]
@@ -75,6 +75,7 @@ describe('Execution', function() {
       summaryEl.querySelector('.started-at dd').should.have.text(moment().startOf('hour').subtract(2, 'minutes').format('dddd MMMM Do, h:mm:ss a'))
       summaryEl.should.not.have.descendant('.close-time')
       summaryEl.should.not.have.descendant('.pending-activities')
+      summaryEl.should.not.have.descendant('.parent-workflow')
       summaryEl.querySelector('.workflow-status dd').should.contain.text('running')
       summaryEl.querySelector('.workflow-status loader.bar').should.be.displayed
     })
@@ -105,18 +106,64 @@ describe('Execution', function() {
       ], null, 2))
     })
 
-    it('should show the result of the workflow if completed')
-    it('should show the failure result from a failed workflow')
-    it('should have a link to a parent workflow if applicable')
-    it('should have links to any child workflows')
-    it('should show the result of the last failed activity')
+    it('should update the status of the workflow when it completes', async function() {
+      var [summaryEl] = await summaryTest(this.test), wfStatus = summaryEl.querySelector('.workflow-status')
+
+      wfStatus.should.have.attr('data-status', 'running')
+      await retry(() => wfStatus.should.have.attr('data-status', 'completed'))
+    })
+
+    it('should show the result of the workflow if completed', async function() {
+      var [summaryEl] = await summaryTest(this.test),
+          resultsEl = await summaryEl.waitUntilExists('.workflow-result pre')
+
+      JSON.parse(resultsEl.textContent).should.deep.equal(fixtures.history.emailRun1[fixtures.history.emailRun1.length - 1].details.result)
+      resultsEl.textNodes('.token.string').should.deep.equal(['"bob@example.com"', '"jane@example.com"', '"foobarbaz"'])
+    })
+
+    it('should show the failure result from a failed workflow', async function() {
+      var [summaryEl] = await summaryTest(this.test, { events: fixtures.history.exampleTimeout }),
+          resultsEl = await summaryEl.waitUntilExists('.workflow-result pre')
+
+      JSON.parse(resultsEl.textContent).should.deep.equal({
+        reason: 'activityTimeout',
+        activityId: 0
+      })
+    })
+
+    it('should have a link to a parent workflow if applicable', async function() {
+      var [summaryEl] = await summaryTest(this.test, {
+        events: [{
+          eventType: 'WorkflowExecutionStarted',
+          timestamp: moment().toISOString(),
+          eventId: 1,
+          details: {
+            workflowType: { name: 'com.github/uber/ci-test-parent' },
+            parentWorkflowDomain: 'another-domain',
+            parentWorkflowExecution: {
+              workflowId: 'the-parent-wfid',
+              runId: '1234'
+            }
+            },
+        }, {
+          eventId: 1,
+          eventType: 'DecisionTaskScheduled',
+          timestamp: moment().toISOString()
+        }]
+      }),
+      parentWf = await summaryEl.waitUntilExists('.parent-workflow')
+
+      parentWf.querySelector('dd a')
+        .should.have.text('ci-test-parent - the-parent-wfid')
+        .and.have.attr('href', '/domain/another-domain/workflows/the-parent-wfid/1234/summary')
+    })
   })
 
   describe('History', function() {
     async function historyTest(mochaTest, o) {
       var [scenario, opts] = executionTest(mochaTest, Object.assign({ view: 'history' }, o))
 
-      scenario.withFullHistory()
+      scenario.withFullHistory(opts.events)
 
       var historyEl = await scenario.render().waitUntilExists('section.history')
       return [historyEl, scenario]
@@ -283,11 +330,46 @@ describe('Execution', function() {
         startDetails.textNodes('dl.details dd').should.deep.equal([
           'email-daily-summaries', 'ci-task-queue', inputPreText, '360', '180'
         ])
-        startDetails.textNodes('dl.details dd pre').should.deep.equal([inputPreText])
       })
 
-      it('should render event inputs as highlighted json')
-      it('should link to child workflows, and load its history when navigated too')
+      it('should render event inputs as highlighted json', async function() {
+        var [historyEl, scenario] = await historyTest(this.test),
+            startDetails = await historyEl.waitUntilExists('.results tbody tr:first-child td:nth-child(4)'),
+            inputPreText = JSON.stringify(fixtures.history.emailRun1[0].details.input, null, 2)
+
+        startDetails.textNodes('dl.details dd pre').should.deep.equal([inputPreText])
+        startDetails.textNodes('dl.details dd pre .token').should.have.length(9)
+      })
+
+      it('should link to child workflows, and load its history when navigated too', async function() {
+        var [historyEl, scenario] = await historyTest(this.test, {
+          events: [{
+            eventType: 'WorkflowExecutionStarted',
+            timestamp: moment().toISOString(),
+            eventId: 1,
+            details: {
+              workflowType: { name: 'com.github/uber/ci-test-parent' }
+            },
+          }, {
+            eventId: 1,
+            eventType: 'ChildWorkflowExecutionInitiated',
+            timestamp: moment().toISOString(),
+            details: {
+              domain: 'child-domain',
+              workflowExecution: {
+                workflowId: 'child-wfid',
+                runId: '2345'
+              },
+              workflowType: { name: 'some-child-workflow' }
+            }
+          }]
+        }),
+        childStartDetails = await historyEl.waitUntilExists('.results tbody tr:nth-child(2) td:nth-child(4)')
+
+        childStartDetails.querySelector('[data-prop="workflowExecution.runId"] dd a')
+          .should.have.text('2345')
+          .and.have.attr('href', '/domain/child-domain/workflows/child-wfid/2345/summary')
+      })
 
       it('should scroll the selected event id from compact view into view', async function () {
         var [testEl, scenario] = new Scenario(this.test)

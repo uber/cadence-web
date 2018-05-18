@@ -34,6 +34,7 @@ export default {
             kvps.push({ key, value, routeLink: {
               name: 'execution/summary',
               params: {
+                domain: root.domain,
                 workflowId: root.workflowExecution.workflowId,
                 runId: value,
               }

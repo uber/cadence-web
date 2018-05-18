@@ -154,7 +154,10 @@ export default {
         eventType: 'WorkflowExecutionCompleted',
         eventId: 12,
         details: {
-          result: 'emails sent',
+          result: {
+            recipients: ['bob@example.com', 'jane@example.com'],
+            trackingTag: 'foobarbaz'
+          },
           decisionTaskCompletedEventId: 11
         }
       }
@@ -207,7 +210,7 @@ export default {
       },
       {
         details: {
-          activityId: '0',
+          activityId: 0,
           activityType: {
             name: 'activity.timeout'
           },
@@ -274,8 +277,8 @@ export default {
       },
       {
         details: {
-          decisionTaskCompletedEventId: 11,
-          result: null
+          reason: 'activityTimeout',
+          activityId: 0
         },
         eventId: 12,
         eventType: 'WorkflowExecutionCompleted',
