@@ -4,7 +4,7 @@ const jsonKeys = ['result', 'input'],
 
 export default {
   name: 'details-list',
-  props: ['item'],
+  props: ['item', 'highlight'],
   data() {
     return {}
   },
@@ -12,20 +12,44 @@ export default {
     kvps() {
       var kvps = []
 
-      function flatten(prefix, obj) {
+      function flatten(prefix, obj, root) {
         Object.entries(obj).forEach(([k, value]) => {
           var key = prefix ? `${prefix}.${k}` : k
           if (value && typeof value === 'object' && !jsonKeys.includes(key)) {
-            flatten(key, value)
+            flatten(key, value, root)
           } else if (key === 'newExecutionRunId') {
-            kvps.push({ key, routeLink: { name: 'execution/history', params: { runId: value } } })
+            kvps.push({ key, value, routeLink: {
+              name: 'execution/summary', params: { runId: value } }
+            })
+          } else if (key === 'parentWorkflowExecution.runId') {
+            kvps.push({ key, value, routeLink: {
+              name: 'execution/summary',
+              params: {
+                domain: root.parentWorkflowDomain,
+                workflowId: root.parentWorkflowExecution.workflowId,
+                runId: value,
+              }
+            }})
+          } else if (key === 'workflowExecution.runId') {
+            kvps.push({ key, value, routeLink: {
+              name: 'execution/summary',
+              params: {
+                domain: root.domain,
+                workflowId: root.workflowExecution.workflowId,
+                runId: value,
+              }
+            }})
+          } else if (key === 'taskList.name') {
+            kvps.push({ key, value, routeLink: {
+              name: 'task-list', params: { taskList: value } }
+            })
           } else if (value) {
             kvps.push({ key, value })
           }
         })
       }
 
-      flatten('', this.item || {})
+      flatten('', this.item || {}, this.item)
       return kvps
     }
   },
@@ -35,13 +59,21 @@ export default {
     }
   },
   render(h) {
+    var highlight = this.highlight
+    function dd(kvp) {
+      if (kvp.routeLink) {
+        return [h('router-link', { props: { to: kvp.routeLink } }, kvp.value)]
+      }
+      if (preKeys.includes(kvp.key)) {
+        let code = JSON.stringify(kvp.value, null, 2)
+        return [highlight !== false ? h('prism', { props: { language: 'json', code } }) : h('pre', null, code)]
+      }
+      return kvp.value
+    }
+
     return h('dl', { class: 'details' }, this.kvps.map(kvp => h('div', { attrs: { 'data-prop': kvp.key } }, [
       h('dt', null, kvp.key),
-      h('dd', null, kvp.routeLink ?
-        h('route-link', { to: kvp.routeLink })
-        : (preKeys.includes(kvp.key) ?
-          [h('pre', null, JSON.stringify(kvp.value, null, 2))] :
-          kvp.value))
+      h('dd', null, dd(kvp))
     ])))
   }
 }

@@ -1,5 +1,5 @@
 <template>
-  <section :class="{ history: true, loading, 'has-results': !!this.results.length }">
+  <section :class="{ history: true, loading: $parent.historyLoading, 'has-results': !!$parent.results.length }">
     <header class="controls">
       <div class="view-format">
         <label for="format">View Format</label>
@@ -13,15 +13,7 @@
         <a href="#" class="export" @click="exportResults">Export</a>
       </div>
     </header>
-    <section class="results"
-      v-infinite-scroll="nextPage"
-      infinite-scroll-disabled="disableInfiniteScroll"
-      infinite-scroll-distance="20"
-      infinite-scroll-immediate-check="true"
-      infinite-scroll-listen-for-event="longpoll"
-      v-snapscroll
-      ref="results"
-    >
+    <section v-snapscroll class="results" ref="results">
       <table v-if="format === 'grid' && showTable">
         <thead>
           <th>ID</th>
@@ -33,50 +25,38 @@
           <th>Details</th>
         </thead>
         <tbody>
-          <tr v-for="(he, i) in results" :key="he.eventId" :data-event-type="he.eventType" :data-event-id="he.eventId" :class="{ active: he.eventId === $route.query.eventId }">
+          <tr v-for="(he, i) in $parent.results" :key="he.eventId" :data-event-type="he.eventType" :data-event-id="he.eventId" :class="{ active: he.eventId === $route.query.eventId }">
             <td><a href="#" @click.prevent="$router.replaceQueryParam('eventId', he.eventId)">{{he.eventId}}</a></td>
             <td>{{he.eventType}}</td>
             <td>{{timeCol(he.timestamp, i)}} </td>
-            <td><details-list :item="he.details" /></td>
+            <td><details-list :item="he.details" :highlight="$parent.results.length < 100" /></td>
           </tr>
         </tbody>
       </table>
-      <pre class="json" v-if="format === 'json'">{{JSON.stringify(results, null, 2)}}</pre>
+      <prism language="json" v-if="format === 'json' && $parent.results.length < 90">{{JSON.stringify($parent.results, null, 2)}}</prism>
+      <pre class="json" v-if="format === 'json' && $parent.results.length >= 90">{{JSON.stringify($parent.results, null, 2)}}</pre>
       <div class="compact-view" v-if="format === 'compact'">
         <event-node v-for="hr in hierarchialResults" :node="hr" :key="hr.eventId" />
       </div>
     </section>
-    <span class="error" v-if="error">{{error}}</span>
+    <span class="error" v-if="$parent.historyError">{{$parent.historyError}}</span>
     <span class="no-results" v-if="showNoResults">No Results</span>
   </section>
 </template>
 
 <script>
 import moment from 'moment'
-import pagedGrid from '../../paged-grid'
 import eventNode from './event-node.vue'
 
-export default pagedGrid({
+export default {
   data() {
-    var endTime = moment(), vm = this
     return {
-      loading: false,
-      error: undefined,
-      nextPageToken: undefined,
-      tsFormat: localStorage.getItem(`${this.$route.params.domain}:history-ts-col-format`) || 'elapsed',
-      results: []
+      tsFormat: localStorage.getItem(`${this.$route.params.domain}:history-ts-col-format`) || 'elapsed'
     }
   },
   props: ['format'],
   created() {
-    this.$watch(() => {
-      let queryUrl = this.$parent.baseAPIURL + '/history?waitForNewEvent=true'
-
-      if (!this.nextPageToken) return queryUrl
-
-      return queryUrl + '&nextPageToken=' + encodeURIComponent(this.nextPageToken)
-    }, v => this.fetch(v), { immediate: true })
-    this.$watch('format', this.scrollEventIntoView.bind(this))
+    this.$watch('format', this.scrollEventIntoView.bind(this)) 
   },
   computed: {
     hierarchialResults() {
@@ -85,12 +65,12 @@ export default pagedGrid({
         started: 1
       }, hash = {}, hierarchy = []
 
-      this.results
+      this.$parent.results
         .map(r => hash[r.eventId] = Object.assign({ children: [] }, r))
         .forEach(r => {
           let parentEventName = Object.keys(r.details || {})
             .map(k => (k.match(/(\S+)EventId/) || [])[1])
-            .filter(k => k)
+            .filter(k => k && k !== 'parentInitiated')
             .sort((a, b) => (rank[b] || 0) - (rank[a] || 0))[0] + 'EventId',
           parentEventId = r.details[parentEventName]
 
@@ -99,63 +79,26 @@ export default pagedGrid({
           } else {
             hierarchy.push(r)
           }
-          if (parentEventName in r.details && !hash[parentEventId]) {
-            console.warn('referenced but not found: ' + parentEventId)
+          if (parentEventName in r.details && !hash[parentEventId] && parentEventId !== 0) {
+            console.warn(`referenced but not found: "${parentEventName}": ${parentEventId}`)
           }
         })
 
       return hierarchy
+    },
+    showTable() {
+      return !this.$parent.historyError && (this.$parent.historyLoading || this.$parent.results.length)
+    },
+    showNoResults() {
+      return !this.$parent.historyError && !this.$parent.historyLoading && this.$parent.results.length === 0
     }
   },
   methods: {
-    fetch(pagedQueryUrl) {
-      this.error = undefined
-      if (!pagedQueryUrl) {
-        this.loading = false
-        return
-      }
-
-      this.loading = true
-      this.pqu = pagedQueryUrl
-      return this.$http(pagedQueryUrl).then(res => {
-        if (this._isDestroyed || this.pqu !== pagedQueryUrl) return
-        if (res.nextPageToken && this.npt === res.nextPageToken) {
-          // nothing happened, and same query is still valid, so let's long pool again
-          return this.fetch(pagedQueryUrl)
-        }
-
-        if (res.nextPageToken) {
-          this.npt = res.nextPageToken
-          this.isWorkflowRunning = JSON.parse(atob(res.nextPageToken)).IsWorkflowRunning
-        } else {
-          this.isWorkflowRunning = false
-        }
-
-        var shouldScrollIntoView = this.$route.query.eventId && this.results.length <= this.$route.query.eventId
-        this.results = this.results.concat(res.history.events.map(data => {
-          data.timestamp = moment(data.timestamp)
-          return data
-        }))
-
-        if (shouldScrollIntoView) {
-          this.scrollEventIntoView()
-        }
-        // https://github.com/ElemeFE/vue-infinite-scroll/issues/89
-        setImmediate(() => this.$emit('longpoll'))
-
-        return this.results
-      }).catch(e => {
-        if (this._isDestroyed || this.pqu !== pagedQueryUrl) return
-        this.npt = undefined
-        this.error = (e.json && e.json.message) || e.status || e.message
-        return []
-      }).finally(() => this.loading = false)
-    },
     exportResults(e) {
-      if (!this.results.length || !this.$route.query) return
+      if (!this.$parent.results.length || !this.$route.query) return
 
       var downloadEl = document.createElement('a')
-      downloadEl.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(this.results)))
+      downloadEl.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(this.$parent.results)))
       downloadEl.setAttribute('download',
         `${this.$route.params.workflowId.replace(/[\\~#%&*{}\/:<>?|\"-]/g, ' ')} - ${this.$route.params.runId}.json`)
 
@@ -181,8 +124,8 @@ export default pagedGrid({
         return ts.format('MMM Do h:mm:ss a')
       }
 
-      let deltaFromPrev = moment.duration(ts - this.results[i - 1].timestamp),
-          elapsed = moment.duration(ts - this.results[0].timestamp).format()
+      let deltaFromPrev = moment.duration(ts - this.$parent.results[i - 1].timestamp),
+          elapsed = moment.duration(ts - this.$parent.results[0].timestamp).format()
 
       if (deltaFromPrev.asSeconds() >= 1) {
         elapsed += ` (+${deltaFromPrev.format()})`
@@ -201,7 +144,7 @@ export default pagedGrid({
   components: {
     'event-node': eventNode
   }
-})
+}
 </script>
 
 <style lang="stylus">
@@ -271,7 +214,7 @@ section.history
     pre
       max-height 15vh
 
-  section.results pre.json
+  section.results > pre
     margin layout-spacing-small
     padding layout-spacing-small
   .compact-view

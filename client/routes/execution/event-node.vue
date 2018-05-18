@@ -1,11 +1,23 @@
 <script>
 import moment from 'moment'
+import shortName from '../../short-name'
 
-const shortActivityName = a => (a || '').split(/[\.\/]/g).pop(),
-titlesForGroups = {
-  ActivityTaskScheduled: n => `Activity ${n.details.activityId} - ${shortActivityName(n.details.activityType && n.details.activityType.name)}`,
+const titlesForGroups = {
+  ActivityTaskScheduled: n => `Activity ${n.details.activityId} - ${shortName(n.details.activityType && n.details.activityType.name)}`,
   TimerStarted: n => `Timer ${n.details.timerId} (${moment.duration(n.details.startToFireTimeoutSeconds, 'seconds').format()})`,
-  StartChildWorkflowExecutionInitiated: n => `Child Workflow ${n.details.workflowType.name}`
+  StartChildWorkflowExecutionInitiated: (n, h) => {
+    var childWf = n.children[0] && n.children[0].details && n.children[0].details.workflowExecution,
+        name = shortName(n.details.workflowType.name)
+
+    return childWf ? ['Child Workflow ', h('router-link', {
+      props: {
+        to: {
+          name: 'execution/summary',
+          params: { workflowId: childWf.workflowId, runId: childWf.runId }
+        }
+      }
+    }, name)] : `Child Workflow ${name}`
+  }
 },
 groupEvents = Object.keys(titlesForGroups)
 
@@ -31,7 +43,7 @@ export default {
     var activeId = this.$route.query.eventId, router = this.$router
 
     function eventNode(node, noGroup) {
-      var groupTitle = (node.eventType in titlesForGroups) && titlesForGroups[node.eventType](node),
+      var groupTitle = (node.eventType in titlesForGroups) && titlesForGroups[node.eventType](node, h),
       isActive = activeId == node.eventId,
       showDetails = activeId && (!!groupTitle || (isActive && noGroup)),
       activeGroupNode = showDetails && findActiveGroupNode(node, activeId, true),

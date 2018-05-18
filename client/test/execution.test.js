@@ -18,7 +18,7 @@ describe('Execution', function() {
   async function summaryTest(mochaTest, o) {
     var [scenario, opts] = executionTest(mochaTest, Object.assign({ view: 'summary' }, o))
 
-    scenario.withSummaryInput(opts.input || null)
+    scenario.withFullHistory(opts.events)
 
     var summaryEl = await scenario.render().waitUntilExists('section.execution section.execution-summary')
     return [summaryEl, scenario]
@@ -43,8 +43,10 @@ describe('Execution', function() {
       '/domain/ci-test/workflows/email-daily-summaries/emailRun1/queries'
     ])
     scenario.vm.$el.querySelector('section.execution > nav a.summary').should.have.class('router-link-active')
-    scenario.vm.$el.querySelector('section.execution > nav a.stack-trace').should.not.be.displayed
-    scenario.vm.$el.querySelector('section.execution > nav a.queries').should.not.be.displayed
+    await retry(() => {
+      scenario.vm.$el.querySelector('section.execution > nav a.stack-trace').should.not.be.displayed
+      scenario.vm.$el.querySelector('section.execution > nav a.queries').should.not.be.displayed
+    })
   })
 
   it('should also show a stack trace tab for running workflows', async function () {
@@ -73,6 +75,7 @@ describe('Execution', function() {
       summaryEl.querySelector('.started-at dd').should.have.text(moment().startOf('hour').subtract(2, 'minutes').format('dddd MMMM Do, h:mm:ss a'))
       summaryEl.should.not.have.descendant('.close-time')
       summaryEl.should.not.have.descendant('.pending-activities')
+      summaryEl.should.not.have.descendant('.parent-workflow')
       summaryEl.querySelector('.workflow-status dd').should.contain.text('running')
       summaryEl.querySelector('.workflow-status loader.bar').should.be.displayed
     })
@@ -87,10 +90,6 @@ describe('Execution', function() {
             activityId: 5,
             status: 'QUEUED'
           }]
-        },
-        input: {
-          startIdx: 5,
-          color: 'blue'
         }
       })
 
@@ -101,10 +100,62 @@ describe('Execution', function() {
       summaryEl.textNodes('.pending-activities > dd:first-of-type dd').should.deep.equal(['4', 'STARTED'])
       summaryEl.textNodes('.pending-activities > dd:nth-of-type(2) dd').should.deep.equal(['5', 'QUEUED'])
 
-      summaryEl.querySelector('.workflow-input pre').should.have.text(JSON.stringify({
-        startIdx: 5,
-        color: 'blue'
-      }, null, 2))
+      summaryEl.querySelector('.workflow-input pre').should.have.text(JSON.stringify([
+        839134,
+        { env: 'prod' }
+      ], null, 2))
+    })
+
+    it('should update the status of the workflow when it completes', async function() {
+      var [summaryEl] = await summaryTest(this.test), wfStatus = summaryEl.querySelector('.workflow-status')
+
+      wfStatus.should.have.attr('data-status', 'running')
+      await retry(() => wfStatus.should.have.attr('data-status', 'completed'))
+    })
+
+    it('should show the result of the workflow if completed', async function() {
+      var [summaryEl] = await summaryTest(this.test),
+          resultsEl = await summaryEl.waitUntilExists('.workflow-result pre')
+
+      JSON.parse(resultsEl.textContent).should.deep.equal(fixtures.history.emailRun1[fixtures.history.emailRun1.length - 1].details.result)
+      resultsEl.textNodes('.token.string').should.deep.equal(['"bob@example.com"', '"jane@example.com"', '"foobarbaz"'])
+    })
+
+    it('should show the failure result from a failed workflow', async function() {
+      var [summaryEl] = await summaryTest(this.test, { events: fixtures.history.exampleTimeout }),
+          resultsEl = await summaryEl.waitUntilExists('.workflow-result pre')
+
+      JSON.parse(resultsEl.textContent).should.deep.equal({
+        reason: 'activityTimeout',
+        activityId: 0
+      })
+    })
+
+    it('should have a link to a parent workflow if applicable', async function() {
+      var [summaryEl] = await summaryTest(this.test, {
+        events: [{
+          eventType: 'WorkflowExecutionStarted',
+          timestamp: moment().toISOString(),
+          eventId: 1,
+          details: {
+            workflowType: { name: 'com.github/uber/ci-test-parent' },
+            parentWorkflowDomain: 'another-domain',
+            parentWorkflowExecution: {
+              workflowId: 'the-parent-wfid',
+              runId: '1234'
+            }
+            },
+        }, {
+          eventId: 1,
+          eventType: 'DecisionTaskScheduled',
+          timestamp: moment().toISOString()
+        }]
+      }),
+      parentWf = await summaryEl.waitUntilExists('.parent-workflow')
+
+      parentWf.querySelector('dd a')
+        .should.have.text('ci-test-parent - the-parent-wfid')
+        .and.have.attr('href', '/domain/another-domain/workflows/the-parent-wfid/1234/summary')
     })
   })
 
@@ -112,7 +163,7 @@ describe('Execution', function() {
     async function historyTest(mochaTest, o) {
       var [scenario, opts] = executionTest(mochaTest, Object.assign({ view: 'history' }, o))
 
-      scenario.withHistory()
+      scenario.withFullHistory(opts.events)
 
       var historyEl = await scenario.render().waitUntilExists('section.history')
       return [historyEl, scenario]
@@ -167,7 +218,7 @@ describe('Execution', function() {
       scenario.location.should.equal('/domain/ci-test/workflows/email-daily-summaries/emailRun1/history?format=compact')
       historyEl.querySelector('.view-formats a.json').trigger('click')
 
-      var jsonView = await resultsEl.waitUntilExists('pre.json')
+      var jsonView = await resultsEl.waitUntilExists('pre.language-json')
       jsonView.should.contain.text('"eventId":')
       resultsEl.should.not.have.descendant('.compact-view')
       scenario.location.should.equal('/domain/ci-test/workflows/email-daily-summaries/emailRun1/history?format=json')
@@ -184,9 +235,9 @@ describe('Execution', function() {
       var href = decodeURIComponent(downloadEl.getAttribute('href'))
       var eventsJson = JSON.parse(decodeURIComponent(href).replace('data:text/plain;charset=utf-8,', ''))
 
-      eventsJson.length.should.equal(12)
-      eventsJson.map(e => e.eventType).slice(3,6).should.deep.equal([
-        'DecisionTaskCompleted', 'MarkerRecorded', 'ActivityTaskScheduled'
+      eventsJson.length.should.equal(4)
+      eventsJson.map(e => e.eventType).should.deep.equal([
+        'WorkflowExecutionStarted', 'DecisionTaskScheduled', 'DecisionTaskStarted', 'DecisionTaskCompleted'
       ])
     })
 
@@ -195,9 +246,10 @@ describe('Execution', function() {
         var [historyEl, scenario] = await historyTest(this.test, { query: 'format=compact' })
         await historyEl.waitUntilExists('.compact-view > .event-node')
 
-        historyEl.textNodes('.compact-view > .event-node > a[data-event-id]').should.deep.equal([
+        historyEl.should.have.class('loading')
+        await retry(() => historyEl.textNodes('.compact-view > .event-node > a[data-event-id]').should.deep.equal([
           'WorkflowExecutionStarted', 'DecisionTaskScheduled', 'DecisionTaskScheduled'
-        ])
+        ]))
         historyEl.attrValues('.compact-view > .event-node > a', 'data-event-id').should.deep.equal([
           '1', '2', '9'
         ])
@@ -222,31 +274,6 @@ describe('Execution', function() {
         scenario.location.should.equal('/domain/ci-test/workflows/email-daily-summaries/emailRun1/history?format=compact&eventId=7')
         historyEl.textNodes('.compact-view dl.details dt').should.deep.equal(['scheduledEventId', 'requestId'])
       })
-
-      it('should request more pages until it fills up scroll area', async function () {
-        var [testEl, scenario] = new Scenario(this.test)
-          .withDomain('ci-test')
-          .startingAt('/domain/ci-test/workflows/long-running-op-1/theRunId/history?format=compact')
-          .withExecution('long-running-op-1', 'theRunId')
-          .withHistory([{
-            timestamp: moment().toISOString(),
-            eventType: 'WorkflowExecutionStarted',
-            eventId: 1,
-            details: {
-              workflowType: {
-                name: 'long-running-op'
-              }
-            }
-          }].concat(generateActivityEvents(2)), true)
-          .withHistory(generateActivityEvents(3, 2), true)
-          .withHistory(generateActivityEvents(5, 5), true)
-          .go(true)
-
-        var historyEl = await testEl.waitUntilExists('section.history')
-        await retry(() => historyEl.querySelectorAll('.compact-view a[data-event-id]').should.have.length(11))
-
-        await Promise.delay(100)
-      })
     })
 
     describe('Grid View', function() {
@@ -254,10 +281,11 @@ describe('Execution', function() {
         var [historyEl, scenario] = await historyTest(this.test)
         await historyEl.waitUntilExists('.results tbody tr:nth-child(4)')
 
+        historyEl.textNodes('table tbody td:nth-child(1)').length.should.be.lessThan(12)
         historyEl.textNodes('table thead th:not(:nth-child(3))').should.deep.equal(['ID', 'Type', 'Details'])
-        historyEl.textNodes('table tbody td:nth-child(1)').should.deep.equal(
+        await retry(() => historyEl.textNodes('table tbody td:nth-child(1)').should.deep.equal(
           new Array(12).fill('').map((_, i) => String(i + 1))
-        )
+        ))
         historyEl.textNodes('table tbody td:nth-child(2)').slice(0, 3).should.deep.equal([
           'WorkflowExecutionStarted', 'DecisionTaskScheduled', 'DecisionTaskStarted'
         ])
@@ -286,11 +314,9 @@ describe('Execution', function() {
       it('should use the timestamp format from local storage if available', async function() {
         localStorage.setItem('ci-test:history-ts-col-format', 'ts')
         var [historyEl, scenario] = await historyTest(this.test)
-        await historyEl.waitUntilExists('.results tbody tr:nth-child(4)')
-
-        historyEl.textNodes('table tbody td:nth-child(3)').should.deep.equal(
+        await retry(() => historyEl.textNodes('table tbody td:nth-child(3)').should.deep.equal(
           fixtures.history.emailRun1.map(e => moment(e.timestamp).format('MMM Do h:mm:ss a'))
-        )
+        ))
       })
 
       it('should show details as flattened key-value pairs from parsed json, except for result and input', async function () {
@@ -304,22 +330,45 @@ describe('Execution', function() {
         startDetails.textNodes('dl.details dd').should.deep.equal([
           'email-daily-summaries', 'ci-task-queue', inputPreText, '360', '180'
         ])
-        startDetails.textNodes('dl.details dd pre').should.deep.equal([inputPreText])
       })
 
-      it('should request more pages only when the user scrolls to the bottom', async function () {
-        var [resultsEl, scenario] = await runningWfHistoryTest(this.test)
-        await retry(() => resultsEl.querySelectorAll('tbody tr').should.have.length(16))
+      it('should render event inputs as highlighted json', async function() {
+        var [historyEl, scenario] = await historyTest(this.test),
+            startDetails = await historyEl.waitUntilExists('.results tbody tr:first-child td:nth-child(4)'),
+            inputPreText = JSON.stringify(fixtures.history.emailRun1[0].details.input, null, 2)
 
-        resultsEl.scrollTop = 100
-        await Promise.delay(50)
+        startDetails.textNodes('dl.details dd pre').should.deep.equal([inputPreText])
+        startDetails.textNodes('dl.details dd pre .token').should.have.length(9)
+      })
 
-        resultsEl.scrollTop = resultsEl.scrollHeight - resultsEl.offsetHeight - 100
-        await Promise.delay(100)
+      it('should link to child workflows, and load its history when navigated too', async function() {
+        var [historyEl, scenario] = await historyTest(this.test, {
+          events: [{
+            eventType: 'WorkflowExecutionStarted',
+            timestamp: moment().toISOString(),
+            eventId: 1,
+            details: {
+              workflowType: { name: 'com.github/uber/ci-test-parent' }
+            },
+          }, {
+            eventId: 1,
+            eventType: 'ChildWorkflowExecutionInitiated',
+            timestamp: moment().toISOString(),
+            details: {
+              domain: 'child-domain',
+              workflowExecution: {
+                workflowId: 'child-wfid',
+                runId: '2345'
+              },
+              workflowType: { name: 'some-child-workflow' }
+            }
+          }]
+        }),
+        childStartDetails = await historyEl.waitUntilExists('.results tbody tr:nth-child(2) td:nth-child(4)')
 
-        scenario.withHistory(generateActivityEvents(8, 15))
-        resultsEl.scrollTop = resultsEl.scrollHeight - resultsEl.offsetHeight
-        await Promise.delay(100)
+        childStartDetails.querySelector('[data-prop="workflowExecution.runId"] dd a')
+          .should.have.text('2345')
+          .and.have.attr('href', '/domain/child-domain/workflows/child-wfid/2345/summary')
       })
 
       it('should scroll the selected event id from compact view into view', async function () {
@@ -359,7 +408,7 @@ describe('Execution', function() {
     it('should show the current stack trace', async function () {
       var [scenario, opts] = executionTest(this.test, { view: 'stack-trace' })
 
-      scenario.api.postOnce(`${scenario.execApiBase()}/queries/__stack_trace`, {
+      scenario.withFullHistory().api.postOnce(`${scenario.execApiBase()}/queries/__stack_trace`, {
         queryResult: 'goroutine 1:\n\tat foo.go:56'
       })
 
@@ -373,7 +422,7 @@ describe('Execution', function() {
       var [scenario, opts] = executionTest(this.test, { view: 'stack-trace' }),
           called = 0
 
-      scenario.api.post(`${scenario.execApiBase()}/queries/__stack_trace`, () => {
+      scenario.withFullHistory().api.post(`${scenario.execApiBase()}/queries/__stack_trace`, () => {
         if (++called === 1) {
           return { queryResult: 'goroutine 1:\n\tat foo.go:56' }
         } else if (called === 2) {
@@ -395,7 +444,7 @@ describe('Execution', function() {
     async function queriesTest(mochaTest, queries) {
       var [scenario, opts] = executionTest(mochaTest, { view: 'queries' })
 
-      scenario.withQueries(queries)
+      scenario.withHistory(fixtures.history.emailRun1).withQueries(queries)
 
       var queriesEl = await scenario.render().waitUntilExists('section.execution section.queries')
       return [queriesEl, scenario]

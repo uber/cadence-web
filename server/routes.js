@@ -68,6 +68,7 @@ router.get('/api/domain/:domain/workflows/:workflowId/:runId/history', async fun
 })
 
 router.get('/api/domain/:domain/workflows/:workflowId/:runId/queries', async function (ctx) {
+  // workaround implementation until https://github.com/uber/cadence/issues/382 is resolved
   try {
     await ctx.cadence.queryWorkflow({
       query: {
