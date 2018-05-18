@@ -17,6 +17,11 @@ wfHistoryThrift = [{
       emails: ['jane@example.com', 'bob@example.com'],
       includeFooter: true
     })),
+    childPolicy: 'TERMINATE',
+    continuedExecutionRunId: null,
+    parentInitiatedEventId: null,
+    parentWorkflowDomain: null,
+    parentWorkflowExecution: null,
     taskStartToCloseTimeoutSeconds: 30,
     executionStartToCloseTimeoutSeconds: 1080
   }
