@@ -282,7 +282,7 @@ describe('Execution', function() {
         await historyEl.waitUntilExists('.results tbody tr:nth-child(4)')
 
         historyEl.textNodes('table tbody td:nth-child(1)').length.should.be.lessThan(12)
-        historyEl.textNodes('table thead th:not(:nth-child(3))').should.deep.equal(['ID', 'Type', 'Details'])
+        historyEl.textNodes('table thead th').slice(0,2).should.deep.equal(['ID', 'Type'])
         await retry(() => historyEl.textNodes('table tbody td:nth-child(1)').should.deep.equal(
           new Array(12).fill('').map((_, i) => String(i + 1))
         ))
@@ -330,6 +330,33 @@ describe('Execution', function() {
         startDetails.textNodes('dl.details dd').should.deep.equal([
           'email-daily-summaries', 'ci-task-queue', inputPreText, '360', '180'
         ])
+      })
+
+      it('should allow toggling of the details column between summary and full details', async function() {
+        var [historyEl, scenario] = await historyTest(this.test)
+        await historyEl.waitUntilExists('.results tbody tr:nth-child(4)')
+
+        var [summaryEl, fullDetailsEl] = historyEl.querySelectorAll('thead th:nth-child(4) a')
+        summaryEl.should.have.text('Summary').and.have.attr('href', '#')
+        fullDetailsEl.should.have.text('Full Details').and.not.have.attr('href')
+
+        summaryEl.trigger('click')
+        await retry(() => {
+          historyEl.textNodes('.results tbody tr:first-child td:nth-child(4) dl.details dt')
+            .should.deep.equal(['input', 'Workflow'])
+          historyEl.textNodes('.results tbody tr:first-child td:nth-child(4) dl.details dd').should.deep.equal([
+            JSON.stringify(fixtures.history.emailRun1[0].details.input), 'email-daily-summaries'
+          ])
+        })
+        localStorage.getItem('ci-test:history-compact-details').should.equal('true')
+      })
+
+      it('should use the details format from local storage if available', async function() {
+        localStorage.setItem('ci-test:history-compact-details', 'true')
+        var [historyEl, scenario] = await historyTest(this.test)
+        await retry(() => historyEl.textNodes('.results tbody tr:first-child td:nth-child(4) dl.details dt')
+          .should.deep.equal(['input', 'Workflow'])
+        )
       })
 
       it('should render event inputs as highlighted json', async function() {

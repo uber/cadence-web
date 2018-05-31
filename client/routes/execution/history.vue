@@ -14,7 +14,7 @@
       </div>
     </header>
     <section v-snapscroll class="results" ref="results">
-      <table v-if="format === 'grid' && showTable">
+      <table v-if="format === 'grid' && showTable" :class="{ compact: compactDetails }">
         <thead>
           <th>ID</th>
           <th>Type</th>
@@ -22,14 +22,23 @@
             <a class="elapsed" :href="tsFormat === 'elapsed' ? null : '#'" @click.prevent="setTsFormat('elapsed')">Elapsed</a> / 
             <a class="ts" :href="tsFormat === 'elapsed' ? '#' : null" @click.prevent="setTsFormat('ts')">Time</a>
           </th>
-          <th>Details</th>
+          <th>
+            <a class="summary" :href="compactDetails ? null : '#'" @click.prevent="setCompactDetails(true)">Summary</a> / 
+            <a class="details" :href="compactDetails ? '#' : null" @click.prevent="setCompactDetails(false)">Full Details</a>
+          </th>
         </thead>
         <tbody>
-          <tr v-for="(he, i) in $parent.results" :key="he.eventId" :data-event-type="he.eventType" :data-event-id="he.eventId" :class="{ active: he.eventId === $route.query.eventId }">
-            <td><a href="#" @click.prevent="$router.replaceQueryParam('eventId', he.eventId)">{{he.eventId}}</a></td>
+          <tr v-for="(he, i) in $parent.results"
+            :key="he.eventId"
+            :data-event-type="he.eventType"
+            :data-event-id="he.eventId"
+            :class="{ active: he.eventId === $route.query.eventId }"
+             @click.prevent="$router.replaceQueryParam('eventId', he.eventId)"
+          >
+            <td>{{he.eventId}}</td>
             <td>{{he.eventType}}</td>
             <td>{{timeCol(he.timestamp, i)}} </td>
-            <td><details-list :item="he.details" :highlight="$parent.results.length < 100" /></td>
+            <td><event-details :event="he" :compact="compactDetails && he.eventId != $route.query.eventId" :highlight="$parent.results.length < 100" /></td>
           </tr>
         </tbody>
       </table>
@@ -47,11 +56,13 @@
 <script>
 import moment from 'moment'
 import eventNode from './event-node.vue'
+import eventDetails from './event-details.vue'
 
 export default {
   data() {
     return {
-      tsFormat: localStorage.getItem(`${this.$route.params.domain}:history-ts-col-format`) || 'elapsed'
+      tsFormat: localStorage.getItem(`${this.$route.params.domain}:history-ts-col-format`) || 'elapsed',
+      compactDetails: localStorage.getItem(`${this.$route.params.domain}:history-compact-details`) === 'true'
     }
   },
   props: ['format'],
@@ -119,6 +130,10 @@ export default {
       this.tsFormat = tsFormat
       localStorage.setItem(`${this.$route.params.domain}:history-ts-col-format`, tsFormat)
     },
+    setCompactDetails(compact) {
+      this.compactDetails = compact
+      localStorage.setItem(`${this.$route.params.domain}:history-compact-details`, JSON.stringify(compact))
+    },
     timeCol(ts, i) {
       if (i === 0 || this.tsFormat !== 'elapsed') {
         return ts.format('MMM Do h:mm:ss a')
@@ -142,7 +157,8 @@ export default {
     }
   },
   components: {
-    'event-node': eventNode
+    'event-node': eventNode,
+    'event-details': eventDetails
   }
 }
 </script>
@@ -202,7 +218,7 @@ section.history
       one-liner-ellipsis()
     tr[data-event-type*="Started"] td:nth-child(2)
       color uber-blue-120
-    tr[data-event-type*="Failed"]
+    tr[data-event-type*="Failed"], tr[data-event-type*="TimedOut"]
       td:nth-child(2), [data-prop="reason"], [data-prop="details"]
         color uber-orange
     tr[data-event-type*="Completed"]
@@ -213,6 +229,27 @@ section.history
       background-color alpha(uber-blue, 5%)
     pre
       max-height 15vh
+    &.compact tr:not(.active)
+      td:nth-child(4)
+        overflow hidden
+      dl.details
+        white-space nowrap
+        max-width 50vw
+        & > div
+          display inline-block
+          padding 0
+        dt, dd
+          display inline-block
+          vertical-align middle
+          margin 0 0.5em
+        dt
+          font-family primary-font-family 
+          font-weight 200
+          text-transform uppercase
+        pre
+          display inline-block
+          max-width 40vw
+          one-liner-ellipsis()
 
   section.results > pre
     margin layout-spacing-small

@@ -132,7 +132,7 @@ export default {
         timestamp: emailRun1Start.add(11, 'second').toISOString(),
         eventType: 'DecisionTaskScheduled',
         eventId: 9,
-        details: {}
+        details: { taskList: { name: 'ci-task-queue' } }
       }, {
         timestamp: emailRun1Start.add(11, 'second').toISOString(),
         eventType: 'DecisionTaskStarted',
