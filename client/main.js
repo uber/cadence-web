@@ -6,6 +6,7 @@ import vueModal from 'vue-js-modal'
 import qs from 'friendly-querystring'
 import http from './http'
 import moment from 'moment'
+import promiseFinally from 'promise.prototype.finally'
 
 import DateRangePicker from './widgets/date-range-picker.vue'
 import detailList from './widgets/detail-list.vue'
@@ -116,6 +117,8 @@ JSON.tryParse = function() {
     return JSON.parse.apply(this, arguments)
   } catch (e) {}
 }
+
+promiseFinally.shim()
 
 Vue.mixin({
   created: function () {
