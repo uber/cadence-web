@@ -238,6 +238,8 @@ section.history
         & > div
           display inline-block
           padding 0
+          &:nth-child(2n)
+            background none
         dt, dd
           display inline-block
           vertical-align middle

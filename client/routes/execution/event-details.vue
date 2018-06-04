@@ -1,13 +1,55 @@
 <script>
 import moment from 'moment'
 import shortName from '../../short-name'
+import parentWorkflowLink from './parent-workflow-link'
 
 const eventOneLiners = {
-  WorkflowExecutionStarted: d => ({
-    input: d.input,
-    identity: d.identity,
+  WorkflowExecutionStarted: d => {
+    var summary = {
+      Parent: undefined,
+      input: d.input,
+      identity: d.identity,
+      Workflow: shortName(d.workflowType.name),
+      'Close Timeout': moment.duration(d.executionStartToCloseTimeout, 'seconds').format()
+    },
+    wfLink = parentWorkflowLink(d)
+
+    if (wfLink) {
+      summary.Parent = { routeLink: wfLink.to, text: wfLink.text }
+    }
+    return summary
+  },
+  StartChildWorkflowExecutionInitiated: d => ({
     Workflow: shortName(d.workflowType.name),
-    'Close Timeout': moment.duration(d.executionStartToCloseTimeout, 'seconds').format()
+    Tasklist: d.taskList.name,
+    input: d.input
+  }),
+  ChildWorkflowExecutionStarted: d => ({
+    Workflow: {
+      routeLink: {
+        name: 'execution/summary',
+        params: {
+          domain: d.domain,
+          workflowId: d.workflowExecution.workflowId,
+          runId: d.workflowExecution.runId
+        }
+      },
+      text: `${shortName(d.workflowType.name)} - ${d.workflowExecution.workflowId}`
+    }
+  }),
+  ChildWorkflowExecutionCompleted: d => ({
+    Workflow: {
+      routeLink: {
+        name: 'execution/summary',
+        params: {
+          domain: d.domain,
+          workflowId: d.workflowExecution.workflowId,
+          runId: d.workflowExecution.runId
+        }
+      },
+      text: shortName(d.workflowType.name)
+    },
+    result: d.result
   }),
   DecisionTaskScheduled: d => ({
     Tasklist: d.taskList.name,

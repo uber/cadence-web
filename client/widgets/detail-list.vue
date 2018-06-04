@@ -14,8 +14,12 @@ export default {
 
       function flatten(prefix, obj, root) {
         Object.entries(obj).forEach(([k, value]) => {
-          var key = prefix ? `${prefix}.${k}` : k
-          if (value && typeof value === 'object' && !jsonKeys.includes(key)) {
+          if (!value) return
+         var key = prefix ? `${prefix}.${k}` : k
+
+          if (value.routeLink) {
+            kvps.push({ key, value: value.text, routeLink: value.routeLink })
+          } else if (typeof value === 'object' && !jsonKeys.includes(key)) {
             flatten(key, value, root)
           } else if (key === 'newExecutionRunId') {
             kvps.push({ key, value, routeLink: {
@@ -43,7 +47,7 @@ export default {
             kvps.push({ key, value, routeLink: {
               name: 'task-list', params: { taskList: value } }
             })
-          } else if (value) {
+          } else {
             kvps.push({ key, value })
           }
         })
