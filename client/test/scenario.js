@@ -68,6 +68,7 @@ Scenario.prototype.tearDown = function() {
     && !this.isDebuggingJustThisTest()) {
     this.vm.$el.parentElement.removeChild(this.vm.$el)
   }
+  delete Mocha.copiedText
 
   var { unmatched } = this.api.calls()
   return unmatched.length ?

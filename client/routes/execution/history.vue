@@ -57,6 +57,7 @@
 import moment from 'moment'
 import eventNode from './event-node.vue'
 import eventDetails from './event-details.vue'
+import Prism from 'vue-prism-component'
 
 export default {
   data() {
@@ -158,7 +159,8 @@ export default {
   },
   components: {
     'event-node': eventNode,
-    'event-details': eventDetails
+    'event-details': eventDetails,
+    'prism': Prism
   }
 }
 </script>

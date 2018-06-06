@@ -58,7 +58,7 @@ export default {
         title: this.title,
         code: JSON.stringify(this.item, null, 2)
       }, {
-        name: 'data-viewer-fullscreener'
+        name: 'data-viewer-fullscreen'
       })
     }
   },
@@ -95,7 +95,7 @@ export default {
       margin 0
       font-size 18px
 
-[data-modal="data-viewer-fullscreener"]
+[data-modal="data-viewer-fullscreen"]
   .v--modal-box.v--modal
     max-width calc(100vw - 20px)
     max-height calc(100vh - 20px)
@@ -106,4 +106,6 @@ export default {
       overflow auto
     header
       padding-right 30px
+      h3
+        one-liner-ellipsis()
 </style>

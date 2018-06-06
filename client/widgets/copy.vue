@@ -7,6 +7,7 @@ export default {
   props: ['text'],
   methods: {
     copy() {
+
       var element = document.createElement('div')
       element.textContent = this.text
       document.body.appendChild(element)
@@ -16,7 +17,12 @@ export default {
       window.getSelection().removeAllRanges()
       window.getSelection().addRange(range)
 
-      document.execCommand('copy')
+      if (typeof Mocha !== undefined) {
+        Mocha.copiedText = this.text
+      } else {
+        document.execCommand('copy')
+      }
+
       element.remove()
 
       this.$el.classList.add('copied')
