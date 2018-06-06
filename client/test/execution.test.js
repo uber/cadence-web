@@ -20,7 +20,7 @@ describe('Execution', function() {
 
     scenario.withFullHistory(opts.events)
 
-    var summaryEl = await scenario.render().waitUntilExists('section.execution section.execution-summary')
+    var summaryEl = await scenario.render(opts.attach).waitUntilExists('section.execution section.execution-summary')
     return [summaryEl, scenario]
   }
 
@@ -106,6 +106,47 @@ describe('Execution', function() {
       ], null, 2))
     })
 
+    it('should show a full screen view option for input that overflows the area', async function() {
+        const input = {
+          foo: 1,
+          bar: 'a',
+          baz: new Array(100).fill('aa').join('|')
+        }
+
+        var [summaryEl, scenario] = await summaryTest(this.test, {
+          attach: true,
+          events: [{
+            eventId: 1,
+            eventType: 'WorkflowExecutionStarted',
+            details: {
+              type: {
+                name: 'ci-input-overflow-test'
+              },
+              execution: {},
+              input
+            },
+            timestamp: new Date().toISOString(),
+          }]
+        }),
+
+        inputDataView = await summaryEl.waitUntilExists('.workflow-input .data-viewer')
+
+        inputDataView.should.have.class('overflow')
+          .and.have.descendant('a.view-full-screen')
+          .and.be.displayed
+
+        inputDataView.querySelector('a.view-full-screen').trigger('click')
+
+        var modal = await scenario.vm.$el.waitUntilExists('[data-modal="data-viewer-fullscreen"]')
+        await retry(() => {
+            modal.should.have.descendant('h3').with.text('email-daily-summaries Input')
+            modal.should.contain('a.copy')
+              .and.contain('a.close')
+              .and.have.descendant('pre.language-json')
+              .with.text(JSON.stringify(input, null, 2))
+        })
+      })
+
     it('should update the status of the workflow when it completes', async function() {
       var [summaryEl] = await summaryTest(this.test), wfStatus = summaryEl.querySelector('.workflow-status')
 
@@ -165,7 +206,7 @@ describe('Execution', function() {
 
       scenario.withFullHistory(opts.events)
 
-      var historyEl = await scenario.render().waitUntilExists('section.history')
+      var historyEl = await scenario.render(opts.attach).waitUntilExists('section.history')
       return [historyEl, scenario]
     }
 
@@ -330,6 +371,43 @@ describe('Execution', function() {
         startDetails.textNodes('dl.details dd').should.deep.equal([
           'email-daily-summaries', 'ci-task-queue', inputPreText, '360', '180'
         ])
+      })
+
+      it('should show a full screen view option for large JSON fields, and allow copying it', async function() {
+        const input = {
+          foo: 1,
+          bar: 'a',
+          baz: new Array(100).fill('aa').join('|')
+        }
+
+        var [historyEl, scenario] = await historyTest(this.test, {
+          attach: true,
+          events: [{
+            eventId: 1,
+            eventType: 'WorkflowExecutionStarted',
+            details: {
+              type: {
+                name: 'ci-input-overflow-test'
+              },
+              execution: {},
+              input
+            },
+            timestamp: new Date().toISOString(),
+          }]
+        }),
+
+        viewFullScreen = await historyEl.waitUntilExists('.results td:nth-child(4) .data-viewer.overflow a.view-full-screen')
+        viewFullScreen.trigger('click')
+
+        var modal = await scenario.vm.$el.waitUntilExists('[data-modal="data-viewer-fullscreen"]')
+        await retry(() => {
+            modal.should.have.descendant('h3').with.text('Event #1 WorkflowExecutionStarted - input')
+            modal.should.have.descendant('pre.language-json')
+              .with.text(JSON.stringify(input, null, 2))
+        })
+
+        modal.querySelector('a.copy').trigger('click')
+        Mocha.copiedText.should.equal(JSON.stringify(input, null, 2))
       })
 
       it('should allow toggling of the details column between summary and full details', async function() {

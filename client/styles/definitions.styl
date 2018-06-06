@@ -120,6 +120,14 @@ backtick()
   padding 2px
   font-size 0.8em
 
+// ignore intrinsic size of children and only flex up to the size of the parent
+flex-exactly-to-parent(direction = row)
+  display flex
+  flex 1
+  min-width 0
+  min-height 0
+  flex-direction column unless direction is row
+
 superlabel()
   position relative
   &::before

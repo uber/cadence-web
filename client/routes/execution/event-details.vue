@@ -75,7 +75,12 @@ export default {
     var item = this.compact && this.event.eventType in eventOneLiners ? eventOneLiners[this.event.eventType](this.event.details) : this.event.details
 
     return h('details-list', {
-      props: { item, highlight: this.highlight, compact: this.compact }
+      props: {
+        item,
+        highlight: this.highlight,
+        compact: this.compact,
+        title: `Event #${this.event.eventId} ${this.event.eventType}`
+      }
     })
   }
 }

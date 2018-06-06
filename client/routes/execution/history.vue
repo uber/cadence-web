@@ -57,6 +57,7 @@
 import moment from 'moment'
 import eventNode from './event-node.vue'
 import eventDetails from './event-details.vue'
+import Prism from 'vue-prism-component'
 
 export default {
   data() {
@@ -158,7 +159,8 @@ export default {
   },
   components: {
     'event-node': eventNode,
-    'event-details': eventDetails
+    'event-details': eventDetails,
+    'prism': Prism
   }
 }
 </script>
@@ -208,7 +210,6 @@ section.history
 
   section pre
     border 1px solid uber-black-60
-    background-color uber-white-20
     overflow auto
 
   table

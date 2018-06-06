@@ -19,7 +19,7 @@
       </div>
       <div class="workflow-result" v-if="!!workflowCompletedEvent">
         <dt>Result</dt>
-        <dd><prism language="json">{{workflowCompletedEvent.details.result || workflowCompletedEvent.details}}</prism></dd>
+        <dd><data-viewer :item="workflowCompletedEvent.details.result || workflowCompletedEvent.details" :title="$route.params.workflowId + ' Result'" /></dd>
       </div>
       <div class="workflow-id">
         <dt>Workflow Id</dt>
@@ -43,7 +43,7 @@
       </div>
       <div class="workflow-input">
         <dt>Input</dt>
-        <dd><prism language="json" v-if="input !== undefined">{{input}}</prism></dd>
+        <dd><data-viewer v-if="input !== undefined" :item="input" :title="$route.params.workflowId + ' Input'" /></dd>
       </div>
       <div class="pending-activities" v-if="$parent.workflow.pendingActivities">
         <dt>Pending Activities</dt>
@@ -115,4 +115,6 @@ section.execution-summary
       color uber-green
     &[data-status="failed"] dd
       color uber-orange
+  pre
+    max-height 18vh
 </style>
