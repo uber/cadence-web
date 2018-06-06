@@ -56,6 +56,7 @@
 
 <script>
 import shortName from '../../short-name'
+import parentWorkflowLink from './parent-workflow-link'
 
 export default {
   data() {
@@ -77,20 +78,7 @@ export default {
       ).toLowerCase()
     },
     parentWorkflowRoute() {
-      var wfStart = this.$parent.results && this.$parent.results[0]
-      if (wfStart && wfStart.details && wfStart.details.parentWorkflowExecution) {
-        return {
-          to: {
-            name: 'execution/summary',
-            params: {
-              domain: wfStart.details.parentWorkflowDomain || this.$route.params.domain,
-              workflowId: wfStart.details.parentWorkflowExecution.workflowId,
-              runId: wfStart.details.parentWorkflowExecution.runId
-            }
-          },
-          text: `${shortName(wfStart.details.workflowType.name)} - ${wfStart.details.parentWorkflowExecution.workflowId}`
-        }
-      }
+      return parentWorkflowLink(this.$parent.results && this.$parent.results[0] && this.$parent.results[0].details)
     }
   }
 }

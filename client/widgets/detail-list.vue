@@ -1,10 +1,10 @@
 <script>
-const jsonKeys = ['result', 'input'],
+const jsonKeys = ['result', 'input', 'details'],
       preKeys = jsonKeys.concat(['stackTrace', 'details.stackTrace'])
 
 export default {
   name: 'details-list',
-  props: ['item', 'highlight'],
+  props: ['item', 'highlight', 'compact'],
   data() {
     return {}
   },
@@ -14,8 +14,12 @@ export default {
 
       function flatten(prefix, obj, root) {
         Object.entries(obj).forEach(([k, value]) => {
-          var key = prefix ? `${prefix}.${k}` : k
-          if (value && typeof value === 'object' && !jsonKeys.includes(key)) {
+          if (!value) return
+         var key = prefix ? `${prefix}.${k}` : k
+
+          if (value.routeLink) {
+            kvps.push({ key, value: value.text, routeLink: value.routeLink })
+          } else if (typeof value === 'object' && !jsonKeys.includes(key)) {
             flatten(key, value, root)
           } else if (key === 'newExecutionRunId') {
             kvps.push({ key, value, routeLink: {
@@ -39,11 +43,11 @@ export default {
                 runId: value,
               }
             }})
-          } else if (key === 'taskList.name') {
+          } else if (key === 'taskList.name' || key === 'Tasklist') {
             kvps.push({ key, value, routeLink: {
               name: 'task-list', params: { taskList: value } }
             })
-          } else if (value) {
+          } else {
             kvps.push({ key, value })
           }
         })
@@ -59,13 +63,13 @@ export default {
     }
   },
   render(h) {
-    var highlight = this.highlight
+    var highlight = this.highlight, fmt = this.compact ? JSON.stringify : x => JSON.stringify(x, null, 2)
     function dd(kvp) {
       if (kvp.routeLink) {
         return [h('router-link', { props: { to: kvp.routeLink } }, kvp.value)]
       }
       if (preKeys.includes(kvp.key)) {
-        let code = JSON.stringify(kvp.value, null, 2)
+        let code = fmt(kvp.value)
         return [highlight !== false ? h('prism', { props: { language: 'json', code } }) : h('pre', null, code)]
       }
       return kvp.value
