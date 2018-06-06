@@ -10,9 +10,8 @@ import moment from 'moment'
 import DateRangePicker from './widgets/date-range-picker.vue'
 import detailList from './widgets/detail-list.vue'
 import barLoader from './widgets/bar-loader.vue'
-import 'prismjs'
-import 'prismjs/components/prism-json'
-import Prism from 'vue-prism-component'
+import dataViewer from './widgets/data-viewer.vue'
+import copyButton from './widgets/copy.vue'
 
 import snapscroll from './directives/snapscroll'
 
@@ -130,12 +129,13 @@ Vue.mixin({
 
 Vue.use(Router)
 Vue.use(infiniteScroll)
-Vue.use(vueModal)
+Vue.use(vueModal, { dynamic: true })
 Vue.component('v-select', vueSelect)
 Vue.component('date-range-picker', DateRangePicker)
-Vue.component('details-list', detailList)
+Vue.component('copy', copyButton)
 Vue.component('bar-loader', barLoader)
-Vue.component('prism', Prism)
+Vue.component('data-viewer', dataViewer)
+Vue.component('details-list', detailList)
 Vue.directive('snapscroll', snapscroll)
 Vue.config.ignoredElements = ['loader']
 

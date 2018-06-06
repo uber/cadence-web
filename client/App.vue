@@ -38,6 +38,7 @@ export default {
       </div>
     </header>
     <router-view></router-view>
+    <modals-container />
   </main>
 </template>
 

@@ -208,7 +208,6 @@ section.history
 
   section pre
     border 1px solid uber-black-60
-    background-color uber-white-20
     overflow auto
 
   table
