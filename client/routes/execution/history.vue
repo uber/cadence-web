@@ -169,6 +169,7 @@ export default {
 @require "../../styles/definitions.styl"
 
 section.history
+  brdr = 1px solid uber-black-60
   display flex
   flex-direction column
   flex 1 1 auto
@@ -209,7 +210,7 @@ section.history
     icon-download()
 
   section pre
-    border 1px solid uber-black-60
+    border brdr
     overflow auto
 
   table
@@ -226,7 +227,8 @@ section.history
       td:nth-child(2), [data-prop="result"] dt
         color uber-green
     tr.active
-      border 1px solid uber-black-60
+      border-top brdr
+      border-bottom brdr
       background-color alpha(uber-blue, 5%)
     pre
       max-height 15vh

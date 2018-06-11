@@ -151,4 +151,39 @@ describe('Workflow History', function() {
         nextPageToken: 'cGFnZTI='
       })
   })
+
+  describe('Export', function() {
+    it('should be able to export history in a format compatible with the CLI', function() {
+      this.test.GetWorkflowExecutionHistory = ({ getRequest }) => ({
+        history: { events: wfHistoryThrift }
+      })
+
+      return request()
+        .get('/api/domain/canary/workflows/ci%2Fdemo/run1/export')
+        .expect(200)
+        .expect(`{"history":{"events":[{"eventId":1,"timestamp":1510701850351393089,"eventType":"WorkflowExecutionStarted","workflowExecutionStartedEventAttributes":{"workflowType":{"name":"github.com/uber/cadence/demo"},"taskList":{"name":"ci-task-queue"},"input":"eyJlbWFpbHMiOlsiamFuZUBleGFtcGxlLmNvbSIsImJvYkBleGFtcGxlLmNvbSJdLCJpbmNsdWRlRm9vdGVyIjp0cnVlfQ==","executionStartToCloseTimeoutSeconds":1080,"taskStartToCloseTimeoutSeconds":30,"childPolicy":"TERMINATE"}},{"eventId":2,"timestamp":1510701850351393089,"eventType":"DecisionTaskScheduled","decisionTaskScheduledEventAttributes":{"taskList":{"name":"canary-task-queue"},"startToCloseTimeoutSeconds":180,"attempt":1}},{"eventId":3,"timestamp":1510701867531262273,"eventType":"DecisionTaskStarted","decisionTaskStartedEventAttributes":{"scheduledEventId":2,"identity":"box1@ci-task-queue","requestId":"fafa095d-b4ca-423a-a812-223e62b5ccf8"}}]}}`)
+    })
+
+    it('should page through all responses', async function() {
+      var calls = 0
+      this.test.GetWorkflowExecutionHistory = ({ getRequest }) => {
+        if (calls > 0) {
+          getRequest.nextPageToken.should.be.ok
+        } else {
+          should.not.exist(getReqest.nextPageToken)
+        }
+        var resp = {
+          history: { events: wfHistoryThrift[calls] }
+        }
+        if (++calls < wfHistoryThrift.length) {
+          resp.nextPageToken = 'cGFnZTI='
+        }
+      }
+
+      return request()
+        .get('/api/domain/canary/workflows/ci%2Fdemo/run1/export')
+        .expect(200)
+        .expect(`{"history":{"events":[{"eventId":1,"timestamp":1510701850351393089,"eventType":"WorkflowExecutionStarted","workflowExecutionStartedEventAttributes":{"workflowType":{"name":"github.com/uber/cadence/demo"},"taskList":{"name":"ci-task-queue"},"input":"eyJlbWFpbHMiOlsiamFuZUBleGFtcGxlLmNvbSIsImJvYkBleGFtcGxlLmNvbSJdLCJpbmNsdWRlRm9vdGVyIjp0cnVlfQ==","executionStartToCloseTimeoutSeconds":1080,"taskStartToCloseTimeoutSeconds":30,"childPolicy":"TERMINATE"}},{"eventId":2,"timestamp":1510701850351393089,"eventType":"DecisionTaskScheduled","decisionTaskScheduledEventAttributes":{"taskList":{"name":"canary-task-queue"},"startToCloseTimeoutSeconds":180,"attempt":1}},{"eventId":3,"timestamp":1510701867531262273,"eventType":"DecisionTaskStarted","decisionTaskStartedEventAttributes":{"scheduledEventId":2,"identity":"box1@ci-task-queue","requestId":"fafa095d-b4ca-423a-a812-223e62b5ccf8"}}]}}`)
+    })
+  })
 })

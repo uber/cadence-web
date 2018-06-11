@@ -5,16 +5,17 @@ const
   TChannel = require('tchannel'),
   path = require('path'),
   Long = require('long'),
+  losslessJSON = require('lossless-json'),
   moment = require('moment'),
   dns = require('dns'),
   isIPv4 = require('is-ipv4-node')
 
-function transform(item) {
+function uiTransform(item) {
   if (!item || typeof item !== 'object') return item
 
   Object.entries(item).forEach(([subkey, subvalue]) => {
     if (subvalue && typeof subvalue.unsigned === 'boolean') {
-      item[subkey] = Long.fromValue(item[subkey]).toNumber()
+      item[subkey] = Long.fromValue(subvalue).toNumber()
       var m = moment(item[subkey] / 1000000)
       if (m.isValid() && m.isAfter('2017-01-01')) {
         item[subkey] = m.toISOString()
@@ -37,9 +38,28 @@ function transform(item) {
         item[subkey] = stringval
       }
     } else if (Array.isArray(subvalue)) {
-      subvalue.forEach(transform)
+      subvalue.forEach(uiTransform)
     } else if (subvalue && typeof subvalue === 'object') {
-      transform(subvalue)
+      uiTransform(subvalue)
+    }
+  })
+  return item
+}
+
+function cliTransform(item) {
+  if (!item || typeof item !== 'object') return item
+
+  Object.entries(item).forEach(([subkey, subvalue]) => {
+    if (subvalue && typeof subvalue.unsigned === 'boolean') {
+      item[subkey] = new losslessJSON.LosslessNumber(Long.fromValue(subvalue).toString())
+    } else if (Buffer.isBuffer(subvalue)) {
+      item[subkey] = subvalue.toString('base64')
+    } else if (Array.isArray(subvalue)) {
+      subvalue.forEach(cliTransform)
+    } else if (subvalue && typeof subvalue === 'object') {
+      cliTransform(subvalue)
+    } else if (subvalue == null) {
+      delete item[subkey]
     }
   })
   return item
@@ -84,7 +104,7 @@ module.exports = async function(ctx, next) {
       entryPoint: path.join(__dirname, '../idl/cadence.thrift')
     })
 
-  function req(method, reqName, bodyTransform) {
+  function req(method, reqName, bodyTransform, resTransform) {
     return (body) => new Promise(function(resolve, reject) {
       try {
         tchannelAsThrift.request({
@@ -103,7 +123,7 @@ module.exports = async function(ctx, next) {
             if (err) {
               reject(err)
             } else if (res.ok) {
-              resolve(transform(res.body))
+              resolve((resTransform || uiTransform)(res.body))
             } else {
               ctx.throw(res.typeName === 'entityNotExistError' ? 404 : 400, null, res.body || res)
             }
@@ -127,12 +147,14 @@ module.exports = async function(ctx, next) {
       workflowId: ctx.params.workflowId,
       runId: ctx.params.runId
     },
-  }, body)
+  }, body),
+  withDomainAndWorkflowExecution = b => Object.assign(withDomainPaging(b), withWorkflowExecution(b))
 
   ctx.cadence = {
     openWorkflows: req('ListOpenWorkflowExecutions', 'list', withDomainPaging),
     closedWorkflows: req('ListClosedWorkflowExecutions', 'list', withDomainPaging),
-    getHistory: req('GetWorkflowExecutionHistory', 'get', b => Object.assign(withDomainPaging(b), withWorkflowExecution(b))),
+    getHistory: req('GetWorkflowExecutionHistory', 'get', withDomainAndWorkflowExecution),
+    exportHistory: req('GetWorkflowExecutionHistory', 'get', withDomainAndWorkflowExecution, cliTransform),
     describeWorkflow: req('DescribeWorkflowExecution', 'describe', withWorkflowExecution),
     queryWorkflow: req('QueryWorkflow', 'query', withWorkflowExecution),
     describeDomain: req('DescribeDomain', 'describe'),

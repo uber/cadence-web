@@ -3,6 +3,7 @@ const
   router = new Router(),
   moment = require('moment'),
   Long = require('long'),
+  losslessJSON = require('lossless-json'),
   momentToLong = m => Long.fromValue(m.unix()).mul(1000000000)
 
 router.get('/api/domain/:domain', async function (ctx) {
@@ -65,6 +66,19 @@ router.get('/api/domain/:domain/workflows/:workflowId/:runId/history', async fun
       }
     })
   }
+})
+
+router.get('/api/domain/:domain/workflows/:workflowId/:runId/export', async function (ctx) {
+  var nextPageToken
+
+  do {
+    var page = await ctx.cadence.exportHistory({ nextPageToken })
+    ctx.res.write((nextPageToken ? ',' : '[') + page.history.events.map(losslessJSON.stringify).join(','))
+    nextPageToken = page.nextPageToken && Buffer.from(page.nextPageToken, 'base64')
+  } while (nextPageToken)
+
+  ctx.res.write(']')
+  ctx.body = ''
 })
 
 router.get('/api/domain/:domain/workflows/:workflowId/:runId/queries', async function (ctx) {
