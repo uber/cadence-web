@@ -11,7 +11,7 @@ export default {
 
       if (e.target.tagName === 'A') {
         var href = e.target.getAttribute('href')
-        if (href && href.startsWith('/')) {
+        if (href && href.startsWith('/') && !e.target.getAttribute('download') && !e.target.getAttribute('target')) {
           e.preventDefault()
           e.stopPropagation()
           this.$router.push(href)

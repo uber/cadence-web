@@ -10,7 +10,7 @@
         </div>
       </div>
       <div class="actions">
-        <a href="#" class="export" @click="exportResults">Export</a>
+        <a class="export" :href="$parent.baseAPIURL + '/export'" :download="exportFilename">Export</a>
       </div>
     </header>
     <section v-snapscroll class="results" ref="results">
@@ -103,25 +103,12 @@ export default {
     },
     showNoResults() {
       return !this.$parent.historyError && !this.$parent.historyLoading && this.$parent.results.length === 0
+    },
+    exportFilename() {
+      return `${this.$route.params.workflowId.replace(/[\\~#%&*{}\/:<>?|\"-]/g, ' ')} - ${this.$route.params.runId}.json`
     }
   },
   methods: {
-    exportResults(e) {
-      if (!this.$parent.results.length || !this.$route.query) return
-
-      var downloadEl = document.createElement('a')
-      downloadEl.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(this.$parent.results)))
-      downloadEl.setAttribute('download',
-        `${this.$route.params.workflowId.replace(/[\\~#%&*{}\/:<>?|\"-]/g, ' ')} - ${this.$route.params.runId}.json`)
-
-      downloadEl.style.display = 'none'
-      document.body.appendChild(downloadEl)
-
-      if (typeof Mocha === 'undefined') {
-        downloadEl.click()
-        document.body.removeChild(downloadEl)
-      }
-    },
     setFormat(format) {
       this.$router.replace({
         query: Object.assign({}, this.$route.query, { format })

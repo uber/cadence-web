@@ -265,21 +265,12 @@ describe('Execution', function() {
       scenario.location.should.equal('/domain/ci-test/workflows/email-daily-summaries/emailRun1/history?format=json')
     })
 
-    it('should download the currently loaded history events as json when export is clicked', async function () {
+    it('should allow downloading the full history via export', async function () {
       var [historyEl, scenario] = await historyTest(this.test),
           exportEl = await scenario.vm.$el.waitUntilExists('section.history .controls a.export')
 
-      exportEl.trigger('click')
-      var downloadEl = document.body.querySelector('a[download]')
-      downloadEl.should.have.attr('download', 'email daily summaries - emailRun1.json')
-
-      var href = decodeURIComponent(downloadEl.getAttribute('href'))
-      var eventsJson = JSON.parse(decodeURIComponent(href).replace('data:text/plain;charset=utf-8,', ''))
-
-      eventsJson.length.should.equal(4)
-      eventsJson.map(e => e.eventType).should.deep.equal([
-        'WorkflowExecutionStarted', 'DecisionTaskScheduled', 'DecisionTaskStarted', 'DecisionTaskCompleted'
-      ])
+      exportEl.should.have.attr('href', '/api/domain/ci-test/workflows/email-daily-summaries/emailRun1/export')
+      exportEl.should.have.attr('download', 'email daily summaries - emailRun1.json')
     })
 
     describe('Compact View', function() {
