@@ -63,7 +63,8 @@ export default {
         details: {
           taskList: {
             name: 'ci-task-queue'
-          }
+          },
+          zero: 0
         }
       }, {
         timestamp: emailRun1Start.toISOString(),
@@ -81,7 +82,7 @@ export default {
         details: {
           scheduledEventId: 2,
           startedEventId: 3,
-          answer: 42
+          answer: 42,
         }
       }, {
         timestamp: emailRun1Start.add(1, 'second').toISOString(),
@@ -89,7 +90,7 @@ export default {
         eventId: 5,
         details: {
           markerName: 'Version',
-          details: 'initial version\n2',
+          details: [0, 'initial version'],
           decisionTaskCompletedEventId: 4
         }
       }, {

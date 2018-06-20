@@ -3,14 +3,14 @@ import moment from 'moment'
 import shortName from '../../short-name'
 import parentWorkflowLink from './parent-workflow-link'
 
-const eventOneLiners = {
+const eventCompactTransforms = {
   WorkflowExecutionStarted: d => {
     var summary = {
       Parent: undefined,
       input: d.input,
       identity: d.identity,
       Workflow: shortName(d.workflowType.name),
-      'Close Timeout': moment.duration(d.executionStartToCloseTimeout, 'seconds').format()
+      'Close Timeout': moment.duration(d.executionStartToCloseTimeoutSeconds, 'seconds').format()
     },
     wfLink = parentWorkflowLink(d)
 
@@ -57,6 +57,7 @@ const eventOneLiners = {
   }),
   DecisionTaskStarted: d => ({ requestId: d.requestId }),
   DecisionTaskCompleted: d => ({ identity: d.identity }),
+  DecisionTaskTimedOut: d => ({ 'Timeout Type': d.timeoutType }),
   ActivityTaskScheduled: d => ({
     ID: d.activityId,
     Name: shortName(d.activityType.name),
@@ -64,7 +65,51 @@ const eventOneLiners = {
     'Close Timeout': moment.duration(d.scheduleToCloseTimeoutSeconds, 'seconds').format()
   }),
   ActivityTaskStarted: d => ({ identity: d.identity, requestId: d.requestId }),
-  ActivityTaskCompleted: d => ({ result: d.result })
+  ActivityTaskCompleted: d => ({ result: d.result }),
+  ActivityTaskTimedOut: d => ({ 'Timeout Type': d.timeoutType }),
+  MarkerRecorded: d => {
+    var details = d.details || {}
+    if (d.markerName === 'LocalActivity') {
+      let la = { 'Local Activity ID': details.ActivityID }
+      if (details.ErrJSON) {
+        la.Error = JSON.tryParse(details.ErrJSON) || details.ErrJSON
+      }
+      if (details.ErrReason) {
+        la.reason = details.ErrReason
+      }
+      if (details.ResultJSON) {
+        la.result = JSON.tryParse(details.ResultJSON) || details.ResultJSON
+    }
+      return la
+    }
+    if (d.markerName == 'Version') {
+      return {
+        Version: details[1],
+        Details: details[0]
+      }
+    }
+    if (d.markerName === 'SideEffect') {
+      return {
+        'Side Effect ID': details[0],
+        data:  JSON.tryParse(atob(details[1])) || details[1]
+      }
+    }
+
+    return d
+  }
+},
+
+eventFullTransforms = {
+  MarkerRecorded: d => {
+    if (d.markerName === 'SideEffect') {
+      return {
+        sideEffectID: d.details[0],
+        data:  JSON.tryParse(atob(d.details[1])) || d.details[1],
+        decisionTaskCompletedEventId: d.decisionTaskCompletedEventId
+      }
+    }
+    return d
+  }
 }
 
 export default {
@@ -72,7 +117,8 @@ export default {
   props: ['event', 'compact', 'highlight'],
   render(h) {
     if (!this.event) return
-    var item = this.compact && this.event.eventType in eventOneLiners ? eventOneLiners[this.event.eventType](this.event.details) : this.event.details
+    var maps = this.compact ? eventCompactTransforms : eventFullTransforms
+    var item = this.event.eventType in maps ? maps[this.event.eventType](this.event.details) : this.event.details
 
     return h('details-list', {
       props: {

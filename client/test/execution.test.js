@@ -402,7 +402,7 @@ describe('Execution', function() {
       })
 
       it('should allow toggling of the details column between summary and full details', async function() {
-        var [historyEl, scenario] = await historyTest(this.test)
+        var [historyEl] = await historyTest(this.test)
         await historyEl.waitUntilExists('.results tbody tr:nth-child(4)')
 
         var [summaryEl, fullDetailsEl] = historyEl.querySelectorAll('thead th:nth-child(4) a')
@@ -412,9 +412,9 @@ describe('Execution', function() {
         summaryEl.trigger('click')
         await retry(() => {
           historyEl.textNodes('.results tbody tr:first-child td:nth-child(4) dl.details dt')
-            .should.deep.equal(['input', 'Workflow'])
+            .should.deep.equal(['input', 'Workflow', 'Close Timeout'])
           historyEl.textNodes('.results tbody tr:first-child td:nth-child(4) dl.details dd').should.deep.equal([
-            JSON.stringify(fixtures.history.emailRun1[0].details.input), 'email-daily-summaries'
+            JSON.stringify(fixtures.history.emailRun1[0].details.input), 'email-daily-summaries', '6m'
           ])
         })
         localStorage.getItem('ci-test:history-compact-details').should.equal('true')
@@ -422,10 +422,72 @@ describe('Execution', function() {
 
       it('should use the details format from local storage if available', async function() {
         localStorage.setItem('ci-test:history-compact-details', 'true')
-        var [historyEl, scenario] = await historyTest(this.test)
+        var [historyEl] = await historyTest(this.test)
         await retry(() => historyEl.textNodes('.results tbody tr:first-child td:nth-child(4) dl.details dt')
-          .should.deep.equal(['input', 'Workflow'])
+          .should.deep.equal(['input', 'Workflow', 'Close Timeout'])
         )
+      })
+
+      it('should specially handle MarkerRecorded events', async function() {
+        var [historyEl] = await historyTest(this.test, {
+          events: [{
+            eventId: 1,
+            eventType: 'WorkflowExecutionStarted',
+            details: {
+              workflowType: {
+                name: 'ci-input-overflow-test'
+              },
+              execution: {}
+            },
+            timestamp: new Date().toISOString(),
+          }, {
+            eventId: 2,
+            eventType: 'MarkerRecorded',
+            details: {
+              markerName: 'Version',
+              details: ['initial version', 0]
+            },
+            timestamp: new Date().toISOString(),
+          }, {
+            eventId: 3,
+            eventType: 'MarkerRecorded',
+            details: {
+              markerName: 'SideEffect',
+              details: [0, btoa(JSON.stringify({ foo: 'bar' }))]
+            },
+            timestamp: new Date().toISOString(),
+          }, {
+            eventId: 4,
+            eventType: 'MarkerRecorded',
+            details: {
+              markerName: 'LocalActivity',
+              details: {
+                ActivityID: 2,
+                ErrJSON: JSON.stringify({ err: 'in json' }),
+                ErrReason: 'string error reason',
+                ResultJSON: JSON.stringify({ result: 'in json' })
+              }
+            },
+            timestamp: new Date().toISOString(),
+          }]
+        })
+        await historyEl.waitUntilExists('.results tbody tr:nth-child(4)')
+
+        historyEl.textNodes('tr:not(:first-child) dl.details dt').should.deep.equal([
+          'markerName', 'details', 'sideEffectID', 'data', 'markerName', 'details'
+        ])
+        historyEl.querySelector('tr:nth-child(3) [data-prop="data"] dd')
+          .should.have.trimmed.text(JSON.stringify({ foo: 'bar' }, null, 2))
+
+        historyEl.querySelector('thead a.summary').trigger('click')
+        await Promise.delay(50)
+
+        historyEl.textNodes('tr:not(:first-child) dl.details dt').should.deep.equal([
+          'Version', 'Details', 'Side Effect ID', 'data', 'Local Activity ID', 'Error', 'reason', 'result'
+        ])
+        historyEl.textNodes('tr:not(:first-child) dl.details dd').should.deep.equal([
+          '0', 'initial version', '0', '{"foo":"bar"}', '2', '{"err":"in json"}', 'string error reason', '{"result":"in json"}'
+        ])
       })
 
       it('should render event inputs as highlighted json', async function() {

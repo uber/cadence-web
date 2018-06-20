@@ -1,5 +1,5 @@
 <script>
-const jsonKeys = ['result', 'input', 'details'],
+const jsonKeys = ['result', 'input', 'details', 'data', 'Error'],
       preKeys = jsonKeys.concat(['stackTrace', 'details.stackTrace'])
 
 export default {
@@ -14,7 +14,7 @@ export default {
 
       function flatten(prefix, obj, root) {
         Object.entries(obj).forEach(([k, value]) => {
-          if (!value) return
+          if (value == null) return
          var key = prefix ? `${prefix}.${k}` : k
 
           if (value.routeLink) {
