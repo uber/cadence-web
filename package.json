@@ -1,6 +1,6 @@
 {
   "name": "cadence-web",
-  "version": "2.4.1",
+  "version": "2.4.2",
   "description": "Cadence Web UI",
   "main": "server/index.js",
   "licence": "MIT",
