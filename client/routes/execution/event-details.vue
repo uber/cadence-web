@@ -58,13 +58,17 @@ const eventCompactTransforms = {
   DecisionTaskStarted: d => ({ requestId: d.requestId }),
   DecisionTaskCompleted: d => ({ identity: d.identity }),
   DecisionTaskTimedOut: d => ({ 'Timeout Type': d.timeoutType }),
+  TimerStarted: d => ({
+    'Timer ID': d.timerId,
+    'Fire Timeout': moment.duration(d.startToFireTimeoutSeconds, 'seconds').format()
+  }),
   ActivityTaskScheduled: d => ({
     ID: d.activityId,
     Name: shortName(d.activityType.name),
     input: d.input,
     'Close Timeout': moment.duration(d.scheduleToCloseTimeoutSeconds, 'seconds').format()
   }),
-  ActivityTaskStarted: d => ({ identity: d.identity, requestId: d.requestId }),
+  ActivityTaskStarted: d => ({ identity: d.identity, attempt: d.attempt, requestId: d.requestId }),
   ActivityTaskCompleted: d => ({ result: d.result }),
   ActivityTaskTimedOut: d => ({ 'Timeout Type': d.timeoutType }),
   MarkerRecorded: d => {

@@ -13,6 +13,7 @@
         <a class="export" :href="$parent.baseAPIURL + '/export'" :download="exportFilename">Export</a>
       </div>
     </header>
+    <timeline :events="$parent.results" />
     <section v-snapscroll class="results" ref="results">
       <table v-if="format === 'grid' && showTable" :class="{ compact: compactDetails }">
         <thead>
@@ -58,6 +59,7 @@ import moment from 'moment'
 import eventNode from './event-node.vue'
 import eventDetails from './event-details.vue'
 import Prism from 'vue-prism-component'
+import timeline from './timeline.vue'
 
 export default {
   data() {
@@ -147,7 +149,8 @@ export default {
   components: {
     'event-node': eventNode,
     'event-details': eventDetails,
-    'prism': Prism
+    'prism': Prism,
+    timeline
   }
 }
 </script>
