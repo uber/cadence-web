@@ -47,7 +47,9 @@ export default {
       isActive = activeId == node.eventId,
       showDetails = activeId && (!!groupTitle || (isActive && noGroup)),
       activeGroupNode = showDetails && findActiveGroupNode(node, activeId, true),
-      detailsList = activeGroupNode && h('details-list', { props: { item: activeGroupNode.details } })
+      detailsList = activeGroupNode && h('details-list', {
+        props: { item: activeGroupNode.details, title: groupTitle || node.eventType }
+      })
 
       return h(groupTitle ? 'div' : 'span', {
         class: 'event-node ' + node.eventType + (activeGroupNode ? ' active' : '')

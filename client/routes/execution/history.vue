@@ -13,18 +13,18 @@
         <a class="export" :href="$parent.baseAPIURL + '/export'" :download="exportFilename">Export</a>
       </div>
     </header>
-    <timeline :events="$parent.results" />
+    <timeline :events="$parent.results" :selected-event-id="eventId" v-if="format !== 'json'" />
     <section v-snapscroll class="results" ref="results">
       <table v-if="format === 'grid' && showTable" :class="{ compact: compactDetails }">
         <thead>
           <th>ID</th>
           <th>Type</th>
           <th>
-            <a class="elapsed" :href="tsFormat === 'elapsed' ? null : '#'" @click.prevent="setTsFormat('elapsed')">Elapsed</a> / 
+            <a class="elapsed" :href="tsFormat === 'elapsed' ? null : '#'" @click.prevent="setTsFormat('elapsed')">Elapsed</a> /
             <a class="ts" :href="tsFormat === 'elapsed' ? '#' : null" @click.prevent="setTsFormat('ts')">Time</a>
           </th>
           <th>
-            <a class="summary" :href="compactDetails ? null : '#'" @click.prevent="setCompactDetails(true)">Summary</a> / 
+            <a class="summary" :href="compactDetails ? null : '#'" @click.prevent="setCompactDetails(true)">Summary</a> /
             <a class="details" :href="compactDetails ? '#' : null" @click.prevent="setCompactDetails(false)">Full Details</a>
           </th>
         </thead>
@@ -33,13 +33,13 @@
             :key="he.eventId"
             :data-event-type="he.eventType"
             :data-event-id="he.eventId"
-            :class="{ active: he.eventId === $route.query.eventId }"
+            :class="{ active: he.eventId === eventId }"
              @click.prevent="$router.replaceQueryParam('eventId', he.eventId)"
           >
             <td>{{he.eventId}}</td>
             <td>{{he.eventType}}</td>
             <td>{{timeCol(he.timestamp, i)}} </td>
-            <td><event-details :event="he" :compact="compactDetails && he.eventId != $route.query.eventId" :highlight="$parent.results.length < 100" /></td>
+            <td><event-details :event="he" :compact="compactDetails && he.eventId != eventId" :highlight="$parent.results.length < 100" /></td>
           </tr>
         </tbody>
       </table>
@@ -68,9 +68,10 @@ export default {
       compactDetails: localStorage.getItem(`${this.$route.params.domain}:history-compact-details`) === 'true'
     }
   },
-  props: ['format'],
+  props: ['format', 'eventId'],
   created() {
-    this.$watch('format', this.scrollEventIntoView.bind(this)) 
+    this.$watch('format', this.scrollEventIntoView.bind(this, true))
+    this.$watch('eventId', this.scrollEventIntoView.bind(this, false))
   },
   computed: {
     hierarchialResults() {
@@ -137,11 +138,15 @@ export default {
       }
       return elapsed
     },
-    scrollEventIntoView(eventId) {
+    scrollEventIntoView(force, eventId) {
       setTimeout(() => {
         var eventRow = this.$refs.results.querySelector(`[data-event-id="${this.$route.query.eventId}"]`)
         if (eventRow) {
-          eventRow.scrollIntoView()
+          if (eventRow.scrollIntoViewIfNeeded) {
+            eventRow.scrollIntoViewIfNeeded()
+          } else if (force) {
+            eventRow.scrollIntoView()
+          }
         }
       }, 100)
     }
@@ -238,7 +243,7 @@ section.history
           vertical-align middle
           margin 0 0.5em
         dt
-          font-family primary-font-family 
+          font-family primary-font-family
           font-weight 200
           text-transform uppercase
         pre
@@ -253,4 +258,6 @@ section.history
     padding layout-spacing-small
     & > .event-node
       display block
+    pre
+      max-height 15vh
 </style>

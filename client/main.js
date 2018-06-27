@@ -48,7 +48,8 @@ const routeOpts = {
       path: '/domain/:domain/workflows/:workflowId/:runId/history',
       component: History,
       props: ({ query }) => ({
-        format: query.format || 'grid'
+        format: query.format || 'grid',
+        eventId: Number(query.eventId) || undefined
       })
     }, {
       name: 'execution/stack-trace',
