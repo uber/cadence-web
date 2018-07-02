@@ -13,7 +13,7 @@
         <a class="export" :href="$parent.baseAPIURL + '/export'" :download="exportFilename">Export</a>
       </div>
     </header>
-    <timeline :events="$parent.results" :selected-event-id="eventId" v-if="format !== 'json'" />
+    <timeline :events="timelineEvents" :selected-event-id="eventId" v-if="format !== 'json'" />
     <section v-snapscroll class="results" ref="results">
       <table v-if="format === 'grid' && showTable" :class="{ compact: compactDetails }">
         <thead>
@@ -46,7 +46,10 @@
       <prism language="json" v-if="format === 'json' && $parent.results.length < 90">{{JSON.stringify($parent.results, null, 2)}}</prism>
       <pre class="json" v-if="format === 'json' && $parent.results.length >= 90">{{JSON.stringify($parent.results, null, 2)}}</pre>
       <div class="compact-view" v-if="format === 'compact'">
-        <event-node v-for="hr in hierarchialResults" :node="hr" :key="hr.eventId" />
+        <div v-for="te in timelineEvents" :key="te.id" :class="te.className + (te.eventIds.includes(eventId) ? ' active' : '')" @click.prevent="selectCompactEvent(te)">
+          <span class="event-title">{{te.content}}</span>
+          <details-list :item="te.details" :title="te.content" />
+        </div>
       </div>
     </section>
     <span class="error" v-if="$parent.historyError">{{$parent.historyError}}</span>
@@ -56,10 +59,11 @@
 
 <script>
 import moment from 'moment'
-import eventNode from './event-node.vue'
 import eventDetails from './event-details.vue'
+import shortName from '../../short-name'
 import Prism from 'vue-prism-component'
 import timeline from './timeline.vue'
+import summarizeEvents from './summarize-events'
 
 export default {
   data() {
@@ -74,32 +78,107 @@ export default {
     this.$watch('eventId', this.scrollEventIntoView.bind(this, false))
   },
   computed: {
-    hierarchialResults() {
-      const rank = {
-        scheduled: -1,
-        started: 1
-      }, hash = {}, hierarchy = []
+    timelineEvents() {
+      const events = [], hash = {},
+      add = i => {
+        hash[i.id] = i
+        events.push(i)
+        return i
+      }
 
-      this.$parent.results
-        .map(r => hash[r.eventId] = Object.assign({ children: [] }, r))
-        .forEach(r => {
-          let parentEventName = Object.keys(r.details || {})
-            .map(k => (k.match(/(\S+)EventId/) || [])[1])
-            .filter(k => k && k !== 'parentInitiated')
-            .sort((a, b) => (rank[b] || 0) - (rank[a] || 0))[0] + 'EventId',
-          parentEventId = r.details[parentEventName]
+      this.$parent.results.forEach(e => {
+        if (e.eventType.startsWith('ActivityTask')) {
+          let scheduledEvent = 'activityId' in e.details ? e : this.$parent.results[e.details.scheduledEventId - 1],
+              activityId = scheduledEvent.details.activityId,
+              item = hash['activity' + activityId]
 
-          if (hash[parentEventId]) {
-            hash[parentEventId].children.push(r)
+          if (!item) {
+            item = add({
+              id: 'activity' + activityId,
+              eventIds: [e.eventId],
+              start: moment(scheduledEvent.timestamp),
+              content: `Activity ${activityId} - ${shortName(scheduledEvent.details.activityType && scheduledEvent.details.activityType.name)}`,
+              details: {
+                input: e.details.input
+              }
+            })
           } else {
-            hierarchy.push(r)
+            item.eventIds.push(e.eventId)
+            if (e.eventType !== 'ActivityTaskStarted') {
+              Object.assign(item.details, summarizeEvents[e.eventType](e.details))
+            }
           }
-          if (parentEventName in r.details && !hash[parentEventId] && parentEventId !== 0) {
-            console.warn(`referenced but not found: "${parentEventName}": ${parentEventId}`)
-          }
-        })
 
-      return hierarchy
+          if (e.eventType !== 'ActivityTaskScheduled' && e.eventType !== 'ActivityTaskStarted') {
+            if (item.start.isBefore(e.timestamp, 'second')) {
+              item.end = moment(e.timestamp)
+            }
+            item.className = 'activity ' + e.eventType.replace('ActivityTask', '').toLowerCase()
+          }
+        } else if (e.eventType.includes('ChildWorkflowExecution')) {
+          let initiatedEvent = 'initiatedEventId' in e.details ? this.$parent.results[e.details.initiatedEventId - 1] : e,
+              initiatedEventId = initiatedEvent.eventId,
+              item = hash['childWf' + initiatedEventId]
+
+          if (!item) {
+            item = add({
+              id: 'childWf' + initiatedEventId,
+              className: 'child-workflow',
+              eventIds: [e.eventId],
+              start: moment(initiatedEvent.timestamp),
+              content: `Child ${shortName(e.details.workflowType.name)}`,
+              details: {
+                input: e.details.input
+              }
+            })
+          } else {
+            item.eventIds.push(e.eventId)
+            if (e.eventType in summarizeEvents) {
+              let summary = summarizeEvents[e.eventType](e.details)
+              if (!item.routeLink && summary.Workflow && summary.Workflow.routeLink) {
+                item.routeLink = summary.Workflow.routeLink
+              }
+              Object.assign(item.details, )
+            }
+          }
+
+          if (e.eventType !== 'StartChildWorkflowExecutionInitiated' && e.eventType !== 'ChildWorkflowExecutionStarted') {
+            if (item.start.isBefore(e.timestamp, 'second')) {
+              item.end = moment(e.timestamp)
+            }
+            item.className = 'child-workflow ' + e.eventType.replace('ChildWorkflowExecution', '').toLowerCase()
+          }
+        } else if (e.eventType === 'TimerStarted') {
+          add({
+            id: 'timer' + e.details.timerId,
+            className: 'timer',
+            eventIds: [e.eventId],
+            start: moment(e.timestamp),
+            end: moment(e.timestamp).add(e.details.startToFireTimeoutSeconds, 'seconds'),
+            content: `Timer ${e.details.timerId} (${moment.duration(e.details.startToFireTimeoutSeconds, 'seconds').format()})`
+          })
+        } else if (e.eventType === 'TimerFired') {
+          let timerStartedEvent = hash[`timer${e.details.timerId}`]
+          if (timerStartedEvent) {
+            timerStartedEvent.eventIds.push(e.eventId)
+          }
+        } else if (e.eventType === 'MarkerRecorded') {
+          add({
+            id: 'marker' + e.eventId,
+            className: 'marker marker-' + e.details.markerName.toLowerCase(),
+            eventIds: [e.eventId],
+            start: moment(e.timestamp),
+            content: ({
+              Version: 'Verison Marker',
+              SideEffect: 'Side Effect',
+              LocalActivity: 'Local Activity'
+            }[e.details.markerName]) || (e.details.markerName + ' Marker'),
+            details: summarizeEvents.MarkerRecorded(e.details)
+          })
+        }
+      })
+
+      return events
     },
     showTable() {
       return !this.$parent.historyError && (this.$parent.historyLoading || this.$parent.results.length)
@@ -140,6 +219,7 @@ export default {
     },
     scrollEventIntoView(force, eventId) {
       setTimeout(() => {
+        // TODO: fix this for the new compact view
         var eventRow = this.$refs.results.querySelector(`[data-event-id="${this.$route.query.eventId}"]`)
         if (eventRow) {
           if (eventRow.scrollIntoViewIfNeeded) {
@@ -149,10 +229,12 @@ export default {
           }
         }
       }, 100)
+    },
+    selectCompactEvent(i) {
+      this.$router.replaceQueryParam('eventId', i.eventIds[i.eventIds.length - 1])
     }
   },
   components: {
-    'event-node': eventNode,
     'event-details': eventDetails,
     'prism': Prism,
     timeline
@@ -231,33 +313,79 @@ section.history
       td:nth-child(4)
         overflow hidden
       dl.details
-        white-space nowrap
         max-width 50vw
-        & > div
-          display inline-block
-          padding 0
-          &:nth-child(2n)
-            background none
-        dt, dd
-          display inline-block
-          vertical-align middle
-          margin 0 0.5em
-        dt
-          font-family primary-font-family
-          font-weight 200
-          text-transform uppercase
-        pre
-          display inline-block
-          max-width 40vw
-          one-liner-ellipsis()
+
+  table.compact tr:not(.active), .compact-view > div:not(.active)
+    dl.details
+      white-space nowrap
+      & > div
+        display inline-block
+        padding 0
+        &:nth-child(2n)
+          background none
+      dt, dd
+        display inline-block
+        vertical-align middle
+        margin 0 0.5em
+      dt
+        font-family primary-font-family
+        font-weight 200
+        text-transform uppercase
+      pre
+        display inline-block
+        max-width 40vw
+        one-liner-ellipsis()
 
   section.results > pre
     margin layout-spacing-small
     padding layout-spacing-small
   .compact-view
     padding layout-spacing-small
-    & > .event-node
-      display block
+    line-height 1.5em
+    .event-title
+      padding 4px
+      font-size 16px
     pre
       max-height 15vh
+
+    & > div
+      //display flex
+      //justify-content space-between
+      border 2px solid primary-color
+      //background-color alpha(uber-black-60, 0.1)
+      padding 6px
+      margin-bottom layout-spacing-small
+      // &.completed
+      //   border-color uber-green
+      // &.failed
+      //   border-color uber-orange
+      // &.timedout
+      //   border-color uber-black-60
+      // &.cancelled, &.canceled
+      //   border-color uber-black-90
+      history-item-state-color(3%)
+      &.active
+        box-shadow 2px 2px 2px rgba(0,0,0,0.3)
+        dl.details dt
+          display inline-block
+          padding-top 5px
+      dl.details dd
+        max-width none
+
+      @media (max-width: 1400px)
+        &:not(.active) dl.details
+          display none
+      @media (min-width: 1400px)
+        &:not(.active)
+          display flex
+          align-items center
+          .event-title
+            flex 0 0 400px
+          dl.details
+            flex 1
+            //display inline-flex
+            align-items center
+            overflow hidden
+            pre
+              max-width none
 </style>

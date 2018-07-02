@@ -185,3 +185,23 @@ paged-grid()
 
   section.results
     overflow auto
+
+history-item-color(color, alphapct)
+  border-color color
+  background-color alpha(color, alphapct)
+  &.vis-selected
+    background-color color
+    color white
+
+history-item-state-color(alphapct)
+  history-item-color(primary-color, alphapct)
+  &.completed
+    history-item-color(uber-green, alphapct)
+  &.failed
+    history-item-color(uber-orange, alphapct)
+  &.timedout
+    history-item-color(uber-black-60, alphapct)
+  &.cancelled, &.canceled
+    history-item-color(uber-black-90, alphapct)
+    .vis-item-content
+      text-decoration-line line-through
