@@ -2,6 +2,20 @@ import moment from 'moment'
 import shortName from '../../short-name'
 import parentWorkflowLink from './parent-workflow-link'
 
+function workflowLink(d, short) {
+  return {
+    routeLink: {
+      name: 'execution/summary',
+      params: {
+        domain: d.domain,
+        workflowId: d.workflowExecution.workflowId,
+        runId: d.workflowExecution.runId
+      }
+    },
+    text: [d.workflowType ? shortName(d.workflowType.name) : '', (short ? '' : d.workflowExecution.workflowId)].filter(x => x).join(' - ')
+  }
+}
+
 export default {
   WorkflowExecutionStarted: d => {
     var summary = {
@@ -24,31 +38,19 @@ export default {
     input: d.input
   }),
   ChildWorkflowExecutionStarted: d => ({
-    Workflow: {
-      routeLink: {
-        name: 'execution/summary',
-        params: {
-          domain: d.domain,
-          workflowId: d.workflowExecution.workflowId,
-          runId: d.workflowExecution.runId
-        }
-      },
-      text: `${shortName(d.workflowType.name)} - ${d.workflowExecution.workflowId}`
-    }
+    Workflow: workflowLink(d)
   }),
   ChildWorkflowExecutionCompleted: d => ({
-    Workflow: {
-      routeLink: {
-        name: 'execution/summary',
-        params: {
-          domain: d.domain,
-          workflowId: d.workflowExecution.workflowId,
-          runId: d.workflowExecution.runId
-        }
-      },
-      text: shortName(d.workflowType.name)
-    },
+    Workflow: workflowLink(d, true),
     result: d.result
+  }),
+  SignalExternalWorkflowExecutionInitiated: d => ({
+    Workflow: workflowLink(d),
+    signal: d.signalName,
+    input: d.input
+  }),
+  ExternalWorkflowExecutionSignaled: d => ({
+    Workflow: workflowLink(d)
   }),
   DecisionTaskScheduled: d => ({
     Tasklist: d.taskList.name,

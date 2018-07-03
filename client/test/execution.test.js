@@ -154,6 +154,10 @@ describe('Execution', function() {
       await retry(() => wfStatus.should.have.attr('data-status', 'completed'))
     })
 
+    it('should link to the new workflow if the status is ContinuedAsNew', async function() {
+      throw new Error('write test')
+    })
+
     it('should show the result of the workflow if completed', async function() {
       var [summaryEl] = await summaryTest(this.test),
           resultsEl = await summaryEl.waitUntilExists('.workflow-result pre')

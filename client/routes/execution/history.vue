@@ -97,7 +97,7 @@ export default {
               id: 'activity' + activityId,
               eventIds: [e.eventId],
               start: moment(scheduledEvent.timestamp),
-              content: `Activity ${activityId} - ${shortName(scheduledEvent.details.activityType && scheduledEvent.details.activityType.name)}`,
+              content: `Activity ${activityId}: ${shortName(scheduledEvent.details.activityType && scheduledEvent.details.activityType.name)}`,
               details: {
                 input: e.details.input
               }
@@ -126,7 +126,7 @@ export default {
               className: 'child-workflow',
               eventIds: [e.eventId],
               start: moment(initiatedEvent.timestamp),
-              content: `Child ${shortName(e.details.workflowType.name)}`,
+              content: `Child Workflow: ${shortName(e.details.workflowType.name)}`,
               details: {
                 input: e.details.input
               }
@@ -175,6 +175,34 @@ export default {
             }[e.details.markerName]) || (e.details.markerName + ' Marker'),
             details: summarizeEvents.MarkerRecorded(e.details)
           })
+        } else if (e.eventType === 'WorkflowExecutionSignaled') {
+          add({
+            id: 'signal' + e.eventId,
+            className: 'signal',
+            eventIds: [e.eventId],
+            start: moment(e.timestamp),
+            content: 'Workflow Signaled',
+            details: {
+              input: e.details.input,
+            }
+          })
+        } else if (e.eventType === 'SignalExternalWorkflowExecutionInitiated') {
+          add({
+            id: 'extsignal' + e.eventId,
+            className: 'external-signal',
+            eventIds: [e.eventId],
+            start: moment(e.timestamp),
+            content: 'External Workflow Signaled',
+            detail: summarizeEvents.SignalExternalWorkflowExecutionInitiated(e.details)
+          })
+        } else if (e.eventType === 'ExternalWorkflowExecutionSignaled') {
+          let initiatedEvent = hash[`extsignal${e.eventId}`]
+          if (initiatedEvent) {
+            initiatedEvent.eventIds.push(e.eventId)
+            if (item.start.isBefore(e.timestamp, 'second')) {
+              item.end = moment(e.timestamp)
+            }
+          }
         }
       })
 

@@ -15,7 +15,11 @@
       </div>
       <div class="workflow-status" :data-status="wfStatus">
         <dt>Status</dt>
-        <dd><bar-loader v-if="wfStatus === 'running'" /> {{wfStatus}}</dd>
+        <dd>
+          <bar-loader v-if="wfStatus === 'running'" />
+          <span v-if="typeof wfStatus === 'string'">{{wfStatus}}</span>
+          <router-link v-if="wfStatus.to" :to="wfStatus.to">{{wfStatus.text}}</router-link>
+        </dd>
       </div>
       <div class="workflow-result" v-if="!!workflowCompletedEvent">
         <dt>Result</dt>
@@ -72,10 +76,21 @@ export default {
     },
     wfStatus() {
       if (this.$parent.isWorkflowRunning) return 'running'
-      return (this.workflowCompletedEvent ?
-        this.workflowCompletedEvent.eventType.replace('WorkflowExecution', '') :
-        (this.$parent.workflow && this.$parent.workflow.workflowExecutionInfo.closeStatus) || 'running'
-      ).toLowerCase()
+      if (!this.workflowCompletedEvent) {
+        return ((this.$parent.workflow && this.$parent.workflow.workflowExecutionInfo.closeStatus) || 'running').toLowerCase()
+      }
+      if (this.workflowCompletedEvent.eventType === 'WorkflowExecutionContinuedAsNew') {
+        return {
+          to: {
+            name: 'execution/summary',
+            params: {
+              runId: this.workflowCompletedEvent.details.newExecutionRunId
+            }
+          },
+          text: 'Continued As New'
+        }
+      }
+      return this.workflowCompletedEvent.eventType.replace('WorkflowExecution', '').toLowerCase()
     },
     parentWorkflowRoute() {
       return parentWorkflowLink(this.$parent.results && this.$parent.results[0] && this.$parent.results[0].details)
