@@ -6,7 +6,16 @@
 import moment from 'moment'
 import shortName from '../../short-name'
 import summarizeEvents from './summarize-events'
-import { DataSet, Timeline } from 'vis/index-timeline-graph2d'
+import { DataSet, Timeline, timeline } from 'vis/index-timeline-graph2d'
+
+if (navigator.language === 'en-US') {
+  timeline.TimeStep.FORMAT.minorLabels.minute = 'h:mm a'
+  timeline.TimeStep.FORMAT.minorLabels.hour = 'h:mm a'
+  timeline.TimeStep.FORMAT.majorLabels.millisecond = 'h:mm:ss a'
+  timeline.TimeStep.FORMAT.majorLabels.second = 'D MMMM h:mm a'
+  timeline.TimeStep.FORMAT.majorLabels.minute = 'ddd MMMM Do'
+  timeline.TimeStep.FORMAT.majorLabels.hour = 'ddd MMMM Do'
+}
 
 export default {
   props: ['events', 'selectedEventId'],
@@ -18,7 +27,7 @@ export default {
       if (!this.timeline && this.items.length && this.$el) {
         this.timeline = new Timeline(this.$el, this.items, null, {
           maxHeight: 350,
-          locale: 'en_US'
+          verticalScroll: true
         })
 
         let dontFocus
