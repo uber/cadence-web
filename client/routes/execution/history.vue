@@ -1,5 +1,5 @@
 <template>
-  <section :class="{ history: true, loading: $parent.historyLoading, 'has-results': !!$parent.results.length }">
+  <section :class="{ history: true, loading: $parent.historyLoading, 'has-results': !!$parent.results.length, 'split-enabled': splitEnabled }">
     <header class="controls">
       <div class="view-format">
         <label for="format">View Format</label>
@@ -13,45 +13,53 @@
         <a class="export" :href="$parent.baseAPIURL + '/export'" :download="exportFilename">Export</a>
       </div>
     </header>
-    <timeline :events="timelineEvents" :selected-event-id="eventId" v-if="format !== 'json'" />
-    <section v-snapscroll class="results" ref="results">
-      <table v-if="format === 'grid' && showTable" :class="{ compact: compactDetails }">
-        <thead>
-          <th>ID</th>
-          <th>Type</th>
-          <th>
-            <a class="elapsed" :href="tsFormat === 'elapsed' ? null : '#'" @click.prevent="setTsFormat('elapsed')">Elapsed</a> /
-            <a class="ts" :href="tsFormat === 'elapsed' ? '#' : null" @click.prevent="setTsFormat('ts')">Time</a>
-          </th>
-          <th>
-            <a class="summary" :href="compactDetails ? null : '#'" @click.prevent="setCompactDetails(true)">Summary</a> /
-            <a class="details" :href="compactDetails ? '#' : null" @click.prevent="setCompactDetails(false)">Full Details</a>
-          </th>
-        </thead>
-        <tbody>
-          <tr v-for="(he, i) in $parent.results"
-            :key="he.eventId"
-            :data-event-type="he.eventType"
-            :data-event-id="he.eventId"
-            :class="{ active: he.eventId === eventId }"
-             @click.prevent="$router.replaceQueryParam('eventId', he.eventId)"
-          >
-            <td>{{he.eventId}}</td>
-            <td>{{he.eventType}}</td>
-            <td>{{timeCol(he.timestamp, i)}} </td>
-            <td><event-details :event="he" :compact="compactDetails && he.eventId != eventId" :highlight="$parent.results.length < 100" /></td>
-          </tr>
-        </tbody>
-      </table>
-      <prism language="json" v-if="format === 'json' && $parent.results.length < 90">{{JSON.stringify($parent.results, null, 2)}}</prism>
-      <pre class="json" v-if="format === 'json' && $parent.results.length >= 90">{{JSON.stringify($parent.results, null, 2)}}</pre>
-      <div class="compact-view" v-if="format === 'compact'">
-        <div v-for="te in timelineEvents" :key="te.id" :class="te.className + (te.eventIds.includes(eventId) ? ' active' : '')" @click.prevent="selectCompactEvent(te)">
-          <span class="event-title">{{te.content}}</span>
-          <details-list :item="te.details" :title="te.content" />
-        </div>
-      </div>
-    </section>
+
+    <Split class="split-panel" direction="vertical" @onDragEnd="onSplitResize" @onDragStart="enableSplitting" v-if="!showNoResults && !$parent.historyError" ref="splitPanel">
+      <SplitArea :size="splitSizes[0]">
+        <timeline :events="timelineEvents" :selected-event-id="eventId" v-if="format !== 'json'" />
+      </SplitArea>
+      <SplitArea :size="splitSizes[1]">
+        <section v-snapscroll class="results" ref="results">
+          <table v-if="format === 'grid' && showTable" :class="{ compact: compactDetails }">
+            <thead>
+              <th>ID</th>
+              <th>Type</th>
+              <th>
+                <a class="elapsed" :href="tsFormat === 'elapsed' ? null : '#'" @click.prevent="setTsFormat('elapsed')">Elapsed</a> /
+                <a class="ts" :href="tsFormat === 'elapsed' ? '#' : null" @click.prevent="setTsFormat('ts')">Time</a>
+              </th>
+              <th>
+                <a class="summary" :href="compactDetails ? null : '#'" @click.prevent="setCompactDetails(true)">Summary</a> /
+                <a class="details" :href="compactDetails ? '#' : null" @click.prevent="setCompactDetails(false)">Full Details</a>
+              </th>
+            </thead>
+            <tbody>
+              <tr v-for="(he, i) in $parent.results"
+                :key="he.eventId"
+                :data-event-type="he.eventType"
+                :data-event-id="he.eventId"
+                :class="{ active: he.eventId === eventId }"
+                @click.prevent="$router.replaceQueryParam('eventId', he.eventId)"
+              >
+                <td>{{he.eventId}}</td>
+                <td>{{he.eventType}}</td>
+                <td>{{timeCol(he.timestamp, i)}} </td>
+                <td><event-details :event="he" :compact="compactDetails && he.eventId != eventId" :highlight="$parent.results.length < 100" /></td>
+              </tr>
+            </tbody>
+          </table>
+          <prism language="json" v-if="format === 'json' && $parent.results.length < 90">{{JSON.stringify($parent.results, null, 2)}}</prism>
+          <pre class="json" v-if="format === 'json' && $parent.results.length >= 90">{{JSON.stringify($parent.results, null, 2)}}</pre>
+          <div class="compact-view" v-if="format === 'compact'">
+            <div v-for="te in timelineEvents" :key="te.id" :class="te.className + (te.eventIds.includes(eventId) ? ' active' : '')" @click.prevent="selectCompactEvent(te)">
+              <span class="event-title">{{te.content}}</span>
+              <details-list :item="te.details" :title="te.content" />
+            </div>
+          </div>
+        </section>
+      </SplitArea>
+    </Split>
+
     <span class="error" v-if="$parent.historyError">{{$parent.historyError}}</span>
     <span class="no-results" v-if="showNoResults">No Results</span>
   </section>
@@ -69,7 +77,9 @@ export default {
   data() {
     return {
       tsFormat: localStorage.getItem(`${this.$route.params.domain}:history-ts-col-format`) || 'elapsed',
-      compactDetails: localStorage.getItem(`${this.$route.params.domain}:history-compact-details`) === 'true'
+      compactDetails: localStorage.getItem(`${this.$route.params.domain}:history-compact-details`) === 'true',
+      splitEnabled: false,
+      splitSizes: [20, 80]
     }
   },
   props: ['format', 'eventId'],
@@ -260,6 +270,17 @@ export default {
     },
     selectCompactEvent(i) {
       this.$router.replaceQueryParam('eventId', i.eventIds[i.eventIds.length - 1])
+    },
+    enableSplitting() {
+      if (!this.splitEnabled) {
+        var timelineHeightPct = (this.$refs.splitPanel.$el.firstElementChild.offsetHeight / this.$refs.splitPanel.$el.offsetHeight) * 100
+        this.splitSizes = [timelineHeightPct, 100 - timelineHeightPct]
+        console.dir(this.splitSizes.slice())
+        this.splitEnabled = true
+      }
+    },
+    onSplitResize(size) {
+      this.$emit('redraw-timeline')
     }
   },
   components: {
@@ -313,6 +334,20 @@ section.history
 
   a.export
     icon-download()
+
+  &:not(.split-enabled) div.split-panel
+    display flex
+    flex-direction column
+    flex 1
+    .gutter
+      flex 0 0 auto
+    .split-vertical:first-child
+      flex 0 0 auto
+      max-height 350px
+    .split-vertical:nth-child(3)
+      flex 1
+  &.split-enabled div.split-panel
+    height calc(100vh - 188px)
 
   section pre
     border brdr

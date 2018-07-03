@@ -58,6 +58,7 @@
     "vue-prism-component": "^1.0.1",
     "vue-router": "^3.0.1",
     "vue-select": "nathanboktae/vue-select#after2.4",
+    "vue-split-panel": "^1.0.4",
     "vue-template-compiler": "^2.5.2",
     "webpack": "^3.10.0"
   },

@@ -26,7 +26,6 @@ export default {
     initIfNeeded() {
       if (!this.timeline && this.items.length && this.$el) {
         this.timeline = new Timeline(this.$el, this.items, null, {
-          maxHeight: 350,
           verticalScroll: true
         })
 
@@ -62,6 +61,7 @@ export default {
       this.items.remove(removed)
       this.initIfNeeded()
     }, { immediate: true })
+    this.$parent.$on('redraw-timeline', () => this.timeline && this.timeline.redraw())
   },
   mounted() {
     this.initIfNeeded()

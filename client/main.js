@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import infiniteScroll from 'vue-infinite-scroll'
 import vueSelect from 'vue-select'
 import vueModal from 'vue-js-modal'
+import vueSplit from 'vue-split-panel'
 import qs from 'friendly-querystring'
 import http from './http'
 import moment from 'moment'
@@ -134,6 +135,7 @@ Vue.mixin({
 Vue.use(Router)
 Vue.use(infiniteScroll)
 Vue.use(vueModal, { dynamic: true })
+Vue.use(vueSplit)
 Vue.component('v-select', vueSelect)
 Vue.component('date-range-picker', DateRangePicker)
 Vue.component('copy', copyButton)
