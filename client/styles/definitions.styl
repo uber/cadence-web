@@ -197,10 +197,8 @@ history-item-state-color(alphapct)
   history-item-color(primary-color, alphapct)
   &.completed
     history-item-color(uber-green, alphapct)
-  &.failed
+  &.failed, &.timedout
     history-item-color(uber-orange, alphapct)
-  &.timedout
-    history-item-color(uber-black-60, alphapct)
   &.cancelled, &.canceled
     history-item-color(uber-black-90, alphapct)
     .vis-item-content

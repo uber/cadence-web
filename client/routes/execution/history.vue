@@ -203,7 +203,7 @@ export default {
             eventIds: [e.eventId],
             start: moment(e.timestamp),
             content: 'External Workflow Signaled',
-            detail: summarizeEvents.SignalExternalWorkflowExecutionInitiated(e.details)
+            details: summarizeEvents.SignalExternalWorkflowExecutionInitiated(e.details)
           })
         } else if (e.eventType === 'ExternalWorkflowExecutionSignaled') {
           let initiatedEvent = hash[`extsignal${e.eventId}`]
@@ -213,6 +213,15 @@ export default {
               item.end = moment(e.timestamp)
             }
           }
+        } else if (e.eventType === 'DecisionTaskFailed' || e.eventType === 'DecisionTaskTimedOut') {
+          add({
+            id: 'decision' + e.eventId,
+            className: 'decision ' + e.eventType.replace('DecisionTask', '').toLowerCase(),
+            eventIds: [e.eventId],
+            start: moment(e.timestamp),
+            content: e.eventType,
+            details: e.details
+          })
         }
       })
 
@@ -412,20 +421,9 @@ section.history
       max-height 15vh
 
     & > div
-      //display flex
-      //justify-content space-between
       border 2px solid primary-color
-      //background-color alpha(uber-black-60, 0.1)
       padding 6px
       margin-bottom layout-spacing-small
-      // &.completed
-      //   border-color uber-green
-      // &.failed
-      //   border-color uber-orange
-      // &.timedout
-      //   border-color uber-black-60
-      // &.cancelled, &.canceled
-      //   border-color uber-black-90
       history-item-state-color(3%)
       &.active
         box-shadow 2px 2px 2px rgba(0,0,0,0.3)
@@ -446,7 +444,6 @@ section.history
             flex 0 0 400px
           dl.details
             flex 1
-            //display inline-flex
             align-items center
             overflow hidden
             pre
