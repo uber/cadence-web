@@ -8,6 +8,13 @@ export default function(historyEvents) {
     hash[i.id] = i
     events.push(i)
     return i
+  },
+  assignEnd = (item, end) => {
+    if (moment.duration(moment(end) - item.start).asSeconds() < 1) {
+      item.end = moment(item.start).add(1, 'second')
+    } else {
+      item.end = moment(end)
+    }
   }
 
   historyEvents.forEach(e => {
@@ -34,9 +41,7 @@ export default function(historyEvents) {
       }
 
       if (e.eventType !== 'ActivityTaskScheduled' && e.eventType !== 'ActivityTaskStarted') {
-        if (item.start.isBefore(e.timestamp, 'second')) {
-          item.end = moment(e.timestamp)
-        }
+        assignEnd(item, e.timestamp)
         item.className = 'activity ' + e.eventType.replace('ActivityTask', '').toLowerCase()
       }
     } else if (e.eventType.includes('ChildWorkflowExecution')) {
@@ -67,9 +72,7 @@ export default function(historyEvents) {
       }
 
       if (e.eventType !== 'StartChildWorkflowExecutionInitiated' && e.eventType !== 'ChildWorkflowExecutionStarted') {
-        if (item.start.isBefore(e.timestamp, 'second')) {
-          item.end = moment(e.timestamp)
-        }
+        assignEnd(item, e.timestamp)
         item.className = 'child-workflow ' + e.eventType.replace('ChildWorkflowExecution', '').toLowerCase()
       }
     } else if (e.eventType === 'TimerStarted') {
@@ -92,6 +95,7 @@ export default function(historyEvents) {
         className: 'marker marker-' + e.details.markerName.toLowerCase(),
         eventIds: [e.eventId],
         start: moment(e.timestamp),
+        //end: moment(e.timestamp).add(1, 'second'),
         content: ({
           Version: 'Verison Marker',
           SideEffect: 'Side Effect',

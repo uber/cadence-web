@@ -148,7 +148,6 @@ export default {
       if (!this.splitEnabled) {
         var timelineHeightPct = (this.$refs.splitPanel.$el.firstElementChild.offsetHeight / this.$refs.splitPanel.$el.offsetHeight) * 100
         this.splitSizes = [timelineHeightPct, 100 - timelineHeightPct]
-        console.dir(this.splitSizes.slice())
         this.splitEnabled = true
       }
     },
