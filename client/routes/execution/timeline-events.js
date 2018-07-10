@@ -30,7 +30,9 @@ export default function(historyEvents) {
           start: moment(scheduledEvent.timestamp),
           content: `Activity ${activityId}: ${shortName(scheduledEvent.details.activityType && scheduledEvent.details.activityType.name)}`,
           details: {
-            input: e.details.input
+            input: e.details.input,
+            scheduleToStartTimeoutSeconds: e.details.scheduleToStartTimeoutSeconds,
+            scheduleToCloseTimeoutSeconds: e.details.scheduleToCloseTimeoutSeconds
           }
         })
       } else {

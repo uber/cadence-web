@@ -14,7 +14,7 @@
       </div>
     </header>
 
-    <Split class="split-panel" direction="vertical" @onDragEnd="onSplitResize" @onDragStart="enableSplitting" v-if="!showNoResults && !$parent.historyError" ref="splitPanel">
+    <Split class="split-panel" direction="vertical" @onDrag="onSplitResize" @onDragStart="enableSplitting" v-if="!showNoResults && !$parent.historyError" ref="splitPanel">
       <SplitArea :size="splitSizes[0]">
         <timeline :events="timelineEvents" :selected-event-id="eventId" v-if="format !== 'json'" />
       </SplitArea>
@@ -72,6 +72,8 @@ import eventDetails from './event-details.vue'
 import Prism from 'vue-prism-component'
 import timeline from './timeline.vue'
 import mapTimelineEvents from './timeline-events'
+import debounce from 'lodash-es/debounce'
+
 
 export default {
   data() {
@@ -151,9 +153,9 @@ export default {
         this.splitEnabled = true
       }
     },
-    onSplitResize(size) {
-      this.$emit('redraw-timeline')
-    }
+    onSplitResize: debounce(function (size) {
+      window.dispatchEvent(new Event('resize'))
+    }, 5)
   },
   components: {
     'event-details': eventDetails,
@@ -211,6 +213,8 @@ section.history
     border-top 1px solid uber-white-80
     border-bottom 1px solid uber-white-80
     background-color uber-white-20
+  div.split-panel .split:first-of-type
+    overflow hidden
   &:not(.split-enabled) div.split-panel
     display flex
     flex-direction column

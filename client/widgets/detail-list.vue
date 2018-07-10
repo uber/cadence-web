@@ -1,4 +1,6 @@
 <script>
+import moment from 'moment'
+
 const jsonKeys = ['result', 'input', 'details', 'data', 'Error'],
       preKeys = jsonKeys.concat(['stackTrace', 'details.stackTrace'])
 
@@ -47,6 +49,8 @@ export default {
             kvps.push({ key, value, routeLink: {
               name: 'task-list', params: { taskList: value } }
             })
+          } else if (/.+TimeoutSeconds/.test(key)) {
+            kvps.push({ key: key.replace(/Seconds$/, ''), value: moment.duration(value, 'seconds').format() })
           } else {
             kvps.push({ key, value })
           }

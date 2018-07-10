@@ -20,13 +20,22 @@ if (navigator.language === 'en-US') {
 export default {
   props: ['events', 'selectedEventId'],
   data() {
-    return {}
+    return { margin: 10, minHeight: 50 }
   },
   methods: {
+    calcHeight() {
+      var height = this.$el.parentElement.offsetHeight - this.margin
+      if (height <= this.minHeight) {
+        var parentMaxHeight = getComputedStyle(this.$el.parentElement)['max-height']
+        height = Math.max(Number(parentMaxHeight.substr(0, parentMaxHeight.length - 2)) || 0, this.minHeight)
+      }
+      return height
+    },
     initIfNeeded() {
       if (!this.timeline && this.items.length && this.$el) {
         this.timeline = new Timeline(this.$el, this.items, null, {
-          verticalScroll: true
+          verticalScroll: true,
+          height: this.calcHeight()
         })
 
         let dontFocus
@@ -53,6 +62,13 @@ export default {
     }
   },
   created() {
+    this.onResize = () => {
+      if (this.timeline) {
+        this.timeline.setOptions({ height: this.calcHeight() })
+        this.timeline.redraw()
+      }
+    }
+
     this.items = new DataSet()
     this.$watch('events', () => {
       var newIds = new DataSet(this.events).getIds(),
@@ -61,10 +77,13 @@ export default {
       this.items.remove(removed)
       this.initIfNeeded()
     }, { immediate: true })
-    this.$parent.$on('redraw-timeline', () => this.timeline && this.timeline.redraw())
   },
   mounted() {
     this.initIfNeeded()
+    window.addEventListener('resize', this.onResize)
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.onResize)
   }
 }
 </script>
