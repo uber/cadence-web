@@ -173,6 +173,29 @@ describe('Workflows', function() {
     await retry(() => workflowsEl.textNodes('.results tbody td:first-child').should.deep.equal(['demoWfId']))
   })
 
+  it('should debounce query criteria changes when issuing requests', async function () {
+    var [workflowsEl, scenario] = await workflowsTest(this.test),
+        wfIdEl = workflowsEl.querySelector('header.filters input[name="workflowId"]')
+
+    scenario.withWorkflows('open', {
+      workflowId: '1234'
+    }, [{
+      execution: {
+        workflowId: '1234',
+        runId: '5678'
+      },
+      type: { name: 'demo' }
+    }])
+
+    wfIdEl.input('12')
+    Promise.delay(5)
+    wfIdEl.input('123')
+    Promise.delay(5)
+    wfIdEl.input('1234')
+
+    await retry(() => workflowsEl.textNodes('.results tbody td:nth-child(3)').should.deep.equal(['demo']))
+  })
+
   it('should show errors from the server', async function () {
     var [workflowsEl, scenario] = await workflowsTest(this.test, {
       status: 503,

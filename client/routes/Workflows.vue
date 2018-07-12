@@ -6,7 +6,7 @@
           placeholder=" "
           name="workflowId"
           v-bind:value="$route.query.workflowId"
-          @input="debouncedSetQuery" />
+          @input="setWorkflowFilter" />
         <label for="workflowId">Workflow ID</label>
       </div>
       <div class="field workflow-name">
@@ -14,7 +14,7 @@
           placeholder=" "
           name="workflowName"
           v-bind:value="$route.query.workflowName"
-          @input="debouncedSetQuery" />
+          @input="setWorkflowFilter" />
         <label for="workflowName">Workflow Name</label>
       </div>
       <date-range-picker
@@ -45,7 +45,7 @@
           <th>End Time</th>
         </thead>
         <tbody>
-          <tr v-for="wf in results">
+          <tr v-for="wf in results" :key="wf.runId">
             <td>{{wf.workflowId}}</td>
             <td><router-link :to="{ name: 'execution/summary', params: { runId: wf.runId, workflowId: wf.workflowId }}">{{wf.runId}}</router-link></td>
             <td>{{wf.workflowName}}</td>
@@ -64,6 +64,7 @@
 <script>
 import moment from 'moment'
 import pagedGrid from '../paged-grid'
+import debounce from 'lodash-es/debounce'
 
 export default pagedGrid({
   data() {
@@ -89,7 +90,7 @@ export default pagedGrid({
     if (!q.range || !/^last-\d{1,2}-(hour|day|month)s?$/.test(q.range)) {
       this.setRange(localStorage.getItem(`${this.$route.params.domain}:workflows-time-range`) || 'last-30-days')
     }
-    this.$watch('fetch', () => {}, { immediate: true })
+    this.$watch('queryOnChange', () => {}, { immediate: true })
   },
   computed: {
     status() {
@@ -127,23 +128,28 @@ export default pagedGrid({
         workflowName: q.workflowName
       }
     },
-    fetch() {
+    queryOnChange() {
       var
         q = Object.assign({}, this.criteria),
         domain = q.domain,
         state = (!q.status || q.status === 'OPEN') ? 'open' : 'closed'
 
       if (!q.startTime || !q.endTime || !q.status) return
-
-      this.loading = true
-      this.error = undefined
-      q.nextPageToken = this.nextPageToken
       if (['OPEN', 'CLOSED'].includes(q.status)) {
         delete q.status
       }
       delete q.domain
+      q.nextPageToken = this.nextPageToken
 
-      return this.$http(`/api/domain/${domain}/workflows/${state}`, { query: q })
+      return this.fetch(`/api/domain/${domain}/workflows/${state}`, q)
+    }
+  },
+  methods: {
+    fetch: debounce(function(url, query) {
+      this.loading = true
+      this.error = undefined
+
+      return this.$http(url, { query })
       .then(res => {
         this.npt = res.nextPageToken
         this.loading = false
@@ -155,16 +161,18 @@ export default pagedGrid({
           endTime: data.closeTime ? moment(data.closeTime).format('lll') : '',
           status: (data.closeStatus || 'open').toLowerCase(),
         }))
-        return this.results = q.nextPageToken ? this.results.concat(formattedResults) : formattedResults
+        return this.results = query.nextPageToken ? this.results.concat(formattedResults) : formattedResults
       }).catch(e => {
         this.npt = undefined
         this.loading = false
         this.error = (e.json && e.json.message) || e.status || e.message
         return []
       })
-    }
-  },
-  methods: {
+    }, typeof Mocha === 'undefined' ? 200 : 60, { maxWait: 1000 }),
+    setWorkflowFilter(e) {
+      var target = e.target || e.testTarget // test hook since Event.target is readOnly and unsettable
+      this.$router.replaceQueryParam(target.getAttribute('name'), target.value)
+    },
     setStatus(status) {
       if (status) {
         this.$router.replace({
