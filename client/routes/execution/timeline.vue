@@ -23,20 +23,23 @@ export default {
     return { margin: 10, minHeight: 50 }
   },
   methods: {
-    calcHeight() {
+    heightOption() {
       var height = this.$el.parentElement.offsetHeight - this.margin
       if (height <= this.minHeight) {
-        var parentMaxHeight = getComputedStyle(this.$el.parentElement)['max-height']
-        height = Math.max(Number(parentMaxHeight.substr(0, parentMaxHeight.length - 2)) || 0, this.minHeight)
+        var parentMaxHeightStr = getComputedStyle(this.$el.parentElement)['max-height'],
+            parentMaxHeight = Number(parentMaxHeightStr.substr(0, parentMaxHeightStr.length - 2))
+
+        if (parentMaxHeight >= this.minHeight) {
+          return { maxHeight: parentMaxHeight }
+        }
       }
-      return height
+      return { height: Math.max(height || 0, this.minHeight), maxHeight: 'initial' }
     },
     initIfNeeded() {
       if (!this.timeline && this.items.length && this.$el) {
-        this.timeline = new Timeline(this.$el, this.items, null, {
-          verticalScroll: true,
-          height: this.calcHeight()
-        })
+        this.timeline = new Timeline(this.$el, this.items, null, Object.assign({
+          verticalScroll: true
+        }, this.heightOption()))
 
         let dontFocus
         this.timeline.on('select', e => {
@@ -64,7 +67,7 @@ export default {
   created() {
     this.onResize = () => {
       if (this.timeline) {
-        this.timeline.setOptions({ height: this.calcHeight() })
+        this.timeline.setOptions(this.heightOption())
         this.timeline.redraw()
       }
     }
