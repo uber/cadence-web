@@ -51,10 +51,27 @@
           <prism language="json" v-if="format === 'json' && $parent.results.length < 90">{{JSON.stringify($parent.results, null, 2)}}</prism>
           <pre class="json" v-if="format === 'json' && $parent.results.length >= 90">{{JSON.stringify($parent.results, null, 2)}}</pre>
           <div class="compact-view" v-if="format === 'compact'">
-            <div v-for="te in timelineEvents" :key="te.id" :class="te.className + (te.eventIds.includes(eventId) ? ' active' : '')" @click.prevent="selectCompactEvent(te)">
-              <span class="event-title" v-if="!te.titleLink">{{te.content}}</span>
-              <router-link class="event-title" v-if="te.titleLink" :to="te.titleLink">{{te.content}}</router-link>
+            <div v-for="te in timelineEvents" :key="te.id" :class="`timeline-event ${te.className} ${(te === selectedTimelineEvent ? ' active' : '')}`" @click.prevent="selectTimelineEvent(te)">
+              <span class="event-title">{{te.content}}</span>
               <details-list :item="te.details" :title="te.content" />
+            </div>
+            <div class="selected-event-details" v-if="selectedTimelineEvent" :class="{ active: !!selectedTimelineEvent }">
+              <a href="#" class="close" @click.prevent="deselectEvent"></a>
+              <span class="event-title" v-if="!selectedTimelineEvent.titleLink">{{selectedTimelineEvent.content}}</span>
+              <router-link class="event-title" v-if="selectedTimelineEvent.titleLink" :to="selectedTimelineEvent.titleLink">{{selectedTimelineEvent.content}}</router-link>
+              <details-list class="timeline-details" :item="selectedTimelineEvent.details" :title="selectedTimelineEvent.content" />
+              <div class="event-tabs">
+                <span>Events</span>
+                <a href="#"
+                  :class="'event' + (eventId === eid ? ' active' : '')"
+                  v-for="eid in selectedTimelineEvent.eventIds"
+                  :key="eid"
+                  @click.prevent="$router.replaceQueryParam('eventId', eid)"
+                  :data-event-id="eid">
+                    {{$parent.results.find(e => e.eventId === eid).eventType}}
+                </a>
+              </div>
+              <details-list class="event-details" :item="selectedEventDetails" :title="`${selectedTimelineEvent.content} - ${selectedEvent.eventType}`" />
             </div>
           </div>
         </section>
@@ -73,6 +90,7 @@ import Prism from 'vue-prism-component'
 import timeline from './timeline.vue'
 import mapTimelineEvents from './timeline-events'
 import debounce from 'lodash-es/debounce'
+import omit from 'lodash-es/omit'
 
 
 export default {
@@ -92,6 +110,19 @@ export default {
   computed: {
     timelineEvents() {
       return mapTimelineEvents(this.$parent.results)
+    },
+    selectedTimelineEvent() {
+      return this.timelineEvents.find(te => te.eventIds.includes(this.eventId))
+    },
+    selectedEvent() {
+      return this.$parent.results.find(e => e.eventId == this.eventId)
+    },
+    selectedEventDetails() {
+      if (!this.selectedEvent) return {}
+      return Object.assign({
+        timestamp: this.selectedEvent.timestamp.format('MMM Do h:mm:ss a'),
+        eventId: this.selectedEvent.eventId
+      }, this.selectedEvent.details)
     },
     showTable() {
       return !this.$parent.historyError && (this.$parent.historyLoading || this.$parent.results.length)
@@ -143,8 +174,11 @@ export default {
         }
       }, 100)
     },
-    selectCompactEvent(i) {
+    selectTimelineEvent(i) {
       this.$router.replaceQueryParam('eventId', i.eventIds[i.eventIds.length - 1])
+    },
+    deselectEvent() {
+      this.$router.replace({ query: omit(this.$route.query, 'eventId') })
     },
     enableSplitting() {
       if (!this.splitEnabled) {
@@ -226,6 +260,10 @@ section.history
       max-height 350px
     .split-vertical:nth-child(3)
       flex 1
+      position relative
+      overflow hidden
+      display flex
+      flex-direction column
   &.split-enabled div.split-panel
     height calc(100vh - 188px)
 
@@ -258,7 +296,7 @@ section.history
       dl.details
         max-width 50vw
 
-  table.compact tr:not(.active), .compact-view > div:not(.active)
+  table.compact tr:not(.active), .compact-view .timeline-event
     dl.details
       white-space nowrap
       & > div
@@ -279,44 +317,81 @@ section.history
         max-width 40vw
         one-liner-ellipsis()
 
-  section.results > pre
-    margin layout-spacing-small
-    padding layout-spacing-small
+  section.results
+    flex 1
+    & > pre
+      margin layout-spacing-small
+      padding layout-spacing-small
+
+  wide-title-width = 400px
   .compact-view
     padding layout-spacing-small
     line-height 1.5em
+    overflow-y auto
     .event-title
       padding 4px
       font-size 16px
     pre
       max-height 15vh
 
-    & > div
+    .timeline-event
       border 2px solid primary-color
       padding 6px
       margin-bottom layout-spacing-small
       history-item-state-color(3%)
-      &.active
-        box-shadow 2px 2px 2px rgba(0,0,0,0.3)
-        dl.details dt
-          display inline-block
-          padding-top 5px
       dl.details dd
         max-width none
 
       @media (max-width: 1400px)
-        &:not(.active) dl.details
+        dl.details
           display none
       @media (min-width: 1400px)
-        &:not(.active)
-          display flex
+        display flex
+        align-items center
+        .event-title
+          flex 0 0 wide-title-width
+        dl.details
+          flex 1
           align-items center
-          .event-title
-            flex 0 0 400px
-          dl.details
-            flex 1
-            align-items center
-            overflow hidden
-            pre
-              max-width none
+          overflow hidden
+          pre
+            max-width none
+
+    .selected-event-details
+      position absolute
+      width "calc(100vw - %s)" % (wide-title-width + 30px)
+      height 100%
+      top 0
+      left wide-title-width + 15px
+      overflow auto
+      background-color white
+      padding layout-spacing-small
+      border-left 1px solid uber-black-80
+      box-shadow -5px 0 5px rgba(0,0,0,0.25)
+      .event-title
+        display block
+        font-size 1.4em
+        margin-bottom 0.5em
+      .event-tabs
+        //border-bottom 1px solid uber-black-60
+        margin-bottom layout-spacing-small
+        margin-top layout-spacing-small
+        a
+          display inline-block
+          padding inline-spacing-medium
+          font-family monospace-font-family
+          border-bottom 2px solid transparent
+          &.active
+            border-bottom-color primary-color
+        & > span
+          font-weight 200
+          text-transform uppercase
+          font-size 11px
+      dl.details
+        background-color alpha(uber-white-80, 0.2)
+        &.timeline-details dt, dd
+          padding 4px
+      a.close
+        top layout-spacing-small
+
 </style>
