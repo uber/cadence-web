@@ -15,10 +15,10 @@
     </header>
 
     <Split class="split-panel" direction="vertical" @onDrag="onSplitResize" @onDragStart="enableSplitting" v-if="!showNoResults && !$parent.historyError" ref="splitPanel">
-      <SplitArea :size="splitSizes[0]">
+      <SplitArea :size="splitSizes[0]" class="timeline-split">
         <timeline :events="timelineEvents" :selected-event-id="eventId" v-if="format !== 'json'" />
       </SplitArea>
-      <SplitArea :size="splitSizes[1]">
+      <SplitArea :size="splitSizes[1]" class="view-split">
         <section v-snapscroll class="results" ref="results">
           <table v-if="format === 'grid' && showTable" :class="{ compact: compactDetails }">
             <thead>
@@ -51,7 +51,7 @@
           <prism language="json" v-if="format === 'json' && $parent.results.length < 90">{{JSON.stringify($parent.results, null, 2)}}</prism>
           <pre class="json" v-if="format === 'json' && $parent.results.length >= 90">{{JSON.stringify($parent.results, null, 2)}}</pre>
           <div class="compact-view" v-if="format === 'compact'">
-            <div v-for="te in timelineEvents" :key="te.id" :class="`timeline-event ${te.className} ${(te === selectedTimelineEvent ? ' active' : '')}`" @click.prevent="selectTimelineEvent(te)">
+            <div v-for="te in timelineEvents" :key="te.id" :class="`timeline-event ${te.className} ${(te === selectedTimelineEvent ? ' vis-selected' : '')}`" @click.prevent="selectTimelineEvent(te)">
               <span class="event-title">{{te.content}}</span>
               <details-list :item="te.details" :title="te.content" />
             </div>
@@ -247,23 +247,24 @@ section.history
     border-top 1px solid uber-white-80
     border-bottom 1px solid uber-white-80
     background-color uber-white-20
-  div.split-panel .split:first-of-type
-    overflow hidden
+  div.split-panel
+    .timeline-split
+      overflow hidden
+    .view-split
+      flex 1
+      overflow hidden
+      display flex
+      position relative
+      flex-direction column
   &:not(.split-enabled) div.split-panel
     display flex
     flex-direction column
     flex 1
     .gutter
       flex 0 0 auto
-    .split-vertical:first-child
+    .timeline-split
       flex 0 0 auto
       max-height 350px
-    .split-vertical:nth-child(3)
-      flex 1
-      position relative
-      overflow hidden
-      display flex
-      flex-direction column
   &.split-enabled div.split-panel
     height calc(100vh - 188px)
 
