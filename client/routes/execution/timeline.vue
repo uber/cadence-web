@@ -102,7 +102,7 @@ export default {
 
 <style lang="stylus">
 @require "../../styles/definitions.styl"
-@require "../../../node_modules/vis/dist/vis.css"
+@require "../../styles/vis.styl"
 
 div.timeline
   padding 0 10px
