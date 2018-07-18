@@ -10,6 +10,7 @@ export default function(historyEvents) {
     return i
   },
   assignEnd = (item, end) => {
+    item.ongoing = false
     if (moment.duration(moment(end) - item.start).asSeconds() < 1) {
       item.end = moment(item.start).add(1, 'second')
     } else {
@@ -28,6 +29,7 @@ export default function(historyEvents) {
           id: 'activity' + activityId,
           eventIds: [e.eventId],
           start: moment(scheduledEvent.timestamp),
+          ongoing: true,
           content: `Activity ${activityId}: ${shortName(scheduledEvent.details.activityType && scheduledEvent.details.activityType.name)}`,
           details: {
             input: e.details.input,
@@ -57,6 +59,7 @@ export default function(historyEvents) {
           className: 'child-workflow',
           eventIds: [e.eventId],
           start: moment(initiatedEvent.timestamp),
+          ongoing: true,
           content: `Child Workflow: ${shortName(e.details.workflowType.name)}`,
           details: {
             input: e.details.input
@@ -97,7 +100,6 @@ export default function(historyEvents) {
         className: 'marker marker-' + e.details.markerName.toLowerCase(),
         eventIds: [e.eventId],
         start: moment(e.timestamp),
-        //end: moment(e.timestamp).add(1, 'second'),
         content: ({
           Version: 'Verison Marker',
           SideEffect: 'Side Effect',
@@ -122,6 +124,7 @@ export default function(historyEvents) {
         className: 'external-signal',
         eventIds: [e.eventId],
         start: moment(e.timestamp),
+        ongoing: true,
         content: 'External Workflow Signaled',
         details: summarizeEvents.SignalExternalWorkflowExecutionInitiated(e.details)
       })
@@ -129,9 +132,7 @@ export default function(historyEvents) {
       let initiatedEvent = hash[`extsignal${e.eventId}`]
       if (initiatedEvent) {
         initiatedEvent.eventIds.push(e.eventId)
-        if (item.start.isBefore(e.timestamp, 'second')) {
-          item.end = moment(e.timestamp)
-        }
+        assignEnd(item, e.timestamp)
       }
     } else if (e.eventType === 'DecisionTaskFailed' || e.eventType === 'DecisionTaskTimedOut') {
       add({

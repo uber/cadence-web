@@ -84,9 +84,18 @@ export default {
   mounted() {
     this.initIfNeeded()
     window.addEventListener('resize', this.onResize)
+    this.ongoingUpdater = setInterval(() => {
+      this.items.forEach(i => {
+        if (i.ongoing) {
+          i.end = moment()
+          this.items.update(i)
+        }
+      })
+    }, 50)
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.onResize)
+    clearInterval(this.ongoingUpdater)
   }
 }
 </script>
