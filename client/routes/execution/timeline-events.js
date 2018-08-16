@@ -11,11 +11,7 @@ export default function(historyEvents) {
   },
   assignEnd = (item, end) => {
     item.ongoing = false
-    if (moment.duration(moment(end) - item.start).asSeconds() < 1) {
-      item.end = moment(item.start).add(1, 'second')
-    } else {
-      item.end = moment(end)
-    }
+    item.end = moment(end)
   }
 
   historyEvents.forEach(e => {
@@ -27,6 +23,7 @@ export default function(historyEvents) {
       if (!item) {
         item = add({
           id: 'activity' + activityId,
+          className: 'activity',
           eventIds: [e.eventId],
           start: moment(scheduledEvent.timestamp),
           ongoing: true,

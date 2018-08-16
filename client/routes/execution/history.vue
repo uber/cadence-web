@@ -48,10 +48,10 @@
               </tr>
             </tbody>
           </table>
-          <prism language="json" v-if="format === 'json' && $parent.results.length < 90">{{JSON.stringify($parent.results, null, 2)}}</prism>
+          <prism class="json" language="json" v-if="format === 'json' && $parent.results.length < 90">{{JSON.stringify($parent.results, null, 2)}}</prism>
           <pre class="json" v-if="format === 'json' && $parent.results.length >= 90">{{JSON.stringify($parent.results, null, 2)}}</pre>
           <div class="compact-view" v-if="format === 'compact'">
-            <div v-for="te in timelineEvents" :key="te.id" :class="`timeline-event ${te.className} ${(te === selectedTimelineEvent ? ' vis-selected' : '')}`" @click.prevent="selectTimelineEvent(te)">
+            <div v-for="te in timelineEvents" :key="te.id" :class="`timeline-event ${te.className || ''} ${(te === selectedTimelineEvent ? ' vis-selected' : '')}`" @click.prevent="selectTimelineEvent(te)">
               <span class="event-title">{{te.content}}</span>
               <details-list :item="te.details" :title="te.content" />
             </div>

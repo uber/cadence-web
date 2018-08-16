@@ -155,7 +155,49 @@ describe('Execution', function() {
     })
 
     it('should link to the new workflow if the status is ContinuedAsNew', async function() {
-      throw new Error('write test')
+      var [summaryEl] = await summaryTest(this.test, {
+        attach: true,
+        events: [{
+          eventId: 1,
+          eventType: 'WorkflowExecutionStarted',
+          details: {
+            type: {
+              name: 'ci-input-overflow-test'
+            },
+            execution: {},
+            input: { greet: 'hello' }
+          },
+          timestamp: new Date().toISOString(),
+        }, {
+          "timestamp": "2018-08-16T01:00:01.582Z",
+          "eventType": "WorkflowExecutionContinuedAsNew",
+          "eventId": 42,
+          "details": {
+            "newExecutionRunId": "617d8b6f-ea42-479c-bc7c-0ec4dacddf64",
+            "workflowType": {
+              "name": "code.uber.internal/marketplace/dsp-scheduler/scheduler/workflow.CTBWorkflow"
+            },
+            "taskList": {
+              "name": "ctb-decider",
+              "kind": null
+            },
+            "input": {
+              "CityID": 240,
+              "CurTime": "",
+              "BudgetGroup": "budget_group_1"
+            },
+            "executionStartToCloseTimeoutSeconds": 2604800,
+            "taskStartToCloseTimeoutSeconds": 300,
+            "decisionTaskCompletedEventId": 41
+          }
+        }]
+      }),
+
+      wfStatusEl = await summaryEl.waitUntilExists('.workflow-status[data-status="continued-as-new"]')
+
+      wfStatusEl.should.contain.descendant('dd a')
+      .and.have.text('Continued As New')
+      .and.have.attr('href', '/domain/ci-test/workflows/email-daily-summaries/617d8b6f-ea42-479c-bc7c-0ec4dacddf64/summary')
     })
 
     it('should show the result of the workflow if completed', async function() {
@@ -256,14 +298,14 @@ describe('Execution', function() {
       resultsEl.should.not.have.descendant('.compact-view')
 
       historyEl.querySelector('.view-formats a.compact').trigger('click')
-      await retry(() => historyEl.querySelectorAll('.compact-view .event-node').should.have.length(12))
+      await retry(() => historyEl.querySelectorAll('.compact-view .timeline-event').should.have.length(2))
 
       resultsEl.should.not.have.descendant('pre.json')
       resultsEl.should.not.have.descendant('table')
       scenario.location.should.equal('/domain/ci-test/workflows/email-daily-summaries/emailRun1/history?format=compact')
       historyEl.querySelector('.view-formats a.json').trigger('click')
 
-      var jsonView = await resultsEl.waitUntilExists('pre.language-json')
+      var jsonView = await resultsEl.waitUntilExists('pre.json.language-json')
       jsonView.should.contain.text('"eventId":')
       resultsEl.should.not.have.descendant('.compact-view')
       scenario.location.should.equal('/domain/ci-test/workflows/email-daily-summaries/emailRun1/history?format=json')
@@ -278,38 +320,12 @@ describe('Execution', function() {
     })
 
     describe('Compact View', function() {
-      it('should build a heiarchy of events', async function () {
-        var [historyEl, scenario] = await historyTest(this.test, { query: 'format=compact' })
-        await historyEl.waitUntilExists('.compact-view > .event-node')
-
-        historyEl.should.have.class('loading')
-        await retry(() => historyEl.textNodes('.compact-view > .event-node > a[data-event-id]').should.deep.equal([
-          'WorkflowExecutionStarted', 'DecisionTaskScheduled', 'DecisionTaskScheduled'
-        ]))
-        historyEl.attrValues('.compact-view > .event-node > a', 'data-event-id').should.deep.equal([
-          '1', '2', '9'
-        ])
-        historyEl.should.have.descendant(
-          '.compact-view > .event-node.DecisionTaskScheduled > .event-children > .event-node.DecisionTaskStarted > .event-children'
-        )
-        historyEl.should.have.descendant(
-          '.compact-view .DecisionTaskScheduled .DecisionTaskStarted .DecisionTaskCompleted .ActivityTaskStarted .ActivityTaskCompleted'
-        )
-      })
-
-      it('should show details of an event when clicked', async function () {
-        var [historyEl, scenario] = await historyTest(this.test, { query: 'format=compact' }),
-            activityStartLink = await historyEl.waitUntilExists('.ActivityTaskStarted a[data-event-id="7"]'),
-            activityStartEl = activityStartLink.parentElement
-
-        historyEl.should.not.contain('.compact-view dl.details')
-        activityStartEl.should.not.have.class('active')
-        activityStartLink.trigger('click')
-
-        await retry(() => activityStartLink.should.have.class('active'))
-        scenario.location.should.equal('/domain/ci-test/workflows/email-daily-summaries/emailRun1/history?format=compact&eventId=7')
-        historyEl.textNodes('.compact-view dl.details dt').should.deep.equal(['scheduledEventId', 'requestId'])
-      })
+      it('should build timeline events from granular event history')
+      it('should also populate the timeline with those events')
+      it('should focus the timeline when an event is clicked, updating the URL')
+      it('should scroll the event into view if an event is clicked from the timeline, updating the URL')
+      it('should show event details when an event is clicked')
+      it('should show event details on initial load, and allow dismissal')
     })
 
     describe('Grid View', function() {
@@ -361,10 +377,10 @@ describe('Execution', function() {
             inputPreText = JSON.stringify(fixtures.history.emailRun1[0].details.input, null, 2)
 
         startDetails.textNodes('dl.details dt').should.deep.equal([
-          'workflowType.name', 'taskList.name', 'input', 'executionStartToCloseTimeoutSeconds', 'taskStartToCloseTimeoutSeconds'
+          'workflowType.name', 'taskList.name', 'input', 'executionStartToCloseTimeout', 'taskStartToCloseTimeout'
         ])
         startDetails.textNodes('dl.details dd').should.deep.equal([
-          'email-daily-summaries', 'ci-task-queue', inputPreText, '360', '180'
+          'email-daily-summaries', 'ci-task-queue', inputPreText, '6m', '3m'
         ])
       })
 
@@ -551,9 +567,9 @@ describe('Execution', function() {
           .go(true)
 
         var historyEl = await testEl.waitUntilExists('section.history')
-        await retry(() => historyEl.querySelectorAll('.compact-view a[data-event-id]').should.have.length(101))
+        await retry(() => historyEl.querySelectorAll('.compact-view .timeline-event.activity').should.have.length(100))
 
-        historyEl.querySelector('.compact-view a[data-event-id="78"]').trigger('click')
+        historyEl.querySelector('.timeline-event.activity:nth-of-type(77)').trigger('click')
         await retry(() => scenario.location.should.equal('/domain/ci-test/workflows/long-running-op-1/theRunId/history?format=compact&eventId=78'))
         await Promise.delay(100)
 
@@ -563,6 +579,9 @@ describe('Execution', function() {
           testEl.querySelector('section.results').scrollTop.should.be.above(5000)
         })
       })
+
+      it('should highlight and scroll the selected event into view when a timeline event is clicked')
+      it('should allow the divider between the grid and timeline to be resized')
     })
   })
 

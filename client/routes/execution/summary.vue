@@ -13,7 +13,7 @@
         <dt>Closed Time</dt>
         <dd>{{$moment($parent.workflow.workflowExecutionInfo.closeTime).format('dddd MMMM Do, h:mm:ss a')}}</dd>
       </div>
-      <div class="workflow-status" :data-status="wfStatus">
+      <div class="workflow-status" :data-status="typeof wfStatus === 'string' ? wfStatus : wfStatus.status">
         <dt>Status</dt>
         <dd>
           <bar-loader v-if="wfStatus === 'running'" />
@@ -87,7 +87,8 @@ export default {
               runId: this.workflowCompletedEvent.details.newExecutionRunId
             }
           },
-          text: 'Continued As New'
+          text: 'Continued As New',
+          status: 'continued-as-new'
         }
       }
       return this.workflowCompletedEvent.eventType.replace('WorkflowExecution', '').toLowerCase()
