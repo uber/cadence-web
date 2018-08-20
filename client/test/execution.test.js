@@ -320,12 +320,115 @@ describe('Execution', function() {
     })
 
     describe('Compact View', function() {
-      it('should build timeline events from granular event history')
-      it('should also populate the timeline with those events')
-      it('should focus the timeline when an event is clicked, updating the URL')
-      it('should scroll the event into view if an event is clicked from the timeline, updating the URL')
-      it('should show event details when an event is clicked')
-      it('should show event details on initial load, and allow dismissal')
+      this.timeout(4000)
+      var prevPollInterval, prevRetryAttempts
+      before(function() {
+        prevPollInterval = window.retry.pollInterval
+        prevRetryAttempts = window.retry.retryAttempts
+        window.retry.pollInterval = 20
+        window.retry.retryAttempts = 200
+      })
+      after(function() {
+        window.retry.pollInterval = prevPollInterval
+        window.retry.retryAttempts = prevRetryAttempts
+      })
+
+      async function compactViewTest(mochaTest, o) {
+        var [summaryEl, scenario] = await historyTest(mochaTest, {
+          events: fixtures.history.timelineVariety,
+          query: 'format=compact',
+          attach: true
+        }),
+        timelineEl = await summaryEl.waitUntilExists('.timeline-split div.timeline')
+
+        await retry(() => timelineEl.timeline.fit.should.be.instanceof(Function))
+
+        return [timelineEl, summaryEl.querySelector('.results .compact-view'), scenario]
+      }
+
+      it('should build timeline events from granular event history', async function() {
+        var [,compactViewEl] = await compactViewTest(this.test)
+
+        await retry(() => compactViewEl.querySelectorAll('.timeline-event').should.have.length(8))
+        compactViewEl.querySelectorAll('.timeline-event.activity').should.have.length(2)
+        compactViewEl.querySelectorAll('.timeline-event.activity.completed').should.have.length(1)
+        compactViewEl.querySelectorAll('.timeline-event.activity.failed').should.have.length(1)
+      })
+
+      it('should also populate the timeline with those events', async function() {
+        var [timelineEl] = await compactViewTest(this.test)
+        timelineEl.timeline.fit()
+
+        await retry(() => timelineEl.querySelectorAll('.vis-box, .vis-range').should.have.length(8))
+        timelineEl.querySelectorAll('.vis-range.activity').should.have.length(2)
+        timelineEl.querySelectorAll('.vis-range.activity.completed').should.have.length(1)
+        timelineEl.querySelectorAll('.vis-range.activity.failed').should.have.length(1)
+
+        timelineEl.querySelectorAll('.vis-box.marker').should.have.length(4)
+        timelineEl.querySelectorAll('.vis-box.marker.marker-version').should.have.length(1)
+        timelineEl.querySelectorAll('.vis-box.marker.marker-sideeffect').should.have.length(1)
+        timelineEl.querySelectorAll('.vis-box.marker.marker-localactivity').should.have.length(2)
+      })
+
+      it('should focus the timeline when an event is clicked, updating the URL and zooming in', async function() {
+        var [timelineEl,compactViewEl,scenario] = await compactViewTest(this.test)
+        timelineEl.timeline.fit()
+        scenario.location.should.equal('/domain/ci-test/workflows/email-daily-summaries/emailRun1/history?format=compact')
+        await retry(() => timelineEl.querySelectorAll('.vis-range.activity.failed').should.have.length(1))
+
+        timelineEl.querySelector('.vis-range.activity.failed').should.not.have.class('vis-selected')
+        var failedActivity = await compactViewEl.waitUntilExists('.timeline-event.activity.failed')
+        failedActivity.trigger('click')
+
+        await retry(() => {
+          scenario.location.should.equal('/domain/ci-test/workflows/email-daily-summaries/emailRun1/history?format=compact&eventId=16')
+          timelineEl.querySelector('.vis-range.activity.failed').should.have.class('vis-selected')
+          Number(timelineEl.querySelector('.vis-range.activity.completed').style.left.match(/[\-0-9]+/)[0]).should.be.below(0)
+        })
+      })
+
+      // need to investigate how to trigger the events needed to simulate a click for the timeline - looks like it uses Hammer.js and listens to PointerEvents
+      xit('should scroll the event into view if an event is clicked from the timeline, updating the URL', async function() {
+        var [timelineEl,,scenario] = await compactViewTest(this.test)
+        timelineEl.timeline.fit()
+
+        scenario.location.should.equal('/domain/ci-test/workflows/email-daily-summaries/emailRun1/history?format=compact')
+        var failedActivity = await timelineEl.waitUntilExists('.vis-range.activity.failed')
+        failedActivity.trigger('select')
+
+        await retry(() => scenario.location.should.equal('/domain/ci-test/workflows/email-daily-summaries/emailRun1/history?format=compact&eventId=16'))
+      })
+
+      it('should show event details when an event is clicked', async function() {
+        var [timelineEl,compactViewEl,scenario] = await compactViewTest(this.test)
+
+        compactViewEl.querySelectorAll('.selected-event-details').should.be.empty
+        var childWf = await compactViewEl.waitUntilExists('.timeline-event.child-workflow.completed ')
+        childWf.trigger('click')
+
+        await retry(() => {
+          compactViewEl.querySelector('.selected-event-details').should.have.class('active')
+          scenario.location.should.equal('/domain/ci-test/workflows/email-daily-summaries/emailRun1/history?format=compact&eventId=18')
+          timelineEl.querySelector('.vis-range.child-workflow.completed').should.have.class('vis-selected')
+          compactViewEl.querySelector('.timeline-event.child-workflow.completed').should.have.class('vis-selected')
+        })
+      })
+
+      it('should show event details on initial load, and allow dismissal', async function () {
+        var [summaryEl, scenario] = await historyTest(this.test, {
+          events: fixtures.history.timelineVariety,
+          query: 'format=compact&eventId=8',
+          attach: true
+        }),
+        timelineEl = await summaryEl.waitUntilExists('.timeline-split div.timeline'),
+        compactViewEl = summaryEl.querySelector('.results .compact-view')
+
+        await retry(() => {
+          compactViewEl.querySelector('.selected-event-details').should.have.class('active')
+          //timelineEl.querySelector('.vis-range.child-workflow.completed').should.have.class('vis-selected')
+          compactViewEl.querySelector('.timeline-event.marker-sideeffect').should.have.class('vis-selected')
+        })
+      })
     })
 
     describe('Grid View', function() {
@@ -567,7 +670,10 @@ describe('Execution', function() {
           .go(true)
 
         var historyEl = await testEl.waitUntilExists('section.history')
-        await retry(() => historyEl.querySelectorAll('.compact-view .timeline-event.activity').should.have.length(100))
+        await retry(() => {
+          historyEl.querySelectorAll('.compact-view .timeline-event.activity').should.have.length(100)
+          testEl.querySelectorAll('section.history .timeline .vis-range.activity').should.have.length(100)
+        })
 
         historyEl.querySelector('.timeline-event.activity:nth-of-type(77)').trigger('click')
         await retry(() => scenario.location.should.equal('/domain/ci-test/workflows/long-running-op-1/theRunId/history?format=compact&eventId=78'))
@@ -580,7 +686,6 @@ describe('Execution', function() {
         })
       })
 
-      it('should highlight and scroll the selected event into view when a timeline event is clicked')
       it('should allow the divider between the grid and timeline to be resized')
     })
   })

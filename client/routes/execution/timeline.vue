@@ -40,6 +40,7 @@ export default {
         this.timeline = new Timeline(this.$el, this.items, null, Object.assign({
           verticalScroll: true
         }, this.heightOption()))
+        this.$el.timeline = this.timeline  // expose for testing purposes
 
         let dontFocus
         this.timeline.on('select', e => {
@@ -50,14 +51,16 @@ export default {
           }
         })
 
-        this.$watch('selectedEventId', sid => {
+        const highlightSelection = sid => {
           var selectedEvent = this.findEvent(this.selectedEventId)
           this.timeline.setSelection(selectedEvent && selectedEvent.id)
           if (selectedEvent && !dontFocus) {
             this.timeline.focus(selectedEvent.id, true)
           }
           dontFocus = false
-        }, { immediate: true })
+        }
+        this.$watch('selectedEventId', highlightSelection, { immediate: true })
+        this.$watch('events', highlightSelection, { immediate: true })
       }
     },
     findEvent(eventId) {
