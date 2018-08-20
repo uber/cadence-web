@@ -3,6 +3,7 @@ import Vue from 'vue'
 import moment from 'moment'
 import fetchMock from 'fetch-mock'
 import qs from 'friendly-querystring'
+import vueModal from 'vue-js-modal'
 
 import main from '../main'
 import http from '../http'
@@ -50,6 +51,7 @@ Scenario.prototype.render = function(attachToBody) {
     }]
   })
 
+  vueModal.rootInstance = this.vm
   return this.vm.$el
 }
 
