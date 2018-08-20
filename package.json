@@ -67,7 +67,7 @@
     "chai-dom": "^1.7.0",
     "fetch-mock": "^5.13.1",
     "mocha": "^4.0.1",
-    "mocha-chrome": "^1.0.3",
+    "mocha-chrome": "^1.1.0",
     "nathanboktae-browser-test-utils": "^0.1.0",
     "supertest": "^3.0.0"
   }
