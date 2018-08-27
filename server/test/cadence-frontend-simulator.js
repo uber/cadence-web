@@ -44,6 +44,7 @@ before(function(done) {
     'GetWorkflowExecutionHistory',
     'QueryWorkflow',
     'DescribeWorkflowExecution',
+    'ListDomains',
     'DescribeDomain',
     'DescribeTaskList'
   ].forEach(endpoint => tchan.register(tchanServer, 'WorkflowService::' + endpoint, {}, handler))

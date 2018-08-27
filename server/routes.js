@@ -6,6 +6,13 @@ const
   losslessJSON = require('lossless-json'),
   momentToLong = m => Long.fromValue(m.unix()).mul(1000000000)
 
+router.get('/api/domain', async function (ctx) {
+  ctx.body = await ctx.cadence.listDomains({
+    pageSize: 50,
+    nextPageToken: ctx.query.nextPageToken ? Buffer.from(ctx.query.nextPageToken, 'base64') : undefined
+  })
+})
+
 router.get('/api/domain/:domain', async function (ctx) {
   ctx.body = await ctx.cadence.describeDomain({ name: ctx.params.domain })
 })
