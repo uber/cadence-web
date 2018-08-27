@@ -1,22 +1,35 @@
 describe('Describe Domain', function() {
   it('should describe the domain', async function () {
-    const domainInfo = {
-      name: 'test-domain',
-      status: 'REGISTERED',
-      description: 'ci test domain',
-      data: {}
+    const domainDesc = {
+      domainInfo: {
+        name: 'test-domain',
+        status: 'REGISTERED',
+        description: 'ci test domain',
+        ownerEmail: null,
+        data: {}
+      },
+      failoverVersion: 0,
+      isGlobalDomain: true,
+      configuration: {
+        workflowExecutionRetentionPeriodInDays: 14,
+        emitMetric: true
+      },
+      replicationConfiguration: {
+        activeClusterName: 'ci-cluster',
+        clusters: null
+      }
     }
 
     this.test.DescribeDomain = ({ describeRequest }) => {
       describeRequest.name.should.equal('test-domain')
-      return { domainInfo }
+      return domainDesc
     }
 
     return request()
       .get('/api/domain/test-domain')
       .expect(200)
       .expect('Content-Type', /json/)
-      .expect(Object.assign({ ownerEmail: null }, domainInfo))
+      .expect(domainDesc)
   })
 
   it('should return 404 if the domain is not found', async function () {
