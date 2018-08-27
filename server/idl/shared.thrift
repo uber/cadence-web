@@ -61,6 +61,17 @@ exception DomainNotActiveError {
   4: required string activeCluster
 }
 
+exception LimitExceededError {
+  1: required string message
+}
+
+exception AccessDeniedError {
+  1: required string message
+}
+
+exception RetryTaskError {
+  1: required string message
+}
 
 enum WorkflowIdReusePolicy {
   /*
@@ -173,6 +184,9 @@ enum DecisionTaskFailedCause {
   WORKFLOW_WORKER_UNHANDLED_FAILURE,
   BAD_SIGNAL_WORKFLOW_EXECUTION_ATTRIBUTES,
   BAD_START_CHILD_EXECUTION_ATTRIBUTES,
+  FORCE_CLOSE_DECISION,
+  FAILOVER_CLOSE_DECISION,
+  BAD_SIGNAL_INPUT_SIZE,
 }
 
 enum CancelExternalWorkflowExecutionFailedCause {
@@ -221,6 +235,10 @@ enum HistoryEventFilterType {
 enum TaskListKind {
   NORMAL,
   STICKY,
+}
+
+struct Header {
+    10: optional map<string, binary> fields
 }
 
 struct WorkflowType {
@@ -325,6 +343,7 @@ struct SignalExternalWorkflowExecutionDecisionAttributes {
 struct RecordMarkerDecisionAttributes {
   10: optional string markerName
   20: optional binary details
+  30: optional Header header
 }
 
 struct ContinueAsNewWorkflowExecutionDecisionAttributes {
@@ -333,6 +352,8 @@ struct ContinueAsNewWorkflowExecutionDecisionAttributes {
   30: optional binary input
   40: optional i32 executionStartToCloseTimeoutSeconds
   50: optional i32 taskStartToCloseTimeoutSeconds
+  60: optional i32 backoffStartIntervalInSeconds
+  70: optional RetryPolicy retryPolicy
 }
 
 struct StartChildWorkflowExecutionDecisionAttributes {
@@ -346,6 +367,7 @@ struct StartChildWorkflowExecutionDecisionAttributes {
   80: optional ChildPolicy childPolicy
   90: optional binary control
   100: optional WorkflowIdReusePolicy workflowIdReusePolicy
+  110: optional RetryPolicy retryPolicy
 }
 
 struct Decision {
@@ -376,6 +398,9 @@ struct WorkflowExecutionStartedEventAttributes {
   52: optional ChildPolicy childPolicy
   54: optional string continuedExecutionRunId
   60: optional string identity
+  70: optional RetryPolicy retryPolicy
+  80: optional i32 attempt
+  90: optional i64 (js.type = "Long") expirationTimestamp
 }
 
 struct WorkflowExecutionCompletedEventAttributes {
@@ -401,6 +426,7 @@ struct WorkflowExecutionContinuedAsNewEventAttributes {
   50: optional i32 executionStartToCloseTimeoutSeconds
   60: optional i32 taskStartToCloseTimeoutSeconds
   70: optional i64 (js.type = "Long") decisionTaskCompletedEventId
+  80: optional i32 backoffStartIntervalInSeconds
 }
 
 struct DecisionTaskScheduledEventAttributes {
@@ -539,6 +565,7 @@ struct MarkerRecordedEventAttributes {
   10: optional string markerName
   20: optional binary details
   30: optional i64 (js.type = "Long") decisionTaskCompletedEventId
+  40: optional Header header
 }
 
 struct WorkflowExecutionSignaledEventAttributes {
@@ -614,6 +641,7 @@ struct StartChildWorkflowExecutionInitiatedEventAttributes {
   90:  optional binary control
   100: optional i64 (js.type = "Long") decisionTaskCompletedEventId
   110: optional WorkflowIdReusePolicy workflowIdReusePolicy
+  120: optional RetryPolicy retryPolicy
 }
 
 struct StartChildWorkflowExecutionFailedEventAttributes {
@@ -748,6 +776,8 @@ struct DomainInfo {
   20: optional DomainStatus status
   30: optional string description
   40: optional string ownerEmail
+  // A key-value map for any customized purpose
+  50: optional map<string,string> data
 }
 
 struct DomainConfiguration {
@@ -758,6 +788,8 @@ struct DomainConfiguration {
 struct UpdateDomainInfo {
   10: optional string description
   20: optional string ownerEmail
+  // A key-value map for any customized purpose
+  30: optional map<string,string> data
 }
 
 struct ClusterReplicationConfiguration {
@@ -777,10 +809,22 @@ struct RegisterDomainRequest {
   50: optional bool emitMetric
   60: optional list<ClusterReplicationConfiguration> clusters
   70: optional string activeClusterName
+  // A key-value map for any customized purpose
+  80: optional map<string,string> data
+}
+
+struct ListDomainsRequest {
+  10: optional i32 pageSize
+  20: optional binary nextPageToken
+}
+
+struct ListDomainsResponse {
+  10: optional list<DescribeDomainResponse> domains
+  20: optional binary nextPageToken
 }
 
 struct DescribeDomainRequest {
- 10: optional string name
+  10: optional string name
 }
 
 struct DescribeDomainResponse {
@@ -822,6 +866,7 @@ struct StartWorkflowExecutionRequest {
   90: optional string requestId
   100: optional WorkflowIdReusePolicy workflowIdReusePolicy
   110: optional ChildPolicy childPolicy
+  120: optional RetryPolicy retryPolicy
 }
 
 struct StartWorkflowExecutionResponse {
@@ -845,6 +890,7 @@ struct PollForDecisionTaskResponse {
   60: optional History history
   70: optional binary nextPageToken
   80: optional WorkflowQuery query
+  90: optional TaskList WorkflowExecutionTaskList
 }
 
 struct StickyExecutionAttributes {
@@ -858,6 +904,12 @@ struct RespondDecisionTaskCompletedRequest {
   30: optional binary executionContext
   40: optional string identity
   50: optional StickyExecutionAttributes stickyAttributes
+  60: optional bool returnNewDecisionTask
+  70: optional bool forceCreateNewDecisionTask
+}
+
+struct RespondDecisionTaskCompletedResponse {
+  10: optional PollForDecisionTaskResponse decisionTask
 }
 
 struct RespondDecisionTaskFailedRequest {
@@ -1000,6 +1052,7 @@ struct SignalWithStartWorkflowExecutionRequest {
   110: optional string signalName
   120: optional binary signalInput
   130: optional binary control
+  140: optional RetryPolicy retryPolicy
 }
 
 struct TerminateWorkflowExecutionRequest {
@@ -1054,6 +1107,16 @@ struct WorkflowQuery {
   20: optional binary queryArgs
 }
 
+struct ResetStickyTaskListRequest {
+  10: optional string domain
+  20: optional WorkflowExecution execution
+}
+
+struct ResetStickyTaskListResponse {
+    // The reason to keep this response is to allow returning
+    // information in the future.
+}
+
 struct RespondQueryTaskCompletedRequest {
   10: optional binary taskToken
   20: optional QueryTaskCompletedType completedType
@@ -1088,6 +1151,26 @@ struct DescribeTaskListRequest {
 
 struct DescribeTaskListResponse {
   10: optional list<PollerInfo> pollers
+}
+
+//At least one of the parameters needs to be provided
+struct DescribeHistoryHostRequest {
+  10: optional string               hostAddress //ip:port
+  20: optional i32                  shardIdForHost
+  30: optional WorkflowExecution    executionForHost
+}
+
+struct DescribeHistoryHostResponse{
+  10: optional i32                  numberOfShards
+  20: optional list<i32>            shardIDs
+  30: optional DomainCacheInfo      domainCache
+  40: optional string               shardControllerStatus
+  50: optional string               address
+}
+
+struct DomainCacheInfo{
+  10: optional i64 numOfItemsInCacheByID
+  20: optional i64 numOfItemsInCacheByName
 }
 
 enum TaskListType {
@@ -1126,4 +1209,7 @@ struct RetryPolicy {
 
   // Non-Retriable errors. Will stop retrying if error matches this list.
   50: optional list<string> nonRetriableErrorReasons
+
+  // Expiration time for the whole retry process.
+  60: optional i32 expirationIntervalInSeconds
 }

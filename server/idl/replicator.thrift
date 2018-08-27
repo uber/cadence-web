@@ -26,6 +26,7 @@ include "history.thrift"
 enum ReplicationTaskType {
   Domain
   History
+  SyncShardStatus
 }
 
 enum DomainOperation {
@@ -44,6 +45,7 @@ struct DomainTaskAttributes {
 }
 
 struct HistoryTaskAttributes {
+  05: optional list<string> targetClusters
   10: optional string domainId
   20: optional string workflowId
   30: optional string runId
@@ -55,9 +57,16 @@ struct HistoryTaskAttributes {
   90: optional shared.History newRunHistory
 }
 
+struct SyncShardStatusTaskAttributes {
+  10: optional string sourceCluster
+  20: optional i64 (js.type = "Long") shardId
+  30: optional i64 (js.type = "Long") timestamp
+}
+
 struct ReplicationTask {
   10: optional ReplicationTaskType taskType
   20: optional DomainTaskAttributes domainTaskAttributes
   30: optional HistoryTaskAttributes historyTaskAttributes
+  40: optional SyncShardStatusTaskAttributes syncShardStatusTaskAttributes
 }
 

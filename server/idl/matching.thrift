@@ -40,6 +40,7 @@ struct PollForDecisionTaskResponse {
   70: optional bool stickyExecutionEnabled
   80: optional shared.WorkflowQuery query
   90: optional shared.TransientDecisionInfo decisionInfo
+  100: optional shared.TaskList WorkflowExecutionTaskList
 }
 
 struct PollForActivityTaskRequest {
@@ -106,6 +107,8 @@ service MatchingService {
     throws (
       1: shared.BadRequestError badRequestError,
       2: shared.InternalServiceError internalServiceError,
+      3: shared.LimitExceededError limitExceededError,
+      4: shared.ServiceBusyError serviceBusyError,
     )
 
   /**
@@ -116,6 +119,8 @@ service MatchingService {
     throws (
       1: shared.BadRequestError badRequestError,
       2: shared.InternalServiceError internalServiceError,
+      3: shared.LimitExceededError limitExceededError,
+      4: shared.ServiceBusyError serviceBusyError,
     )
 
   /**
@@ -127,6 +132,8 @@ service MatchingService {
       1: shared.BadRequestError badRequestError,
       2: shared.InternalServiceError internalServiceError,
       3: shared.ServiceBusyError serviceBusyError,
+      4: shared.LimitExceededError limitExceededError,
+      5: shared.DomainNotActiveError domainNotActiveError,
     )
 
   /**
@@ -138,6 +145,8 @@ service MatchingService {
       1: shared.BadRequestError badRequestError,
       2: shared.InternalServiceError internalServiceError,
       3: shared.ServiceBusyError serviceBusyError,
+      4: shared.LimitExceededError limitExceededError,
+      5: shared.DomainNotActiveError domainNotActiveError,
     )
 
   /**
@@ -149,6 +158,8 @@ service MatchingService {
       2: shared.InternalServiceError internalServiceError,
       3: shared.EntityNotExistsError entityNotExistError,
       4: shared.QueryFailedError queryFailedError,
+      5: shared.LimitExceededError limitExceededError,
+      6: shared.ServiceBusyError serviceBusyError,
     )
 
   /**
@@ -159,6 +170,8 @@ service MatchingService {
       1: shared.BadRequestError badRequestError,
       2: shared.InternalServiceError internalServiceError,
       3: shared.EntityNotExistsError entityNotExistError,
+      4: shared.LimitExceededError limitExceededError,
+      5: shared.ServiceBusyError serviceBusyError,
     )
 
   /**
@@ -174,6 +187,7 @@ service MatchingService {
     throws (
       1: shared.BadRequestError badRequestError,
       2: shared.InternalServiceError internalServiceError,
+      3: shared.ServiceBusyError serviceBusyError,
     )
 
   /**
@@ -185,5 +199,6 @@ service MatchingService {
         1: shared.BadRequestError badRequestError,
         2: shared.InternalServiceError internalServiceError,
         3: shared.EntityNotExistsError entityNotExistError,
+        4: shared.ServiceBusyError serviceBusyError,
       )
 }

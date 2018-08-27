@@ -3,7 +3,8 @@ describe('Describe Domain', function() {
     const domainInfo = {
       name: 'test-domain',
       status: 'REGISTERED',
-      description: 'ci test domain'
+      description: 'ci test domain',
+      data: {}
     }
 
     this.test.DescribeDomain = ({ describeRequest }) => {

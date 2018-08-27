@@ -5,6 +5,7 @@ wfHistoryThrift = [{
   timestamp: new Long(800610625, 351737684, false),
   eventType: 'WorkflowExecutionStarted',
   workflowExecutionStartedEventAttributes: {
+    attempt: null,
     workflowType: {
       name: 'github.com/uber/cadence/demo'
     },
@@ -18,10 +19,12 @@ wfHistoryThrift = [{
       includeFooter: true
     })),
     childPolicy: 'TERMINATE',
+    expirationTimestamp: null,
     continuedExecutionRunId: null,
     parentInitiatedEventId: null,
     parentWorkflowDomain: null,
     parentWorkflowExecution: null,
+    retryPolicy: null,
     taskStartToCloseTimeoutSeconds: 30,
     executionStartToCloseTimeoutSeconds: 1080
   }
