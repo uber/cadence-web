@@ -1,22 +1,28 @@
 <template>
   <div class="domain-navigation" :class="'validation-' + validation">
-    <div class="input-wrapper">
-      <input type="text" name="domain" spellcheck="false" autocorrect="off"
-        ref="input"
-        v-bind:value="d"
-        :placeholder="$props.placeholder"
-        @input="onInput"
-        @keydown.enter="changeDomain"
-        @keydown.esc="onEsc"
-      />
+    <div class="input-and-validation">
+      <div class="input-wrapper">
+        <input type="text" name="domain" spellcheck="false" autocorrect="off"
+          ref="input"
+          v-bind:value="d"
+          :placeholder="$props.placeholder"
+          @input="onInput"
+          @keydown.enter="changeDomain"
+          @keydown.esc="onEsc"
+        />
+      </div>
+      <p :class="'validation validation-' + validation">{{validationMessage}}</p>
     </div>
-    <p :class="'validation validation-' + validation">{{validationMessage}}</p>
     <ul class="recent-domains" v-if="recentDomains.length">
       <h3>Recent Domains</h3>
-      <li v-for="domain in recentDomains">
-        <a :href="domainLink(domain)" :data-domain="domain" @click="recordDomainFromClick">{{domain}}</a>
+      <li v-for="domain in recentDomains" :key="domain">
+        <a :href="domainLink(domain)" :data-domain="domain" @click="recordDomainFromClick" @mouseover="showDomainDesc(domain)">{{domain}}</a>
       </li>
     </ul>
+    <div :class="{ 'domain-description': true, pending: !!domainDescRequest }" v-if="domainDesc">
+      <span class="domain-name">{{domainDescName}}</span>
+      <details-list :item="domainDesc" :title="domainDescName" />
+    </div>
   </div>
 </template>
 
@@ -31,18 +37,37 @@ const validationMessages = {
   error: d => `An error occoured while querying for ${d}`,
 }
 
+function mapDomainDescription(d) {
+  d.configuration = d.configuration || {}
+  d.replicationConfiguration = d.replicationConfiguration || { clusters: [] }
+  return {
+    description: d.domainInfo.description,
+    owner: d.domainInfo.ownerEmail,
+    'Global?': d.isGlobalDomain ? 'Yes' : 'No',
+    'Retention Period': d.configuration.workflowExecutionRetentionPeriodInDays + ' days',
+    'Emit Metrics': d.configuration.emitMetric ? 'Yes' : 'No',
+    'Failover Version': d.failoverVersion,
+    clusters: d.replicationConfiguration.clusters
+      .map(c => c.clusterName === d.replicationConfiguration.activeClusterName ? `${c.clusterName} (active)` : c.clusterName)
+      .join(', ')
+  }
+}
+
 export default {
   props: ['domain', 'placeholder'],
   data() {
     return {
       d: this.$props.domain,
       validation: 'unknown',
-      validationRequest: undefined,
       validationMessage: undefined,
-      recentDomains: JSON.tryParse(localStorage.getItem('recent-domains')) || []
+      recentDomains: JSON.tryParse(localStorage.getItem('recent-domains')) || [],
+      domainDesc: undefined,
+      domainDescName: undefined,
+      domainDescRequest: undefined
     }
   },
   created() {
+    this.domainDescCache = {}
     if (this.$route && this.$route.params && this.$route.params.domain) {
       this.recordDomain(this.$route.params.domain)
     }
@@ -73,11 +98,23 @@ export default {
       this.recordDomain(domain)
       this.$emit('navigate', domain)
     },
+    getDomainDesc(d) {
+      if (this.domainDescCache[d]) {
+        return Promise.resolve(this.domainDescCache[d])
+      }
+      return this.$http(`/api/domain/${d}`).then(r => {
+        return this.domainDescCache[d] = mapDomainDescription(r)
+      })
+    },
     checkValidity: debounce(function (x) {
       const check = newDomain => {
         this.validation = 'pending'
-        this.validationRequest = this.$http(`/api/domain/${newDomain}`).then(
-          () => 'valid',
+        this.domainDescRequest = this.getDomainDesc(newDomain).then(
+          desc => {
+            this.domainDescName = newDomain
+            this.domainDesc = desc
+            return 'valid'
+          },
           res => res.status === 404 ? 'invalid' : 'error'
         ).then(v => {
           this.$emit('validate', this.d, v)
@@ -86,20 +123,31 @@ export default {
           }
           if (this.d === newDomain || !this.d) {
             this.validation = this.d ? v : 'unknown'
-            this.validationRequest = null
+            this.domainDescRequest = null
           } else {
             check.call(this, this.d)
           }
         })
       }
 
-      if (!this.validationRequest && this.d) {
+      if (!this.domainDescRequest && this.d) {
         check(this.d)
       }
     }, 300),
     onInput() {
       this.d = this.$refs.input.value
       this.checkValidity()
+    },
+    showDomainDesc(d) {
+      this.domainDescName = d
+      this.domainDescRequest = this.getDomainDesc(d)
+        .catch(res => ({ error: `${res.statusText || res.message} ${res.status}` }))
+        .then(desc => {
+          if (this.domainDescName === d) {
+            this.domainDesc = desc
+            this.domainDescRequest = null
+          }
+        })
     },
     onEsc(e) {
       this.$emit('cancel', e)
@@ -122,26 +170,27 @@ validation(color, symbol)
 
 .domain-navigation
   display flex
-  flex-direction column
-  div.input-wrapper
-    display flex
-    position relative
-    flex 1 1 auto
+  flex-wrap wrap
+  div.input-and-validation
+    flex 0 0 100%
+    div.input-wrapper
+      display flex
+      position relative
+      &::after
+        position absolute
+        right 18px
+        font-size 11px
+        size = 16px
+        width size
+        height size
+        border-radius size
+        top "calc(50% - %s)" % (size/2)
+        color white
+        display flex
+        justify-content center
+        align-items center
     input
       flex 1 1 auto
-    &::after
-      position absolute
-      right 18px
-      font-size 11px
-      size = 16px
-      width size
-      height size
-      border-radius size
-      top "calc(50% - %s)" % (size/2)
-      color white
-      display flex
-      justify-content center
-      align-items center
   &.validation-invalid .input-wrapper
     validation(uber-orange, '✕')
   &.validation-valid .input-wrapper
@@ -154,6 +203,28 @@ validation(color, symbol)
     content ' '
   .validation-message
     line-height 1.5em
-  ul
-    display block
+
+  ul.recent-domains
+    flex 1 1 auto
+
+  .domain-description
+    flex 1 1 60%
+    padding layout-spacing-small
+    span.domain-name
+      display inline-block
+      font-size 18px
+      padding inline-spacing-small
+      font-family monospace-font-family
+    &.pending dl.details
+      opacity 0.2
+    dl.details
+      & > div
+        display block
+        padding inline-spacing-small
+      dt, dd
+        line-height 1.5em
+      dt
+        text-transform uppercase
+        font-family primary-font-family
+        font-weight 200
 </style>
