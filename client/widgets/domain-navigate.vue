@@ -10,6 +10,7 @@
           @keydown.enter="changeDomain"
           @keydown.esc="onEsc"
         />
+        <a :href="validation === 'valid' ? '#' : ''" class="change-domain" @click="changeDomain"></a>
       </div>
       <p :class="'validation validation-' + validation">{{validationMessage}}</p>
     </div>
@@ -171,14 +172,17 @@ validation(color, symbol)
 .domain-navigation
   display flex
   flex-wrap wrap
+  change-domain-size = 32px
+
   div.input-and-validation
     flex 0 0 100%
     div.input-wrapper
       display flex
       position relative
+      align-items center
       &::after
         position absolute
-        right 18px
+        right 18px + change-domain-size + inline-spacing-small
         font-size 11px
         size = 16px
         width size
@@ -206,6 +210,21 @@ validation(color, symbol)
 
   ul.recent-domains
     flex 1 1 auto
+
+  a.change-domain
+    icon('\ea87')
+    margin-left inline-spacing-small
+    &::before
+      display inline-block
+      width change-domain-size
+      height change-domain-size
+      line-height change-domain-size
+      text-align center
+      color white
+      background-color uber-white-80
+      border-radius change-domain-size
+    &[href='#']::before
+      background-color primary-color
 
   .domain-description
     flex 1 1 60%

@@ -4,6 +4,7 @@ import moment from 'moment'
 import fetchMock from 'fetch-mock'
 import qs from 'friendly-querystring'
 import vueModal from 'vue-js-modal'
+import deepmerge from 'deepmerge'
 
 import main from '../main'
 import http from '../http'
@@ -88,6 +89,29 @@ Object.defineProperty(Scenario.prototype, 'location', {
 Scenario.prototype.withDomain = function(domain) {
   this.domain = domain
   return this
+}
+
+Scenario.prototype.withDomainDescription = function(domain, domainDesc) {
+  this.api.getOnce(`/api/domain/${domain}`, deepmerge({
+    domainInfo: {
+      name: domain,
+      status: 'REGISTERED',
+      description: 'A cool domain',
+      ownerEmail: 'ci-test@uber.com'
+    },
+    configuration: {
+      workflowExecutionRetentionPeriodInDays: 21,
+      emitMetric: true
+    },
+    replicationConfiguration: {
+      activeClusterName: 'ci-test-cluster',
+      clusters: [{
+        clusterName: 'ci-test-cluster'
+      }]
+    },
+    failoverVersion: 0,
+    isGlobalDomain: false
+  }, domainDesc || {}))
 }
 
 Scenario.prototype.withWorkflows = function(status, query, workflows) {

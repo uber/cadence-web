@@ -36,10 +36,15 @@ section.intro
   @media (min-width 1600px)
     width 1580px
     margin 0 auto
+    .domain-navigation
+      padding-left layout-spacing-medium
+      padding-right layout-spacing-medium
   .links
     margin layout-spacing-large auto
+    a
+      display block
   h1
-    margin-bottom base-font-size
+    margin-bottom base-font-size*2
   p, h3, .domain-navigation
     margin 1em 0
   a
