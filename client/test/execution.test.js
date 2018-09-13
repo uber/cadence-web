@@ -356,6 +356,7 @@ describe('Execution', function() {
       })
 
       it('should also populate the timeline with those events', async function() {
+        this.retries(3) // flakey on mocha-chrome but not normal, windowed Chrome
         var [timelineEl] = await compactViewTest(this.test)
         timelineEl.timeline.fit()
 
