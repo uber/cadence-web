@@ -457,7 +457,11 @@ describe('Execution', function() {
         var thead = historyEl.querySelector('section.results thead')
         await retry(() => {
           thead.should.have.class('floating')
-          Array.from(thead.querySelectorAll('th')).map(th => th.style.width).should.deep.equal([ '102px', '394px', '287px', '1007px' ])
+          var widths = Array.from(thead.querySelectorAll('th')).map(th => Number(th.style.width.match(/(\d+)px/)[1]))
+          widths[0].should.be.closeTo(102, 5)
+          widths[1].should.be.closeTo(397, 15)
+          widths[2].should.be.closeTo(282, 10)
+          widths[3].should.be.closeTo(1009, 20)
         })
       })
 
