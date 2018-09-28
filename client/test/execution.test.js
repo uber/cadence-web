@@ -416,17 +416,15 @@ describe('Execution', function() {
       })
 
       it('should show event details on initial load, and allow dismissal', async function () {
-        var [summaryEl, scenario] = await historyTest(this.test, {
+        var [summaryEl] = await historyTest(this.test, {
           events: fixtures.history.timelineVariety,
           query: 'format=compact&eventId=8',
           attach: true
         }),
-        timelineEl = await summaryEl.waitUntilExists('.timeline-split div.timeline'),
         compactViewEl = summaryEl.querySelector('.results .compact-view')
 
         await retry(() => {
           compactViewEl.querySelector('.selected-event-details').should.have.class('active')
-          //timelineEl.querySelector('.vis-range.child-workflow.completed').should.have.class('vis-selected')
           compactViewEl.querySelector('.timeline-event.marker-sideeffect').should.have.class('vis-selected')
         })
       })
@@ -434,7 +432,7 @@ describe('Execution', function() {
 
     describe('Grid View', function() {
       it('should show full results in a grid', async function () {
-        var [historyEl, scenario] = await historyTest(this.test)
+        var [historyEl] = await historyTest(this.test)
         await historyEl.waitUntilExists('.results tbody tr:nth-child(4)')
 
         historyEl.textNodes('table tbody td:nth-child(1)').length.should.be.lessThan(12)
@@ -452,8 +450,19 @@ describe('Execution', function() {
         ])
       })
 
+      it('should pin widths of table ths and float the thead ', async function() {
+        var [historyEl] = await historyTest(this.test, { attach: true })
+        await historyEl.waitUntilExists('.results tbody tr:nth-child(4)')
+
+        var thead = historyEl.querySelector('section.results thead')
+        await retry(() => {
+          thead.should.have.class('floating')
+          Array.from(thead.querySelectorAll('th')).map(th => th.style.width).should.deep.equal([ '102px', '394px', '287px', '1007px' ])
+        })
+      })
+
       it('should allow toggling of the time column between elapsed and local timestamp', async function() {
-        var [historyEl, scenario] = await historyTest(this.test)
+        var [historyEl] = await historyTest(this.test)
         await historyEl.waitUntilExists('.results tbody tr:nth-child(4)')
 
         var [elapsedEl, tsEl] = historyEl.querySelectorAll('thead th:nth-child(3) a')
@@ -469,14 +478,14 @@ describe('Execution', function() {
 
       it('should use the timestamp format from local storage if available', async function() {
         localStorage.setItem('ci-test:history-ts-col-format', 'ts')
-        var [historyEl, scenario] = await historyTest(this.test)
+        var [historyEl] = await historyTest(this.test)
         await retry(() => historyEl.textNodes('table tbody td:nth-child(3)').should.deep.equal(
           fixtures.history.emailRun1.map(e => moment(e.timestamp).format('MMM Do h:mm:ss a'))
         ))
       })
 
       it('should show details as flattened key-value pairs from parsed json, except for result and input', async function () {
-        var [historyEl, scenario] = await historyTest(this.test),
+        var [historyEl] = await historyTest(this.test),
             startDetails = await historyEl.waitUntilExists('.results tbody tr:first-child td:nth-child(4)'),
             inputPreText = JSON.stringify(fixtures.history.emailRun1[0].details.input, null, 2)
 

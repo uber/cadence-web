@@ -21,7 +21,7 @@
       <SplitArea :size="splitSizes[1]" class="view-split">
         <section v-snapscroll class="results" ref="results">
           <table v-if="format === 'grid' && showTable" :class="{ compact: compactDetails }">
-            <thead>
+            <thead ref="thead">
               <th>ID</th>
               <th>Type</th>
               <th>
@@ -33,6 +33,7 @@
                 <a class="details" :href="compactDetails ? '#' : null" @click.prevent="setCompactDetails(false)">Full Details</a>
               </th>
             </thead>
+            <div class="spacer"></div>
             <tbody>
               <tr v-for="(he, i) in $parent.results"
                 :key="he.eventId"
@@ -106,6 +107,28 @@ export default {
   created() {
     this.$watch('format', this.scrollEventIntoView.bind(this, true))
     this.$watch('eventId', this.scrollEventIntoView.bind(this, false))
+
+    this.recalcThWidths = debounce(() => {
+      if (!this.$refs.thead) return
+      var ths = Array.from(this.$refs.thead.querySelectorAll('th'))
+
+      this.$refs.thead.classList.remove('floating')
+
+      ths.forEach(th => th.style.width = '')
+      ths.forEach(th => th.style.width = `${th.offsetWidth}px`)
+      this.$refs.thead.classList.add('floating')
+    }, 5)
+  },
+  mounted() {
+    this.$watch(
+      () => `${this.$parent.results.length}${this.tsFormat.length}${this.$route.query.format}${this.compactDetails}`,
+      this.recalcThWidths,
+      { immediate: true }
+    )
+    window.addEventListener('resize', this.recalcThWidths)
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.recalcThWidths)
   },
   computed: {
     timelineEvents() {
@@ -273,9 +296,28 @@ section.history
     overflow auto
 
   table
+    thead
+      background-color uber-white-10
+      box-shadow 2px 2px 2px rgba(0,0,0,0.2)
+      &.floating
+        position absolute
+        display flex
+        top 0
+        left 0
+        z-index 2
+        th
+          display inline-block
+        & + .spacer
+          width 100%
+          height 38px
+    td, th
+      &:first-child
+        min-width 60px
+      &:nth-child(2)
+        min-width 150px
     th a:not([href])
       border-bottom 1px solid black
-    td:nth-child(3)
+    td:nth-child(3), td:nth-child(2)
       one-liner-ellipsis()
     tr[data-event-type*="Started"] td:nth-child(2)
       color uber-blue-120
