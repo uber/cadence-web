@@ -157,6 +157,7 @@ module.exports = async function(ctx, next) {
     exportHistory: req('GetWorkflowExecutionHistory', 'get', withDomainAndWorkflowExecution, cliTransform),
     describeWorkflow: req('DescribeWorkflowExecution', 'describe', withWorkflowExecution),
     queryWorkflow: req('QueryWorkflow', 'query', withWorkflowExecution),
+    terminateWorkflow: req('TerminateWorkflow', 'terminate', withWorkflowExecution),
     listDomains: req('ListDomains', 'list'),
     describeDomain: req('DescribeDomain', 'describe'),
     describeTaskList: req('DescribeTaskList'),

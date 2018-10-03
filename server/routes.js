@@ -89,21 +89,25 @@ router.get('/api/domain/:domain/workflows/:workflowId/:runId/export', async func
 })
 
 router.get('/api/domain/:domain/workflows/:workflowId/:runId/queries', async function (ctx) {
-  // workaround implementation until https://github.com/uber/cadence/issues/382 is resolved
-  try {
-    await ctx.cadence.queryWorkflow({
-      query: {
-        queryType: '__cadence_web_list'
-      }
-    })
+  var resp = await ctx.cadence.terminateWorkflow({
+    reason: ctx.body.reason
+  })
+})
 
-    ctx.throw(500)
-  } catch(e) {
-    ctx.body = ((e.message || '')
-      .match(/KnownQueryTypes=\[(.*)\]/) || [null, ''])[1]
-      .split(' ')
-      .filter(q => q)
-  }
+router.post('/api/domain/:domain/workflows/:workflowId/:runId/terminate', async function (ctx) {
+  var nextPageToken
+
+  do {
+    var page = await ctx.cadence.exportHistory({ nextPageToken })
+    if (!nextPageToken) {
+      ctx.status = 200
+    }
+    ctx.res.write((nextPageToken ? ',' : '[') + page.history.events.map(losslessJSON.stringify).join(','))
+    nextPageToken = page.nextPageToken && Buffer.from(page.nextPageToken, 'base64')
+  } while (nextPageToken)
+
+  ctx.res.write(']')
+  ctx.body = ''
 })
 
 router.post('/api/domain/:domain/workflows/:workflowId/:runId/queries/:queryType', async function (ctx) {
