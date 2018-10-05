@@ -94,6 +94,7 @@ router.get('/api/domain/:domain/workflows/:workflowId/:runId/queries', async fun
   })
 })
 
+<<<<<<< HEAD
 router.post('/api/domain/:domain/workflows/:workflowId/:runId/terminate', async function (ctx) {
   var nextPageToken
 
@@ -108,6 +109,15 @@ router.post('/api/domain/:domain/workflows/:workflowId/:runId/terminate', async 
 
   ctx.res.write(']')
   ctx.body = ''
+=======
+    ctx.throw(500)
+  } catch(e) {
+    ctx.body = ((e.message || '')
+      .match(/(KnownQueryTypes|knownTypes)=\[(.*)\]/) || [null, null, ''])[2]
+      .split(' ')
+      .filter(q => q)
+  }
+>>>>>>> master
 })
 
 router.post('/api/domain/:domain/workflows/:workflowId/:runId/queries/:queryType', async function (ctx) {
