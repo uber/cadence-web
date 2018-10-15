@@ -200,6 +200,12 @@ Scenario.prototype.withQueryResult = function(query, result) {
   return this
 }
 
+Scenario.prototype.withWorkflowTermination = function(workflowId, runId, reason)  {
+  this.api.postOnce(this.execApiBase() + '/terminate', { reason })
+
+  return this
+}
+
 Scenario.prototype.withTaskListPollers = function(taskList, pollers) {
   this.api.getOnce(`/api/domain/${this.domain}/task-lists/${taskList}/pollers`, pollers || {
     node1: {
@@ -217,5 +223,6 @@ Scenario.prototype.withTaskListPollers = function(taskList, pollers) {
   })
   return this
 }
+
 
 window.Scenario = Scenario

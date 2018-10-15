@@ -27,4 +27,18 @@ describe('Workflow Execution', function() {
         pendingActivities: null
       })
   })
+
+  it('should terminate a workflow', async function() {
+    let reason
+    this.test.TerminateWorkflowExecution = ({ terminateRequest }) => {
+      reason = terminateRequest.reason
+      return {}
+    }
+
+    return request()
+      .post('/api/domain/canary/workflows/ci%2Fdemo/run1/terminate')
+      .send({ reason: 'example reason' })
+      .expect(204)
+      .expect(() => reason.should.equal('example reason'))
+  })
 })

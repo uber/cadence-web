@@ -44,6 +44,7 @@ before(function(done) {
     'GetWorkflowExecutionHistory',
     'QueryWorkflow',
     'DescribeWorkflowExecution',
+    'TerminateWorkflowExecution',
     'ListDomains',
     'DescribeDomain',
     'DescribeTaskList'

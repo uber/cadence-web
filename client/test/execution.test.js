@@ -24,16 +24,18 @@ describe('Execution', function() {
     return [summaryEl, scenario]
   }
 
+  const closedWorkflowExecution = {
+    workflowExecutionInfo: {
+      closeTime: moment().subtract(1, 'day'),
+      closeStatus: 'COMPLETED',
+      type: {},
+      execution: {}
+    },
+  }
+
   it('should show summary and history tabs for completed workflows', async function () {
     var [,scenario] = await summaryTest(this.test, {
-      execution: {
-        workflowExecutionInfo: {
-          closeTime: moment().subtract(1, 'day'),
-          closeStatus: 'COMPLETED',
-          type: {},
-          execution: {}
-        },
-      }
+      execution: closedWorkflowExecution
     })
 
     scenario.vm.$el.attrValues('section.execution > nav a', 'href').should.deep.equal([
@@ -243,6 +245,63 @@ describe('Execution', function() {
       parentWf.querySelector('dd a')
         .should.have.text('ci-test-parent - the-parent-wfid')
         .and.have.attr('href', '/domain/another-domain/workflows/the-parent-wfid/1234/summary')
+    })
+
+    describe('Actions', function() {
+      it('should offer the user to terminate a running workflow, prompting the user for a termination reason', async function() {
+        var [summaryEl] = await summaryTest(this.test),
+            terminateEl = await summaryEl.waitUntilExists('aside.actions a.terminate')
+
+        terminateEl.trigger('click')
+        var confirmTerminateEl = await summaryEl.waitUntilExists('[data-modal="confirm-termination"]')
+        confirmTerminateEl.should.contain.text('Are you sure you want to terminate this workflow?')
+        confirmTerminateEl.should.contain('a.terminate').and.contain('a.cancel').and.contain('input[placeholder="Reason"]')
+      })
+
+      it('should terminate the workflow with the provided reason', async function() {
+        var [summaryEl, scenario] = await summaryTest(this.test)
+        ;(await summaryEl.waitUntilExists('aside.actions a.terminate')).trigger('click')
+
+        var confirmTerminateEl = await summaryEl.waitUntilExists('[data-modal="confirm-termination"]')
+        var reasonEl = confirmTerminateEl.querySelector('input')
+        reasonEl.value = 'example termination'
+        reasonEl.trigger('input')
+        await Promise.delay(10)
+
+        scenario.withWorkflowTermination('example termination')
+        confirmTerminateEl.querySelector('a.terminate').trigger('click')
+        await retry(() => summaryEl.should.not.contain('[data-modal="confirm-termination"]'))
+      })
+
+      it('should terminate the workflow without a reason', async function() {
+        var [summaryEl, scenario] = await summaryTest(this.test)
+        ;(await summaryEl.waitUntilExists('aside.actions a.terminate')).trigger('click')
+
+        var terminateEl = await summaryEl.waitUntilExists('[data-modal="confirm-termination"] a.terminate')
+        scenario.withWorkflowTermination()
+        terminateEl.trigger('click')
+
+        await retry(() => summaryEl.should.not.contain('[data-modal="confirm-termination"]'))
+      })
+
+      it('should allow the user to cancel the termination prompt, doing nothing', async function() {
+        var [summaryEl] = await summaryTest(this.test)
+        ;(await summaryEl.waitUntilExists('aside.actions a.terminate')).trigger('click')
+
+        var cancelDialog = await summaryEl.waitUntilExists('[data-modal="confirm-termination"] a.cancel')
+        cancelDialog.trigger('click')
+        await retry(() => summaryEl.should.not.contain('[data-modal="confirm-termination"]'))
+        await Promise.delay(200)
+      })
+
+      it('should not offer the user the ability to terminate completed workflows', async function() {
+        var [summaryEl] = await summaryTest(this.test, {
+          execution: closedWorkflowExecution
+        })
+
+        await retry(() => summaryEl.should.have.descendant('.workflow-status dd').and.have.trimmed.text('completed'))
+        summaryEl.should.have.descendant('aside.actions').and.not.contain('a.terminate')
+      })
     })
   })
 
