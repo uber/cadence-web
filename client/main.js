@@ -134,7 +134,7 @@ Vue.mixin({
 
 Vue.use(Router)
 Vue.use(infiniteScroll)
-Vue.use(vueModal, { dynamic: true })
+Vue.use(vueModal, { dynamic: true, dialog: true })
 Vue.use(vueSplit)
 Vue.component('v-select', vueSelect)
 Vue.component('date-range-picker', DateRangePicker)

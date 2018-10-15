@@ -89,27 +89,14 @@ router.get('/api/domain/:domain/workflows/:workflowId/:runId/export', async func
 })
 
 router.get('/api/domain/:domain/workflows/:workflowId/:runId/queries', async function (ctx) {
-  var resp = await ctx.cadence.terminateWorkflow({
-    reason: ctx.body.reason
-  })
-})
+  // workaround implementation until https://github.com/uber/cadence/issues/382 is resolved
+  try {
+    await ctx.cadence.queryWorkflow({
+      query: {
+        queryType: '__cadence_web_list'
+      }
+    })
 
-<<<<<<< HEAD
-router.post('/api/domain/:domain/workflows/:workflowId/:runId/terminate', async function (ctx) {
-  var nextPageToken
-
-  do {
-    var page = await ctx.cadence.exportHistory({ nextPageToken })
-    if (!nextPageToken) {
-      ctx.status = 200
-    }
-    ctx.res.write((nextPageToken ? ',' : '[') + page.history.events.map(losslessJSON.stringify).join(','))
-    nextPageToken = page.nextPageToken && Buffer.from(page.nextPageToken, 'base64')
-  } while (nextPageToken)
-
-  ctx.res.write(']')
-  ctx.body = ''
-=======
     ctx.throw(500)
   } catch(e) {
     ctx.body = ((e.message || '')
@@ -117,7 +104,6 @@ router.post('/api/domain/:domain/workflows/:workflowId/:runId/terminate', async 
       .split(' ')
       .filter(q => q)
   }
->>>>>>> master
 })
 
 router.post('/api/domain/:domain/workflows/:workflowId/:runId/queries/:queryType', async function (ctx) {
@@ -125,6 +111,12 @@ router.post('/api/domain/:domain/workflows/:workflowId/:runId/queries/:queryType
     query: {
       queryType: ctx.params.queryType
     }
+  })
+})
+
+router.post('/api/domain/:domain/workflows/:workflowId/:runId/terminate', async function (ctx) {
+  ctx.body = await ctx.cadence.terminateWorkflow({
+    reason: ctx.request.body && ctx.request.body.reason
   })
 })
 

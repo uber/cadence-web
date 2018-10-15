@@ -39,6 +39,7 @@ export default {
     </header>
     <router-view></router-view>
     <modals-container />
+    <v-dialog />
   </main>
 </template>
 

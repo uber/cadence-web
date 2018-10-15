@@ -1,5 +1,18 @@
 <template>
   <section class="execution-summary">
+    <aside class="actions">
+      <a href="" class="terminate" v-if="wfStatus == 'running'" @click.prevent="$modal.show('confirm-termination')">Terminate</a>
+    </aside>
+
+    <modal name="confirm-termination">
+      <h3>Are you sure you want to terminate this workflow?</h3>
+      <input v-model="terminationReason" placeholder="Reason" />
+      <footer>
+        <a href="#" class="terminate" @click.prevent="terminate">Terminate</a>
+        <a href="#" class="cancel" @click.prevent="$modal.hide('confirm-termination')">Cancel</a>
+      </footer>
+    </modal>
+
     <dl v-if="$parent.workflow">
       <div class="workflow-name">
         <dt>Workflow Name</dt>
@@ -51,7 +64,7 @@
       </div>
       <div class="pending-activities" v-if="$parent.workflow.pendingActivities">
         <dt>Pending Activities</dt>
-        <dd v-for="pa in $parent.workflow.pendingActivities"><details-list :item="pa" /></dd>
+        <dd v-for="pa in $parent.workflow.pendingActivities" :key="pa.activityID"><details-list :item="pa" /></dd>
       </div>
     </dl>
     <span class="error" v-if="$parent.error">{{$parent.error}}</span>
@@ -64,7 +77,9 @@ import parentWorkflowLink from './parent-workflow-link'
 
 export default {
   data() {
-    return {}
+    return {
+      terminationReason: undefined
+    }
   },
   computed: {
     input() {
@@ -95,6 +110,16 @@ export default {
     },
     parentWorkflowRoute() {
       return parentWorkflowLink(this.$parent.results && this.$parent.results[0] && this.$parent.results[0].details)
+    }
+  },
+  methods: {
+    terminate() {
+      this.$modal.hide('confirm-termination')
+      this.$http.post(this.$parent.baseAPIURL + '/terminate', { reason: this.terminationReason }).then(r => {
+        console.dir(r)
+      }, resp => {
+        $parent.error = resp.message || resp.status || resp.statusCode
+      })
     }
   }
 }
@@ -133,4 +158,20 @@ section.execution-summary
       color uber-orange
   pre
     max-height 18vh
+
+  aside.actions
+    float right
+    a
+      action-button(uber-orange)
+
+[data-modal="confirm-termination"]
+  input
+    margin layout-spacing-medium 0
+  footer
+    display flex
+    justify-content space-between
+  a.terminate
+    action-button(uber-orange)
+  a.cancel
+    action-button()
 </style>
