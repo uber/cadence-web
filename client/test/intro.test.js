@@ -15,7 +15,7 @@ describe('Intro', function() {
     var testEl = new Scenario(this.test).render(),
         headerBar = await testEl.waitUntilExists('header.top-bar')
 
-    headerBar.should.have.descendant('a h2').with.text('Cadence')
+    headerBar.should.have.descendant('a.logo svg').and.have.descendant('text').with.text('adence')
     headerBar.should.not.contain('nav').and.not.contain('div.domain')
   })
 
