@@ -1,7 +1,10 @@
 <script>
+import logo from './assets/logo.svg'
+
 export default {
   data () {
-    return {}
+    console.dir(logo)
+    return { logo }
   },
   methods: {
     globalClick(e) {
@@ -25,7 +28,7 @@ export default {
 <template>
   <main @click="globalClick">
     <header class="top-bar">
-      <a href="/" class="uber-icon"><h2>Cadence</h2></a>
+      <a href="/" class="logo" v-html="logo"></a>
       <div class="domain" v-if="$route.params.domain">
         <a :href="`/domain/${$route.params.domain}/workflows`" :class="{'router-link-active': $route.path === `/domain/${$route.params.domain}/workflows`, workflows: true }">{{$route.params.domain}}</a>
         <a :href="`/domain/${$route.params.domain}/config`" :class="{'router-link-active': $route.path === `/domain/${$route.params.domain}/config`, config: true }"></a>
@@ -76,6 +79,11 @@ header.top-bar
     &.config
       margin-left inline-spacing-medium
       icon('\ea5f')
+    &.logo
+      margin-right layout-spacing-medium
+  svg
+    display inline-block
+    height top-nav-height - 20px
 
   spacing = 1.3em
   nav-label-color = uber-white-40
