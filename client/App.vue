@@ -27,7 +27,8 @@ export default {
     <header class="top-bar">
       <a href="/" class="uber-icon"><h2>Cadence</h2></a>
       <div class="domain" v-if="$route.params.domain">
-        <a :href="`/domain/${$route.params.domain}/workflows`" :class="{'router-link-active': $route.path === `/domain/${$route.params.domain}/workflows`}">{{$route.params.domain}}</a>
+        <a :href="`/domain/${$route.params.domain}/workflows`" :class="{'router-link-active': $route.path === `/domain/${$route.params.domain}/workflows`, workflows: true }">{{$route.params.domain}}</a>
+        <a :href="`/domain/${$route.params.domain}/config`" :class="{'router-link-active': $route.path === `/domain/${$route.params.domain}/config`, config: true }"></a>
       </div>
       <div class="list-workflows" v-if="$route.name === 'workflows'">Workflows</div>
       <div class="detail-view workflow-id" v-if="$route.params.workflowId">
@@ -72,6 +73,9 @@ header.top-bar
     display inline-block
     h2
       color uber-white-80
+    &.config
+      margin-left inline-spacing-medium
+      icon('\ea5f')
 
   spacing = 1.3em
   nav-label-color = uber-white-40
@@ -79,6 +83,7 @@ header.top-bar
   & > div
     margin-right spacing
   div.domain
+    flex 0 0 auto
     &::before
       content 'DOMAIN'
       font-size nav-label-font-size

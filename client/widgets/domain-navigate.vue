@@ -31,27 +31,12 @@
 import debounce from 'lodash-es/debounce'
 import omit from 'lodash-es/omit'
 import { stringify } from 'friendly-querystring'
+import mapDomainDescription from '../map-domain-description'
 
 const validationMessages = {
   valid: d => `${d} exists`,
   invalid: d => `${d} does not exist`,
   error: d => `An error occoured while querying for ${d}`,
-}
-
-function mapDomainDescription(d) {
-  d.configuration = d.configuration || {}
-  d.replicationConfiguration = d.replicationConfiguration || { clusters: [] }
-  return {
-    description: d.domainInfo.description,
-    owner: d.domainInfo.ownerEmail,
-    'Global?': d.isGlobalDomain ? 'Yes' : 'No',
-    'Retention Period': d.configuration.workflowExecutionRetentionPeriodInDays + ' days',
-    'Emit Metrics': d.configuration.emitMetric ? 'Yes' : 'No',
-    'Failover Version': d.failoverVersion,
-    clusters: d.replicationConfiguration.clusters
-      .map(c => c.clusterName === d.replicationConfiguration.activeClusterName ? `${c.clusterName} (active)` : c.clusterName)
-      .join(', ')
-  }
 }
 
 export default {
@@ -226,24 +211,24 @@ validation(color, symbol)
     &[href='#']::before
       background-color primary-color
 
-  .domain-description
-    flex 1 1 60%
-    padding layout-spacing-small
-    span.domain-name
-      display inline-block
-      font-size 18px
+.domain-description
+  flex 1 1 60%
+  padding layout-spacing-small
+  span.domain-name
+    display inline-block
+    font-size 18px
+    padding inline-spacing-small
+    font-family monospace-font-family
+  &.pending dl.details
+    opacity 0.2
+  dl.details
+    & > div
+      display block
       padding inline-spacing-small
-      font-family monospace-font-family
-    &.pending dl.details
-      opacity 0.2
-    dl.details
-      & > div
-        display block
-        padding inline-spacing-small
-      dt, dd
-        line-height 1.5em
-      dt
-        text-transform uppercase
-        font-family primary-font-family
-        font-weight 200
+    dt, dd
+      line-height 1.5em
+    dt
+      text-transform uppercase
+      font-family primary-font-family
+      font-weight 200
 </style>

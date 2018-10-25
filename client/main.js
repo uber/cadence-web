@@ -20,6 +20,7 @@ import snapscroll from './directives/snapscroll'
 import App from './App.vue'
 import Intro from './routes/Intro.vue'
 import Workflows from './routes/Workflows.vue'
+import DomainConfig from './routes/domain-config.vue'
 import ExecutionTabs from './routes/execution/index.vue'
 import ExecutionSummary from './routes/execution/summary.vue'
 import History from './routes/execution/history.vue'
@@ -36,6 +37,10 @@ const routeOpts = {
     name: 'workflows',
     path: '/domain/:domain/workflows',
     component: Workflows
+  }, {
+    name: 'domain-config',
+    path: '/domain/:domain/config',
+    component: DomainConfig
   }, {
     name: 'execution',
     path: '/domain/:domain/workflows/:workflowId/:runId',

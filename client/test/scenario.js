@@ -112,6 +112,7 @@ Scenario.prototype.withDomainDescription = function(domain, domainDesc) {
     failoverVersion: 0,
     isGlobalDomain: false
   }, domainDesc || {}))
+  return this
 }
 
 Scenario.prototype.withWorkflows = function(status, query, workflows) {

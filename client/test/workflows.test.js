@@ -1,6 +1,5 @@
 import fixtures from './fixtures'
 import moment from 'moment'
-import qs from 'friendly-querystring'
 
 describe('Workflows', function() {
   async function workflowsTest(mochaTest, initialWorkflows, query) {
@@ -21,6 +20,19 @@ describe('Workflows', function() {
     },
     type: { name: 'demo' }
   }]
+
+  it('should show the domain with configuration link and workflows breadcrumb in the nav bar', async function() {
+    var [,scenario] = await workflowsTest(this.test),
+        header = scenario.vm.$el.querySelector('header.top-bar')
+
+    header.should.have.descendant('a.workflows')
+      .and.have.class('router-link-active')
+      .and.have.attribute('href', '/domain/ci-test/workflows')
+
+    header.should.have.descendant('a.config')
+      .and.not.have.class('router-link-active')
+      .and.have.attribute('href', 'domain/ci-test/config')
+  })
 
   it('should query for open workflows in the last 30 days by default', async function() {
     var [workflowsEl, scenario] = await workflowsTest(this.test),

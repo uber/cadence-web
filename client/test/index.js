@@ -110,6 +110,7 @@ mocha.checkLeaks()
 require('./intro.test')
 require('./workflows.test')
 require('./execution.test')
+require('./domain-config.test')
 require('./task-list.test')
 
 mocha.run()
