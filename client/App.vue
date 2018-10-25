@@ -3,7 +3,6 @@ import logo from './assets/logo.svg'
 
 export default {
   data () {
-    console.dir(logo)
     return { logo }
   },
   methods: {
