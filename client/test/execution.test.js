@@ -300,7 +300,7 @@ describe('Execution', function() {
         })
 
         await retry(() => summaryEl.should.have.descendant('.workflow-status dd').and.have.trimmed.text('completed'))
-        summaryEl.should.have.descendant('aside.actions').and.not.contain('a.terminate')
+        summaryEl.should.have.descendant('aside.actions a.terminate').and.not.be.displayed
       })
     })
   })
