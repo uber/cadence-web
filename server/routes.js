@@ -120,6 +120,10 @@ router.post('/api/domain/:domain/workflows/:workflowId/:runId/terminate', async 
   })
 })
 
+router.post('/api/domain/:domain/workflows/:workflowId/:runId/signal/:signal', async function (ctx) {
+  ctx.body = await ctx.cadence.signalWorkflow({ signalName: ctx.params.signal })
+})
+
 router.get('/api/domain/:domain/workflows/:workflowId/:runId', async function (ctx) {
   ctx.body = await ctx.cadence.describeWorkflow()
 })

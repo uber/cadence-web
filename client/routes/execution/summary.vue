@@ -1,7 +1,7 @@
 <template>
   <section class="execution-summary">
     <aside class="actions">
-      <a href="" class="terminate" v-if="wfStatus == 'running'" @click.prevent="$modal.show('confirm-termination')">Terminate</a>
+      <a href="" class="terminate" v-show="$parent.isWorkflowRunning" @click.prevent="$modal.show('confirm-termination')">Terminate</a>
     </aside>
 
     <modal name="confirm-termination">

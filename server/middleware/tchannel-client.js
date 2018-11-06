@@ -164,6 +164,7 @@ module.exports = async function(ctx, next) {
         runId: ctx.params.runId
       },
     }, body)),
+    signalWorkflow: req('SignalWorkflowExecution', 'signal', withWorkflowExecution),
     listDomains: req('ListDomains', 'list'),
     describeDomain: req('DescribeDomain', 'describe'),
     describeTaskList: req('DescribeTaskList'),
