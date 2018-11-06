@@ -148,6 +148,13 @@ module.exports = async function(ctx, next) {
       runId: ctx.params.runId
     },
   }, body),
+  withVerboseWorkflowExecution = body => Object.assign({
+    domain: ctx.params.domain,
+    workflowExecution: {
+      workflowId: ctx.params.workflowId,
+      runId: ctx.params.runId
+    },
+  }, body),
   withDomainAndWorkflowExecution = b => Object.assign(withDomainPaging(b), withWorkflowExecution(b))
 
   ctx.cadence = {
@@ -157,14 +164,8 @@ module.exports = async function(ctx, next) {
     exportHistory: req('GetWorkflowExecutionHistory', 'get', withDomainAndWorkflowExecution, cliTransform),
     describeWorkflow: req('DescribeWorkflowExecution', 'describe', withWorkflowExecution),
     queryWorkflow: req('QueryWorkflow', 'query', withWorkflowExecution),
-    terminateWorkflow: req('TerminateWorkflowExecution', 'terminate', body => Object.assign({
-      domain: ctx.params.domain,
-      workflowExecution: {
-        workflowId: ctx.params.workflowId,
-        runId: ctx.params.runId
-      },
-    }, body)),
-    signalWorkflow: req('SignalWorkflowExecution', 'signal', withWorkflowExecution),
+    terminateWorkflow: req('TerminateWorkflowExecution', 'terminate', withVerboseWorkflowExecution),
+    signalWorkflow: req('SignalWorkflowExecution', 'signal', withVerboseWorkflowExecution),
     listDomains: req('ListDomains', 'list'),
     describeDomain: req('DescribeDomain', 'describe'),
     describeTaskList: req('DescribeTaskList'),

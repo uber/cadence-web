@@ -31,6 +31,8 @@ describe('Workflow Execution', function() {
   it('should terminate a workflow', async function() {
     let reason
     this.test.TerminateWorkflowExecution = ({ terminateRequest }) => {
+      terminateRequest.workflowExecution.workflowId.should.equal('ci/demo')
+      terminateRequest.workflowExecution.runId.should.equal('run1')
       reason = terminateRequest.reason
       return {}
     }
@@ -45,12 +47,14 @@ describe('Workflow Execution', function() {
   it('should signal a workflow without input', async function() {
     let signal
     this.test.SignalWorkflowExecution = ({ signalRequest }) => {
+      signalRequest.workflowExecution.workflowId.should.equal('ci/demo')
+      signalRequest.workflowExecution.runId.should.equal('run2')
       signal = signalRequest.signalName
       return {}
     }
 
     return request()
-      .post('/api/domain/canary/workflows/ci%2Fdemo/run1/signal/firealarm')
+      .post('/api/domain/canary/workflows/ci%2Fdemo/run2/signal/firealarm')
       .expect(204)
       .expect(() => signal.should.equal('firealarm'))
   })
