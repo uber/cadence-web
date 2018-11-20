@@ -2,11 +2,12 @@ import fixtures from './fixtures'
 import moment from 'moment'
 
 describe('Workflows', function() {
-  async function workflowsTest(mochaTest, initialWorkflows, query) {
+  async function workflowsTest(mochaTest, initialWorkflows, query, domainDesc) {
     var [testEl, scenario] = new Scenario(mochaTest)
       .withDomain('ci-test')
       .startingAt('/domain/ci-test/workflows')
       .withWorkflows('open', query, initialWorkflows)
+      .withDomainDescription('ci-test', domainDesc)
       .go()
 
     var workflows = await testEl.waitUntilExists('section.workflows')
@@ -34,8 +35,8 @@ describe('Workflows', function() {
       .and.have.attribute('href', 'domain/ci-test/config')
   })
 
-  it('should query for open workflows in the last 30 days by default', async function() {
-    var [workflowsEl, scenario] = await workflowsTest(this.test),
+  it('should query for open workflows and show the results in a grid', async function() {
+    var [workflowsEl] = await workflowsTest(this.test),
         resultsEl = workflowsEl.querySelector('section.results')
 
     workflowsEl.querySelector('div.status .selected-tag').should.contain.text('Open')
@@ -73,8 +74,55 @@ describe('Workflows', function() {
     )
 
     resultsEl.should.not.contain('span.no-results').and.not.contain('span.error')
+  })
 
-    scenario.location.should.equal('/domain/ci-test/workflows?range=last-30-days&status=OPEN')
+  it('should query for workflows to the last of the retention window if less than 30 days, and show that option in the relative range picker', async function() {
+    var [workflowsEl, scenario] = await workflowsTest(this.test, null, {
+      startTime: moment().subtract(14, 'days').startOf('day').toISOString()
+    }, {
+      configuration: {
+        workflowExecutionRetentionPeriodInDays: 14
+      }
+    }),
+    dateRangePicker = workflowsEl.querySelector('header.filters .date-range-picker')
+
+    await retry(() => workflowsEl.querySelectorAll('section.results tbody tr').should.have.length(2))
+
+    dateRangePicker.querySelector('.selected-tag').should.have.trimmed.text('Last 14 days')
+    var relativeOptions = await dateRangePicker.selectOptions()
+    relativeOptions.should.deep.equal([
+      'Last 3 hours',
+      'Last 24 hours',
+      'Last 3 days',
+      'Last 7 days',
+      'Last 14 days',
+      'Custom range'
+    ])
+  })
+
+  it('should query for workflows for the past 30 days if the retention policy is beyond 30 days', async function() {
+    var [workflowsEl, scenario] = await workflowsTest(this.test, null, {
+      startTime: moment().subtract(30, 'days').startOf('day').toISOString()
+    }, {
+      configuration: {
+        workflowExecutionRetentionPeriodInDays: 365
+      }
+    }),
+    dateRangePicker = workflowsEl.querySelector('header.filters .date-range-picker')
+
+    await retry(() => workflowsEl.querySelectorAll('section.results tbody tr').should.have.length(2))
+
+    dateRangePicker.querySelector('.selected-tag').should.have.trimmed.text('Last 30 days')
+    var relativeOptions = await dateRangePicker.selectOptions()
+    relativeOptions.should.deep.equal([
+      'Last 3 hours',
+      'Last 24 hours',
+      'Last 3 days',
+      'Last 7 days',
+      'Last 30 days',
+      'Last 3 months',
+      'Custom range'
+    ])
   })
 
   it('should load and save last relative time ranges in localStorage', async function () {
@@ -82,6 +130,10 @@ describe('Workflows', function() {
 
     var [workflowsEl, scenario] = await workflowsTest(this.test, null, {
         startTime: moment().subtract(7, 'days').startOf('day').toISOString()
+      }, {
+        configuration: {
+          workflowExecutionRetentionPeriodInDays: 120
+        }
       }),
       dateRangePicker = workflowsEl.querySelector('header.filters .date-range-picker')
 
@@ -132,6 +184,7 @@ describe('Workflows', function() {
         endTime: moment().endOf('hour').toISOString(),
         status: 'FAILED'
       })
+      .withDomainDescription('ci-test')
       .go()
 
     await retry(() => testEl.querySelectorAll('section.workflows section.results tbody tr').should.have.length(1))
@@ -236,6 +289,7 @@ describe('Workflows', function() {
         status: 'FAILED',
         workflowName: 'demo'
       })
+      .withDomainDescription('ci-test')
       .go()
 
     var workflowsEl = await testEl.waitUntilExists('section.workflows')

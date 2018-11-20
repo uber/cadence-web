@@ -121,7 +121,7 @@ Scenario.prototype.withWorkflows = function(status, query, workflows) {
   }
 
   var url = `/api/domain/${this.domain}/workflows/${status}?${qs.stringify(Object.assign({
-      startTime: moment().subtract(30, 'day').startOf('day').toISOString(),
+      startTime: moment().subtract(21, 'day').startOf('day').toISOString(),
       endTime: moment().endOf('day').toISOString(),
     }, query))}`
 

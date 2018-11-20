@@ -13,6 +13,7 @@
         :sync-range="customRange"
         @change="onDateRangeChange"
         lang="en"
+        :disabled-func="isDayDisabled"
         monthYearFormat="MMMM YYYY"
       />
     </div>
@@ -23,22 +24,22 @@
 import {DateRange} from 'vue-date-range'
 import moment from 'moment'
 
-const relativeRangeOptions = [
-  { label: 'Last 3 hours', value: 'last-3-hours' },
-  { label: 'Last 24 hours', value: 'last-24-hours' },
-  { label: 'Last 7 days', value: 'last-7-days' },
-  { label: 'Last 30 days', value: 'last-30-days' },
-  { label: 'Last 3 months', value: 'last-3-months' },
-  { label: 'Custom range', value: 'custom' }
+const baseRelativeRangeOptions = [
+  { label: 'Last 3 hours', value: 'last-3-hours', daysAgo: 0.2 },
+  { label: 'Last 24 hours', value: 'last-24-hours', daysAgo: 1 },
+  { label: 'Last 3 days', value: 'last-3-days', daysAgo: 3 },
+  { label: 'Last 7 days', value: 'last-7-days', daysAgo: 7 },
+  { label: 'Last 30 days', value: 'last-30-days', daysAgo: 30 },
+  { label: 'Last 3 months', value: 'last-3-months', daysAgo: 90 },
+  { label: 'Custom range', value: 'custom', daysAgo: Number.MAX_VALUE }
 ]
 
 export default {
-  props: ['dateRange'],
+  props: ['dateRange', 'maxDays'],
   data() {
     return {
-      relativeRangeOptions,
       customVisible: this.isCustom,
-      datePickerVisible: false
+      datePickerVisible: false,
     }
   },
   created() {
@@ -58,19 +59,35 @@ export default {
     isCustom() {
       return typeof this.dateRange !== 'string'
     },
+    relativeRangeOptions() {
+      let options = baseRelativeRangeOptions
+      if (this.maxDays && options.every(o => o.daysAgo != this.maxDays) && this.maxDays < 90) {
+        options = options.slice().filter(o => o.value === 'custom' || o.daysAgo <= this.maxDays)
+        options.push({
+          label: `Last ${this.maxDays} days`,
+          value: `last-${this.maxDays}-days`,
+          daysAgo: this.maxDays
+        })
+        options.sort((a, b) => a.daysAgo - b.daysAgo)
+      }
+      return options
+    },
     relativeRange() {
       return this.isCustom ?
-        relativeRangeOptions[relativeRangeOptions.length - 1] :
-        relativeRangeOptions.find(o => o.value === this.dateRange)
+        this.relativeRangeOptions[this.relativeRangeOptions.length - 1] :
+        this.relativeRangeOptions.find(o => o.value === this.dateRange)
     },
     customRange() {
       return {
-        startDate: (this.dateRange && this.dateRange.startTime) || moment().subtract(30, 'days').startOf('day'),
+        startDate: (this.dateRange && this.dateRange.startTime) || moment().subtract(this.maxDays || 30, 'days').startOf('day'),
         endDate: (this.dateRange && this.dateRange.endTime) || moment().endOf('day')
       }
     },
     customRangeDisplay(d) {
       return `${this.customRange.startDate.format('MMM Do')} - ${this.customRange.endDate.format('MMM Do')}`
+    },
+    maxStartDate() {
+      return moment().startOf('day').subtract(this.maxDays, 'days')
     }
   },
   methods: {
@@ -84,6 +101,12 @@ export default {
     },
     onDateRangeChange(r) {
       this.$emit('change', { startTime: r.startDate, endTime: r.endDate })
+    },
+    isDayDisabled(day) {
+      if (this.maxDays) {
+        if (day.isBefore(this.maxStartDate)) return true
+      }
+      return day.isAfter(moment().endOf('day'))
     }
   },
   components: {
