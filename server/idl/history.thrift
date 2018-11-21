@@ -74,6 +74,8 @@ struct GetMutableStateResponse {
   90: optional string clientImpl
   100: optional bool isWorkflowRunning
   110: optional i32 stickyTaskListScheduleToStartTimeout
+  120: optional i32 eventStoreVersion
+  130: optional binary branchToken
 }
 
 struct ResetStickyTaskListRequest {
@@ -134,6 +136,9 @@ struct RecordActivityTaskStartedResponse {
   30: optional i64 (js.type = "Long") startedTimestamp
   40: optional i64 (js.type = "Long") attempt
   50: optional i64 (js.type = "Long") scheduledTimestampOfThisAttempt
+  60: optional binary heartbeatDetails
+  70: optional shared.WorkflowType workflowType
+  80: optional string workflowDomain
 }
 
 struct RecordDecisionTaskStartedRequest {
@@ -155,6 +160,8 @@ struct RecordDecisionTaskStartedResponse {
   70: optional bool stickyExecutionEnabled
   80: optional shared.TransientDecisionInfo decisionInfo
   90: optional shared.TaskList WorkflowExecutionTaskList
+  100: optional i32 eventStoreVersion
+  110: optional binary branchToken
 }
 
 struct SignalWorkflowExecutionRequest {
@@ -229,12 +236,28 @@ struct ReplicateEventsRequest {
   80: optional shared.History history
   90: optional shared.History newRunHistory
   100: optional bool forceBufferEvents
+  110: optional i32 eventStoreVersion
+  120: optional i32 newRunEventStoreVersion
 }
 
 struct SyncShardStatusRequest {
   10: optional string sourceCluster
   20: optional i64 (js.type = "Long") shardId
   30: optional i64 (js.type = "Long") timestamp
+}
+
+struct SyncActivityRequest {
+  10: optional string domainId
+  20: optional string workflowId
+  30: optional string runId
+  40: optional i64 (js.type = "Long") version
+  50: optional i64 (js.type = "Long") scheduledId
+  60: optional i64 (js.type = "Long") scheduledTime
+  70: optional i64 (js.type = "Long") startedId
+  80: optional i64 (js.type = "Long") startedTime
+  90: optional i64 (js.type = "Long") lastHeartbeatTime
+  100: optional binary details
+  110: optional i32 attempt
 }
 
 /**
@@ -451,8 +474,9 @@ service HistoryService {
   * SignalWithStartWorkflowExecution is used to ensure sending a signal event to a workflow execution.
   * If workflow is running, this results in WorkflowExecutionSignaled event recorded in the history
   * and a decision task being created for the execution.
-  * If workflow is not running or not found, this results in WorkflowExecutionStarted and WorkflowExecutionSignaled
-  * event recorded in history, and a decision task being created for the execution
+  * If workflow is not running or not found, it will first try start workflow with given WorkflowIDResuePolicy,
+  * and record WorkflowExecutionStarted and WorkflowExecutionSignaled event in case of success.
+  * It will return `WorkflowExecutionAlreadyStartedError` if start workflow failed with given policy.
   **/
   shared.StartWorkflowExecutionResponse SignalWithStartWorkflowExecution(1: SignalWithStartWorkflowExecutionRequest signalWithStartRequest)
     throws (
@@ -462,6 +486,7 @@ service HistoryService {
       4: shared.DomainNotActiveError domainNotActiveError,
       5: shared.LimitExceededError limitExceededError,
       6: shared.ServiceBusyError serviceBusyError,
+      7: shared.WorkflowExecutionAlreadyStartedError workflowAlreadyStartedError,
     )
 
   /**
@@ -578,6 +603,18 @@ service HistoryService {
       4: ShardOwnershipLostError shardOwnershipLostError,
       5: shared.LimitExceededError limitExceededError,
       6: shared.ServiceBusyError serviceBusyError,
+    )
+
+  /**
+  * SyncActivity sync the activity status
+  **/
+  void SyncActivity(1: SyncActivityRequest syncActivityRequest)
+    throws (
+      1: shared.BadRequestError badRequestError,
+      2: shared.InternalServiceError internalServiceError,
+      3: shared.EntityNotExistsError entityNotExistError,
+      4: ShardOwnershipLostError shardOwnershipLostError,
+      5: shared.ServiceBusyError serviceBusyError,
     )
 
   /**

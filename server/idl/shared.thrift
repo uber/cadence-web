@@ -446,6 +446,7 @@ struct DecisionTaskCompletedEventAttributes {
   20: optional i64 (js.type = "Long") scheduledEventId
   30: optional i64 (js.type = "Long") startedEventId
   40: optional string identity
+  50: optional string binaryChecksum
 }
 
 struct DecisionTaskTimedOutEventAttributes {
@@ -811,6 +812,7 @@ struct RegisterDomainRequest {
   70: optional string activeClusterName
   // A key-value map for any customized purpose
   80: optional map<string,string> data
+  90: optional string securityToken
 }
 
 struct ListDomainsRequest {
@@ -840,6 +842,7 @@ struct UpdateDomainRequest {
  20: optional UpdateDomainInfo updatedInfo
  30: optional DomainConfiguration configuration
  40: optional DomainReplicationConfiguration replicationConfiguration
+ 50: optional string securityToken
 }
 
 struct UpdateDomainResponse {
@@ -852,6 +855,7 @@ struct UpdateDomainResponse {
 
 struct DeprecateDomainRequest {
  10: optional string name
+ 20: optional string securityToken
 }
 
 struct StartWorkflowExecutionRequest {
@@ -906,6 +910,7 @@ struct RespondDecisionTaskCompletedRequest {
   50: optional StickyExecutionAttributes stickyAttributes
   60: optional bool returnNewDecisionTask
   70: optional bool forceCreateNewDecisionTask
+  80: optional string binaryChecksum
 }
 
 struct RespondDecisionTaskCompletedResponse {
@@ -939,6 +944,9 @@ struct PollForActivityTaskResponse {
   110: optional i32 heartbeatTimeoutSeconds
   120: optional i32 attempt
   130: optional i64 (js.type = "Long") scheduledTimestampOfThisAttempt
+  140: optional binary heartbeatDetails
+  150: optional WorkflowType workflowType
+  160: optional string workflowDomain
 }
 
 struct RecordActivityTaskHeartbeatRequest {
@@ -1212,4 +1220,21 @@ struct RetryPolicy {
 
   // Expiration time for the whole retry process.
   60: optional i32 expirationIntervalInSeconds
+}
+
+// HistoryBranchRange represents a piece of range for a branch.
+struct HistoryBranchRange{
+  // branchID of original branch forked from
+  10: optional string branchID
+  // beinning node for the range, inclusive
+  20: optional i64 beginNodeID
+  // ending node for the range, exclusive
+  30: optional i64 endNodeID
+}
+
+// For history persistence to serialize/deserialize branch details
+struct HistoryBranch{
+  10: optional string treeID
+  20: optional string branchID
+  30: optional list<HistoryBranchRange>  ancestors
 }

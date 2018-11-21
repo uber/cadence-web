@@ -19,6 +19,7 @@
       </div>
       <date-range-picker
         :date-range="range"
+        :max-days="maxRetentionDays"
         @change="setRange"
       />
       <v-select
@@ -69,7 +70,7 @@ import debounce from 'lodash-es/debounce'
 export default pagedGrid({
   data() {
     return {
-      loading: false,
+      loading: true,
       results: [],
       error: undefined,
       nextPageToken: undefined,
@@ -82,13 +83,24 @@ export default pagedGrid({
         { value: 'TERMINATED', label: 'Terminated' },
         { value: 'CONTINUED_AS_NEW', label: 'Continued As New' },
         { value: 'TIMED_OUT', label: 'Timed Out'}
-      ]
+      ],
+      maxRetentionDays: undefined
     }
   },
   created() {
+    this.$http(`/api/domain/${this.$route.params.domain}`).then(r => {
+      this.maxRetentionDays = Number(r.configuration.workflowExecutionRetentionPeriodInDays) || 30
+      if (!this.isRouteRangeValid()) {
+        this.setRange(`last-${Math.min(30, this.maxRetentionDays)}-days`)
+      }
+    })
+
     var q = this.$route.query || {}
     if (!q.range || !/^last-\d{1,2}-(hour|day|month)s?$/.test(q.range)) {
-      this.setRange(localStorage.getItem(`${this.$route.params.domain}:workflows-time-range`) || 'last-30-days')
+      let prevRange = localStorage.getItem(`${this.$route.params.domain}:workflows-time-range`)
+      if (prevRange) {
+        this.setRange(prevRange)
+      }
     }
     this.$watch('queryOnChange', () => {}, { immediate: true })
   },
@@ -179,6 +191,10 @@ export default pagedGrid({
           query: Object.assign({}, this.$route.query, { status: status.value })
         })
       }
+    },
+    isRouteRangeValid() {
+      var q = this.$route.query || {}
+      return !!q.range && !!/^last-\d{1,2}-(hour|day|month)s?$/.test(q.range)
     },
     setRange(range) {
       if (range) {

@@ -24,13 +24,12 @@ npm run dev   # webpack hot reload environment
 npm start     # for production
 ```
 
-
 ## Testing
 
 Start up the webserver for testing via:
 
 ```
-TEST_RUN=1 node server.js
+npm run test-server
 ```
 
-The open `localhost:8088` in the browser of your choice, or use `npm test` to run it with [mocha-chrome](https://www.npmjs.com/package/mocha-chrome) from the command line. This runs the tests via Chrome in headless mode and shows the results in your terminal.
+The open `localhost:8090` in the browser of your choice, or use `npm test` to run it with [mocha-chrome](https://www.npmjs.com/package/mocha-chrome) from the command line. This runs the tests via Chrome in headless mode and shows the results in your terminal.

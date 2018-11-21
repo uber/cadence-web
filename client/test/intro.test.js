@@ -69,7 +69,7 @@ describe('Intro', function() {
     domainInput.input('ci-tests')
 
     await testEl.waitUntilExists('.domain-navigation.validation-valid')
-    scenario.withDomain('ci-tests').withWorkflows('open')
+    scenario.withDomain('ci-tests').withWorkflows('open').withDomainDescription('ci-tests')
     domainInput.trigger('keydown', { code: 13, keyCode: 13, key: 'Enter' })
 
     await testEl.waitUntilExists('section.workflows')
@@ -100,7 +100,7 @@ describe('Intro', function() {
 
     await testEl.waitUntilExists('.domain-navigation.validation-valid')
     changeDomain.should.have.attr('href', '#')
-    scenario.withDomain('ci-tests').withWorkflows('open')
+    scenario.withDomain('ci-tests').withDomainDescription('ci-tests').withWorkflows('open')
     changeDomain.trigger('click')
 
     await testEl.waitUntilExists('section.workflows')
@@ -109,6 +109,8 @@ describe('Intro', function() {
     headerBar.should.have.descendant('div.domain').that.contains.text('ci-test')
     scenario.location.should.contain('/domain/ci-tests/workflows')
     localStorage.getItem('recent-domains').should.equal('["ci-tests"]')
+
+    await Promise.delay(100)
   })
 
   it('should show recent domains with links to them', async function () {
@@ -120,7 +122,7 @@ describe('Intro', function() {
     recentDomains.textNodes('li a').should.deep.equal(['demo', 'ci-tests'])
 
     recentDomains.querySelectorAll('li a')[1].trigger('click')
-    scenario.withDomain('ci-tests').withWorkflows('open')
+    scenario.withDomain('ci-tests').withDomainDescription('ci-tests').withWorkflows('open')
 
     await testEl.waitUntilExists('section.workflows')
     localStorage.getItem('recent-domains').should.equal('["ci-tests","demo"]')
