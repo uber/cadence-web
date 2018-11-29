@@ -243,7 +243,7 @@ describe('Execution', function() {
       parentWf = await summaryEl.waitUntilExists('.parent-workflow')
 
       parentWf.querySelector('dd a')
-        .should.have.text('ci-test-parent - the-parent-wfid')
+        .should.have.text('the-parent-wfid')
         .and.have.attr('href', '/domain/another-domain/workflows/the-parent-wfid/1234/summary')
     })
 

@@ -1,5 +1,3 @@
-import shortName from '../../short-name'
-
 export default function (wfStartDetails) {
 	if (wfStartDetails && wfStartDetails.parentWorkflowExecution) {
 		return {
@@ -11,7 +9,7 @@ export default function (wfStartDetails) {
 					runId: wfStartDetails.parentWorkflowExecution.runId
 				}
 			},
-			text: `${shortName(wfStartDetails.workflowType.name)} - ${wfStartDetails.parentWorkflowExecution.workflowId}`
+			text: wfStartDetails.parentWorkflowExecution.workflowId
 		}
 	}
 }
