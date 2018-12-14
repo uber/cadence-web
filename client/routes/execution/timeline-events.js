@@ -98,7 +98,7 @@ export default function(historyEvents) {
         eventIds: [e.eventId],
         start: moment(e.timestamp),
         content: ({
-          Version: 'Verison Marker',
+          Version: 'Version Marker',
           SideEffect: 'Side Effect',
           LocalActivity: 'Local Activity'
         }[e.details.markerName]) || (e.details.markerName + ' Marker'),
