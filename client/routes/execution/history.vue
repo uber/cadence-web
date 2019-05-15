@@ -114,6 +114,8 @@ export default {
         { value: 'Decision', label: 'Decision' },
         { value: 'Activity', label: 'Activity' },
         { value: 'Signal', label: 'Signal' },
+        { value: 'Timer', label: 'Timer' },
+        { value: 'ChildWorkflow', label: 'ChildWorkflow' },
         { value: 'Workflow', label: 'Workflow' },
       ],
       splitSizes: [20, 80]
@@ -176,7 +178,7 @@ export default {
       if (this && this.eventType && this.eventType != "All") {
         var et = this.eventType
         return this.$parent.results.filter(function (u) {
-          return u.eventType.startsWith(et)
+          return u.eventType.includes(et)
         })
       } else {
         return this.$parent.results
