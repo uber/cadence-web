@@ -113,8 +113,7 @@ export default {
         { value: 'Decision', label: 'Decision' },
         { value: 'Activity', label: 'Activity' },
         { value: 'Signal', label: 'Signal' },
-        { value: 'Child Workflow', label: 'Child Workflow' },
-        { value: 'Others', label: 'Others' },
+        { value: 'Workflow', label: 'Workflow' },
       ],
       splitSizes: [20, 80]
     }
@@ -124,7 +123,6 @@ export default {
     this.$watch('format', this.scrollEventIntoView.bind(this, true))
     this.$watch('eventId', this.scrollEventIntoView.bind(this, false))
 
-    this.eventType = ""
     this.recalcThWidths = debounce(() => {
       if (!this.$refs.thead) return
       var ths = Array.from(this.$refs.thead.querySelectorAll('th'))
@@ -173,16 +171,16 @@ export default {
     exportFilename() {
       return `${this.$route.params.workflowId.replace(/[\\~#%&*{}\/:<>?|\"-]/g, ' ')} - ${this.$route.params.runId}.json`
     },
-    filteredEvents(){
-      return this.$parent.results.filter(function(u) {
-        if (this && this.eventType && this.eventType != "--"){
-          return u.eventType.startsWith(this.eventType)
-        }else{
-          return true
-        }
-      })
-    },
-
+    filteredEvents() {
+      if (this && this.eventType && this.eventType != "--") {
+        var et = this.eventType
+        return this.$parent.results.filter(function (u) {
+          return u.eventType.startsWith(et)
+        })
+      } else {
+        return this.$parent.results
+      }
+    }
   },
   methods: {
     setEventType(et){
