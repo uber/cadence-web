@@ -25,7 +25,7 @@
               <th>ID</th>
               <th>Type <v-select
                         class="eventType"
-                        value="--"
+                        value="All"
                         :options="eventTypes"
                         :on-change="setEventType"
                         :searchable="false"
@@ -110,6 +110,7 @@ export default {
       splitEnabled: false,
       eventType: "",
       eventTypes: [
+        { value: 'All', label: 'All' },
         { value: 'Decision', label: 'Decision' },
         { value: 'Activity', label: 'Activity' },
         { value: 'Signal', label: 'Signal' },
@@ -172,7 +173,7 @@ export default {
       return `${this.$route.params.workflowId.replace(/[\\~#%&*{}\/:<>?|\"-]/g, ' ')} - ${this.$route.params.runId}.json`
     },
     filteredEvents() {
-      if (this && this.eventType && this.eventType != "--") {
+      if (this && this.eventType && this.eventType != "All") {
         var et = this.eventType
         return this.$parent.results.filter(function (u) {
           return u.eventType.startsWith(et)
