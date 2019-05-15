@@ -175,7 +175,7 @@ export default {
     },
     filteredEvents(){
       return this.$parent.results.filter(function(u) {
-        if (this.eventType && this.eventType != "--"){
+        if (this && this.eventType && this.eventType != "--"){
           return u.eventType.startsWith(this.eventType)
         }else{
           return true
@@ -186,7 +186,7 @@ export default {
   },
   methods: {
     setEventType(et){
-      this.eventType = et
+      this.eventType = et.value
     },
     setFormat(format) {
       this.$router.replace({
