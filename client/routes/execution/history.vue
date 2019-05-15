@@ -335,6 +335,10 @@ section.history
         z-index 2
         th
           display inline-block
+          & > .v-select.eventType
+            margin-left 10px
+            display: inline-block
+            width: 150px
         & + .spacer
           width 100%
           height 38px
