@@ -23,7 +23,15 @@
           <table v-if="format === 'grid' && showTable" :class="{ compact: compactDetails }">
             <thead ref="thead">
               <th>ID</th>
-              <th>Type</th>
+              <th>Type <v-select
+                        class="eventType"
+                        value="All"
+                        :options="eventTypes"
+                        :on-change="setEventType"
+                        :searchable="false"
+                />
+
+              </th>
               <th>
                 <a class="elapsed" :href="tsFormat === 'elapsed' ? null : '#'" @click.prevent="setTsFormat('elapsed')">Elapsed</a> /
                 <a class="ts" :href="tsFormat === 'elapsed' ? '#' : null" @click.prevent="setTsFormat('ts')">Time</a>
@@ -35,7 +43,7 @@
             </thead>
             <div class="spacer"></div>
             <tbody>
-              <tr v-for="(he, i) in $parent.results"
+              <tr v-for="(he, i) in filteredEvents"
                 :key="he.eventId"
                 :data-event-type="he.eventType"
                 :data-event-id="he.eventId"
@@ -100,6 +108,16 @@ export default {
       tsFormat: localStorage.getItem(`${this.$route.params.domain}:history-ts-col-format`) || 'elapsed',
       compactDetails: localStorage.getItem(`${this.$route.params.domain}:history-compact-details`) === 'true',
       splitEnabled: false,
+      eventType: "",
+      eventTypes: [
+        { value: 'All', label: 'All' },
+        { value: 'Decision', label: 'Decision' },
+        { value: 'Activity', label: 'Activity' },
+        { value: 'Signal', label: 'Signal' },
+        { value: 'Timer', label: 'Timer' },
+        { value: 'ChildWorkflow', label: 'ChildWorkflow' },
+        { value: 'Workflow', label: 'Workflow' },
+      ],
       splitSizes: [20, 80]
     }
   },
@@ -155,9 +173,22 @@ export default {
     },
     exportFilename() {
       return `${this.$route.params.workflowId.replace(/[\\~#%&*{}\/:<>?|\"-]/g, ' ')} - ${this.$route.params.runId}.json`
+    },
+    filteredEvents() {
+      if (this && this.eventType && this.eventType != "All") {
+        var et = this.eventType
+        return this.$parent.results.filter(function (u) {
+          return u.eventType.includes(et)
+        })
+      } else {
+        return this.$parent.results
+      }
     }
   },
   methods: {
+    setEventType(et){
+      this.eventType = et.value
+    },
     setFormat(format) {
       this.$router.replace({
         query: Object.assign({}, this.$route.query, { format })
@@ -307,6 +338,10 @@ section.history
         z-index 2
         th
           display inline-block
+          & > .v-select.eventType
+            margin-left 10px
+            display: inline-block
+            width: 150px
         & + .spacer
           width 100%
           height 38px
