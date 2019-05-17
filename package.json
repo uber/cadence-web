@@ -62,7 +62,7 @@
     "vue-select": "nathanboktae/vue-select#after2.4",
     "vue-split-panel": "^1.0.4",
     "vue-template-compiler": "^2.5.2",
-    "webpack": "^3.10.0"
+    "webpack": "^4.31.0"
   },
   "devDependencies": {
     "chai": "^4.1.2",
