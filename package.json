@@ -72,6 +72,7 @@
     "mocha": "^4.0.1",
     "mocha-chrome": "^1.1.0",
     "nathanboktae-browser-test-utils": "^0.1.0",
-    "supertest": "^3.0.0"
+    "supertest": "^3.0.0",
+    "mini-css-extract-plugin" : "^0.6.0"
   }
 }
