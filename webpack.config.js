@@ -4,6 +4,7 @@ const
   ExtractTextPlugin = require('extract-text-webpack-plugin'),
   HtmlWebpackPlugin = require('html-webpack-plugin'),
   extractStylus = 'css-loader?sourceMap!stylus-loader',
+  MiniCssExtractPlugin = require('mini-css-extract-plugin'),
   development = !['production', 'ci'].includes(process.env.NODE_ENV)
 
 module.exports = {
@@ -22,7 +23,9 @@ module.exports = {
         NODE_ENV: '"production"'
       }
     }),
-    new ExtractTextPlugin({ filename: development ? 'cadence.css' : 'cadence.[hash].css', allChunks: true }),
+      new MiniCssExtractPlugin({
+      filename: development ? 'cadence.css' : 'cadence.[hash].css',
+    }),
     new HtmlWebpackPlugin({
       title: 'Cadence',
       filename: 'index.html',
@@ -34,7 +37,19 @@ module.exports = {
     })
   ].filter(x => x),
   module: {
-    rules: [{
+    rules: [
+      {
+        test: /\.css$/,
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {     
+              hmr: development,
+            },
+          },
+          'css-loader',
+      },
+      {
       test: /\.vue?$/,
       loader: 'vue-loader',
       options: {
