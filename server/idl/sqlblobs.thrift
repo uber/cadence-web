@@ -20,7 +20,7 @@
 
 namespace java com.uber.cadence.sqlblobs
 
-include "shared.thrift"
+include "./shared.thrift"
 
 struct ShardInfo {
   10: optional i32 stolenSinceRenew

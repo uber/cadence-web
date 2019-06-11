@@ -20,7 +20,7 @@
 
 namespace java com.uber.cadence.admin
 
-include "shared.thrift"
+include "./shared.thrift"
 
 /**
 * AdminService provides advanced APIs for debugging and analysis with admin privillege
