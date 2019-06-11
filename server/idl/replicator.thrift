@@ -20,7 +20,7 @@
 
 namespace java com.uber.cadence.replicator
 
-include "./shared.thrift"
+include "shared.thrift"
 include "history.thrift"
 
 enum ReplicationTaskType {
@@ -28,6 +28,7 @@ enum ReplicationTaskType {
   History
   SyncShardStatus
   SyncActivity
+  HistoryMetadata
 }
 
 enum DomainOperation {
@@ -53,11 +54,21 @@ struct HistoryTaskAttributes {
   40: optional i64 (js.type = "Long") firstEventId
   50: optional i64 (js.type = "Long") nextEventId
   60: optional i64 (js.type = "Long") version
-  70: optional map<string, history.ReplicationInfo> replicationInfo
+  70: optional map<string, shared.ReplicationInfo> replicationInfo
   80: optional shared.History history
   90: optional shared.History newRunHistory
   100: optional i32 eventStoreVersion
   110: optional i32 newRunEventStoreVersion
+  120: optional bool resetWorkflow
+}
+
+struct HistoryMetadataTaskAttributes {
+  05: optional list<string> targetClusters
+  10: optional string domainId
+  20: optional string workflowId
+  30: optional string runId
+  40: optional i64 (js.type = "Long") firstEventId
+  50: optional i64 (js.type = "Long") nextEventId
 }
 
 struct SyncShardStatusTaskAttributes {
@@ -86,5 +97,6 @@ struct ReplicationTask {
   30: optional HistoryTaskAttributes historyTaskAttributes
   40: optional SyncShardStatusTaskAttributes syncShardStatusTaskAttributes
   50: optional SyncActicvityTaskAttributes syncActicvityTaskAttributes
+  60: optional HistoryMetadataTaskAttributes historyMetadataTaskAttributes
 }
 
