@@ -44,6 +44,11 @@ struct StartWorkflowExecutionRequest {
   30: optional ParentExecutionInfo parentExecutionInfo
   40: optional i32 attempt
   50: optional i64 (js.type = "Long") expirationTimestamp
+  55: optional shared.ContinueAsNewInitiator continueAsNewInitiator
+  56: optional string continuedFailureReason
+  57: optional binary continuedFailureDetails
+  58: optional binary lastCompletionResult
+  60: optional i32 firstDecisionTaskBackoffSeconds
 }
 
 struct DescribeMutableStateRequest{
@@ -66,6 +71,7 @@ struct GetMutableStateResponse {
   10: optional shared.WorkflowExecution execution
   20: optional shared.WorkflowType workflowType
   30: optional i64 (js.type = "Long") NextEventId
+  35: optional i64 (js.type = "Long") PreviousStartedEventId
   40: optional i64 (js.type = "Long") LastFirstEventId
   50: optional shared.TaskList taskList
   60: optional shared.TaskList stickyTaskList
@@ -76,6 +82,7 @@ struct GetMutableStateResponse {
   110: optional i32 stickyTaskListScheduleToStartTimeout
   120: optional i32 eventStoreVersion
   130: optional binary branchToken
+  140: optional map<string, shared.ReplicationInfo> replicationInfo
 }
 
 struct ResetStickyTaskListRequest {
@@ -162,6 +169,8 @@ struct RecordDecisionTaskStartedResponse {
   90: optional shared.TaskList WorkflowExecutionTaskList
   100: optional i32 eventStoreVersion
   110: optional binary branchToken
+  120:  optional i64 (js.type = "Long") scheduledTimestamp
+  130:  optional i64 (js.type = "Long") startedTimestamp
 }
 
 struct SignalWorkflowExecutionRequest {
@@ -187,6 +196,11 @@ struct TerminateWorkflowExecutionRequest {
   20: optional shared.TerminateWorkflowExecutionRequest terminateRequest
 }
 
+struct ResetWorkflowExecutionRequest {
+  10: optional string domainUUID
+  20: optional shared.ResetWorkflowExecutionRequest resetRequest
+}
+
 struct RequestCancelWorkflowExecutionRequest {
   10: optional string domainUUID
   20: optional shared.RequestCancelWorkflowExecutionRequest cancelRequest
@@ -198,6 +212,7 @@ struct RequestCancelWorkflowExecutionRequest {
 struct ScheduleDecisionTaskRequest {
   10: optional string domainUUID
   20: optional shared.WorkflowExecution workflowExecution
+  30: optional bool isFirstDecision
 }
 
 struct DescribeWorkflowExecutionRequest {
@@ -220,11 +235,6 @@ struct RecordChildExecutionCompletedRequest {
   50: optional shared.HistoryEvent completionEvent
 }
 
-struct ReplicationInfo {
-  10: optional i64 (js.type = "Long") version
-  20: optional i64 (js.type = "Long") lastEventId
-}
-
 struct ReplicateEventsRequest {
   10: optional string sourceCluster
   20: optional string domainUUID
@@ -232,12 +242,23 @@ struct ReplicateEventsRequest {
   40: optional i64 (js.type = "Long") firstEventId
   50: optional i64 (js.type = "Long") nextEventId
   60: optional i64 (js.type = "Long") version
-  70: optional map<string, ReplicationInfo> replicationInfo
+  70: optional map<string, shared.ReplicationInfo> replicationInfo
   80: optional shared.History history
   90: optional shared.History newRunHistory
-  100: optional bool forceBufferEvents
+  100: optional bool forceBufferEvents // this attribute is deprecated
   110: optional i32 eventStoreVersion
   120: optional i32 newRunEventStoreVersion
+  130: optional bool resetWorkflow
+}
+
+struct ReplicateRawEventsRequest {
+  10: optional string domainUUID
+  20: optional shared.WorkflowExecution workflowExecution
+  30: optional map<string, shared.ReplicationInfo> replicationInfo
+  40: optional shared.DataBlob history
+  50: optional shared.DataBlob newRunHistory
+  60: optional i32 eventStoreVersion
+  70: optional i32 newRunEventStoreVersion
 }
 
 struct SyncShardStatusRequest {
@@ -520,6 +541,22 @@ service HistoryService {
     )
 
   /**
+  * ResetWorkflowExecution reset an existing workflow execution by a firstEventID of a existing event batch
+  * in the history and immediately terminating the current execution instance.
+  * After reset, the history will grow from nextFirstEventID.
+  **/
+  shared.ResetWorkflowExecutionResponse ResetWorkflowExecution(1: ResetWorkflowExecutionRequest resetRequest)
+    throws (
+      1: shared.BadRequestError badRequestError,
+      2: shared.InternalServiceError internalServiceError,
+      3: shared.EntityNotExistsError entityNotExistError,
+      4: ShardOwnershipLostError shardOwnershipLostError,
+      5: shared.DomainNotActiveError domainNotActiveError,
+      6: shared.LimitExceededError limitExceededError,
+      7: shared.ServiceBusyError serviceBusyError,
+    )
+
+  /**
   * RequestCancelWorkflowExecution is called by application worker when it wants to request cancellation of a workflow instance.
   * It will result in a new 'WorkflowExecutionCancelRequested' event being written to the workflow history and a new DecisionTask
   * created for the workflow instance so new decisions could be made. It fails with 'EntityNotExistsError' if the workflow is not valid
@@ -593,6 +630,17 @@ service HistoryService {
       7: shared.ServiceBusyError serviceBusyError,
     )
 
+  void ReplicateRawEvents(1: ReplicateRawEventsRequest replicateRequest)
+    throws (
+      1: shared.BadRequestError badRequestError,
+      2: shared.InternalServiceError internalServiceError,
+      3: shared.EntityNotExistsError entityNotExistError,
+      4: ShardOwnershipLostError shardOwnershipLostError,
+      5: shared.LimitExceededError limitExceededError,
+      6: shared.RetryTaskError retryTaskError,
+      7: shared.ServiceBusyError serviceBusyError,
+    )
+
   /**
   * SyncShardStatus sync the status between shards
   **/
@@ -615,6 +663,7 @@ service HistoryService {
       3: shared.EntityNotExistsError entityNotExistError,
       4: ShardOwnershipLostError shardOwnershipLostError,
       5: shared.ServiceBusyError serviceBusyError,
+      6: shared.RetryTaskError retryTaskError,
     )
 
   /**
