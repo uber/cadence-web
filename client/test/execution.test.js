@@ -20,8 +20,8 @@ describe('Execution', function() {
 
     scenario.withFullHistory(opts.events)
 
-    var summaryEl = await scenario.render(opts.attach).waitUntilExists('section.execution section.execution-summary')
-    return [summaryEl, scenario]
+    var summaryEl = await scenario.render(opts.attach).waitUntilExists('section.execution section.execution-summary dl')
+    return [summaryEl.parentElement, scenario]
   }
 
   const closedWorkflowExecution = {
@@ -59,8 +59,8 @@ describe('Execution', function() {
       '/domain/ci-test/workflows/email-daily-summaries/emailRun1/stack-trace',
       '/domain/ci-test/workflows/email-daily-summaries/emailRun1/queries'
     ])
-    scenario.vm.$el.querySelector('section.execution > nav a.stack-trace').should.be.displayed
-    scenario.vm.$el.querySelector('section.execution > nav a.queries').should.be.displayed
+    scenario.vm.$el.querySelector('section.execution > nav a.stack-trace').should.not.have.property("display", "none")
+    scenario.vm.$el.querySelector('section.execution > nav a.queries').should.not.have.property("display", "none")
   })
 
   describe('Summary', function() {
@@ -79,7 +79,7 @@ describe('Execution', function() {
       summaryEl.should.not.have.descendant('.pending-activities')
       summaryEl.should.not.have.descendant('.parent-workflow')
       summaryEl.querySelector('.workflow-status dd').should.contain.text('running')
-      summaryEl.querySelector('.workflow-status loader.bar').should.be.displayed
+      summaryEl.querySelector('.workflow-status loader.bar').should.not.have.property("display", "none")
     })
 
     it('should show the input of the workflow, and any pending events', async function () {

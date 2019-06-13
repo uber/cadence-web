@@ -6,11 +6,17 @@ describe('Describe Domain', function() {
         status: 'REGISTERED',
         description: 'domain for running CI tests',
         ownerEmail: 'cadence-dev@uber.com',
-        data: null
+        data: null,
+        uuid: null
       },
       isGlobalDomain: false,
       failoverVersion: 0,
       configuration: {
+        archivalBucketName: null,
+        archivalBucketOwner: null,
+        archivalRetentionPeriodInDays: null,
+        archivalStatus: null,
+        badBinaries: null,
         emitMetric: false,
         workflowExecutionRetentionPeriodInDays: 14
       },
@@ -39,11 +45,17 @@ describe('Describe Domain', function() {
         status: 'REGISTERED',
         description: 'ci test domain',
         ownerEmail: null,
-        data: {}
+        data: {},
+        uuid: null
       },
       failoverVersion: 0,
       isGlobalDomain: true,
       configuration: {
+        archivalBucketName: null,
+        archivalBucketOwner: null,
+        archivalRetentionPeriodInDays: null,
+        archivalStatus: null,
+        badBinaries: null,
         workflowExecutionRetentionPeriodInDays: 14,
         emitMetric: true
       },
