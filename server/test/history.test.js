@@ -21,10 +21,22 @@ wfHistoryThrift = [{
     childPolicy: 'TERMINATE',
     expirationTimestamp: null,
     continuedExecutionRunId: null,
+    continuedFailureDetails: null,
+    continuedFailureReason: null,
+    cronSchedule: null,
+    firstDecisionTaskBackoffSeconds: null,
+    firstExecutionRunId: null,
+    header: null,
+    initiator: null,
+    lastCompletionResult: null,
+    memo: null,
+    originalExecutionRunId: null,
     parentInitiatedEventId: null,
     parentWorkflowDomain: null,
     parentWorkflowExecution: null,
+    prevAutoResetPoints: null,
     retryPolicy: null,
+    searchAttributes: null,
     taskStartToCloseTimeoutSeconds: 30,
     executionStartToCloseTimeoutSeconds: 1080
   }
@@ -119,6 +131,7 @@ describe('Workflow History', function() {
       .expect(200)
       .expect('Content-Type', /json/)
       .expect({
+        archived: null,
         history: { events: [] },
         nextPageToken: 'cGFnZTM='
       })
@@ -150,6 +163,7 @@ describe('Workflow History', function() {
       .get('/api/domain/canary/workflows/ci%2Fdemo/run1/history')
       .expect(200)
       .expect({
+        archived: null,
         history: { events: wfHistoryJson },
         nextPageToken: 'cGFnZTI='
       })
