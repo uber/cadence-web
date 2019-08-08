@@ -1,7 +1,7 @@
 <template>
   <section :class="{ workflows: true, loading }">
     <header class="filters">
-      <template v-if="filterMode === 'advance'">
+      <template v-if="filterMode === 'advanced'">
         <div class="field query-string">
           <input type="search" class="query-string"
             placeholder=" "
@@ -42,7 +42,7 @@
           :searchable="false"
         />
       </template>
-      <a class="toggle-filter" @click="toggleFilter">{{ filterMode === 'advance' ? 'basic' : 'advance' }}</a>
+      <a class="toggle-filter" @click="toggleFilter">{{ filterMode === 'advanced' ? 'basic' : 'advanced' }}</a>
     </header>
     <section class="results"
       v-infinite-scroll="nextPage"
@@ -233,11 +233,11 @@ export default pagedGrid({
       }
     },
     toggleFilter() {
-      if (this.filterMode === 'advance') {
+      if (this.filterMode === 'advanced') {
         this.filterMode = 'basic'
         this.$route.query.queryString = ''
       } else {
-        this.filterMode = 'advance'
+        this.filterMode = 'advanced'
       }
     }
   }
