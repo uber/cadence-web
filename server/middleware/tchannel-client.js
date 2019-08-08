@@ -160,6 +160,7 @@ module.exports = async function(ctx, next) {
   ctx.cadence = {
     openWorkflows: req('ListOpenWorkflowExecutions', 'list', withDomainPaging),
     closedWorkflows: req('ListClosedWorkflowExecutions', 'list', withDomainPaging),
+    listWorkflows: req('ListWorkflowExecutions', 'list', withDomainPaging),
     getHistory: req('GetWorkflowExecutionHistory', 'get', withDomainAndWorkflowExecution),
     exportHistory: req('GetWorkflowExecutionHistory', 'get', withDomainAndWorkflowExecution, cliTransform),
     describeWorkflow: req('DescribeWorkflowExecution', 'describe', withWorkflowExecution),
