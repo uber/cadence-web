@@ -1,34 +1,48 @@
 <template>
   <section :class="{ workflows: true, loading }">
     <header class="filters">
-      <div class="field workflow-id">
-        <input type="search" class="workflow-id"
-          placeholder=" "
-          name="workflowId"
-          v-bind:value="$route.query.workflowId"
-          @input="setWorkflowFilter" />
-        <label for="workflowId">Workflow ID</label>
-      </div>
-      <div class="field workflow-name">
-        <input type="search" class="workflow-name"
-          placeholder=" "
-          name="workflowName"
-          v-bind:value="$route.query.workflowName"
-          @input="setWorkflowFilter" />
-        <label for="workflowName">Workflow Name</label>
-      </div>
-      <date-range-picker
-        :date-range="range"
-        :max-days="maxRetentionDays"
-        @change="setRange"
-      />
-      <v-select
-        class="status"
-        :value="status"
-        :options="statuses"
-        :on-change="setStatus"
-        :searchable="false"
-      />
+      <template v-if="filterMode === 'advance'">
+        <div class="field query-string">
+          <input type="search" class="query-string"
+            placeholder=" "
+            key="sql-query"
+            name="queryString"
+            v-bind:value="$route.query.queryString"
+            @input="setWorkflowFilter" />
+          <label for="queryString">Query</label>
+        </div>
+      </template>
+      <template v-else>
+        <div class="field workflow-id">
+          <input type="search" class="workflow-id"
+            placeholder=" "
+            name="workflowId"
+            v-bind:value="$route.query.workflowId"
+            @input="setWorkflowFilter" />
+          <label for="workflowId">Workflow ID</label>
+        </div>
+        <div class="field workflow-name">
+          <input type="search" class="workflow-name"
+            placeholder=" "
+            name="workflowName"
+            v-bind:value="$route.query.workflowName"
+            @input="setWorkflowFilter" />
+          <label for="workflowName">Workflow Name</label>
+        </div>
+        <date-range-picker
+          :date-range="range"
+          :max-days="maxRetentionDays"
+          @change="setRange"
+        />
+        <v-select
+          class="status"
+          :value="status"
+          :options="statuses"
+          :on-change="setStatus"
+          :searchable="false"
+        />
+      </template>
+      <a class="toggle-filter" @click="toggleFilter">{{ filterMode === 'advance' ? 'basic' : 'advance' }}</a>
     </header>
     <section class="results"
       v-infinite-scroll="nextPage"
@@ -84,7 +98,8 @@ export default pagedGrid({
         { value: 'CONTINUED_AS_NEW', label: 'Continued As New' },
         { value: 'TIMED_OUT', label: 'Timed Out'}
       ],
-      maxRetentionDays: undefined
+      maxRetentionDays: undefined,
+      filterMode: 'basic'
     }
   },
   created() {
@@ -137,7 +152,8 @@ export default pagedGrid({
         endTime,
         status: q.status,
         workflowId: q.workflowId,
-        workflowName: q.workflowName
+        workflowName: q.workflowName,
+        queryString: q.queryString,
       }
     },
     queryOnChange() {
@@ -152,6 +168,10 @@ export default pagedGrid({
       }
       delete q.domain
       q.nextPageToken = this.nextPageToken
+
+      if (q.queryString) {
+        return this.fetch(`/api/domain/${domain}/workflows/list`, q)
+      }
 
       return this.fetch(`/api/domain/${domain}/workflows/${state}`, q)
     }
@@ -211,6 +231,14 @@ export default pagedGrid({
         }
         this.$router.replace({ query })
       }
+    },
+    toggleFilter() {
+      if (this.filterMode === 'advance') {
+        this.filterMode = 'basic'
+        this.$route.query.queryString = ''
+      } else {
+        this.filterMode = 'advance'
+      }
     }
   }
 })
@@ -228,6 +256,8 @@ section.workflows
       flex 1 1 auto
     .v-select
       flex 1 1 240px
+    a.toggle-filter
+      action-button()
 
   paged-grid()
 
