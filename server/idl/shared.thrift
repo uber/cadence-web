@@ -175,6 +175,7 @@ enum EventType {
   SignalExternalWorkflowExecutionInitiated,
   SignalExternalWorkflowExecutionFailed,
   ExternalWorkflowExecutionSignaled,
+  UpsertWorkflowSearchAttributes,
 }
 
 enum DecisionTaskFailedCause {
