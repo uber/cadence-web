@@ -73,6 +73,7 @@ export default {
   ActivityTaskCompleted: d => ({ result: d.result }),
   ActivityTaskFailed: d => ({ reason: d.reason, details: d.details }),
   ActivityTaskTimedOut: d => ({ 'Timeout Type': d.timeoutType }),
+  ActivityTaskCancelRequested: d => ({ ID: d.activityId }),
   MarkerRecorded: d => {
     var details = d.details || {}
     if (d.markerName === 'LocalActivity') {
