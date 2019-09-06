@@ -16,7 +16,8 @@ Follow [this great guide](https://gist.github.com/Chaser324/ce0505fbed06b947d962
 
 ## Building
 
-The standard node.js workflow is used here
+The standard node.js workflow is used here. Use Node version 10. Version 12 is unable to install the 
+[farmhash](https://www.npmjs.com/package/farmhash) package.
 
 ```
 npm i

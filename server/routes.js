@@ -39,6 +39,14 @@ async function listWorkflows(state, ctx) {
 router.get('/api/domain/:domain/workflows/open', listWorkflows.bind(null, 'open'))
 router.get('/api/domain/:domain/workflows/closed', listWorkflows.bind(null, 'closed'))
 
+router.get('/api/domain/:domain/workflows/list', async function (ctx) {
+  var q = ctx.query || {}
+  ctx.body = await ctx.cadence['listWorkflows']({
+    query: q.queryString || undefined,
+    nextPageToken: q.nextPageToken ? Buffer.from(q.nextPageToken, 'base64') : undefined
+  })
+})
+
 router.get('/api/domain/:domain/workflows/:workflowId/:runId/history', async function (ctx) {
   var q = ctx.query || {}
 
