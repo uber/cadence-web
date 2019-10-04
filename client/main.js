@@ -30,6 +30,7 @@ import TaskList from './routes/task-list.vue'
 
 const routeOpts = {
   mode: 'history',
+  base: process.env.CADENCE_WEB_ROOT || '/',
   routes: [{
     path: '/',
     component: Intro

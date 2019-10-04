@@ -3,7 +3,7 @@ import logo from './assets/logo.svg'
 
 export default {
   data () {
-    return { logo }
+    return { logo, basePath: process.env.CADENCE_WEB_ROOT || '/'}
   },
   methods: {
     globalClick(e) {
@@ -27,7 +27,7 @@ export default {
 <template>
   <main @click="globalClick">
     <header class="top-bar">
-      <a href="/" class="logo" v-html="logo"></a>
+      <a :href="basePath" class="logo" v-html="logo"></a>
       <div class="domain" v-if="$route.params.domain">
         <a :href="`/domain/${$route.params.domain}/workflows`" :class="{'router-link-active': $route.path === `/domain/${$route.params.domain}/workflows`, workflows: true }">{{$route.params.domain}}</a>
         <a :href="`/domain/${$route.params.domain}/config`" :class="{'router-link-active': $route.path === `/domain/${$route.params.domain}/config`, config: true }"></a>

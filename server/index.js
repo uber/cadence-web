@@ -2,6 +2,7 @@ const
   Koa = require('koa'),
   bodyparser = require('koa-bodyparser'),
   send = require('koa-send'),
+  mount = require('koa-mount'),
   path = require('path'),
   staticRoot = path.join(__dirname, '../dist'),
   app = new Koa(),
@@ -13,6 +14,8 @@ app.init = function(options) {
   options = options || {}
 
   const useWebpack = 'useWebpack' in options ? options.useWebpack : process.env.NODE_ENV !== 'production'
+  const rootPath = process.env.CADENCE_WEB_ROOT || '/'
+
   if (useWebpack) {
     var Webpack = require('webpack'),
         koaWebpack = require('koa-webpack'),
@@ -41,8 +44,8 @@ app.init = function(options) {
       dev: { stats: { colors: true } },
       hot: { port: process.env.TEST_RUN ? 8082 : 8081 }
     }) :
-    require('koa-static')(staticRoot))
-  .use(router.routes())
+    mount(rootPath, require('koa-static')(staticRoot)))
+  .use(mount(rootPath, router.routes()))
   .use(router.allowedMethods())
   .use(async function (ctx, next) {
     if (['HEAD', 'GET'].includes(ctx.method) && !ctx.path.startsWith('/api')) {

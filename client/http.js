@@ -1,3 +1,5 @@
+const basePath = (process.env.CADENCE_WEB_ROOT || '/') === '/' ? '' : process.env.CADENCE_WEB_ROOT
+
 export default function http(fetch, url, o) {
   var opts = Object.assign({
     credentials: 'same-origin',
@@ -17,7 +19,7 @@ export default function http(fetch, url, o) {
     }
   }
 
-  return fetch(url, opts).then(
+  return fetch(basePath + url, opts).then(
     r => r.status >= 200 && r.status < 300 ?
       r.json().catch(() => {}) :
       r.json().then(
@@ -28,7 +30,7 @@ export default function http(fetch, url, o) {
 }
 
 http.post = function(fetch, url, body) {
-  return http(fetch, url, {
+  return http(fetch, basePath + url, {
     method: 'POST',
     body: JSON.stringify(body),
     headers: {

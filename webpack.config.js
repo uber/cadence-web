@@ -14,12 +14,13 @@ module.exports = {
   output: {
     path: path.join(__dirname, 'dist'),
     filename: 'cadence.[hash].js',
-    publicPath: '/'
+    publicPath: process.env.CADENCE_WEB_ROOT || '/'
   },
   plugins: [
     !development && new webpack.DefinePlugin({
       'process.env': {
-        NODE_ENV: '"production"'
+        NODE_ENV: '"production"',
+        CADENCE_WEB_ROOT: "'" + (process.env.CADENCE_WEB_ROOT || '/') + "'"
       }
     }),
     new ExtractTextPlugin({ filename: development ? 'cadence.css' : 'cadence.[hash].css', allChunks: true }),
