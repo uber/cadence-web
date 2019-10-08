@@ -22,7 +22,9 @@ app.init = function(options) {
         compiler = Webpack(app.webpackConfig)
   }
 
-  app.use(async (ctx, next) => {
+  const realApp = new Koa() // to be mounted on path
+
+  realApp.use(async (ctx, next) => {
     try {
       await next()
     } catch (err) {
@@ -44,8 +46,8 @@ app.init = function(options) {
       dev: { stats: { colors: true } },
       hot: { port: process.env.TEST_RUN ? 8082 : 8081 }
     }) :
-    mount(rootPath, require('koa-static')(staticRoot)))
-  .use(mount(rootPath, router.routes()))
+    require('koa-static')(staticRoot))
+  .use(router.routes())
   .use(router.allowedMethods())
   .use(async function (ctx, next) {
     if (['HEAD', 'GET'].includes(ctx.method) && !ctx.path.startsWith('/api')) {
@@ -69,6 +71,7 @@ app.init = function(options) {
     }
   })
 
+  app.use(mount(rootPath, realApp))
   return app
 }
 
