@@ -4,33 +4,19 @@ import logo from './assets/logo.svg'
 export default {
   data () {
     return { logo, basePath: process.env.CADENCE_WEB_ROOT || '/'}
-  },
-  methods: {
-    globalClick(e) {
-      if (this.editing && !this.$refs.domain.contains(e.target)) {
-        this.clearEdit()
-      }
-
-      if (e.target.tagName === 'A') {
-        var href = e.target.getAttribute('href')
-        if (href && href.startsWith('/') && !e.target.getAttribute('download') && !e.target.getAttribute('target')) {
-          e.preventDefault()
-          e.stopPropagation()
-          this.$router.push(href)
-        }
-      }
-    }
   }
 }
 </script>
 
 <template>
-  <main @click="globalClick">
+  <main>
     <header class="top-bar">
       <a :href="basePath" class="logo" v-html="logo"></a>
       <div class="domain" v-if="$route.params.domain">
-        <a :href="`/domain/${$route.params.domain}/workflows`" :class="{'router-link-active': $route.path === `/domain/${$route.params.domain}/workflows`, workflows: true }">{{$route.params.domain}}</a>
-        <a :href="`/domain/${$route.params.domain}/config`" :class="{'router-link-active': $route.path === `/domain/${$route.params.domain}/config`, config: true }"></a>
+        <router-link exact :to="{ name: 'workflows', params: { domain: $route.params.domain}, query: $router.currentRoute.query}"
+                     :class="{workflows: true }">{{$route.params.domain}}</router-link>
+        <router-link exact :to="{ name: 'domain-config', params: { domain: $route.params.domain}, query: $router.currentRoute.query}"
+                     :class="{config: true }"></router-link>
       </div>
       <div class="list-workflows" v-if="$route.name === 'workflows'">Workflows</div>
       <div class="detail-view workflow-id" v-if="$route.params.workflowId">
