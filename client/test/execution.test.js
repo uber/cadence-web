@@ -245,7 +245,7 @@ describe('Execution', function() {
             terminateEl = await summaryEl.waitUntilExists('aside.actions a.terminate')
 
         terminateEl.trigger('click')
-        var confirmTerminateEl = await summaryEl.waitUntilExists('[data-modal="confirm-termination"]')
+        var confirmTerminateEl = await summaryEl.waitUntilExists('[data-modal="confirm-termination"] h3')
         confirmTerminateEl.should.contain.text('Are you sure you want to terminate this workflow?')
         confirmTerminateEl.should.contain('a.terminate').and.contain('a.cancel').and.contain('input[placeholder="Reason"]')
       })
