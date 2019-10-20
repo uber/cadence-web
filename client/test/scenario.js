@@ -225,5 +225,12 @@ Scenario.prototype.withTaskListPollers = function(taskList, pollers) {
   return this
 }
 
+Scenario.prototype.withFeatureFlags = function(viewOnly) {
+  this.api.getOnce(`/api/feature-flags`, {
+    viewOnly: viewOnly
+  })
+  return this
+}
+
 
 window.Scenario = Scenario

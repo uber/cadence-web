@@ -8,7 +8,7 @@ describe('Task List', function() {
       .withTaskListPollers('ci_task_list', pollers)
       .go()
 
-    var taskListEl = await testEl.waitUntilExists('section.task-list')
+    var taskListEl = await testEl.waitUntilExists('section.task-list table')
     return [taskListEl, scenario]
   }
 

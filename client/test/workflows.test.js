@@ -214,8 +214,6 @@ describe('Workflows', function() {
     var dayCells = Array.from(workflowsEl.querySelectorAll('.date-range-picker .ayou-calendar .ayou-day-cell'))
     dayCells.find(d => d.textContent === '11 ').trigger('click')
 
-    await Promise.delay(50)
-
     const year = moment().year(), month = moment().month()
     scenario.withWorkflows('open', {
       startTime: moment([year, month, 11]).toISOString(),
@@ -223,7 +221,6 @@ describe('Workflows', function() {
     }, demoWf)
     dayCells.find(d => d.textContent === '14 ').trigger('click')
 
-    await Promise.delay(100)
   })
 
   it('should allow querying by status of the workflow', async function () {

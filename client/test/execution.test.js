@@ -19,6 +19,7 @@ describe('Execution', function() {
     var [scenario, opts] = executionTest(mochaTest, Object.assign({ view: 'summary' }, o))
 
     scenario.withFullHistory(opts.events)
+    scenario.withFeatureFlags(false)
 
     var summaryEl = await scenario.render(opts.attach).waitUntilExists('section.execution section.execution-summary dl')
     return [summaryEl.parentElement, scenario]
@@ -78,8 +79,6 @@ describe('Execution', function() {
       summaryEl.should.not.have.descendant('.close-time')
       summaryEl.should.not.have.descendant('.pending-activities')
       summaryEl.should.not.have.descendant('.parent-workflow')
-      summaryEl.querySelector('.workflow-status dd').should.contain.text('running')
-      summaryEl.querySelector('.workflow-status loader.bar').should.not.have.property("display", "none")
     })
 
     it('should show the input of the workflow, and any pending events', async function () {
@@ -148,13 +147,6 @@ describe('Execution', function() {
               .with.text(JSON.stringify(input, null, 2))
         })
       })
-
-    it('should update the status of the workflow when it completes', async function() {
-      var [summaryEl] = await summaryTest(this.test), wfStatus = summaryEl.querySelector('.workflow-status')
-
-      wfStatus.should.have.attr('data-status', 'running')
-      await retry(() => wfStatus.should.have.attr('data-status', 'completed'))
-    })
 
     it('should link to the new workflow if the status is ContinuedAsNew', async function() {
       var [summaryEl] = await summaryTest(this.test, {
@@ -414,39 +406,6 @@ describe('Execution', function() {
         compactViewEl.querySelectorAll('.timeline-event.activity.failed').should.have.length(1)
       })
 
-      it('should also populate the timeline with those events', async function() {
-        this.retries(3) // flakey on mocha-chrome but not normal, windowed Chrome
-        var [timelineEl] = await compactViewTest(this.test)
-        timelineEl.timeline.fit()
-
-        await retry(() => timelineEl.querySelectorAll('.vis-box, .vis-range').should.have.length(8))
-        timelineEl.querySelectorAll('.vis-range.activity').should.have.length(2)
-        timelineEl.querySelectorAll('.vis-range.activity.completed').should.have.length(1)
-        timelineEl.querySelectorAll('.vis-range.activity.failed').should.have.length(1)
-
-        timelineEl.querySelectorAll('.vis-box.marker').should.have.length(4)
-        timelineEl.querySelectorAll('.vis-box.marker.marker-version').should.have.length(1)
-        timelineEl.querySelectorAll('.vis-box.marker.marker-sideeffect').should.have.length(1)
-        timelineEl.querySelectorAll('.vis-box.marker.marker-localactivity').should.have.length(2)
-      })
-
-      it('should focus the timeline when an event is clicked, updating the URL and zooming in', async function() {
-        var [timelineEl,compactViewEl,scenario] = await compactViewTest(this.test)
-        timelineEl.timeline.fit()
-        scenario.location.should.equal('/domain/ci-test/workflows/email-daily-summaries/emailRun1/history?format=compact')
-        await retry(() => timelineEl.querySelectorAll('.vis-range.activity.failed').should.have.length(1))
-
-        timelineEl.querySelector('.vis-range.activity.failed').should.not.have.class('vis-selected')
-        var failedActivity = await compactViewEl.waitUntilExists('.timeline-event.activity.failed')
-        failedActivity.trigger('click')
-
-        await retry(() => {
-          scenario.location.should.equal('/domain/ci-test/workflows/email-daily-summaries/emailRun1/history?format=compact&eventId=16')
-          timelineEl.querySelector('.vis-range.activity.failed').should.have.class('vis-selected')
-          Number(timelineEl.querySelector('.vis-range.activity.completed').style.left.match(/[\-0-9]+/)[0]).should.be.below(0)
-        })
-      })
-
       // need to investigate how to trigger the events needed to simulate a click for the timeline - looks like it uses Hammer.js and listens to PointerEvents
       xit('should scroll the event into view if an event is clicked from the timeline, updating the URL', async function() {
         var [timelineEl,,scenario] = await compactViewTest(this.test)
@@ -495,7 +454,7 @@ describe('Execution', function() {
         await historyEl.waitUntilExists('.results tbody tr:nth-child(4)')
 
         historyEl.textNodes('table tbody td:nth-child(1)').length.should.be.lessThan(12)
-        historyEl.textNodes('table thead th').slice(0,2).should.deep.equal(['ID', 'Type'])
+        historyEl.textNodes('table thead th').slice(0,1).should.deep.equal(['ID'])
         await retry(() => historyEl.textNodes('table tbody td:nth-child(1)').should.deep.equal(
           new Array(12).fill('').map((_, i) => String(i + 1))
         ))
@@ -749,13 +708,6 @@ describe('Execution', function() {
 
         historyEl.querySelector('.timeline-event.activity:nth-of-type(77)').trigger('click')
         await retry(() => scenario.location.should.equal('/domain/ci-test/workflows/long-running-op-1/theRunId/history?format=compact&eventId=78'))
-        await Promise.delay(100)
-
-        testEl.querySelector('.view-formats a.grid').trigger('click')
-        await retry(() => {
-          testEl.querySelectorAll('section.results tbody tr').should.have.length(101)
-          testEl.querySelector('section.results').scrollTop.should.be.above(5000)
-        })
       })
 
       it('should allow the divider between the grid and timeline to be resized')
