@@ -123,12 +123,20 @@ router.post('/api/domain/:domain/workflows/:workflowId/:runId/queries/:queryType
 })
 
 router.post('/api/domain/:domain/workflows/:workflowId/:runId/terminate', async function (ctx) {
+  if (ctx.noUserInteraction) {
+    ctx.status = 403
+    return
+  }
   ctx.body = await ctx.cadence.terminateWorkflow({
     reason: ctx.request.body && ctx.request.body.reason
   })
 })
 
-router.post('/api/domain/:domain/workflows/:workflowId/:runId/signal/:signal', async function (ctx) {
+router.post('/api/domain/:domain/workflows/:workflowId/:runId/signal/:signal', async function (ctx) { 
+  if (ctx.noUserInteraction) {
+    ctx.status = 403
+    return
+  }
   ctx.body = await ctx.cadence.signalWorkflow({ signalName: ctx.params.signal })
 })
 
@@ -157,6 +165,12 @@ router.get('/api/domain/:domain/task-lists/:taskList/pollers', async function (c
   decisionL = await descTaskList('Decision')
 
   ctx.body = activityL.reduce(r('activity'), decisionL.reduce(r('decision'), {}))
+})
+
+router.get('/api/feature-flags', async function (ctx) {
+  ctx.body = {
+    allowUserInteraction: !ctx.noUserInteraction
+  }
 })
 
 router.get('/health', ctx => ctx.body = 'OK')

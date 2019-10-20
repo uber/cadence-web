@@ -1,8 +1,9 @@
 <template>
   <section class="execution-summary">
-    <aside class="actions">
-      <a href="" class="terminate" v-show="$parent.isWorkflowRunning" @click.prevent="$modal.show('confirm-termination')">Terminate</a>
-    </aside>
+      <aside class="actions" v-if="this.showTerminateButton">
+        <a href="" class="terminate" v-show="$parent.isWorkflowRunning" @click.prevent="$modal.show('confirm-termination')">Terminate</a>
+      </aside>
+    
 
     <modal name="confirm-termination">
       <h3>Are you sure you want to terminate this workflow?</h3>
@@ -78,8 +79,15 @@ import parentWorkflowLink from './parent-workflow-link'
 export default {
   data() {
     return {
+      showTerminateButton: false,
       terminationReason: undefined
     }
+  },
+  created() {
+    this.$http(`/api/feature-flags`).then(
+      r => this.showTerminateButton = r.allowUserInteraction,
+      res => this.error = `${res.statusText || res.message} ${res.status}`
+    )
   },
   computed: {
     input() {

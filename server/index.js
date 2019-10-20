@@ -6,8 +6,12 @@ const
   staticRoot = path.join(__dirname, '../dist'),
   app = new Koa(),
   router = require('./routes')
+  parseArgs = require('minimist')
 
 app.webpackConfig = require('../webpack.config')
+
+var argv = parseArgs(process.argv)
+app.context.noUserInteraction = argv.noUserInteraction ? true : false
 
 app.init = function(options) {
   options = options || {}

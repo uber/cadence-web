@@ -28,6 +28,7 @@ import StackTrace from './routes/execution/stack-trace.vue'
 import Queries from './routes/execution/queries.vue'
 import TaskList from './routes/task-list.vue'
 
+
 const routeOpts = {
   mode: 'history',
   routes: [{
@@ -159,7 +160,7 @@ if (typeof mocha === 'undefined') {
     el: 'main',
     router,
     template: '<App/>',
-    components: { App }
+    components: { App}
   })
 
   if (module.hot) {
