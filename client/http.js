@@ -37,12 +37,5 @@ http.post = function(fetch, url, body) {
   })
 }
 
-http.get = function(fetch, url) {
-  return http(fetch, url, {
-    method: 'GET'
-  })
-}
-
 http.global = http.bind(null, window.fetch)
 http.global.post = http.post.bind(null, window.fetch)
-http.global.get = http.get.bind(null, window.fetch)
