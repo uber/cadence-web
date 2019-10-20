@@ -85,7 +85,7 @@ export default {
   },
   created() {
     this.$http(`/api/feature-flags`).then(
-      r => this.showTerminateButton = r.allowUserInteraction,
+      r => this.showTerminateButton = !r.viewOnly,
       res => this.error = `${res.statusText || res.message} ${res.status}`
     )
   },

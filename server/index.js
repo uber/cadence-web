@@ -11,7 +11,7 @@ const
 app.webpackConfig = require('../webpack.config')
 
 var argv = parseArgs(process.argv)
-app.context.noUserInteraction = argv.noUserInteraction ? true : false
+app.context.viewOnly = argv.viewOnly ? true : false
 
 app.init = function(options) {
   options = options || {}

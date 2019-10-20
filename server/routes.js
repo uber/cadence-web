@@ -123,7 +123,7 @@ router.post('/api/domain/:domain/workflows/:workflowId/:runId/queries/:queryType
 })
 
 router.post('/api/domain/:domain/workflows/:workflowId/:runId/terminate', async function (ctx) {
-  if (ctx.noUserInteraction) {
+  if (ctx.viewOnly) {
     ctx.status = 403
     return
   }
@@ -133,7 +133,7 @@ router.post('/api/domain/:domain/workflows/:workflowId/:runId/terminate', async 
 })
 
 router.post('/api/domain/:domain/workflows/:workflowId/:runId/signal/:signal', async function (ctx) { 
-  if (ctx.noUserInteraction) {
+  if (ctx.viewOnly) {
     ctx.status = 403
     return
   }
@@ -169,7 +169,7 @@ router.get('/api/domain/:domain/task-lists/:taskList/pollers', async function (c
 
 router.get('/api/feature-flags', async function (ctx) {
   ctx.body = {
-    allowUserInteraction: !ctx.noUserInteraction
+    viewOnly: ctx.viewOnly
   }
 })
 
