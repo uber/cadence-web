@@ -167,7 +167,7 @@ router.get('/api/domain/:domain/task-lists/:taskList/pollers', async function (c
   ctx.body = activityL.reduce(r('activity'), decisionL.reduce(r('decision'), {}))
 })
 
-router.get('/api/feature-flags', async function (ctx) {
+router.get('/api/view-only', async function (ctx) {
   ctx.body = {
     viewOnly: ctx.viewOnly
   }

@@ -226,7 +226,7 @@ Scenario.prototype.withTaskListPollers = function(taskList, pollers) {
 }
 
 Scenario.prototype.withFeatureFlags = function(viewOnly) {
-  this.api.getOnce(`/api/feature-flags`, {
+  this.api.getOnce(`/api/view-only`, {
     viewOnly: viewOnly
   })
   return this
