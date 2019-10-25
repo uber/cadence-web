@@ -100,6 +100,15 @@ const routeOpts = {
   }
 }
 
+const originalPush = Router.prototype.push
+Router.prototype.push = function push (location, onResolve, onReject) {
+  if (onResolve || onReject) return originalPush.call(this, location, onResolve, onReject)
+  try {
+    return originalPush.call(this, location).catch(err => err)
+  } catch (error) {
+  }
+}
+
 const router = new Router(routeOpts)
 
 Object.getPrototypeOf(router).replaceQueryParam = function(prop, val) {

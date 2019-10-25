@@ -11,6 +11,7 @@ RUN npm install --production
 # Bundle app source
 COPY . .
 
+ENV CADENCE_WEB_ROOT=/admin/cadence
 # Bundle the client code
 RUN npm run build-production
 
