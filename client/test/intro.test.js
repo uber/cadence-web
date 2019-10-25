@@ -125,7 +125,7 @@ describe('Intro', function() {
     scenario.withDomain('ci-tests').withDomainDescription('ci-tests').withWorkflows('open')
 
     await testEl.waitUntilExists('section.workflows')
-    localStorage.getItem('recent-domains').should.equal('["ci-tests","demo"]')
+    localStorage.getItem('recent-domains').should.equal('["demo","ci-tests"]')
   })
 
   it('should show a description of recent domains when hovered', async function () {
