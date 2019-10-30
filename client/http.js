@@ -30,7 +30,7 @@ export default function http(fetch, url, o) {
 }
 
 http.post = function(fetch, url, body) {
-  return http(fetch, basePath + url, {
+  return http(fetch, url, {
     method: 'POST',
     body: JSON.stringify(body),
     headers: {
