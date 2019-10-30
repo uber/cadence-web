@@ -13,7 +13,7 @@ export default {
     <header class="top-bar">
       <a :href="basePath" class="logo" v-html="logo"></a>
       <div class="domain" v-if="$route.params.domain">
-        <router-link :to="{ name: 'workflows', params: { domain: $route.params.domain}}"
+        <router-link exact :to="{ name: 'workflows', params: { domain: $route.params.domain}, query: this.$route.query}"
                      :class="{workflows: true }">{{$route.params.domain}}</router-link>
         <router-link :to="{ name: 'domain-config', params: { domain: $route.params.domain}}"
                      :class="{config: true }"></router-link>
