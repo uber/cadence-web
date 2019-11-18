@@ -344,7 +344,7 @@ section.history
             width: 150px
         & + .spacer
           width 100%
-          height 38px
+          height 66px
     td, th
       &:first-child
         min-width 60px
