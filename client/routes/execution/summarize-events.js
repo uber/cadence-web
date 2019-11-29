@@ -96,9 +96,16 @@ export default {
       }
     }
     if (d.markerName === 'SideEffect') {
-      return {
-        'Side Effect ID': details[0],
-        data:  JSON.tryParse(atob(details[1])) || details[1]
+      if (Array.isArray(details)) {
+        return {
+          'Side Effect ID': details[0],
+          data: JSON.tryParse(atob(details[1])) || details[1]
+        }
+      }
+      else { // Java client
+        return {
+          data: details
+        }
       }
     }
 

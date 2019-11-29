@@ -4,11 +4,19 @@ import eventCompactTransforms from './summarize-events'
 const eventFullTransforms = {
   MarkerRecorded: d => {
     if (d.markerName === 'SideEffect') {
-      return {
-        sideEffectID: d.details[0],
-        data:  JSON.tryParse(atob(d.details[1])) || d.details[1],
-        decisionTaskCompletedEventId: d.decisionTaskCompletedEventId
-      }
+        if (Array.isArray(d.details)) {
+            return {
+                sideEffectID: d.details[0],
+                data: JSON.tryParse(atob(d.details[1])) || d.details[1],
+                decisionTaskCompletedEventId: d.decisionTaskCompletedEventId
+            }
+        }
+        else { // Java client
+            return {
+                data: d.details,
+                decisionTaskCompletedEventId: d.decisionTaskCompletedEventId
+            }
+        }
     }
     return d
   }
