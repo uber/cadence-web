@@ -1,5 +1,5 @@
 <template>
-  <section :class="{ history: true, loading: $parent.historyLoading, 'has-results': !!$parent.results.length, 'split-enabled': splitEnabled }">
+  <section :class="{ history: true, loading: $parent.historyLoading, 'has-results': !!$parent.results.length, 'split-enabled': true }">
     <header class="controls">
       <div class="view-format">
         <label for="format">View Format</label>
@@ -20,43 +20,61 @@
       </SplitArea>
       <SplitArea :size="splitSizes[1]" class="view-split">
         <section v-snapscroll class="results" ref="results">
-          <table v-if="format === 'grid' && showTable" :class="{ compact: compactDetails }">
-            <thead ref="thead">
-              <th>ID</th>
-              <th>Type <v-select
-                        class="eventType"
-                        value="All"
-                        :options="eventTypes"
-                        :on-change="setEventType"
-                        :searchable="false"
+          <div class="table" v-if="format === 'grid' && showTable" :class="{ compact: compactDetails }">
+            <div class="thead" ref="thead">
+              <div class="th">ID</div>
+              <div class="th">
+                Type
+                <v-select
+                  class="eventType"
+                  value="All"
+                  :options="eventTypes"
+                  :on-change="setEventType"
+                  :searchable="false"
                 />
-
-              </th>
-              <th>
+              </div>
+              <div class="th">
                 <a class="elapsed" :href="tsFormat === 'elapsed' ? null : '#'" @click.prevent="setTsFormat('elapsed')">Elapsed</a> /
                 <a class="ts" :href="tsFormat === 'elapsed' ? '#' : null" @click.prevent="setTsFormat('ts')">Time</a>
-              </th>
-              <th>
+              </div>
+              <div class="th col-summary">
                 <a class="summary" :href="compactDetails ? null : '#'" @click.prevent="setCompactDetails(true)">Summary</a> /
                 <a class="details" :href="compactDetails ? '#' : null" @click.prevent="setCompactDetails(false)">Full Details</a>
-              </th>
-            </thead>
-            <div class="spacer"></div>
-            <tbody>
-              <tr v-for="(he, i) in filteredEvents"
-                :key="he.eventId"
-                :data-event-type="he.eventType"
-                :data-event-id="he.eventId"
-                :class="{ active: he.eventId === eventId }"
-                @click.prevent="$router.replaceQueryParam('eventId', he.eventId)"
-              >
-                <td>{{he.eventId}}</td>
-                <td>{{he.eventType}}</td>
-                <td>{{timeCol(he.timestamp, i)}} </td>
-                <td><event-details :event="he" :compact="compactDetails && he.eventId != eventId" :highlight="$parent.results.length < 100" /></td>
-              </tr>
-            </tbody>
-          </table>
+              </div>
+            </div>
+            <div class="spacer" />
+            <DynamicScroller
+              key-field="eventId"
+              :items="filteredEvents"
+              :min-item-size="38"
+              page-mode
+            >
+              <template v-slot="{ item, index, active }">
+                <DynamicScrollerItem
+                  :active="active"
+                  class="tr"
+                  :class="{ active: item.expanded }"
+                  :data-active="active"
+                  :data-event-type="item.eventType"
+                  :data-event-id="item.eventId"
+                  :data-index="index"
+                  :item="item"
+                  @click.prevent="$router.replaceQueryParam('eventId', item.eventId)"
+                >
+                  <div class="td">{{item.eventId}}</div>
+                  <div class="td">{{item.eventType}}</div>
+                  <div class="td">{{timeCol(item.timestamp, index)}}</div>
+                  <div class="td col-summary">
+                    <event-details
+                      :event="item"
+                      :compact="compactDetails && !item.expanded"
+                      :highlight="$parent.results.length < 100"
+                    />
+                  </div>
+                </DynamicScrollerItem>
+              </template>
+            </DynamicScroller>
+          </div>
           <prism class="json" language="json" v-if="format === 'json' && $parent.results.length < 90">{{JSON.stringify($parent.results, null, 2)}}</prism>
           <pre class="json" v-if="format === 'json' && $parent.results.length >= 90">{{JSON.stringify($parent.results, null, 2)}}</pre>
           <div class="compact-view" v-if="format === 'compact'">
@@ -96,6 +114,7 @@
 import moment from 'moment'
 import eventDetails from './event-details.vue'
 import Prism from 'vue-prism-component'
+import { DynamicScroller, DynamicScrollerItem } from 'vue-virtual-scroller'
 import timeline from './timeline.vue'
 import mapTimelineEvents from './timeline-events'
 import debounce from 'lodash-es/debounce'
@@ -175,13 +194,18 @@ export default {
       return `${this.$route.params.workflowId.replace(/[\\~#%&*{}\/:<>?|\"-]/g, ' ')} - ${this.$route.params.runId}.json`
     },
     filteredEvents() {
+      // TODO - Ideally would use spread here instead of Object.assign
+      const formattedResults = this.$parent.results.map((item) => Object.assign({}, item, {
+        expanded: item.eventId === this.eventId,
+      }))
+
       if (this && this.eventType && this.eventType != "All") {
         var et = this.eventType
-        return this.$parent.results.filter(function (u) {
+        return formattedResults.filter(function (u) {
           return u.eventType.includes(et)
         })
       } else {
-        return this.$parent.results
+        return formattedResults
       }
     }
   },
@@ -246,9 +270,11 @@ export default {
     }, 5)
   },
   components: {
+    DynamicScroller,
+    DynamicScrollerItem,
     'event-details': eventDetails,
     'prism': Prism,
-    timeline
+    timeline,
   }
 }
 </script>
@@ -326,8 +352,16 @@ section.history
     border brdr
     overflow auto
 
-  table
-    thead
+  .table
+    .vue-recycle-scroller__slot,
+    .vue-recycle-scroller__item-view
+      display flex
+      width 100%
+      &:nth-child(2n) .tr
+        background-color #f8f8f9
+    .col-summary
+      flex 6 !important
+    .thead
       background-color uber-white-10
       box-shadow 2px 2px 2px rgba(0,0,0,0.2)
       &.floating
@@ -336,45 +370,54 @@ section.history
         top 0
         left 0
         z-index 2
-        th
+        width calc(100% - 10px)
+        .th
+          color: rgb(0, 0, 0);
           display inline-block
+          font-weight: 500;
+          text-transform: uppercase;
           & > .v-select.eventType
             margin-left 10px
             display: inline-block
             width: 150px
         & + .spacer
           width 100%
-          height 38px
-    td, th
+          height 60px
+    .tr
+      display flex
+      flex 1
+    .td, .th
+      flex 1
+      padding 8px
       &:first-child
         min-width 60px
       &:nth-child(2)
         min-width 150px
-    th a:not([href])
+    .th a:not([href])
       border-bottom 1px solid black
-    td:nth-child(3), td:nth-child(2)
+    .td:nth-child(3), .td:nth-child(2)
       one-liner-ellipsis()
-    tr[data-event-type*="Started"] td:nth-child(2)
+    .tr[data-event-type*="Started"] .td:nth-child(2)
       color uber-blue-120
-    tr[data-event-type*="Failed"], tr[data-event-type*="TimedOut"]
-      td:nth-child(2), [data-prop="reason"], [data-prop="details"]
+    .tr[data-event-type*="Failed"], .tr[data-event-type*="TimedOut"]
+      .td:nth-child(2), [data-prop="reason"], [data-prop="details"]
         color uber-orange
-    tr[data-event-type*="Completed"]
-      td:nth-child(2), [data-prop="result"] dt
+    .tr[data-event-type*="Completed"]
+      .td:nth-child(2), [data-prop="result"] dt
         color uber-green
-    tr.active
+    .tr.active
       border-top brdr
       border-bottom brdr
       background-color alpha(uber-blue, 5%)
     pre
       max-height 15vh
-    &.compact tr:not(.active)
-      td:nth-child(4)
+    &.compact .tr:not(.active)
+      .td:nth-child(4)
         overflow hidden
       dl.details
         max-width 50vw
 
-  table.compact tr:not(.active), .compact-view .timeline-event
+  .table.compact .tr:not(.active), .compact-view .timeline-event
     dl.details
       white-space nowrap
       & > div

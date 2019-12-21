@@ -24,7 +24,6 @@
     "npm": "^5"
   },
   "dependencies": {
-    "css-loader": "^0.28.7",
     "deepmerge": "^2.0.0",
     "extract-text-webpack-plugin": "^3.0.1",
     "file-loader": "^1.1.5",
@@ -63,16 +62,20 @@
     "vue-split-panel": "^1.0.4",
     "vue-style-loader": "^3.1.2",
     "vue-template-compiler": "^2.5.2",
+    "vue-virtual-scroll-list": "^1.4.4",
+    "vue-virtual-scroller": "^1.0.0-rc.2",
     "webpack": "^3.10.0"
   },
   "devDependencies": {
     "chai": "^4.1.2",
     "chai-dom": "^1.7.0",
     "chai-things": "^0.2.0",
+    "css-loader": "^0.28.11",
     "fetch-mock": "^5.13.1",
     "mocha": "^4.0.1",
     "mocha-chrome": "^1.1.0",
     "nathanboktae-browser-test-utils": "^0.1.0",
+    "style-loader": "^1.1.1",
     "supertest": "^3.0.0",
     "webpack-hot-client": "^1.3.0"
   }
