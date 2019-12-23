@@ -30,7 +30,7 @@
         <section v-snapscroll class="results" ref="results">
           <div class="table" v-if="format === 'grid' && showTable" :class="{ compact: compactDetails }">
             <div class="thead" ref="thead">
-              <div class="th">ID</div>
+              <div class="th col-id">ID</div>
               <div class="th">
                 Type
                 <v-select
@@ -69,7 +69,7 @@
                   :item="item"
                   @click.prevent="$router.replaceQueryParam('eventId', item.eventId)"
                 >
-                  <div class="td">{{item.eventId}}</div>
+                  <div class="td col-id">{{item.eventId}}</div>
                   <div class="td">{{item.eventType}}</div>
                   <div class="td">{{timeCol(item.timestamp, index)}}</div>
                   <div class="td col-summary">
@@ -365,8 +365,10 @@ section.history
       width 100%
       &:nth-child(2n) .tr
         background-color #f8f8f9
+    .col-id
+      flex 0.25 !important
     .col-summary
-      flex 6 !important
+      flex 5 !important
     .thead
       background-color uber-white-10
       box-shadow 2px 2px 2px rgba(0,0,0,0.2)
