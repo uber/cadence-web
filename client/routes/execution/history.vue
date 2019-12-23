@@ -210,7 +210,7 @@ export default {
         expanded: item.eventId === this.eventId,
       }));
 
-      return eventType !== "All" ?
+      return eventType && eventType !== "All" ?
         formattedResults.filter(result => result.eventType.includes(eventType)) :
         formattedResults;
     }
