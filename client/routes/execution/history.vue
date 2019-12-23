@@ -15,10 +15,18 @@
     </header>
 
     <Split class="split-panel" direction="vertical" @onDrag="onSplitResize" @onDragStart="enableSplitting" v-if="!showNoResults && !$parent.historyError" ref="splitPanel">
-      <SplitArea :size="splitSizes[0]" class="timeline-split">
+      <SplitArea
+        class="timeline-split"
+        :min-size="splitSizeMinSet[0]"
+        :size="splitSizeSet[0]"
+      >
         <timeline :events="timelineEvents" :selected-event-id="eventId" v-if="format !== 'json'" />
       </SplitArea>
-      <SplitArea :size="splitSizes[1]" class="view-split">
+      <SplitArea
+        class="view-split"
+        :min-size="splitSizeMinSet[1]"
+        :size="splitSizeSet[1]"
+      >
         <section v-snapscroll class="results" ref="results">
           <div class="table" v-if="format === 'grid' && showTable" :class="{ compact: compactDetails }">
             <div class="thead" ref="thead">
@@ -137,7 +145,8 @@ export default {
         { value: 'ChildWorkflow', label: 'ChildWorkflow' },
         { value: 'Workflow', label: 'Workflow' },
       ],
-      splitSizes: [20, 80]
+      splitSizeSet: [20, 80],
+      splitSizeMinSet: [0, 0],
     }
   },
   props: ['format', 'eventId'],
@@ -194,19 +203,16 @@ export default {
       return `${this.$route.params.workflowId.replace(/[\\~#%&*{}\/:<>?|\"-]/g, ' ')} - ${this.$route.params.runId}.json`
     },
     filteredEvents() {
+      const { eventType } = this;
+
       // TODO - Ideally would use spread here instead of Object.assign
       const formattedResults = this.$parent.results.map((item) => Object.assign({}, item, {
         expanded: item.eventId === this.eventId,
-      }))
+      }));
 
-      if (this && this.eventType && this.eventType != "All") {
-        var et = this.eventType
-        return formattedResults.filter(function (u) {
-          return u.eventType.includes(et)
-        })
-      } else {
-        return formattedResults
-      }
+      return eventType !== "All" ?
+        formattedResults.filter(result => result.eventType.includes(eventType)) :
+        formattedResults;
     }
   },
   methods: {
@@ -261,7 +267,7 @@ export default {
     enableSplitting() {
       if (!this.splitEnabled) {
         var timelineHeightPct = (this.$refs.splitPanel.$el.firstElementChild.offsetHeight / this.$refs.splitPanel.$el.offsetHeight) * 100
-        this.splitSizes = [timelineHeightPct, 100 - timelineHeightPct]
+        this.splitSizeSet = [timelineHeightPct, 100 - timelineHeightPct]
         this.splitEnabled = true
       }
     },
