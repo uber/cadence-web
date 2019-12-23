@@ -203,10 +203,11 @@ export default {
       return `${this.$route.params.workflowId.replace(/[\\~#%&*{}\/:<>?|\"-]/g, ' ')} - ${this.$route.params.runId}.json`
     },
     filteredEvents() {
-      const { eventType } = this;
+      const { compactDetails, eventType } = this;
 
       // TODO - Ideally would use spread here instead of Object.assign
       const formattedResults = this.$parent.results.map((item) => Object.assign({}, item, {
+        compact: compactDetails,
         expanded: item.eventId === this.eventId,
       }));
 
@@ -229,8 +230,8 @@ export default {
       localStorage.setItem(`${this.$route.params.domain}:history-ts-col-format`, tsFormat)
     },
     setCompactDetails(compact) {
-      this.compactDetails = compact
-      localStorage.setItem(`${this.$route.params.domain}:history-compact-details`, JSON.stringify(compact))
+      this.compactDetails = compact;
+      localStorage.setItem(`${this.$route.params.domain}:history-compact-details`, JSON.stringify(compact));
     },
     timeCol(ts, i) {
       if (i === 0 || this.tsFormat !== 'elapsed') {
