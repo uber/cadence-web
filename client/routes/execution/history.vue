@@ -59,25 +59,29 @@
             >
               <template v-slot="{ item, index, active }">
                 <DynamicScrollerItem
+                  class="scroller-item"
                   :active="active"
-                  class="tr"
-                  :class="{ active: item.expanded, odd: index % 2 === 1 }"
                   :data-active="active"
-                  :data-event-type="item.eventType"
-                  :data-event-id="item.eventId"
                   :data-index="index"
                   :item="item"
-                  @click.prevent="$router.replaceQueryParam('eventId', item.eventId)"
                 >
-                  <div class="td col-id">{{item.eventId}}</div>
-                  <div class="td">{{item.eventType}}</div>
-                  <div class="td">{{timeCol(item && item.timestamp, index)}}</div>
-                  <div class="td col-summary">
-                    <event-details
-                      :event="item"
-                      :compact="compactDetails && !item.expanded"
-                      :highlight="$parent.results.length < 100"
-                    />
+                  <div
+                    class="tr"
+                    :class="{ active: item.expanded, odd: index % 2 === 1 }"
+                    :data-event-type="item.eventType"
+                    :data-event-id="item.eventId"
+                    @click.prevent="$router.replaceQueryParam('eventId', item.eventId)"
+                  >
+                    <div class="td col-id">{{item.eventId}}</div>
+                    <div class="td">{{item.eventType}}</div>
+                    <div class="td">{{timeCol(item && item.timestamp, index)}}</div>
+                    <div class="td col-summary">
+                      <event-details
+                        :event="item"
+                        :compact="compactDetails && !item.expanded"
+                        :highlight="$parent.results.length < 100"
+                      />
+                    </div>
                   </div>
                 </DynamicScrollerItem>
               </template>
@@ -204,8 +208,6 @@ export default {
     },
     filteredEvents() {
       const { compactDetails, eventType } = this;
-
-      // TODO - Ideally would use spread here instead of Object.assign
       const formattedResults = this.$parent.results.map((item) => Object.assign({}, item, {
         compact: compactDetails,
         expanded: item.eventId === this.eventId,
@@ -361,7 +363,8 @@ section.history
 
   .table
     .vue-recycle-scroller__slot,
-    .vue-recycle-scroller__item-view
+    .vue-recycle-scroller__item-view,
+    .scroller-item
       display flex
       width 100%
     .col-id
