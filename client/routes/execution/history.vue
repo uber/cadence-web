@@ -71,7 +71,7 @@
                 >
                   <div class="td col-id">{{item.eventId}}</div>
                   <div class="td">{{item.eventType}}</div>
-                  <div class="td">{{timeCol(item.timestamp, index)}}</div>
+                  <div class="td">{{timeCol(item && item.timestamp, index)}}</div>
                   <div class="td col-summary">
                     <event-details
                       :event="item"
