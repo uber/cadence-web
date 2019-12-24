@@ -26,6 +26,7 @@
         class="view-split"
         :min-size="splitSizeMinSet[1]"
         :size="splitSizeSet[1]"
+        ref="viewSplit"
       >
         <section v-snapscroll class="results" ref="results">
           <div class="table" v-if="format === 'grid' && showTable" :class="{ compact: compactDetails }">
@@ -55,7 +56,8 @@
               key-field="eventId"
               :items="filteredEvents"
               :min-item-size="38"
-              page-mode
+              ref="scroller"
+              style="height: 0px;"
             >
               <template v-slot="{ item, index, active }">
                 <DynamicScrollerItem
@@ -159,14 +161,22 @@ export default {
     this.$watch('eventId', this.scrollEventIntoView.bind(this, false))
 
     this.recalcThWidths = debounce(() => {
-      if (!this.$refs.thead) return
-      var ths = Array.from(this.$refs.thead.querySelectorAll('th'))
+      const thead = this.$refs.thead;
+      if (!thead) return
+      var ths = Array.from(thead.querySelectorAll('th'))
 
-      this.$refs.thead.classList.remove('floating')
+      thead.classList.remove('floating')
 
       ths.forEach(th => th.style.width = '')
       ths.forEach(th => th.style.width = `${th.offsetWidth}px`)
-      this.$refs.thead.classList.add('floating')
+      thead.classList.add('floating')
+
+      // calculate height for virtual table
+      const viewSplit = this.$refs.viewSplit;
+      const theadHeight = thead.offsetHeight;
+      const viewSplitHeight = viewSplit.$el.offsetHeight;
+      const scrollerHeight = viewSplitHeight - theadHeight;
+      this.$refs.scroller.$el.style.height = `${scrollerHeight}px`;
     }, 5)
   },
   mounted() {
@@ -207,15 +217,21 @@ export default {
       return `${this.$route.params.workflowId.replace(/[\\~#%&*{}\/:<>?|\"-]/g, ' ')} - ${this.$route.params.runId}.json`
     },
     filteredEvents() {
-      const { compactDetails, eventType } = this;
+      const { eventId, eventType } = this;
       const formattedResults = this.$parent.results.map((item) => Object.assign({}, item, {
-        compact: compactDetails,
-        expanded: item.eventId === this.eventId,
+        expanded: item.eventId === eventId,
       }));
-
       return eventType && eventType !== "All" ?
         formattedResults.filter(result => result.eventType.includes(eventType)) :
         formattedResults;
+    },
+    filteredEventIdToIndex() {
+      return this.filteredEvents
+        .map(({ eventId }) => eventId)
+        .reduce((accumulator, eventId, index) => {
+          accumulator[eventId] = index;
+          return accumulator;
+        }, {});
     }
   },
   methods: {
@@ -234,6 +250,7 @@ export default {
     setCompactDetails(compact) {
       this.compactDetails = compact;
       localStorage.setItem(`${this.$route.params.domain}:history-compact-details`, JSON.stringify(compact));
+      this.$refs.scroller.forceUpdate();
     },
     timeCol(ts, i) {
       if (i === -1) {
@@ -254,16 +271,12 @@ export default {
     },
     scrollEventIntoView(force, eventId) {
       setTimeout(() => {
-        // TODO: fix this for the new compact view
-        var eventRow = this.$refs.results.querySelector(`[data-event-id="${this.$route.query.eventId}"]`)
-        if (eventRow) {
-          if (eventRow.scrollIntoViewIfNeeded) {
-            eventRow.scrollIntoViewIfNeeded()
-          } else if (force) {
-            eventRow.scrollIntoView()
-          }
+        const { scroller } = this.$refs;
+        const index = this.filteredEventIdToIndex[eventId];
+        if (index !== undefined && scroller) {
+          scroller.scrollToItem(index);
         }
-      }, 100)
+      }, 100);
     },
     selectTimelineEvent(i) {
       this.$router.replaceQueryParam('eventId', i.eventIds[i.eventIds.length - 1])
