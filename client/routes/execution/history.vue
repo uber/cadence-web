@@ -236,6 +236,10 @@ export default {
       localStorage.setItem(`${this.$route.params.domain}:history-compact-details`, JSON.stringify(compact));
     },
     timeCol(ts, i) {
+      if (i === -1) {
+        return '';
+      }
+
       if (i === 0 || this.tsFormat !== 'elapsed') {
         return ts.format('MMM Do h:mm:ss a')
       }
