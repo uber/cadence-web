@@ -61,7 +61,7 @@
                 <DynamicScrollerItem
                   :active="active"
                   class="tr"
-                  :class="{ active: item.expanded }"
+                  :class="{ active: item.expanded, odd: index % 2 === 1 }"
                   :data-active="active"
                   :data-event-type="item.eventType"
                   :data-event-id="item.eventId"
@@ -364,8 +364,6 @@ section.history
     .vue-recycle-scroller__item-view
       display flex
       width 100%
-      &:nth-child(2n) .tr
-        background-color #f8f8f9
     .col-id
       flex 0.25 !important
     .col-summary
@@ -395,6 +393,8 @@ section.history
     .tr
       display flex
       flex 1
+      &.odd
+        background-color #f8f8f9
     .td, .th
       flex 1
       padding 8px
