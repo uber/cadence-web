@@ -32,7 +32,7 @@
           <div class="table" v-if="format === 'grid' && showTable" :class="{ compact: compactDetails }">
             <div class="thead" ref="thead">
               <div class="th col-id">ID</div>
-              <div class="th">
+              <div class="th col-type">
                 Type
                 <v-select
                   class="eventType"
@@ -42,7 +42,7 @@
                   :searchable="false"
                 />
               </div>
-              <div class="th">
+              <div class="th col-time">
                 <a class="elapsed" :href="tsFormat === 'elapsed' ? null : '#'" @click.prevent="setTsFormat('elapsed')">Elapsed</a> /
                 <a class="ts" :href="tsFormat === 'elapsed' ? '#' : null" @click.prevent="setTsFormat('ts')">Time</a>
               </div>
@@ -75,8 +75,8 @@
                     @click.prevent="$router.replaceQueryParam('eventId', item.eventId)"
                   >
                     <div class="td col-id">{{item.eventId}}</div>
-                    <div class="td">{{item.eventType}}</div>
-                    <div class="td">{{timeCol(item && item.timestamp, index)}}</div>
+                    <div class="td col-type">{{item.eventType}}</div>
+                    <div class="td col-time">{{timeCol(item && item.timestamp, index)}}</div>
                     <div class="td col-summary">
                       <event-details
                         :event="item"
@@ -171,26 +171,12 @@ export default {
   },
   props: ['format', 'eventId'],
   created() {
-    this.$watch('format', this.scrollEventIntoView.bind(this, true))
-    this.$watch('eventId', this.scrollEventIntoView.bind(this, false))
-
-    this.recalcThWidths = debounce(() => {
-      const thead = this.$refs.thead;
-
-      if (thead) {
-        var ths = Array.from(thead.querySelectorAll('th'))
-
-        thead.classList.remove('floating')
-
-        ths.forEach(th => th.style.width = '')
-        ths.forEach(th => th.style.width = `${th.offsetWidth}px`)
-        thead.classList.add('floating')
-      }
-
-      // calculate height for virtual table
-      const { scrollerCompact, scrollerGrid } = this.$refs;
+    this.onResizeWindow = debounce(() => {
+      const { scrollerCompact, scrollerGrid, thead, viewSplit } = this.$refs;
       const scroller = this.isGrid ? scrollerGrid : scrollerCompact;
-      const viewSplit = this.$refs.viewSplit;
+      if (!scroller) {
+        return;
+      }
       const offsetHeight = this.isGrid ? thead.offsetHeight : 0;
       const viewSplitHeight = viewSplit.$el.offsetHeight;
       const scrollerHeight = viewSplitHeight - offsetHeight;
@@ -200,13 +186,13 @@ export default {
   mounted() {
     this.$watch(
       () => `${this.$parent.results.length}${this.tsFormat.length}${this.$route.query.format}${this.compactDetails}`,
-      this.recalcThWidths,
+      this.onResizeWindow,
       { immediate: true }
     )
-    window.addEventListener('resize', this.recalcThWidths)
+    window.addEventListener('resize', this.onResizeWindow)
   },
   beforeDestroy() {
-    window.removeEventListener('resize', this.recalcThWidths)
+    window.removeEventListener('resize', this.onResizeWindow)
   },
   computed: {
     timelineEvents() {
@@ -270,8 +256,9 @@ export default {
     },
     setFormat(format) {
       this.$router.replace({
-        query: Object.assign({}, this.$route.query, { format })
-      })
+        query: Object.assign({}, this.$route.query, { format }),
+      });
+      setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
     },
     setTsFormat(tsFormat) {
       this.tsFormat = tsFormat
@@ -300,22 +287,31 @@ export default {
       }
       return elapsed
     },
-    scrollEventIntoView(force, eventId) {
-      const { scrollerCompact, scrollerGrid } = this.$refs;
-      const scroller = this.isGrid ? scrollerGrid : scrollerCompact;
+    scrollEventIntoView(eventId) {
       const index = this.isGrid ?
         this.filteredEventIdToIndex[eventId] :
         this.timelineEventIdToIndex[eventId] ;
 
-      if (index !== undefined && scroller) {
+      this.scrollToItem(index);
+
+      if (this.isGrid) {
+        // Need to fire twice as the scroller items can have dynamic height which causes the scrolling position to not be accurate.
+        setTimeout(() => this.scrollToItem(index, true), 100);
+      }
+    },
+    scrollToItem(index, forceUpdate) {
+      const { scrollerCompact, scrollerGrid } = this.$refs;
+      const scroller = this.isGrid ? scrollerGrid : scrollerCompact;
+      if (index === undefined || !scroller) {
+        return;
+      }
+      try {
         scroller.scrollToItem(index);
-        if (this.isGrid) {
-          // Need to fire twice as the scroller items can have dynamic height which causes the scrolling position to not be accurate.
-          setTimeout(() => {
-            scroller.scrollToItem(index);
-            scroller.forceUpdate();
-          }, 100);
+        if (forceUpdate) {
+          scroller.forceUpdate();
         }
+      } catch (error) {
+        console.warn('vue-virtual-scroller: Could not scrollToItem:', error);
       }
     },
     selectTimelineEvent(i) {
@@ -334,6 +330,14 @@ export default {
     onSplitResize: debounce(function (size) {
       window.dispatchEvent(new Event('resize'))
     }, 5)
+  },
+  watch: {
+    eventId(eventId) {
+      this.scrollEventIntoView(eventId);
+    },
+    filteredEvents() {
+      this.scrollEventIntoView(this.eventId);
+    },
   },
   components: {
     DynamicScroller,
@@ -426,43 +430,42 @@ section.history
       display flex
       width 100%
     .col-id
-      flex 0.25 !important
+      min-width 50px
     .col-summary
-      flex 5 !important
+      flex 1
+    .col-time
+      min-width 150px
+    .col-type
+      min-width 212px
     .thead
       background-color uber-white-10
       box-shadow 2px 2px 2px rgba(0,0,0,0.2)
-      &.floating
-        position absolute
-        display flex
-        top 0
-        left 0
-        z-index 2
-        width calc(100% - 10px)
-        .th
-          color: rgb(0, 0, 0);
-          display inline-block
-          font-weight: 500;
-          text-transform: uppercase;
-          & > .v-select.eventType
-            margin-left 10px
-            display: inline-block
-            width: 150px
-        & + .spacer
-          width 100%
-          height 60px
+      position absolute
+      display flex
+      top 0
+      left 0
+      z-index 2
+      width calc(100% - 10px)
+      .th
+        color: rgb(0, 0, 0);
+        display inline-block
+        font-weight: 500;
+        text-transform: uppercase;
+        & > .v-select.eventType
+          margin-left 10px
+          display: inline-block
+          width: 150px
+      & + .spacer
+        width 100%
+        height 60px
     .tr
       display flex
       flex 1
       &.odd
         background-color #f8f8f9
     .td, .th
-      flex 1
+      flex-basis auto
       padding 8px
-      &:first-child
-        min-width 60px
-      &:nth-child(2)
-        min-width 150px
     .th a:not([href])
       border-bottom 1px solid black
     .td:nth-child(3), .td:nth-child(2)
