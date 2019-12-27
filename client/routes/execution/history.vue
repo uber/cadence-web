@@ -56,7 +56,7 @@
               key-field="eventId"
               :items="filteredEvents"
               :min-item-size="38"
-              ref="scroller"
+              ref="scrollerGrid"
               style="height: 0px;"
             >
               <template v-slot="{ item, index, active }">
@@ -92,10 +92,23 @@
           <prism class="json" language="json" v-if="format === 'json' && $parent.results.length < 90">{{JSON.stringify($parent.results, null, 2)}}</prism>
           <pre class="json" v-if="format === 'json' && $parent.results.length >= 90">{{JSON.stringify($parent.results, null, 2)}}</pre>
           <div class="compact-view" v-if="format === 'compact'">
-            <div v-for="te in timelineEvents" :key="te.id" :class="`timeline-event ${te.className || ''} ${(te === selectedTimelineEvent ? ' vis-selected' : '')}`" @click.prevent="selectTimelineEvent(te)">
-              <span class="event-title">{{te.content}}</span>
-              <details-list :item="te.details" :title="te.content" />
-            </div>
+            <RecycleScroller
+              key-field="id"
+              :items="timelineEvents"
+              :item-size="70"
+              ref="scrollerCompact"
+              style="height: 0px;"
+            >
+              <template v-slot="{ item }">
+                <div
+                  :class="`timeline-event ${item.className || ''} ${(item === selectedTimelineEvent ? ' vis-selected' : '')}`"
+                  @click.prevent="selectTimelineEvent(item)"
+                >
+                  <span class="event-title">{{item.content}}</span>
+                  <details-list :item="item.details" :title="item.content" />
+                </div>
+              </template>
+            </RecycleScroller>
             <div class="selected-event-details" v-if="selectedTimelineEvent" :class="{ active: !!selectedTimelineEvent }">
               <a href="#" class="close" @click.prevent="deselectEvent"></a>
               <span class="event-title" v-if="!selectedTimelineEvent.titleLink">{{selectedTimelineEvent.content}}</span>
@@ -128,7 +141,7 @@
 import moment from 'moment'
 import eventDetails from './event-details.vue'
 import Prism from 'vue-prism-component'
-import { DynamicScroller, DynamicScrollerItem } from 'vue-virtual-scroller'
+import { DynamicScroller, DynamicScrollerItem, RecycleScroller } from 'vue-virtual-scroller'
 import timeline from './timeline.vue'
 import mapTimelineEvents from './timeline-events'
 import debounce from 'lodash-es/debounce'
@@ -162,22 +175,26 @@ export default {
 
     this.recalcThWidths = debounce(() => {
       const thead = this.$refs.thead;
-      if (!thead) return
-      var ths = Array.from(thead.querySelectorAll('th'))
 
-      thead.classList.remove('floating')
+      if (thead) {
+        var ths = Array.from(thead.querySelectorAll('th'))
 
-      ths.forEach(th => th.style.width = '')
-      ths.forEach(th => th.style.width = `${th.offsetWidth}px`)
-      thead.classList.add('floating')
+        thead.classList.remove('floating')
+
+        ths.forEach(th => th.style.width = '')
+        ths.forEach(th => th.style.width = `${th.offsetWidth}px`)
+        thead.classList.add('floating')
+      }
 
       // calculate height for virtual table
+      const { scrollerCompact, scrollerGrid } = this.$refs;
+      const scroller = this.isGrid ? scrollerGrid : scrollerCompact;
       const viewSplit = this.$refs.viewSplit;
-      const theadHeight = thead.offsetHeight;
+      const offsetHeight = this.isGrid ? thead.offsetHeight : 0;
       const viewSplitHeight = viewSplit.$el.offsetHeight;
-      const scrollerHeight = viewSplitHeight - theadHeight;
-      this.$refs.scroller.$el.style.height = `${scrollerHeight}px`;
-    }, 5)
+      const scrollerHeight = viewSplitHeight - offsetHeight;
+      scroller.$el.style.height = `${scrollerHeight}px`;
+    }, 5);
   },
   mounted() {
     this.$watch(
@@ -232,7 +249,19 @@ export default {
           accumulator[eventId] = index;
           return accumulator;
         }, {});
-    }
+    },
+    isGrid() {
+      return this.format === 'grid';
+    },
+    timelineEventIdToIndex() {
+      return this.timelineEvents
+        .map(({ eventIds }) => eventIds)
+        .reduce((accumulator, eventIds, index) =>
+          Object.assign({}, accumulator, eventIds.reduce((acc, eventId) => {
+            acc[eventId] = index;
+            return acc;
+          }, {})), {});
+    },
   },
   methods: {
     setEventType(et){
@@ -248,9 +277,10 @@ export default {
       localStorage.setItem(`${this.$route.params.domain}:history-ts-col-format`, tsFormat)
     },
     setCompactDetails(compact) {
+      const { scrollerGrid } = this.$refs;
       this.compactDetails = compact;
       localStorage.setItem(`${this.$route.params.domain}:history-compact-details`, JSON.stringify(compact));
-      this.$refs.scroller.forceUpdate();
+      scrollerGrid.forceUpdate();
     },
     timeCol(ts, i) {
       if (i === -1) {
@@ -270,13 +300,22 @@ export default {
       return elapsed
     },
     scrollEventIntoView(force, eventId) {
-      setTimeout(() => {
-        const { scroller } = this.$refs;
-        const index = this.filteredEventIdToIndex[eventId];
-        if (index !== undefined && scroller) {
-          scroller.scrollToItem(index);
+      const { scrollerCompact, scrollerGrid } = this.$refs;
+      const scroller = this.isGrid ? scrollerGrid : scrollerCompact;
+      const index = this.isGrid ?
+        this.filteredEventIdToIndex[eventId] :
+        this.timelineEventIdToIndex[eventId] ;
+
+      if (index !== undefined && scroller) {
+        scroller.scrollToItem(index);
+        if (this.isGrid) {
+          // Need to fire twice as the scroller items can have dynamic height which causes the scrolling position to not be accurate.
+          setTimeout(() => {
+            scroller.scrollToItem(index);
+            scroller.forceUpdate();
+          }, 100);
         }
-      }, 100);
+      }
     },
     selectTimelineEvent(i) {
       this.$router.replaceQueryParam('eventId', i.eventIds[i.eventIds.length - 1])
@@ -300,6 +339,7 @@ export default {
     DynamicScrollerItem,
     'event-details': eventDetails,
     'prism': Prism,
+    RecycleScroller,
     timeline,
   }
 }
