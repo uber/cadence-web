@@ -93,6 +93,7 @@
           <pre class="json" v-if="format === 'json' && $parent.results.length >= 90">{{JSON.stringify($parent.results, null, 2)}}</pre>
           <div class="compact-view" v-if="format === 'compact'">
             <RecycleScroller
+              class="scroller-compact"
               key-field="id"
               :items="timelineEvents"
               :item-size="70"
@@ -514,10 +515,13 @@ section.history
       padding layout-spacing-small
 
   wide-title-width = 400px
+
   .compact-view
-    padding layout-spacing-small
     line-height 1.5em
     overflow-y auto
+    .scroller-compact
+      padding layout-spacing-small
+      padding-bottom 0
     .event-title
       padding 4px
       font-size 16px
