@@ -25,8 +25,8 @@
       <SplitArea
         class="view-split"
         :min-size="splitSizeMinSet[1]"
-        :size="splitSizeSet[1]"
         ref="viewSplit"
+        :size="splitSizeSet[1]"
       >
         <section v-snapscroll class="results" ref="results">
           <div class="table" v-if="format === 'grid' && showTable" :class="{ compact: compactDetails }">
