@@ -495,7 +495,9 @@ describe('Execution', function() {
         await historyEl.waitUntilExists('.results tbody tr:nth-child(4)')
 
         historyEl.textNodes('table tbody td:nth-child(1)').length.should.be.lessThan(12)
-        historyEl.textNodes('table thead th').slice(0,2).should.deep.equal(['ID', 'Type'])
+        const textNodes = historyEl.textNodes('table thead th').slice(0, 2);
+        textNodes[0].should.equal('ID');
+        textNodes[1].should.include('Type');
         await retry(() => historyEl.textNodes('table tbody td:nth-child(1)').should.deep.equal(
           new Array(12).fill('').map((_, i) => String(i + 1))
         ))
