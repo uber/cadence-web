@@ -211,6 +211,9 @@ describe('Workflows', function() {
         dateRangeEl = workflowsEl.querySelector('header.filters .date-range-picker input')
 
     dateRangeEl.focus()
+
+    await Promise.delay(150);
+
     var dayCells = Array.from(workflowsEl.querySelectorAll('.date-range-picker .ayou-calendar .ayou-day-cell'))
     dayCells.find(d => d.textContent === '11 ').trigger('click')
 
