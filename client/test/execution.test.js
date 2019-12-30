@@ -33,7 +33,7 @@ describe('Execution', function() {
     },
   }
 
-  describe('Summary', function() {
+  describe('Workflow Statistics', () => {
     it('should show statistics from the workflow', async function () {
       var [summaryEl] = await summaryTest(this.test)
 
@@ -50,8 +50,10 @@ describe('Execution', function() {
       summaryEl.should.not.have.descendant('.parent-workflow')
       summaryEl.querySelector('.workflow-status dd').should.contain.text('running')
       summaryEl.querySelector('.workflow-status loader.bar').should.not.have.property("display", "none")
-    })
+    });
+  });
 
+  describe('Summary', function() {
     it('should show the input of the workflow, and any pending events', async function () {
       var [summaryEl] = await summaryTest(this.test, {
         execution: {
@@ -117,13 +119,6 @@ describe('Execution', function() {
             .and.have.descendant('pre.language-json')
             .with.text(JSON.stringify(input, null, 2))
       })
-    })
-
-    it('should update the status of the workflow when it completes', async function() {
-      var [summaryEl] = await summaryTest(this.test), wfStatus = summaryEl.querySelector('.workflow-status')
-
-      wfStatus.should.have.attr('data-status', 'running')
-      await retry(() => wfStatus.should.have.attr('data-status', 'completed'))
     })
 
     it('should link to the new workflow if the status is ContinuedAsNew', async function() {
@@ -859,6 +854,13 @@ describe('Execution', function() {
         scenario.vm.$el.querySelector('section.execution > nav a.stack-trace').should.not.be.displayed
         scenario.vm.$el.querySelector('section.execution > nav a.queries').should.not.be.displayed
       })
+    })
+
+    it('should update the status of the workflow when it completes', async function() {
+      var [summaryEl] = await summaryTest(this.test), wfStatus = summaryEl.querySelector('.workflow-status')
+
+      wfStatus.should.have.attr('data-status', 'running')
+      await retry(() => wfStatus.should.have.attr('data-status', 'completed'))
     })
   });
 })
