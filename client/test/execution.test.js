@@ -33,36 +33,6 @@ describe('Execution', function() {
     },
   }
 
-  it('should show summary and history tabs for completed workflows', async function () {
-    var [,scenario] = await summaryTest(this.test, {
-      execution: closedWorkflowExecution
-    })
-
-    scenario.vm.$el.attrValues('section.execution > nav a', 'href').should.deep.equal([
-      '/domain/ci-test/workflows/email-daily-summaries/emailRun1/summary',
-      '/domain/ci-test/workflows/email-daily-summaries/emailRun1/history',
-      '/domain/ci-test/workflows/email-daily-summaries/emailRun1/stack-trace',
-      '/domain/ci-test/workflows/email-daily-summaries/emailRun1/queries'
-    ])
-    scenario.vm.$el.querySelector('section.execution > nav a.summary').should.have.class('router-link-active')
-    await retry(() => {
-      scenario.vm.$el.querySelector('section.execution > nav a.stack-trace').should.not.be.displayed
-      scenario.vm.$el.querySelector('section.execution > nav a.queries').should.not.be.displayed
-    })
-  })
-
-  it('should also show a stack trace tab for running workflows', async function () {
-    var [,scenario] = await summaryTest(this.test)
-    scenario.vm.$el.attrValues('section.execution > nav a', 'href').should.deep.equal([
-      '/domain/ci-test/workflows/email-daily-summaries/emailRun1/summary',
-      '/domain/ci-test/workflows/email-daily-summaries/emailRun1/history',
-      '/domain/ci-test/workflows/email-daily-summaries/emailRun1/stack-trace',
-      '/domain/ci-test/workflows/email-daily-summaries/emailRun1/queries'
-    ])
-    scenario.vm.$el.querySelector('section.execution > nav a.stack-trace').should.not.have.property("display", "none")
-    scenario.vm.$el.querySelector('section.execution > nav a.queries').should.not.have.property("display", "none")
-  })
-
   describe('Summary', function() {
     it('should show statistics from the workflow', async function () {
       var [summaryEl] = await summaryTest(this.test)
@@ -109,45 +79,45 @@ describe('Execution', function() {
     })
 
     it('should show a full screen view option for input that overflows the area', async function() {
-        const input = {
-          foo: 1,
-          bar: 'a',
-          baz: new Array(100).fill('aa').join('|')
-        }
+      const input = {
+        foo: 1,
+        bar: 'a',
+        baz: new Array(100).fill('aa').join('|')
+      }
 
-        var [summaryEl, scenario] = await summaryTest(this.test, {
-          attach: true,
-          events: [{
-            eventId: 1,
-            eventType: 'WorkflowExecutionStarted',
-            details: {
-              type: {
-                name: 'ci-input-overflow-test'
-              },
-              execution: {},
-              input
+      var [summaryEl, scenario] = await summaryTest(this.test, {
+        attach: true,
+        events: [{
+          eventId: 1,
+          eventType: 'WorkflowExecutionStarted',
+          details: {
+            type: {
+              name: 'ci-input-overflow-test'
             },
-            timestamp: new Date().toISOString(),
-          }]
-        }),
+            execution: {},
+            input
+          },
+          timestamp: new Date().toISOString(),
+        }]
+      }),
 
-        inputDataView = await summaryEl.waitUntilExists('.workflow-input .data-viewer')
+      inputDataView = await summaryEl.waitUntilExists('.workflow-input .data-viewer')
 
-        inputDataView.should.have.class('overflow')
-          .and.have.descendant('a.view-full-screen')
-          .and.be.displayed
+      inputDataView.should.have.class('overflow')
+        .and.have.descendant('a.view-full-screen')
+        .and.be.displayed
 
-        inputDataView.querySelector('a.view-full-screen').trigger('click')
+      inputDataView.querySelector('a.view-full-screen').trigger('click')
 
-        var modal = await scenario.vm.$el.waitUntilExists('[data-modal="data-viewer-fullscreen"]')
-        await retry(() => {
-            modal.should.have.descendant('h3').with.text('email-daily-summaries Input')
-            modal.should.contain('a.copy')
-              .and.contain('a.close')
-              .and.have.descendant('pre.language-json')
-              .with.text(JSON.stringify(input, null, 2))
-        })
+      var modal = await scenario.vm.$el.waitUntilExists('[data-modal="data-viewer-fullscreen"]')
+      await retry(() => {
+          modal.should.have.descendant('h3').with.text('email-daily-summaries Input')
+          modal.should.contain('a.copy')
+            .and.contain('a.close')
+            .and.have.descendant('pre.language-json')
+            .with.text(JSON.stringify(input, null, 2))
       })
+    })
 
     it('should update the status of the workflow when it completes', async function() {
       var [summaryEl] = await summaryTest(this.test), wfStatus = summaryEl.querySelector('.workflow-status')
@@ -770,7 +740,19 @@ describe('Execution', function() {
     })
   })
 
-  describe('Stack Trace', function() {
+  describe('Stack Trace', function () {
+    it('should also show a stack trace tab for running workflows', async function () {
+      var [,scenario] = await summaryTest(this.test)
+      scenario.vm.$el.attrValues('section.execution > nav a', 'href').should.deep.equal([
+        '/domain/ci-test/workflows/email-daily-summaries/emailRun1/summary',
+        '/domain/ci-test/workflows/email-daily-summaries/emailRun1/history',
+        '/domain/ci-test/workflows/email-daily-summaries/emailRun1/stack-trace',
+        '/domain/ci-test/workflows/email-daily-summaries/emailRun1/queries'
+      ])
+      scenario.vm.$el.querySelector('section.execution > nav a.stack-trace').should.not.have.property("display", "none")
+      scenario.vm.$el.querySelector('section.execution > nav a.queries').should.not.have.property("display", "none")
+    })
+
     it('should show the current stack trace', async function () {
       var [scenario, opts] = executionTest(this.test, { view: 'stack-trace' })
 
@@ -859,4 +841,24 @@ describe('Execution', function() {
       queriesEl.should.not.have.descendant('pre')
     })
   })
+
+  describe('Completed workflows', () => {
+    it('should show summary and history tabs for completed workflows', async function () {
+      var [,scenario] = await summaryTest(this.test, {
+        execution: closedWorkflowExecution
+      })
+
+      scenario.vm.$el.attrValues('section.execution > nav a', 'href').should.deep.equal([
+        '/domain/ci-test/workflows/email-daily-summaries/emailRun1/summary',
+        '/domain/ci-test/workflows/email-daily-summaries/emailRun1/history',
+        '/domain/ci-test/workflows/email-daily-summaries/emailRun1/stack-trace',
+        '/domain/ci-test/workflows/email-daily-summaries/emailRun1/queries'
+      ])
+      scenario.vm.$el.querySelector('section.execution > nav a.summary').should.have.class('router-link-active')
+      await retry(() => {
+        scenario.vm.$el.querySelector('section.execution > nav a.stack-trace').should.not.be.displayed
+        scenario.vm.$el.querySelector('section.execution > nav a.queries').should.not.be.displayed
+      })
+    })
+  });
 })
