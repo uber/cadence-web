@@ -654,7 +654,7 @@ describe('Execution', function() {
 
       it('should render event inputs as highlighted json', async function() {
         var [historyEl, scenario] = await historyTest(this.test),
-            startDetails = await historyEl.waitUntilExists('.results tbody tr:first-child td:nth-child(4)'),
+            startDetails = await historyEl.waitUntilExists('.results .tr:first-child .td:nth-child(4)'),
             inputPreText = JSON.stringify(fixtures.history.emailRun1[0].details.input, null, 2)
 
         startDetails.textNodes('dl.details dd pre').should.deep.equal([inputPreText])
