@@ -542,7 +542,7 @@ describe('Execution', function() {
           }]
         }),
 
-        viewFullScreen = await historyEl.waitUntilExists('.results td:nth-child(4) .data-viewer.overflow a.view-full-screen')
+        viewFullScreen = await historyEl.waitUntilExists('.results .td:nth-child(4) .data-viewer.overflow a.view-full-screen')
         viewFullScreen.trigger('click')
 
         var modal = await scenario.vm.$el.waitUntilExists('[data-modal="data-viewer-fullscreen"]')
