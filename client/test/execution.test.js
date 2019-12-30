@@ -558,18 +558,25 @@ describe('Execution', function() {
 
       it('should allow toggling of the details column between summary and full details', async function() {
         var [historyEl] = await historyTest(this.test)
-        await historyEl.waitUntilExists('.results tbody tr:nth-child(4)')
+        await historyEl.waitUntilExists('.results .vue-recycle-scroller__item-view:nth-child(4) .tr')
 
-        var [summaryEl, fullDetailsEl] = historyEl.querySelectorAll('thead th:nth-child(4) a')
+        var [summaryEl, fullDetailsEl] = historyEl.querySelectorAll('.thead .th:nth-child(4) a')
         summaryEl.should.have.text('Summary').and.have.attr('href', '#')
         fullDetailsEl.should.have.text('Full Details').and.not.have.attr('href')
 
         summaryEl.trigger('click')
         await retry(() => {
-          historyEl.textNodes('.results tbody tr:first-child td:nth-child(4) dl.details dt')
-            .should.deep.equal(['input', 'Workflow', 'Close Timeout'])
-          historyEl.textNodes('.results tbody tr:first-child td:nth-child(4) dl.details dd').should.deep.equal([
-            JSON.stringify(fixtures.history.emailRun1[0].details.input), 'email-daily-summaries', '6m'
+          historyEl.textNodes('.results .tr:first-child .td.col-summary dl.details dt')
+            .should.deep.equal([
+              'input',
+              'Workflow',
+              'Close Timeout',
+            ])
+          historyEl.textNodes('.results .tr:first-child .td.col-summary dl.details dd').should.deep.equal([
+            JSON.stringify(fixtures.history.emailRun1[0].details.input),
+            'email-daily-summaries',
+            '6m',
+            "ci-task-queue",
           ])
         })
         localStorage.getItem('ci-test:history-compact-details').should.equal('true')
@@ -578,7 +585,7 @@ describe('Execution', function() {
       it('should use the details format from local storage if available', async function() {
         localStorage.setItem('ci-test:history-compact-details', 'true')
         var [historyEl] = await historyTest(this.test)
-        await retry(() => historyEl.textNodes('.results tbody tr:first-child td:nth-child(4) dl.details dt')
+        await retry(() => historyEl.textNodes('.results .tr:first-child .td:nth-child(4) dl.details dt')
           .should.deep.equal(['input', 'Workflow', 'Close Timeout'])
         )
       })
@@ -626,21 +633,21 @@ describe('Execution', function() {
             timestamp: new Date().toISOString(),
           }]
         })
-        await historyEl.waitUntilExists('.results tbody tr:nth-child(4)')
+        await historyEl.waitUntilExists('.results .vue-recycle-scroller__item-view:nth-child(4) .tr')
 
-        historyEl.textNodes('tr:not(:first-child) dl.details dt').should.deep.equal([
+        historyEl.textNodes('.vue-recycle-scroller__item-view:not(:first-child) .tr dl.details dt').should.deep.equal([
           'markerName', 'details', 'sideEffectID', 'data', 'markerName', 'details'
         ])
-        historyEl.querySelector('tr:nth-child(3) [data-prop="data"] dd')
+        historyEl.querySelector('.vue-recycle-scroller__item-view:nth-child(3) .tr [data-prop="data"] dd')
           .should.have.trimmed.text(JSON.stringify({ foo: 'bar' }, null, 2))
 
-        historyEl.querySelector('thead a.summary').trigger('click')
+        historyEl.querySelector('.thead a.summary').trigger('click')
         await Promise.delay(50)
 
-        historyEl.textNodes('tr:not(:first-child) dl.details dt').should.deep.equal([
+        historyEl.textNodes('.vue-recycle-scroller__item-view:not(:first-child) .tr dl.details dt').should.deep.equal([
           'Version', 'Details', 'Side Effect ID', 'data', 'Local Activity ID', 'Error', 'reason', 'result'
         ])
-        historyEl.textNodes('tr:not(:first-child) dl.details dd').should.deep.equal([
+        historyEl.textNodes('.vue-recycle-scroller__item-view:not(:first-child) .tr dl.details dd').should.deep.equal([
           '0', 'initial version', '0', '{"foo":"bar"}', '2', '{"err":"in json"}', 'string error reason', '{"result":"in json"}'
         ])
       })
