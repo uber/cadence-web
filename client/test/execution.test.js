@@ -17,10 +17,8 @@ describe('Execution', function() {
 
   async function summaryTest(mochaTest, o) {
     var [scenario, opts] = executionTest(mochaTest, Object.assign({ view: 'summary' }, o))
-
     scenario.withFullHistory(opts.events)
-
-    var summaryEl = await scenario.render(opts.attach).waitUntilExists('section.execution section.execution-summary dl')
+    var summaryEl = await scenario.render(opts.attach).waitUntilExists('section.execution section.execution-summary dl');
     return [summaryEl.parentElement, scenario]
   }
 
@@ -35,21 +33,22 @@ describe('Execution', function() {
 
   describe('Workflow Statistics', () => {
     it('should show statistics from the workflow', async function () {
-      var [summaryEl] = await summaryTest(this.test)
-
-      summaryEl.querySelector('.workflow-id dd').should.have.text('email-daily-summaries')
-      summaryEl.querySelector('.run-id dd').should.have.text('emailRun1')
-      summaryEl.querySelector('.history-length dd').should.have.text('14')
-      summaryEl.querySelector('.workflow-name dd').should.have.text('CIDemoWorkflow')
-      summaryEl.querySelector('.task-list dd a[href]')
-        .should.have.text('ci_task_list')
-        .and.have.attr('href', '/domain/ci-test/task-lists/ci_task_list')
-      summaryEl.querySelector('.started-at dd').should.have.text(moment().startOf('hour').subtract(2, 'minutes').format('dddd MMMM Do, h:mm:ss a'))
-      summaryEl.should.not.have.descendant('.close-time')
-      summaryEl.should.not.have.descendant('.pending-activities')
-      summaryEl.should.not.have.descendant('.parent-workflow')
-      summaryEl.querySelector('.workflow-status dd').should.contain.text('running')
-      summaryEl.querySelector('.workflow-status loader.bar').should.not.have.property("display", "none")
+      summaryTest(this.test)
+        .then(([summaryEl]) => {
+          summaryEl.querySelector('.workflow-id dd').should.have.text('email-daily-summaries')
+          summaryEl.querySelector('.run-id dd').should.have.text('emailRun1')
+          summaryEl.querySelector('.history-length dd').should.have.text('14')
+          summaryEl.querySelector('.workflow-name dd').should.have.text('CIDemoWorkflow')
+          summaryEl.querySelector('.task-list dd a[href]')
+            .should.have.text('ci_task_list')
+            .and.have.attr('href', '/domain/ci-test/task-lists/ci_task_list')
+          summaryEl.querySelector('.started-at dd').should.have.text(moment().startOf('hour').subtract(2, 'minutes').format('dddd MMMM Do, h:mm:ss a'))
+          summaryEl.should.not.have.descendant('.close-time')
+          summaryEl.should.not.have.descendant('.pending-activities')
+          summaryEl.should.not.have.descendant('.parent-workflow')
+          summaryEl.querySelector('.workflow-status dd').should.contain.text('running')
+          summaryEl.querySelector('.workflow-status loader.bar').should.not.have.property("display", "none")
+        });
     });
   });
 
