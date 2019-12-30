@@ -417,6 +417,9 @@ describe('Execution', function() {
       it('should also populate the timeline with those events', async function() {
         this.retries(3) // flakey on mocha-chrome but not normal, windowed Chrome
         var [timelineEl] = await compactViewTest(this.test)
+
+        await Promise.delay(50)
+
         timelineEl.timeline.fit()
 
         await retry(() => timelineEl.querySelectorAll('.vis-box, .vis-range').should.have.length(8))
