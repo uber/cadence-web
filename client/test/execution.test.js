@@ -684,7 +684,7 @@ describe('Execution', function() {
             }
           }]
         }),
-        childStartDetails = await historyEl.waitUntilExists('.results tbody tr:nth-child(2) td:nth-child(4)')
+        childStartDetails = await historyEl.waitUntilExists('.results .vue-recycle-scroller__item-view:nth-child(1) .tr .td:nth-child(4)')
 
         childStartDetails.querySelector('[data-prop="workflowExecution.runId"] dd a')
           .should.have.text('2345')
