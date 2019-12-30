@@ -435,6 +435,9 @@ describe('Execution', function() {
 
       it('should focus the timeline when an event is clicked, updating the URL and zooming in', async function() {
         var [timelineEl,compactViewEl,scenario] = await compactViewTest(this.test)
+
+        await Promise.delay(50)
+
         timelineEl.timeline.fit()
         scenario.location.should.equal('/domain/ci-test/workflows/email-daily-summaries/emailRun1/history?format=compact')
         await retry(() => timelineEl.querySelectorAll('.vis-range.activity.failed').should.have.length(1))
