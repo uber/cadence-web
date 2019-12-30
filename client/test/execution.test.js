@@ -485,15 +485,15 @@ describe('Execution', function() {
 
       it('should allow toggling of the time column between elapsed and local timestamp', async function() {
         var [historyEl] = await historyTest(this.test)
-        await historyEl.waitUntilExists('.results tbody tr:nth-child(4)')
+        await historyEl.waitUntilExists('.results .vue-recycle-scroller__item-view:nth-child(4) .tr')
 
-        var [elapsedEl, tsEl] = historyEl.querySelectorAll('thead th:nth-child(3) a')
+        var [elapsedEl, tsEl] = historyEl.querySelectorAll('.thead .th:nth-child(3) a')
         elapsedEl.should.have.text('Elapsed').and.not.have.attr('href')
         tsEl.should.have.text('Time').and.have.attr('href', '#')
 
         tsEl.trigger('click')
-        await retry(() => historyEl.textNodes('table tbody td:nth-child(3)').should.deep.equal(
-          fixtures.history.emailRun1.map(e => moment(e.timestamp).format('MMM Do h:mm:ss a'))
+        await retry(() => historyEl.textNodes('.td.col-time').should.deep.equal(
+          fixtures.history.emailRun1.filter((_value, index) => index < 6).map(e => moment(e.timestamp).format('MMM Do h:mm:ss a'))
         ))
         localStorage.getItem('ci-test:history-ts-col-format').should.equal('ts')
       })
@@ -501,7 +501,7 @@ describe('Execution', function() {
       it('should use the timestamp format from local storage if available', async function() {
         localStorage.setItem('ci-test:history-ts-col-format', 'ts')
         var [historyEl] = await historyTest(this.test)
-        await retry(() => historyEl.textNodes('table tbody td:nth-child(3)').should.deep.equal(
+        await retry(() => historyEl.textNodes('.td.col-time').should.deep.equal(
           fixtures.history.emailRun1.map(e => moment(e.timestamp).format('MMM Do h:mm:ss a'))
         ))
       })
