@@ -508,7 +508,7 @@ describe('Execution', function() {
 
       it('should show details as flattened key-value pairs from parsed json, except for result and input', async function () {
         var [historyEl] = await historyTest(this.test),
-            startDetails = await historyEl.waitUntilExists('.results tbody tr:first-child td:nth-child(4)'),
+            startDetails = await historyEl.waitUntilExists('.results .tr:first-child .td:nth-child(4)'),
             inputPreText = JSON.stringify(fixtures.history.emailRun1[0].details.input, null, 2)
 
         startDetails.textNodes('dl.details dt').should.deep.equal([
