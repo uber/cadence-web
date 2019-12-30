@@ -857,11 +857,13 @@ describe('Execution', function() {
       })
     })
 
-    it('should update the status of the workflow when it completes', async function() {
-      var [summaryEl] = await summaryTest(this.test), wfStatus = summaryEl.querySelector('.workflow-status')
-
-      wfStatus.should.have.attr('data-status', 'running')
-      await retry(() => wfStatus.should.have.attr('data-status', 'completed'))
+    it('should update the status of the workflow when it completes', async function () {
+      summaryTest(this.test)
+        .then(async ([summaryEl]) => {
+          const wfStatus = summaryEl.querySelector('.workflow-status');
+          wfStatus.should.have.attr('data-status', 'running')
+          await retry(() => wfStatus.should.have.attr('data-status', 'completed'))
+        });
     })
   });
 })
