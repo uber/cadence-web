@@ -316,7 +316,7 @@ describe('Execution', function() {
       var [historyEl, scenario] = await historyTest(this.test)
       var resultsEl = historyEl.querySelector('section.results')
 
-      await retry(() => resultsEl.querySelectorAll('tbody tr').should.have.length(12))
+      await retry(() => resultsEl.querySelectorAll('.tr').should.have.length(6))
       resultsEl.should.not.have.descendant('pre.json')
       resultsEl.should.not.have.descendant('.compact-view')
 
