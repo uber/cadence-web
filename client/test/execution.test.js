@@ -502,7 +502,7 @@ describe('Execution', function() {
         localStorage.setItem('ci-test:history-ts-col-format', 'ts')
         var [historyEl] = await historyTest(this.test)
         await retry(() => historyEl.textNodes('.td.col-time').should.deep.equal(
-          fixtures.history.emailRun1.map(e => moment(e.timestamp).format('MMM Do h:mm:ss a'))
+          fixtures.history.emailRun1.filter((_value, index) => index < 6).map(e => moment(e.timestamp).format('MMM Do h:mm:ss a'))
         ))
       })
 
