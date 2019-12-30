@@ -483,20 +483,6 @@ describe('Execution', function() {
           });
       })
 
-      it('should pin widths of table ths and float the thead', async function() {
-        var [historyEl] = await historyTest(this.test, { attach: true })
-        await historyEl.waitUntilExists('.results tbody tr:nth-child(4)')
-
-        var thead = historyEl.querySelector('section.results thead')
-        await retry(() => {
-          thead.should.have.class('floating')
-          var widths = Array.from(thead.querySelectorAll('th')).map(th => Number(th.style.width.match(/(\d+)px/)[1]))
-          widths.should.all.be.above(50)
-          var detailWidth = widths.pop()
-          widths.should.all.be.below(detailWidth)
-        })
-      })
-
       it('should allow toggling of the time column between elapsed and local timestamp', async function() {
         var [historyEl] = await historyTest(this.test)
         await historyEl.waitUntilExists('.results tbody tr:nth-child(4)')
