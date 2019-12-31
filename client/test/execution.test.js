@@ -585,7 +585,7 @@ describe('Execution', function() {
       it('should use the details format from local storage if available', async function() {
         localStorage.setItem('ci-test:history-compact-details', 'true')
         var [historyEl] = await historyTest(this.test)
-        await retry(() => historyEl.textNodes('.results .tr:first-child .td:nth-child(4) dl.details dt')
+        await retry(() => historyEl.textNodes('.results .vue-recycle-scroller__item-view:first-child .tr .td:nth-child(4) dl.details dt')
           .should.deep.equal(['input', 'Workflow', 'Close Timeout'])
         )
       })
