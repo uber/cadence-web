@@ -577,7 +577,6 @@ describe('Execution', function() {
             JSON.stringify(fixtures.history.emailRun1[0].details.input),
             'email-daily-summaries',
             '6m',
-            "ci-task-queue",
           ])
         })
         localStorage.getItem('ci-test:history-compact-details').should.equal('true')
