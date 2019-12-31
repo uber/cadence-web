@@ -62,7 +62,6 @@
     "vue-split-panel": "^1.0.4",
     "vue-style-loader": "^3.1.2",
     "vue-template-compiler": "^2.5.2",
-    "vue-virtual-scroll-list": "^1.4.4",
     "vue-virtual-scroller": "^1.0.0-rc.2",
     "webpack": "^3.10.0"
   },
