@@ -565,14 +565,15 @@ describe('Execution', function() {
         fullDetailsEl.should.have.text('Full Details').and.not.have.attr('href')
 
         summaryEl.trigger('click')
+
         await retry(() => {
-          historyEl.textNodes('.results .tr:first-child .td.col-summary dl.details dt')
+          historyEl.textNodes('.results .vue-recycle-scroller__item-view:first-child .tr .td.col-summary dl.details dt')
             .should.deep.equal([
               'input',
               'Workflow',
               'Close Timeout',
             ])
-          historyEl.textNodes('.results .tr:first-child .td.col-summary dl.details dd').should.deep.equal([
+          historyEl.textNodes('.results .vue-recycle-scroller__item-view:first-child .tr .td.col-summary dl.details dd').should.deep.equal([
             JSON.stringify(fixtures.history.emailRun1[0].details.input),
             'email-daily-summaries',
             '6m',
