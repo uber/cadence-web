@@ -4,6 +4,7 @@ const
   ExtractTextPlugin = require('extract-text-webpack-plugin'),
   HtmlWebpackPlugin = require('html-webpack-plugin'),
   extractStylus = 'css-loader?sourceMap!stylus-loader',
+  MiniCssExtractPlugin = require('mini-css-extract-plugin'),
   development = !['production', 'ci'].includes(process.env.NODE_ENV)
 
 module.exports = {
@@ -22,7 +23,9 @@ module.exports = {
         NODE_ENV: '"production"'
       }
     }),
-    new ExtractTextPlugin({ filename: development ? 'cadence.css' : 'cadence.[hash].css', allChunks: true }),
+    new MiniCssExtractPlugin({
+      filename: development ? 'cadence.css' : 'cadence.[hash].css',
+    }),
     new HtmlWebpackPlugin({
       title: 'Cadence',
       filename: 'index.html',
@@ -35,40 +38,56 @@ module.exports = {
   ].filter(x => x),
   module: {
     rules: [{
-      test: /\.vue?$/,
-      loader: 'vue-loader',
-      options: {
-        loaders: {
-          stylus: ExtractTextPlugin.extract({
-            use: extractStylus,
-            fallback: 'vue-style-loader'
-          }),
-        }
-      }
-    }, {
-      test: /\.svg$/,
-      use: [{
-        loader: 'html-loader',
+        test: /\.css$/,
+        use: [{
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              hmr: development,
+            },
+          },
+          'css-loader',
+        ],
+      },
+      {
+        test: /\.vue?$/,
+        loader: 'vue-loader',
         options: {
-          minimize: true
+          loaders: {
+            stylus: ExtractTextPlugin.extract({
+              use: extractStylus,
+              fallback: 'vue-style-loader'
+            }),
+          }
         }
-      }]
-    }, {
-      test: /\.(png|jpg|gif)$/,
-      loader: 'file-loader',
-      options: {
-        name: '[name].[ext]?[hash]'
+      },
+      {
+        test: /\.svg$/,
+        use: [{
+          loader: 'html-loader',
+          options: {
+            minimize: true
+          }
+        }]
+      },
+      {
+        test: /\.(png|jpg|gif)$/,
+        loader: 'file-loader',
+        options: {
+          name: '[name].[ext]?[hash]'
+        }
+      },
+      {
+        test: /\.styl$/,
+        use: ExtractTextPlugin.extract({
+          use: extractStylus,
+          fallback: 'raw-loader'
+        }),
+        include: path.join(__dirname, 'src')
       }
-    }, {
-      test: /\.styl$/,
-      use: ExtractTextPlugin.extract({ use: extractStylus, fallback: 'raw-loader' }),
-      include: path.join(__dirname, 'src')
-    }]
+    ]
   },
   resolve: {
-    extensions: ['.js', '.vue']
-  },
-  resolve: {
+    extensions: ['.js', '.vue'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js'
     }
