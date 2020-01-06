@@ -14,7 +14,9 @@ describe('Task List', function() {
 
   it('should show a table of the pollers of the task list', async function () {
     var [taskListEl] = await taskListTest(this.test),
-        lastAccessBase = moment().startOf('hour')
+      lastAccessBase = moment().startOf('hour')
+
+    await Promise.delay(1);
 
     taskListEl.querySelectorAll('table tbody tr').should.have.length(3)
     taskListEl.textNodes('tbody tr td:first-child').should.deep.equal([
