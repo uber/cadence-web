@@ -35,19 +35,19 @@ describe('Execution', function() {
     it('should show statistics from the workflow', async function () {
       summaryTest(this.test)
         .then(([summaryEl]) => {
-          summaryEl.querySelector('.workflow-id dd').should.have.text('email-daily-summaries')
-          summaryEl.querySelector('.run-id dd').should.have.text('emailRun1')
-          summaryEl.querySelector('.history-length dd').should.have.text('14')
-          summaryEl.querySelector('.workflow-name dd').should.have.text('CIDemoWorkflow')
+          summaryEl.querySelector('.workflow-id dd').should.have.text('email-daily-summaries');
+          summaryEl.querySelector('.run-id dd').should.have.text('emailRun1');
+          summaryEl.querySelector('.history-length dd').should.have.text('14');
+          summaryEl.querySelector('.workflow-name dd').should.have.text('CIDemoWorkflow');
           summaryEl.querySelector('.task-list dd a[href]')
             .should.have.text('ci_task_list')
-            .and.have.attr('href', '/domain/ci-test/task-lists/ci_task_list')
-          summaryEl.querySelector('.started-at dd').should.have.text(moment().startOf('hour').subtract(2, 'minutes').format('dddd MMMM Do, h:mm:ss a'))
-          summaryEl.should.not.have.descendant('.close-time')
-          summaryEl.should.not.have.descendant('.pending-activities')
-          summaryEl.should.not.have.descendant('.parent-workflow')
-          summaryEl.querySelector('.workflow-status dd').should.contain.text('running')
-          summaryEl.querySelector('.workflow-status loader.bar').should.not.have.property("display", "none")
+            .and.have.attr('href', '/domain/ci-test/task-lists/ci_task_list');
+          summaryEl.querySelector('.started-at dd').should.have.text(moment().startOf('hour').subtract(2, 'minutes').format('dddd MMMM Do, h:mm:ss a'));
+          summaryEl.should.not.have.descendant('.close-time');
+          summaryEl.should.not.have.descendant('.pending-activities');
+          summaryEl.should.not.have.descendant('.parent-workflow');
+          summaryEl.querySelector('.workflow-status dd').should.contain.text('running');
+          summaryEl.querySelector('.workflow-status loader.bar').should.not.have.property("display", "none");
         });
     });
   });
@@ -79,14 +79,14 @@ describe('Execution', function() {
       ], null, 2))
     })
 
-    it('should show a full screen view option for input that overflows the area', async function() {
+    it('should show a full screen view option for input that overflows the area', async function () {
       const input = {
         foo: 1,
         bar: 'a',
         baz: new Array(100).fill('aa').join('|')
-      }
+      };
 
-      var [summaryEl, scenario] = await summaryTest(this.test, {
+      const [summaryEl, scenario] = await summaryTest(this.test, {
         attach: true,
         events: [{
           eventId: 1,
@@ -100,25 +100,24 @@ describe('Execution', function() {
           },
           timestamp: new Date().toISOString(),
         }]
-      }),
-
-      inputDataView = await summaryEl.waitUntilExists('.workflow-input .data-viewer')
+      });
+      const inputDataView = await summaryEl.waitUntilExists('.workflow-input .data-viewer');
 
       inputDataView.should.have.class('overflow')
         .and.have.descendant('a.view-full-screen')
-        .and.be.displayed
+        .and.be.displayed;
 
-      inputDataView.querySelector('a.view-full-screen').trigger('click')
+      inputDataView.querySelector('a.view-full-screen').trigger('click');
 
-      var modal = await scenario.vm.$el.waitUntilExists('[data-modal="data-viewer-fullscreen"]')
+      var modal = await scenario.vm.$el.waitUntilExists('[data-modal="data-viewer-fullscreen"]');
       await retry(() => {
-          modal.should.have.descendant('h3').with.text('email-daily-summaries Input')
-          modal.should.contain('a.copy')
-            .and.contain('a.close')
-            .and.have.descendant('pre.language-json')
-            .with.text(JSON.stringify(input, null, 2))
-      })
-    })
+        modal.should.have.descendant('h3').with.text('email-daily-summaries Input');
+        modal.should.contain('a.copy')
+          .and.contain('a.close')
+          .and.have.descendant('pre.language-json')
+          .with.text(JSON.stringify(input, null, 2));
+      });
+    });
 
     it('should link to the new workflow if the status is ContinuedAsNew', async function() {
       var [summaryEl] = await summaryTest(this.test, {
@@ -316,7 +315,7 @@ describe('Execution', function() {
       var [historyEl, scenario] = await historyTest(this.test)
       var resultsEl = historyEl.querySelector('section.results')
 
-      await retry(() => resultsEl.querySelectorAll('.tr').should.have.length(6))
+      await retry(() => resultsEl.querySelectorAll('.tr').should.have.length(6));
       resultsEl.should.not.have.descendant('pre.json')
       resultsEl.should.not.have.descendant('.compact-view')
 
@@ -382,7 +381,7 @@ describe('Execution', function() {
         this.retries(3) // flakey on mocha-chrome but not normal, windowed Chrome
         var [timelineEl] = await compactViewTest(this.test)
 
-        await Promise.delay(50)
+        await Promise.delay(50);
 
         timelineEl.timeline.fit()
 
@@ -400,7 +399,7 @@ describe('Execution', function() {
       it('should focus the timeline when an event is clicked, updating the URL and zooming in', async function() {
         var [timelineEl,compactViewEl,scenario] = await compactViewTest(this.test)
 
-        await Promise.delay(50)
+        await Promise.delay(50);
 
         timelineEl.timeline.fit()
         scenario.location.should.equal('/domain/ci-test/workflows/email-daily-summaries/emailRun1/history?format=compact')
@@ -459,37 +458,34 @@ describe('Execution', function() {
       })
     })
 
-    describe('Grid View', function() {
+    describe('Grid View', function () {
       it('should show full results in a grid', async function () {
         historyTest(this.test)
           .then(async ([historyEl]) => {
-            await historyEl.waitUntilExists('.results tbody tr:nth-child(4)')
+            await historyEl.waitUntilExists('.results tbody tr:nth-child(4)');
 
-        historyEl.textNodes('table tbody td:nth-child(1)').length.should.be.lessThan(12)
-        const textNodes =historyEl.textNodes('table thead th').slice(0,2);
+            historyEl.textNodes('table tbody td:nth-child(1)').length.should.be.lessThan(12)
+            const textNodes = historyEl.textNodes('table thead th').slice(0, 2);
             textNodes[0].should.equal('ID');
-            textNodes[1].should.include( 'Type');
-        await retry(() => historyEl.textNodes('table tbody td:nth-child(1)').should.deep.equal(
-          new Array(12).fill('').map((_, i) => String(i + 1))
-        ))
-        historyEl.textNodes('table tbody td:nth-child(2)').slice(0, 3).should.deep.equal([
-          'WorkflowExecutionStarted', 'DecisionTaskScheduled', 'DecisionTaskStarted'
-        ])
-        historyEl.textNodes('table tbody td:nth-child(3)').should.deep.equal([
-          moment(fixtures.history.emailRun1[0].timestamp).format('MMM Do h:mm:ss a'),
-          '', '', '1s (+1s)', '2s (+1s)', '3s (+1s)', '8s (+5s)', '19s (+11s)',
-          '30s (+11s)', '41s (+11s)', '52s (+11s)', '1m 4s (+12s)'])
-        });
-      })
+            textNodes[1].should.include('Type');
+            await retry(() => historyEl.textNodes('table tbody td:nth-child(1)').should.deep.equal(
+              new Array(12).fill('').map((_, i) => String(i + 1))
+            ))
+            historyEl.textNodes('table tbody td:nth-child(2)').slice(0, 3).should.deep.equal([
+              'WorkflowExecutionStarted', 'DecisionTaskScheduled', 'DecisionTaskStarted'
+            ])
+            historyEl.textNodes('table tbody td:nth-child(3)').should.deep.equal([
+              moment(fixtures.history.emailRun1[0].timestamp).format('MMM Do h:mm:ss a'),
+              '', '', '1s (+1s)', '2s (+1s)', '3s (+1s)', '8s (+5s)', '19s (+11s)',
+              '30s (+11s)', '41s (+11s)', '52s (+11s)', '1m 4s (+12s)']);
+          });
+      });
 
-      ;
-      })
-
-      it('should allow toggling of the time column between elapsed and local timestamp', async function() {
+      it('should allow toggling of the time column between elapsed and local timestamp', async function () {
         var [historyEl] = await historyTest(this.test)
-        await historyEl.waitUntilExists('.results .vue-recycle-scroller__item-view:nth-child(4) .tr')
+        await historyEl.waitUntilExists('.results .vue-recycle-scroller__item-view:nth-child(4) .tr');
 
-        var [elapsedEl, tsEl] = historyEl.querySelectorAll('.thead .th:nth-child(3) a')
+        var [elapsedEl, tsEl] = historyEl.querySelectorAll('.thead .th:nth-child(3) a');
         elapsedEl.should.have.text('Elapsed').and.not.have.attr('href')
         tsEl.should.have.text('Time').and.have.attr('href', '#')
 
@@ -510,8 +506,8 @@ describe('Execution', function() {
 
       it('should show details as flattened key-value pairs from parsed json, except for result and input', async function () {
         var [historyEl] = await historyTest(this.test),
-            startDetails = await historyEl.waitUntilExists('.results .tr:first-child .td:nth-child(4)'),
-            inputPreText = JSON.stringify(fixtures.history.emailRun1[0].details.input, null, 2)
+          startDetails = await historyEl.waitUntilExists('.results .tr:first-child .td:nth-child(4)'),
+          inputPreText = JSON.stringify(fixtures.history.emailRun1[0].details.input, null, 2);
 
         startDetails.textNodes('dl.details dt').should.deep.equal([
           'workflowType.name', 'taskList.name', 'input', 'executionStartToCloseTimeout', 'taskStartToCloseTimeout'
@@ -544,7 +540,7 @@ describe('Execution', function() {
           }]
         }),
 
-        viewFullScreen = await historyEl.waitUntilExists('.results .td:nth-child(4) .data-viewer.overflow a.view-full-screen')
+          viewFullScreen = await historyEl.waitUntilExists('.results .td:nth-child(4) .data-viewer.overflow a.view-full-screen');
         viewFullScreen.trigger('click')
 
         var modal = await scenario.vm.$el.waitUntilExists('[data-modal="data-viewer-fullscreen"]')
@@ -562,7 +558,7 @@ describe('Execution', function() {
         var [historyEl] = await historyTest(this.test)
         await historyEl.waitUntilExists('.results .vue-recycle-scroller__item-view:nth-child(4) .tr')
 
-        var [summaryEl, fullDetailsEl] = historyEl.querySelectorAll('.thead .th:nth-child(4) a')
+        var [summaryEl, fullDetailsEl] = historyEl.querySelectorAll('.thead .th:nth-child(4) a');
         summaryEl.should.have.text('Summary').and.have.attr('href', '#')
         fullDetailsEl.should.have.text('Full Details').and.not.have.attr('href')
 
@@ -574,12 +570,12 @@ describe('Execution', function() {
               'input',
               'Workflow',
               'Close Timeout',
-            ])
+            ]);
           historyEl.textNodes('.results .vue-recycle-scroller__item-view:first-child .tr .td.col-summary dl.details dd').should.deep.equal([
             JSON.stringify(fixtures.history.emailRun1[0].details.input),
             'email-daily-summaries',
             '6m',
-          ])
+          ]);
         })
         localStorage.getItem('ci-test:history-compact-details').should.equal('true')
       })
@@ -635,7 +631,7 @@ describe('Execution', function() {
             timestamp: new Date().toISOString(),
           }]
         })
-        await historyEl.waitUntilExists('.results .vue-recycle-scroller__item-view:nth-child(4) .tr')
+        await historyEl.waitUntilExists('.results .vue-recycle-scroller__item-view:nth-child(4) .tr');
 
         historyEl.textNodes('.vue-recycle-scroller__item-view:not(:first-child) .tr dl.details dt').should.deep.equal([
           'markerName', 'details', 'sideEffectID', 'data', 'markerName', 'details'
@@ -643,7 +639,7 @@ describe('Execution', function() {
         historyEl.querySelector('.vue-recycle-scroller__item-view:nth-child(3) .tr [data-prop="data"] dd')
           .should.have.trimmed.text(JSON.stringify({ foo: 'bar' }, null, 2))
 
-        historyEl.querySelector('.thead a.summary').trigger('click')
+        historyEl.querySelector('.thead a.summary').trigger('click');
         await Promise.delay(50)
 
         historyEl.textNodes('.vue-recycle-scroller__item-view:not(:first-child) .tr dl.details dt').should.deep.equal([
@@ -686,7 +682,7 @@ describe('Execution', function() {
             }
           }]
         }),
-        childStartDetails = await historyEl.waitUntilExists('.results .vue-recycle-scroller__item-view:nth-child(1) .tr .td:nth-child(4)')
+        childStartDetails = await historyEl.waitUntilExists('.results .vue-recycle-scroller__item-view:nth-child(1) .tr .td:nth-child(4)');
 
         childStartDetails.querySelector('[data-prop="workflowExecution.runId"] dd a')
           .should.have.text('2345')
@@ -694,39 +690,39 @@ describe('Execution', function() {
       })
 
       it('should scroll the selected event id from compact view into view', async function () {
-          var [testEl, scenario] = new Scenario(this.test)
-              .withDomain('ci-test')
-              .startingAt('/domain/ci-test/workflows/long-running-op-1/theRunId/history?format=compact')
-              .withExecution('long-running-op-1', 'theRunId')
-              .withHistory([{
-                  timestamp: moment().toISOString(),
-                  eventType: 'WorkflowExecutionStarted',
-                  eventId: 1,
-                  details: {
-                      workflowType: {
-                          name: 'long-running-op'
-                      }
-                  }
-              }].concat(generateActivityEvents(100)))
-              .go(true)
+        var [testEl, scenario] = new Scenario(this.test)
+          .withDomain('ci-test')
+          .startingAt('/domain/ci-test/workflows/long-running-op-1/theRunId/history?format=compact')
+          .withExecution('long-running-op-1', 'theRunId')
+          .withHistory([{
+            timestamp: moment().toISOString(),
+            eventType: 'WorkflowExecutionStarted',
+            eventId: 1,
+            details: {
+              workflowType: {
+                name: 'long-running-op'
+              }
+            }
+          }].concat(generateActivityEvents(100)))
+          .go(true);
 
-          var historyEl = await testEl.waitUntilExists('section.history')
+        var historyEl = await testEl.waitUntilExists('section.history');
 
-          await retry(() => {
-              historyEl.querySelectorAll('.compact-view .timeline-event.activity').should.have.length(8)
-              testEl.querySelectorAll('section.history .timeline .vis-range.activity').should.have.length(100)
-          })
+        await retry(() => {
+          historyEl.querySelectorAll('.compact-view .timeline-event.activity').should.have.length(8);
+          testEl.querySelectorAll('section.history .timeline .vis-range.activity').should.have.length(100);
+        });
 
-          historyEl.querySelector('.vue-recycle-scroller__item-view:nth-of-type(8) .timeline-event.activity').trigger('click')
-          await retry(() => scenario.location.should.equal('/domain/ci-test/workflows/long-running-op-1/theRunId/history?format=compact&eventId=9'))
-          await Promise.delay(100)
+        historyEl.querySelector('.vue-recycle-scroller__item-view:nth-of-type(8) .timeline-event.activity').trigger('click');
+        await retry(() => scenario.location.should.equal('/domain/ci-test/workflows/long-running-op-1/theRunId/history?format=compact&eventId=9'));
+        await Promise.delay(100);
 
-          testEl.querySelector('.view-formats a.grid').trigger('click')
+        testEl.querySelector('.view-formats a.grid').trigger('click');
 
-          await retry(() => {
-              testEl.querySelectorAll('section.results .vue-recycle-scroller__item-view .tr').should.have.length(17)
-              testEl.querySelector('section.results .vue-recycle-scroller').scrollTop.should.be.above(450)
-          })
+        await retry(() => {
+          testEl.querySelectorAll('section.results .vue-recycle-scroller__item-view .tr').should.have.length(17);
+          testEl.querySelector('section.results .vue-recycle-scroller').scrollTop.should.be.above(450);
+        });
       });
 
       it('should allow the divider between the grid and timeline to be resized')
@@ -735,16 +731,16 @@ describe('Execution', function() {
 
   describe('Stack Trace', function () {
     it('should also show a stack trace tab for running workflows', async function () {
-      var [,scenario] = await summaryTest(this.test)
+      var [, scenario] = await summaryTest(this.test);
       scenario.vm.$el.attrValues('section.execution > nav a', 'href').should.deep.equal([
         '/domain/ci-test/workflows/email-daily-summaries/emailRun1/summary',
         '/domain/ci-test/workflows/email-daily-summaries/emailRun1/history',
         '/domain/ci-test/workflows/email-daily-summaries/emailRun1/stack-trace',
         '/domain/ci-test/workflows/email-daily-summaries/emailRun1/queries'
-      ])
-      scenario.vm.$el.querySelector('section.execution > nav a.stack-trace').should.not.have.property("display", "none")
-      scenario.vm.$el.querySelector('section.execution > nav a.queries').should.not.have.property("display", "none")
-    })
+      ]);
+      scenario.vm.$el.querySelector('section.execution > nav a.stack-trace').should.not.have.property("display", "none");
+      scenario.vm.$el.querySelector('section.execution > nav a.queries').should.not.have.property("display", "none");
+    });
 
     it('should show the current stack trace', async function () {
       var [scenario, opts] = executionTest(this.test, { view: 'stack-trace' })
@@ -837,30 +833,30 @@ describe('Execution', function() {
 
   describe('Completed workflows', () => {
     it('should show summary and history tabs for completed workflows', async function () {
-      var [,scenario] = await summaryTest(this.test, {
+      var [, scenario] = await summaryTest(this.test, {
         execution: closedWorkflowExecution
-      })
+      });
 
       scenario.vm.$el.attrValues('section.execution > nav a', 'href').should.deep.equal([
         '/domain/ci-test/workflows/email-daily-summaries/emailRun1/summary',
         '/domain/ci-test/workflows/email-daily-summaries/emailRun1/history',
         '/domain/ci-test/workflows/email-daily-summaries/emailRun1/stack-trace',
         '/domain/ci-test/workflows/email-daily-summaries/emailRun1/queries'
-      ])
-      scenario.vm.$el.querySelector('section.execution > nav a.summary').should.have.class('router-link-active')
+      ]);
+      scenario.vm.$el.querySelector('section.execution > nav a.summary').should.have.class('router-link-active');
       await retry(() => {
         scenario.vm.$el.querySelector('section.execution > nav a.stack-trace').should.not.be.displayed
         scenario.vm.$el.querySelector('section.execution > nav a.queries').should.not.be.displayed
-      })
-    })
+      });
+    });
 
     it('should update the status of the workflow when it completes', async function () {
       summaryTest(this.test)
         .then(async ([summaryEl]) => {
           const wfStatus = summaryEl.querySelector('.workflow-status');
-          wfStatus.should.have.attr('data-status', 'running')
-          await retry(() => wfStatus.should.have.attr('data-status', 'completed'))
+          wfStatus.should.have.attr('data-status', 'running');
+          await retry(() => wfStatus.should.have.attr('data-status', 'completed'));
         });
-    })
+    });
   });
 })
