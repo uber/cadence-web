@@ -142,7 +142,7 @@
 import moment from 'moment'
 import eventDetails from './event-details.vue'
 import Prism from 'vue-prism-component'
-import { DynamicScroller, DynamicScrollerItem, RecycleScroller } from 'vue-virtual-scroller'
+import { DynamicScroller, DynamicScrollerItem, RecycleScroller } from 'vue-virtual-scroller';
 import timeline from './timeline.vue'
 import mapTimelineEvents from './timeline-events'
 import debounce from 'lodash-es/debounce'
@@ -188,11 +188,11 @@ export default {
       () => `${this.$parent.results.length}${this.tsFormat.length}${this.$route.query.format}${this.compactDetails}`,
       this.onResizeWindow,
       { immediate: true }
-    )
-    window.addEventListener('resize', this.onResizeWindow)
+    );
+    window.addEventListener('resize', this.onResizeWindow);
   },
   beforeDestroy() {
-    window.removeEventListener('resize', this.onResizeWindow)
+    window.removeEventListener('resize', this.onResizeWindow);
   },
   computed: {
     timelineEvents() {
@@ -290,7 +290,7 @@ export default {
     scrollEventIntoView(eventId) {
       const index = this.isGrid ?
         this.filteredEventIdToIndex[eventId] :
-        this.timelineEventIdToIndex[eventId] ;
+        this.timelineEventIdToIndex[eventId];
 
       this.scrollToItem(index);
 
@@ -323,7 +323,7 @@ export default {
     enableSplitting() {
       if (!this.splitEnabled) {
         var timelineHeightPct = (this.$refs.splitPanel.$el.firstElementChild.offsetHeight / this.$refs.splitPanel.$el.offsetHeight) * 100
-        this.splitSizeSet = [timelineHeightPct, 100 - timelineHeightPct]
+        this.splitSizeSet = [timelineHeightPct, 100 - timelineHeightPct];
         this.splitEnabled = true
       }
     },
@@ -427,45 +427,45 @@ section.history
     .vue-recycle-scroller__slot,
     .vue-recycle-scroller__item-view,
     .scroller-item
-      display flex
-      width 100%
+      display: flex;
+      width: 100%;
     .col-id
-      min-width 50px
+      min-width: 50px;
     .col-summary
-      flex 1
+      flex: 1;
     .col-time
-      min-width 150px
+      min-width: 150px;
     .col-type
-      min-width 212px
+      min-width: 212px;
     .thead
       background-color uber-white-10
       box-shadow 2px 2px 2px rgba(0,0,0,0.2)
-      position absolute
-      display flex
-      top 0
-      left 0
-      z-index 2
-      width calc(100% - 10px)
+      position: absolute;
+      display: flex;
+      top: 0;
+      left: 0;
+      z-index: 2;
+      width: calc(100% - 10px);
       .th
         color: rgb(0, 0, 0);
-        display inline-block
+        display: inline-block;
         font-weight: 500;
         text-transform: uppercase;
         & > .v-select.eventType
-          margin-left 10px
-          display: inline-block
-          width: 150px
+          margin-left: 10px;
+          display: inline-block;
+          width: 150px;
       & + .spacer
-        width 100%
-        height 60px
+        width: 100%;
+        height: 60px;
     .tr
-      display flex
-      flex 1
+      display: flex;
+      flex: 1;
       &.odd
-        background-color #f8f8f9
+        background-color: #f8f8f9;
     .td, .th
-      flex-basis auto
-      padding 8px
+      flex-basis: auto;
+      padding: 8px;
     .th a:not([href])
       border-bottom 1px solid black
     .td:nth-child(3), .td:nth-child(2)
@@ -523,8 +523,8 @@ section.history
     line-height 1.5em
     overflow-y auto
     .scroller-compact
-      padding layout-spacing-small
-      padding-bottom 0
+      padding: layout-spacing-small;
+      padding-bottom: 0;
     .event-title
       padding 4px
       font-size 16px
