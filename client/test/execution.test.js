@@ -47,7 +47,7 @@ describe('Execution', function() {
           summaryEl.should.not.have.descendant('.pending-activities');
           summaryEl.should.not.have.descendant('.parent-workflow');
           summaryEl.querySelector('.workflow-status dd').should.contain.text('running');
-          summaryEl.querySelector('.workflow-status loader.bar').should.not.have.property("display", "none");
+          summaryEl.querySelector('.workflow-status loader.bar').should.not.have.property('display', 'none');
         });
     });
   });
@@ -470,14 +470,17 @@ describe('Execution', function() {
             textNodes[1].should.include('Type');
             await retry(() => historyEl.textNodes('table tbody td:nth-child(1)').should.deep.equal(
               new Array(12).fill('').map((_, i) => String(i + 1))
-            ))
+            ));
             historyEl.textNodes('table tbody td:nth-child(2)').slice(0, 3).should.deep.equal([
               'WorkflowExecutionStarted', 'DecisionTaskScheduled', 'DecisionTaskStarted'
-            ])
-            historyEl.textNodes('table tbody td:nth-child(3)').should.deep.equal([
-              moment(fixtures.history.emailRun1[0].timestamp).format('MMM Do h:mm:ss a'),
-              '', '', '1s (+1s)', '2s (+1s)', '3s (+1s)', '8s (+5s)', '19s (+11s)',
-              '30s (+11s)', '41s (+11s)', '52s (+11s)', '1m 4s (+12s)']);
+            ]);
+            historyEl.textNodes('table tbody td:nth-child(3)').should.deep.equal(
+              [
+                moment(fixtures.history.emailRun1[0].timestamp).format('MMM Do h:mm:ss a'),
+                '', '', '1s (+1s)', '2s (+1s)', '3s (+1s)', '8s (+5s)', '19s (+11s)',
+                '30s (+11s)', '41s (+11s)', '52s (+11s)', '1m 4s (+12s)'
+              ]
+            );
           });
       });
 
@@ -540,7 +543,7 @@ describe('Execution', function() {
           }]
         }),
 
-          viewFullScreen = await historyEl.waitUntilExists('.results .td:nth-child(4) .data-viewer.overflow a.view-full-screen');
+        viewFullScreen = await historyEl.waitUntilExists('.results .td:nth-child(4) .data-viewer.overflow a.view-full-screen');
         viewFullScreen.trigger('click')
 
         var modal = await scenario.vm.$el.waitUntilExists('[data-modal="data-viewer-fullscreen"]')
@@ -556,7 +559,7 @@ describe('Execution', function() {
 
       it('should allow toggling of the details column between summary and full details', async function() {
         var [historyEl] = await historyTest(this.test)
-        await historyEl.waitUntilExists('.results .vue-recycle-scroller__item-view:nth-child(4) .tr')
+        await historyEl.waitUntilExists('.results .vue-recycle-scroller__item-view:nth-child(4) .tr');
 
         var [summaryEl, fullDetailsEl] = historyEl.querySelectorAll('.thead .th:nth-child(4) a');
         summaryEl.should.have.text('Summary').and.have.attr('href', '#')
@@ -738,8 +741,8 @@ describe('Execution', function() {
         '/domain/ci-test/workflows/email-daily-summaries/emailRun1/stack-trace',
         '/domain/ci-test/workflows/email-daily-summaries/emailRun1/queries'
       ]);
-      scenario.vm.$el.querySelector('section.execution > nav a.stack-trace').should.not.have.property("display", "none");
-      scenario.vm.$el.querySelector('section.execution > nav a.queries').should.not.have.property("display", "none");
+      scenario.vm.$el.querySelector('section.execution > nav a.stack-trace').should.not.have.property('display', 'none');
+      scenario.vm.$el.querySelector('section.execution > nav a.queries').should.not.have.property('display', 'none');
     });
 
     it('should show the current stack trace', async function () {
