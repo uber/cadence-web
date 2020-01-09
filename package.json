@@ -24,6 +24,7 @@
     "npm": "^5"
   },
   "dependencies": {
+    "css-loader": "^0.28.7",
     "deepmerge": "^2.0.0",
     "extract-text-webpack-plugin": "^3.0.1",
     "file-loader": "^1.1.5",
@@ -69,7 +70,6 @@
     "chai": "^4.1.2",
     "chai-dom": "^1.7.0",
     "chai-things": "^0.2.0",
-    "css-loader": "^0.28.11",
     "fetch-mock": "^5.13.1",
     "mocha": "^4.0.1",
     "mocha-chrome": "^1.1.0",
