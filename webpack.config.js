@@ -63,12 +63,6 @@ module.exports = {
       test: /\.styl$/,
       use: ExtractTextPlugin.extract({ use: extractStylus, fallback: 'raw-loader' }),
       include: path.join(__dirname, 'src')
-    }, {
-      test: /\.css$/,
-        use: [
-          { loader: 'style-loader' },
-          { loader: 'css-loader' }
-        ]
     }]
   },
   resolve: {
