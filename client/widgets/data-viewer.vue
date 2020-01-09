@@ -11,6 +11,8 @@ import 'prismjs'
 import 'prismjs/components/prism-json'
 import Prism from 'vue-prism-component'
 
+const MAXIMUM_CHARACTER_LIMIT = 300;
+
 export default {
   name: 'data-viewer',
   props: ['item', 'highlight', 'compact', 'title'],
@@ -37,7 +39,9 @@ export default {
   },
   computed: {
     code() {
-      return this.compact ? JSON.stringify(this.item) : JSON.stringify(this.item, null, 2)
+      return this.compact ?
+        JSON.stringify(this.item).substring(0, MAXIMUM_CHARACTER_LIMIT) :
+        JSON.stringify(this.item, null, 2);
     }
   },
   methods: {

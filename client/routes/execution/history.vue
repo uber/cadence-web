@@ -105,8 +105,12 @@
                   :class="`timeline-event ${item.className || ''} ${(item === selectedTimelineEvent ? ' vis-selected' : '')}`"
                   @click.prevent="selectTimelineEvent(item)"
                 >
-                  <span class="event-title">{{item.content}}</span>
-                  <details-list :item="item.details" :title="item.content" />
+                  <span class="event-title">{{item.content}}</span>7
+                  <details-list
+                    :compact="true"
+                    :item="item.details"
+                    :title="item.content"
+                  />
                 </div>
               </template>
             </RecycleScroller>
