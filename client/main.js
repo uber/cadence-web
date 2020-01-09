@@ -1,3 +1,4 @@
+import 'vue-virtual-scroller/dist/vue-virtual-scroller.css';
 import Vue from 'vue'
 import Router from 'vue-router'
 import infiniteScroll from 'vue-infinite-scroll'
