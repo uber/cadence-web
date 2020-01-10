@@ -12,7 +12,7 @@
 
 <script>
 import moment from 'moment'
-const resultThreshold = 1000
+const resultThreshold = 200000;
 
 export default {
   data() {
