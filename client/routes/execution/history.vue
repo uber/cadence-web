@@ -158,6 +158,7 @@ export default {
     return {
       tsFormat: localStorage.getItem(`${this.$route.params.domain}:history-ts-col-format`) || 'elapsed',
       compactDetails: localStorage.getItem(`${this.$route.params.domain}:history-compact-details`) === 'true',
+      scrolledToEventOnInit: false,
       splitEnabled: false,
       eventType: "",
       eventTypes: [
@@ -256,7 +257,8 @@ export default {
   },
   methods: {
     setEventType(et){
-      this.eventType = et.value
+      this.eventType = et.value;
+      setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
     },
     setFormat(format) {
       this.$router.replace({
@@ -273,6 +275,7 @@ export default {
       this.compactDetails = compact;
       localStorage.setItem(`${this.$route.params.domain}:history-compact-details`, JSON.stringify(compact));
       scrollerGrid.forceUpdate();
+      setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
     },
     timeCol(ts, i) {
       if (i === -1) {
@@ -340,7 +343,10 @@ export default {
       this.scrollEventIntoView(eventId);
     },
     filteredEvents() {
-      this.scrollEventIntoView(this.eventId);
+      if (!this.scrolledToEventOnInit && this.eventId !== undefined && this.filteredEventIdToIndex[this.eventId] !== undefined) {
+        this.scrolledToEventOnInit = true;
+        setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
+      }
     },
   },
   components: {
