@@ -343,7 +343,11 @@ export default {
       this.scrollEventIntoView(eventId);
     },
     filteredEvents() {
-      if (!this.scrolledToEventOnInit && this.eventId !== undefined && this.filteredEventIdToIndex[this.eventId] !== undefined) {
+      if (
+        !this.scrolledToEventOnInit
+        && this.eventId !== undefined
+        && this.filteredEventIdToIndex[this.eventId] !== undefined
+      ) {
         this.scrolledToEventOnInit = true;
         setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
       }
