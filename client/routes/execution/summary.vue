@@ -73,7 +73,7 @@
 
 <script>
 import shortName from '../../short-name'
-import parentWorkflowLink from './parent-workflow-link'
+import { parentWorkflowLink } from './helpers'
 
 export default {
   data() {

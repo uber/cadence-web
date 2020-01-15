@@ -20,7 +20,14 @@
         :min-size="splitSizeMinSet[0]"
         :size="splitSizeSet[0]"
       >
-        <timeline :events="timelineEvents" :selected-event-id="eventId" v-if="format !== 'json'" />
+        <!-- TODO - Disabling graph while optimising history screen -->
+        <!--
+        <timeline
+          :events="$parent.timelineEvents"
+          :selected-event-id="eventId"
+          v-if="format !== 'json'"
+        />
+        -->
       </SplitArea>
       <SplitArea
         class="view-split"
@@ -76,10 +83,10 @@
                   >
                     <div class="td col-id">{{item.eventId}}</div>
                     <div class="td col-type">{{item.eventType}}</div>
-                    <div class="td col-time">{{timeCol(item && item.timestamp, index)}}</div>
+                    <div class="td col-time">{{tsFormat === 'elapsed' ? item.displayTimeElapsed : item.displayTimeStamp}}</div>
                     <div class="td col-summary">
                       <event-details
-                        :event="item"
+                        :event="(compactDetails && !item.expanded) ? item.eventSummary : item.eventFullDetails"
                         :compact="compactDetails && !item.expanded"
                         :highlight="$parent.results.length < 100"
                       />
@@ -95,7 +102,7 @@
             <RecycleScroller
               class="scroller-compact"
               key-field="id"
-              :items="timelineEvents"
+              :items="$parent.timelineEvents"
               :item-size="70"
               ref="scrollerCompact"
               style="height: 0px;"
@@ -148,7 +155,6 @@ import eventDetails from './event-details.vue'
 import Prism from 'vue-prism-component'
 import { DynamicScroller, DynamicScrollerItem, RecycleScroller } from 'vue-virtual-scroller';
 import timeline from './timeline.vue'
-import mapTimelineEvents from './timeline-events'
 import debounce from 'lodash-es/debounce'
 import omit from 'lodash-es/omit'
 
@@ -199,11 +205,8 @@ export default {
     window.removeEventListener('resize', this.onResizeWindow);
   },
   computed: {
-    timelineEvents() {
-      return mapTimelineEvents(this.$parent.results)
-    },
     selectedTimelineEvent() {
-      return this.timelineEvents.find(te => te.eventIds.includes(this.eventId))
+      return this.$parent.timelineEvents.find(te => te.eventIds.includes(this.eventId))
     },
     selectedEvent() {
       return this.$parent.results.find(e => e.eventId == this.eventId)
@@ -245,7 +248,7 @@ export default {
       return this.format === 'grid';
     },
     timelineEventIdToIndex() {
-      return this.timelineEvents
+      return this.$parent.timelineEvents
         .map(({ eventIds }) => eventIds)
         .reduce((accumulator, eventIds, index) =>
           Object.assign({}, accumulator, eventIds.reduce((acc, eventId) => {
@@ -273,23 +276,6 @@ export default {
       this.compactDetails = compact;
       localStorage.setItem(`${this.$route.params.domain}:history-compact-details`, JSON.stringify(compact));
       scrollerGrid.forceUpdate();
-    },
-    timeCol(ts, i) {
-      if (i === -1) {
-        return '';
-      }
-
-      if (i === 0 || this.tsFormat !== 'elapsed') {
-        return ts.format('MMM Do h:mm:ss a')
-      }
-
-      let deltaFromPrev = moment.duration(ts - this.$parent.results[i - 1].timestamp),
-          elapsed = moment.duration(ts - this.$parent.results[0].timestamp).format()
-
-      if (deltaFromPrev.asSeconds() >= 1) {
-        elapsed += ` (+${deltaFromPrev.format()})`
-      }
-      return elapsed
     },
     scrollEventIntoView(eventId) {
       const index = this.isGrid ?

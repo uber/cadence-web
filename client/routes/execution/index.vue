@@ -12,7 +12,17 @@
 
 <script>
 import moment from 'moment'
-const resultThreshold = 1000
+import { RESULT_THRESHOLD } from './constants';
+
+import {
+  getDisplayTimeElapsed,
+  getDisplayTimeStamp,
+  getEventDetails,
+  getEventFullDetails,
+  getEventSummary,
+  getKeyValuePairs,
+  mapTimelineEvents
+} from './helpers';
 
 export default {
   data() {
@@ -24,7 +34,8 @@ export default {
       historyLoading: undefined,
       isWorkflowRunning: undefined,
       nextPageToken: undefined,
-      results: []
+      results: [],
+      timelineEvents: [],
     }
   },
   created() {
@@ -69,18 +80,51 @@ export default {
 
         if (res.nextPageToken) {
           this.isWorkflowRunning = JSON.parse(atob(res.nextPageToken)).IsWorkflowRunning
-          if (this.results.length < resultThreshold) {
-            setImmediate(() => this.nextPageToken = res.nextPageToken)
+          if (this.results.length < RESULT_THRESHOLD) {
+            setTimeout(() => this.nextPageToken = res.nextPageToken)
           }
         } else {
           this.isWorkflowRunning = false
         }
 
         var shouldHighlightEventId = this.$route.query.eventId && this.results.length <= this.$route.query.eventId
-        this.results = this.results.concat(res.history.events.map(data => {
-          data.timestamp = moment(data.timestamp)
-          return data
-        }))
+        const events = res.history.events;
+        const formattedEvents = events
+          .map(event => {
+            const details = getEventDetails(event);
+            const eventSummary = getEventSummary(event);
+            const eventFullDetails = getEventFullDetails(event);
+            const timestamp = moment(event.timestamp);
+            return Object.assign({}, event, {
+              details,
+              eventSummary,
+              eventFullDetails,
+              timestamp,
+            });
+          })
+          // TODO - not ideal solution but will do for now and come back and refactor later...
+          .map((event, index, eventList) => {
+            const displayTimeStamp = getDisplayTimeStamp(event);
+            const displayTimeElapsed = getDisplayTimeElapsed(event, index, eventList);
+            return Object.assign({}, event, {
+              displayTimeStamp,
+              displayTimeElapsed
+            });
+          });
+
+        this.results = this.results.concat(formattedEvents);
+
+        // update timeline events
+        const newTimelineEvents = mapTimelineEvents(events)
+          .map((event) => {
+            const details = getEventDetails(event);
+            return Object.assign({}, event, {
+              details,
+            });
+          });
+
+        this.timelineEvents = this.timelineEvents.concat(newTimelineEvents);
+
 
         if (shouldHighlightEventId) {
           this.$emit('highlight-event-id', this.$route.query.eventId)
@@ -99,7 +143,7 @@ export default {
           this.historyLoading = false
         }
       })
-    }
+    },
   }
 }
 </script>

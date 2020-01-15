@@ -1,30 +1,12 @@
 <script>
-import eventCompactTransforms from './summarize-events'
-
-const eventFullTransforms = {
-  MarkerRecorded: d => {
-    if (d.markerName === 'SideEffect') {
-      return {
-        sideEffectID: d.details[0],
-        data:  JSON.tryParse(atob(d.details[1])) || d.details[1],
-        decisionTaskCompletedEventId: d.decisionTaskCompletedEventId
-      }
-    }
-    return d
-  }
-}
-
 export default {
   name: 'event-details',
   props: ['event', 'compact', 'highlight'],
   render(h) {
     if (!this.event) return
-    var maps = this.compact ? eventCompactTransforms : eventFullTransforms
-    var item = this.event.eventType in maps ? maps[this.event.eventType](this.event.details) : this.event.details
-
     return h('details-list', {
       props: {
-        item,
+        item: this.event,
         highlight: this.highlight,
         compact: this.compact,
         title: `Event #${this.event.eventId} ${this.event.eventType}`

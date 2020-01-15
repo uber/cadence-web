@@ -1,8 +1,8 @@
 <template>
   <div class="data-viewer">
     <a href="#" class="view-full-screen" @click.stop.prevent="viewFullScreen"></a>
-    <prism v-if="highlight !== false" language="json" ref="codebox">{{code}}</prism>
-    <pre v-if="highlight === false" ref="codebox">{{code}}</pre>
+    <prism v-if="highlight !== false" language="json" ref="codebox">{{item.jsonStringDisplay}}</prism>
+    <pre v-if="highlight === false" ref="codebox">{{item.jsonStringDisplay}}</pre>
   </div>
 </template>
 
@@ -10,8 +10,6 @@
 import 'prismjs'
 import 'prismjs/components/prism-json'
 import Prism from 'vue-prism-component'
-
-const MAXIMUM_CHARACTER_LIMIT = 300;
 
 export default {
   name: 'data-viewer',
@@ -37,13 +35,6 @@ export default {
   beforeDestroy() {
     window.removeEventListener('resize', this.checkOverflow)
   },
-  computed: {
-    code() {
-      return this.compact ?
-        JSON.stringify(this.item).substring(0, MAXIMUM_CHARACTER_LIMIT) :
-        JSON.stringify(this.item, null, 2);
-    }
-  },
   methods: {
     viewFullScreen() {
       this.$modal.show({
@@ -61,7 +52,7 @@ export default {
         components: { prism: Prism }
       }, {
         title: this.title,
-        code: JSON.stringify(this.item, null, 2)
+        code: this.item.jsonStringFull
       }, {
         name: 'data-viewer-fullscreen'
       })

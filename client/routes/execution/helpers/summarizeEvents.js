@@ -1,6 +1,6 @@
 import moment from 'moment'
-import shortName from '../../short-name'
-import parentWorkflowLink from './parent-workflow-link'
+import shortName from '../../../short-name'
+import parentWorkflowLink from './parentWorkflowLink';
 
 function workflowLink(d, short) {
   return {
@@ -16,7 +16,7 @@ function workflowLink(d, short) {
   }
 }
 
-export default {
+export const summarizeEvents = {
   WorkflowExecutionStarted: d => {
     var summary = {
       Parent: undefined,
@@ -104,4 +104,4 @@ export default {
 
     return d
   }
-}
+};
