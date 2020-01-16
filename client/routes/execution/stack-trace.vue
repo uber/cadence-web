@@ -21,13 +21,16 @@ export default {
       loading: undefined
     }
   },
+  props: [
+    'baseAPIURL',
+  ],
   created() {
     this.getStackTrace()
   },
   methods: {
     getStackTrace() {
       this.loading = true
-      return this.$http.post(`${this.$parent.baseAPIURL}/queries/__stack_trace`).then(({ queryResult }) => {
+      return this.$http.post(`${this.baseAPIURL}/queries/__stack_trace`).then(({ queryResult }) => {
         this.stackTrace = queryResult
         this.stackTraceTimestamp = moment()
       })

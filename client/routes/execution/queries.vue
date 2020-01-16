@@ -33,9 +33,12 @@ export default {
       running: false
     }
   },
+  props: [
+    'baseAPIURL',
+  ],
   created() {
     this.loading = true
-    this.$http(this.$parent.baseAPIURL + '/queries').then(
+    this.$http(this.baseAPIURL + '/queries').then(
       r => {
         this.queries = r.filter(r => r !== '__stack_trace')
         if (!this.queryName) {
@@ -53,7 +56,7 @@ export default {
     },
     run() {
       this.running = true
-      this.$http.post(`${this.$parent.baseAPIURL}/queries/${this.queryName}`)
+      this.$http.post(`${this.baseAPIURL}/queries/${this.queryName}`)
         .then(r => this.result = r.queryResult, e => this.error = (e.json && e.json.message) || e.status || e.message)
         .finally(() => this.running = false)
     }

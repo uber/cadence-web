@@ -140,28 +140,16 @@ export default {
       terminationReason: undefined
     }
   },
+  props: [
+    'baseAPIURL',
+    'input',
+    'isWorkflowRunning',
+    'parentWorkflowRoute',
+    'result',
+    'wfStatus',
+    'workflow',
+  ],
   computed: {
-    baseAPIURL() {
-      return this.$parent.baseAPIURL;
-    },
-    input() {
-      return this.$parent.summary.input;
-    },
-    isWorkflowRunning() {
-      return this.$parent.summary.isWorkflowRunning;
-    },
-    parentWorkflowRoute() {
-      return this.$parent.summary.parentWorkflowRoute;
-    },
-    result() {
-      return this.$parent.summary.result;
-    },
-    wfStatus() {
-      return this.$parent.summary.wfStatus;
-    },
-    workflow() {
-      return this.$parent.summary.workflow;
-    },
     workflowCloseTime() {
       return this.workflow.workflowExecutionInfo.closeTime
         ? moment(this.workflow.workflowExecutionInfo.closeTime)

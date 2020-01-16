@@ -6,7 +6,21 @@
       <router-link :to="{ name: 'execution/stack-trace' }" class="stack-trace" v-show="isWorkflowRunning">Stack Trace</router-link>
       <router-link :to="{ name: 'execution/queries' }" class="queries" v-show="isWorkflowRunning">Queries</router-link>
     </nav>
-    <router-view></router-view>
+    <router-view
+      :baseAPIURL="baseAPIURL"
+
+      :error="history.error"
+      :events="history.events"
+      :loading="history.loading"
+      :timelineEvents="history.timelineEvents"
+
+      :input="summary.input"
+      :isWorkflowRunning="summary.isWorkflowRunning"
+      :parentWorkflowRoute="summary.parentWorkflowRoute"
+      :result="summary.result"
+      :wfStatus="summary.wfStatus"
+      :workflow="summary.workflow"
+    />
   </section>
 </template>
 
@@ -31,8 +45,8 @@ export default {
 
       history: {
         error: undefined,
-        loading: undefined,
         events: [],
+        loading: undefined,
         timelineEvents: [],
       },
 

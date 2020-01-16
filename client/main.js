@@ -45,27 +45,32 @@ const routeOpts = {
     name: 'execution',
     path: '/domain/:domain/workflows/:workflowId/:runId',
     component: ExecutionTabs,
-    children: [{
-      name: 'execution/summary',
-      path: '/domain/:domain/workflows/:workflowId/:runId/summary',
-      component: ExecutionSummary
-    }, {
-      name: 'execution/history',
-      path: '/domain/:domain/workflows/:workflowId/:runId/history',
-      component: History,
-      props: ({ query }) => ({
-        format: query.format || 'grid',
-        eventId: Number(query.eventId) || undefined
-      })
-    }, {
-      name: 'execution/stack-trace',
-      path: '/domain/:domain/workflows/:workflowId/:runId/stack-trace',
-      component: StackTrace
-    }, {
-      name: 'execution/queries',
-      path: '/domain/:domain/workflows/:workflowId/:runId/queries',
-      component: Queries
-    }]
+    children: [
+      {
+        name: 'execution/summary',
+        path: '/domain/:domain/workflows/:workflowId/:runId/summary',
+        component: ExecutionSummary
+      },
+      {
+        name: 'execution/history',
+        path: '/domain/:domain/workflows/:workflowId/:runId/history',
+        component: History,
+        props: ({ query }) => ({
+          format: query.format || 'grid',
+          eventId: Number(query.eventId) || undefined
+        })
+      },
+      {
+        name: 'execution/stack-trace',
+        path: '/domain/:domain/workflows/:workflowId/:runId/stack-trace',
+        component: StackTrace
+      },
+      {
+        name: 'execution/queries',
+        path: '/domain/:domain/workflows/:workflowId/:runId/queries',
+        component: Queries
+      }
+    ]
   }, {
     name: 'task-list',
     path: '/domain/:domain/task-lists/:taskList',

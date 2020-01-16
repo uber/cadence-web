@@ -179,7 +179,15 @@ export default {
       splitSizeMinSet: [0, 0],
     }
   },
-  props: ['format', 'eventId'],
+  props: [
+    'baseAPIURL',
+    'error',
+    'eventId',
+    'events',
+    'format',
+    'loading',
+    'timelineEvents',
+  ],
   created() {
     this.onResizeWindow = debounce(() => {
       const { scrollerCompact, scrollerGrid, thead, viewSplit } = this.$refs;
@@ -205,15 +213,6 @@ export default {
     window.removeEventListener('resize', this.onResizeWindow);
   },
   computed: {
-    baseAPIURL() {
-      return this.$parent.baseAPIURL;
-    },
-    error() {
-      return this.$parent.history.error;
-    },
-    events() {
-      return this.$parent.history.events;
-    },
     exportFilename() {
       return `${this.$route.params.workflowId.replace(/[\\~#%&*{}\/:<>?|\"-]/g, ' ')} - ${this.$route.params.runId}.json`
     },
@@ -236,9 +235,6 @@ export default {
     },
     isGrid() {
       return this.format === 'grid';
-    },
-    loading() {
-      return this.$parent.history.loading;
     },
     selectedTimelineEvent() {
       return this.timelineEvents.find(te => te.eventIds.includes(this.eventId))
@@ -267,9 +263,6 @@ export default {
             acc[eventId] = index;
             return acc;
           }, {})), {});
-    },
-    timelineEvents() {
-      return this.$parent.history.timelineEvents;
     },
   },
   methods: {
