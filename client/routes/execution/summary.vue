@@ -1,42 +1,74 @@
 <template>
   <section class="execution-summary">
     <aside class="actions">
-      <a href="" class="terminate" v-show="$parent.isWorkflowRunning" @click.prevent="$modal.show('confirm-termination')">Terminate</a>
+      <a
+        href=""
+        class="terminate"
+        v-show="isWorkflowRunning"
+        @click.prevent="$modal.show('confirm-termination')"
+      >
+        Terminate
+      </a>
     </aside>
 
     <modal name="confirm-termination">
       <h3>Are you sure you want to terminate this workflow?</h3>
       <input v-model="terminationReason" placeholder="Reason" />
       <footer>
-        <a href="#" class="terminate" @click.prevent="terminate">Terminate</a>
-        <a href="#" class="cancel" @click.prevent="$modal.hide('confirm-termination')">Cancel</a>
+        <a
+          href="#"
+          class="terminate"
+          @click.prevent="terminate"
+        >
+          Terminate
+        </a>
+        <a
+          href="#"
+          class="cancel"
+          @click.prevent="$modal.hide('confirm-termination')"
+        >
+          Cancel
+        </a>
       </footer>
     </modal>
 
-    <dl v-if="$parent.workflow">
+    <dl v-if="workflow">
       <div class="workflow-name">
         <dt>Workflow Name</dt>
-        <dd>{{$parent.workflow.workflowExecutionInfo.type.name}}</dd>
+        <dd>{{workflow.workflowExecutionInfo.type.name}}</dd>
       </div>
       <div class="started-at">
         <dt>Started At</dt>
-        <dd>{{$moment($parent.workflow.workflowExecutionInfo.startTime).format('dddd MMMM Do, h:mm:ss a')}}</dd>
+        <dd>{{workflowStartTime}}</dd>
       </div>
-      <div class="close-time" v-if="$parent.workflow.workflowExecutionInfo.closeTime">
+      <div class="close-time" v-if="workflowCloseTime">
         <dt>Closed Time</dt>
-        <dd>{{$moment($parent.workflow.workflowExecutionInfo.closeTime).format('dddd MMMM Do, h:mm:ss a')}}</dd>
+        <dd>{{workflowCloseTime}}</dd>
       </div>
-      <div class="workflow-status" :data-status="typeof wfStatus === 'string' ? wfStatus : wfStatus.status">
+      <div
+        class="workflow-status"
+        :data-status="typeof wfStatus === 'string' ? wfStatus : wfStatus.status"
+      >
         <dt>Status</dt>
         <dd>
           <bar-loader v-if="wfStatus === 'running'" />
           <span v-if="typeof wfStatus === 'string'">{{wfStatus}}</span>
-          <router-link v-if="wfStatus.to" :to="wfStatus.to">{{wfStatus.text}}</router-link>
+          <router-link
+            v-if="wfStatus.to"
+            :to="wfStatus.to"
+          >
+            {{wfStatus.text}}
+          </router-link>
         </dd>
       </div>
-      <div class="workflow-result" v-if="!!workflowCompletedEvent">
+      <div class="workflow-result" v-if="result">
         <dt>Result</dt>
-        <dd><data-viewer :item="workflowCompletedEvent.details.result || workflowCompletedEvent.details" :title="$route.params.workflowId + ' Result'" /></dd>
+        <dd>
+          <data-viewer
+            :item="result"
+            :title="$route.params.workflowId + ' Result'"
+          />
+        </dd>
       </div>
       <div class="workflow-id">
         <dt>Workflow Id</dt>
@@ -48,78 +80,109 @@
       </div>
       <div class="parent-workflow" v-if="parentWorkflowRoute">
         <dt>Parent Workflow</dt>
-        <dd><router-link :to="parentWorkflowRoute.to">{{parentWorkflowRoute.text}}</router-link></dd>
+        <dd>
+          <router-link
+            :to="parentWorkflowRoute.to"
+          >
+            {{parentWorkflowRoute.text}}
+          </router-link>
+        </dd>
       </div>
       <div class="task-list">
         <dt>Task List</dt>
-        <dd><router-link :to="{ name: 'task-list', params: { taskList: $parent.workflow.executionConfiguration.taskList.name }}">{{$parent.workflow.executionConfiguration.taskList.name}}</router-link></dd>
+        <dd>
+          <router-link
+            :to="{
+              name: 'task-list',
+              params: {
+                taskList: workflow.executionConfiguration.taskList.name
+              }
+            }"
+          >
+            {{workflow.executionConfiguration.taskList.name}}
+          </router-link>
+        </dd>
       </div>
       <div class="history-length">
         <dt>History Events</dt>
-        <dd>{{$parent.workflow.workflowExecutionInfo.historyLength}}</dd>
+        <dd>{{workflow.workflowExecutionInfo.historyLength}}</dd>
       </div>
       <div class="workflow-input">
         <dt>Input</dt>
-        <dd><data-viewer v-if="input !== undefined" :item="input" :title="$route.params.workflowId + ' Input'" /></dd>
+        <dd>
+          <data-viewer
+            v-if="input !== undefined"
+            :item="input"
+            :title="$route.params.workflowId + ' Input'"
+          />
+        </dd>
       </div>
-      <div class="pending-activities" v-if="$parent.workflow.pendingActivities">
+      <div class="pending-activities" v-if="workflow.pendingActivities">
         <dt>Pending Activities</dt>
-        <dd v-for="pa in $parent.workflow.pendingActivities" :key="pa.activityID"><details-list :item="pa" /></dd>
+        <dd v-for="pa in workflow.pendingActivities" :key="pa.activityID">
+          <details-list :item="pa" />
+        </dd>
       </div>
     </dl>
-    <span class="error" v-if="$parent.error">{{$parent.error}}</span>
+    <span class="error" v-if="error">{{error}}</span>
   </section>
 </template>
 
 <script>
+import moment from 'moment';
 import shortName from '../../short-name'
 import { parentWorkflowLink } from './helpers'
 
 export default {
   data() {
     return {
+      error: undefined,
       terminationReason: undefined
     }
   },
   computed: {
+    baseAPIURL() {
+      return this.$parent.baseAPIURL;
+    },
     input() {
-      return this.$parent.results[0] && this.$parent.results[0].details.input
+      return this.$parent.summary.input;
     },
-    workflowCompletedEvent() {
-       return this.$parent.results.length > 1 && this.$parent.results[this.$parent.results.length - 1].eventType.startsWith('WorkflowExecution') ?
-          this.$parent.results[this.$parent.results.length - 1] : undefined
-    },
-    wfStatus() {
-      if (this.$parent.isWorkflowRunning) return 'running'
-      if (!this.workflowCompletedEvent) {
-        return ((this.$parent.workflow && this.$parent.workflow.workflowExecutionInfo.closeStatus) || 'running').toLowerCase()
-      }
-      if (this.workflowCompletedEvent.eventType === 'WorkflowExecutionContinuedAsNew') {
-        return {
-          to: {
-            name: 'execution/summary',
-            params: {
-              runId: this.workflowCompletedEvent.details.newExecutionRunId
-            }
-          },
-          text: 'Continued As New',
-          status: 'continued-as-new'
-        }
-      }
-      return this.workflowCompletedEvent.eventType.replace('WorkflowExecution', '').toLowerCase()
+    isWorkflowRunning() {
+      return this.$parent.summary.isWorkflowRunning;
     },
     parentWorkflowRoute() {
-      return parentWorkflowLink(this.$parent.results && this.$parent.results[0] && this.$parent.results[0].details)
-    }
+      return this.$parent.summary.parentWorkflowRoute;
+    },
+    result() {
+      return this.$parent.summary.result;
+    },
+    wfStatus() {
+      return this.$parent.summary.wfStatus;
+    },
+    workflow() {
+      return this.$parent.summary.workflow;
+    },
+    workflowCloseTime() {
+      return this.workflow.workflowExecutionInfo.closeTime
+        ? moment(this.workflow.workflowExecutionInfo.closeTime)
+          .format('dddd MMMM Do, h:mm:ss a')
+        : '';
+    },
+    workflowStartTime() {
+      return moment(this.workflow.workflowExecutionInfo.startTime)
+        .format('dddd MMMM Do, h:mm:ss a');
+    },
   },
   methods: {
     terminate() {
-      this.$modal.hide('confirm-termination')
-      this.$http.post(this.$parent.baseAPIURL + '/terminate', { reason: this.terminationReason }).then(r => {
-        console.dir(r)
+      this.$modal.hide('confirm-termination');
+      this.$http.post(this.baseAPIURL + '/terminate', {
+        reason: this.terminationReason
+      }).then(r => {
+        console.dir(r);
       }, resp => {
-        $parent.error = resp.message || resp.status || resp.statusCode
-      })
+        this.error = resp.message || resp.status || resp.statusCode;
+      });
     }
   }
 }

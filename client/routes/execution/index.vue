@@ -11,31 +11,39 @@
 </template>
 
 <script>
-import moment from 'moment'
 import { RESULT_THRESHOLD } from './constants';
 
 import {
-  getDisplayTimeElapsed,
-  getDisplayTimeStamp,
-  getEventDetails,
-  getEventFullDetails,
-  getEventSummary,
-  getKeyValuePairs,
-  mapTimelineEvents
+  getHistoryEvents,
+  getHistoryTimelineEvents,
+  getSummary,
 } from './helpers';
 
 export default {
   data() {
     return {
-      workflow: undefined,
-      wfError: undefined,
-      wfLoading: true,
-      historyError: undefined,
-      historyLoading: undefined,
+      events: [],
       isWorkflowRunning: undefined,
       nextPageToken: undefined,
-      results: [],
-      timelineEvents: [],
+      wfError: undefined,
+      wfLoading: true,
+      workflow: undefined,
+
+      history: {
+        error: undefined,
+        loading: undefined,
+        events: [],
+        timelineEvents: [],
+      },
+
+      summary: {
+        input: undefined,
+        isWorkflowRunning: undefined,
+        parentWorkflowRoute: undefined,
+        result: undefined,
+        wfStatus: undefined,
+        workflow: undefined,
+      },
     }
   },
   created() {
@@ -63,13 +71,13 @@ export default {
   },
   methods: {
     fetchHistoryPage(pagedQueryUrl) {
-      this.historyError = undefined
+      this.history.error = undefined;
       if (!pagedQueryUrl) {
-        this.historyLoading = false
+        this.history.loading = false;
         return
       }
 
-      this.historyLoading = true
+      this.history.loading = true;
       this.pqu = pagedQueryUrl
       return this.$http(pagedQueryUrl).then(res => {
         if (this._isDestroyed || this.pqu !== pagedQueryUrl) return
@@ -88,43 +96,18 @@ export default {
         }
 
         var shouldHighlightEventId = this.$route.query.eventId && this.results.length <= this.$route.query.eventId
+
         const events = res.history.events;
-        const formattedEvents = events
-          .map(event => {
-            const details = getEventDetails(event);
-            const eventSummary = getEventSummary(event);
-            const eventFullDetails = getEventFullDetails(event);
-            const timestamp = moment(event.timestamp);
-            return Object.assign({}, event, {
-              details,
-              eventSummary,
-              eventFullDetails,
-              timestamp,
-            });
-          })
-          // TODO - not ideal solution but will do for now and come back and refactor later...
-          .map((event, index, eventList) => {
-            const displayTimeStamp = getDisplayTimeStamp(event);
-            const displayTimeElapsed = getDisplayTimeElapsed(event, index, eventList);
-            return Object.assign({}, event, {
-              displayTimeStamp,
-              displayTimeElapsed
-            });
-          });
+        this.events = this.events.concat(events);
 
-        this.results = this.results.concat(formattedEvents);
+        this.history.events = this.history.events.concat(getHistoryEvents(events));
+        this.history.timelineEvents = getHistoryTimelineEvents(this.history.events);
 
-        // update timeline events
-        const newTimelineEvents = mapTimelineEvents(events)
-          .map((event) => {
-            const details = getEventDetails(event);
-            return Object.assign({}, event, {
-              details,
-            });
-          });
-
-        this.timelineEvents = this.timelineEvents.concat(newTimelineEvents);
-
+        this.summary = getSummary({
+          events: this.events,
+          isWorkflowRunning: this.isWorkflowRunning,
+          workflow: this.workflow
+        });
 
         if (shouldHighlightEventId) {
           this.$emit('highlight-event-id', this.$route.query.eventId)
@@ -136,11 +119,11 @@ export default {
       }).catch(e => {
         console.error(e)
         if (this._isDestroyed || this.pqu !== pagedQueryUrl) return
-        this.historyError = (e.json && e.json.message) || e.status || e.message
+        this.history.error = (e.json && e.json.message) || e.status || e.message;
         return []
       }).finally(() => {
         if (this._isDestroyed || this.pqu !== pagedQueryUrl) {
-          this.historyLoading = false
+          this.history.loading = false;
         }
       })
     },

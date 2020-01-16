@@ -1,5 +1,5 @@
 <template>
-  <section :class="{ history: true, loading: $parent.historyLoading, 'has-results': !!$parent.results.length, 'split-enabled': true }">
+  <section :class="{ history: true, loading, 'has-results': !!events.length, 'split-enabled': true }">
     <header class="controls">
       <div class="view-format">
         <label for="format">View Format</label>
@@ -10,11 +10,11 @@
         </div>
       </div>
       <div class="actions">
-        <a class="export" :href="$parent.baseAPIURL + '/export'" :download="exportFilename">Export</a>
+        <a class="export" :href="baseAPIURL + '/export'" :download="exportFilename">Export</a>
       </div>
     </header>
 
-    <Split class="split-panel" direction="vertical" @onDrag="onSplitResize" @onDragStart="enableSplitting" v-if="!showNoResults && !$parent.historyError" ref="splitPanel">
+    <Split class="split-panel" direction="vertical" @onDrag="onSplitResize" @onDragStart="enableSplitting" v-if="!showNoResults && !error" ref="splitPanel">
       <SplitArea
         class="timeline-split"
         :min-size="splitSizeMinSet[0]"
@@ -23,7 +23,7 @@
         <!-- TODO - Disabling graph while optimising history screen -->
         <!--
         <timeline
-          :events="$parent.timelineEvents"
+          :events="timelineEvents"
           :selected-event-id="eventId"
           v-if="format !== 'json'"
         />
@@ -83,12 +83,12 @@
                   >
                     <div class="td col-id">{{item.eventId}}</div>
                     <div class="td col-type">{{item.eventType}}</div>
-                    <div class="td col-time">{{tsFormat === 'elapsed' ? item.displayTimeElapsed : item.displayTimeStamp}}</div>
+                    <div class="td col-time">{{tsFormat === 'elapsed' ? item.timeElapsedDisplay : item.timeStampDisplay}}</div>
                     <div class="td col-summary">
                       <event-details
                         :event="(compactDetails && !item.expanded) ? item.eventSummary : item.eventFullDetails"
                         :compact="compactDetails && !item.expanded"
-                        :highlight="$parent.results.length < 100"
+                        :highlight="events.length < 100"
                       />
                     </div>
                   </div>
@@ -96,13 +96,13 @@
               </template>
             </DynamicScroller>
           </div>
-          <prism class="json" language="json" v-if="format === 'json' && $parent.results.length < 90">{{JSON.stringify($parent.results, null, 2)}}</prism>
-          <pre class="json" v-if="format === 'json' && $parent.results.length >= 90">{{JSON.stringify($parent.results, null, 2)}}</pre>
+          <prism class="json" language="json" v-if="format === 'json' && events.length < 90">{{JSON.stringify(events, null, 2)}}</prism>
+          <pre class="json" v-if="format === 'json' && events.length >= 90">{{JSON.stringify(events, null, 2)}}</pre>
           <div class="compact-view" v-if="format === 'compact'">
             <RecycleScroller
               class="scroller-compact"
               key-field="id"
-              :items="$parent.timelineEvents"
+              :items="timelineEvents"
               :item-size="70"
               ref="scrollerCompact"
               style="height: 0px;"
@@ -112,7 +112,7 @@
                   :class="`timeline-event ${item.className || ''} ${(item === selectedTimelineEvent ? ' vis-selected' : '')}`"
                   @click.prevent="selectTimelineEvent(item)"
                 >
-                  <span class="event-title">{{item.content}}</span>7
+                  <span class="event-title">{{item.content}}</span>
                   <details-list
                     :compact="true"
                     :item="item.details"
@@ -134,7 +134,7 @@
                   :key="eid"
                   @click.prevent="$router.replaceQueryParam('eventId', eid)"
                   :data-event-id="eid">
-                    {{$parent.results.find(e => e.eventId === eid).eventType}}
+                    {{events.find(event => event.eventId === eid).eventType}}
                 </a>
               </div>
               <details-list class="event-details" :item="selectedEventDetails" :title="`${selectedTimelineEvent.content} - ${selectedEvent.eventType}`" />
@@ -144,7 +144,7 @@
       </SplitArea>
     </Split>
 
-    <span class="error" v-if="$parent.historyError">{{$parent.historyError}}</span>
+    <span class="error" v-if="error">{{error}}</span>
     <span class="no-results" v-if="showNoResults">No Results</span>
   </section>
 </template>
@@ -195,7 +195,7 @@ export default {
   },
   mounted() {
     this.$watch(
-      () => `${this.$parent.results.length}${this.tsFormat.length}${this.$route.query.format}${this.compactDetails}`,
+      () => `${this.events.length}${this.tsFormat.length}${this.$route.query.format}${this.compactDetails}`,
       this.onResizeWindow,
       { immediate: true }
     );
@@ -205,36 +205,26 @@ export default {
     window.removeEventListener('resize', this.onResizeWindow);
   },
   computed: {
-    selectedTimelineEvent() {
-      return this.$parent.timelineEvents.find(te => te.eventIds.includes(this.eventId))
+    baseAPIURL() {
+      return this.$parent.baseAPIURL;
     },
-    selectedEvent() {
-      return this.$parent.results.find(e => e.eventId == this.eventId)
+    error() {
+      return this.$parent.history.error;
     },
-    selectedEventDetails() {
-      if (!this.selectedEvent) return {}
-      return Object.assign({
-        timestamp: this.selectedEvent.timestamp.format('MMM Do h:mm:ss a'),
-        eventId: this.selectedEvent.eventId
-      }, this.selectedEvent.details)
-    },
-    showTable() {
-      return !this.$parent.historyError && (this.$parent.historyLoading || this.$parent.results.length)
-    },
-    showNoResults() {
-      return !this.$parent.historyError && !this.$parent.historyLoading && this.$parent.results.length === 0
+    events() {
+      return this.$parent.history.events;
     },
     exportFilename() {
       return `${this.$route.params.workflowId.replace(/[\\~#%&*{}\/:<>?|\"-]/g, ' ')} - ${this.$route.params.runId}.json`
     },
     filteredEvents() {
       const { eventId, eventType } = this;
-      const formattedResults = this.$parent.results.map((item) => Object.assign({}, item, {
-        expanded: item.eventId === eventId,
+      const formattedEvents = this.events.map((event) => Object.assign({}, event, {
+        expanded: event.eventId === eventId,
       }));
       return eventType && eventType !== "All" ?
-        formattedResults.filter(result => result.eventType.includes(eventType)) :
-        formattedResults;
+        formattedEvents.filter(result => result.eventType.includes(eventType)) :
+        formattedEvents;
     },
     filteredEventIdToIndex() {
       return this.filteredEvents
@@ -247,14 +237,39 @@ export default {
     isGrid() {
       return this.format === 'grid';
     },
+    loading() {
+      return this.$parent.history.loading;
+    },
+    selectedTimelineEvent() {
+      return this.timelineEvents.find(te => te.eventIds.includes(this.eventId))
+    },
+    selectedEvent() {
+      return this.events.find(e => e.eventId == this.eventId)
+    },
+    selectedEventDetails() {
+      if (!this.selectedEvent) return {}
+      return Object.assign({
+        timestamp: this.selectedEvent.timestamp.format('MMM Do h:mm:ss a'),
+        eventId: this.selectedEvent.eventId
+      }, this.selectedEvent.details)
+    },
+    showTable() {
+      return !this.error && (this.loading || this.events.length)
+    },
+    showNoResults() {
+      return !this.error && !this.loading && this.events.length === 0
+    },
     timelineEventIdToIndex() {
-      return this.$parent.timelineEvents
+      return this.timelineEvents
         .map(({ eventIds }) => eventIds)
         .reduce((accumulator, eventIds, index) =>
           Object.assign({}, accumulator, eventIds.reduce((acc, eventId) => {
             acc[eventId] = index;
             return acc;
           }, {})), {});
+    },
+    timelineEvents() {
+      return this.$parent.history.timelineEvents;
     },
   },
   methods: {

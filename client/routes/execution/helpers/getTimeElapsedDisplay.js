@@ -1,6 +1,6 @@
 import moment from 'moment';
 
-const getDisplayTimeElapsed = (event, index, eventList) => {
+const getTimeElapsedDisplay = (event, index, eventList) => {
   const { timestamp } = event;
   if (!timestamp || index === -1) {
     return '';
@@ -19,4 +19,4 @@ const getDisplayTimeElapsed = (event, index, eventList) => {
   return elapsed;
 };
 
-export default getDisplayTimeElapsed;
+export default getTimeElapsedDisplay;

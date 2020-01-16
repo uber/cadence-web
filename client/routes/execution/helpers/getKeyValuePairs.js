@@ -3,7 +3,7 @@ import {
   preKeys,
 } from '../constants';
 import moment from 'moment';
-import getStringElipsis from './getStringElipsis';
+import getJsonStringObject from './getJsonStringObject';
 
 const getKeyValuePairs = event => {
   var kvps = []
@@ -53,14 +53,9 @@ const getKeyValuePairs = event => {
       } else if (/.+TimeoutSeconds/.test(key)) {
         kvps.push({ key: key.replace(/Seconds$/, ''), value: moment.duration(value, 'seconds').format() })
       } else if (preKeys.includes(k)) {
-        const jsonStringFull = JSON.stringify(value, null, 2);
-        const jsonStringDisplay = getStringElipsis(jsonStringFull);
         kvps.push({
           key,
-          value: {
-            jsonStringDisplay,
-            jsonStringFull,
-          }
+          value: getJsonStringObject(value)
         });
       } else {
         kvps.push({ key, value });
