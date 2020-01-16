@@ -1,6 +1,6 @@
 <script>
 import moment from 'moment'
-import { preKeys } from '../routes/execution/constants';
+import { preKeys } from '../constants';
 
 export default {
   name: 'details-list',

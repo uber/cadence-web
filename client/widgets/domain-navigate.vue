@@ -31,7 +31,7 @@
 import debounce from 'lodash-es/debounce'
 import omit from 'lodash-es/omit'
 import { stringify } from 'friendly-querystring'
-import mapDomainDescription from '../map-domain-description'
+import { getKeyValuePairs, mapDomainDescription } from '../helpers'
 
 const validationMessages = {
   valid: d => `${d} exists`,
@@ -98,7 +98,7 @@ export default {
         this.domainDescRequest = this.getDomainDesc(newDomain).then(
           desc => {
             this.domainDescName = newDomain
-            this.domainDesc = desc
+            this.domainDesc = { kvps: getKeyValuePairs(desc) }
             return 'valid'
           },
           res => res.status === 404 ? 'invalid' : 'error'
@@ -130,7 +130,7 @@ export default {
         .catch(res => ({ error: `${res.statusText || res.message} ${res.status}` }))
         .then(desc => {
           if (this.domainDescName === d) {
-            this.domainDesc = desc
+            this.domainDesc = { kvps: getKeyValuePairs(desc) }
             this.domainDescRequest = null
           }
         })

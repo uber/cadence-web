@@ -1,5 +1,5 @@
 import { eventFullTransforms } from './eventFullTransforms';
-import getKeyValuePairs from './getKeyValuePairs';
+import { getKeyValuePairs } from '../../../helpers';
 
 const getEventFullDetails = (event) => {
   if (!event) {

@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import mapDomainDescription from '../map-domain-description'
+import { getKeyValuePairs, mapDomainDescription } from '../helpers';
 
 export default {
   data() {
@@ -22,7 +22,11 @@ export default {
   },
   created() {
     this.$http(`/api/domain/${this.$route.params.domain}`).then(
-      r => this.domainConfig = mapDomainDescription(r),
+      r => {
+        const domainConfig = mapDomainDescription(r);
+        const kvps = getKeyValuePairs(domainConfig);
+        this.domainConfig = Object.assign({}, domainConfig, { kvps });
+      },
       res => this.error = `${res.statusText || res.message} ${res.status}`
     ).finally(() => this.loading = false)
   },

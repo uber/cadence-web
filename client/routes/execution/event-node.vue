@@ -1,6 +1,7 @@
 <script>
 import moment from 'moment'
 import shortName from '../../short-name'
+import { getKeyValuePairs } from '../../helpers';
 
 const titlesForGroups = {
   ActivityTaskScheduled: n => `Activity ${n.details.activityId} - ${shortName(n.details.activityType && n.details.activityType.name)}`,
@@ -48,7 +49,7 @@ export default {
       showDetails = activeId && (!!groupTitle || (isActive && noGroup)),
       activeGroupNode = showDetails && findActiveGroupNode(node, activeId, true),
       detailsList = activeGroupNode && h('details-list', {
-        props: { item: activeGroupNode.details, title: groupTitle || node.eventType }
+        props: { item: { kvps: getKeyValuePairs(activeGroupNode.details) }, title: groupTitle || node.eventType }
       })
 
       return h(groupTitle ? 'div' : 'span', {

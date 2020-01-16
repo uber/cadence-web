@@ -1,6 +1,4 @@
-import getJsonStringObject from './getJsonStringObject';
-import getKeyValuePairs from './getKeyValuePairs';
-import getStringElipsis from './getStringElipsis';
+import { getJsonStringObject, getKeyValuePairs } from '../../../helpers';
 import getSummaryWorkflowStatus from './getSummaryWorkflowStatus';
 import parentWorkflowLink from './parentWorkflowLink';
 
@@ -9,13 +7,15 @@ const getSummary = ({
   isWorkflowRunning,
   workflow
 }) => {
-  const formattedWorkflow = Object.assign({}, workflow, {
-    pendingActivities: workflow.pendingActivities.map((pendingActivity) => {
-      return Object.assign({}, pendingActivity, {
-        kvps: getKeyValuePairs(pendingActivity),
-      });
-    }),
-  });
+  const formattedWorkflow = !!workflow.pendingActivities
+    ? Object.assign({}, workflow, {
+      pendingActivities: workflow.pendingActivities.map((pendingActivity) => {
+        return Object.assign({}, pendingActivity, {
+          kvps: getKeyValuePairs(pendingActivity),
+        });
+      }),
+    })
+    : workflow;
 
   if (!events || !events.length) {
     return {
