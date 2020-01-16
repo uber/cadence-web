@@ -10,6 +10,7 @@
         </div>
       </div>
       <div class="actions">
+        <a href="#" @click.prevent="toggleGraph()">{{ showGraph ? 'hide' : 'show' }} graph</a>
         <a class="export" :href="baseAPIURL + '/export'" :download="exportFilename">Export</a>
       </div>
     </header>
@@ -20,14 +21,11 @@
         :min-size="splitSizeMinSet[0]"
         :size="splitSizeSet[0]"
       >
-        <!-- TODO - Disabling graph while optimising history screen -->
-        <!--
         <timeline
           :events="timelineEvents"
           :selected-event-id="eventId"
-          v-if="format !== 'json'"
+          v-if="format !== 'json' && showGraph"
         />
-        -->
       </SplitArea>
       <SplitArea
         class="view-split"
@@ -164,6 +162,7 @@ export default {
     return {
       tsFormat: localStorage.getItem(`${this.$route.params.domain}:history-ts-col-format`) || 'elapsed',
       compactDetails: localStorage.getItem(`${this.$route.params.domain}:history-compact-details`) === 'true',
+      showGraph: false,
       splitEnabled: false,
       eventType: "",
       eventTypes: [
@@ -175,7 +174,7 @@ export default {
         { value: 'ChildWorkflow', label: 'ChildWorkflow' },
         { value: 'Workflow', label: 'Workflow' },
       ],
-      splitSizeSet: [20, 80],
+      splitSizeSet: [1, 99],
       splitSizeMinSet: [0, 0],
     }
   },
@@ -263,9 +262,22 @@ export default {
             acc[eventId] = index;
             return acc;
           }, {})), {});
-    },
+    }
   },
   methods: {
+    deselectEvent() {
+      this.$router.replace({ query: omit(this.$route.query, 'eventId') })
+    },
+    enableSplitting() {
+      if (!this.splitEnabled) {
+        var timelineHeightPct = (this.$refs.splitPanel.$el.firstElementChild.offsetHeight / this.$refs.splitPanel.$el.offsetHeight) * 100
+        this.splitSizeSet = [timelineHeightPct, 100 - timelineHeightPct];
+        this.splitEnabled = true
+      }
+    },
+    onSplitResize: debounce(function (size) {
+      window.dispatchEvent(new Event('resize'))
+    }, 5),
     setEventType(et){
       this.eventType = et.value
     },
@@ -315,19 +327,11 @@ export default {
     selectTimelineEvent(i) {
       this.$router.replaceQueryParam('eventId', i.eventIds[i.eventIds.length - 1])
     },
-    deselectEvent() {
-      this.$router.replace({ query: omit(this.$route.query, 'eventId') })
+    toggleGraph() {
+      this.showGraph = !this.showGraph;
+      this.splitSizeSet = this.showGraph ? [20, 80] : [1, 99];
+      this.onResizeWindow();
     },
-    enableSplitting() {
-      if (!this.splitEnabled) {
-        var timelineHeightPct = (this.$refs.splitPanel.$el.firstElementChild.offsetHeight / this.$refs.splitPanel.$el.offsetHeight) * 100
-        this.splitSizeSet = [timelineHeightPct, 100 - timelineHeightPct];
-        this.splitEnabled = true
-      }
-    },
-    onSplitResize: debounce(function (size) {
-      window.dispatchEvent(new Event('resize'))
-    }, 5)
   },
   watch: {
     eventId(eventId) {
