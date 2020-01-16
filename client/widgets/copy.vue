@@ -17,8 +17,8 @@ export default {
       window.getSelection().removeAllRanges()
       window.getSelection().addRange(range)
 
-      if (typeof Mocha !== undefined) {
-        Mocha.copiedText = this.text
+      if (window.Mocha) {
+        window.Mocha.copiedText = this.text;
       } else {
         document.execCommand('copy')
       }
