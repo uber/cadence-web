@@ -3,7 +3,7 @@ import {
   preKeys,
 } from '../constants';
 import moment from 'moment';
-import getJsonStringObject from './getJsonStringObject';
+import getJsonStringObject from './get-json-string-object';
 
 const getKeyValuePairs = event => {
   var kvps = []

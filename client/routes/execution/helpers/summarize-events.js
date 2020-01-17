@@ -1,6 +1,6 @@
 import moment from 'moment'
 import shortName from '../../../short-name'
-import parentWorkflowLink from './parentWorkflowLink';
+import parentWorkflowLink from './parent-workflow-link';
 
 function workflowLink(d, short) {
   return {

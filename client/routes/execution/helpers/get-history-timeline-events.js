@@ -1,5 +1,5 @@
-import getEventDetails from './getEventDetails';
-import mapTimelineEvents from './mapTimelineEvents';
+import getEventDetails from './get-event-details';
+import mapTimelineEvents from './map-timeline-events';
 
 const getHistoryTimelineEvents = (events) =>
   mapTimelineEvents(events)

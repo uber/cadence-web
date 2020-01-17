@@ -1,6 +1,6 @@
 import { getJsonStringObject, getKeyValuePairs } from '../../../helpers';
-import getSummaryWorkflowStatus from './getSummaryWorkflowStatus';
-import parentWorkflowLink from './parentWorkflowLink';
+import getSummaryWorkflowStatus from './get-summary-workflow-status';
+import parentWorkflowLink from './parent-workflow-link';
 
 const getSummary = ({
   events,

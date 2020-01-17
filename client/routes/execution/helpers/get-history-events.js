@@ -1,9 +1,9 @@
 import moment from 'moment';
-import getTimeElapsedDisplay from './getTimeElapsedDisplay';
-import getTimeStampDisplay from './getTimeStampDisplay';
-import getEventDetails from './getEventDetails';
-import getEventFullDetails from './getEventFullDetails';
-import getEventSummary from './getEventSummary';
+import getTimeElapsedDisplay from './get-time-elapsed-display';
+import getTimeStampDisplay from './get-time-stamp-display';
+import getEventDetails from './get-event-details';
+import getEventFullDetails from './get-event-full-details';
+import getEventSummary from './get-event-summary';
 
 const getHistoryEvents = (events) => {
   if (!events) {

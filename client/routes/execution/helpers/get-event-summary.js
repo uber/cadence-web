@@ -1,5 +1,5 @@
 // TODO - move these transforms into helpers folder
-import { summarizeEvents } from './summarizeEvents';
+import { summarizeEvents } from './summarize-events';
 import { getKeyValuePairs } from '../../../helpers';
 
 const getEventSummary = event => {

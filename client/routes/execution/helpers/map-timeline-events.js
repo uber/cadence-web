@@ -1,6 +1,6 @@
 import moment from 'moment'
 import shortName from '../../../short-name'
-import { summarizeEvents } from './summarizeEvents';
+import { summarizeEvents } from './summarize-events';
 
 export default function(historyEvents) {
   const events = [], hash = {},

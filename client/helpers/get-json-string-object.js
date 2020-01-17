@@ -1,4 +1,4 @@
-import getStringElipsis from './getStringElipsis';
+import getStringElipsis from './get-string-elipsis';
 
 const getJsonStringObject = (value) => {
   const jsonStringFull = JSON.stringify(value, null, 2);
