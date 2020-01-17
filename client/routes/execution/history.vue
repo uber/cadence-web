@@ -162,6 +162,7 @@ export default {
     return {
       tsFormat: localStorage.getItem(`${this.$route.params.domain}:history-ts-col-format`) || 'elapsed',
       compactDetails: localStorage.getItem(`${this.$route.params.domain}:history-compact-details`) === 'true',
+      scrolledToEventOnInit: false,
       showGraph: false,
       splitEnabled: false,
       eventType: "",
@@ -279,7 +280,8 @@ export default {
       window.dispatchEvent(new Event('resize'))
     }, 5),
     setEventType(et){
-      this.eventType = et.value
+      this.eventType = et.value;
+      setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
     },
     setFormat(format) {
       this.$router.replace({
@@ -296,6 +298,7 @@ export default {
       this.compactDetails = compact;
       localStorage.setItem(`${this.$route.params.domain}:history-compact-details`, JSON.stringify(compact));
       scrollerGrid.forceUpdate();
+      setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
     },
     scrollEventIntoView(eventId) {
       const index = this.isGrid ?
@@ -338,7 +341,14 @@ export default {
       this.scrollEventIntoView(eventId);
     },
     filteredEvents() {
-      this.scrollEventIntoView(this.eventId);
+      if (
+        !this.scrolledToEventOnInit
+        && this.eventId !== undefined
+        && this.filteredEventIdToIndex[this.eventId] !== undefined
+      ) {
+        this.scrolledToEventOnInit = true;
+        setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
+      }
     },
   },
   components: {
