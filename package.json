@@ -8,6 +8,7 @@
     "dev": "NODE_ENV=development node server.js",
     "start": "npm run build && NODE_ENV=production node server.js",
     "test": "mocha server/test && mocha-chrome http://localhost:8090",
+    "test:unit": "jest",
     "test-server": "CADENCE_WEB_PORT=8090 TEST_RUN=ci node server.js",
     "build": "webpack",
     "build-production": "NODE_ENV=production npm run build"
@@ -67,10 +68,14 @@
     "webpack": "^3.10.0"
   },
   "devDependencies": {
+    "atob": "^2.1.2",
+    "babel-jest": "^24.9.0",
+    "babel-preset-env": "^1.7.0",
     "chai": "^4.1.2",
     "chai-dom": "^1.7.0",
     "chai-things": "^0.2.0",
     "fetch-mock": "^5.13.1",
+    "jest": "^24.9.0",
     "mocha": "^4.0.1",
     "mocha-chrome": "^1.1.0",
     "nathanboktae-browser-test-utils": "^0.1.0",

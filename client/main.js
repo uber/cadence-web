@@ -9,6 +9,8 @@ import http from './http'
 import moment from 'moment'
 import promiseFinally from 'promise.prototype.finally'
 
+import { jsonTryParse } from './helpers';
+
 import DateRangePicker from './widgets/date-range-picker.vue'
 import detailList from './widgets/detail-list.vue'
 import barLoader from './widgets/bar-loader.vue'
@@ -123,11 +125,7 @@ Object.getPrototypeOf(moment.duration(2, 'seconds')).format = function() {
     .trim()
 }
 
-JSON.tryParse = function() {
-  try {
-    return JSON.parse.apply(this, arguments)
-  } catch (e) {}
-}
+JSON.tryParse = jsonTryParse;
 
 promiseFinally.shim()
 
