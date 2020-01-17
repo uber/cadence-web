@@ -159,11 +159,12 @@ import omit from 'lodash-es/omit'
 
 export default {
   data() {
+    const showGraph = localStorage.getItem(`${this.$route.params.domain}:history-show-graph`) === 'true';
     return {
       tsFormat: localStorage.getItem(`${this.$route.params.domain}:history-ts-col-format`) || 'elapsed',
       compactDetails: localStorage.getItem(`${this.$route.params.domain}:history-compact-details`) === 'true',
       scrolledToEventOnInit: false,
-      showGraph: false,
+      showGraph,
       splitEnabled: false,
       eventType: "",
       eventTypes: [
@@ -175,7 +176,7 @@ export default {
         { value: 'ChildWorkflow', label: 'ChildWorkflow' },
         { value: 'Workflow', label: 'Workflow' },
       ],
-      splitSizeSet: [1, 99],
+      splitSizeSet: showGraph ? [20, 80] : [1, 99],
       splitSizeMinSet: [0, 0],
     }
   },
@@ -334,6 +335,7 @@ export default {
       this.showGraph = !this.showGraph;
       this.splitSizeSet = this.showGraph ? [20, 80] : [1, 99];
       this.onResizeWindow();
+      localStorage.setItem(`${this.$route.params.domain}:history-show-graph`, this.showGraph)
     },
   },
   watch: {
