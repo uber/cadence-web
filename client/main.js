@@ -9,7 +9,10 @@ import http from './http'
 import moment from 'moment'
 import promiseFinally from 'promise.prototype.finally'
 
-import { jsonTryParse } from './helpers';
+import {
+  injectMomentDurationFormat,
+  jsonTryParse,
+} from './helpers';
 
 import DateRangePicker from './widgets/date-range-picker.vue'
 import detailList from './widgets/detail-list.vue'
@@ -116,14 +119,7 @@ Object.getPrototypeOf(router).replaceQueryParam = function(prop, val) {
   this.replace({ query: newQuery })
 }
 
-Object.getPrototypeOf(moment.duration(2, 'seconds')).format = function() {
-  return this.toString().toLowerCase()
-    .replace(/[pt]/g, '')
-    .replace(/([hmd])/g, '$1 ')
-    .replace(/\.\d{1,3}s/, 's')
-    .replace('0d ', '')
-    .trim()
-}
+injectMomentDurationFormat();
 
 JSON.tryParse = jsonTryParse;
 
