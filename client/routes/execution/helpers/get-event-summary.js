@@ -6,6 +6,9 @@ const getEventSummary = event => {
   if (!event) {
     return event;
   }
+  if (!event.details) {
+    return event.details;
+  }
   const { eventId, eventType } = event;
   const maps = summarizeEvents;
   const item = event.eventType in maps ? maps[event.eventType](event.details) : event.details;

@@ -92,9 +92,12 @@ export default function(historyEvents) {
         timerStartedEvent.eventIds.push(e.eventId)
       }
     } else if (e.eventType === 'MarkerRecorded') {
+      const markerName = e.details.markerName !== undefined
+        ? e.details.markerName.toLowerCase()
+        : '';
       add({
         id: 'marker' + e.eventId,
-        className: 'marker marker-' + e.details.markerName.toLowerCase(),
+        className: `marker marker-${markerName}`,
         eventIds: [e.eventId],
         start: moment(e.timestamp),
         content: ({
