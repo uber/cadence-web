@@ -148,6 +148,11 @@ export default {
     'result',
     'wfStatus',
     'workflow',
+
+    // unused props but need to be declaired otherwise automatically injected into dom
+    'events',
+    'loading',
+    'timelineEvents',
   ],
   computed: {
     workflowCloseTime() {
