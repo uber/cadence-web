@@ -47,14 +47,14 @@
       </div>
       <div
         class="workflow-status"
-        :data-status="typeof wfStatus === 'string' ? wfStatus : wfStatus.status"
+        :data-status="wfStatus !== undefined && (typeof wfStatus === 'string' ? wfStatus : wfStatus.status)"
       >
         <dt>Status</dt>
         <dd>
           <bar-loader v-if="wfStatus === 'running'" />
           <span v-if="typeof wfStatus === 'string'">{{wfStatus}}</span>
           <router-link
-            v-if="wfStatus.to"
+            v-if="wfStatus !== undefined && wfStatus.to"
             :to="wfStatus.to"
           >
             {{wfStatus.text}}
@@ -124,7 +124,7 @@
         </dd>
       </div>
     </dl>
-    <span class="error" v-if="error">{{error}}</span>
+    <span class="error" v-if="terminationError">{{terminationError}}</span>
   </section>
 </template>
 
@@ -136,7 +136,7 @@ import { parentWorkflowLink } from './helpers'
 export default {
   data() {
     return {
-      error: undefined,
+      terminationError: undefined,
       terminationReason: undefined
     }
   },
@@ -150,6 +150,7 @@ export default {
     'workflow',
 
     // unused props but need to be declaired otherwise automatically injected into dom
+    'error',
     'events',
     'loading',
     'timelineEvents',
@@ -174,7 +175,7 @@ export default {
       }).then(r => {
         console.dir(r);
       }, resp => {
-        this.error = resp.message || resp.status || resp.statusCode;
+        this.terminationError = resp.message || resp.status || resp.statusCode;
       });
     }
   }

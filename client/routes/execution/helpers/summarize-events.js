@@ -22,7 +22,7 @@ export const summarizeEvents = {
       Parent: undefined,
       input: d.input,
       identity: d.identity,
-      Workflow: shortName(d.workflowType.name),
+      Workflow: d.workflowType ? shortName(d.workflowType.name) : '',
       'Close Timeout': moment.duration(d.executionStartToCloseTimeoutSeconds, 'seconds').format()
     },
     wfLink = parentWorkflowLink(d)
