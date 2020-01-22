@@ -10,7 +10,7 @@
         </div>
       </div>
       <div class="actions">
-        <a href="#" @click.prevent="toggleGraph()">{{ showGraph ? 'hide' : 'show' }} graph</a>
+        <a href="#" @click.prevent="toggleShowGraph()">{{ showGraph ? 'hide' : 'show' }} graph</a>
         <a class="export" :href="baseAPIURL + '/export'" :download="exportFilename">Export</a>
       </div>
     </header>
@@ -159,12 +159,10 @@ import omit from 'lodash-es/omit'
 
 export default {
   data() {
-    const showGraph = localStorage.getItem(`${this.$route.params.domain}:history-show-graph`) === 'true';
     return {
       tsFormat: localStorage.getItem(`${this.$route.params.domain}:history-ts-col-format`) || 'elapsed',
       compactDetails: localStorage.getItem(`${this.$route.params.domain}:history-compact-details`) === 'true',
       scrolledToEventOnInit: false,
-      showGraph,
       splitEnabled: false,
       eventType: "",
       eventTypes: [
@@ -176,8 +174,9 @@ export default {
         { value: 'ChildWorkflow', label: 'ChildWorkflow' },
         { value: 'Workflow', label: 'Workflow' },
       ],
-      splitSizeSet: showGraph ? [20, 80] : [1, 99],
+      splitSizeSet: [1, 99],
       splitSizeMinSet: [0, 0],
+      unwatch: [],
     }
   },
   props: [
@@ -187,6 +186,7 @@ export default {
     'events',
     'format',
     'loading',
+    'showGraph',
     'timelineEvents',
 
     // unused props but need to be declaired otherwise automatically injected into dom
@@ -211,15 +211,19 @@ export default {
     }, 5);
   },
   mounted() {
-    this.$watch(
+    this.splitSizeSet = this.showGraph ? [20, 80] : [1, 99];
+    this.unwatch.push(this.$watch(
       () => `${this.events.length}${this.tsFormat.length}${this.$route.query.format}${this.compactDetails}`,
       this.onResizeWindow,
       { immediate: true }
-    );
+    ));
     window.addEventListener('resize', this.onResizeWindow);
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.onResizeWindow);
+    while(this.unwatch.length) {
+      (this.unwatch.pop())();
+    }
   },
   computed: {
     exportFilename() {
@@ -339,11 +343,14 @@ export default {
     selectTimelineEvent(i) {
       this.$router.replaceQueryParam('eventId', i.eventIds[i.eventIds.length - 1])
     },
-    toggleGraph() {
-      this.showGraph = !this.showGraph;
-      this.splitSizeSet = this.showGraph ? [20, 80] : [1, 99];
-      this.onResizeWindow();
-      localStorage.setItem(`${this.$route.params.domain}:history-show-graph`, this.showGraph)
+    toggleShowGraph() {
+      if (this.showGraph) {
+        this.$router.replace({ query: omit(this.$route.query, 'showGraph') });
+      } else {
+        this.$router.replace({
+          query: Object.assign({}, this.$route.query, { showGraph: true }),
+        });
+      }
     },
   },
   watch: {
@@ -359,6 +366,10 @@ export default {
         this.scrolledToEventOnInit = true;
         setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
       }
+    },
+    showGraph() {
+      this.splitSizeSet = this.showGraph ? [20, 80] : [1, 99];
+      this.onSplitResize();
     },
   },
   components: {

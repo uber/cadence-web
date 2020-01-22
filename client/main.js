@@ -62,7 +62,8 @@ const routeOpts = {
         component: History,
         props: ({ query }) => ({
           format: query.format || 'grid',
-          eventId: Number(query.eventId) || undefined
+          eventId: Number(query.eventId) || undefined,
+          showGraph: query.showGraph === true,
         })
       },
       {

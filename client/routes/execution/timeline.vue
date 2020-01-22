@@ -20,7 +20,11 @@ if (navigator.language === 'en-US') {
 export default {
   props: ['events', 'selectedEventId'],
   data() {
-    return { margin: 10, minHeight: 50 }
+    return {
+      margin: 10,
+      minHeight: 50,
+      unwatch: []
+    };
   },
   methods: {
     heightOption() {
@@ -38,6 +42,7 @@ export default {
     initIfNeeded() {
       if (!this.timeline && this.items.length && this.$el) {
         this.timeline = new Timeline(this.$el, this.items, null, Object.assign({
+          autoResize: false,
           verticalScroll: true
         }, this.heightOption()))
         this.$el.timeline = this.timeline  // expose for testing purposes
@@ -59,8 +64,8 @@ export default {
           }
           dontFocus = false
         }
-        this.$watch('selectedEventId', highlightSelection, { immediate: true })
-        this.$watch('events', highlightSelection, { immediate: true })
+        this.unwatch.push(this.$watch('selectedEventId', highlightSelection, { immediate: true }));
+        this.unwatch.push(this.$watch('events', highlightSelection, { immediate: true }));
       }
     },
     findEvent(eventId) {
@@ -76,13 +81,13 @@ export default {
     }
 
     this.items = new DataSet()
-    this.$watch('events', () => {
+    this.unwatch.push(this.$watch('events', () => {
       var newIds = new DataSet(this.events).getIds(),
           removed = this.items.getIds().filter(i => !newIds.includes(i))
       this.items.update(this.events)
       this.items.remove(removed)
       this.initIfNeeded()
-    }, { immediate: true })
+    }, { immediate: true }));
   },
   mounted() {
     this.initIfNeeded()
@@ -99,6 +104,10 @@ export default {
   beforeDestroy() {
     window.removeEventListener('resize', this.onResize)
     clearInterval(this.ongoingUpdater)
+    while(this.unwatch.length) {
+      (this.unwatch.pop())();
+    }
+    this.timeline.destroy();
   }
 }
 </script>

@@ -206,7 +206,7 @@ describe('Execution', function() {
       parentWf = await summaryEl.waitUntilExists('.parent-workflow')
 
       parentWf.querySelector('dd a')
-        .should.have.text('the-parent-wfid')
+        .should.contain.text('the-parent-wfid')
         .and.have.attr('href', '/domain/another-domain/workflows/the-parent-wfid/1234/summary')
     })
 
@@ -356,12 +356,13 @@ describe('Execution', function() {
       })
 
       async function compactViewTest(mochaTest, o) {
-        var [summaryEl, scenario] = await historyTest(mochaTest, {
+        const [summaryEl, scenario] = await historyTest(mochaTest, {
           events: fixtures.history.timelineVariety,
           query: 'format=compact',
           attach: true
-        }),
-        timelineEl = await summaryEl.waitUntilExists('.timeline-split div.timeline')
+        });
+
+        const timelineEl = await summaryEl.waitUntilExists('.timeline-split div.timeline')
 
         await retry(() => timelineEl.timeline.fit.should.be.instanceof(Function))
 
