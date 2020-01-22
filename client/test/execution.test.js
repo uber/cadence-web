@@ -358,7 +358,7 @@ describe('Execution', function() {
       async function compactViewTest(mochaTest, o) {
         const [summaryEl, scenario] = await historyTest(mochaTest, {
           events: fixtures.history.timelineVariety,
-          query: 'format=compact',
+          query: 'format=compact&showGraph=true',
           attach: true
         });
 
