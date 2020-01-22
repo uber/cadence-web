@@ -120,6 +120,9 @@ div.timeline
   padding 0 10px
   margin-bottom inline-spacing-medium
 
+  .vis-timeline
+    visibility: visible !important;
+
   .vis-item
     border-color primary-color
     &.vis-selected
