@@ -7,29 +7,28 @@ export default {
   props: ['text'],
   methods: {
     copy() {
+      const element = document.createElement('div');
+      element.textContent = this.text;
+      document.body.appendChild(element);
 
-      var element = document.createElement('div')
-      element.textContent = this.text
-      document.body.appendChild(element)
-
-      var range = document.createRange()
-      range.selectNode(element)
-      window.getSelection().removeAllRanges()
-      window.getSelection().addRange(range)
+      const range = document.createRange();
+      range.selectNode(element);
+      window.getSelection().removeAllRanges();
+      window.getSelection().addRange(range);
 
       if (window.Mocha) {
         window.Mocha.copiedText = this.text;
       } else {
-        document.execCommand('copy')
+        document.execCommand('copy');
       }
 
-      element.remove()
+      element.remove();
 
-      this.$el.classList.add('copied')
-      setTimeout(() => this.$el.classList.remove('copied'), 1000)
-    }
-  }
-}
+      this.$el.classList.add('copied');
+      setTimeout(() => this.$el.classList.remove('copied'), 1000);
+    },
+  },
+};
 </script>
 
 <style lang="stylus">

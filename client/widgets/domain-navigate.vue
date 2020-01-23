@@ -28,16 +28,19 @@
 </template>
 
 <script>
-import debounce from 'lodash-es/debounce'
-import omit from 'lodash-es/omit'
-import { stringify } from 'friendly-querystring'
-import { getKeyValuePairs, mapDomainDescription } from '../helpers'
+import debounce from 'lodash-es/debounce';
+import omit from 'lodash-es/omit';
+import { stringify } from 'friendly-querystring';
+import {
+  getKeyValuePairs,
+  mapDomainDescription,
+} from '../helpers';
 
 const validationMessages = {
   valid: d => `${d} exists`,
   invalid: d => `${d} does not exist`,
   error: d => `An error occoured while querying for ${d}`,
-}
+};
 
 export default {
   props: ['domain', 'placeholder'],
@@ -49,95 +52,99 @@ export default {
       recentDomains: JSON.tryParse(localStorage.getItem('recent-domains')) || [],
       domainDesc: undefined,
       domainDescName: undefined,
-      domainDescRequest: undefined
-    }
+      domainDescRequest: undefined,
+    };
   },
   created() {
-    this.domainDescCache = {}
+    this.domainDescCache = {};
     if (this.$route && this.$route.params && this.$route.params.domain) {
-      this.recordDomain(this.$route.params.domain)
+      this.recordDomain(this.$route.params.domain);
     }
   },
   methods: {
     recordDomain(domain) {
       if (domain) {
-        this.recentDomains = this.recentDomains.filter(d => d && d !== domain).slice(0, 15)
-        this.recentDomains.unshift(domain)
-        localStorage.setItem('recent-domains', JSON.stringify(this.recentDomains))
+        this.recentDomains = this.recentDomains.filter(d => d && d !== domain).slice(0, 15);
+        this.recentDomains.unshift(domain);
+        localStorage.setItem('recent-domains', JSON.stringify(this.recentDomains));
       }
     },
     changeDomain() {
       if (this.validation === 'valid') {
         this.$router.push({
           path: `/domain/${this.d}/workflows`,
-          query: omit(this.$router.currentRoute.query, 'workflowId', 'runId', 'workflowName')
+          query: omit(this.$router.currentRoute.query, 'workflowId', 'runId', 'workflowName'),
         })
-        this.recordDomain(this.d)
-        this.$emit('navigate', this.d)
+        this.recordDomain(this.d);
+        this.$emit('navigate', this.d);
       }
     },
     domainLink(d) {
-      return `/domain/${d}/workflows?${stringify(this.$router.currentRoute.query)}`
+      return `/domain/${d}/workflows?${stringify(this.$router.currentRoute.query)}`;
     },
     recordDomainFromClick(e) {
-      var domain = e.target.getAttribute('data-domain')
-      this.recordDomain(domain)
-      this.$emit('navigate', domain)
+      var domain = e.target.getAttribute('data-domain');
+      this.recordDomain(domain);
+      this.$emit('navigate', domain);
     },
     getDomainDesc(d) {
       if (this.domainDescCache[d]) {
-        return Promise.resolve(this.domainDescCache[d])
+        return Promise.resolve(this.domainDescCache[d]);
       }
       return this.$http(`/api/domain/${d}`).then(r => {
-        return this.domainDescCache[d] = mapDomainDescription(r)
-      })
+        return this.domainDescCache[d] = mapDomainDescription(r);
+      });
     },
     checkValidity: debounce(function (x) {
       const check = newDomain => {
-        this.validation = 'pending'
+        this.validation = 'pending';
         this.domainDescRequest = this.getDomainDesc(newDomain).then(
           desc => {
-            this.domainDescName = newDomain
-            this.domainDesc = { kvps: getKeyValuePairs(desc) }
-            return 'valid'
+            this.domainDescName = newDomain;
+            this.domainDesc = {
+              kvps: getKeyValuePairs(desc),
+            };
+            return 'valid';
           },
           res => res.status === 404 ? 'invalid' : 'error'
         ).then(v => {
-          this.$emit('validate', this.d, v)
+          this.$emit('validate', this.d, v);
           if (v in validationMessages) {
-            this.validationMessage = validationMessages[v](this.d)
+            this.validationMessage = validationMessages[v](this.d);
           }
           if (this.d === newDomain || !this.d) {
-            this.validation = this.d ? v : 'unknown'
-            this.domainDescRequest = null
+            this.validation = this.d ? v : 'unknown';
+            this.domainDescRequest = null;
           } else {
-            check.call(this, this.d)
+            check.call(this, this.d);
           }
-        })
-      }
+        });
+      };
 
       if (!this.domainDescRequest && this.d) {
-        check(this.d)
+        check(this.d);
       }
     }, 300),
     onInput() {
-      this.d = this.$refs.input.value
-      this.checkValidity()
+      this.d = this.$refs.input.value;
+      this.checkValidity();
     },
     showDomainDesc(d) {
-      this.domainDescName = d
+      this.domainDescName = d;
       this.domainDescRequest = this.getDomainDesc(d)
         .catch(res => ({ error: `${res.statusText || res.message} ${res.status}` }))
         .then(desc => {
           if (this.domainDescName === d) {
-            this.domainDesc = { kvps: getKeyValuePairs(desc) }
-            this.domainDescRequest = null
+            this.domainDesc = {
+              kvps: getKeyValuePairs(desc),
+            };
+            this.domainDescRequest = null;
           }
-        })
+        });
     },
     onEsc(e) {
-      this.$emit('cancel', e)
-    }
+      this.$emit('cancel', e);
+    },
   }
 }
 </script>

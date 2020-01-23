@@ -160,8 +160,8 @@ import omit from 'lodash-es/omit'
 export default {
   data() {
     return {
-      tsFormat: localStorage.getItem(`${this.$route.params.domain}:history-ts-col-format`) || 'elapsed',
-      compactDetails: localStorage.getItem(`${this.$route.params.domain}:history-compact-details`) === 'true',
+      tsFormat: localStorage.getItem(`${this.domain}:history-ts-col-format`) || 'elapsed',
+      compactDetails: localStorage.getItem(`${this.domain}:history-compact-details`) === 'true',
       scrolledToEventOnInit: false,
       splitEnabled: false,
       eventType: "",
@@ -181,13 +181,16 @@ export default {
   },
   props: [
     'baseAPIURL',
+    'domain',
     'error',
     'eventId',
     'events',
     'format',
     'loading',
+    'runId',
     'showGraph',
     'timelineEvents',
+    'workflowId',
 
     // unused props but need to be declaired otherwise automatically injected into dom
     'input',
@@ -227,7 +230,7 @@ export default {
   },
   computed: {
     exportFilename() {
-      return `${this.$route.params.workflowId.replace(/[\\~#%&*{}\/:<>?|\"-]/g, ' ')} - ${this.$route.params.runId}.json`
+      return `${this.workflowId.replace(/[\\~#%&*{}\/:<>?|\"-]/g, ' ')} - ${this.runId}.json`
     },
     filteredEvents() {
       const { eventId, eventType } = this;
@@ -304,12 +307,12 @@ export default {
     },
     setTsFormat(tsFormat) {
       this.tsFormat = tsFormat
-      localStorage.setItem(`${this.$route.params.domain}:history-ts-col-format`, tsFormat)
+      localStorage.setItem(`${this.domain}:history-ts-col-format`, tsFormat)
     },
     setCompactDetails(compact) {
       const { scrollerGrid } = this.$refs;
       this.compactDetails = compact;
-      localStorage.setItem(`${this.$route.params.domain}:history-compact-details`, JSON.stringify(compact));
+      localStorage.setItem(`${this.domain}:history-compact-details`, JSON.stringify(compact));
       scrollerGrid.forceUpdate();
       setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
     },

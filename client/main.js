@@ -45,26 +45,41 @@ const routeOpts = {
   }, {
     name: 'domain-config',
     path: '/domain/:domain/config',
-    component: DomainConfig
+    component: DomainConfig,
+    props: ({ params }) => ({
+      domain: params.domain
+    }),
   }, {
     name: 'execution',
     path: '/domain/:domain/workflows/:workflowId/:runId',
     component: ExecutionTabs,
+    props: ({ params }) => ({
+      domain: params.domain,
+      runId: params.runId,
+      workflowId: params.workflowId,
+    }),
     children: [
       {
         name: 'execution/summary',
         path: '/domain/:domain/workflows/:workflowId/:runId/summary',
-        component: ExecutionSummary
+        component: ExecutionSummary,
+        props: ({ params }) => ({
+          runId: params.runId,
+          workflowId: params.workflowId,
+        }),
       },
       {
         name: 'execution/history',
         path: '/domain/:domain/workflows/:workflowId/:runId/history',
         component: History,
-        props: ({ query }) => ({
-          format: query.format || 'grid',
+        props: ({ params, query }) => ({
+          domain: params.domain,
           eventId: Number(query.eventId) || undefined,
+          format: query.format || 'grid',
+          runId: params.runId,
           showGraph: query.showGraph === true,
-        })
+          workflowId: params.workflowId,
+        }),
       },
       {
         name: 'execution/stack-trace',

@@ -60,6 +60,11 @@ export default {
       },
     }
   },
+  props: [
+    'domain',
+    'runId',
+    'workflowId',
+  ],
   created() {
     this.$watch('baseAPIURL', u => {
       this.results = []
@@ -79,7 +84,7 @@ export default {
   },
   computed: {
     baseAPIURL() {
-      var { domain, workflowId, runId } = this.$route.params
+      var { domain, workflowId, runId } = this;
       return `/api/domain/${domain}/workflows/${encodeURIComponent(workflowId)}/${encodeURIComponent(runId)}`
     }
   },

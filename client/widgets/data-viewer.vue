@@ -52,7 +52,7 @@ export default {
         components: { prism: Prism }
       }, {
         title: this.title,
-        code: this.item.jsonStringFull
+        code: this.item.jsonStringFull,
       }, {
         name: 'data-viewer-fullscreen'
       })

@@ -66,17 +66,17 @@
         <dd>
           <data-viewer
             :item="result"
-            :title="$route.params.workflowId + ' Result'"
+            :title="workflowId + ' Result'"
           />
         </dd>
       </div>
       <div class="workflow-id">
         <dt>Workflow Id</dt>
-        <dd>{{$route.params.workflowId}}</dd>
+        <dd>{{workflowId}}</dd>
       </div>
       <div class="run-id">
         <dt>Run Id</dt>
-        <dd>{{$route.params.runId}}</dd>
+        <dd>{{runId}}</dd>
       </div>
       <div class="parent-workflow" v-if="parentWorkflowRoute">
         <dt>Parent Workflow</dt>
@@ -113,7 +113,7 @@
           <data-viewer
             v-if="input !== undefined"
             :item="input"
-            :title="$route.params.workflowId + ' Input'"
+            :title="workflowId + ' Input'"
           />
         </dd>
       </div>
@@ -130,15 +130,15 @@
 
 <script>
 import moment from 'moment';
-import shortName from '../../short-name'
-import { parentWorkflowLink } from './helpers'
+import shortName from '../../short-name';
+import { parentWorkflowLink } from './helpers';
 
 export default {
   data() {
     return {
       terminationError: undefined,
-      terminationReason: undefined
-    }
+      terminationReason: undefined,
+    };
   },
   props: [
     'baseAPIURL',
@@ -146,8 +146,10 @@ export default {
     'isWorkflowRunning',
     'parentWorkflowRoute',
     'result',
+    'runId',
     'wfStatus',
     'workflow',
+    'workflowId',
 
     // unused props but need to be declaired otherwise automatically injected into dom
     'error',
@@ -171,15 +173,15 @@ export default {
     terminate() {
       this.$modal.hide('confirm-termination');
       this.$http.post(this.baseAPIURL + '/terminate', {
-        reason: this.terminationReason
+        reason: this.terminationReason,
       }).then(r => {
         console.dir(r);
       }, resp => {
         this.terminationError = resp.message || resp.status || resp.statusCode;
       });
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="stylus">

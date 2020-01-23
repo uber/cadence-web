@@ -1,10 +1,10 @@
 <template>
   <section :class="{ 'domain-config domain-description': true, loading }">
-    <header><h3>{{$route.params.domain}}</h3></header>
+    <header><h3>{{domain}}</h3></header>
     <details-list
       v-if="domainConfig"
       :item="domainConfig"
-      :title="`Domain ${$route.params.domain} Configuration`" />
+      :title="`Domain ${domain} Configuration`" />
     <span class="error" v-if="error">{{error}}</span>
   </section>
 </template>
@@ -20,8 +20,11 @@ export default {
       domainConfig: undefined
     }
   },
+  props: [
+    'domain'
+  ],
   created() {
-    this.$http(`/api/domain/${this.$route.params.domain}`).then(
+    this.$http(`/api/domain/${this.domain}`).then(
       r => {
         const domainConfig = mapDomainDescription(r);
         const kvps = getKeyValuePairs(domainConfig);

@@ -1,5 +1,5 @@
 <template>
-  <section :class="{ 'stack-trace': true, loading }">
+  <section :class="{ 'stack-trace': true, loading: stackTraceLoading }">
     <header v-if="stackTraceTimestamp">
       <span>Stack trace at {{stackTraceTimestamp.format('h:mm:ss a')}}</span>
       <a href="#" class="refresh" @click="getStackTrace">Refresh</a>
@@ -18,18 +18,30 @@ export default {
     return {
       stackTrace: undefined,
       stackTraceTimestamp: undefined,
-      loading: undefined
+      stackTraceLoading: undefined
     }
   },
   props: [
     'baseAPIURL',
+
+    // unused props but need to be declaired otherwise automatically injected into dom
+    'error',
+    'events',
+    'input',
+    'isWorkflowRunning',
+    'loading',
+    'parentWorkflowRoute',
+    'result',
+    'timelineEvents',
+    'wfStatus',
+    'workflow',
   ],
   created() {
     this.getStackTrace()
   },
   methods: {
     getStackTrace() {
-      this.loading = true
+      this.stackTraceLoading = true
       return this.$http.post(`${this.baseAPIURL}/queries/__stack_trace`).then(({ queryResult }) => {
         this.stackTrace = queryResult
         this.stackTraceTimestamp = moment()
@@ -38,7 +50,7 @@ export default {
         console.error(e)
         this.stackTrace = { error: (e.json && e.json.message) || e.status || e.message }
       })
-      .finally(() => this.loading = false)
+      .finally(() => this.stackTraceLoading = false)
     }
   }
 }
