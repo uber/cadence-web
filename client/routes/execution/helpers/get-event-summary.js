@@ -1,4 +1,3 @@
-// TODO - move these transforms into helpers folder
 import { summarizeEvents } from './summarize-events';
 import { getKeyValuePairs } from '../../../helpers';
 

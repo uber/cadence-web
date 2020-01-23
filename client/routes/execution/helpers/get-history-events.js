@@ -23,7 +23,6 @@ const getHistoryEvents = (events) => {
         timestamp,
       });
     })
-    // TODO - not ideal solution but will do for now and come back and refactor later...
     .map((event, index, eventList) => {
       const timeStampDisplay = getTimeStampDisplay(event);
       const timeElapsedDisplay = getTimeElapsedDisplay(event, index, eventList);

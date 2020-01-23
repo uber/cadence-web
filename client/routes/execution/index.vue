@@ -114,7 +114,7 @@ export default {
         const events = res.history.events;
         this.events = this.events.concat(events);
 
-        this.history.events = this.history.events.concat(getHistoryEvents(events));
+        this.history.events = getHistoryEvents(this.events);
         this.history.timelineEvents = getHistoryTimelineEvents(this.history.events);
 
         this.summary = getSummary({

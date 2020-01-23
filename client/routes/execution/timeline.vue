@@ -107,7 +107,9 @@ export default {
     while(this.unwatch.length) {
       (this.unwatch.pop())();
     }
-    this.timeline.destroy();
+    if (this.timeline) {
+      this.timeline.destroy();
+    }
   }
 }
 </script>
