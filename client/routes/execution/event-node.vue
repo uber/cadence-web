@@ -1,77 +1,118 @@
 <script>
-import moment from 'moment'
-import shortName from '../../short-name'
+import moment from 'moment';
+import shortName from '../../short-name';
 import { getKeyValuePairs } from '../../helpers';
 
 const titlesForGroups = {
   ActivityTaskScheduled: n => `Activity ${n.details.activityId} - ${shortName(n.details.activityType && n.details.activityType.name)}`,
   TimerStarted: n => `Timer ${n.details.timerId} (${moment.duration(n.details.startToFireTimeoutSeconds, 'seconds').format()})`,
   StartChildWorkflowExecutionInitiated: (n, h) => {
-    var childWf = n.children[0] && n.children[0].details && n.children[0].details.workflowExecution,
-        name = shortName(n.details.workflowType.name)
+    const childWf = n.children[0] && n.children[0].details && n.children[0].details.workflowExecution;
+    const name = shortName(n.details.workflowType.name);
 
-    return childWf ? ['Child Workflow ', h('router-link', {
-      props: {
-        to: {
-          name: 'execution/summary',
-          params: { workflowId: childWf.workflowId, runId: childWf.runId }
-        }
-      }
-    }, name)] : `Child Workflow ${name}`
-  }
-},
-groupEvents = Object.keys(titlesForGroups)
-
+    return childWf
+      ? [
+        'Child Workflow ',
+        h('router-link', {
+          props: {
+            to: {
+              name: 'execution/summary',
+              params: {
+                runId: childWf.runId,
+                workflowId: childWf.workflowId,
+              },
+            },
+          },
+        }, name),
+      ]
+      : `Child Workflow ${name}`;
+  },
+};
+const groupEvents = Object.keys(titlesForGroups);
 
 function findActiveGroupNode(node, id, topLevel) {
-  if (node.eventId == id) return node
-  if (!topLevel && groupEvents.includes(node.eventType)) return
+  if (node.eventId == id) {
+    return node;
+  }
 
-  for (var c of node.children) {
-    let activeChild = findActiveGroupNode(c, id)
-    if (activeChild) return activeChild
+  if (!topLevel && groupEvents.includes(node.eventType)) {
+    return;
+  }
+
+  for (let c of node.children) {
+    let activeChild = findActiveGroupNode(c, id);
+    if (activeChild) {
+      return activeChild;
+    }
   }
 }
 
 function titleForNode(n) {
-  return n.eventType.replace(/(ActivityTask|ChildWorkflowExecution|StartChildWorkflowExecution)/, '')
+  return n.eventType.replace(/(ActivityTask|ChildWorkflowExecution|StartChildWorkflowExecution)/, '');
 }
 
 export default {
   name: 'event-node',
   props: ['node'],
   render(h) {
-    var activeId = this.$route.query.eventId, router = this.$router
+    const activeId = this.$route.query.eventId;
+    const router = this.$router;
 
     function eventNode(node, noGroup) {
-      var groupTitle = (node.eventType in titlesForGroups) && titlesForGroups[node.eventType](node, h),
-      isActive = activeId == node.eventId,
-      showDetails = activeId && (!!groupTitle || (isActive && noGroup)),
-      activeGroupNode = showDetails && findActiveGroupNode(node, activeId, true),
-      detailsList = activeGroupNode && h('details-list', {
-        props: { item: { kvps: getKeyValuePairs(activeGroupNode.details) }, title: groupTitle || node.eventType }
-      })
+      const groupTitle = (node.eventType in titlesForGroups) && titlesForGroups[node.eventType](node, h);
+      const isActive = activeId == node.eventId;
+      const showDetails = activeId && (!!groupTitle || (isActive && noGroup));
+      const activeGroupNode = showDetails && findActiveGroupNode(node, activeId, true);
+      const detailsList = activeGroupNode && h('details-list', {
+        props: {
+          item: {
+            kvps: getKeyValuePairs(activeGroupNode.details),
+          },
+          title: groupTitle || node.eventType,
+        },
+      });
 
-      return h(groupTitle ? 'div' : 'span', {
-        class: 'event-node ' + node.eventType + (activeGroupNode ? ' active' : '')
-      }, [
-        groupTitle && h('span', { class: 'group-title' }, groupTitle),
-        h('a', {
-          attrs: { href: '#', 'data-event-id': node.eventId },
-          class: 'event-id' + (isActive ? ' active' : ''),
-          on: { click: e => {
-            e.preventDefault();
-            router.replaceQueryParam('eventId', node.eventId) } }
-        }, [titleForNode(node)]),
-        !groupTitle && detailsList,
-        h('span', { class: 'event-children' }, node.children.map(c => eventNode(c, noGroup && !groupTitle))),
-        groupTitle && detailsList
-      ])
+      return h(
+        groupTitle ? 'div' : 'span', {
+          class: 'event-node ' + node.eventType + (activeGroupNode ? ' active' : ''),
+        },
+        [
+          groupTitle && h('span', { class: 'group-title' }, groupTitle),
+          h(
+            'a',
+            {
+              attrs: {
+                href: '#',
+                'data-event-id': node.eventId,
+              },
+              class: 'event-id' + (isActive ? ' active' : ''),
+              on: {
+                click: e => {
+                  e.preventDefault();
+                  router.replaceQueryParam('eventId', node.eventId);
+                },
+              },
+            },
+            [
+              titleForNode(node)
+            ],
+          ),
+          !groupTitle && detailsList,
+          h(
+            'span',
+            {
+              class: 'event-children',
+            },
+            node.children.map(c => eventNode(c, noGroup && !groupTitle)),
+          ),
+          groupTitle && detailsList,
+        ],
+      );
     }
 
-    return eventNode(this.node, true)
-  }
-}
+    return eventNode(this.node, true);
+  },
+};
 </script>
 
 <style lang="stylus">

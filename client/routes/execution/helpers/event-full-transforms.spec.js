@@ -10,9 +10,9 @@ describe('eventFullTransforms', () => {
           decisionTaskCompletedEventId: 'decisionTaskCompletedEventIdValue',
           details: [
             'sideEffectIdValue',
-            'eyAiaGVsbG8iOiAid29ybGQiIH0' // { "hello": "world" }
+            'eyAiaGVsbG8iOiAid29ybGQiIH0', // { "hello": "world" }
           ],
-          markerName: 'SideEffect'
+          markerName: 'SideEffect',
         };
       });
 
@@ -41,9 +41,9 @@ describe('eventFullTransforms', () => {
         decisionTaskCompletedEventId: 'decisionTaskCompletedEventIdValue',
         details: [
           'sideEffectIdValue',
-          'eyAiaGVsbG8iOiAid29ybGQiIH0' // { "hello": "world" }
+          'eyAiaGVsbG8iOiAid29ybGQiIH0', // { "hello": "world" }
         ],
-        markerName: 'NotSideEffect'
+        markerName: 'NotSideEffect',
       };
     });
 

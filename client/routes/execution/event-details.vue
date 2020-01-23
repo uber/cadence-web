@@ -11,11 +11,11 @@ export default {
         item: this.event,
         highlight: this.highlight,
         compact: this.compact,
-        title: `Event #${this.event.eventId} ${this.event.eventType}`
-      }
-    })
-  }
-}
+        title: `Event #${this.event.eventId} ${this.event.eventType}`,
+      },
+    });
+  },
+};
 </script>
 
 <style lang="stylus">
