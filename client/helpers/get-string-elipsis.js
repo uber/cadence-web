@@ -1,6 +1,6 @@
 import {
   MAXIMUM_JSON_CHARACTER_LIMIT,
-  MAXIMUM_JSON_MESSAGE
+  MAXIMUM_JSON_MESSAGE,
 } from '../constants';
 
 const getStringElipsis = input =>

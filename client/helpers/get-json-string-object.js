@@ -5,7 +5,7 @@ const getJsonStringObject = (value) => {
   const jsonStringDisplay = value ? getStringElipsis(jsonStringFull) : '';
   return {
     jsonStringDisplay,
-    jsonStringFull
+    jsonStringFull,
   };
 };
 
