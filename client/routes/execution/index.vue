@@ -7,19 +7,30 @@
       <router-link :to="{ name: 'execution/queries' }" class="queries" v-show="isWorkflowRunning">Queries</router-link>
     </nav>
     <router-view
+      name="summary"
       :baseAPIURL="baseAPIURL"
-
-      :error="history.error"
-      :events="history.events"
-      :loading="history.loading"
-      :timelineEvents="history.timelineEvents"
-
       :input="summary.input"
       :isWorkflowRunning="summary.isWorkflowRunning"
       :parentWorkflowRoute="summary.parentWorkflowRoute"
       :result="summary.result"
       :wfStatus="summary.wfStatus"
       :workflow="summary.workflow"
+    />
+    <router-view
+      name="history"
+      :baseAPIURL="baseAPIURL"
+      :error="history.error"
+      :events="history.events"
+      :loading="history.loading"
+      :timelineEvents="history.timelineEvents"
+    />
+    <router-view
+      name="stacktrace"
+      :baseAPIURL="baseAPIURL"
+    />
+    <router-view
+      name="queries"
+      :baseAPIURL="baseAPIURL"
     />
   </section>
 </template>

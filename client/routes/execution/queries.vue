@@ -1,5 +1,5 @@
 <template>
-  <section :class="{ queries: true, loading: queryLoading }">
+  <section :class="{ queries: true, loading }">
     <header v-if="queries && queries.length">
       <div class="query-name">
         <v-select
@@ -13,7 +13,7 @@
       <a :href="queryName && !running ? '#' : undefined" :class="{ run: true, running }" @click.prevent="run">Run</a>
     </header>
     <pre v-if="queryResult">{{queryResult}}</pre>
-    <span class="error" v-if="queryError">{{queryError}}</span>
+    <span class="error" v-if="error">{{error}}</span>
     <span class="no-queries" v-if="queries && queries.length === 0">No queries registered</span>
   </section>
 </template>
@@ -24,32 +24,20 @@ import moment from 'moment';
 export default {
   data() {
     return {
-      queryLoading: false,
+      error: undefined,
+      loading: false,
       queryName: undefined,
       queryInput: undefined,
       queries: undefined,
       queryResult: undefined,
-      queryError: undefined,
       running: false,
     };
   },
   props: [
     'baseAPIURL',
-
-    // unused props but need to be declaired otherwise automatically injected into dom
-    'error',
-    'events',
-    'input',
-    'isWorkflowRunning',
-    'loading',
-    'parentWorkflowRoute',
-    'result',
-    'timelineEvents',
-    'wfStatus',
-    'workflow',
   ],
   created() {
-    this.queryLoading = true;
+    this.loading = true;
     this.$http(this.baseAPIURL + '/queries')
       .then(
         r => {
@@ -58,14 +46,14 @@ export default {
             this.queryName = this.queries[0];
           }
         },
-        e => this.queryError = (e.json && e.json.message) || e.status || e.message,
+        e => this.error = (e.json && e.json.message) || e.status || e.message,
       )
-      .finally(() => this.queryLoading = false);
+      .finally(() => this.loading = false);
   },
   methods: {
     setQuery(queryName) {
       this.queryResult = undefined;
-      this.queryError = undefined;
+      this.error = undefined;
       this.queryName = queryName;
     },
     run() {
@@ -73,7 +61,7 @@ export default {
       this.$http.post(`${this.baseAPIURL}/queries/${this.queryName}`)
         .then(
           r => this.queryResult = r.queryResult,
-          e => this.queryError = (e.json && e.json.message) || e.status || e.message,
+          e => this.error = (e.json && e.json.message) || e.status || e.message,
         )
         .finally(() => this.running = false);
     },

@@ -190,14 +190,6 @@ export default {
     'showGraph',
     'timelineEvents',
     'workflowId',
-
-    // unused props but need to be declaired otherwise automatically injected into dom
-    'input',
-    'isWorkflowRunning',
-    'parentWorkflowRoute',
-    'result',
-    'wfStatus',
-    'workflow',
   ],
   created() {
     this.onResizeWindow = debounce(() => {
