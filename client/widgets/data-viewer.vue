@@ -7,61 +7,72 @@
 </template>
 
 <script>
-import 'prismjs'
-import 'prismjs/components/prism-json'
-import Prism from 'vue-prism-component'
+import 'prismjs';
+import 'prismjs/components/prism-json';
+import Prism from 'vue-prism-component';
 
 export default {
   name: 'data-viewer',
-  props: ['item', 'highlight', 'compact', 'title'],
+  props: [
+    'compact',
+    'highlight',
+    'item',
+    'title',
+  ],
   data() {
-    return {}
+    return {};
   },
   created() {
     this.checkOverflow = () => {
-      let el = this.$refs.codebox
-      if (!el) return
+      const el = this.$refs.codebox;
+      if (!el) {
+        return;
+      }
 
-      let action = el.scrollWidth > (el.offsetWidth + 2) || el.scrollHeight > (el.offsetHeight + 2) ? 'add' : 'remove'
-      this.$el.classList[action]('overflow')
-    }
-    window.addEventListener('resize', this.checkOverflow)
-    ;['item', 'highlight', 'compact'].forEach(e => this.$watch(e, this.checkOverflow))
-    this.$watch(() => this.$route, this.checkOverflow)
+      const action = el.scrollWidth > (el.offsetWidth + 2) || el.scrollHeight > (el.offsetHeight + 2) ? 'add' : 'remove';
+      this.$el.classList[action]('overflow');
+    };
+    window.addEventListener('resize', this.checkOverflow);
+    ['item', 'highlight', 'compact'].forEach(e => this.$watch(e, this.checkOverflow));
+    this.$watch(() => this.$route, this.checkOverflow);
   },
   mounted() {
-    this.checkOverflow()
+    this.checkOverflow();
   },
   beforeDestroy() {
-    window.removeEventListener('resize', this.checkOverflow)
+    window.removeEventListener('resize', this.checkOverflow);
   },
   methods: {
     viewFullScreen() {
-      this.$modal.show({
-        template: `
-          <div class="data-viewer-fullscreen">
-            <header>
-              <h3>{{title}}</h3>
-              <copy :text="code" />
-              <a class="close" href="#" @click="$emit('close')"></a>
-            </header>
-            <prism language="json">{{code}}</prism>
-          </div>
-        `,
-        props: ['code', 'title'],
-        components: { prism: Prism }
-      }, {
-        title: this.title,
-        code: this.item.jsonStringFull,
-      }, {
-        name: 'data-viewer-fullscreen'
-      })
-    }
+      this.$modal.show(
+        {
+          components: { prism: Prism },
+          props: ['code', 'title'],
+          template: `
+            <div class="data-viewer-fullscreen">
+              <header>
+                <h3>{{title}}</h3>
+                <copy :text="code" />
+                <a class="close" href="#" @click="$emit('close')"></a>
+              </header>
+              <prism language="json">{{code}}</prism>
+            </div>
+          `,
+        },
+        {
+          code: this.item.jsonStringFull,
+          title: this.title,
+        },
+        {
+          name: 'data-viewer-fullscreen',
+        },
+      );
+    },
   },
   components: {
-    prism: Prism
-  }
-}
+    prism: Prism,
+  },
+};
 </script>
 
 <style lang="stylus">

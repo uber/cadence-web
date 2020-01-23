@@ -9,8 +9,8 @@ describe('parentWorkflowLink', () => {
         parentWorkflowDomain: 'parentWorkflowDomainValue',
         parentWorkflowExecution: {
           workflowId: 'workflowIdValue',
-          runId: 'runIdValue'
-        }
+          runId: 'runIdValue',
+        },
       };
     });
 

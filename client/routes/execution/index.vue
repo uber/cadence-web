@@ -58,7 +58,7 @@ export default {
         wfStatus: undefined,
         workflow: undefined,
       },
-    }
+    };
   },
   props: [
     'domain',
@@ -67,54 +67,64 @@ export default {
   ],
   created() {
     this.$watch('baseAPIURL', u => {
-      this.results = []
-      this.nextPageToken = undefined
-      return this.$http(u).then(
-        wf => { this.workflow = wf; this.isWorkflowRunning = !wf.workflowExecutionInfo.closeTime },
-        e => this.wfError = (e.json && e.json.message) || e.status || e.message
-      ).finally(() => this.wfLoading = false)
-    }, { immediate: true })
+      this.results = [];
+      this.nextPageToken = undefined;
+      return this.$http(u)
+        .then(
+          wf => {
+            this.workflow = wf;
+            this.isWorkflowRunning = !wf.workflowExecutionInfo.closeTime;
+          },
+          e => this.wfError = (e.json && e.json.message) || e.status || e.message,
+        )
+        .finally(() => this.wfLoading = false);
+    }, { immediate: true });
 
     this.$watch(() => {
-      let queryUrl = this.baseAPIURL + '/history?waitForNewEvent=true'
-      if (!this.nextPageToken) return queryUrl
+      const queryUrl = this.baseAPIURL + '/history?waitForNewEvent=true';
+      if (!this.nextPageToken) {
+        return queryUrl;
+      }
 
-      return queryUrl + '&nextPageToken=' + encodeURIComponent(this.nextPageToken)
-    }, v => this.fetchHistoryPage(v), { immediate: true })
+      return queryUrl + '&nextPageToken=' + encodeURIComponent(this.nextPageToken);
+    }, v => this.fetchHistoryPage(v), { immediate: true });
   },
   computed: {
     baseAPIURL() {
       var { domain, workflowId, runId } = this;
-      return `/api/domain/${domain}/workflows/${encodeURIComponent(workflowId)}/${encodeURIComponent(runId)}`
-    }
+      return `/api/domain/${domain}/workflows/${encodeURIComponent(workflowId)}/${encodeURIComponent(runId)}`;
+    },
   },
   methods: {
     fetchHistoryPage(pagedQueryUrl) {
       this.history.error = undefined;
       if (!pagedQueryUrl) {
         this.history.loading = false;
-        return
+        return;
       }
 
       this.history.loading = true;
-      this.pqu = pagedQueryUrl
+      this.pqu = pagedQueryUrl;
       return this.$http(pagedQueryUrl).then(res => {
-        if (this._isDestroyed || this.pqu !== pagedQueryUrl) return
+        if (this._isDestroyed || this.pqu !== pagedQueryUrl) {
+          return;
+        }
+
         if (res.nextPageToken && this.npt === res.nextPageToken) {
           // nothing happened, and same query is still valid, so let's long pool again
-          return this.fetch(pagedQueryUrl)
+          return this.fetch(pagedQueryUrl);
         }
 
         if (res.nextPageToken) {
-          this.isWorkflowRunning = JSON.parse(atob(res.nextPageToken)).IsWorkflowRunning
+          this.isWorkflowRunning = JSON.parse(atob(res.nextPageToken)).IsWorkflowRunning;
           if (this.results.length < RESULT_THRESHOLD) {
-            setTimeout(() => this.nextPageToken = res.nextPageToken)
+            setTimeout(() => this.nextPageToken = res.nextPageToken);
           }
         } else {
-          this.isWorkflowRunning = false
+          this.isWorkflowRunning = false;
         }
 
-        var shouldHighlightEventId = this.$route.query.eventId && this.results.length <= this.$route.query.eventId
+        var shouldHighlightEventId = this.$route.query.eventId && this.results.length <= this.$route.query.eventId;
 
         const events = res.history.events;
         this.events = this.events.concat(events);
@@ -125,29 +135,29 @@ export default {
         this.summary = getSummary({
           events: this.events,
           isWorkflowRunning: this.isWorkflowRunning,
-          workflow: this.workflow
+          workflow: this.workflow,
         });
 
         if (shouldHighlightEventId) {
-          this.$emit('highlight-event-id', this.$route.query.eventId)
+          this.$emit('highlight-event-id', this.$route.query.eventId);
         }
-        // // https://github.com/ElemeFE/vue-infinite-scroll/issues/89
-        // setImmediate(() => this.$emit('longpoll'))
 
-        return this.results
+        return this.results;
       }).catch(e => {
-        console.error(e)
-        if (this._isDestroyed || this.pqu !== pagedQueryUrl) return
+        console.error(e);
+        if (this._isDestroyed || this.pqu !== pagedQueryUrl) {
+          return;
+        }
         this.history.error = (e.json && e.json.message) || e.status || e.message;
-        return []
+        return [];
       }).finally(() => {
         if (this._isDestroyed || this.pqu !== pagedQueryUrl) {
           this.history.loading = false;
         }
-      })
+      });
     },
-  }
-}
+  },
+};
 </script>
 
 <style lang="stylus">

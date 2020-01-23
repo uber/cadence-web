@@ -1,16 +1,21 @@
 <script>
-import moment from 'moment'
+import moment from 'moment';
 import { preKeys } from '../constants';
 
 export default {
   name: 'details-list',
-  props: ['item', 'highlight', 'compact', 'title'],
+  props: [
+    'compact',
+    'highlight',
+    'item',
+    'title',
+  ],
   data() {
     return {};
   },
   methods: {
     format(val) {
-      return val == null ? '' : (String(val) || '""');
+      return val === null ? '' : (String(val) || '""');
     },
   },
   render(h) {

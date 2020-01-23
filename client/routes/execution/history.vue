@@ -148,14 +148,13 @@
 </template>
 
 <script>
-import moment from 'moment'
-import eventDetails from './event-details.vue'
-import Prism from 'vue-prism-component'
+import moment from 'moment';
+import eventDetails from './event-details.vue';
+import Prism from 'vue-prism-component';
 import { DynamicScroller, DynamicScrollerItem, RecycleScroller } from 'vue-virtual-scroller';
-import timeline from './timeline.vue'
-import debounce from 'lodash-es/debounce'
-import omit from 'lodash-es/omit'
-
+import timeline from './timeline.vue';
+import debounce from 'lodash-es/debounce';
+import omit from 'lodash-es/omit';
 
 export default {
   data() {
@@ -177,7 +176,7 @@ export default {
       splitSizeSet: [1, 99],
       splitSizeMinSet: [0, 0],
       unwatch: [],
-    }
+    };
   },
   props: [
     'baseAPIURL',
@@ -218,7 +217,7 @@ export default {
     this.unwatch.push(this.$watch(
       () => `${this.events.length}${this.tsFormat.length}${this.$route.query.format}${this.compactDetails}`,
       this.onResizeWindow,
-      { immediate: true }
+      { immediate: true },
     ));
     window.addEventListener('resize', this.onResizeWindow);
   },
@@ -230,14 +229,17 @@ export default {
   },
   computed: {
     exportFilename() {
-      return `${this.workflowId.replace(/[\\~#%&*{}\/:<>?|\"-]/g, ' ')} - ${this.runId}.json`
+      return `${this.workflowId.replace(/[\\~#%&*{}\/:<>?|\"-]/g, ' ')} - ${this.runId}.json`;
     },
     filteredEvents() {
-      const { eventId, eventType } = this;
+      const {
+        eventId,
+        eventType,
+      } = this;
       const formattedEvents = this.events.map((event) => Object.assign({}, event, {
         expanded: event.eventId === eventId,
       }));
-      return eventType && eventType !== "All" ?
+      return eventType && eventType !== 'All' ?
         formattedEvents.filter(result => result.eventType.includes(eventType)) :
         formattedEvents;
     },
@@ -253,23 +255,25 @@ export default {
       return this.format === 'grid';
     },
     selectedTimelineEvent() {
-      return this.timelineEvents.find(te => te.eventIds.includes(this.eventId))
+      return this.timelineEvents.find(te => te.eventIds.includes(this.eventId));
     },
     selectedEvent() {
-      return this.events.find(e => e.eventId == this.eventId)
+      return this.events.find(e => e.eventId === this.eventId);
     },
     selectedEventDetails() {
-      if (!this.selectedEvent) return {}
+      if (!this.selectedEvent) {
+        return {};
+      }
       return Object.assign({
         timestamp: this.selectedEvent.timestamp.format('MMM Do h:mm:ss a'),
-        eventId: this.selectedEvent.eventId
-      }, this.selectedEvent.details)
+        eventId: this.selectedEvent.eventId,
+      }, this.selectedEvent.details);
     },
     showTable() {
-      return !this.error && (this.loading || this.events.length)
+      return !this.error && (this.loading || this.events.length);
     },
     showNoResults() {
-      return !this.error && !this.loading && this.events.length === 0
+      return !this.error && !this.loading && this.events.length === 0;
     },
     timelineEventIdToIndex() {
       return this.timelineEvents
@@ -279,21 +283,21 @@ export default {
             acc[eventId] = index;
             return acc;
           }, {})), {});
-    }
+    },
   },
   methods: {
     deselectEvent() {
-      this.$router.replace({ query: omit(this.$route.query, 'eventId') })
+      this.$router.replace({ query: omit(this.$route.query, 'eventId') });
     },
     enableSplitting() {
       if (!this.splitEnabled) {
-        var timelineHeightPct = (this.$refs.splitPanel.$el.firstElementChild.offsetHeight / this.$refs.splitPanel.$el.offsetHeight) * 100
+        var timelineHeightPct = (this.$refs.splitPanel.$el.firstElementChild.offsetHeight / this.$refs.splitPanel.$el.offsetHeight) * 100;
         this.splitSizeSet = [timelineHeightPct, 100 - timelineHeightPct];
-        this.splitEnabled = true
+        this.splitEnabled = true;
       }
     },
     onSplitResize: debounce(function (size) {
-      window.dispatchEvent(new Event('resize'))
+      window.dispatchEvent(new Event('resize'));
     }, 5),
     setEventType(et){
       this.eventType = et.value;
@@ -306,8 +310,8 @@ export default {
       setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
     },
     setTsFormat(tsFormat) {
-      this.tsFormat = tsFormat
-      localStorage.setItem(`${this.domain}:history-ts-col-format`, tsFormat)
+      this.tsFormat = tsFormat;
+      localStorage.setItem(`${this.domain}:history-ts-col-format`, tsFormat);
     },
     setCompactDetails(compact) {
       const { scrollerGrid } = this.$refs;
@@ -344,7 +348,7 @@ export default {
       }
     },
     selectTimelineEvent(i) {
-      this.$router.replaceQueryParam('eventId', i.eventIds[i.eventIds.length - 1])
+      this.$router.replaceQueryParam('eventId', i.eventIds[i.eventIds.length - 1]);
     },
     toggleShowGraph() {
       if (this.showGraph) {

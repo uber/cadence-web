@@ -11,3 +11,4 @@ export { eventFullTransforms } from './event-full-transforms';
 export { default as mapTimelineEvents } from './map-timeline-events';
 export { default as parentWorkflowLink } from './parent-workflow-link';
 export { summarizeEvents } from './summarize-events';
+export { default as workflowLink } from './workflow-link';

@@ -31,7 +31,7 @@ const titlesForGroups = {
 const groupEvents = Object.keys(titlesForGroups);
 
 function findActiveGroupNode(node, id, topLevel) {
-  if (node.eventId == id) {
+  if (node.eventId === id) {
     return node;
   }
 
@@ -60,7 +60,7 @@ export default {
 
     function eventNode(node, noGroup) {
       const groupTitle = (node.eventType in titlesForGroups) && titlesForGroups[node.eventType](node, h);
-      const isActive = activeId == node.eventId;
+      const isActive = activeId === node.eventId;
       const showDetails = activeId && (!!groupTitle || (isActive && noGroup));
       const activeGroupNode = showDetails && findActiveGroupNode(node, activeId, true);
       const detailsList = activeGroupNode && h('details-list', {

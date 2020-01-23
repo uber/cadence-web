@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import moment from 'moment'
+import moment from 'moment';
 
 export default {
   data() {
@@ -30,8 +30,8 @@ export default {
       queries: undefined,
       queryResult: undefined,
       queryError: undefined,
-      running: false
-    }
+      running: false,
+    };
   },
   props: [
     'baseAPIURL',
@@ -49,31 +49,36 @@ export default {
     'workflow',
   ],
   created() {
-    this.queryLoading = true
-    this.$http(this.baseAPIURL + '/queries').then(
-      r => {
-        this.queries = r.filter(r => r !== '__stack_trace')
-        if (!this.queryName) {
-          this.queryName = this.queries[0]
-        }
-      },
-      e => this.queryError = (e.json && e.json.message) || e.status || e.message
-    ).finally(() => this.queryLoading = false)
+    this.queryLoading = true;
+    this.$http(this.baseAPIURL + '/queries')
+      .then(
+        r => {
+          this.queries = r.filter(r => r !== '__stack_trace');
+          if (!this.queryName) {
+            this.queryName = this.queries[0];
+          }
+        },
+        e => this.queryError = (e.json && e.json.message) || e.status || e.message,
+      )
+      .finally(() => this.queryLoading = false);
   },
   methods: {
     setQuery(queryName) {
-      this.queryResult = undefined
-      this.queryError = undefined
-      this.queryName = queryName
+      this.queryResult = undefined;
+      this.queryError = undefined;
+      this.queryName = queryName;
     },
     run() {
-      this.running = true
+      this.running = true;
       this.$http.post(`${this.baseAPIURL}/queries/${this.queryName}`)
-        .then(r => this.queryResult = r.queryResult, e => this.queryError = (e.json && e.json.message) || e.status || e.message)
-        .finally(() => this.running = false)
-    }
-  }
-}
+        .then(
+          r => this.queryResult = r.queryResult,
+          e => this.queryError = (e.json && e.json.message) || e.status || e.message,
+        )
+        .finally(() => this.running = false);
+    },
+  },
+};
 </script>
 
 <style lang="stylus">
