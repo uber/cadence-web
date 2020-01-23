@@ -701,7 +701,7 @@ describe('Execution', function() {
       it('should scroll the selected event id from compact view into view', async function () {
         var [testEl, scenario] = new Scenario(this.test)
           .withDomain('ci-test')
-          .startingAt('/domain/ci-test/workflows/long-running-op-1/theRunId/history?format=compact')
+          .startingAt('/domain/ci-test/workflows/long-running-op-1/theRunId/history?format=compact&showGraph=true')
           .withExecution('long-running-op-1', 'theRunId')
           .withHistory([{
             timestamp: moment().toISOString(),
@@ -723,7 +723,7 @@ describe('Execution', function() {
         });
 
         historyEl.querySelector('.vue-recycle-scroller__item-view:nth-of-type(8) .timeline-event.activity').trigger('click');
-        await retry(() => scenario.location.should.equal('/domain/ci-test/workflows/long-running-op-1/theRunId/history?format=compact&eventId=9'));
+        await retry(() => scenario.location.should.equal('/domain/ci-test/workflows/long-running-op-1/theRunId/history?format=compact&showGraph=true&eventId=9'));
         await Promise.delay(100);
 
         testEl.querySelector('.view-formats a.grid').trigger('click');
