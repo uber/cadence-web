@@ -1,7 +1,6 @@
-
 export default function (d) {
-  d.configuration = d.configuration || {}
-  d.replicationConfiguration = d.replicationConfiguration || { clusters: [] }
+  d.configuration = d.configuration || {};
+  d.replicationConfiguration = d.replicationConfiguration || { clusters: [] };
   return {
     description: d.domainInfo.description,
     owner: d.domainInfo.ownerEmail,
@@ -11,6 +10,6 @@ export default function (d) {
     'Failover Version': d.failoverVersion,
     clusters: d.replicationConfiguration.clusters
       .map(c => c.clusterName === d.replicationConfiguration.activeClusterName ? `${c.clusterName} (active)` : c.clusterName)
-      .join(', ')
-  }
-}
+      .join(', '),
+  };
+};

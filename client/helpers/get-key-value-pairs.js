@@ -9,7 +9,7 @@ const getKeyValuePairs = event => {
   const kvps = [];
   const flatten = (prefix, obj, root) => {
     Object.entries(obj).forEach(([k, value]) => {
-      if (!value) {
+      if (value === null || value === undefined) {
         return;
       }
       const key = prefix ? `${prefix}.${k}` : k;
