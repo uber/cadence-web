@@ -1,11 +1,14 @@
-import { getJsonStringObject, getKeyValuePairs } from '../../../helpers';
+import {
+  getJsonStringObject,
+  getKeyValuePairs,
+} from '../../../helpers';
 import getSummaryWorkflowStatus from './get-summary-workflow-status';
 import parentWorkflowLink from './parent-workflow-link';
 
 const getSummary = ({
   events,
   isWorkflowRunning,
-  workflow
+  workflow,
 }) => {
   const formattedWorkflow = !!workflow.pendingActivities
     ? Object.assign({}, workflow, {
@@ -44,7 +47,7 @@ const getSummary = ({
   const wfStatus = getSummaryWorkflowStatus({
     isWorkflowRunning,
     workflow,
-    workflowCompletedEvent
+    workflowCompletedEvent,
   });
 
   const parentWorkflowRoute = parentWorkflowLink(firstEvent.details);

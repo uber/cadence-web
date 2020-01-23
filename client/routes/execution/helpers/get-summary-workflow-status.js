@@ -16,11 +16,11 @@ const getSummaryWorkflowStatus = ({
       to: {
         name: 'execution/summary',
         params: {
-          runId: workflowCompletedEvent.details.newExecutionRunId
-        }
+          runId: workflowCompletedEvent.details.newExecutionRunId,
+        },
       },
       text: 'Continued As New',
-      status: 'continued-as-new'
+      status: 'continued-as-new',
     };
   }
   return workflowCompletedEvent.eventType.replace('WorkflowExecution', '').toLowerCase();

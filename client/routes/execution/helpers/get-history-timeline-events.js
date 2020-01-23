@@ -1,7 +1,7 @@
 import getEventDetails from './get-event-details';
 import mapTimelineEvents from './map-timeline-events';
 
-const getHistoryTimelineEvents = (events) =>
+const getHistoryTimelineEvents = events =>
   mapTimelineEvents(events)
     .map((event) => {
       const details = getEventDetails(event);

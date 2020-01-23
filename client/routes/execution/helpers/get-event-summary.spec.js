@@ -15,7 +15,7 @@ describe('getEventSummary', () => {
     beforeEach(() => {
       event = {
         details: {
-          key: 'value'
+          key: 'value',
         },
         eventId: 'eventIdValue',
         eventType: 'eventTypeValue',

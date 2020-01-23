@@ -16,7 +16,7 @@ describe('getTimeElapsedDisplay', () => {
   describe('When passed an event with a timestamp and index = -1', () => {
     it('should return "".', () => {
       const event = {
-        timestamp: moment(DATE)
+        timestamp: moment(DATE),
       };
       const index = -1;
       const output = getTimeElapsedDisplay(event, index);
@@ -27,7 +27,7 @@ describe('getTimeElapsedDisplay', () => {
   describe('When passed an event with a timestamp and index = 0', () => {
     it('should return the date string.', () => {
       const event = {
-        timestamp: moment(DATE)
+        timestamp: moment(DATE),
       };
       const index = 0;
       const output = getTimeElapsedDisplay(event, index);
@@ -39,11 +39,11 @@ describe('getTimeElapsedDisplay', () => {
     it('should return the elapsed time between the first event and the second.', () => {
       const eventList = [
         {
-          timestamp: moment(DATE)
+          timestamp: moment(DATE),
         },
         {
-          timestamp: moment(DATE_PLUS_ONE_HOUR)
-        }
+          timestamp: moment(DATE_PLUS_ONE_HOUR),
+        },
       ];
       const index = 1;
       const event = eventList[index];

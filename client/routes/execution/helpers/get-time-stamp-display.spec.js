@@ -15,7 +15,7 @@ describe('getTimeStampDisplay', () => {
   describe('When passed an event with a timestamp and index = -1', () => {
     it('should return "".', () => {
       const event = {
-        timestamp: moment(DATE)
+        timestamp: moment(DATE),
       };
       const index = -1;
       const output = getTimeStampDisplay(event, index);
@@ -26,7 +26,7 @@ describe('getTimeStampDisplay', () => {
   describe('When passed an event with a timestamp and index = 0', () => {
     it('should return the date string.', () => {
       const event = {
-        timestamp: moment(DATE)
+        timestamp: moment(DATE),
       };
       const index = 0;
       const output = getTimeStampDisplay(event, index);

@@ -4,7 +4,7 @@ describe('getSummaryWorkflowStatus', () => {
   describe('When passed an event with isWorkflowRunning = true', () => {
     it('should return "running".', () => {
       const event = {
-        isWorkflowRunning: true
+        isWorkflowRunning: true,
       };
       const output = getSummaryWorkflowStatus(event);
       expect(output).toEqual('running');
@@ -16,10 +16,10 @@ describe('getSummaryWorkflowStatus', () => {
       const event = {
         workflow: {
           workflowExecutionInfo: {
-            closeStatus: 'closeStatusValue'
-          }
+            closeStatus: 'closeStatusValue',
+          },
         },
-        workflowCompletedEvent: false
+        workflowCompletedEvent: false,
       };
       const output = getSummaryWorkflowStatus(event);
       expect(output).toEqual('closestatusvalue');
@@ -29,7 +29,7 @@ describe('getSummaryWorkflowStatus', () => {
   describe('When passed an event with workflowCompletedEvent = false and workflow.workflowExecutionInfo.closeStatus is not defined', () => {
     it('should return "running".', () => {
       const event = {
-        workflowCompletedEvent: false
+        workflowCompletedEvent: false,
       };
       const output = getSummaryWorkflowStatus(event);
       expect(output).toEqual('running');
@@ -44,9 +44,9 @@ describe('getSummaryWorkflowStatus', () => {
         workflowCompletedEvent: {
           eventType: 'WorkflowExecutionContinuedAsNew',
           details: {
-            newExecutionRunId: 'newExecutionRunIdValue'
-          }
-        }
+            newExecutionRunId: 'newExecutionRunIdValue',
+          },
+        },
       };
     });
 
@@ -75,8 +75,8 @@ describe('getSummaryWorkflowStatus', () => {
     it('should return workflowCompletedEvent.eventType without WorkflowExecution and in lower case.', () => {
       const event = {
         workflowCompletedEvent: {
-          eventType: 'NotWorkflowExecutionContinuedAsNew'
-        }
+          eventType: 'NotWorkflowExecutionContinuedAsNew',
+        },
       };
       const output = getSummaryWorkflowStatus(event);
       expect(output).toEqual('notcontinuedasnew');

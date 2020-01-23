@@ -5,7 +5,7 @@ import getEventDetails from './get-event-details';
 import getEventFullDetails from './get-event-full-details';
 import getEventSummary from './get-event-summary';
 
-const getHistoryEvents = (events) => {
+const getHistoryEvents = events => {
   if (!events) {
     return [];
   }
@@ -28,7 +28,7 @@ const getHistoryEvents = (events) => {
       const timeElapsedDisplay = getTimeElapsedDisplay(event, index, eventList);
       return Object.assign({}, event, {
         timeStampDisplay,
-        timeElapsedDisplay
+        timeElapsedDisplay,
       });
     });
 };
