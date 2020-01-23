@@ -1,3 +1,5 @@
+import shortName from '../../../short-name';
+
 const workflowLink = (d, short) => {
   const text = [
     d.workflowType

@@ -571,14 +571,14 @@ describe('Execution', function() {
         await retry(() => {
           historyEl.textNodes('.results .vue-recycle-scroller__item-view:first-child .tr .td.col-summary dl.details dt')
             .should.deep.equal([
+              'Close Timeout',
               'input',
               'Workflow',
-              'Close Timeout',
             ]);
           const ddTextNodes = historyEl.textNodes('.results .vue-recycle-scroller__item-view:first-child .tr .td.col-summary dl.details dd');
-          ddTextNodes[0].should.equalIgnoreSpaces(JSON.stringify(fixtures.history.emailRun1[0].details.input));
-          ddTextNodes[1].should.equal('email-daily-summaries');
-          ddTextNodes[2].should.equal('6m');
+          ddTextNodes[0].should.equal('6m');
+          ddTextNodes[1].should.equalIgnoreSpaces(JSON.stringify(fixtures.history.emailRun1[0].details.input));
+          ddTextNodes[2].should.equal('email-daily-summaries');
         })
         localStorage.getItem('ci-test:history-compact-details').should.equal('true')
       })
@@ -587,7 +587,7 @@ describe('Execution', function() {
         localStorage.setItem('ci-test:history-compact-details', 'true')
         var [historyEl] = await historyTest(this.test)
         await retry(() => historyEl.textNodes('.results .vue-recycle-scroller__item-view:first-child .tr .td:nth-child(4) dl.details dt')
-          .should.deep.equal(['input', 'Workflow', 'Close Timeout'])
+          .should.deep.equal(['Close Timeout', 'input', 'Workflow'])
         )
       })
 
@@ -646,13 +646,13 @@ describe('Execution', function() {
         await Promise.delay(50)
 
         historyEl.textNodes('.vue-recycle-scroller__item-view:not(:first-child) .tr dl.details dt').should.deep.equal([
-          'Version', 'Details', 'Side Effect ID', 'data', 'Local Activity ID', 'Error', 'reason', 'result'
+          'Details', 'Version', 'data', 'Side Effect ID', 'Local Activity ID', 'Error', 'reason', 'result'
         ])
         const ddTextNodes = historyEl.textNodes('.vue-recycle-scroller__item-view:not(:first-child) .tr dl.details dd');
-        ddTextNodes[0].should.equal('0');
-        ddTextNodes[1].should.equal('initial version');
-        ddTextNodes[2].should.equal('0');
-        ddTextNodes[3].should.equalIgnoreSpaces('{"foo":"bar"}');
+        ddTextNodes[0].should.equal('initial version');
+        ddTextNodes[1].should.equal('0');
+        ddTextNodes[2].should.equalIgnoreSpaces('{"foo":"bar"}');
+        ddTextNodes[3].should.equal('0');
         ddTextNodes[4].should.equal('2');
         ddTextNodes[5].should.equalIgnoreSpaces('{"err":"in json"}');
         ddTextNodes[6].should.equal('string error reason');
