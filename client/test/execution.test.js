@@ -403,7 +403,7 @@ describe('Execution', function() {
         await Promise.delay(50);
 
         timelineEl.timeline.fit()
-        scenario.location.should.equal('/domain/ci-test/workflows/email-daily-summaries/emailRun1/history?format=compact')
+        scenario.location.should.equal('/domain/ci-test/workflows/email-daily-summaries/emailRun1/history?format=compact&showGraph=true')
         await retry(() => timelineEl.querySelectorAll('.vis-range.activity.failed').should.have.length(1))
 
         timelineEl.querySelector('.vis-range.activity.failed').should.not.have.class('vis-selected')
@@ -411,7 +411,7 @@ describe('Execution', function() {
         failedActivity.trigger('click')
 
         await retry(() => {
-          scenario.location.should.equal('/domain/ci-test/workflows/email-daily-summaries/emailRun1/history?format=compact&eventId=16')
+          scenario.location.should.equal('/domain/ci-test/workflows/email-daily-summaries/emailRun1/history?format=compact&showGraph=true&eventId=16')
           timelineEl.querySelector('.vis-range.activity.failed').should.have.class('vis-selected')
           Number(timelineEl.querySelector('.vis-range.activity.completed').style.left.match(/[\-0-9]+/)[0]).should.be.below(0)
         })
@@ -438,7 +438,7 @@ describe('Execution', function() {
 
         await retry(() => {
           compactViewEl.querySelector('.selected-event-details').should.have.class('active')
-          scenario.location.should.equal('/domain/ci-test/workflows/email-daily-summaries/emailRun1/history?format=compact&eventId=18')
+          scenario.location.should.equal('/domain/ci-test/workflows/email-daily-summaries/emailRun1/history?format=compact&showGraph=true&eventId=18')
           timelineEl.querySelector('.vis-range.child-workflow.completed').should.have.class('vis-selected')
           compactViewEl.querySelector('.timeline-event.child-workflow.completed').should.have.class('vis-selected')
         })
@@ -575,11 +575,10 @@ describe('Execution', function() {
               'Workflow',
               'Close Timeout',
             ]);
-          historyEl.textNodes('.results .vue-recycle-scroller__item-view:first-child .tr .td.col-summary dl.details dd').should.deep.equal([
-            JSON.stringify(fixtures.history.emailRun1[0].details.input),
-            'email-daily-summaries',
-            '6m',
-          ]);
+          const ddTextNodes = historyEl.textNodes('.results .vue-recycle-scroller__item-view:first-child .tr .td.col-summary dl.details dd');
+          ddTextNodes[0].should.equalIgnoreSpaces(JSON.stringify(fixtures.history.emailRun1[0].details.input));
+          ddTextNodes[1].should.equal('email-daily-summaries');
+          ddTextNodes[2].should.equal('6m');
         })
         localStorage.getItem('ci-test:history-compact-details').should.equal('true')
       })
@@ -649,9 +648,15 @@ describe('Execution', function() {
         historyEl.textNodes('.vue-recycle-scroller__item-view:not(:first-child) .tr dl.details dt').should.deep.equal([
           'Version', 'Details', 'Side Effect ID', 'data', 'Local Activity ID', 'Error', 'reason', 'result'
         ])
-        historyEl.textNodes('.vue-recycle-scroller__item-view:not(:first-child) .tr dl.details dd').should.deep.equal([
-          '0', 'initial version', '0', '{"foo":"bar"}', '2', '{"err":"in json"}', 'string error reason', '{"result":"in json"}'
-        ])
+        const ddTextNodes = historyEl.textNodes('.vue-recycle-scroller__item-view:not(:first-child) .tr dl.details dd');
+        ddTextNodes[0].should.equal('0');
+        ddTextNodes[1].should.equal('initial version');
+        ddTextNodes[2].should.equal('0');
+        ddTextNodes[3].should.equalIgnoreSpaces('{"foo":"bar"}');
+        ddTextNodes[4].should.equal('2');
+        ddTextNodes[5].should.equalIgnoreSpaces('{"err":"in json"}');
+        ddTextNodes[6].should.equal('string error reason');
+        ddTextNodes[7].should.equalIgnoreSpaces('{"result":"in json"}');
       })
 
       it('should render event inputs as highlighted json', async function() {

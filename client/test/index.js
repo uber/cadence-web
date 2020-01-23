@@ -40,6 +40,7 @@ document.title = 'Cadence Tests'
 var chai = window.chai = require('chai')
 chai.should()
 chai.use(require('chai-dom'))
+chai.use(require('chai-string'))
 chai.use(require('chai-things'))
 
 require('nathanboktae-browser-test-utils')
