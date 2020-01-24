@@ -18,6 +18,7 @@ module.exports = {
   },
   plugins: [
     'jest',
+    'prettier',
     'vue',
   ],
   rules: {
