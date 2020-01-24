@@ -1,5 +1,5 @@
 import moment from 'moment';
-import shortName from '../../../short-name';
+import { shortName } from '../../../helpers';
 import { summarizeEvents } from './summarize-events';
 
 export default function (historyEvents) {

@@ -1,5 +1,5 @@
 import moment from 'moment';
-import shortName from '../../../short-name';
+import { shortName } from '../../../helpers';
 import parentWorkflowLink from './parent-workflow-link';
 import workflowLink from './workflow-link';
 

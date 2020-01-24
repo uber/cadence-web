@@ -1,7 +1,6 @@
 <script>
 import moment from 'moment';
-import shortName from '../../short-name';
-import { getKeyValuePairs } from '../../helpers';
+import { getKeyValuePairs, shortName } from '../../helpers';
 
 const titlesForGroups = {
   ActivityTaskScheduled: n => `Activity ${n.details.activityId} - ${shortName(n.details.activityType && n.details.activityType.name)}`,

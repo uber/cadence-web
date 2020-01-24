@@ -4,7 +4,7 @@
 
 <script>
 import moment from 'moment';
-import shortName from '../../short-name';
+import { shortName } from '../../helpers';
 import { summarizeEvents } from './helpers';
 import { DataSet, Timeline, timeline } from 'vis/index-timeline-graph2d';
 

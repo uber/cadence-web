@@ -130,7 +130,7 @@
 
 <script>
 import moment from 'moment';
-import shortName from '../../short-name';
+import { shortName } from '../../helpers';
 import { parentWorkflowLink } from './helpers';
 
 export default {
