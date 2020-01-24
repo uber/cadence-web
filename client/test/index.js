@@ -1,5 +1,5 @@
 if (module.hot) {
-  module.hot.addStatusHandler((status) => {
+  module.hot.addStatusHandler(status => {
     if (status === 'apply') {
       location.reload();
     }
@@ -14,7 +14,10 @@ document.body.appendChild(mochaDiv);
 
 const mochaCss = document.createElement('link');
 mochaCss.setAttribute('rel', 'stylesheet');
-mochaCss.setAttribute('href', 'https://cdnjs.cloudflare.com/ajax/libs/mocha/3.4.2/mocha.css');
+mochaCss.setAttribute(
+  'href',
+  'https://cdnjs.cloudflare.com/ajax/libs/mocha/3.4.2/mocha.css',
+);
 document.head.appendChild(mochaCss);
 
 const extraStyling = document.createElement('style');
@@ -37,7 +40,7 @@ main {
 document.head.appendChild(extraStyling);
 document.title = 'Cadence Tests';
 
-const chai = window.chai = require('chai');
+const chai = (window.chai = require('chai'));
 
 chai.should();
 chai.use(require('chai-dom'));
@@ -58,17 +61,23 @@ beforeEach(() => {
 
 // hack workaround for https://github.com/mochajs/mocha/issues/1635
 const oldIt = window.it;
-window.it = function (name, func) {
+window.it = function(name, func) {
   if (func) {
     const origFunc = func;
 
-    const wrapperFunc = function () {
+    const wrapperFunc = function() {
       const result = func.call(this);
       if (result && typeof result.then === 'function') {
         const currScenario = this.test.scenario;
         return result.then(
           () => currScenario && currScenario.tearDown(this.test),
-          (e) => (currScenario ? currScenario.tearDown(this.test).then(() => Promise.reject(e), () => Promise.reject(e)) : Promise.reject(e)),
+          e =>
+            currScenario
+              ? currScenario.tearDown(this.test).then(
+                  () => Promise.reject(e),
+                  () => Promise.reject(e),
+                )
+              : Promise.reject(e),
         );
       }
       return scenario && scenario.tearDown(this.test).then(() => result);
@@ -80,22 +89,24 @@ window.it = function (name, func) {
   return oldIt.apply(null, arguments);
 };
 
-HTMLInputElement.prototype.input = function (text) {
+HTMLInputElement.prototype.input = function(text) {
   this.value = text;
   this.trigger('input', { testTarget: this });
 };
 
-HTMLElement.prototype.selectItem = async function (text) {
+HTMLElement.prototype.selectItem = async function(text) {
   const openDropdown = new MouseEvent('mousedown');
   this.querySelector('.dropdown-toggle').dispatchEvent(openDropdown);
 
-  const itemToClick = Array.from(await this.waitUntilAllExist('ul.dropdown-menu li a')).find((a) => a.innerText.trim() === text);
+  const itemToClick = Array.from(
+    await this.waitUntilAllExist('ul.dropdown-menu li a'),
+  ).find(a => a.innerText.trim() === text);
   const selectItem = new MouseEvent('mousedown');
 
   itemToClick.dispatchEvent(selectItem);
 };
 
-HTMLElement.prototype.selectOptions = async function (text) {
+HTMLElement.prototype.selectOptions = async function(text) {
   const openDropdown = new MouseEvent('mousedown');
   this.querySelector('.dropdown-toggle').dispatchEvent(openDropdown);
 

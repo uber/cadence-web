@@ -10,8 +10,8 @@
       </thead>
       <tbody>
         <tr v-for="p in pollers">
-          <td>{{p.identity}}</td>
-          <td>{{p.lastAccessTime.format('ddd MMMM Do, h:mm:ss a')}}</td>
+          <td>{{ p.identity }}</td>
+          <td>{{ p.lastAccessTime.format('ddd MMMM Do, h:mm:ss a') }}</td>
           <td class="decision" :data-handled="p.handlesDecisions"></td>
           <td class="activity" :data-handled="p.handlesActivities"></td>
         </tr>
@@ -32,15 +32,20 @@ export default {
     };
   },
   created() {
-    this.$http(`/api/domain/${this.$route.params.domain}/task-lists/${this.$route.params.taskList}/pollers`).then(
-      (p) => this.pollers = Object.keys(p).map((identity) => ({
-        identity,
-        lastAccessTime: moment(p[identity].lastAccessTime),
-        handlesDecisions: p[identity].taskListTypes.includes('decision'),
-        handlesActivities: p[identity].taskListTypes.includes('activity'),
-      })),
-      (e) => this.error = (e.json && e.json.message) || e.status || e.message,
-    ).finally(() => this.loading = false);
+    this.$http(
+      `/api/domain/${this.$route.params.domain}/task-lists/${this.$route.params.taskList}/pollers`,
+    )
+      .then(
+        p =>
+          (this.pollers = Object.keys(p).map(identity => ({
+            identity,
+            lastAccessTime: moment(p[identity].lastAccessTime),
+            handlesDecisions: p[identity].taskListTypes.includes('decision'),
+            handlesActivities: p[identity].taskListTypes.includes('activity'),
+          }))),
+        e => (this.error = (e.json && e.json.message) || e.status || e.message),
+      )
+      .finally(() => (this.loading = false));
   },
   methods: {},
 };

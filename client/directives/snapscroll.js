@@ -2,7 +2,8 @@ export default {
   bind(el) {
     el.addEventListener('scroll', () => {
       // eslint-disable-next-line no-param-reassign
-      el.scrolledToBottom = el.scrollHeight - el.scrollTop - el.offsetHeight < 10;
+      el.scrolledToBottom =
+        el.scrollHeight - el.scrollTop - el.offsetHeight < 10;
     });
   },
   update(el) {

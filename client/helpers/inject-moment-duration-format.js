@@ -1,8 +1,9 @@
 import moment from 'moment';
 
 const injectMomentDurationFormat = () => {
-  Object.getPrototypeOf(moment.duration(2, 'seconds')).format = function () {
-    return this.toString().toLowerCase()
+  Object.getPrototypeOf(moment.duration(2, 'seconds')).format = function() {
+    return this.toString()
+      .toLowerCase()
       .replace(/[pt]/g, '')
       .replace(/([hmd])/g, '$1 ')
       .replace(/\.\d{1,3}s/, 's')

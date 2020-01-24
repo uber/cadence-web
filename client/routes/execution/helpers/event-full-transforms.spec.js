@@ -28,7 +28,9 @@ describe('eventFullTransforms', () => {
 
       it('should return an object with property decisionTaskCompletedEventId.', () => {
         const output = eventFullTransforms.MarkerRecorded(event);
-        expect(output.decisionTaskCompletedEventId).toEqual('decisionTaskCompletedEventIdValue');
+        expect(output.decisionTaskCompletedEventId).toEqual(
+          'decisionTaskCompletedEventIdValue',
+        );
       });
     });
   });

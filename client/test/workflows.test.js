@@ -14,81 +14,116 @@ describe('Workflows', () => {
     return [workflows, scenario];
   }
 
-  const demoWf = [{
-    execution: {
-      workflowId: 'demoWfId',
-      runId: 'demoRunId',
+  const demoWf = [
+    {
+      execution: {
+        workflowId: 'demoWfId',
+        runId: 'demoRunId',
+      },
+      type: { name: 'demo' },
     },
-    type: { name: 'demo' },
-  }];
+  ];
 
-  it('should show the domain with configuration link and workflows breadcrumb in the nav bar', async function () {
+  it('should show the domain with configuration link and workflows breadcrumb in the nav bar', async function() {
     const [, scenario] = await workflowsTest(this.test);
     const header = scenario.vm.$el.querySelector('header.top-bar');
 
-    header.should.have.descendant('a.workflows')
+    header.should.have
+      .descendant('a.workflows')
       .and.have.class('router-link-active')
       .and.have.attribute('href', '/domain/ci-test/workflows');
 
-    header.should.have.descendant('a.config')
+    header.should.have
+      .descendant('a.config')
       .and.not.have.class('router-link-active')
       .and.have.attribute('href', 'domain/ci-test/config');
   });
 
-  it('should query for open workflows and show the results in a grid', async function () {
+  it('should query for open workflows and show the results in a grid', async function() {
     const [workflowsEl] = await workflowsTest(this.test);
     const resultsEl = workflowsEl.querySelector('section.results');
 
-    workflowsEl.querySelector('div.status .selected-tag').should.contain.text('Open');
+    workflowsEl
+      .querySelector('div.status .selected-tag')
+      .should.contain.text('Open');
 
     await resultsEl.waitUntilExists('tbody tr:nth-child(2)');
 
-    resultsEl.textNodes('th').should.deep.equal([
-      'Workflow ID',
-      'Run ID',
-      'Name',
-      'Status',
-      'Start Time',
-      'End Time',
-    ]);
+    resultsEl
+      .textNodes('th')
+      .should.deep.equal([
+        'Workflow ID',
+        'Run ID',
+        'Name',
+        'Status',
+        'Start Time',
+        'End Time',
+      ]);
 
-    resultsEl.textNodes('tbody td:first-child').should.deep.equal([
-      'github.com/uber/cadence-web/email-daily-summaries-2',
-      'github.com/uber/cadence-web/example-1',
-    ]);
-    resultsEl.textNodes('tbody td:nth-child(2)').should.deep.equal([
-      'ef2c889e-e709-4d50-99ee-3748dfa0a101',
-      'db8da3c0-b7d3-48b7-a9b3-b6f566e58207',
-    ]);
-    resultsEl.attrValues('tbody td:nth-child(2) a', 'href').should.deep.equal([
-      '/domain/ci-test/workflows/github.com%2Fuber%2Fcadence-web%2Femail-daily-summaries-2/ef2c889e-e709-4d50-99ee-3748dfa0a101/summary',
-      '/domain/ci-test/workflows/github.com%2Fuber%2Fcadence-web%2Fexample-1/db8da3c0-b7d3-48b7-a9b3-b6f566e58207/summary',
-    ]);
-    resultsEl.textNodes('tbody td:nth-child(3)').should.deep.equal([
-      'email-daily-summaries',
-      'example',
-    ]);
-    resultsEl.textNodes('tbody td:nth-child(4)').should.deep.equal(['open', 'open']);
-    resultsEl.textNodes('tbody td:nth-child(5)').should.deep.equal(
-      fixtures.workflows.open.map((wf) => moment(wf.startTime).format('lll')),
-    );
+    resultsEl
+      .textNodes('tbody td:first-child')
+      .should.deep.equal([
+        'github.com/uber/cadence-web/email-daily-summaries-2',
+        'github.com/uber/cadence-web/example-1',
+      ]);
+    resultsEl
+      .textNodes('tbody td:nth-child(2)')
+      .should.deep.equal([
+        'ef2c889e-e709-4d50-99ee-3748dfa0a101',
+        'db8da3c0-b7d3-48b7-a9b3-b6f566e58207',
+      ]);
+    resultsEl
+      .attrValues('tbody td:nth-child(2) a', 'href')
+      .should.deep.equal([
+        '/domain/ci-test/workflows/github.com%2Fuber%2Fcadence-web%2Femail-daily-summaries-2/ef2c889e-e709-4d50-99ee-3748dfa0a101/summary',
+        '/domain/ci-test/workflows/github.com%2Fuber%2Fcadence-web%2Fexample-1/db8da3c0-b7d3-48b7-a9b3-b6f566e58207/summary',
+      ]);
+    resultsEl
+      .textNodes('tbody td:nth-child(3)')
+      .should.deep.equal(['email-daily-summaries', 'example']);
+    resultsEl
+      .textNodes('tbody td:nth-child(4)')
+      .should.deep.equal(['open', 'open']);
+    resultsEl
+      .textNodes('tbody td:nth-child(5)')
+      .should.deep.equal(
+        fixtures.workflows.open.map(wf => moment(wf.startTime).format('lll')),
+      );
 
-    resultsEl.should.not.contain('span.no-results').and.not.contain('span.error');
+    resultsEl.should.not
+      .contain('span.no-results')
+      .and.not.contain('span.error');
   });
 
-  it('should query for workflows to the last of the retention window if less than 30 days, and show that option in the relative range picker', async function () {
-    const [workflowsEl, scenario] = await workflowsTest(this.test, null, {
-      startTime: moment().subtract(14, 'days').startOf('day').toISOString(),
-    }, {
-      configuration: {
-        workflowExecutionRetentionPeriodInDays: 14,
+  it('should query for workflows to the last of the retention window if less than 30 days, and show that option in the relative range picker', async function() {
+    const [workflowsEl, scenario] = await workflowsTest(
+      this.test,
+      null,
+      {
+        startTime: moment()
+          .subtract(14, 'days')
+          .startOf('day')
+          .toISOString(),
       },
-    });
-    const dateRangePicker = workflowsEl.querySelector('header.filters .date-range-picker');
+      {
+        configuration: {
+          workflowExecutionRetentionPeriodInDays: 14,
+        },
+      },
+    );
+    const dateRangePicker = workflowsEl.querySelector(
+      'header.filters .date-range-picker',
+    );
 
-    await retry(() => workflowsEl.querySelectorAll('section.results tbody tr').should.have.length(2));
+    await retry(() =>
+      workflowsEl
+        .querySelectorAll('section.results tbody tr')
+        .should.have.length(2),
+    );
 
-    dateRangePicker.querySelector('.selected-tag').should.have.trimmed.text('Last 14 days');
+    dateRangePicker
+      .querySelector('.selected-tag')
+      .should.have.trimmed.text('Last 14 days');
     const relativeOptions = await dateRangePicker.selectOptions();
     relativeOptions.should.deep.equal([
       'Last 3 hours',
@@ -100,19 +135,35 @@ describe('Workflows', () => {
     ]);
   });
 
-  it('should query for workflows for the past 30 days if the retention policy is beyond 30 days', async function () {
-    const [workflowsEl, scenario] = await workflowsTest(this.test, null, {
-      startTime: moment().subtract(30, 'days').startOf('day').toISOString(),
-    }, {
-      configuration: {
-        workflowExecutionRetentionPeriodInDays: 365,
+  it('should query for workflows for the past 30 days if the retention policy is beyond 30 days', async function() {
+    const [workflowsEl, scenario] = await workflowsTest(
+      this.test,
+      null,
+      {
+        startTime: moment()
+          .subtract(30, 'days')
+          .startOf('day')
+          .toISOString(),
       },
-    });
-    const dateRangePicker = workflowsEl.querySelector('header.filters .date-range-picker');
+      {
+        configuration: {
+          workflowExecutionRetentionPeriodInDays: 365,
+        },
+      },
+    );
+    const dateRangePicker = workflowsEl.querySelector(
+      'header.filters .date-range-picker',
+    );
 
-    await retry(() => workflowsEl.querySelectorAll('section.results tbody tr').should.have.length(2));
+    await retry(() =>
+      workflowsEl
+        .querySelectorAll('section.results tbody tr')
+        .should.have.length(2),
+    );
 
-    dateRangePicker.querySelector('.selected-tag').should.have.trimmed.text('Last 30 days');
+    dateRangePicker
+      .querySelector('.selected-tag')
+      .should.have.trimmed.text('Last 30 days');
     const relativeOptions = await dateRangePicker.selectOptions();
     relativeOptions.should.deep.equal([
       'Last 3 hours',
@@ -125,136 +176,230 @@ describe('Workflows', () => {
     ]);
   });
 
-  it('should load and save last relative time ranges in localStorage', async function () {
+  it('should load and save last relative time ranges in localStorage', async function() {
     localStorage.setItem('ci-test:workflows-time-range', 'last-7-days');
 
-    const [workflowsEl, scenario] = await workflowsTest(this.test, null, {
-      startTime: moment().subtract(7, 'days').startOf('day').toISOString(),
-    }, {
-      configuration: {
-        workflowExecutionRetentionPeriodInDays: 120,
+    const [workflowsEl, scenario] = await workflowsTest(
+      this.test,
+      null,
+      {
+        startTime: moment()
+          .subtract(7, 'days')
+          .startOf('day')
+          .toISOString(),
       },
-    });
-    const dateRangePicker = workflowsEl.querySelector('header.filters .date-range-picker');
+      {
+        configuration: {
+          workflowExecutionRetentionPeriodInDays: 120,
+        },
+      },
+    );
+    const dateRangePicker = workflowsEl.querySelector(
+      'header.filters .date-range-picker',
+    );
 
-    await retry(() => workflowsEl.querySelectorAll('section.results tbody tr').should.have.length(2));
-    scenario.location.should.equal('/domain/ci-test/workflows?range=last-7-days&status=OPEN');
+    await retry(() =>
+      workflowsEl
+        .querySelectorAll('section.results tbody tr')
+        .should.have.length(2),
+    );
+    scenario.location.should.equal(
+      '/domain/ci-test/workflows?range=last-7-days&status=OPEN',
+    );
 
-    dateRangePicker.querySelector('.selected-tag').should.have.trimmed.text('Last 7 days');
+    dateRangePicker
+      .querySelector('.selected-tag')
+      .should.have.trimmed.text('Last 7 days');
 
-    scenario.withWorkflows('open', {
-      startTime: moment().subtract(3, 'months').startOf('month').toISOString(),
-      endTime: moment().endOf('month').toISOString(),
-    }, [fixtures.workflows.open[0]]);
+    scenario.withWorkflows(
+      'open',
+      {
+        startTime: moment()
+          .subtract(3, 'months')
+          .startOf('month')
+          .toISOString(),
+        endTime: moment()
+          .endOf('month')
+          .toISOString(),
+      },
+      [fixtures.workflows.open[0]],
+    );
     dateRangePicker.selectItem('Last 3 months');
 
-    await retry(() => workflowsEl.querySelectorAll('section.results tbody tr').should.have.length(1));
-    scenario.location.should.equal('/domain/ci-test/workflows?range=last-3-months&status=OPEN');
-    localStorage.getItem('ci-test:workflows-time-range').should.equal('last-3-months');
-    dateRangePicker.querySelector('.selected-tag').should.have.trimmed.text('Last 3 months');
+    await retry(() =>
+      workflowsEl
+        .querySelectorAll('section.results tbody tr')
+        .should.have.length(1),
+    );
+    scenario.location.should.equal(
+      '/domain/ci-test/workflows?range=last-3-months&status=OPEN',
+    );
+    localStorage
+      .getItem('ci-test:workflows-time-range')
+      .should.equal('last-3-months');
+    dateRangePicker
+      .querySelector('.selected-tag')
+      .should.have.trimmed.text('Last 3 months');
   });
 
-  it('should allow filtering by workflow id', async function () {
+  it('should allow filtering by workflow id', async function() {
     const [workflowsEl, scenario] = await workflowsTest(this.test);
-    const wfIdEl = workflowsEl.querySelector('header.filters input[name="workflowId"]');
+    const wfIdEl = workflowsEl.querySelector(
+      'header.filters input[name="workflowId"]',
+    );
 
     await Promise.delay(10);
     wfIdEl.value.should.be.empty;
 
-    scenario.withWorkflows('open', {
-      workflowId: '1234',
-    }, [{
-      execution: {
+    scenario.withWorkflows(
+      'open',
+      {
         workflowId: '1234',
-        runId: '5678',
       },
-      type: { name: 'demo' },
-    }]);
+      [
+        {
+          execution: {
+            workflowId: '1234',
+            runId: '5678',
+          },
+          type: { name: 'demo' },
+        },
+      ],
+    );
     wfIdEl.input('1234');
 
-    await retry(() => workflowsEl.textNodes('.results tbody td:nth-child(3)').should.deep.equal(['demo']));
+    await retry(() =>
+      workflowsEl
+        .textNodes('.results tbody td:nth-child(3)')
+        .should.deep.equal(['demo']),
+    );
   });
 
-  it('should respect query parameters for range and status', async function () {
+  it('should respect query parameters for range and status', async function() {
     const [testEl, scenario] = new Scenario(this.test)
       .withDomain('ci-test')
       .startingAt('/domain/ci-test/workflows?status=FAILED&range=last-24-hours')
       .withWorkflows('closed', {
-        startTime: moment().subtract(24, 'hours').startOf('hour').toISOString(),
-        endTime: moment().endOf('hour').toISOString(),
+        startTime: moment()
+          .subtract(24, 'hours')
+          .startOf('hour')
+          .toISOString(),
+        endTime: moment()
+          .endOf('hour')
+          .toISOString(),
         status: 'FAILED',
       })
       .withDomainDescription('ci-test')
       .go();
 
-    await retry(() => testEl.querySelectorAll('section.workflows section.results tbody tr').should.have.length(1));
+    await retry(() =>
+      testEl
+        .querySelectorAll('section.workflows section.results tbody tr')
+        .should.have.length(1),
+    );
     await Promise.delay(50);
   });
 
-  it('should allow filtering by workflow name', async function () {
+  it('should allow filtering by workflow name', async function() {
     const [workflowsEl, scenario] = await workflowsTest(this.test);
-    const wfNameEl = workflowsEl.querySelector('header.filters input[name="workflowName"]');
+    const wfNameEl = workflowsEl.querySelector(
+      'header.filters input[name="workflowName"]',
+    );
 
     await Promise.delay(10);
     wfNameEl.value.should.be.empty;
 
-    scenario.withWorkflows('open', {
-      workflowName: 'demo',
-    }, demoWf);
+    scenario.withWorkflows(
+      'open',
+      {
+        workflowName: 'demo',
+      },
+      demoWf,
+    );
     wfNameEl.input('demo');
 
-    await retry(() => workflowsEl.textNodes('.results tbody td:first-child').should.deep.equal(['demoWfId']));
+    await retry(() =>
+      workflowsEl
+        .textNodes('.results tbody td:first-child')
+        .should.deep.equal(['demoWfId']),
+    );
   });
 
-  it('should allow changing the date range', async function () {
+  it('should allow changing the date range', async function() {
     const [workflowsEl, scenario] = await workflowsTest(this.test);
-    const dateRangeEl = workflowsEl.querySelector('header.filters .date-range-picker input');
+    const dateRangeEl = workflowsEl.querySelector(
+      'header.filters .date-range-picker input',
+    );
 
     dateRangeEl.focus();
 
     await Promise.delay(150);
 
-    const dayCells = Array.from(workflowsEl.querySelectorAll('.date-range-picker .ayou-calendar .ayou-day-cell'));
-    dayCells.find((d) => d.textContent === '11 ').trigger('click');
+    const dayCells = Array.from(
+      workflowsEl.querySelectorAll(
+        '.date-range-picker .ayou-calendar .ayou-day-cell',
+      ),
+    );
+    dayCells.find(d => d.textContent === '11 ').trigger('click');
 
     await Promise.delay(50);
 
-    const year = moment().year(); const
-      month = moment().month();
-    scenario.withWorkflows('open', {
-      startTime: moment([year, month, 11]).toISOString(),
-      endTime: moment([year, month, 14]).toISOString(),
-    }, demoWf);
-    dayCells.find((d) => d.textContent === '14 ').trigger('click');
+    const year = moment().year();
+    const month = moment().month();
+    scenario.withWorkflows(
+      'open',
+      {
+        startTime: moment([year, month, 11]).toISOString(),
+        endTime: moment([year, month, 14]).toISOString(),
+      },
+      demoWf,
+    );
+    dayCells.find(d => d.textContent === '14 ').trigger('click');
 
     await Promise.delay(100);
   });
 
-  it('should allow querying by status of the workflow', async function () {
+  it('should allow querying by status of the workflow', async function() {
     const [workflowsEl, scenario] = await workflowsTest(this.test);
-    const statusEl = workflowsEl.querySelector('header.filters .dropdown.status');
+    const statusEl = workflowsEl.querySelector(
+      'header.filters .dropdown.status',
+    );
 
-    await retry(() => statusEl.querySelector('.selected-tag').should.have.trimmed.text('Open'));
+    await retry(() =>
+      statusEl.querySelector('.selected-tag').should.have.trimmed.text('Open'),
+    );
 
     scenario.withWorkflows('closed', { status: 'FAILED' }, demoWf);
     await statusEl.selectItem('Failed');
 
-    await retry(() => workflowsEl.textNodes('.results tbody td:first-child').should.deep.equal(['demoWfId']));
+    await retry(() =>
+      workflowsEl
+        .textNodes('.results tbody td:first-child')
+        .should.deep.equal(['demoWfId']),
+    );
   });
 
-  it('should debounce query criteria changes when issuing requests', async function () {
+  it('should debounce query criteria changes when issuing requests', async function() {
     const [workflowsEl, scenario] = await workflowsTest(this.test);
-    const wfIdEl = workflowsEl.querySelector('header.filters input[name="workflowId"]');
+    const wfIdEl = workflowsEl.querySelector(
+      'header.filters input[name="workflowId"]',
+    );
 
-    scenario.withWorkflows('open', {
-      workflowId: '1234',
-    }, [{
-      execution: {
+    scenario.withWorkflows(
+      'open',
+      {
         workflowId: '1234',
-        runId: '5678',
       },
-      type: { name: 'demo' },
-    }]);
+      [
+        {
+          execution: {
+            workflowId: '1234',
+            runId: '5678',
+          },
+          type: { name: 'demo' },
+        },
+      ],
+    );
 
     wfIdEl.input('12');
     Promise.delay(5);
@@ -262,10 +407,14 @@ describe('Workflows', () => {
     Promise.delay(5);
     wfIdEl.input('1234');
 
-    await retry(() => workflowsEl.textNodes('.results tbody td:nth-child(3)').should.deep.equal(['demo']));
+    await retry(() =>
+      workflowsEl
+        .textNodes('.results tbody td:nth-child(3)')
+        .should.deep.equal(['demo']),
+    );
   });
 
-  it('should show errors from the server', async function () {
+  it('should show errors from the server', async function() {
     const [workflowsEl, scenario] = await workflowsTest(this.test, {
       status: 503,
       body: {
@@ -273,19 +422,24 @@ describe('Workflows', () => {
       },
     });
 
-    await retry(() => workflowsEl.querySelector('span.error').should.have.text('Server Unavailable'));
+    await retry(() =>
+      workflowsEl
+        .querySelector('span.error')
+        .should.have.text('Server Unavailable'),
+    );
   });
 
-  it('should not show the table of results when there are no results', async function () {
+  it('should not show the table of results when there are no results', async function() {
     const [workflowsEl, scenario] = await workflowsTest(this.test, []);
 
     await retry(() => {
       workflowsEl.querySelector('span.no-results').should.be.displayed;
-      workflowsEl.querySelector('section.results table').should.not.be.displayed;
+      workflowsEl.querySelector('section.results table').should.not.be
+        .displayed;
     });
   });
 
-  it('should use query parameters from the URL', async function () {
+  it('should use query parameters from the URL', async function() {
     const [testEl, scenario] = new Scenario(this.test)
       .withDomain('ci-test')
       .startingAt('/domain/ci-test/workflows?status=FAILED&workflowName=demo')
@@ -297,7 +451,11 @@ describe('Workflows', () => {
       .go();
 
     const workflowsEl = await testEl.waitUntilExists('section.workflows');
-    workflowsEl.querySelector('header.filters input[name="workflowName"]').value.should.equal('demo');
-    workflowsEl.querySelector('header.filters .status .selected-tag').should.have.trimmed.text('Failed');
+    workflowsEl
+      .querySelector('header.filters input[name="workflowName"]')
+      .value.should.equal('demo');
+    workflowsEl
+      .querySelector('header.filters .status .selected-tag')
+      .should.have.trimmed.text('Failed');
   });
 });

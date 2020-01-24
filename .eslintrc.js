@@ -7,6 +7,7 @@ module.exports = {
   extends: [
     'plugin:vue/essential',
     'airbnb-base',
+    'plugin:prettier/recommended',
   ],
   globals: {
     Atomics: 'readonly',
@@ -22,5 +23,12 @@ module.exports = {
     'vue',
   ],
   rules: {
+    'prettier/prettier': [
+      'error',
+      {
+        singleQuote: true,
+        trailingComma: 'all',
+      },
+    ],
   },
 };

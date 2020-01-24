@@ -3,27 +3,40 @@ import moment from 'moment';
 import { getKeyValuePairs, shortName } from '../../helpers';
 
 const titlesForGroups = {
-  ActivityTaskScheduled: (n) => `Activity ${n.details.activityId} - ${shortName(n.details.activityType && n.details.activityType.name)}`,
-  TimerStarted: (n) => `Timer ${n.details.timerId} (${moment.duration(n.details.startToFireTimeoutSeconds, 'seconds').format()})`,
+  ActivityTaskScheduled: n =>
+    `Activity ${n.details.activityId} - ${shortName(
+      n.details.activityType && n.details.activityType.name,
+    )}`,
+  TimerStarted: n =>
+    `Timer ${n.details.timerId} (${moment
+      .duration(n.details.startToFireTimeoutSeconds, 'seconds')
+      .format()})`,
   StartChildWorkflowExecutionInitiated: (n, h) => {
-    const childWf = n.children[0] && n.children[0].details && n.children[0].details.workflowExecution;
+    const childWf =
+      n.children[0] &&
+      n.children[0].details &&
+      n.children[0].details.workflowExecution;
     const name = shortName(n.details.workflowType.name);
 
     return childWf
       ? [
-        'Child Workflow ',
-        h('router-link', {
-          props: {
-            to: {
-              name: 'execution/summary',
-              params: {
-                runId: childWf.runId,
-                workflowId: childWf.workflowId,
+          'Child Workflow ',
+          h(
+            'router-link',
+            {
+              props: {
+                to: {
+                  name: 'execution/summary',
+                  params: {
+                    runId: childWf.runId,
+                    workflowId: childWf.workflowId,
+                  },
+                },
               },
             },
-          },
-        }, name),
-      ]
+            name,
+          ),
+        ]
       : `Child Workflow ${name}`;
   },
 };
@@ -47,7 +60,10 @@ function findActiveGroupNode(node, id, topLevel) {
 }
 
 function titleForNode(n) {
-  return n.eventType.replace(/(ActivityTask|ChildWorkflowExecution|StartChildWorkflowExecution)/, '');
+  return n.eventType.replace(
+    /(ActivityTask|ChildWorkflowExecution|StartChildWorkflowExecution)/,
+    '',
+  );
 }
 
 export default {
@@ -58,22 +74,30 @@ export default {
     const router = this.$router;
 
     function eventNode(node, noGroup) {
-      const groupTitle = (node.eventType in titlesForGroups) && titlesForGroups[node.eventType](node, h);
+      const groupTitle =
+        node.eventType in titlesForGroups &&
+        titlesForGroups[node.eventType](node, h);
       const isActive = activeId === node.eventId;
       const showDetails = activeId && (!!groupTitle || (isActive && noGroup));
-      const activeGroupNode = showDetails && findActiveGroupNode(node, activeId, true);
-      const detailsList = activeGroupNode && h('details-list', {
-        props: {
-          item: {
-            kvps: getKeyValuePairs(activeGroupNode.details),
+      const activeGroupNode =
+        showDetails && findActiveGroupNode(node, activeId, true);
+      const detailsList =
+        activeGroupNode &&
+        h('details-list', {
+          props: {
+            item: {
+              kvps: getKeyValuePairs(activeGroupNode.details),
+            },
+            title: groupTitle || node.eventType,
           },
-          title: groupTitle || node.eventType,
-        },
-      });
+        });
 
       return h(
-        groupTitle ? 'div' : 'span', {
-          class: `event-node ${node.eventType}${activeGroupNode ? ' active' : ''}`,
+        groupTitle ? 'div' : 'span',
+        {
+          class: `event-node ${node.eventType}${
+            activeGroupNode ? ' active' : ''
+          }`,
         },
         [
           groupTitle && h('span', { class: 'group-title' }, groupTitle),
@@ -86,15 +110,13 @@ export default {
               },
               class: `event-id${isActive ? ' active' : ''}`,
               on: {
-                click: (e) => {
+                click: e => {
                   e.preventDefault();
                   router.replaceQueryParam('eventId', node.eventId);
                 },
               },
             },
-            [
-              titleForNode(node),
-            ],
+            [titleForNode(node)],
           ),
           !groupTitle && detailsList,
           h(
@@ -102,7 +124,7 @@ export default {
             {
               class: 'event-children',
             },
-            node.children.map((c) => eventNode(c, noGroup && !groupTitle)),
+            node.children.map(c => eventNode(c, noGroup && !groupTitle)),
           ),
           groupTitle && detailsList,
         ],

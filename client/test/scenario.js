@@ -10,12 +10,13 @@ import main from '../main';
 import http from '../http';
 import fixtures from './fixtures';
 
-
 export default function Scenario(test) {
   test.scenario = this;
   this.mochaTest = test;
   this.api = fetchMock.sandbox().catch((url, req, opts) => {
-    let msg = `Unexpected request: ${url}${opts && opts.query ? `?${opts.query}` : ''}`;
+    let msg = `Unexpected request: ${url}${
+      opts && opts.query ? `?${opts.query}` : ''
+    }`;
     if (req.body) {
       msg += `\n${req.body}`;
     }
@@ -23,11 +24,13 @@ export default function Scenario(test) {
   });
 }
 
-Scenario.prototype.isDebuggingJustThisTest = function () {
-  return window.location.search.includes(encodeURIComponent(this.mochaTest.fullTitle()));
+Scenario.prototype.isDebuggingJustThisTest = function() {
+  return window.location.search.includes(
+    encodeURIComponent(this.mochaTest.fullTitle()),
+  );
 };
 
-Scenario.prototype.render = function (attachToBody) {
+Scenario.prototype.render = function(attachToBody) {
   const $http = http.bind(null, this.api);
   $http.post = http.post.bind(null, this.api);
 
@@ -45,38 +48,49 @@ Scenario.prototype.render = function (attachToBody) {
     router: this.router,
     template: '<App/>',
     components: { App: main.App },
-    mixins: [{
-      created() {
-        this.$http = $http;
+    mixins: [
+      {
+        created() {
+          this.$http = $http;
+        },
       },
-    }],
+    ],
   });
 
   vueModal.rootInstance = this.vm;
   return this.vm.$el;
 };
 
-Scenario.prototype.go = function () {
+Scenario.prototype.go = function() {
   return [this.render.apply(this, arguments), this];
 };
 
-Scenario.prototype.startingAt = function (url) {
+Scenario.prototype.startingAt = function(url) {
   this.initialUrl = url;
   return this;
 };
 
-Scenario.prototype.tearDown = function () {
-  if (this.vm && this.vm.$el && this.vm.$el.parentElement
+Scenario.prototype.tearDown = function() {
+  if (
+    this.vm &&
+    this.vm.$el &&
+    this.vm.$el.parentElement &&
     // as a convience, if debugging just this test, don't remove the test app
-    && !this.isDebuggingJustThisTest()) {
+    !this.isDebuggingJustThisTest()
+  ) {
     this.vm.$el.parentElement.removeChild(this.vm.$el);
   }
   delete Mocha.copiedText;
 
   const { unmatched } = this.api.calls();
   return unmatched.length
-    ? Promise.reject(new Error(`${unmatched.length} outstanding expected API calls:
-      ${unmatched.slice(0, 5).map(([url]) => url).join('\n')}`))
+    ? Promise.reject(
+        new Error(`${unmatched.length} outstanding expected API calls:
+      ${unmatched
+        .slice(0, 5)
+        .map(([url]) => url)
+        .join('\n')}`),
+      )
     : Promise.resolve();
 };
 
@@ -86,58 +100,75 @@ Object.defineProperty(Scenario.prototype, 'location', {
   },
 });
 
-Scenario.prototype.withDomain = function (domain) {
+Scenario.prototype.withDomain = function(domain) {
   this.domain = domain;
   return this;
 };
 
-Scenario.prototype.withDomainDescription = function (domain, domainDesc) {
-  this.api.getOnce(`/api/domain/${domain}`, deepmerge({
-    domainInfo: {
-      name: domain,
-      status: 'REGISTERED',
-      description: 'A cool domain',
-      ownerEmail: 'ci-test@uber.com',
-    },
-    configuration: {
-      workflowExecutionRetentionPeriodInDays: 21,
-      emitMetric: true,
-    },
-    replicationConfiguration: {
-      activeClusterName: 'ci-test-cluster',
-      clusters: [{
-        clusterName: 'ci-test-cluster',
-      }],
-    },
-    failoverVersion: 0,
-    isGlobalDomain: false,
-  }, domainDesc || {}));
+Scenario.prototype.withDomainDescription = function(domain, domainDesc) {
+  this.api.getOnce(
+    `/api/domain/${domain}`,
+    deepmerge(
+      {
+        domainInfo: {
+          name: domain,
+          status: 'REGISTERED',
+          description: 'A cool domain',
+          ownerEmail: 'ci-test@uber.com',
+        },
+        configuration: {
+          workflowExecutionRetentionPeriodInDays: 21,
+          emitMetric: true,
+        },
+        replicationConfiguration: {
+          activeClusterName: 'ci-test-cluster',
+          clusters: [
+            {
+              clusterName: 'ci-test-cluster',
+            },
+          ],
+        },
+        failoverVersion: 0,
+        isGlobalDomain: false,
+      },
+      domainDesc || {},
+    ),
+  );
   return this;
 };
 
-Scenario.prototype.withWorkflows = function (status, query, workflows) {
+Scenario.prototype.withWorkflows = function(status, query, workflows) {
   if (!workflows) {
     workflows = JSON.parse(JSON.stringify(fixtures.workflows[status]));
   }
 
   const url = `/api/domain/${this.domain}/workflows/${status}?${qs.stringify({
-    startTime: moment().subtract(21, 'day').startOf('day').toISOString(),
-    endTime: moment().endOf('day').toISOString(),
+    startTime: moment()
+      .subtract(21, 'day')
+      .startOf('day')
+      .toISOString(),
+    endTime: moment()
+      .endOf('day')
+      .toISOString(),
     ...query,
   })}`;
 
-  const response = Array.isArray(workflows) ? { executions: workflows } : workflows;
+  const response = Array.isArray(workflows)
+    ? { executions: workflows }
+    : workflows;
 
   this.api.getOnce(url, response);
 
   return this;
 };
 
-Scenario.prototype.execApiBase = function (workflowId, runId) {
-  return `/api/domain/${this.domain}/workflows/${encodeURIComponent(workflowId || this.workflowId)}/${encodeURIComponent(runId || this.runId)}`;
+Scenario.prototype.execApiBase = function(workflowId, runId) {
+  return `/api/domain/${this.domain}/workflows/${encodeURIComponent(
+    workflowId || this.workflowId,
+  )}/${encodeURIComponent(runId || this.runId)}`;
 };
 
-Scenario.prototype.withExecution = function (workflowId, runId, description) {
+Scenario.prototype.withExecution = function(workflowId, runId, description) {
   this.workflowId = workflowId;
   this.runId = runId;
 
@@ -151,21 +182,29 @@ Scenario.prototype.withExecution = function (workflowId, runId, description) {
     workflowExecutionInfo: {
       execution: { workflowId, runId },
       type: { name: 'CIDemoWorkflow' },
-      startTime: moment().startOf('hour').subtract(2, 'minutes'),
+      startTime: moment()
+        .startOf('hour')
+        .subtract(2, 'minutes'),
       historyLength: 14,
     },
-    ...description || {},
+    ...(description || {}),
   });
 
   return this;
 };
 
-Scenario.prototype.withHistory = function (events, hasMorePages) {
+Scenario.prototype.withHistory = function(events, hasMorePages) {
   if (!this.historyNpt) {
     this.historyNpt = {};
   }
 
-  const makeToken = () => btoa(JSON.stringify({ NextEventId: this.historyNpt[this.runId], IsWorkflowRunning: true }));
+  const makeToken = () =>
+    btoa(
+      JSON.stringify({
+        NextEventId: this.historyNpt[this.runId],
+        IsWorkflowRunning: true,
+      }),
+    );
 
   let url = `${this.execApiBase()}/history?waitForNewEvent=true`;
   const response = Array.isArray(events) ? { history: { events } } : events;
@@ -175,7 +214,8 @@ Scenario.prototype.withHistory = function (events, hasMorePages) {
   }
 
   if (hasMorePages) {
-    this.historyNpt[this.runId] = (this.historyNpt[this.runId] || 0) + response.history.events.length + 1;
+    this.historyNpt[this.runId] =
+      (this.historyNpt[this.runId] || 0) + response.history.events.length + 1;
     response.nextPageToken = makeToken();
   }
 
@@ -184,7 +224,7 @@ Scenario.prototype.withHistory = function (events, hasMorePages) {
   return this;
 };
 
-Scenario.prototype.withFullHistory = function (events) {
+Scenario.prototype.withFullHistory = function(events) {
   var events = JSON.parse(JSON.stringify(events || fixtures.history.emailRun1));
   const third = Math.floor(events.length / 3);
 
@@ -193,39 +233,57 @@ Scenario.prototype.withFullHistory = function (events) {
     .withHistory(events.slice(third + third));
 };
 
-Scenario.prototype.withQueries = function (queries) {
-  this.api.getOnce(`${this.execApiBase()}/queries`, queries || ['__stack_trace', 'status']);
+Scenario.prototype.withQueries = function(queries) {
+  this.api.getOnce(
+    `${this.execApiBase()}/queries`,
+    queries || ['__stack_trace', 'status'],
+  );
   return this;
 };
 
-Scenario.prototype.withQueryResult = function (query, result) {
-  this.api.postOnce(`${this.execApiBase()}/queries/${query}`, result && result.status ? result : { queryResult: result });
+Scenario.prototype.withQueryResult = function(query, result) {
+  this.api.postOnce(
+    `${this.execApiBase()}/queries/${query}`,
+    result && result.status ? result : { queryResult: result },
+  );
   return this;
 };
 
-Scenario.prototype.withWorkflowTermination = function (workflowId, runId, reason) {
+Scenario.prototype.withWorkflowTermination = function(
+  workflowId,
+  runId,
+  reason,
+) {
   this.api.postOnce(`${this.execApiBase()}/terminate`, { reason });
 
   return this;
 };
 
-Scenario.prototype.withTaskListPollers = function (taskList, pollers) {
-  this.api.getOnce(`/api/domain/${this.domain}/task-lists/${taskList}/pollers`, pollers || {
-    node1: {
-      lastAccessTime: moment().startOf('hour').add(5, 'minutes'),
-      taskListTypes: ['decision', 'activity'],
+Scenario.prototype.withTaskListPollers = function(taskList, pollers) {
+  this.api.getOnce(
+    `/api/domain/${this.domain}/task-lists/${taskList}/pollers`,
+    pollers || {
+      node1: {
+        lastAccessTime: moment()
+          .startOf('hour')
+          .add(5, 'minutes'),
+        taskListTypes: ['decision', 'activity'],
+      },
+      node2: {
+        lastAccessTime: moment()
+          .startOf('hour')
+          .add(3, 'minutes'),
+        taskListTypes: ['decision'],
+      },
+      node3: {
+        lastAccessTime: moment()
+          .startOf('hour')
+          .add(4, 'minutes'),
+        taskListTypes: ['activity'],
+      },
     },
-    node2: {
-      lastAccessTime: moment().startOf('hour').add(3, 'minutes'),
-      taskListTypes: ['decision'],
-    },
-    node3: {
-      lastAccessTime: moment().startOf('hour').add(4, 'minutes'),
-      taskListTypes: ['activity'],
-    },
-  });
+  );
   return this;
 };
-
 
 window.Scenario = Scenario;

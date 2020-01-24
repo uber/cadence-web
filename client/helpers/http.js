@@ -9,8 +9,8 @@ export default function http(fetch, url, o) {
 
   if (opts.query) {
     const qs = Object.keys(opts.query)
-      .filter((k) => opts.query[k] != null)
-      .map((k) => `${encodeURIComponent(k)}=${encodeURIComponent(opts.query[k])}`)
+      .filter(k => opts.query[k] != null)
+      .map(k => `${encodeURIComponent(k)}=${encodeURIComponent(opts.query[k])}`)
       .join('&');
 
     if (qs) {
@@ -18,17 +18,17 @@ export default function http(fetch, url, o) {
     }
   }
 
-  return fetch(url, opts).then(
-    (r) => (r.status >= 200 && r.status < 300
+  return fetch(url, opts).then(r =>
+    r.status >= 200 && r.status < 300
       ? r.json().catch(() => {})
       : r.json().then(
-        (json) => Promise.reject(Object.assign(r, { json })),
-        () => Promise.reject(r),
-      )),
+          json => Promise.reject(Object.assign(r, { json })),
+          () => Promise.reject(r),
+        ),
   );
 }
 
-http.post = function (fetch, url, body) {
+http.post = function(fetch, url, body) {
   return http(fetch, url, {
     method: 'POST',
     body: JSON.stringify(body),

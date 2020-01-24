@@ -15,11 +15,7 @@
       <h3>Are you sure you want to terminate this workflow?</h3>
       <input v-model="terminationReason" placeholder="Reason" />
       <footer>
-        <a
-          href="#"
-          class="terminate"
-          @click.prevent="terminate"
-        >
+        <a href="#" class="terminate" @click.prevent="terminate">
           Terminate
         </a>
         <a
@@ -35,56 +31,54 @@
     <dl v-if="workflow">
       <div class="workflow-name">
         <dt>Workflow Name</dt>
-        <dd>{{workflow.workflowExecutionInfo.type.name}}</dd>
+        <dd>{{ workflow.workflowExecutionInfo.type.name }}</dd>
       </div>
       <div class="started-at">
         <dt>Started At</dt>
-        <dd>{{workflowStartTime}}</dd>
+        <dd>{{ workflowStartTime }}</dd>
       </div>
       <div class="close-time" v-if="workflowCloseTime">
         <dt>Closed Time</dt>
-        <dd>{{workflowCloseTime}}</dd>
+        <dd>{{ workflowCloseTime }}</dd>
       </div>
       <div
         class="workflow-status"
-        :data-status="wfStatus !== undefined && (typeof wfStatus === 'string' ? wfStatus : wfStatus.status)"
+        :data-status="
+          wfStatus !== undefined &&
+            (typeof wfStatus === 'string' ? wfStatus : wfStatus.status)
+        "
       >
         <dt>Status</dt>
         <dd>
           <bar-loader v-if="wfStatus === 'running'" />
-          <span v-if="typeof wfStatus === 'string'">{{wfStatus}}</span>
+          <span v-if="typeof wfStatus === 'string'">{{ wfStatus }}</span>
           <router-link
             v-if="wfStatus !== undefined && wfStatus.to"
             :to="wfStatus.to"
           >
-            {{wfStatus.text}}
+            {{ wfStatus.text }}
           </router-link>
         </dd>
       </div>
       <div class="workflow-result" v-if="result">
         <dt>Result</dt>
         <dd>
-          <data-viewer
-            :item="result"
-            :title="workflowId + ' Result'"
-          />
+          <data-viewer :item="result" :title="workflowId + ' Result'" />
         </dd>
       </div>
       <div class="workflow-id">
         <dt>Workflow Id</dt>
-        <dd>{{workflowId}}</dd>
+        <dd>{{ workflowId }}</dd>
       </div>
       <div class="run-id">
         <dt>Run Id</dt>
-        <dd>{{runId}}</dd>
+        <dd>{{ runId }}</dd>
       </div>
       <div class="parent-workflow" v-if="parentWorkflowRoute">
         <dt>Parent Workflow</dt>
         <dd>
-          <router-link
-            :to="parentWorkflowRoute.to"
-          >
-            {{parentWorkflowRoute.text}}
+          <router-link :to="parentWorkflowRoute.to">
+            {{ parentWorkflowRoute.text }}
           </router-link>
         </dd>
       </div>
@@ -95,17 +89,17 @@
             :to="{
               name: 'task-list',
               params: {
-                taskList: workflow.executionConfiguration.taskList.name
-              }
+                taskList: workflow.executionConfiguration.taskList.name,
+              },
             }"
           >
-            {{workflow.executionConfiguration.taskList.name}}
+            {{ workflow.executionConfiguration.taskList.name }}
           </router-link>
         </dd>
       </div>
       <div class="history-length">
         <dt>History Events</dt>
-        <dd>{{workflow.workflowExecutionInfo.historyLength}}</dd>
+        <dd>{{ workflow.workflowExecutionInfo.historyLength }}</dd>
       </div>
       <div class="workflow-input">
         <dt>Input</dt>
@@ -124,7 +118,7 @@
         </dd>
       </div>
     </dl>
-    <span class="error" v-if="terminationError">{{terminationError}}</span>
+    <span class="error" v-if="terminationError">{{ terminationError }}</span>
   </section>
 </template>
 
@@ -154,25 +148,33 @@ export default {
   computed: {
     workflowCloseTime() {
       return this.workflow.workflowExecutionInfo.closeTime
-        ? moment(this.workflow.workflowExecutionInfo.closeTime)
-          .format('dddd MMMM Do, h:mm:ss a')
+        ? moment(this.workflow.workflowExecutionInfo.closeTime).format(
+            'dddd MMMM Do, h:mm:ss a',
+          )
         : '';
     },
     workflowStartTime() {
-      return moment(this.workflow.workflowExecutionInfo.startTime)
-        .format('dddd MMMM Do, h:mm:ss a');
+      return moment(this.workflow.workflowExecutionInfo.startTime).format(
+        'dddd MMMM Do, h:mm:ss a',
+      );
     },
   },
   methods: {
     terminate() {
       this.$modal.hide('confirm-termination');
-      this.$http.post(`${this.baseAPIURL}/terminate`, {
-        reason: this.terminationReason,
-      }).then((r) => {
-        console.dir(r);
-      }, (resp) => {
-        this.terminationError = resp.message || resp.status || resp.statusCode;
-      });
+      this.$http
+        .post(`${this.baseAPIURL}/terminate`, {
+          reason: this.terminationReason,
+        })
+        .then(
+          r => {
+            console.dir(r);
+          },
+          resp => {
+            this.terminationError =
+              resp.message || resp.status || resp.statusCode;
+          },
+        );
     },
   },
 };

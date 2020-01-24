@@ -8,11 +8,7 @@ import qs from 'friendly-querystring';
 import moment from 'moment';
 import promiseFinally from 'promise.prototype.finally';
 
-import {
-  http,
-  injectMomentDurationFormat,
-  jsonTryParse,
-} from './helpers';
+import { http, injectMomentDurationFormat, jsonTryParse } from './helpers';
 
 import DateRangePicker from './widgets/date-range-picker.vue';
 import detailList from './widgets/detail-list.vue';
@@ -141,17 +137,16 @@ const routeOpts = {
     },
   ],
   parseQuery: qs.parse.bind(qs),
-  stringifyQuery: (query) => {
+  stringifyQuery: query => {
     const q = qs.stringify(query);
-    return q ? (`?${q}`) : '';
+    return q ? `?${q}` : '';
   },
 };
 
 const router = new Router(routeOpts);
 
-Object.getPrototypeOf(router).replaceQueryParam = function (prop, val) {
+Object.getPrototypeOf(router).replaceQueryParam = function(prop, val) {
   const newQuery = {
-
     ...this.currentRoute.query,
     [prop]: val,
   };
@@ -207,12 +202,17 @@ if (typeof mocha === 'undefined') {
   });
 
   if (module.hot) {
-    module.hot.addStatusHandler((status) => {
+    module.hot.addStatusHandler(status => {
       if (status === 'apply') {
-        document.querySelectorAll('link[href][rel=stylesheet]').forEach((link) => {
-          const nextStyleHref = link.href.replace(/(\?\d+)?$/, `?${Date.now()}`);
-          link.href = nextStyleHref;
-        });
+        document
+          .querySelectorAll('link[href][rel=stylesheet]')
+          .forEach(link => {
+            const nextStyleHref = link.href.replace(
+              /(\?\d+)?$/,
+              `?${Date.now()}`,
+            );
+            link.href = nextStyleHref;
+          });
       }
     });
   }

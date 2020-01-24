@@ -1,4 +1,4 @@
-export default function (wfStartDetails) {
+export default function(wfStartDetails) {
   if (wfStartDetails && wfStartDetails.parentWorkflowExecution) {
     return {
       to: {

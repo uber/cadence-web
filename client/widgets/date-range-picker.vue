@@ -7,7 +7,13 @@
       :searchable="false"
     />
     <div class="custom-range" v-show="customVisible">
-      <input type="text" class="date-range" :value="customRangeDisplay" @focus="datePickerVisible = true" @blur>
+      <input
+        type="text"
+        class="date-range"
+        :value="customRangeDisplay"
+        @focus="datePickerVisible = true"
+        @blur
+      />
       <daterange
         v-show="datePickerVisible"
         :sync-range="customRange"
@@ -43,7 +49,7 @@ export default {
     };
   },
   created() {
-    this.onClickOrFocusOut = (e) => {
+    this.onClickOrFocusOut = e => {
       if (!this.$el.contains(e.relatedTarget || e.target)) {
         this.datePickerVisible = false;
       }
@@ -61,8 +67,14 @@ export default {
     },
     relativeRangeOptions() {
       let options = baseRelativeRangeOptions;
-      if (this.maxDays && options.every((o) => o.daysAgo != this.maxDays) && this.maxDays < 90) {
-        options = options.slice().filter((o) => o.value === 'custom' || o.daysAgo <= this.maxDays);
+      if (
+        this.maxDays &&
+        options.every(o => o.daysAgo != this.maxDays) &&
+        this.maxDays < 90
+      ) {
+        options = options
+          .slice()
+          .filter(o => o.value === 'custom' || o.daysAgo <= this.maxDays);
         options.push({
           label: `Last ${this.maxDays} days`,
           value: `last-${this.maxDays}-days`,
@@ -75,19 +87,28 @@ export default {
     relativeRange() {
       return this.isCustom
         ? this.relativeRangeOptions[this.relativeRangeOptions.length - 1]
-        : this.relativeRangeOptions.find((o) => o.value === this.dateRange);
+        : this.relativeRangeOptions.find(o => o.value === this.dateRange);
     },
     customRange() {
       return {
-        startDate: (this.dateRange && this.dateRange.startTime) || moment().subtract(this.maxDays || 30, 'days').startOf('day'),
-        endDate: (this.dateRange && this.dateRange.endTime) || moment().endOf('day'),
+        startDate:
+          (this.dateRange && this.dateRange.startTime) ||
+          moment()
+            .subtract(this.maxDays || 30, 'days')
+            .startOf('day'),
+        endDate:
+          (this.dateRange && this.dateRange.endTime) || moment().endOf('day'),
       };
     },
     customRangeDisplay(d) {
-      return `${this.customRange.startDate.format('MMM Do')} - ${this.customRange.endDate.format('MMM Do')}`;
+      return `${this.customRange.startDate.format(
+        'MMM Do',
+      )} - ${this.customRange.endDate.format('MMM Do')}`;
     },
     maxStartDate() {
-      return moment().startOf('day').subtract(this.maxDays, 'days');
+      return moment()
+        .startOf('day')
+        .subtract(this.maxDays, 'days');
     },
   },
   methods: {

@@ -9,7 +9,9 @@ const getTimeElapsedDisplay = ({ timestamp }, index, eventList) => {
     return timestamp.format('MMM Do h:mm:ss a');
   }
 
-  const deltaFromPrev = moment.duration(timestamp - eventList[index - 1].timestamp);
+  const deltaFromPrev = moment.duration(
+    timestamp - eventList[index - 1].timestamp,
+  );
   let elapsed = moment.duration(timestamp - eventList[0].timestamp).format();
 
   if (deltaFromPrev.asSeconds() >= 1) {

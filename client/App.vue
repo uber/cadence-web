@@ -13,7 +13,12 @@ export default {
 
       if (e.target.tagName === 'A') {
         const href = e.target.getAttribute('href');
-        if (href && href.startsWith('/') && !e.target.getAttribute('download') && !e.target.getAttribute('target')) {
+        if (
+          href &&
+          href.startsWith('/') &&
+          !e.target.getAttribute('download') &&
+          !e.target.getAttribute('target')
+        ) {
           e.preventDefault();
           e.stopPropagation();
           this.$router.push(href);
@@ -29,15 +34,32 @@ export default {
     <header class="top-bar">
       <a href="/" class="logo" v-html="logo"></a>
       <div class="domain" v-if="$route.params.domain">
-        <a :href="`/domain/${$route.params.domain}/workflows`" :class="{'router-link-active': $route.path === `/domain/${$route.params.domain}/workflows`, workflows: true }">{{$route.params.domain}}</a>
-        <a :href="`/domain/${$route.params.domain}/config`" :class="{'router-link-active': $route.path === `/domain/${$route.params.domain}/config`, config: true }"></a>
+        <a
+          :href="`/domain/${$route.params.domain}/workflows`"
+          :class="{
+            'router-link-active':
+              $route.path === `/domain/${$route.params.domain}/workflows`,
+            workflows: true,
+          }"
+          >{{ $route.params.domain }}</a
+        >
+        <a
+          :href="`/domain/${$route.params.domain}/config`"
+          :class="{
+            'router-link-active':
+              $route.path === `/domain/${$route.params.domain}/config`,
+            config: true,
+          }"
+        ></a>
       </div>
-      <div class="list-workflows" v-if="$route.name === 'workflows'">Workflows</div>
+      <div class="list-workflows" v-if="$route.name === 'workflows'">
+        Workflows
+      </div>
       <div class="detail-view workflow-id" v-if="$route.params.workflowId">
-        <span>{{$route.params.workflowId}}</span>
+        <span>{{ $route.params.workflowId }}</span>
       </div>
       <div class="detail-view task-list" v-if="$route.params.taskList">
-        <span>{{$route.params.taskList}}</span>
+        <span>{{ $route.params.taskList }}</span>
       </div>
     </header>
     <router-view></router-view>

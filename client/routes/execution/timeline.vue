@@ -30,8 +30,12 @@ export default {
     heightOption() {
       const height = this.$el.parentElement.offsetHeight - this.margin;
       if (height <= this.minHeight) {
-        const parentMaxHeightStr = getComputedStyle(this.$el.parentElement)['max-height'];
-        const parentMaxHeight = Number(parentMaxHeightStr.substr(0, parentMaxHeightStr.length - 2));
+        const parentMaxHeightStr = getComputedStyle(this.$el.parentElement)[
+          'max-height'
+        ];
+        const parentMaxHeight = Number(
+          parentMaxHeightStr.substr(0, parentMaxHeightStr.length - 2),
+        );
 
         if (parentMaxHeight >= this.minHeight) {
           return { maxHeight: parentMaxHeight };
@@ -44,19 +48,25 @@ export default {
     },
     initIfNeeded() {
       if (!this.timeline && this.items.length && this.$el) {
-        this.timeline = new Timeline(this.$el, this.items, null, ({ verticalScroll: true, ...this.heightOption() }));
+        this.timeline = new Timeline(this.$el, this.items, null, {
+          verticalScroll: true,
+          ...this.heightOption(),
+        });
         this.$el.timeline = this.timeline; // expose for testing purposes
 
         let dontFocus;
-        this.timeline.on('select', (e) => {
+        this.timeline.on('select', e => {
           const selectedItem = this.items.get(e.items[0]);
           if (selectedItem && selectedItem.eventIds) {
             dontFocus = true;
-            this.$router.replaceQueryParam('eventId', selectedItem.eventIds[selectedItem.eventIds.length - 1]);
+            this.$router.replaceQueryParam(
+              'eventId',
+              selectedItem.eventIds[selectedItem.eventIds.length - 1],
+            );
           }
         });
 
-        const highlightSelection = (sid) => {
+        const highlightSelection = sid => {
           const selectedEvent = this.findEvent(this.selectedEventId);
           this.timeline.setSelection(selectedEvent && selectedEvent.id);
           if (selectedEvent && !dontFocus) {
@@ -64,13 +74,20 @@ export default {
           }
           dontFocus = false;
         };
-        this.unwatch.push(this.$watch('selectedEventId', highlightSelection, { immediate: true }));
-        this.unwatch.push(this.$watch('events', highlightSelection, { immediate: true }));
+        this.unwatch.push(
+          this.$watch('selectedEventId', highlightSelection, {
+            immediate: true,
+          }),
+        );
+        this.unwatch.push(
+          this.$watch('events', highlightSelection, { immediate: true }),
+        );
       }
     },
     findEvent(eventId) {
-      return this.items.get()
-        .find((i) => i.eventIds && i.eventIds.some((id) => id === eventId));
+      return this.items
+        .get()
+        .find(i => i.eventIds && i.eventIds.some(id => id === eventId));
     },
   },
   created() {
@@ -82,19 +99,25 @@ export default {
     };
 
     this.items = new DataSet();
-    this.unwatch.push(this.$watch('events', () => {
-      const newIds = new DataSet(this.events).getIds();
-      const removed = this.items.getIds().filter((i) => !newIds.includes(i));
-      this.items.update(this.events);
-      this.items.remove(removed);
-      this.initIfNeeded();
-    }, { immediate: true }));
+    this.unwatch.push(
+      this.$watch(
+        'events',
+        () => {
+          const newIds = new DataSet(this.events).getIds();
+          const removed = this.items.getIds().filter(i => !newIds.includes(i));
+          this.items.update(this.events);
+          this.items.remove(removed);
+          this.initIfNeeded();
+        },
+        { immediate: true },
+      ),
+    );
   },
   mounted() {
     this.initIfNeeded();
     window.addEventListener('resize', this.onResize);
     this.ongoingUpdater = setInterval(() => {
-      this.items.forEach((i) => {
+      this.items.forEach(i => {
         if (i.ongoing) {
           i.end = moment();
           this.items.update(i);
@@ -106,7 +129,7 @@ export default {
     window.removeEventListener('resize', this.onResize);
     clearInterval(this.ongoingUpdater);
     while (this.unwatch.length) {
-      (this.unwatch.pop())();
+      this.unwatch.pop()();
     }
     if (this.timeline) {
       this.timeline.destroy();
@@ -156,5 +179,4 @@ div.timeline
 
     &.marker
       border-color black
-
 </style>

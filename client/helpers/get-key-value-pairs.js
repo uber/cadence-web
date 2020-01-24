@@ -1,11 +1,8 @@
 import moment from 'moment';
-import {
-  jsonKeys,
-  preKeys,
-} from '../constants';
+import { jsonKeys, preKeys } from '../constants';
 import getJsonStringObject from './get-json-string-object';
 
-const getKeyValuePairs = (event) => {
+const getKeyValuePairs = event => {
   const kvps = [];
   const flatten = (prefix, obj, root) => {
     Object.entries(obj).forEach(([k, value]) => {

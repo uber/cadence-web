@@ -1,5 +1,9 @@
 <template>
-  <loader class="bar"><div></div><div></div><div></div></loader>
+  <loader class="bar"
+    ><div></div>
+    <div></div>
+    <div></div
+  ></loader>
 </template>
 
 <script>
