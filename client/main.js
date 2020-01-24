@@ -5,9 +5,9 @@ import vueSelect from 'vue-select';
 import vueModal from 'vue-js-modal';
 import vueSplit from 'vue-split-panel';
 import qs from 'friendly-querystring';
-import http from './http';
 import moment from 'moment';
 import promiseFinally from 'promise.prototype.finally';
+import http from './http';
 
 import {
   injectMomentDurationFormat,
@@ -73,14 +73,14 @@ const routeOpts = {
             summary: ({ params }) => ({
               runId: params.runId,
               workflowId: params.workflowId,
-            })
+            }),
           },
         },
         {
           name: 'execution/history',
           path: '/domain/:domain/workflows/:workflowId/:runId/history',
           components: {
-            history: History
+            history: History,
           },
           props: {
             history: ({ params, query }) => ({
@@ -90,21 +90,21 @@ const routeOpts = {
               runId: params.runId,
               showGraph: query.showGraph === true,
               workflowId: params.workflowId,
-            })
+            }),
           },
         },
         {
           name: 'execution/stack-trace',
           path: '/domain/:domain/workflows/:workflowId/:runId/stack-trace',
           components: {
-            stacktrace: StackTrace
+            stacktrace: StackTrace,
           },
         },
         {
           name: 'execution/queries',
           path: '/domain/:domain/workflows/:workflowId/:runId/queries',
           components: {
-            queries: Queries
+            queries: Queries,
           },
         },
       ],
@@ -128,7 +128,7 @@ const routeOpts = {
           runId: query.runId,
           workflowId: query.workflowId,
           domain: params.domain,
-        }
+        };
         delete query.runId;
         delete query.workflowId;
 
@@ -141,22 +141,20 @@ const routeOpts = {
     },
   ],
   parseQuery: qs.parse.bind(qs),
-  stringifyQuery: query => {
+  stringifyQuery: (query) => {
     const q = qs.stringify(query);
-    return q ? ('?' + q) : '';
+    return q ? (`?${q}`) : '';
   },
 };
 
 const router = new Router(routeOpts);
 
 Object.getPrototypeOf(router).replaceQueryParam = function (prop, val) {
-  const newQuery = Object.assign(
-    {},
-    this.currentRoute.query,
-    {
-      [prop]: val,
-    },
-  );
+  const newQuery = {
+
+    ...this.currentRoute.query,
+    [prop]: val,
+  };
   if (!newQuery[prop]) {
     delete newQuery[prop];
   }
@@ -167,10 +165,10 @@ injectMomentDurationFormat();
 
 JSON.tryParse = jsonTryParse;
 
-promiseFinally.shim()
+promiseFinally.shim();
 
 Vue.mixin({
-  created: function () {
+  created() {
     this.$moment = moment;
     if (typeof Scenario === 'undefined') {
       this.$http = http.global;
@@ -205,11 +203,11 @@ if (typeof mocha === 'undefined') {
     el: 'main',
     router,
     template: '<App/>',
-    components: { App }
+    components: { App },
   });
 
   if (module.hot) {
-    module.hot.addStatusHandler(function (status) {
+    module.hot.addStatusHandler((status) => {
       if (status === 'apply') {
         document.querySelectorAll('link[href][rel=stylesheet]').forEach((link) => {
           const nextStyleHref = link.href.replace(/(\?\d+)?$/, `?${Date.now()}`);

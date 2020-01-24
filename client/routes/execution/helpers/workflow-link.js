@@ -7,8 +7,8 @@ const workflowLink = (d, short) => {
       : '',
     (short
       ? ''
-      : d.workflowExecution.workflowId)
-  ].filter(x => x).join(' - ');
+      : d.workflowExecution.workflowId),
+  ].filter((x) => x).join(' - ');
 
   return {
     routeLink: {

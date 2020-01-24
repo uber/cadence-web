@@ -10,13 +10,10 @@ const getSummary = ({
   isWorkflowRunning,
   workflow,
 }) => {
-  const formattedWorkflow = !!workflow.pendingActivities
-    ? Object.assign({}, workflow, {
-      pendingActivities: workflow.pendingActivities.map((pendingActivity) => {
-        return Object.assign({}, pendingActivity, {
-          kvps: getKeyValuePairs(pendingActivity),
-        });
-      }),
+  const formattedWorkflow = workflow.pendingActivities
+    ? ({
+      ...workflow,
+      pendingActivities: workflow.pendingActivities.map((pendingActivity) => ({ ...pendingActivity, kvps: getKeyValuePairs(pendingActivity) })),
     })
     : workflow;
 
@@ -40,7 +37,7 @@ const getSummary = ({
     ? lastEvent
     : undefined;
 
-  const result = !!workflowCompletedEvent
+  const result = workflowCompletedEvent
     ? getJsonStringObject(workflowCompletedEvent.details.result || workflowCompletedEvent.details)
     : undefined;
 

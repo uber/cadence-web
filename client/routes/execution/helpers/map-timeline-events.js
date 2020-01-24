@@ -2,11 +2,11 @@ import moment from 'moment';
 import shortName from '../../../short-name';
 import { summarizeEvents } from './summarize-events';
 
-export default function(historyEvents) {
+export default function (historyEvents) {
   const events = [];
   const hash = {};
 
-  const add = i => {
+  const add = (i) => {
     hash[i.id] = i;
     events.push(i);
     return i;
@@ -17,15 +17,15 @@ export default function(historyEvents) {
     item.end = moment(end);
   };
 
-  historyEvents.forEach(e => {
+  historyEvents.forEach((e) => {
     if (e.eventType.startsWith('ActivityTask')) {
       const scheduledEvent = 'activityId' in e.details ? e : historyEvents[e.details.scheduledEventId - 1];
-      const activityId = scheduledEvent.details.activityId;
-      let item = hash['activity' + activityId];
+      const { activityId } = scheduledEvent.details;
+      let item = hash[`activity${activityId}`];
 
       if (!item) {
         item = add({
-          id: 'activity' + activityId,
+          id: `activity${activityId}`,
           className: 'activity',
           eventIds: [e.eventId],
           start: moment(scheduledEvent.timestamp),
@@ -46,16 +46,16 @@ export default function(historyEvents) {
 
       if (e.eventType !== 'ActivityTaskScheduled' && e.eventType !== 'ActivityTaskStarted') {
         assignEnd(item, e.timestamp);
-        item.className = 'activity ' + e.eventType.replace('ActivityTask', '').toLowerCase();
+        item.className = `activity ${e.eventType.replace('ActivityTask', '').toLowerCase()}`;
       }
     } else if (e.eventType.includes('ChildWorkflowExecution')) {
       const initiatedEvent = 'initiatedEventId' in e.details ? historyEvents[e.details.initiatedEventId - 1] : e;
       const initiatedEventId = initiatedEvent.eventId;
-      let item = hash['childWf' + initiatedEventId];
+      let item = hash[`childWf${initiatedEventId}`];
 
       if (!item) {
         item = add({
-          id: 'childWf' + initiatedEventId,
+          id: `childWf${initiatedEventId}`,
           className: 'child-workflow',
           eventIds: [e.eventId],
           start: moment(initiatedEvent.timestamp),
@@ -78,11 +78,11 @@ export default function(historyEvents) {
 
       if (e.eventType !== 'StartChildWorkflowExecutionInitiated' && e.eventType !== 'ChildWorkflowExecutionStarted') {
         assignEnd(item, e.timestamp);
-        item.className = 'child-workflow ' + e.eventType.replace('ChildWorkflowExecution', '').toLowerCase();
+        item.className = `child-workflow ${e.eventType.replace('ChildWorkflowExecution', '').toLowerCase()}`;
       }
     } else if (e.eventType === 'TimerStarted') {
       add({
-        id: 'timer' + e.details.timerId,
+        id: `timer${e.details.timerId}`,
         className: 'timer',
         eventIds: [e.eventId],
         start: moment(e.timestamp),
@@ -100,7 +100,7 @@ export default function(historyEvents) {
         : '';
 
       add({
-        id: 'marker' + e.eventId,
+        id: `marker${e.eventId}`,
         className: `marker marker-${markerName}`,
         eventIds: [e.eventId],
         start: moment(e.timestamp),
@@ -108,12 +108,12 @@ export default function(historyEvents) {
           Version: 'Version Marker',
           SideEffect: 'Side Effect',
           LocalActivity: 'Local Activity',
-        }[e.details.markerName]) || (e.details.markerName + ' Marker'),
+        }[e.details.markerName]) || (`${e.details.markerName} Marker`),
         details: summarizeEvents.MarkerRecorded(e.details),
       });
     } else if (e.eventType === 'WorkflowExecutionSignaled') {
       add({
-        id: 'signal' + e.eventId,
+        id: `signal${e.eventId}`,
         className: 'signal',
         eventIds: [e.eventId],
         start: moment(e.timestamp),
@@ -124,7 +124,7 @@ export default function(historyEvents) {
       });
     } else if (e.eventType === 'SignalExternalWorkflowExecutionInitiated') {
       add({
-        id: 'extsignal' + e.eventId,
+        id: `extsignal${e.eventId}`,
         className: 'external-signal',
         eventIds: [e.eventId],
         start: moment(e.timestamp),
@@ -140,8 +140,8 @@ export default function(historyEvents) {
       }
     } else if (e.eventType === 'DecisionTaskFailed' || e.eventType === 'DecisionTaskTimedOut') {
       add({
-        id: 'decision' + e.eventId,
-        className: 'decision ' + e.eventType.replace('DecisionTask', '').toLowerCase(),
+        id: `decision${e.eventId}`,
+        className: `decision ${e.eventType.replace('DecisionTask', '').toLowerCase()}`,
         eventIds: [e.eventId],
         start: moment(e.timestamp),
         content: e.eventType,
@@ -151,4 +151,4 @@ export default function(historyEvents) {
   });
 
   return events;
-};
+}

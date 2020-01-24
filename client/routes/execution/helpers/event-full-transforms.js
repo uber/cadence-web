@@ -1,5 +1,5 @@
 export const eventFullTransforms = {
-  MarkerRecorded: d => {
+  MarkerRecorded: (d) => {
     if (d.markerName === 'SideEffect') {
       return {
         sideEffectID: d.details[0],

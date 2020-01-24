@@ -1,7 +1,7 @@
 import { eventFullTransforms } from './event-full-transforms';
 import { getKeyValuePairs } from '../../../helpers';
 
-const getEventFullDetails = event => {
+const getEventFullDetails = (event) => {
   if (!event) {
     return event;
   }
@@ -19,15 +19,13 @@ const getEventFullDetails = event => {
 
   const kvps = getKeyValuePairs(item);
 
-  return Object.assign(
-    {},
-    item,
-    {
-      eventId,
-      eventType,
-      kvps,
-    },
-  );
+  return {
+
+    ...item,
+    eventId,
+    eventType,
+    kvps,
+  };
 };
 
 export default getEventFullDetails;

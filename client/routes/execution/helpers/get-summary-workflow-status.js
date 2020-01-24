@@ -1,7 +1,7 @@
 const getSummaryWorkflowStatus = ({
   isWorkflowRunning,
   workflow,
-  workflowCompletedEvent
+  workflowCompletedEvent,
 }) => {
   if (isWorkflowRunning) {
     return 'running';

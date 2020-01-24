@@ -34,36 +34,48 @@ module.exports = {
     })
   ].filter(x => x),
   module: {
-    rules: [{
-      test: /\.vue?$/,
-      loader: 'vue-loader',
-      options: {
-        loaders: {
-          stylus: ExtractTextPlugin.extract({
-            use: extractStylus,
-            fallback: 'vue-style-loader'
-          }),
-        }
-      }
-    }, {
-      test: /\.svg$/,
-      use: [{
-        loader: 'html-loader',
+    rules: [
+      {
+        test: /\.js$/,
+        loader: 'babel-loader',
         options: {
-          minimize: true
+          presets: ['@babel/preset-env']
         }
-      }]
-    }, {
-      test: /\.(png|jpg|gif)$/,
-      loader: 'file-loader',
-      options: {
-        name: '[name].[ext]?[hash]'
+      },
+      {
+        test: /\.vue?$/,
+        loader: 'vue-loader',
+        options: {
+          loaders: {
+            stylus: ExtractTextPlugin.extract({
+              use: extractStylus,
+              fallback: 'vue-style-loader'
+            }),
+          }
+        }
+      },
+      {
+        test: /\.svg$/,
+        use: [{
+          loader: 'html-loader',
+          options: {
+            minimize: true
+          }
+        }]
+      },
+      {
+        test: /\.(png|jpg|gif)$/,
+        loader: 'file-loader',
+        options: {
+          name: '[name].[ext]?[hash]'
+        }
+      },
+      {
+        test: /\.styl$/,
+        use: ExtractTextPlugin.extract({ use: extractStylus, fallback: 'raw-loader' }),
+        include: path.join(__dirname, 'src')
       }
-    }, {
-      test: /\.styl$/,
-      use: ExtractTextPlugin.extract({ use: extractStylus, fallback: 'raw-loader' }),
-      include: path.join(__dirname, 'src')
-    }]
+    ]
   },
   resolve: {
     extensions: ['.js', '.vue']

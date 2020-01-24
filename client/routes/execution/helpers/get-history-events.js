@@ -5,31 +5,33 @@ import getEventDetails from './get-event-details';
 import getEventFullDetails from './get-event-full-details';
 import getEventSummary from './get-event-summary';
 
-const getHistoryEvents = events => {
+const getHistoryEvents = (events) => {
   if (!events) {
     return [];
   }
 
   return events
-    .map(event => {
+    .map((event) => {
       const details = getEventDetails(event);
       const eventSummary = getEventSummary(event);
       const eventFullDetails = getEventFullDetails(event);
       const timestamp = moment(event.timestamp);
-      return Object.assign({}, event, {
+      return {
+        ...event,
         details,
         eventSummary,
         eventFullDetails,
         timestamp,
-      });
+      };
     })
     .map((event, index, eventList) => {
       const timeStampDisplay = getTimeStampDisplay(event);
       const timeElapsedDisplay = getTimeElapsedDisplay(event, index, eventList);
-      return Object.assign({}, event, {
+      return {
+        ...event,
         timeStampDisplay,
         timeElapsedDisplay,
-      });
+      };
     });
 };
 

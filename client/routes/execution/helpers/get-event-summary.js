@@ -1,7 +1,7 @@
 import { summarizeEvents } from './summarize-events';
 import { getKeyValuePairs } from '../../../helpers';
 
-const getEventSummary = event => {
+const getEventSummary = (event) => {
   if (!event) {
     return event;
   }
@@ -23,11 +23,12 @@ const getEventSummary = event => {
 
   const kvps = getKeyValuePairs(item);
 
-  return Object.assign({}, item, {
+  return {
+    ...item,
     eventId,
     eventType,
     kvps,
-  });
+  };
 };
 
 export default getEventSummary;
