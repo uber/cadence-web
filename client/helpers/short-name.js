@@ -1,1 +1,1 @@
-export default a => (a || '').split(/[\.\/]/g).pop();
+export default a => (a || '').split(/[./]/g).pop();

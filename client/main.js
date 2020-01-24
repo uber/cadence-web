@@ -120,18 +120,18 @@ const routeOpts = {
           };
         }
 
+        const { runId, workflowId, ...queryWhitelist } = query;
+
         const newParams = {
-          runId: query.runId,
-          workflowId: query.workflowId,
+          runId,
+          workflowId,
           domain: params.domain,
         };
-        delete query.runId;
-        delete query.workflowId;
 
         return {
           name: 'execution/history',
           params: newParams,
-          query,
+          query: queryWhitelist,
         };
       },
     },

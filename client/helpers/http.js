@@ -6,6 +6,7 @@ export default function http(fetch, url, o) {
     },
     ...o,
   };
+  let fetchUrl = url;
 
   if (opts.query) {
     const qs = Object.keys(opts.query)
@@ -14,11 +15,11 @@ export default function http(fetch, url, o) {
       .join('&');
 
     if (qs) {
-      url = `${url}?${qs}`;
+      fetchUrl = `${url}?${qs}`;
     }
   }
 
-  return fetch(url, opts).then(r =>
+  return fetch(fetchUrl, opts).then(r =>
     r.status >= 200 && r.status < 300
       ? r.json().catch(() => {})
       : r.json().then(
@@ -28,7 +29,7 @@ export default function http(fetch, url, o) {
   );
 }
 
-http.post = function(fetch, url, body) {
+http.post = function post(fetch, url, body) {
   return http(fetch, url, {
     method: 'POST',
     body: JSON.stringify(body),
