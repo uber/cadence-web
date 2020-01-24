@@ -19,19 +19,21 @@ export default {
     },
   },
   render(h) {
-    var { highlight, compact, title } = this;
+    const { highlight, compact, title } = this;
     function dd(kvp) {
       if (kvp.routeLink) {
         return [h('router-link', { props: { to: kvp.routeLink } }, kvp.value)];
       }
       return preKeys.includes(kvp.key) ? [h('data-viewer', {
-        props: { item: kvp.value, compact, highlight, title: `${title} - ${kvp.key}` }
+        props: {
+          item: kvp.value, compact, highlight, title: `${title} - ${kvp.key}`,
+        },
       })] : kvp.value;
     }
 
-    return h('dl', { class: 'details' }, this.item.kvps.map(kvp => h('div', { attrs: { 'data-prop': kvp.key } }, [
+    return h('dl', { class: 'details' }, this.item.kvps.map((kvp) => h('div', { attrs: { 'data-prop': kvp.key } }, [
       h('dt', null, kvp.key),
-      h('dd', null, dd(kvp))
+      h('dd', null, dd(kvp)),
     ])));
   },
 };

@@ -4,8 +4,8 @@
 
 <script>
 export default {
-  name: 'bar-loader'
-}
+  name: 'bar-loader',
+};
 </script>
 
 <style lang="stylus">

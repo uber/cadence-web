@@ -77,32 +77,32 @@ export default {
     'workflowId',
   ],
   created() {
-    this.$watch('baseAPIURL', u => {
+    this.$watch('baseAPIURL', (u) => {
       this.results = [];
       this.nextPageToken = undefined;
       return this.$http(u)
         .then(
-          wf => {
+          (wf) => {
             this.workflow = wf;
             this.isWorkflowRunning = !wf.workflowExecutionInfo.closeTime;
           },
-          e => this.wfError = (e.json && e.json.message) || e.status || e.message,
+          (e) => this.wfError = (e.json && e.json.message) || e.status || e.message,
         )
         .finally(() => this.wfLoading = false);
     }, { immediate: true });
 
     this.$watch(() => {
-      const queryUrl = this.baseAPIURL + '/history?waitForNewEvent=true';
+      const queryUrl = `${this.baseAPIURL}/history?waitForNewEvent=true`;
       if (!this.nextPageToken) {
         return queryUrl;
       }
 
-      return queryUrl + '&nextPageToken=' + encodeURIComponent(this.nextPageToken);
-    }, v => this.fetchHistoryPage(v), { immediate: true });
+      return `${queryUrl}&nextPageToken=${encodeURIComponent(this.nextPageToken)}`;
+    }, (v) => this.fetchHistoryPage(v), { immediate: true });
   },
   computed: {
     baseAPIURL() {
-      var { domain, workflowId, runId } = this;
+      const { domain, workflowId, runId } = this;
       return `/api/domain/${domain}/workflows/${encodeURIComponent(workflowId)}/${encodeURIComponent(runId)}`;
     },
   },
@@ -116,7 +116,7 @@ export default {
 
       this.history.loading = true;
       this.pqu = pagedQueryUrl;
-      return this.$http(pagedQueryUrl).then(res => {
+      return this.$http(pagedQueryUrl).then((res) => {
         if (this._isDestroyed || this.pqu !== pagedQueryUrl) {
           return;
         }
@@ -135,9 +135,9 @@ export default {
           this.isWorkflowRunning = false;
         }
 
-        var shouldHighlightEventId = this.$route.query.eventId && this.results.length <= this.$route.query.eventId;
+        const shouldHighlightEventId = this.$route.query.eventId && this.results.length <= this.$route.query.eventId;
 
-        const events = res.history.events;
+        const { events } = res.history;
         this.events = this.events.concat(events);
 
         this.history.events = getHistoryEvents(this.events);
@@ -154,7 +154,7 @@ export default {
         }
 
         return this.results;
-      }).catch(e => {
+      }).catch((e) => {
         console.error(e);
         if (this._isDestroyed || this.pqu !== pagedQueryUrl) {
           return;

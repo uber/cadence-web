@@ -33,7 +33,7 @@ export default {
       this.$el.classList[action]('overflow');
     };
     window.addEventListener('resize', this.checkOverflow);
-    ['item', 'highlight', 'compact'].forEach(e => this.$watch(e, this.checkOverflow));
+    ['item', 'highlight', 'compact'].forEach((e) => this.$watch(e, this.checkOverflow));
     this.$watch(() => this.$route, this.checkOverflow);
   },
   mounted() {

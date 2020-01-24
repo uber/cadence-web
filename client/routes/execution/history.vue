@@ -149,12 +149,12 @@
 
 <script>
 import moment from 'moment';
-import eventDetails from './event-details.vue';
 import Prism from 'vue-prism-component';
 import { DynamicScroller, DynamicScrollerItem, RecycleScroller } from 'vue-virtual-scroller';
-import timeline from './timeline.vue';
 import debounce from 'lodash-es/debounce';
 import omit from 'lodash-es/omit';
+import timeline from './timeline.vue';
+import eventDetails from './event-details.vue';
 
 export default {
   data() {
@@ -163,7 +163,7 @@ export default {
       compactDetails: localStorage.getItem(`${this.domain}:history-compact-details`) === 'true',
       scrolledToEventOnInit: false,
       splitEnabled: false,
-      eventType: "",
+      eventType: '',
       eventTypes: [
         { value: 'All', label: 'All' },
         { value: 'Decision', label: 'Decision' },
@@ -193,7 +193,9 @@ export default {
   ],
   created() {
     this.onResizeWindow = debounce(() => {
-      const { scrollerCompact, scrollerGrid, thead, viewSplit } = this.$refs;
+      const {
+        scrollerCompact, scrollerGrid, thead, viewSplit,
+      } = this.$refs;
       const scroller = this.isGrid ? scrollerGrid : scrollerCompact;
       if (!scroller) {
         return;
@@ -215,7 +217,7 @@ export default {
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.onResizeWindow);
-    while(this.unwatch.length) {
+    while (this.unwatch.length) {
       (this.unwatch.pop())();
     }
   },
@@ -228,12 +230,10 @@ export default {
         eventId,
         eventType,
       } = this;
-      const formattedEvents = this.events.map((event) => Object.assign({}, event, {
-        expanded: event.eventId === eventId,
-      }));
-      return eventType && eventType !== 'All' ?
-        formattedEvents.filter(result => result.eventType.includes(eventType)) :
-        formattedEvents;
+      const formattedEvents = this.events.map((event) => ({ ...event, expanded: event.eventId === eventId }));
+      return eventType && eventType !== 'All'
+        ? formattedEvents.filter((result) => result.eventType.includes(eventType))
+        : formattedEvents;
     },
     filteredEventIdToIndex() {
       return this.filteredEvents
@@ -247,19 +247,20 @@ export default {
       return this.format === 'grid';
     },
     selectedTimelineEvent() {
-      return this.timelineEvents.find(te => te.eventIds.includes(this.eventId));
+      return this.timelineEvents.find((te) => te.eventIds.includes(this.eventId));
     },
     selectedEvent() {
-      return this.events.find(e => e.eventId === this.eventId);
+      return this.events.find((e) => e.eventId === this.eventId);
     },
     selectedEventDetails() {
       if (!this.selectedEvent) {
         return {};
       }
-      return Object.assign({
+      return {
         timestamp: this.selectedEvent.timestamp.format('MMM Do h:mm:ss a'),
         eventId: this.selectedEvent.eventId,
-      }, this.selectedEvent.details);
+        ...this.selectedEvent.details,
+      };
     },
     showTable() {
       return !this.error && (this.loading || this.events.length);
@@ -270,11 +271,13 @@ export default {
     timelineEventIdToIndex() {
       return this.timelineEvents
         .map(({ eventIds }) => eventIds)
-        .reduce((accumulator, eventIds, index) =>
-          Object.assign({}, accumulator, eventIds.reduce((acc, eventId) => {
+        .reduce((accumulator, eventIds, index) => ({
+          ...accumulator,
+          ...eventIds.reduce((acc, eventId) => {
             acc[eventId] = index;
             return acc;
-          }, {})), {});
+          }, {}),
+        }), {});
     },
   },
   methods: {
@@ -283,21 +286,21 @@ export default {
     },
     enableSplitting() {
       if (!this.splitEnabled) {
-        var timelineHeightPct = (this.$refs.splitPanel.$el.firstElementChild.offsetHeight / this.$refs.splitPanel.$el.offsetHeight) * 100;
+        const timelineHeightPct = (this.$refs.splitPanel.$el.firstElementChild.offsetHeight / this.$refs.splitPanel.$el.offsetHeight) * 100;
         this.splitSizeSet = [timelineHeightPct, 100 - timelineHeightPct];
         this.splitEnabled = true;
       }
     },
-    onSplitResize: debounce(function (size) {
+    onSplitResize: debounce((size) => {
       window.dispatchEvent(new Event('resize'));
     }, 5),
-    setEventType(et){
+    setEventType(et) {
       this.eventType = et.value;
       setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
     },
     setFormat(format) {
       this.$router.replace({
-        query: Object.assign({}, this.$route.query, { format }),
+        query: { ...this.$route.query, format },
       });
       setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
     },
@@ -313,9 +316,9 @@ export default {
       setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
     },
     scrollEventIntoView(eventId) {
-      const index = this.isGrid ?
-        this.filteredEventIdToIndex[eventId] :
-        this.timelineEventIdToIndex[eventId];
+      const index = this.isGrid
+        ? this.filteredEventIdToIndex[eventId]
+        : this.timelineEventIdToIndex[eventId];
 
       this.scrollToItem(index);
 
@@ -347,7 +350,7 @@ export default {
         this.$router.replace({ query: omit(this.$route.query, 'showGraph') });
       } else {
         this.$router.replace({
-          query: Object.assign({}, this.$route.query, { showGraph: true }),
+          query: { ...this.$route.query, showGraph: true },
         });
       }
     },
@@ -375,11 +378,11 @@ export default {
     DynamicScroller,
     DynamicScrollerItem,
     'event-details': eventDetails,
-    'prism': Prism,
+    prism: Prism,
     RecycleScroller,
     timeline,
-  }
-}
+  },
+};
 </script>
 
 <style lang="stylus">

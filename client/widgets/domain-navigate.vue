@@ -37,9 +37,9 @@ import {
 } from '../helpers';
 
 const validationMessages = {
-  valid: d => `${d} exists`,
-  invalid: d => `${d} does not exist`,
-  error: d => `An error occoured while querying for ${d}`,
+  valid: (d) => `${d} exists`,
+  invalid: (d) => `${d} does not exist`,
+  error: (d) => `An error occoured while querying for ${d}`,
 };
 
 export default {
@@ -64,7 +64,7 @@ export default {
   methods: {
     recordDomain(domain) {
       if (domain) {
-        this.recentDomains = this.recentDomains.filter(d => d && d !== domain).slice(0, 15);
+        this.recentDomains = this.recentDomains.filter((d) => d && d !== domain).slice(0, 15);
         this.recentDomains.unshift(domain);
         localStorage.setItem('recent-domains', JSON.stringify(this.recentDomains));
       }
@@ -74,7 +74,7 @@ export default {
         this.$router.push({
           path: `/domain/${this.d}/workflows`,
           query: omit(this.$router.currentRoute.query, 'workflowId', 'runId', 'workflowName'),
-        })
+        });
         this.recordDomain(this.d);
         this.$emit('navigate', this.d);
       }
@@ -83,7 +83,7 @@ export default {
       return `/domain/${d}/workflows?${stringify(this.$router.currentRoute.query)}`;
     },
     recordDomainFromClick(e) {
-      var domain = e.target.getAttribute('data-domain');
+      const domain = e.target.getAttribute('data-domain');
       this.recordDomain(domain);
       this.$emit('navigate', domain);
     },
@@ -91,23 +91,21 @@ export default {
       if (this.domainDescCache[d]) {
         return Promise.resolve(this.domainDescCache[d]);
       }
-      return this.$http(`/api/domain/${d}`).then(r => {
-        return this.domainDescCache[d] = mapDomainDescription(r);
-      });
+      return this.$http(`/api/domain/${d}`).then((r) => this.domainDescCache[d] = mapDomainDescription(r));
     },
     checkValidity: debounce(function (x) {
-      const check = newDomain => {
+      const check = (newDomain) => {
         this.validation = 'pending';
         this.domainDescRequest = this.getDomainDesc(newDomain).then(
-          desc => {
+          (desc) => {
             this.domainDescName = newDomain;
             this.domainDesc = {
               kvps: getKeyValuePairs(desc),
             };
             return 'valid';
           },
-          res => res.status === 404 ? 'invalid' : 'error'
-        ).then(v => {
+          (res) => (res.status === 404 ? 'invalid' : 'error'),
+        ).then((v) => {
           this.$emit('validate', this.d, v);
           if (v in validationMessages) {
             this.validationMessage = validationMessages[v](this.d);
@@ -132,8 +130,8 @@ export default {
     showDomainDesc(d) {
       this.domainDescName = d;
       this.domainDescRequest = this.getDomainDesc(d)
-        .catch(res => ({ error: `${res.statusText || res.message} ${res.status}` }))
-        .then(desc => {
+        .catch((res) => ({ error: `${res.statusText || res.message} ${res.status}` }))
+        .then((desc) => {
           if (this.domainDescName === d) {
             this.domainDesc = {
               kvps: getKeyValuePairs(desc),
@@ -145,8 +143,8 @@ export default {
     onEsc(e) {
       this.$emit('cancel', e);
     },
-  }
-}
+  },
+};
 </script>
 
 <style lang="stylus">

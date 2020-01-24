@@ -1,27 +1,27 @@
 <script>
-import logo from './assets/logo.svg'
+import logo from './assets/logo.svg';
 
 export default {
-  data () {
-    return { logo }
+  data() {
+    return { logo };
   },
   methods: {
     globalClick(e) {
       if (this.editing && !this.$refs.domain.contains(e.target)) {
-        this.clearEdit()
+        this.clearEdit();
       }
 
       if (e.target.tagName === 'A') {
-        var href = e.target.getAttribute('href')
+        const href = e.target.getAttribute('href');
         if (href && href.startsWith('/') && !e.target.getAttribute('download') && !e.target.getAttribute('target')) {
-          e.preventDefault()
-          e.stopPropagation()
-          this.$router.push(href)
+          e.preventDefault();
+          e.stopPropagation();
+          this.$router.push(href);
         }
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <template>

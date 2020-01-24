@@ -35,7 +35,7 @@ export default {
           this.stackTrace = queryResult;
           this.stackTraceTimestamp = moment();
         })
-        .catch(e => {
+        .catch((e) => {
           console.error(e);
           this.stackTrace = {
             error: (e.json && e.json.message) || e.status || e.message,

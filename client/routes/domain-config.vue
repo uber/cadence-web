@@ -29,12 +29,12 @@ export default {
   created() {
     this.$http(`/api/domain/${this.domain}`)
       .then(
-        r => {
+        (r) => {
           const domainConfig = mapDomainDescription(r);
           const kvps = getKeyValuePairs(domainConfig);
-          this.domainConfig = Object.assign({}, domainConfig, { kvps });
+          this.domainConfig = { ...domainConfig, kvps };
         },
-        res => this.error = `${res.statusText || res.message} ${res.status}`,
+        (res) => this.error = `${res.statusText || res.message} ${res.status}`,
       )
       .finally(() => this.loading = false);
   },

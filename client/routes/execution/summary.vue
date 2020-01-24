@@ -166,11 +166,11 @@ export default {
   methods: {
     terminate() {
       this.$modal.hide('confirm-termination');
-      this.$http.post(this.baseAPIURL + '/terminate', {
+      this.$http.post(`${this.baseAPIURL}/terminate`, {
         reason: this.terminationReason,
-      }).then(r => {
+      }).then((r) => {
         console.dir(r);
-      }, resp => {
+      }, (resp) => {
         this.terminationError = resp.message || resp.status || resp.statusCode;
       });
     },

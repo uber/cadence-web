@@ -38,15 +38,15 @@ export default {
   ],
   created() {
     this.loading = true;
-    this.$http(this.baseAPIURL + '/queries')
+    this.$http(`${this.baseAPIURL}/queries`)
       .then(
-        r => {
-          this.queries = r.filter(r => r !== '__stack_trace');
+        (r) => {
+          this.queries = r.filter((r) => r !== '__stack_trace');
           if (!this.queryName) {
             this.queryName = this.queries[0];
           }
         },
-        e => this.error = (e.json && e.json.message) || e.status || e.message,
+        (e) => this.error = (e.json && e.json.message) || e.status || e.message,
       )
       .finally(() => this.loading = false);
   },
@@ -60,8 +60,8 @@ export default {
       this.running = true;
       this.$http.post(`${this.baseAPIURL}/queries/${this.queryName}`)
         .then(
-          r => this.queryResult = r.queryResult,
-          e => this.error = (e.json && e.json.message) || e.status || e.message,
+          (r) => this.queryResult = r.queryResult,
+          (e) => this.error = (e.json && e.json.message) || e.status || e.message,
         )
         .finally(() => this.running = false);
     },

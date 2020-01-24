@@ -21,29 +21,29 @@
 </template>
 
 <script>
-import moment from 'moment'
+import moment from 'moment';
 
 export default {
   data() {
     return {
       pollers: undefined,
       error: undefined,
-      loading: true
-    }
+      loading: true,
+    };
   },
   created() {
     this.$http(`/api/domain/${this.$route.params.domain}/task-lists/${this.$route.params.taskList}/pollers`).then(
-      p => this.pollers = Object.keys(p).map(identity => ({
+      (p) => this.pollers = Object.keys(p).map((identity) => ({
         identity,
         lastAccessTime: moment(p[identity].lastAccessTime),
         handlesDecisions: p[identity].taskListTypes.includes('decision'),
         handlesActivities: p[identity].taskListTypes.includes('activity'),
       })),
-      e => this.error = (e.json && e.json.message) || e.status || e.message
-    ).finally(() => this.loading = false)
+      (e) => this.error = (e.json && e.json.message) || e.status || e.message,
+    ).finally(() => this.loading = false);
   },
-  methods: {}
-}
+  methods: {},
+};
 </script>
 
 <style lang="stylus">

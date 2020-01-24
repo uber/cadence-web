@@ -6,6 +6,7 @@
   "licence": "MIT",
   "scripts": {
     "dev": "NODE_ENV=development node server.js",
+    "eslint": "eslint --ext .js,.vue client",
     "start": "npm run build && NODE_ENV=production node server.js",
     "test": "mocha server/test && mocha-chrome http://localhost:8090",
     "test:unit": "jest",
