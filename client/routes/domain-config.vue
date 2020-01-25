@@ -32,9 +32,13 @@ export default {
           const kvps = getKeyValuePairs(domainConfig);
           this.domainConfig = { ...domainConfig, kvps };
         },
-        res => (this.error = `${res.statusText || res.message} ${res.status}`),
+        res => {
+          this.error = `${res.statusText || res.message} ${res.status}`;
+        },
       )
-      .finally(() => (this.loading = false));
+      .finally(() => {
+        this.loading = false;
+      });
   },
   methods: {},
 };

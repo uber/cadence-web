@@ -145,7 +145,10 @@ const routeOpts = {
 
 const router = new Router(routeOpts);
 
-Object.getPrototypeOf(router).replaceQueryParam = function(prop, val) {
+Object.getPrototypeOf(router).replaceQueryParam = function replaceQueryParam(
+  prop,
+  val,
+) {
   const newQuery = {
     ...this.currentRoute.query,
     [prop]: val,
@@ -194,6 +197,7 @@ if (typeof mocha === 'undefined') {
     document.body.appendChild(document.createElement('main'));
   }
 
+  // eslint-disable-next-line no-new
   new Vue({
     el: 'main',
     router,
@@ -211,6 +215,7 @@ if (typeof mocha === 'undefined') {
               /(\?\d+)?$/,
               `?${Date.now()}`,
             );
+            // eslint-disable-next-line no-param-reassign
             link.href = nextStyleHref;
           });
       }

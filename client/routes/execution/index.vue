@@ -92,11 +92,14 @@ export default {
               this.workflow = wf;
               this.isWorkflowRunning = !wf.workflowExecutionInfo.closeTime;
             },
-            e =>
-              (this.wfError =
-                (e.json && e.json.message) || e.status || e.message),
+            e => {
+              this.wfError =
+                (e.json && e.json.message) || e.status || e.message;
+            },
           )
-          .finally(() => (this.wfLoading = false));
+          .finally(() => {
+            this.wfLoading = false;
+          });
       },
       { immediate: true },
     );
@@ -112,7 +115,9 @@ export default {
           this.nextPageToken,
         )}`;
       },
-      v => this.fetchHistoryPage(v),
+      v => {
+        this.fetchHistoryPage(v);
+      },
       { immediate: true },
     );
   },
@@ -134,10 +139,11 @@ export default {
 
       this.history.loading = true;
       this.pqu = pagedQueryUrl;
-      return this.$http(pagedQueryUrl)
+      this.$http(pagedQueryUrl)
         .then(res => {
+          // eslint-disable-next-line no-underscore-dangle
           if (this._isDestroyed || this.pqu !== pagedQueryUrl) {
-            return;
+            return null;
           }
 
           if (res.nextPageToken && this.npt === res.nextPageToken) {
@@ -150,7 +156,9 @@ export default {
               atob(res.nextPageToken),
             ).IsWorkflowRunning;
             if (this.results.length < RESULT_THRESHOLD) {
-              setTimeout(() => (this.nextPageToken = res.nextPageToken));
+              setTimeout(() => {
+                this.nextPageToken = res.nextPageToken;
+              });
             }
           } else {
             this.isWorkflowRunning = false;
@@ -181,15 +189,17 @@ export default {
           return this.results;
         })
         .catch(e => {
+          // eslint-disable-next-line no-console
           console.error(e);
+          // eslint-disable-next-line no-underscore-dangle
           if (this._isDestroyed || this.pqu !== pagedQueryUrl) {
             return;
           }
           this.history.error =
             (e.json && e.json.message) || e.status || e.message;
-          return [];
         })
         .finally(() => {
+          // eslint-disable-next-line no-underscore-dangle
           if (this._isDestroyed || this.pqu !== pagedQueryUrl) {
             this.history.loading = false;
           }

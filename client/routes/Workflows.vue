@@ -198,15 +198,16 @@ export default pagedGrid({
       q.nextPageToken = this.nextPageToken;
 
       if (q.queryString) {
-        return this.fetch(`/api/domain/${domain}/workflows/list`, q);
+        this.fetch(`/api/domain/${domain}/workflows/list`, q);
+        return;
       }
 
-      return this.fetch(`/api/domain/${domain}/workflows/${state}`, q);
+      this.fetch(`/api/domain/${domain}/workflows/${state}`, q);
     },
   },
   methods: {
     fetch: debounce(
-      function(url, query) {
+      function fetch(url, query) {
         this.loading = true;
         this.error = undefined;
 
@@ -224,9 +225,12 @@ export default pagedGrid({
                 : '',
               status: (data.closeStatus || 'open').toLowerCase(),
             }));
-            return (this.results = query.nextPageToken
+
+            this.results = query.nextPageToken
               ? this.results.concat(formattedResults)
-              : formattedResults);
+              : formattedResults;
+
+            return this.results;
           })
           .catch(e => {
             this.npt = undefined;

@@ -13,7 +13,9 @@ export default function(historyEvents) {
   };
 
   const assignEnd = (item, end) => {
+    // eslint-disable-next-line no-param-reassign
     item.ongoing = false;
+    // eslint-disable-next-line no-param-reassign
     item.end = moment(end);
   };
 
@@ -170,7 +172,8 @@ export default function(historyEvents) {
       const initiatedEvent = hash[`extsignal${e.eventId}`];
       if (initiatedEvent) {
         initiatedEvent.eventIds.push(e.eventId);
-        assignEnd(item, e.timestamp);
+        // TODO - code will break as item is not defined.
+        // assignEnd(item, e.timestamp);
       }
     } else if (
       e.eventType === 'DecisionTaskFailed' ||

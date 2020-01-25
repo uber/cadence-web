@@ -261,7 +261,6 @@
 </template>
 
 <script>
-import moment from 'moment';
 import Prism from 'vue-prism-component';
 import {
   DynamicScroller,
@@ -345,7 +344,7 @@ export default {
   },
   computed: {
     exportFilename() {
-      return `${this.workflowId.replace(/[\\~#%&*{}\/:<>?|\"-]/g, ' ')} - ${
+      return `${this.workflowId.replace(/[\\~#%&*{}/:<>?|"-]/g, ' ')} - ${
         this.runId
       }.json`;
     },
@@ -421,7 +420,7 @@ export default {
         this.splitEnabled = true;
       }
     },
-    onSplitResize: debounce(size => {
+    onSplitResize: debounce(() => {
       window.dispatchEvent(new Event('resize'));
     }, 5),
     setEventType(et) {
@@ -472,6 +471,7 @@ export default {
           scroller.forceUpdate();
         }
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.warn('vue-virtual-scroller: Could not scrollToItem:', error);
       }
     },

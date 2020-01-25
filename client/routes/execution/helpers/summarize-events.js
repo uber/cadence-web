@@ -3,6 +3,7 @@ import { shortName } from '../../../helpers';
 import parentWorkflowLink from './parent-workflow-link';
 import workflowLink from './workflow-link';
 
+// eslint-disable-next-line import/prefer-default-export
 export const summarizeEvents = {
   ActivityTaskCancelRequested: d => ({ ID: d.activityId }),
   ActivityTaskCompleted: d => ({ result: d.result }),

@@ -48,15 +48,18 @@ function findActiveGroupNode(node, id, topLevel) {
   }
 
   if (!topLevel && groupEvents.includes(node.eventType)) {
-    return;
+    return null;
   }
 
+  // eslint-disable-next-line no-restricted-syntax
   for (const c of node.children) {
     const activeChild = findActiveGroupNode(c, id);
     if (activeChild) {
       return activeChild;
     }
   }
+
+  return null;
 }
 
 function titleForNode(n) {
