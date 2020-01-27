@@ -1,5 +1,5 @@
 <template>
-  <section :class="{ history: true, loading: $parent.historyLoading, 'has-results': !!$parent.results.length, 'split-enabled': true }">
+  <section :class="{ history: true, loading, 'has-results': !!events.length, 'split-enabled': true }">
     <header class="controls">
       <div class="view-format">
         <label for="format">View Format</label>
@@ -10,17 +10,22 @@
         </div>
       </div>
       <div class="actions">
-        <a class="export" :href="$parent.baseAPIURL + '/export'" :download="exportFilename">Export</a>
+        <a href="#" @click.prevent="toggleShowGraph()">{{ showGraph ? 'hide' : 'show' }} graph</a>
+        <a class="export" :href="baseAPIURL + '/export'" :download="exportFilename">Export</a>
       </div>
     </header>
 
-    <Split class="split-panel" direction="vertical" @onDrag="onSplitResize" @onDragStart="enableSplitting" v-if="!showNoResults && !$parent.historyError" ref="splitPanel">
+    <Split class="split-panel" direction="vertical" @onDrag="onSplitResize" @onDragStart="enableSplitting" v-if="!showNoResults && !error" ref="splitPanel">
       <SplitArea
         class="timeline-split"
         :min-size="splitSizeMinSet[0]"
         :size="splitSizeSet[0]"
       >
-        <timeline :events="timelineEvents" :selected-event-id="eventId" v-if="format !== 'json'" />
+        <timeline
+          :events="timelineEvents"
+          :selected-event-id="eventId"
+          v-if="format !== 'json' && showGraph"
+        />
       </SplitArea>
       <SplitArea
         class="view-split"
@@ -76,12 +81,12 @@
                   >
                     <div class="td col-id">{{item.eventId}}</div>
                     <div class="td col-type">{{item.eventType}}</div>
-                    <div class="td col-time">{{timeCol(item && item.timestamp, index)}}</div>
+                    <div class="td col-time">{{tsFormat === 'elapsed' ? item.timeElapsedDisplay : item.timeStampDisplay}}</div>
                     <div class="td col-summary">
                       <event-details
-                        :event="item"
+                        :event="(compactDetails && !item.expanded) ? item.eventSummary : item.eventFullDetails"
                         :compact="compactDetails && !item.expanded"
-                        :highlight="$parent.results.length < 100"
+                        :highlight="events.length < 100"
                       />
                     </div>
                   </div>
@@ -89,8 +94,8 @@
               </template>
             </DynamicScroller>
           </div>
-          <prism class="json" language="json" v-if="format === 'json' && $parent.results.length < 90">{{JSON.stringify($parent.results, null, 2)}}</prism>
-          <pre class="json" v-if="format === 'json' && $parent.results.length >= 90">{{JSON.stringify($parent.results, null, 2)}}</pre>
+          <prism class="json" language="json" v-if="format === 'json' && events.length < 90">{{JSON.stringify(events, null, 2)}}</prism>
+          <pre class="json" v-if="format === 'json' && events.length >= 90">{{JSON.stringify(events, null, 2)}}</pre>
           <div class="compact-view" v-if="format === 'compact'">
             <RecycleScroller
               class="scroller-compact"
@@ -105,7 +110,7 @@
                   :class="`timeline-event ${item.className || ''} ${(item === selectedTimelineEvent ? ' vis-selected' : '')}`"
                   @click.prevent="selectTimelineEvent(item)"
                 >
-                  <span class="event-title">{{item.content}}</span>7
+                  <span class="event-title">{{item.content}}</span>
                   <details-list
                     :compact="true"
                     :item="item.details"
@@ -127,7 +132,7 @@
                   :key="eid"
                   @click.prevent="$router.replaceQueryParam('eventId', eid)"
                   :data-event-id="eid">
-                    {{$parent.results.find(e => e.eventId === eid).eventType}}
+                    {{events.find(event => event.eventId === eid).eventType}}
                 </a>
               </div>
               <details-list class="event-details" :item="selectedEventDetails" :title="`${selectedTimelineEvent.content} - ${selectedEvent.eventType}`" />
@@ -137,27 +142,26 @@
       </SplitArea>
     </Split>
 
-    <span class="error" v-if="$parent.historyError">{{$parent.historyError}}</span>
+    <span class="error" v-if="error">{{error}}</span>
     <span class="no-results" v-if="showNoResults">No Results</span>
   </section>
 </template>
 
 <script>
-import moment from 'moment'
-import eventDetails from './event-details.vue'
-import Prism from 'vue-prism-component'
+import moment from 'moment';
+import eventDetails from './event-details.vue';
+import Prism from 'vue-prism-component';
 import { DynamicScroller, DynamicScrollerItem, RecycleScroller } from 'vue-virtual-scroller';
-import timeline from './timeline.vue'
-import mapTimelineEvents from './timeline-events'
-import debounce from 'lodash-es/debounce'
-import omit from 'lodash-es/omit'
-
+import timeline from './timeline.vue';
+import debounce from 'lodash-es/debounce';
+import omit from 'lodash-es/omit';
 
 export default {
   data() {
     return {
-      tsFormat: localStorage.getItem(`${this.$route.params.domain}:history-ts-col-format`) || 'elapsed',
-      compactDetails: localStorage.getItem(`${this.$route.params.domain}:history-compact-details`) === 'true',
+      tsFormat: localStorage.getItem(`${this.domain}:history-ts-col-format`) || 'elapsed',
+      compactDetails: localStorage.getItem(`${this.domain}:history-compact-details`) === 'true',
+      scrolledToEventOnInit: false,
       splitEnabled: false,
       eventType: "",
       eventTypes: [
@@ -169,11 +173,24 @@ export default {
         { value: 'ChildWorkflow', label: 'ChildWorkflow' },
         { value: 'Workflow', label: 'Workflow' },
       ],
-      splitSizeSet: [20, 80],
+      splitSizeSet: [1, 99],
       splitSizeMinSet: [0, 0],
-    }
+      unwatch: [],
+    };
   },
-  props: ['format', 'eventId'],
+  props: [
+    'baseAPIURL',
+    'domain',
+    'error',
+    'eventId',
+    'events',
+    'format',
+    'loading',
+    'runId',
+    'showGraph',
+    'timelineEvents',
+    'workflowId',
+  ],
   created() {
     this.onResizeWindow = debounce(() => {
       const { scrollerCompact, scrollerGrid, thead, viewSplit } = this.$refs;
@@ -188,50 +205,35 @@ export default {
     }, 5);
   },
   mounted() {
-    this.$watch(
-      () => `${this.$parent.results.length}${this.tsFormat.length}${this.$route.query.format}${this.compactDetails}`,
+    this.splitSizeSet = this.showGraph ? [20, 80] : [1, 99];
+    this.unwatch.push(this.$watch(
+      () => `${this.events.length}${this.tsFormat.length}${this.$route.query.format}${this.compactDetails}`,
       this.onResizeWindow,
-      { immediate: true }
-    );
+      { immediate: true },
+    ));
     window.addEventListener('resize', this.onResizeWindow);
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.onResizeWindow);
+    while(this.unwatch.length) {
+      (this.unwatch.pop())();
+    }
   },
   computed: {
-    timelineEvents() {
-      return mapTimelineEvents(this.$parent.results)
-    },
-    selectedTimelineEvent() {
-      return this.timelineEvents.find(te => te.eventIds.includes(this.eventId))
-    },
-    selectedEvent() {
-      return this.$parent.results.find(e => e.eventId == this.eventId)
-    },
-    selectedEventDetails() {
-      if (!this.selectedEvent) return {}
-      return Object.assign({
-        timestamp: this.selectedEvent.timestamp.format('MMM Do h:mm:ss a'),
-        eventId: this.selectedEvent.eventId
-      }, this.selectedEvent.details)
-    },
-    showTable() {
-      return !this.$parent.historyError && (this.$parent.historyLoading || this.$parent.results.length)
-    },
-    showNoResults() {
-      return !this.$parent.historyError && !this.$parent.historyLoading && this.$parent.results.length === 0
-    },
     exportFilename() {
-      return `${this.$route.params.workflowId.replace(/[\\~#%&*{}\/:<>?|\"-]/g, ' ')} - ${this.$route.params.runId}.json`
+      return `${this.workflowId.replace(/[\\~#%&*{}\/:<>?|\"-]/g, ' ')} - ${this.runId}.json`;
     },
     filteredEvents() {
-      const { eventId, eventType } = this;
-      const formattedResults = this.$parent.results.map((item) => Object.assign({}, item, {
-        expanded: item.eventId === eventId,
+      const {
+        eventId,
+        eventType,
+      } = this;
+      const formattedEvents = this.events.map((event) => Object.assign({}, event, {
+        expanded: event.eventId === eventId,
       }));
-      return eventType && eventType !== "All" ?
-        formattedResults.filter(result => result.eventType.includes(eventType)) :
-        formattedResults;
+      return eventType && eventType !== 'All' ?
+        formattedEvents.filter(result => result.eventType.includes(eventType)) :
+        formattedEvents;
     },
     filteredEventIdToIndex() {
       return this.filteredEvents
@@ -244,6 +246,27 @@ export default {
     isGrid() {
       return this.format === 'grid';
     },
+    selectedTimelineEvent() {
+      return this.timelineEvents.find(te => te.eventIds.includes(this.eventId));
+    },
+    selectedEvent() {
+      return this.events.find(e => e.eventId === this.eventId);
+    },
+    selectedEventDetails() {
+      if (!this.selectedEvent) {
+        return {};
+      }
+      return Object.assign({
+        timestamp: this.selectedEvent.timestamp.format('MMM Do h:mm:ss a'),
+        eventId: this.selectedEvent.eventId,
+      }, this.selectedEvent.details);
+    },
+    showTable() {
+      return !this.error && (this.loading || this.events.length);
+    },
+    showNoResults() {
+      return !this.error && !this.loading && this.events.length === 0;
+    },
     timelineEventIdToIndex() {
       return this.timelineEvents
         .map(({ eventIds }) => eventIds)
@@ -255,8 +278,22 @@ export default {
     },
   },
   methods: {
+    deselectEvent() {
+      this.$router.replace({ query: omit(this.$route.query, 'eventId') });
+    },
+    enableSplitting() {
+      if (!this.splitEnabled) {
+        var timelineHeightPct = (this.$refs.splitPanel.$el.firstElementChild.offsetHeight / this.$refs.splitPanel.$el.offsetHeight) * 100;
+        this.splitSizeSet = [timelineHeightPct, 100 - timelineHeightPct];
+        this.splitEnabled = true;
+      }
+    },
+    onSplitResize: debounce(function (size) {
+      window.dispatchEvent(new Event('resize'));
+    }, 5),
     setEventType(et){
-      this.eventType = et.value
+      this.eventType = et.value;
+      setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
     },
     setFormat(format) {
       this.$router.replace({
@@ -265,31 +302,15 @@ export default {
       setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
     },
     setTsFormat(tsFormat) {
-      this.tsFormat = tsFormat
-      localStorage.setItem(`${this.$route.params.domain}:history-ts-col-format`, tsFormat)
+      this.tsFormat = tsFormat;
+      localStorage.setItem(`${this.domain}:history-ts-col-format`, tsFormat);
     },
     setCompactDetails(compact) {
       const { scrollerGrid } = this.$refs;
       this.compactDetails = compact;
-      localStorage.setItem(`${this.$route.params.domain}:history-compact-details`, JSON.stringify(compact));
+      localStorage.setItem(`${this.domain}:history-compact-details`, JSON.stringify(compact));
       scrollerGrid.forceUpdate();
-    },
-    timeCol(ts, i) {
-      if (i === -1) {
-        return '';
-      }
-
-      if (i === 0 || this.tsFormat !== 'elapsed') {
-        return ts.format('MMM Do h:mm:ss a')
-      }
-
-      let deltaFromPrev = moment.duration(ts - this.$parent.results[i - 1].timestamp),
-          elapsed = moment.duration(ts - this.$parent.results[0].timestamp).format()
-
-      if (deltaFromPrev.asSeconds() >= 1) {
-        elapsed += ` (+${deltaFromPrev.format()})`
-      }
-      return elapsed
+      setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
     },
     scrollEventIntoView(eventId) {
       const index = this.isGrid ?
@@ -319,28 +340,35 @@ export default {
       }
     },
     selectTimelineEvent(i) {
-      this.$router.replaceQueryParam('eventId', i.eventIds[i.eventIds.length - 1])
+      this.$router.replaceQueryParam('eventId', i.eventIds[i.eventIds.length - 1]);
     },
-    deselectEvent() {
-      this.$router.replace({ query: omit(this.$route.query, 'eventId') })
-    },
-    enableSplitting() {
-      if (!this.splitEnabled) {
-        var timelineHeightPct = (this.$refs.splitPanel.$el.firstElementChild.offsetHeight / this.$refs.splitPanel.$el.offsetHeight) * 100
-        this.splitSizeSet = [timelineHeightPct, 100 - timelineHeightPct];
-        this.splitEnabled = true
+    toggleShowGraph() {
+      if (this.showGraph) {
+        this.$router.replace({ query: omit(this.$route.query, 'showGraph') });
+      } else {
+        this.$router.replace({
+          query: Object.assign({}, this.$route.query, { showGraph: true }),
+        });
       }
     },
-    onSplitResize: debounce(function (size) {
-      window.dispatchEvent(new Event('resize'))
-    }, 5)
   },
   watch: {
     eventId(eventId) {
       this.scrollEventIntoView(eventId);
     },
     filteredEvents() {
-      this.scrollEventIntoView(this.eventId);
+      if (
+        !this.scrolledToEventOnInit
+        && this.eventId !== undefined
+        && this.filteredEventIdToIndex[this.eventId] !== undefined
+      ) {
+        this.scrolledToEventOnInit = true;
+        setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
+      }
+    },
+    showGraph() {
+      this.splitSizeSet = this.showGraph ? [20, 80] : [1, 99];
+      this.onSplitResize();
     },
   },
   components: {

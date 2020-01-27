@@ -1,24 +1,27 @@
-import moment from 'moment'
-import shortName from '../../short-name'
-import summarizeEvents from './summarize-events'
+import moment from 'moment';
+import shortName from '../../../short-name';
+import { summarizeEvents } from './summarize-events';
 
 export default function(historyEvents) {
-  const events = [], hash = {},
-  add = i => {
-    hash[i.id] = i
-    events.push(i)
-    return i
-  },
-  assignEnd = (item, end) => {
-    item.ongoing = false
-    item.end = moment(end)
-  }
+  const events = [];
+  const hash = {};
+
+  const add = i => {
+    hash[i.id] = i;
+    events.push(i);
+    return i;
+  };
+
+  const assignEnd = (item, end) => {
+    item.ongoing = false;
+    item.end = moment(end);
+  };
 
   historyEvents.forEach(e => {
     if (e.eventType.startsWith('ActivityTask')) {
-      let scheduledEvent = 'activityId' in e.details ? e : historyEvents[e.details.scheduledEventId - 1],
-          activityId = scheduledEvent.details.activityId,
-          item = hash['activity' + activityId]
+      const scheduledEvent = 'activityId' in e.details ? e : historyEvents[e.details.scheduledEventId - 1];
+      const activityId = scheduledEvent.details.activityId;
+      let item = hash['activity' + activityId];
 
       if (!item) {
         item = add({
@@ -31,24 +34,24 @@ export default function(historyEvents) {
           details: {
             input: e.details.input,
             scheduleToStartTimeoutSeconds: e.details.scheduleToStartTimeoutSeconds,
-            scheduleToCloseTimeoutSeconds: e.details.scheduleToCloseTimeoutSeconds
-          }
-        })
+            scheduleToCloseTimeoutSeconds: e.details.scheduleToCloseTimeoutSeconds,
+          },
+        });
       } else {
-        item.eventIds.push(e.eventId)
+        item.eventIds.push(e.eventId);
         if (e.eventType !== 'ActivityTaskStarted') {
-          Object.assign(item.details, summarizeEvents[e.eventType](e.details))
+          Object.assign(item.details, summarizeEvents[e.eventType](e.details));
         }
       }
 
       if (e.eventType !== 'ActivityTaskScheduled' && e.eventType !== 'ActivityTaskStarted') {
-        assignEnd(item, e.timestamp)
-        item.className = 'activity ' + e.eventType.replace('ActivityTask', '').toLowerCase()
+        assignEnd(item, e.timestamp);
+        item.className = 'activity ' + e.eventType.replace('ActivityTask', '').toLowerCase();
       }
     } else if (e.eventType.includes('ChildWorkflowExecution')) {
-      let initiatedEvent = 'initiatedEventId' in e.details ? historyEvents[e.details.initiatedEventId - 1] : e,
-          initiatedEventId = initiatedEvent.eventId,
-          item = hash['childWf' + initiatedEventId]
+      const initiatedEvent = 'initiatedEventId' in e.details ? historyEvents[e.details.initiatedEventId - 1] : e;
+      const initiatedEventId = initiatedEvent.eventId;
+      let item = hash['childWf' + initiatedEventId];
 
       if (!item) {
         item = add({
@@ -59,23 +62,23 @@ export default function(historyEvents) {
           ongoing: true,
           content: `Child Workflow: ${shortName(e.details.workflowType.name)}`,
           details: {
-            input: e.details.input
-          }
-        })
+            input: e.details.input,
+          },
+        });
       } else {
-        item.eventIds.push(e.eventId)
+        item.eventIds.push(e.eventId);
         if (e.eventType in summarizeEvents) {
-          let summary = summarizeEvents[e.eventType](e.details)
+          const summary = summarizeEvents[e.eventType](e.details);
           if (!item.titleLink && summary.Workflow && summary.Workflow.routeLink) {
-            item.titleLink = summary.Workflow.routeLink
+            item.titleLink = summary.Workflow.routeLink;
           }
-          Object.assign(item.details, )
+          Object.assign(item.details);
         }
       }
 
       if (e.eventType !== 'StartChildWorkflowExecutionInitiated' && e.eventType !== 'ChildWorkflowExecutionStarted') {
-        assignEnd(item, e.timestamp)
-        item.className = 'child-workflow ' + e.eventType.replace('ChildWorkflowExecution', '').toLowerCase()
+        assignEnd(item, e.timestamp);
+        item.className = 'child-workflow ' + e.eventType.replace('ChildWorkflowExecution', '').toLowerCase();
       }
     } else if (e.eventType === 'TimerStarted') {
       add({
@@ -84,26 +87,30 @@ export default function(historyEvents) {
         eventIds: [e.eventId],
         start: moment(e.timestamp),
         end: moment(e.timestamp).add(e.details.startToFireTimeoutSeconds, 'seconds'),
-        content: `Timer ${e.details.timerId} (${moment.duration(e.details.startToFireTimeoutSeconds, 'seconds').format()})`
-      })
+        content: `Timer ${e.details.timerId} (${moment.duration(e.details.startToFireTimeoutSeconds, 'seconds').format()})`,
+      });
     } else if (e.eventType === 'TimerFired') {
-      let timerStartedEvent = hash[`timer${e.details.timerId}`]
+      const timerStartedEvent = hash[`timer${e.details.timerId}`];
       if (timerStartedEvent) {
-        timerStartedEvent.eventIds.push(e.eventId)
+        timerStartedEvent.eventIds.push(e.eventId);
       }
     } else if (e.eventType === 'MarkerRecorded') {
+      const markerName = e.details.markerName !== undefined
+        ? e.details.markerName.toLowerCase()
+        : '';
+
       add({
         id: 'marker' + e.eventId,
-        className: 'marker marker-' + e.details.markerName.toLowerCase(),
+        className: `marker marker-${markerName}`,
         eventIds: [e.eventId],
         start: moment(e.timestamp),
         content: ({
           Version: 'Version Marker',
           SideEffect: 'Side Effect',
-          LocalActivity: 'Local Activity'
+          LocalActivity: 'Local Activity',
         }[e.details.markerName]) || (e.details.markerName + ' Marker'),
-        details: summarizeEvents.MarkerRecorded(e.details)
-      })
+        details: summarizeEvents.MarkerRecorded(e.details),
+      });
     } else if (e.eventType === 'WorkflowExecutionSignaled') {
       add({
         id: 'signal' + e.eventId,
@@ -113,8 +120,8 @@ export default function(historyEvents) {
         content: 'Workflow Signaled',
         details: {
           input: e.details.input,
-        }
-      })
+        },
+      });
     } else if (e.eventType === 'SignalExternalWorkflowExecutionInitiated') {
       add({
         id: 'extsignal' + e.eventId,
@@ -123,13 +130,13 @@ export default function(historyEvents) {
         start: moment(e.timestamp),
         ongoing: true,
         content: 'External Workflow Signaled',
-        details: summarizeEvents.SignalExternalWorkflowExecutionInitiated(e.details)
-      })
+        details: summarizeEvents.SignalExternalWorkflowExecutionInitiated(e.details),
+      });
     } else if (e.eventType === 'ExternalWorkflowExecutionSignaled') {
-      let initiatedEvent = hash[`extsignal${e.eventId}`]
+      const initiatedEvent = hash[`extsignal${e.eventId}`];
       if (initiatedEvent) {
-        initiatedEvent.eventIds.push(e.eventId)
-        assignEnd(item, e.timestamp)
+        initiatedEvent.eventIds.push(e.eventId);
+        assignEnd(item, e.timestamp);
       }
     } else if (e.eventType === 'DecisionTaskFailed' || e.eventType === 'DecisionTaskTimedOut') {
       add({
@@ -138,10 +145,10 @@ export default function(historyEvents) {
         eventIds: [e.eventId],
         start: moment(e.timestamp),
         content: e.eventType,
-        details: e.details
-      })
+        details: e.details,
+      });
     }
-  })
+  });
 
-  return events
-}
+  return events;
+};

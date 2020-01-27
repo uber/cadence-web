@@ -58,7 +58,7 @@ function cliTransform(item) {
       subvalue.forEach(cliTransform)
     } else if (subvalue && typeof subvalue === 'object') {
       cliTransform(subvalue)
-    } else if (subvalue == null) {
+    } else if (subvalue === null || subvalue === undefined) {
       delete item[subkey]
     }
   })

@@ -11,34 +11,40 @@
 </template>
 
 <script>
-import moment from 'moment'
+import moment from 'moment';
 
 export default {
   data() {
     return {
+      loading: undefined,
       stackTrace: undefined,
       stackTraceTimestamp: undefined,
-      loading: undefined
-    }
+    };
   },
+  props: [
+    'baseAPIURL',
+  ],
   created() {
-    this.getStackTrace()
+    this.getStackTrace();
   },
   methods: {
     getStackTrace() {
-      this.loading = true
-      return this.$http.post(`${this.$parent.baseAPIURL}/queries/__stack_trace`).then(({ queryResult }) => {
-        this.stackTrace = queryResult
-        this.stackTraceTimestamp = moment()
-      })
-      .catch(e => {
-        console.error(e)
-        this.stackTrace = { error: (e.json && e.json.message) || e.status || e.message }
-      })
-      .finally(() => this.loading = false)
-    }
-  }
-}
+      this.loading = true;
+      return this.$http.post(`${this.baseAPIURL}/queries/__stack_trace`)
+        .then(({ queryResult }) => {
+          this.stackTrace = queryResult;
+          this.stackTraceTimestamp = moment();
+        })
+        .catch(e => {
+          console.error(e);
+          this.stackTrace = {
+            error: (e.json && e.json.message) || e.status || e.message,
+          };
+        })
+        .finally(() => this.loading = false);
+    },
+  },
+};
 </script>
 
 <style lang="stylus">
