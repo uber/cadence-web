@@ -2,24 +2,30 @@ import moment from 'moment';
 import fixtures from './fixtures';
 
 describe('Execution', () => {
-  function executionTest(mochaTest, o) {
-    o = {
+  function executionTest(mochaTest, options) {
+    const extendedOptions = {
       workflowId: 'email-daily-summaries',
       runId: 'emailRun1',
       view: 'summary',
-      ...o,
+      ...options,
     };
 
     return [
       new Scenario(mochaTest)
         .withDomain('ci-test')
-        .withExecution(o.workflowId, o.runId, o.execution)
+        .withExecution(
+          extendedOptions.workflowId,
+          extendedOptions.runId,
+          extendedOptions.execution,
+        )
         .startingAt(
-          `/domain/ci-test/workflows/${o.workflowId}/${o.runId}/${o.view}${
-            o.query ? `?${o.query}` : ''
+          `/domain/ci-test/workflows/${extendedOptions.workflowId}/${
+            extendedOptions.runId
+          }/${extendedOptions.view}${
+            extendedOptions.query ? `?${extendedOptions.query}` : ''
           }`,
         ),
-      o,
+      extendedOptions,
     ];
   }
 
@@ -45,7 +51,7 @@ describe('Execution', () => {
   };
 
   describe('Workflow Statistics', () => {
-    it('should show statistics from the workflow', async function() {
+    it('should show statistics from the workflow', async function test() {
       summaryTest(this.test).then(([summaryEl]) => {
         summaryEl
           .querySelector('.workflow-id dd')
@@ -79,7 +85,7 @@ describe('Execution', () => {
   });
 
   describe('Summary', () => {
-    it('should show the input of the workflow, and any pending events', async function() {
+    it('should show the input of the workflow, and any pending events', async function test() {
       const [summaryEl] = await summaryTest(this.test, {
         execution: {
           pendingActivities: [

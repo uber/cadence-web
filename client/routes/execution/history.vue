@@ -273,6 +273,7 @@ import timeline from './timeline.vue';
 import eventDetails from './event-details.vue';
 
 export default {
+  name: 'history',
   data() {
     return {
       tsFormat:

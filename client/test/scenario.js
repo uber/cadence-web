@@ -7,7 +7,7 @@ import vueModal from 'vue-js-modal';
 import deepmerge from 'deepmerge';
 
 import main from '../main';
-import http from '../http';
+import { http } from '../helpers';
 import fixtures from './fixtures';
 
 export default function Scenario(test) {

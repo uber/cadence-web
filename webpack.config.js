@@ -9,6 +9,7 @@ const
 module.exports = {
   devtool: 'source-map',
   entry: [
+    process.env.TEST_RUN ? 'babel-polyfill' : '',
     path.join(__dirname, process.env.TEST_RUN ? 'client/test/index' : 'client/main')
   ].filter(x => x),
   output: {

@@ -10,7 +10,7 @@ describe('Domain Configuration', () => {
     return [configEl, scenario];
   }
 
-  it('should show properties in a readable form from the domain description API', async function() {
+  it('should show properties in a readable form from the domain description API', async function test() {
     const [configEl] = await domainConfigTest(this.test);
 
     await configEl.waitUntilExists('dl.details dt');
