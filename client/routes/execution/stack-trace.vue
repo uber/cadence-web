@@ -37,12 +37,15 @@ export default {
           this.stackTraceTimestamp = moment();
         })
         .catch(e => {
+          // eslint-disable-next-line no-console
           console.error(e);
           this.stackTrace = {
             error: (e.json && e.json.message) || e.status || e.message,
           };
         })
-        .finally(() => (this.loading = false));
+        .finally(() => {
+          this.loading = false;
+        });
     },
   },
 };

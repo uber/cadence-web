@@ -5,8 +5,6 @@
 <script>
 import moment from 'moment';
 import { DataSet, Timeline, timeline } from 'vis/index-timeline-graph2d';
-import { shortName } from '../../helpers';
-import { summarizeEvents } from './helpers';
 
 if (navigator.language === 'en-US') {
   timeline.TimeStep.FORMAT.minorLabels.minute = 'h:mm a';
@@ -66,7 +64,7 @@ export default {
           }
         });
 
-        const highlightSelection = sid => {
+        const highlightSelection = () => {
           const selectedEvent = this.findEvent(this.selectedEventId);
           this.timeline.setSelection(selectedEvent && selectedEvent.id);
           if (selectedEvent && !dontFocus) {
@@ -119,6 +117,7 @@ export default {
     this.ongoingUpdater = setInterval(() => {
       this.items.forEach(i => {
         if (i.ongoing) {
+          // eslint-disable-next-line no-param-reassign
           i.end = moment();
           this.items.update(i);
         }

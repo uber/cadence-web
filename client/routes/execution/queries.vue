@@ -14,20 +14,19 @@
         :href="queryName && !running ? '#' : undefined"
         :class="{ run: true, running }"
         @click.prevent="run"
-        >Run</a
       >
+        Run
+      </a>
     </header>
     <pre v-if="queryResult">{{ queryResult }}</pre>
     <span class="error" v-if="error">{{ error }}</span>
-    <span class="no-queries" v-if="queries && queries.length === 0"
-      >No queries registered</span
-    >
+    <span class="no-queries" v-if="queries && queries.length === 0">
+      No queries registered
+    </span>
   </section>
 </template>
 
 <script>
-import moment from 'moment';
-
 export default {
   data() {
     return {
@@ -45,15 +44,19 @@ export default {
     this.loading = true;
     this.$http(`${this.baseAPIURL}/queries`)
       .then(
-        r => {
-          this.queries = r.filter(r => r !== '__stack_trace');
+        queries => {
+          this.queries = queries.filter(query => query !== '__stack_trace');
           if (!this.queryName) {
-            this.queryName = this.queries[0];
+            [this.queryName] = this.queries;
           }
         },
-        e => (this.error = (e.json && e.json.message) || e.status || e.message),
+        e => {
+          this.error = (e.json && e.json.message) || e.status || e.message;
+        },
       )
-      .finally(() => (this.loading = false));
+      .finally(() => {
+        this.loading = false;
+      });
   },
   methods: {
     setQuery(queryName) {
@@ -66,11 +69,16 @@ export default {
       this.$http
         .post(`${this.baseAPIURL}/queries/${this.queryName}`)
         .then(
-          r => (this.queryResult = r.queryResult),
-          e =>
-            (this.error = (e.json && e.json.message) || e.status || e.message),
+          r => {
+            this.queryResult = r.queryResult;
+          },
+          e => {
+            this.error = (e.json && e.json.message) || e.status || e.message;
+          },
         )
-        .finally(() => (this.running = false));
+        .finally(() => {
+          this.running = false;
+        });
     },
   },
 };

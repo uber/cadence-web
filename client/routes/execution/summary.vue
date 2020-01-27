@@ -124,8 +124,6 @@
 
 <script>
 import moment from 'moment';
-import { shortName } from '../../helpers';
-import { parentWorkflowLink } from './helpers';
 
 export default {
   data() {
@@ -168,6 +166,7 @@ export default {
         })
         .then(
           r => {
+            // eslint-disable-next-line no-console
             console.dir(r);
           },
           resp => {
