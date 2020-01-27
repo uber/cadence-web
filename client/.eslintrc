@@ -4,5 +4,8 @@
   },
   "parserOptions": {
     "sourceType": "module"
-  }
+  },
+  "plugins": [
+    "chai-friendly"
+  ]
 }
