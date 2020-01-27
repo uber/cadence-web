@@ -174,7 +174,7 @@ describe('Execution', () => {
       });
     });
 
-    it('should link to the new workflow if the status is ContinuedAsNew', async function() {
+    it('should link to the new workflow if the status is ContinuedAsNew', async function test() {
       const [summaryEl] = await summaryTest(this.test, {
         attach: true,
         events: [
@@ -230,7 +230,7 @@ describe('Execution', () => {
         );
     });
 
-    it('should show the result of the workflow if completed', async function() {
+    it('should show the result of the workflow if completed', async function test() {
       const [summaryEl] = await summaryTest(this.test);
       const resultsEl = await summaryEl.waitUntilExists('.workflow-result pre');
 
@@ -247,7 +247,7 @@ describe('Execution', () => {
         ]);
     });
 
-    it('should show the failure result from a failed workflow', async function() {
+    it('should show the failure result from a failed workflow', async function test() {
       const [summaryEl] = await summaryTest(this.test, {
         events: fixtures.history.exampleTimeout,
       });
@@ -259,7 +259,7 @@ describe('Execution', () => {
       });
     });
 
-    it('should have a link to a parent workflow if applicable', async function() {
+    it('should have a link to a parent workflow if applicable', async function test() {
       const [summaryEl] = await summaryTest(this.test, {
         events: [
           {
@@ -294,7 +294,7 @@ describe('Execution', () => {
     });
 
     describe('Actions', () => {
-      it('should offer the user to terminate a running workflow, prompting the user for a termination reason', async function() {
+      it('should offer the user to terminate a running workflow, prompting the user for a termination reason', async function test() {
         const [summaryEl] = await summaryTest(this.test);
         const terminateEl = await summaryEl.waitUntilExists(
           'aside.actions a.terminate',
@@ -313,7 +313,7 @@ describe('Execution', () => {
           .and.contain('input[placeholder="Reason"]');
       });
 
-      it('should terminate the workflow with the provided reason', async function() {
+      it('should terminate the workflow with the provided reason', async function test() {
         const [summaryEl, scenario] = await summaryTest(this.test);
         (await summaryEl.waitUntilExists('aside.actions a.terminate')).trigger(
           'click',
@@ -334,7 +334,7 @@ describe('Execution', () => {
         );
       });
 
-      it('should terminate the workflow without a reason', async function() {
+      it('should terminate the workflow without a reason', async function test() {
         const [summaryEl, scenario] = await summaryTest(this.test);
         (await summaryEl.waitUntilExists('aside.actions a.terminate')).trigger(
           'click',
@@ -351,7 +351,7 @@ describe('Execution', () => {
         );
       });
 
-      it('should allow the user to cancel the termination prompt, doing nothing', async function() {
+      it('should allow the user to cancel the termination prompt, doing nothing', async function test() {
         const [summaryEl] = await summaryTest(this.test);
         (await summaryEl.waitUntilExists('aside.actions a.terminate')).trigger(
           'click',
@@ -367,7 +367,7 @@ describe('Execution', () => {
         await Promise.delay(200);
       });
 
-      it('should not offer the user the ability to terminate completed workflows', async function() {
+      it('should not offer the user the ability to terminate completed workflows', async function test() {
         const [summaryEl] = await summaryTest(this.test, {
           execution: closedWorkflowExecution,
         });
@@ -412,36 +412,7 @@ describe('Execution', () => {
       }));
     }
 
-    async function runningWfHistoryTest(mochaTest) {
-      const [testEl, scenario] = executionTest(mochaTest, {
-        workflowId: 'long-running-op-2',
-        runId: 'theRunId',
-        view: 'history',
-      })[0]
-        .withHistory(
-          [
-            {
-              timestamp: moment().toISOString(),
-              eventType: 'WorkflowExecutionStarted',
-              eventId: 1,
-              details: {
-                workflowType: {
-                  name: 'long-running-op',
-                },
-              },
-            },
-          ].concat(generateActivityEvents(15)),
-          true,
-        )
-        .go(true);
-
-      return [
-        await testEl.waitUntilExists('section.history section.results'),
-        scenario,
-      ];
-    }
-
-    it('should allow the user to change the view format', async function() {
+    it('should allow the user to change the view format', async function test() {
       const [historyEl, scenario] = await historyTest(this.test);
       const resultsEl = historyEl.querySelector('section.results');
 
@@ -475,8 +446,8 @@ describe('Execution', () => {
       );
     });
 
-    it('should allow downloading the full history via export', async function() {
-      const [historyEl, scenario] = await historyTest(this.test);
+    it('should allow downloading the full history via export', async function test() {
+      const [, scenario] = await historyTest(this.test);
       const exportEl = await scenario.vm.$el.waitUntilExists(
         'section.history .controls a.export',
       );
@@ -491,7 +462,7 @@ describe('Execution', () => {
       );
     });
 
-    describe('Compact View', function() {
+    describe('Compact View', function describeTest() {
       this.timeout(4000);
       let prevPollInterval;
       let prevRetryAttempts;
@@ -506,7 +477,7 @@ describe('Execution', () => {
         window.retry.retryAttempts = prevRetryAttempts;
       });
 
-      async function compactViewTest(mochaTest, o) {
+      async function compactViewTest(mochaTest) {
         const [summaryEl, scenario] = await historyTest(mochaTest, {
           events: fixtures.history.timelineVariety,
           query: 'format=compact&showGraph=true',
@@ -528,7 +499,7 @@ describe('Execution', () => {
         ];
       }
 
-      it('should build timeline events from granular event history', async function() {
+      it('should build timeline events from granular event history', async function test() {
         const [, compactViewEl] = await compactViewTest(this.test);
 
         await retry(() =>
@@ -547,7 +518,7 @@ describe('Execution', () => {
           .should.have.length(1);
       });
 
-      it('should also populate the timeline with those events', async function() {
+      it('should also populate the timeline with those events', async function test() {
         this.retries(3); // flakey on mocha-chrome but not normal, windowed Chrome
         const [timelineEl] = await compactViewTest(this.test);
 
@@ -582,7 +553,7 @@ describe('Execution', () => {
           .should.have.length(2);
       });
 
-      it('should focus the timeline when an event is clicked, updating the URL and zooming in', async function() {
+      it('should focus the timeline when an event is clicked, updating the URL and zooming in', async function test() {
         const [timelineEl, compactViewEl, scenario] = await compactViewTest(
           this.test,
         );
@@ -617,13 +588,13 @@ describe('Execution', () => {
           Number(
             timelineEl
               .querySelector('.vis-range.activity.completed')
-              .style.left.match(/[\-0-9]+/)[0],
+              .style.left.match(/[-0-9]+/)[0],
           ).should.be.below(0);
         });
       });
 
       // need to investigate how to trigger the events needed to simulate a click for the timeline - looks like it uses Hammer.js and listens to PointerEvents
-      xit('should scroll the event into view if an event is clicked from the timeline, updating the URL', async function() {
+      xit('should scroll the event into view if an event is clicked from the timeline, updating the URL', async function test() {
         const [timelineEl, , scenario] = await compactViewTest(this.test);
         timelineEl.timeline.fit();
 
@@ -642,7 +613,7 @@ describe('Execution', () => {
         );
       });
 
-      it('should show event details when an event is clicked', async function() {
+      it('should show event details when an event is clicked', async function test() {
         const [timelineEl, compactViewEl, scenario] = await compactViewTest(
           this.test,
         );
@@ -670,7 +641,7 @@ describe('Execution', () => {
         });
       });
 
-      it('should show event details on initial load, and allow dismissal', async function() {
+      it('should show event details on initial load, and allow dismissal', async function test() {
         const [summaryEl] = await historyTest(this.test, {
           events: fixtures.history.timelineVariety,
           query: 'format=compact&eventId=8',
@@ -690,7 +661,7 @@ describe('Execution', () => {
     });
 
     describe('Grid View', () => {
-      it('should show full results in a grid', async function() {
+      it('should show full results in a grid', async function test() {
         historyTest(this.test).then(async ([historyEl]) => {
           await historyEl.waitUntilExists('.results tbody tr:nth-child(4)');
 
@@ -736,7 +707,7 @@ describe('Execution', () => {
         });
       });
 
-      it('should allow toggling of the time column between elapsed and local timestamp', async function() {
+      it('should allow toggling of the time column between elapsed and local timestamp', async function test() {
         const [historyEl] = await historyTest(this.test);
         await historyEl.waitUntilExists(
           '.results .vue-recycle-scroller__item-view:nth-child(4) .tr',
@@ -763,7 +734,7 @@ describe('Execution', () => {
           .should.equal('ts');
       });
 
-      it('should use the timestamp format from local storage if available', async function() {
+      it('should use the timestamp format from local storage if available', async function test() {
         localStorage.setItem('ci-test:history-ts-col-format', 'ts');
         const [historyEl] = await historyTest(this.test);
         await retry(() =>
@@ -777,7 +748,7 @@ describe('Execution', () => {
         );
       });
 
-      it('should show details as flattened key-value pairs from parsed json, except for result and input', async function() {
+      it('should show details as flattened key-value pairs from parsed json, except for result and input', async function test() {
         const [historyEl] = await historyTest(this.test);
         const startDetails = await historyEl.waitUntilExists(
           '.results .tr:first-child .td:nth-child(4)',
@@ -808,7 +779,7 @@ describe('Execution', () => {
           ]);
       });
 
-      it('should show a full screen view option for large JSON fields, and allow copying it', async function() {
+      it('should show a full screen view option for large JSON fields, and allow copying it', async function test() {
         const input = {
           foo: 1,
           bar: 'a',
@@ -851,10 +822,10 @@ describe('Execution', () => {
         });
 
         modal.querySelector('a.copy').trigger('click');
-        Mocha.copiedText.should.equal(JSON.stringify(input, null, 2));
+        window.Mocha.copiedText.should.equal(JSON.stringify(input, null, 2));
       });
 
-      it('should allow toggling of the details column between summary and full details', async function() {
+      it('should allow toggling of the details column between summary and full details', async function test() {
         const [historyEl] = await historyTest(this.test);
         await historyEl.waitUntilExists(
           '.results .vue-recycle-scroller__item-view:nth-child(4) .tr',
@@ -890,7 +861,7 @@ describe('Execution', () => {
           .should.equal('true');
       });
 
-      it('should use the details format from local storage if available', async function() {
+      it('should use the details format from local storage if available', async function test() {
         localStorage.setItem('ci-test:history-compact-details', 'true');
         const [historyEl] = await historyTest(this.test);
         await retry(() =>
@@ -902,7 +873,7 @@ describe('Execution', () => {
         );
       });
 
-      it('should specially handle MarkerRecorded events', async function() {
+      it('should specially handle MarkerRecorded events', async function test() {
         const [historyEl] = await historyTest(this.test, {
           events: [
             {
@@ -1002,8 +973,8 @@ describe('Execution', () => {
         ddTextNodes[7].should.equalIgnoreSpaces('{"result":"in json"}');
       });
 
-      it('should render event inputs as highlighted json', async function() {
-        const [historyEl, scenario] = await historyTest(this.test);
+      it('should render event inputs as highlighted json', async function test() {
+        const [historyEl] = await historyTest(this.test);
         const startDetails = await historyEl.waitUntilExists(
           '.results .tr:first-child .td:nth-child(4)',
         );
@@ -1021,8 +992,8 @@ describe('Execution', () => {
           .should.have.length(9);
       });
 
-      it('should link to child workflows, and load its history when navigated too', async function() {
-        const [historyEl, scenario] = await historyTest(this.test, {
+      it('should link to child workflows, and load its history when navigated too', async function test() {
+        const [historyEl] = await historyTest(this.test, {
           events: [
             {
               eventType: 'WorkflowExecutionStarted',
@@ -1060,7 +1031,7 @@ describe('Execution', () => {
           );
       });
 
-      it('should scroll the selected event id from compact view into view', async function() {
+      it('should scroll the selected event id from compact view into view', async function test() {
         const [testEl, scenario] = new Scenario(this.test)
           .withDomain('ci-test')
           .startingAt(
@@ -1127,7 +1098,7 @@ describe('Execution', () => {
   });
 
   describe('Stack Trace', () => {
-    it('should also show a stack trace tab for running workflows', async function() {
+    it('should also show a stack trace tab for running workflows', async function test() {
       const [, scenario] = await summaryTest(this.test);
       scenario.vm.$el
         .attrValues('section.execution > nav a', 'href')
@@ -1145,8 +1116,8 @@ describe('Execution', () => {
         .should.not.have.property('display', 'none');
     });
 
-    it('should show the current stack trace', async function() {
-      const [scenario, opts] = executionTest(this.test, {
+    it('should show the current stack trace', async function test() {
+      const [scenario] = executionTest(this.test, {
         view: 'stack-trace',
       });
 
@@ -1170,8 +1141,8 @@ describe('Execution', () => {
         .should.have.text('goroutine 1:\n\tat foo.go:56');
     });
 
-    it('should allow the user to refresh the stack trace', async function() {
-      const [scenario, opts] = executionTest(this.test, {
+    it('should allow the user to refresh the stack trace', async function test() {
+      const [scenario] = executionTest(this.test, {
         view: 'stack-trace',
       });
       let called = 0;
@@ -1179,6 +1150,7 @@ describe('Execution', () => {
       scenario
         .withFullHistory()
         .api.post(`${scenario.execApiBase()}/queries/__stack_trace`, () => {
+          // eslint-disable-next-line no-plusplus
           if (++called === 1) {
             return { queryResult: 'goroutine 1:\n\tat foo.go:56' };
           }
@@ -1215,7 +1187,7 @@ describe('Execution', () => {
 
   describe('Queries', () => {
     async function queriesTest(mochaTest, queries) {
-      const [scenario, opts] = executionTest(mochaTest, { view: 'queries' });
+      const [scenario] = executionTest(mochaTest, { view: 'queries' });
 
       scenario.withHistory(fixtures.history.emailRun1).withQueries(queries);
 
@@ -1225,7 +1197,7 @@ describe('Execution', () => {
       return [queriesEl, scenario];
     }
 
-    it('should query the list of stack traces, and show it in the dropdown, enabling run as appropriate', async function() {
+    it('should query the list of stack traces, and show it in the dropdown, enabling run as appropriate', async function test() {
       const [queriesEl] = await queriesTest(this.test, [
         '__stack_trace',
         'foo',
@@ -1239,7 +1211,7 @@ describe('Execution', () => {
       options.should.deep.equal(['foo', 'bar']);
     });
 
-    it('should show an error if queries could not be listed', async function() {
+    it('should show an error if queries could not be listed', async function test() {
       const [queriesEl] = await queriesTest(this.test, {
         status: 400,
         body: { message: 'I do not understand' },
@@ -1253,12 +1225,10 @@ describe('Execution', () => {
       queriesEl.should.not.contain('header .query-name');
     });
 
-    it('should run a query and show the result', async function() {
+    it('should run a query and show the result', async function test() {
       const [queriesEl, scenario] = await queriesTest(this.test);
 
-      const queriesDropdown = await queriesEl.waitUntilExists(
-        '.query-name .dropdown',
-      );
+      await queriesEl.waitUntilExists('.query-name .dropdown');
       const runButton = queriesEl.querySelector('a.run');
 
       await retry(() => runButton.should.have.attr('href', '#'));
@@ -1270,12 +1240,10 @@ describe('Execution', () => {
       );
     });
 
-    it('should show an error if there was an error running the query', async function() {
+    it('should show an error if there was an error running the query', async function test() {
       const [queriesEl, scenario] = await queriesTest(this.test);
 
-      const queriesDropdown = await queriesEl.waitUntilExists(
-        '.query-name .dropdown',
-      );
+      await queriesEl.waitUntilExists('.query-name .dropdown');
       const runButton = queriesEl.querySelector('a.run');
 
       await retry(() => runButton.should.have.attr('href', '#'));
@@ -1296,7 +1264,7 @@ describe('Execution', () => {
   });
 
   describe('Completed workflows', () => {
-    it('should show summary and history tabs for completed workflows', async function() {
+    it('should show summary and history tabs for completed workflows', async function test() {
       const [, scenario] = await summaryTest(this.test, {
         execution: closedWorkflowExecution,
       });
@@ -1320,7 +1288,7 @@ describe('Execution', () => {
       });
     });
 
-    it('should update the status of the workflow when it completes', async function() {
+    it('should update the status of the workflow when it completes', async function test() {
       summaryTest(this.test).then(async ([summaryEl]) => {
         const wfStatus = summaryEl.querySelector('.workflow-status');
         wfStatus.should.have.attr('data-status', 'running');
