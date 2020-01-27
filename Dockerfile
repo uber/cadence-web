@@ -1,4 +1,4 @@
-FROM node:carbon
+FROM node:dubnium
 
 WORKDIR /usr/cadence-web
 

@@ -125,7 +125,7 @@ describe('Execution', () => {
         .should.have.text(JSON.stringify([839134, { env: 'prod' }], null, 2));
     });
 
-    it('should show a full screen view option for input that overflows the area', async function() {
+    it('should show a full screen view option for input that overflows the area', async function test() {
       const input = {
         foo: 1,
         bar: 'a',
