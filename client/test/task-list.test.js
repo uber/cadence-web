@@ -12,9 +12,8 @@ describe('Task List', () => {
     return [taskListEl, scenario];
   }
 
-  it('should show a table of the pollers of the task list', async function() {
+  it('should show a table of the pollers of the task list', async function test() {
     const [taskListEl] = await taskListTest(this.test);
-    const lastAccessBase = moment().startOf('hour');
 
     await Promise.delay(1);
 

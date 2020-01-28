@@ -11,6 +11,7 @@ import { http } from '../helpers';
 import fixtures from './fixtures';
 
 export default function Scenario(test) {
+  // eslint-disable-next-line no-param-reassign
   test.scenario = this;
   this.mochaTest = test;
   this.api = fetchMock.sandbox().catch((url, req, opts) => {
@@ -24,13 +25,13 @@ export default function Scenario(test) {
   });
 }
 
-Scenario.prototype.isDebuggingJustThisTest = function() {
+Scenario.prototype.isDebuggingJustThisTest = function isDebuggingJustThisTest() {
   return window.location.search.includes(
     encodeURIComponent(this.mochaTest.fullTitle()),
   );
 };
 
-Scenario.prototype.render = function(attachToBody) {
+Scenario.prototype.render = function render(attachToBody) {
   const $http = http.bind(null, this.api);
   $http.post = http.post.bind(null, this.api);
 
@@ -61,16 +62,16 @@ Scenario.prototype.render = function(attachToBody) {
   return this.vm.$el;
 };
 
-Scenario.prototype.go = function() {
-  return [this.render.apply(this, arguments), this];
+Scenario.prototype.go = function go(...args) {
+  return [this.render(...args), this];
 };
 
-Scenario.prototype.startingAt = function(url) {
+Scenario.prototype.startingAt = function startingAt(url) {
   this.initialUrl = url;
   return this;
 };
 
-Scenario.prototype.tearDown = function() {
+Scenario.prototype.tearDown = function tearDown() {
   if (
     this.vm &&
     this.vm.$el &&
@@ -80,7 +81,7 @@ Scenario.prototype.tearDown = function() {
   ) {
     this.vm.$el.parentElement.removeChild(this.vm.$el);
   }
-  delete Mocha.copiedText;
+  delete window.Mocha.copiedText;
 
   const { unmatched } = this.api.calls();
   return unmatched.length
@@ -100,12 +101,15 @@ Object.defineProperty(Scenario.prototype, 'location', {
   },
 });
 
-Scenario.prototype.withDomain = function(domain) {
+Scenario.prototype.withDomain = function withDomain(domain) {
   this.domain = domain;
   return this;
 };
 
-Scenario.prototype.withDomainDescription = function(domain, domainDesc) {
+Scenario.prototype.withDomainDescription = function withDomainDescription(
+  domain,
+  domainDesc,
+) {
   this.api.getOnce(
     `/api/domain/${domain}`,
     deepmerge(
@@ -137,8 +141,13 @@ Scenario.prototype.withDomainDescription = function(domain, domainDesc) {
   return this;
 };
 
-Scenario.prototype.withWorkflows = function(status, query, workflows) {
+Scenario.prototype.withWorkflows = function withWorkflows(
+  status,
+  query,
+  workflows,
+) {
   if (!workflows) {
+    // eslint-disable-next-line no-param-reassign
     workflows = JSON.parse(JSON.stringify(fixtures.workflows[status]));
   }
 
@@ -162,13 +171,17 @@ Scenario.prototype.withWorkflows = function(status, query, workflows) {
   return this;
 };
 
-Scenario.prototype.execApiBase = function(workflowId, runId) {
+Scenario.prototype.execApiBase = function execApiBase(workflowId, runId) {
   return `/api/domain/${this.domain}/workflows/${encodeURIComponent(
     workflowId || this.workflowId,
   )}/${encodeURIComponent(runId || this.runId)}`;
 };
 
-Scenario.prototype.withExecution = function(workflowId, runId, description) {
+Scenario.prototype.withExecution = function withExecution(
+  workflowId,
+  runId,
+  description,
+) {
   this.workflowId = workflowId;
   this.runId = runId;
 
@@ -193,7 +206,7 @@ Scenario.prototype.withExecution = function(workflowId, runId, description) {
   return this;
 };
 
-Scenario.prototype.withHistory = function(events, hasMorePages) {
+Scenario.prototype.withHistory = function withHistory(events, hasMorePages) {
   if (!this.historyNpt) {
     this.historyNpt = {};
   }
@@ -224,16 +237,18 @@ Scenario.prototype.withHistory = function(events, hasMorePages) {
   return this;
 };
 
-Scenario.prototype.withFullHistory = function(events) {
-  var events = JSON.parse(JSON.stringify(events || fixtures.history.emailRun1));
-  const third = Math.floor(events.length / 3);
+Scenario.prototype.withFullHistory = function withFullHistory(events) {
+  const parsedEvents = JSON.parse(
+    JSON.stringify(events || fixtures.history.emailRun1),
+  );
+  const third = Math.floor(parsedEvents.length / 3);
 
-  return this.withHistory(events.slice(0, third), true)
-    .withHistory(events.slice(third, third + third), true)
-    .withHistory(events.slice(third + third));
+  return this.withHistory(parsedEvents.slice(0, third), true)
+    .withHistory(parsedEvents.slice(third, third + third), true)
+    .withHistory(parsedEvents.slice(third + third));
 };
 
-Scenario.prototype.withQueries = function(queries) {
+Scenario.prototype.withQueries = function withQueries(queries) {
   this.api.getOnce(
     `${this.execApiBase()}/queries`,
     queries || ['__stack_trace', 'status'],
@@ -241,7 +256,7 @@ Scenario.prototype.withQueries = function(queries) {
   return this;
 };
 
-Scenario.prototype.withQueryResult = function(query, result) {
+Scenario.prototype.withQueryResult = function withQueryResult(query, result) {
   this.api.postOnce(
     `${this.execApiBase()}/queries/${query}`,
     result && result.status ? result : { queryResult: result },
@@ -249,7 +264,7 @@ Scenario.prototype.withQueryResult = function(query, result) {
   return this;
 };
 
-Scenario.prototype.withWorkflowTermination = function(
+Scenario.prototype.withWorkflowTermination = function withWorkflowTermination(
   workflowId,
   runId,
   reason,
@@ -259,7 +274,10 @@ Scenario.prototype.withWorkflowTermination = function(
   return this;
 };
 
-Scenario.prototype.withTaskListPollers = function(taskList, pollers) {
+Scenario.prototype.withTaskListPollers = function withTaskListPollers(
+  taskList,
+  pollers,
+) {
   this.api.getOnce(
     `/api/domain/${this.domain}/task-lists/${taskList}/pollers`,
     pollers || {

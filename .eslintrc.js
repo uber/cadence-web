@@ -5,6 +5,7 @@ module.exports = {
     'jest/globals': true,
   },
   extends: [
+    'plugin:chai-friendly/recommended',
     'plugin:vue/essential',
     'airbnb-base',
     'plugin:prettier/recommended',
@@ -18,6 +19,7 @@ module.exports = {
     sourceType: 'module',
   },
   plugins: [
+    'chai-friendly',
     'jest',
     'prettier',
     'vue',
@@ -36,6 +38,7 @@ module.exports = {
       {
         "devDependencies": [
           "client/test/index.js",
+          "client/test/scenario.js",
           "**/*.test.js",
           "**/*.spec.js",
         ],

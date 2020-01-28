@@ -2,13 +2,7 @@
   "env": {
     "browser": true
   },
-  "extends": [
-    "plugin:chai-friendly/recommended"
-  ],
   "parserOptions": {
     "sourceType": "module"
-  },
-  "plugins": [
-    "chai-friendly"
-  ]
+  }
 }
