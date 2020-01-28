@@ -63,7 +63,7 @@
         <timeline
           :events="timelineEvents"
           :selected-event-id="eventId"
-          v-if="format !== 'json' && showGraph"
+          v-if="showGraph"
         />
       </SplitArea>
       <SplitArea
