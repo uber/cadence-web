@@ -705,6 +705,7 @@ section.history
 
     .timeline-event
       border 2px solid primary-color
+      cursor: pointer;
       padding 6px
       margin-bottom layout-spacing-small
       history-item-state-color(3%)
