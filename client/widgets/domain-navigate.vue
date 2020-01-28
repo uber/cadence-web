@@ -120,11 +120,12 @@ export default {
       if (this.domainDescCache[d]) {
         return Promise.resolve(this.domainDescCache[d]);
       }
-      return this.$http(`/api/domain/${d}`).then(
-        r => (this.domainDescCache[d] = mapDomainDescription(r)),
-      );
+      return this.$http(`/api/domain/${d}`).then(r => {
+        this.domainDescCache[d] = mapDomainDescription(r);
+        return this.domainDescCache[d];
+      });
     },
-    checkValidity: debounce(function(x) {
+    checkValidity: debounce(function checkValidity() {
       const check = newDomain => {
         this.validation = 'pending';
         this.domainDescRequest = this.getDomainDesc(newDomain)

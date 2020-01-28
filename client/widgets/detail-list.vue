@@ -1,5 +1,4 @@
 <script>
-import moment from 'moment';
 import { preKeys } from '../constants';
 
 export default {

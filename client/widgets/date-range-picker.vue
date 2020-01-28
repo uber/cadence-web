@@ -12,7 +12,6 @@
         class="date-range"
         :value="customRangeDisplay"
         @focus="datePickerVisible = true"
-        @blur
       />
       <daterange
         v-show="datePickerVisible"
@@ -69,7 +68,7 @@ export default {
       let options = baseRelativeRangeOptions;
       if (
         this.maxDays &&
-        options.every(o => o.daysAgo != this.maxDays) &&
+        options.every(o => o.daysAgo !== this.maxDays) &&
         this.maxDays < 90
       ) {
         options = options
@@ -100,7 +99,7 @@ export default {
           (this.dateRange && this.dateRange.endTime) || moment().endOf('day'),
       };
     },
-    customRangeDisplay(d) {
+    customRangeDisplay() {
       return `${this.customRange.startDate.format(
         'MMM Do',
       )} - ${this.customRange.endDate.format('MMM Do')}`;
