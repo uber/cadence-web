@@ -24,7 +24,7 @@ describe('Workflows', () => {
     },
   ];
 
-  it('should show the domain with configuration link and workflows breadcrumb in the nav bar', async function() {
+  it('should show the domain with configuration link and workflows breadcrumb in the nav bar', async function test() {
     const [, scenario] = await workflowsTest(this.test);
     const header = scenario.vm.$el.querySelector('header.top-bar');
 
@@ -39,7 +39,7 @@ describe('Workflows', () => {
       .and.have.attribute('href', 'domain/ci-test/config');
   });
 
-  it('should query for open workflows and show the results in a grid', async function() {
+  it('should query for open workflows and show the results in a grid', async function test() {
     const [workflowsEl] = await workflowsTest(this.test);
     const resultsEl = workflowsEl.querySelector('section.results');
 
@@ -95,8 +95,8 @@ describe('Workflows', () => {
       .and.not.contain('span.error');
   });
 
-  it('should query for workflows to the last of the retention window if less than 30 days, and show that option in the relative range picker', async function() {
-    const [workflowsEl, scenario] = await workflowsTest(
+  it('should query for workflows to the last of the retention window if less than 30 days, and show that option in the relative range picker', async function test() {
+    const [workflowsEl] = await workflowsTest(
       this.test,
       null,
       {
@@ -135,8 +135,8 @@ describe('Workflows', () => {
     ]);
   });
 
-  it('should query for workflows for the past 30 days if the retention policy is beyond 30 days', async function() {
-    const [workflowsEl, scenario] = await workflowsTest(
+  it('should query for workflows for the past 30 days if the retention policy is beyond 30 days', async function test() {
+    const [workflowsEl] = await workflowsTest(
       this.test,
       null,
       {
@@ -176,7 +176,7 @@ describe('Workflows', () => {
     ]);
   });
 
-  it('should load and save last relative time ranges in localStorage', async function() {
+  it('should load and save last relative time ranges in localStorage', async function test() {
     localStorage.setItem('ci-test:workflows-time-range', 'last-7-days');
 
     const [workflowsEl, scenario] = await workflowsTest(
@@ -242,7 +242,7 @@ describe('Workflows', () => {
       .should.have.trimmed.text('Last 3 months');
   });
 
-  it('should allow filtering by workflow id', async function() {
+  it('should allow filtering by workflow id', async function test() {
     const [workflowsEl, scenario] = await workflowsTest(this.test);
     const wfIdEl = workflowsEl.querySelector(
       'header.filters input[name="workflowId"]',
@@ -275,8 +275,8 @@ describe('Workflows', () => {
     );
   });
 
-  it('should respect query parameters for range and status', async function() {
-    const [testEl, scenario] = new Scenario(this.test)
+  it('should respect query parameters for range and status', async function test() {
+    const [testEl] = new Scenario(this.test)
       .withDomain('ci-test')
       .startingAt('/domain/ci-test/workflows?status=FAILED&range=last-24-hours')
       .withWorkflows('closed', {
@@ -300,7 +300,7 @@ describe('Workflows', () => {
     await Promise.delay(50);
   });
 
-  it('should allow filtering by workflow name', async function() {
+  it('should allow filtering by workflow name', async function test() {
     const [workflowsEl, scenario] = await workflowsTest(this.test);
     const wfNameEl = workflowsEl.querySelector(
       'header.filters input[name="workflowName"]',
@@ -325,7 +325,7 @@ describe('Workflows', () => {
     );
   });
 
-  it('should allow changing the date range', async function() {
+  it('should allow changing the date range', async function test() {
     const [workflowsEl, scenario] = await workflowsTest(this.test);
     const dateRangeEl = workflowsEl.querySelector(
       'header.filters .date-range-picker input',
@@ -359,7 +359,7 @@ describe('Workflows', () => {
     await Promise.delay(100);
   });
 
-  it('should allow querying by status of the workflow', async function() {
+  it('should allow querying by status of the workflow', async function test() {
     const [workflowsEl, scenario] = await workflowsTest(this.test);
     const statusEl = workflowsEl.querySelector(
       'header.filters .dropdown.status',
@@ -379,7 +379,7 @@ describe('Workflows', () => {
     );
   });
 
-  it('should debounce query criteria changes when issuing requests', async function() {
+  it('should debounce query criteria changes when issuing requests', async function test() {
     const [workflowsEl, scenario] = await workflowsTest(this.test);
     const wfIdEl = workflowsEl.querySelector(
       'header.filters input[name="workflowId"]',
@@ -414,8 +414,8 @@ describe('Workflows', () => {
     );
   });
 
-  it('should show errors from the server', async function() {
-    const [workflowsEl, scenario] = await workflowsTest(this.test, {
+  it('should show errors from the server', async function test() {
+    const [workflowsEl] = await workflowsTest(this.test, {
       status: 503,
       body: {
         message: 'Server Unavailable',
@@ -429,8 +429,8 @@ describe('Workflows', () => {
     );
   });
 
-  it('should not show the table of results when there are no results', async function() {
-    const [workflowsEl, scenario] = await workflowsTest(this.test, []);
+  it('should not show the table of results when there are no results', async function test() {
+    const [workflowsEl] = await workflowsTest(this.test, []);
 
     await retry(() => {
       workflowsEl.querySelector('span.no-results').should.be.displayed;
@@ -439,8 +439,8 @@ describe('Workflows', () => {
     });
   });
 
-  it('should use query parameters from the URL', async function() {
-    const [testEl, scenario] = new Scenario(this.test)
+  it('should use query parameters from the URL', async function test() {
+    const [testEl] = new Scenario(this.test)
       .withDomain('ci-test')
       .startingAt('/domain/ci-test/workflows?status=FAILED&workflowName=demo')
       .withWorkflows('closed', {
