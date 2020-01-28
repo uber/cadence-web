@@ -1,5 +1,5 @@
 describe('Intro', () => {
-  it('should provide links to learn about cadence', async function() {
+  it('should provide links to learn about cadence', async function test() {
     const testEl = new Scenario(this.test).render();
     const linksEl = await testEl.waitUntilExists('section.intro .links');
 
@@ -13,7 +13,7 @@ describe('Intro', () => {
       ]);
   });
 
-  it('should show a header bar without a breadcrumb or domain changer', async function() {
+  it('should show a header bar without a breadcrumb or domain changer', async function test() {
     const testEl = new Scenario(this.test).render();
     const headerBar = await testEl.waitUntilExists('header.top-bar');
 
@@ -24,7 +24,7 @@ describe('Intro', () => {
     headerBar.should.not.contain('nav').and.not.contain('div.domain');
   });
 
-  it('should validate the existance of domains as the user types', async function() {
+  it('should validate the existance of domains as the user types', async function test() {
     const [testEl, scenario] = new Scenario(this.test).go();
     const domainNav = await testEl.waitUntilExists('.intro .domain-navigation');
     const domainInput = domainNav.querySelector('input');
@@ -51,7 +51,7 @@ describe('Intro', () => {
     await retry(() => domainNav.should.have.class('validation-valid'));
   });
 
-  it('should render the details of a valid domain', async function() {
+  it('should render the details of a valid domain', async function test() {
     const [testEl, scenario] = new Scenario(this.test).go();
     const domainInput = await testEl.waitUntilExists(
       '.intro .domain-navigation input',
@@ -90,7 +90,7 @@ describe('Intro', () => {
       ]);
   });
 
-  it('should go to the workflows of the domain requested when entered', async function() {
+  it('should go to the workflows of the domain requested when entered', async function test() {
     const [testEl, scenario] = new Scenario(this.test).go();
     const domainInput = await testEl.waitUntilExists(
       '.intro .domain-navigation input',
@@ -116,7 +116,7 @@ describe('Intro', () => {
     localStorage.getItem('recent-domains').should.equal('["ci-tests"]');
   });
 
-  it('should activate the change-domain button when the domain is valid and navigate to it', async function() {
+  it('should activate the change-domain button when the domain is valid and navigate to it', async function test() {
     const [testEl, scenario] = new Scenario(this.test).go();
     const domainNav = await testEl.waitUntilExists('.intro .domain-navigation');
     const domainInput = domainNav.querySelector('input');
@@ -154,7 +154,7 @@ describe('Intro', () => {
     await Promise.delay(100);
   });
 
-  it('should show recent domains with links to them', async function() {
+  it('should show recent domains with links to them', async function test() {
     localStorage.setItem(
       'recent-domains',
       JSON.stringify(['demo', 'ci-tests']),
@@ -179,7 +179,7 @@ describe('Intro', () => {
     localStorage.getItem('recent-domains').should.equal('["ci-tests","demo"]');
   });
 
-  it('should show a description of recent domains when hovered', async function() {
+  it('should show a description of recent domains when hovered', async function test() {
     localStorage.setItem(
       'recent-domains',
       JSON.stringify(['demo', 'ci-tests']),
