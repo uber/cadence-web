@@ -1,7 +1,7 @@
 if (module.hot) {
   module.hot.addStatusHandler(status => {
     if (status === 'apply') {
-      location.reload();
+      window.location.reload();
     }
   });
 }
@@ -40,7 +40,9 @@ main {
 document.head.appendChild(extraStyling);
 document.title = 'Cadence Tests';
 
-const chai = (window.chai = require('chai'));
+const chai = require('chai');
+
+window.chai = chai;
 
 chai.should();
 chai.use(require('chai-dom'));
@@ -61,11 +63,12 @@ beforeEach(() => {
 
 // hack workaround for https://github.com/mochajs/mocha/issues/1635
 const oldIt = window.it;
-window.it = function(name, func) {
+window.it = function it(...args) {
+  const [name, func] = args;
   if (func) {
     const origFunc = func;
 
-    const wrapperFunc = function() {
+    const wrapperFunc = function wrapperFunc() {
       const result = func.call(this);
       if (result && typeof result.then === 'function') {
         const currScenario = this.test.scenario;
@@ -80,33 +83,34 @@ window.it = function(name, func) {
               : Promise.reject(e),
         );
       }
+      // eslint-disable-next-line no-undef
       return scenario && scenario.tearDown(this.test).then(() => result);
     };
     wrapperFunc.toString = origFunc.toString.bind(origFunc);
 
     return oldIt(name, wrapperFunc);
   }
-  return oldIt.apply(null, arguments);
+  return oldIt(...args);
 };
 
-HTMLInputElement.prototype.input = function(text) {
+HTMLInputElement.prototype.input = function input(text) {
   this.value = text;
   this.trigger('input', { testTarget: this });
 };
 
-HTMLElement.prototype.selectItem = async function(text) {
+HTMLElement.prototype.selectItem = async function selectItem(text) {
   const openDropdown = new MouseEvent('mousedown');
   this.querySelector('.dropdown-toggle').dispatchEvent(openDropdown);
 
   const itemToClick = Array.from(
     await this.waitUntilAllExist('ul.dropdown-menu li a'),
   ).find(a => a.innerText.trim() === text);
-  const selectItem = new MouseEvent('mousedown');
+  const selectedItem = new MouseEvent('mousedown');
 
-  itemToClick.dispatchEvent(selectItem);
+  itemToClick.dispatchEvent(selectedItem);
 };
 
-HTMLElement.prototype.selectOptions = async function(text) {
+HTMLElement.prototype.selectOptions = async function selectOptions() {
   const openDropdown = new MouseEvent('mousedown');
   this.querySelector('.dropdown-toggle').dispatchEvent(openDropdown);
 
