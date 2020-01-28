@@ -30,5 +30,16 @@ module.exports = {
         trailingComma: 'all',
       },
     ],
+    // see https://stackoverflow.com/questions/44939304/eslint-should-be-listed-in-the-projects-dependencies-not-devdependencies#answer-55863857
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": [
+          "client/test/index.js",
+          "**/*.test.js",
+          "**/*.spec.js",
+        ],
+      },
+    ],
   },
 };
