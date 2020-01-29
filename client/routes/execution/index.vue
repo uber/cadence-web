@@ -44,8 +44,6 @@
 </template>
 
 <script>
-import {RESULT_THRESHOLD} from './constants';
-
 import {
   getHistoryEvents,
   getHistoryTimelineEvents,
@@ -77,49 +75,20 @@ export default {
         wfStatus: undefined,
         workflow: undefined,
       },
+
+      unwatch: [],
     };
   },
   props: ['domain', 'runId', 'workflowId'],
   created() {
-    this.$watch(
-      'baseAPIURL',
-      u => {
-        this.results = [];
-        this.nextPageToken = undefined;
-        return this.$http(u)
-          .then(
-            wf => {
-              this.workflow = wf;
-              this.isWorkflowRunning = !wf.workflowExecutionInfo.closeTime;
-            },
-            e => {
-              this.wfError =
-                (e.json && e.json.message) || e.status || e.message;
-            }
-          )
-          .finally(() => {
-            this.wfLoading = false;
-          });
-      },
-      {immediate: true}
+    this.unwatch.push(
+      this.$watch('baseAPIURL', this.onBaseApiUrlChange, {immediate: true})
     );
-
-    this.$watch(
-      () => {
-        const queryUrl = `${this.baseAPIURL}/history?waitForNewEvent=true`;
-        if (!this.nextPageToken) {
-          return queryUrl;
-        }
-
-        return `${queryUrl}&nextPageToken=${encodeURIComponent(
-          this.nextPageToken
-        )}`;
-      },
-      v => {
-        this.fetchHistoryPage(v);
-      },
-      {immediate: true}
-    );
+  },
+  beforeDestroy() {
+    while (this.unwatch.length) {
+      this.unwatch.pop()();
+    }
   },
   computed: {
     baseAPIURL() {
@@ -127,6 +96,15 @@ export default {
       return `/api/domain/${domain}/workflows/${encodeURIComponent(
         workflowId
       )}/${encodeURIComponent(runId)}`;
+    },
+    queryUrl() {
+      const queryUrl = `${this.baseAPIURL}/history?waitForNewEvent=true`;
+      if (!this.nextPageToken) {
+        return queryUrl;
+      }
+      return `${queryUrl}&nextPageToken=${encodeURIComponent(
+        this.nextPageToken
+      )}`;
     },
   },
   methods: {
@@ -155,18 +133,16 @@ export default {
             this.isWorkflowRunning = JSON.parse(
               atob(res.nextPageToken)
             ).IsWorkflowRunning;
-            if (this.results.length < RESULT_THRESHOLD) {
-              setTimeout(() => {
-                this.nextPageToken = res.nextPageToken;
-              });
-            }
+            setTimeout(() => {
+              this.nextPageToken = res.nextPageToken;
+            });
           } else {
             this.isWorkflowRunning = false;
           }
 
           const shouldHighlightEventId =
             this.$route.query.eventId &&
-            this.results.length <= this.$route.query.eventId;
+            this.events.length <= this.$route.query.eventId;
 
           const {events} = res.history;
           this.events = this.events.concat(events);
@@ -186,7 +162,7 @@ export default {
             this.$emit('highlight-event-id', this.$route.query.eventId);
           }
 
-          return this.results;
+          return this.events;
         })
         .catch(e => {
           // eslint-disable-next-line no-console
@@ -204,6 +180,38 @@ export default {
             this.history.loading = false;
           }
         });
+    },
+    onBaseApiUrlChange(baseAPIURL) {
+      this.events = [];
+      this.history.events = [];
+      this.history.timelineEvents = [];
+      this.nextPageToken = undefined;
+      return this.$http(baseAPIURL)
+        .then(
+          wf => {
+            this.workflow = wf;
+            this.isWorkflowRunning = !wf.workflowExecutionInfo.closeTime;
+            this.setupQueryUrlWatch();
+          },
+          e => {
+            this.wfError = (e.json && e.json.message) || e.status || e.message;
+          }
+        )
+        .finally(() => {
+          this.wfLoading = false;
+        });
+    },
+    onQueryUrlChange(queryUrl) {
+      this.fetchHistoryPage(queryUrl);
+    },
+    setupQueryUrlWatch() {
+      while (this.unwatch.length > 1) {
+        this.unwatch.pop()();
+      }
+
+      this.unwatch.push(
+        this.$watch('queryUrl', this.onQueryUrlChange, {immediate: true})
+      );
     },
   },
 };
