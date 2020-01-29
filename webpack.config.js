@@ -48,6 +48,12 @@ module.exports = {
         loader: 'vue-loader',
         options: {
           loaders: {
+            js: {
+              loader: 'babel-loader',
+              options: {
+                configFile: path.resolve(__dirname, '.babelrc'),
+              },
+            },
             stylus: ExtractTextPlugin.extract({
               use: extractStylus,
               fallback: 'vue-style-loader'
