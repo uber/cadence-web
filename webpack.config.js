@@ -39,6 +39,9 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
+        options: {
+          configFile: path.resolve(__dirname, '.babelrc'),
+        },
       },
       {
         test: /\.vue?$/,
