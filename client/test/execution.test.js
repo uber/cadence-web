@@ -414,6 +414,7 @@ describe('Execution', () => {
 
     it('should allow the user to change the view format', async function test() {
       const [historyEl, scenario] = await historyTest(this.test);
+      await historyEl.waitUntilExists('section.results');
       const resultsEl = historyEl.querySelector('section.results');
 
       await retry(() =>
@@ -647,6 +648,7 @@ describe('Execution', () => {
           query: 'format=compact&eventId=8',
           attach: true,
         });
+        await summaryEl.waitUntilExists('.results .compact-view');
         const compactViewEl = summaryEl.querySelector('.results .compact-view');
 
         await retry(() => {
