@@ -1,4 +1,4 @@
-import { eventFullTransforms } from './event-full-transforms';
+import {eventFullTransforms} from './event-full-transforms';
 
 describe('eventFullTransforms', () => {
   describe('MarkerRecorded', () => {
@@ -23,13 +23,13 @@ describe('eventFullTransforms', () => {
 
       it('should return an object with property data.', () => {
         const output = eventFullTransforms.MarkerRecorded(event);
-        expect(output.data).toEqual({ hello: 'world' });
+        expect(output.data).toEqual({hello: 'world'});
       });
 
       it('should return an object with property decisionTaskCompletedEventId.', () => {
         const output = eventFullTransforms.MarkerRecorded(event);
         expect(output.decisionTaskCompletedEventId).toEqual(
-          'decisionTaskCompletedEventIdValue',
+          'decisionTaskCompletedEventIdValue'
         );
       });
     });

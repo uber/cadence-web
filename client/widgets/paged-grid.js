@@ -20,6 +20,6 @@ export default function(vue) {
         },
       },
     },
-    vue,
+    vue
   );
 }

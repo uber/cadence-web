@@ -1,4 +1,4 @@
-import { shortName } from '../../../helpers';
+import {shortName} from '../../../helpers';
 
 const workflowLink = (d, short) => {
   const text = [

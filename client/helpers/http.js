@@ -23,9 +23,9 @@ export default function http(fetch, url, o) {
     r.status >= 200 && r.status < 300
       ? r.json().catch(() => {})
       : r.json().then(
-          json => Promise.reject(Object.assign(r, { json })),
-          () => Promise.reject(r),
-        ),
+          json => Promise.reject(Object.assign(r, {json})),
+          () => Promise.reject(r)
+        )
   );
 }
 

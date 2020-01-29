@@ -3,7 +3,7 @@ import logo from './assets/logo.svg';
 
 export default {
   data() {
-    return { logo };
+    return {logo};
   },
   methods: {
     globalClick(e) {

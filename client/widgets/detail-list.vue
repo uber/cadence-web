@@ -1,5 +1,5 @@
 <script>
-import { preKeys } from '../constants';
+import {preKeys} from '../constants';
 
 export default {
   name: 'details-list',
@@ -13,10 +13,10 @@ export default {
     },
   },
   render(h) {
-    const { highlight, compact, title } = this;
+    const {highlight, compact, title} = this;
     function dd(kvp) {
       if (kvp.routeLink) {
-        return [h('router-link', { props: { to: kvp.routeLink } }, kvp.value)];
+        return [h('router-link', {props: {to: kvp.routeLink}}, kvp.value)];
       }
       return preKeys.includes(kvp.key)
         ? [
@@ -34,13 +34,13 @@ export default {
 
     return h(
       'dl',
-      { class: 'details' },
+      {class: 'details'},
       this.item.kvps.map(kvp =>
-        h('div', { attrs: { 'data-prop': kvp.key } }, [
+        h('div', {attrs: {'data-prop': kvp.key}}, [
           h('dt', null, kvp.key),
           h('dd', null, dd(kvp)),
-        ]),
-      ),
+        ])
+      )
     );
   },
 };

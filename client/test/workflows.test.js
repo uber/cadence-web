@@ -20,7 +20,7 @@ describe('Workflows', () => {
         workflowId: 'demoWfId',
         runId: 'demoRunId',
       },
-      type: { name: 'demo' },
+      type: {name: 'demo'},
     },
   ];
 
@@ -87,7 +87,7 @@ describe('Workflows', () => {
     resultsEl
       .textNodes('tbody td:nth-child(5)')
       .should.deep.equal(
-        fixtures.workflows.open.map(wf => moment(wf.startTime).format('lll')),
+        fixtures.workflows.open.map(wf => moment(wf.startTime).format('lll'))
       );
 
     resultsEl.should.not
@@ -109,16 +109,16 @@ describe('Workflows', () => {
         configuration: {
           workflowExecutionRetentionPeriodInDays: 14,
         },
-      },
+      }
     );
     const dateRangePicker = workflowsEl.querySelector(
-      'header.filters .date-range-picker',
+      'header.filters .date-range-picker'
     );
 
     await retry(() =>
       workflowsEl
         .querySelectorAll('section.results tbody tr')
-        .should.have.length(2),
+        .should.have.length(2)
     );
 
     dateRangePicker
@@ -149,16 +149,16 @@ describe('Workflows', () => {
         configuration: {
           workflowExecutionRetentionPeriodInDays: 365,
         },
-      },
+      }
     );
     const dateRangePicker = workflowsEl.querySelector(
-      'header.filters .date-range-picker',
+      'header.filters .date-range-picker'
     );
 
     await retry(() =>
       workflowsEl
         .querySelectorAll('section.results tbody tr')
-        .should.have.length(2),
+        .should.have.length(2)
     );
 
     dateRangePicker
@@ -192,19 +192,19 @@ describe('Workflows', () => {
         configuration: {
           workflowExecutionRetentionPeriodInDays: 120,
         },
-      },
+      }
     );
     const dateRangePicker = workflowsEl.querySelector(
-      'header.filters .date-range-picker',
+      'header.filters .date-range-picker'
     );
 
     await retry(() =>
       workflowsEl
         .querySelectorAll('section.results tbody tr')
-        .should.have.length(2),
+        .should.have.length(2)
     );
     scenario.location.should.equal(
-      '/domain/ci-test/workflows?range=last-7-days&status=OPEN',
+      '/domain/ci-test/workflows?range=last-7-days&status=OPEN'
     );
 
     dateRangePicker
@@ -222,17 +222,17 @@ describe('Workflows', () => {
           .endOf('month')
           .toISOString(),
       },
-      [fixtures.workflows.open[0]],
+      [fixtures.workflows.open[0]]
     );
     dateRangePicker.selectItem('Last 3 months');
 
     await retry(() =>
       workflowsEl
         .querySelectorAll('section.results tbody tr')
-        .should.have.length(1),
+        .should.have.length(1)
     );
     scenario.location.should.equal(
-      '/domain/ci-test/workflows?range=last-3-months&status=OPEN',
+      '/domain/ci-test/workflows?range=last-3-months&status=OPEN'
     );
     localStorage
       .getItem('ci-test:workflows-time-range')
@@ -245,7 +245,7 @@ describe('Workflows', () => {
   it('should allow filtering by workflow id', async function test() {
     const [workflowsEl, scenario] = await workflowsTest(this.test);
     const wfIdEl = workflowsEl.querySelector(
-      'header.filters input[name="workflowId"]',
+      'header.filters input[name="workflowId"]'
     );
 
     await Promise.delay(10);
@@ -262,16 +262,16 @@ describe('Workflows', () => {
             workflowId: '1234',
             runId: '5678',
           },
-          type: { name: 'demo' },
+          type: {name: 'demo'},
         },
-      ],
+      ]
     );
     wfIdEl.input('1234');
 
     await retry(() =>
       workflowsEl
         .textNodes('.results tbody td:nth-child(3)')
-        .should.deep.equal(['demo']),
+        .should.deep.equal(['demo'])
     );
   });
 
@@ -295,7 +295,7 @@ describe('Workflows', () => {
     await retry(() =>
       testEl
         .querySelectorAll('section.workflows section.results tbody tr')
-        .should.have.length(1),
+        .should.have.length(1)
     );
     await Promise.delay(50);
   });
@@ -303,7 +303,7 @@ describe('Workflows', () => {
   it('should allow filtering by workflow name', async function test() {
     const [workflowsEl, scenario] = await workflowsTest(this.test);
     const wfNameEl = workflowsEl.querySelector(
-      'header.filters input[name="workflowName"]',
+      'header.filters input[name="workflowName"]'
     );
 
     await Promise.delay(10);
@@ -314,21 +314,21 @@ describe('Workflows', () => {
       {
         workflowName: 'demo',
       },
-      demoWf,
+      demoWf
     );
     wfNameEl.input('demo');
 
     await retry(() =>
       workflowsEl
         .textNodes('.results tbody td:first-child')
-        .should.deep.equal(['demoWfId']),
+        .should.deep.equal(['demoWfId'])
     );
   });
 
   it('should allow changing the date range', async function test() {
     const [workflowsEl, scenario] = await workflowsTest(this.test);
     const dateRangeEl = workflowsEl.querySelector(
-      'header.filters .date-range-picker input',
+      'header.filters .date-range-picker input'
     );
 
     dateRangeEl.focus();
@@ -337,8 +337,8 @@ describe('Workflows', () => {
 
     const dayCells = Array.from(
       workflowsEl.querySelectorAll(
-        '.date-range-picker .ayou-calendar .ayou-day-cell',
-      ),
+        '.date-range-picker .ayou-calendar .ayou-day-cell'
+      )
     );
     dayCells.find(d => d.textContent === '11 ').trigger('click');
 
@@ -352,7 +352,7 @@ describe('Workflows', () => {
         startTime: moment([year, month, 11]).toISOString(),
         endTime: moment([year, month, 14]).toISOString(),
       },
-      demoWf,
+      demoWf
     );
     dayCells.find(d => d.textContent === '14 ').trigger('click');
 
@@ -362,27 +362,27 @@ describe('Workflows', () => {
   it('should allow querying by status of the workflow', async function test() {
     const [workflowsEl, scenario] = await workflowsTest(this.test);
     const statusEl = workflowsEl.querySelector(
-      'header.filters .dropdown.status',
+      'header.filters .dropdown.status'
     );
 
     await retry(() =>
-      statusEl.querySelector('.selected-tag').should.have.trimmed.text('Open'),
+      statusEl.querySelector('.selected-tag').should.have.trimmed.text('Open')
     );
 
-    scenario.withWorkflows('closed', { status: 'FAILED' }, demoWf);
+    scenario.withWorkflows('closed', {status: 'FAILED'}, demoWf);
     await statusEl.selectItem('Failed');
 
     await retry(() =>
       workflowsEl
         .textNodes('.results tbody td:first-child')
-        .should.deep.equal(['demoWfId']),
+        .should.deep.equal(['demoWfId'])
     );
   });
 
   it('should debounce query criteria changes when issuing requests', async function test() {
     const [workflowsEl, scenario] = await workflowsTest(this.test);
     const wfIdEl = workflowsEl.querySelector(
-      'header.filters input[name="workflowId"]',
+      'header.filters input[name="workflowId"]'
     );
 
     scenario.withWorkflows(
@@ -396,9 +396,9 @@ describe('Workflows', () => {
             workflowId: '1234',
             runId: '5678',
           },
-          type: { name: 'demo' },
+          type: {name: 'demo'},
         },
-      ],
+      ]
     );
 
     wfIdEl.input('12');
@@ -410,7 +410,7 @@ describe('Workflows', () => {
     await retry(() =>
       workflowsEl
         .textNodes('.results tbody td:nth-child(3)')
-        .should.deep.equal(['demo']),
+        .should.deep.equal(['demo'])
     );
   });
 
@@ -425,7 +425,7 @@ describe('Workflows', () => {
     await retry(() =>
       workflowsEl
         .querySelector('span.error')
-        .should.have.text('Server Unavailable'),
+        .should.have.text('Server Unavailable')
     );
   });
 

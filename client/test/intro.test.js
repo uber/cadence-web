@@ -42,7 +42,7 @@ describe('Intro', () => {
 
     await Promise.delay(50);
 
-    domainInput.trigger('keydown', { code: 13, keyCode: 13, key: 'Enter' });
+    domainInput.trigger('keydown', {code: 13, keyCode: 13, key: 'Enter'});
     await Promise.delay(50);
 
     scenario.withDomainDescription('ci-tests');
@@ -54,14 +54,14 @@ describe('Intro', () => {
   it('should render the details of a valid domain', async function test() {
     const [testEl, scenario] = new Scenario(this.test).go();
     const domainInput = await testEl.waitUntilExists(
-      '.intro .domain-navigation input',
+      '.intro .domain-navigation input'
     );
 
     scenario.withDomainDescription('ci-tests');
     domainInput.input('ci-tests');
 
     const descriptionEl = await testEl.waitUntilExists(
-      '.intro .domain-description',
+      '.intro .domain-description'
     );
     descriptionEl.should.have
       .descendant('span.domain-name')
@@ -93,7 +93,7 @@ describe('Intro', () => {
   it('should go to the workflows of the domain requested when entered', async function test() {
     const [testEl, scenario] = new Scenario(this.test).go();
     const domainInput = await testEl.waitUntilExists(
-      '.intro .domain-navigation input',
+      '.intro .domain-navigation input'
     );
 
     scenario.withDomainDescription('ci-tests');
@@ -104,7 +104,7 @@ describe('Intro', () => {
       .withDomain('ci-tests')
       .withWorkflows('open')
       .withDomainDescription('ci-tests');
-    domainInput.trigger('keydown', { code: 13, keyCode: 13, key: 'Enter' });
+    domainInput.trigger('keydown', {code: 13, keyCode: 13, key: 'Enter'});
 
     await testEl.waitUntilExists('section.workflows');
     const headerBar = testEl.querySelector('header.top-bar');
@@ -157,11 +157,11 @@ describe('Intro', () => {
   it('should show recent domains with links to them', async function test() {
     localStorage.setItem(
       'recent-domains',
-      JSON.stringify(['demo', 'ci-tests']),
+      JSON.stringify(['demo', 'ci-tests'])
     );
     const [testEl, scenario] = new Scenario(this.test).go();
     const recentDomains = await testEl.waitUntilExists(
-      '.domain-navigation ul.recent-domains',
+      '.domain-navigation ul.recent-domains'
     );
 
     recentDomains.should.have
@@ -182,21 +182,21 @@ describe('Intro', () => {
   it('should show a description of recent domains when hovered', async function test() {
     localStorage.setItem(
       'recent-domains',
-      JSON.stringify(['demo', 'ci-tests']),
+      JSON.stringify(['demo', 'ci-tests'])
     );
     const [testEl, scenario] = new Scenario(this.test).go();
     const recentDomains = await testEl.waitUntilExists(
-      '.domain-navigation ul.recent-domains',
+      '.domain-navigation ul.recent-domains'
     );
 
     scenario.withDomainDescription('demo', {
-      domainInfo: { description: 'demo playground' },
-      configuration: { workflowExecutionRetentionPeriodInDays: 3 },
+      domainInfo: {description: 'demo playground'},
+      configuration: {workflowExecutionRetentionPeriodInDays: 3},
     });
     recentDomains.querySelectorAll('li a')[0].trigger('mouseover');
 
     const descriptionEl = await testEl.waitUntilExists(
-      '.intro .domain-description',
+      '.intro .domain-description'
     );
     descriptionEl
       .textNodes('dl.details dd')

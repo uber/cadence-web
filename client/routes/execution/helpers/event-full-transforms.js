@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/prefer-default-export
 export const eventFullTransforms = {
   MarkerRecorded: d => {
     if (d.markerName === 'SideEffect') {

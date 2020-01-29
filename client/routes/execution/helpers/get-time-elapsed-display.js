@@ -1,6 +1,6 @@
 import moment from 'moment';
 
-const getTimeElapsedDisplay = ({ timestamp }, index, eventList) => {
+const getTimeElapsedDisplay = ({timestamp}, index, eventList) => {
   if (!timestamp || index === -1) {
     return '';
   }
@@ -10,7 +10,7 @@ const getTimeElapsedDisplay = ({ timestamp }, index, eventList) => {
   }
 
   const deltaFromPrev = moment.duration(
-    timestamp - eventList[index - 1].timestamp,
+    timestamp - eventList[index - 1].timestamp
   );
   let elapsed = moment.duration(timestamp - eventList[0].timestamp).format();
 

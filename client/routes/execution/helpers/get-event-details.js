@@ -1,7 +1,7 @@
-import { getKeyValuePairs } from '../../../helpers';
+import {getKeyValuePairs} from '../../../helpers';
 
 const getEventDetails = event => {
-  const { details, eventId, eventType } = event;
+  const {details, eventId, eventType} = event;
   const kvps = getKeyValuePairs(details);
   return {
     ...details,

@@ -2,7 +2,7 @@ import moment from 'moment';
 
 const injectMomentDurationFormat = () => {
   Object.getPrototypeOf(
-    moment.duration(2, 'seconds'),
+    moment.duration(2, 'seconds')
   ).format = function format() {
     return this.toString()
       .toLowerCase()

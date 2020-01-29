@@ -1,5 +1,5 @@
 <template>
-  <section :class="{ queries: true, loading }">
+  <section :class="{queries: true, loading}">
     <header v-if="queries && queries.length">
       <div class="query-name">
         <v-select
@@ -12,7 +12,7 @@
       </div>
       <a
         :href="queryName && !running ? '#' : undefined"
-        :class="{ run: true, running }"
+        :class="{run: true, running}"
         @click.prevent="run"
       >
         Run
@@ -52,7 +52,7 @@ export default {
         },
         e => {
           this.error = (e.json && e.json.message) || e.status || e.message;
-        },
+        }
       )
       .finally(() => {
         this.loading = false;
@@ -74,7 +74,7 @@ export default {
           },
           e => {
             this.error = (e.json && e.json.message) || e.status || e.message;
-          },
+          }
         )
         .finally(() => {
           this.running = false;

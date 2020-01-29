@@ -76,7 +76,7 @@
           <div
             class="table"
             v-if="format === 'grid' && showTable"
-            :class="{ compact: compactDetails }"
+            :class="{compact: compactDetails}"
           >
             <div class="thead" ref="thead">
               <div class="th col-id">ID</div>
@@ -129,7 +129,7 @@
               ref="scrollerGrid"
               style="height: 0px;"
             >
-              <template v-slot="{ item, index, active }">
+              <template v-slot="{item, index, active}">
                 <DynamicScrollerItem
                   class="scroller-item"
                   :active="active"
@@ -139,7 +139,7 @@
                 >
                   <div
                     class="tr"
-                    :class="{ active: item.expanded, odd: index % 2 === 1 }"
+                    :class="{active: item.expanded, odd: index % 2 === 1}"
                     :data-event-type="item.eventType"
                     :data-event-id="item.eventId"
                     @click.prevent="
@@ -189,7 +189,7 @@
               ref="scrollerCompact"
               style="height: 0px;"
             >
-              <template v-slot="{ item }">
+              <template v-slot="{item}">
                 <div
                   :class="
                     `timeline-event ${item.className || ''} ${
@@ -210,7 +210,7 @@
             <div
               class="selected-event-details"
               v-if="selectedTimelineEvent"
-              :class="{ active: !!selectedTimelineEvent }"
+              :class="{active: !!selectedTimelineEvent}"
             >
               <a href="#" class="close" @click.prevent="deselectEvent"></a>
               <span
@@ -286,13 +286,13 @@ export default {
       splitEnabled: false,
       eventType: '',
       eventTypes: [
-        { value: 'All', label: 'All' },
-        { value: 'Decision', label: 'Decision' },
-        { value: 'Activity', label: 'Activity' },
-        { value: 'Signal', label: 'Signal' },
-        { value: 'Timer', label: 'Timer' },
-        { value: 'ChildWorkflow', label: 'ChildWorkflow' },
-        { value: 'Workflow', label: 'Workflow' },
+        {value: 'All', label: 'All'},
+        {value: 'Decision', label: 'Decision'},
+        {value: 'Activity', label: 'Activity'},
+        {value: 'Signal', label: 'Signal'},
+        {value: 'Timer', label: 'Timer'},
+        {value: 'ChildWorkflow', label: 'ChildWorkflow'},
+        {value: 'Workflow', label: 'Workflow'},
       ],
       splitSizeSet: [1, 99],
       splitSizeMinSet: [0, 0],
@@ -314,7 +314,7 @@ export default {
   ],
   created() {
     this.onResizeWindow = debounce(() => {
-      const { scrollerCompact, scrollerGrid, thead, viewSplit } = this.$refs;
+      const {scrollerCompact, scrollerGrid, thead, viewSplit} = this.$refs;
       const scroller = this.isGrid ? scrollerGrid : scrollerCompact;
       if (!scroller) {
         return;
@@ -332,8 +332,8 @@ export default {
         () =>
           `${this.events.length}${this.tsFormat.length}${this.$route.query.format}${this.compactDetails}`,
         this.onResizeWindow,
-        { immediate: true },
-      ),
+        {immediate: true}
+      )
     );
     window.addEventListener('resize', this.onResizeWindow);
   },
@@ -350,7 +350,7 @@ export default {
       }.json`;
     },
     filteredEvents() {
-      const { eventId, eventType } = this;
+      const {eventId, eventType} = this;
       const formattedEvents = this.events.map(event => ({
         ...event,
         expanded: event.eventId === eventId,
@@ -361,7 +361,7 @@ export default {
     },
     filteredEventIdToIndex() {
       return this.filteredEvents
-        .map(({ eventId }) => eventId)
+        .map(({eventId}) => eventId)
         .reduce((accumulator, eventId, index) => {
           accumulator[eventId] = index;
           return accumulator;
@@ -394,7 +394,7 @@ export default {
     },
     timelineEventIdToIndex() {
       return this.timelineEvents
-        .map(({ eventIds }) => eventIds)
+        .map(({eventIds}) => eventIds)
         .reduce(
           (accumulator, eventIds, index) => ({
             ...accumulator,
@@ -403,13 +403,13 @@ export default {
               return acc;
             }, {}),
           }),
-          {},
+          {}
         );
     },
   },
   methods: {
     deselectEvent() {
-      this.$router.replace({ query: omit(this.$route.query, 'eventId') });
+      this.$router.replace({query: omit(this.$route.query, 'eventId')});
     },
     enableSplitting() {
       if (!this.splitEnabled) {
@@ -430,7 +430,7 @@ export default {
     },
     setFormat(format) {
       this.$router.replace({
-        query: { ...this.$route.query, format },
+        query: {...this.$route.query, format},
       });
       setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
     },
@@ -439,11 +439,11 @@ export default {
       localStorage.setItem(`${this.domain}:history-ts-col-format`, tsFormat);
     },
     setCompactDetails(compact) {
-      const { scrollerGrid } = this.$refs;
+      const {scrollerGrid} = this.$refs;
       this.compactDetails = compact;
       localStorage.setItem(
         `${this.domain}:history-compact-details`,
-        JSON.stringify(compact),
+        JSON.stringify(compact)
       );
       scrollerGrid.forceUpdate();
       setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
@@ -461,7 +461,7 @@ export default {
       }
     },
     scrollToItem(index, forceUpdate) {
-      const { scrollerCompact, scrollerGrid } = this.$refs;
+      const {scrollerCompact, scrollerGrid} = this.$refs;
       const scroller = this.isGrid ? scrollerGrid : scrollerCompact;
       if (index === undefined || !scroller) {
         return;
@@ -479,15 +479,15 @@ export default {
     selectTimelineEvent(i) {
       this.$router.replaceQueryParam(
         'eventId',
-        i.eventIds[i.eventIds.length - 1],
+        i.eventIds[i.eventIds.length - 1]
       );
     },
     toggleShowGraph() {
       if (this.showGraph) {
-        this.$router.replace({ query: omit(this.$route.query, 'showGraph') });
+        this.$router.replace({query: omit(this.$route.query, 'showGraph')});
       } else {
         this.$router.replace({
-          query: { ...this.$route.query, showGraph: true },
+          query: {...this.$route.query, showGraph: true},
         });
       }
     },

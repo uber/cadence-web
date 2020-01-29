@@ -1,11 +1,11 @@
 <script>
 import moment from 'moment';
-import { getKeyValuePairs, shortName } from '../../helpers';
+import {getKeyValuePairs, shortName} from '../../helpers';
 
 const titlesForGroups = {
   ActivityTaskScheduled: n =>
     `Activity ${n.details.activityId} - ${shortName(
-      n.details.activityType && n.details.activityType.name,
+      n.details.activityType && n.details.activityType.name
     )}`,
   TimerStarted: n =>
     `Timer ${n.details.timerId} (${moment
@@ -34,7 +34,7 @@ const titlesForGroups = {
                 },
               },
             },
-            name,
+            name
           ),
         ]
       : `Child Workflow ${name}`;
@@ -65,7 +65,7 @@ function findActiveGroupNode(node, id, topLevel) {
 function titleForNode(n) {
   return n.eventType.replace(
     /(ActivityTask|ChildWorkflowExecution|StartChildWorkflowExecution)/,
-    '',
+    ''
   );
 }
 
@@ -103,7 +103,7 @@ export default {
           }`,
         },
         [
-          groupTitle && h('span', { class: 'group-title' }, groupTitle),
+          groupTitle && h('span', {class: 'group-title'}, groupTitle),
           h(
             'a',
             {
@@ -119,7 +119,7 @@ export default {
                 },
               },
             },
-            [titleForNode(node)],
+            [titleForNode(node)]
           ),
           !groupTitle && detailsList,
           h(
@@ -127,10 +127,10 @@ export default {
             {
               class: 'event-children',
             },
-            node.children.map(c => eventNode(c, noGroup && !groupTitle)),
+            node.children.map(c => eventNode(c, noGroup && !groupTitle))
           ),
           groupTitle && detailsList,
-        ],
+        ]
       );
     }
 

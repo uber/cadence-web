@@ -7,7 +7,7 @@ import vueModal from 'vue-js-modal';
 import deepmerge from 'deepmerge';
 
 import main from '../main';
-import { http } from '../helpers';
+import {http} from '../helpers';
 import fixtures from './fixtures';
 
 export default function Scenario(test) {
@@ -27,7 +27,7 @@ export default function Scenario(test) {
 
 Scenario.prototype.isDebuggingJustThisTest = function isDebuggingJustThisTest() {
   return window.location.search.includes(
-    encodeURIComponent(this.mochaTest.fullTitle()),
+    encodeURIComponent(this.mochaTest.fullTitle())
   );
 };
 
@@ -35,7 +35,7 @@ Scenario.prototype.render = function render(attachToBody) {
   const $http = http.bind(null, this.api);
   $http.post = http.post.bind(null, this.api);
 
-  this.router = new Router({ ...main.routeOpts, mode: 'abstract' });
+  this.router = new Router({...main.routeOpts, mode: 'abstract'});
   this.router.push(this.initialUrl || '/');
 
   const el = document.createElement('div');
@@ -48,7 +48,7 @@ Scenario.prototype.render = function render(attachToBody) {
     el,
     router: this.router,
     template: '<App/>',
-    components: { App: main.App },
+    components: {App: main.App},
     mixins: [
       {
         created() {
@@ -83,14 +83,14 @@ Scenario.prototype.tearDown = function tearDown() {
   }
   delete window.Mocha.copiedText;
 
-  const { unmatched } = this.api.calls();
+  const {unmatched} = this.api.calls();
   return unmatched.length
     ? Promise.reject(
         new Error(`${unmatched.length} outstanding expected API calls:
       ${unmatched
         .slice(0, 5)
         .map(([url]) => url)
-        .join('\n')}`),
+        .join('\n')}`)
       )
     : Promise.resolve();
 };
@@ -108,7 +108,7 @@ Scenario.prototype.withDomain = function withDomain(domain) {
 
 Scenario.prototype.withDomainDescription = function withDomainDescription(
   domain,
-  domainDesc,
+  domainDesc
 ) {
   this.api.getOnce(
     `/api/domain/${domain}`,
@@ -135,8 +135,8 @@ Scenario.prototype.withDomainDescription = function withDomainDescription(
         failoverVersion: 0,
         isGlobalDomain: false,
       },
-      domainDesc || {},
-    ),
+      domainDesc || {}
+    )
   );
   return this;
 };
@@ -144,7 +144,7 @@ Scenario.prototype.withDomainDescription = function withDomainDescription(
 Scenario.prototype.withWorkflows = function withWorkflows(
   status,
   query,
-  workflows,
+  workflows
 ) {
   if (!workflows) {
     // eslint-disable-next-line no-param-reassign
@@ -163,7 +163,7 @@ Scenario.prototype.withWorkflows = function withWorkflows(
   })}`;
 
   const response = Array.isArray(workflows)
-    ? { executions: workflows }
+    ? {executions: workflows}
     : workflows;
 
   this.api.getOnce(url, response);
@@ -173,28 +173,28 @@ Scenario.prototype.withWorkflows = function withWorkflows(
 
 Scenario.prototype.execApiBase = function execApiBase(workflowId, runId) {
   return `/api/domain/${this.domain}/workflows/${encodeURIComponent(
-    workflowId || this.workflowId,
+    workflowId || this.workflowId
   )}/${encodeURIComponent(runId || this.runId)}`;
 };
 
 Scenario.prototype.withExecution = function withExecution(
   workflowId,
   runId,
-  description,
+  description
 ) {
   this.workflowId = workflowId;
   this.runId = runId;
 
   this.api.getOnce(this.execApiBase(), {
     executionConfiguration: {
-      taskList: { name: 'ci_task_list' },
+      taskList: {name: 'ci_task_list'},
       executionStartToCloseTimeoutSeconds: 3600,
       taskStartToCloseTimeoutSeconds: 10,
       childPolicy: 'TERMINATE',
     },
     workflowExecutionInfo: {
-      execution: { workflowId, runId },
-      type: { name: 'CIDemoWorkflow' },
+      execution: {workflowId, runId},
+      type: {name: 'CIDemoWorkflow'},
       startTime: moment()
         .startOf('hour')
         .subtract(2, 'minutes'),
@@ -216,11 +216,11 @@ Scenario.prototype.withHistory = function withHistory(events, hasMorePages) {
       JSON.stringify({
         NextEventId: this.historyNpt[this.runId],
         IsWorkflowRunning: true,
-      }),
+      })
     );
 
   let url = `${this.execApiBase()}/history?waitForNewEvent=true`;
-  const response = Array.isArray(events) ? { history: { events } } : events;
+  const response = Array.isArray(events) ? {history: {events}} : events;
 
   if (this.historyNpt[this.runId]) {
     url += `&nextPageToken=${encodeURIComponent(makeToken())}`;
@@ -239,7 +239,7 @@ Scenario.prototype.withHistory = function withHistory(events, hasMorePages) {
 
 Scenario.prototype.withFullHistory = function withFullHistory(events) {
   const parsedEvents = JSON.parse(
-    JSON.stringify(events || fixtures.history.emailRun1),
+    JSON.stringify(events || fixtures.history.emailRun1)
   );
   const third = Math.floor(parsedEvents.length / 3);
 
@@ -251,7 +251,7 @@ Scenario.prototype.withFullHistory = function withFullHistory(events) {
 Scenario.prototype.withQueries = function withQueries(queries) {
   this.api.getOnce(
     `${this.execApiBase()}/queries`,
-    queries || ['__stack_trace', 'status'],
+    queries || ['__stack_trace', 'status']
   );
   return this;
 };
@@ -259,7 +259,7 @@ Scenario.prototype.withQueries = function withQueries(queries) {
 Scenario.prototype.withQueryResult = function withQueryResult(query, result) {
   this.api.postOnce(
     `${this.execApiBase()}/queries/${query}`,
-    result && result.status ? result : { queryResult: result },
+    result && result.status ? result : {queryResult: result}
   );
   return this;
 };
@@ -267,16 +267,16 @@ Scenario.prototype.withQueryResult = function withQueryResult(query, result) {
 Scenario.prototype.withWorkflowTermination = function withWorkflowTermination(
   workflowId,
   runId,
-  reason,
+  reason
 ) {
-  this.api.postOnce(`${this.execApiBase()}/terminate`, { reason });
+  this.api.postOnce(`${this.execApiBase()}/terminate`, {reason});
 
   return this;
 };
 
 Scenario.prototype.withTaskListPollers = function withTaskListPollers(
   taskList,
-  pollers,
+  pollers
 ) {
   this.api.getOnce(
     `/api/domain/${this.domain}/task-lists/${taskList}/pollers`,
@@ -299,7 +299,7 @@ Scenario.prototype.withTaskListPollers = function withTaskListPollers(
           .add(4, 'minutes'),
         taskListTypes: ['activity'],
       },
-    },
+    }
   );
   return this;
 };

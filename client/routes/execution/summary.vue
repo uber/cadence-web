@@ -147,13 +147,13 @@ export default {
     workflowCloseTime() {
       return this.workflow.workflowExecutionInfo.closeTime
         ? moment(this.workflow.workflowExecutionInfo.closeTime).format(
-            'dddd MMMM Do, h:mm:ss a',
+            'dddd MMMM Do, h:mm:ss a'
           )
         : '';
     },
     workflowStartTime() {
       return moment(this.workflow.workflowExecutionInfo.startTime).format(
-        'dddd MMMM Do, h:mm:ss a',
+        'dddd MMMM Do, h:mm:ss a'
       );
     },
   },
@@ -172,7 +172,7 @@ export default {
           resp => {
             this.terminationError =
               resp.message || resp.status || resp.statusCode;
-          },
+          }
         );
     },
   },

@@ -4,7 +4,7 @@
 
 <script>
 import moment from 'moment';
-import { DataSet, Timeline, timeline } from 'vis/index-timeline-graph2d';
+import {DataSet, Timeline, timeline} from 'vis/index-timeline-graph2d';
 
 if (navigator.language === 'en-US') {
   timeline.TimeStep.FORMAT.minorLabels.minute = 'h:mm a';
@@ -32,11 +32,11 @@ export default {
           'max-height'
         ];
         const parentMaxHeight = Number(
-          parentMaxHeightStr.substr(0, parentMaxHeightStr.length - 2),
+          parentMaxHeightStr.substr(0, parentMaxHeightStr.length - 2)
         );
 
         if (parentMaxHeight >= this.minHeight) {
-          return { maxHeight: parentMaxHeight };
+          return {maxHeight: parentMaxHeight};
         }
       }
       return {
@@ -59,7 +59,7 @@ export default {
             dontFocus = true;
             this.$router.replaceQueryParam(
               'eventId',
-              selectedItem.eventIds[selectedItem.eventIds.length - 1],
+              selectedItem.eventIds[selectedItem.eventIds.length - 1]
             );
           }
         });
@@ -75,10 +75,10 @@ export default {
         this.unwatch.push(
           this.$watch('selectedEventId', highlightSelection, {
             immediate: true,
-          }),
+          })
         );
         this.unwatch.push(
-          this.$watch('events', highlightSelection, { immediate: true }),
+          this.$watch('events', highlightSelection, {immediate: true})
         );
       }
     },
@@ -107,8 +107,8 @@ export default {
           this.items.remove(removed);
           this.initIfNeeded();
         },
-        { immediate: true },
-      ),
+        {immediate: true}
+      )
     );
   },
   mounted() {

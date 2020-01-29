@@ -1,12 +1,11 @@
 import moment from 'moment';
-import { shortName } from '../../../helpers';
+import {shortName} from '../../../helpers';
 import parentWorkflowLink from './parent-workflow-link';
 import workflowLink from './workflow-link';
 
-// eslint-disable-next-line import/prefer-default-export
 export const summarizeEvents = {
-  ActivityTaskCancelRequested: d => ({ ID: d.activityId }),
-  ActivityTaskCompleted: d => ({ result: d.result }),
+  ActivityTaskCancelRequested: d => ({ID: d.activityId}),
+  ActivityTaskCompleted: d => ({result: d.result}),
   ActivityTaskFailed: d => ({
     details: d.details,
     reason: d.reason,
@@ -24,7 +23,7 @@ export const summarizeEvents = {
     identity: d.identity,
     requestId: d.requestId,
   }),
-  ActivityTaskTimedOut: d => ({ 'Timeout Type': d.timeoutType }),
+  ActivityTaskTimedOut: d => ({'Timeout Type': d.timeoutType}),
   ChildWorkflowExecutionCompleted: d => ({
     result: d.result,
     Workflow: workflowLink(d, true),
@@ -32,13 +31,13 @@ export const summarizeEvents = {
   ChildWorkflowExecutionStarted: d => ({
     Workflow: workflowLink(d),
   }),
-  DecisionTaskCompleted: d => ({ identity: d.identity }),
+  DecisionTaskCompleted: d => ({identity: d.identity}),
   DecisionTaskScheduled: d => ({
     Tasklist: d.taskList.name,
     Timeout: moment.duration(d.startToCloseTimeoutSeconds, 'seconds').format(),
   }),
-  DecisionTaskStarted: d => ({ requestId: d.requestId }),
-  DecisionTaskTimedOut: d => ({ 'Timeout Type': d.timeoutType }),
+  DecisionTaskStarted: d => ({requestId: d.requestId}),
+  DecisionTaskTimedOut: d => ({'Timeout Type': d.timeoutType}),
   ExternalWorkflowExecutionSignaled: d => ({
     Workflow: workflowLink(d),
   }),
@@ -46,7 +45,7 @@ export const summarizeEvents = {
     const details = d.details || {};
 
     if (d.markerName === 'LocalActivity') {
-      const la = { 'Local Activity ID': details.ActivityID };
+      const la = {'Local Activity ID': details.ActivityID};
       if (details.ErrJSON) {
         la.Error = JSON.tryParse(details.ErrJSON) || details.ErrJSON;
       }

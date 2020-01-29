@@ -1,20 +1,20 @@
 <template>
-  <section :class="{ execution: true, loading: wfLoading }">
+  <section :class="{execution: true, loading: wfLoading}">
     <nav>
-      <router-link :to="{ name: 'execution/summary' }" class="summary"
+      <router-link :to="{name: 'execution/summary'}" class="summary"
         >Summary</router-link
       >
-      <router-link :to="{ name: 'execution/history' }" class="history"
+      <router-link :to="{name: 'execution/history'}" class="history"
         >History</router-link
       >
       <router-link
-        :to="{ name: 'execution/stack-trace' }"
+        :to="{name: 'execution/stack-trace'}"
         class="stack-trace"
         v-show="isWorkflowRunning"
         >Stack Trace</router-link
       >
       <router-link
-        :to="{ name: 'execution/queries' }"
+        :to="{name: 'execution/queries'}"
         class="queries"
         v-show="isWorkflowRunning"
         >Queries</router-link
@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import { RESULT_THRESHOLD } from './constants';
+import {RESULT_THRESHOLD} from './constants';
 
 import {
   getHistoryEvents,
@@ -95,13 +95,13 @@ export default {
             e => {
               this.wfError =
                 (e.json && e.json.message) || e.status || e.message;
-            },
+            }
           )
           .finally(() => {
             this.wfLoading = false;
           });
       },
-      { immediate: true },
+      {immediate: true}
     );
 
     this.$watch(
@@ -112,20 +112,20 @@ export default {
         }
 
         return `${queryUrl}&nextPageToken=${encodeURIComponent(
-          this.nextPageToken,
+          this.nextPageToken
         )}`;
       },
       v => {
         this.fetchHistoryPage(v);
       },
-      { immediate: true },
+      {immediate: true}
     );
   },
   computed: {
     baseAPIURL() {
-      const { domain, workflowId, runId } = this;
+      const {domain, workflowId, runId} = this;
       return `/api/domain/${domain}/workflows/${encodeURIComponent(
-        workflowId,
+        workflowId
       )}/${encodeURIComponent(runId)}`;
     },
   },
@@ -153,7 +153,7 @@ export default {
 
           if (res.nextPageToken) {
             this.isWorkflowRunning = JSON.parse(
-              atob(res.nextPageToken),
+              atob(res.nextPageToken)
             ).IsWorkflowRunning;
             if (this.results.length < RESULT_THRESHOLD) {
               setTimeout(() => {
@@ -168,12 +168,12 @@ export default {
             this.$route.query.eventId &&
             this.results.length <= this.$route.query.eventId;
 
-          const { events } = res.history;
+          const {events} = res.history;
           this.events = this.events.concat(events);
 
           this.history.events = getHistoryEvents(this.events);
           this.history.timelineEvents = getHistoryTimelineEvents(
-            this.history.events,
+            this.history.events
           );
 
           this.summary = getSummary({

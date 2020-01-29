@@ -1,5 +1,5 @@
 <template>
-  <section :class="{ 'task-list': true, loading }">
+  <section :class="{'task-list': true, loading}">
     <header><h3>Pollers</h3></header>
     <table v-if="pollers">
       <thead>
@@ -33,7 +33,7 @@ export default {
   },
   created() {
     this.$http(
-      `/api/domain/${this.$route.params.domain}/task-lists/${this.$route.params.taskList}/pollers`,
+      `/api/domain/${this.$route.params.domain}/task-lists/${this.$route.params.taskList}/pollers`
     )
       .then(
         p => {
@@ -46,7 +46,7 @@ export default {
         },
         e => {
           this.error = (e.json && e.json.message) || e.status || e.message;
-        },
+        }
       )
       .finally(() => {
         this.loading = false;

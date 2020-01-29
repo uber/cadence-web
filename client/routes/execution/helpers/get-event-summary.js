@@ -1,5 +1,5 @@
-import { summarizeEvents } from './summarize-events';
-import { getKeyValuePairs } from '../../../helpers';
+import {summarizeEvents} from './summarize-events';
+import {getKeyValuePairs} from '../../../helpers';
 
 const getEventSummary = event => {
   if (!event) {
@@ -10,7 +10,7 @@ const getEventSummary = event => {
     return event.details;
   }
 
-  const { eventId, eventType } = event;
+  const {eventId, eventType} = event;
 
   const maps = summarizeEvents;
 

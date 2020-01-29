@@ -37,7 +37,7 @@
       </li>
     </ul>
     <div
-      :class="{ 'domain-description': true, pending: !!domainDescRequest }"
+      :class="{'domain-description': true, pending: !!domainDescRequest}"
       v-if="domainDesc"
     >
       <span class="domain-name">{{ domainDescName }}</span>
@@ -49,8 +49,8 @@
 <script>
 import debounce from 'lodash-es/debounce';
 import omit from 'lodash-es/omit';
-import { stringify } from 'friendly-querystring';
-import { getKeyValuePairs, mapDomainDescription } from '../helpers';
+import {stringify} from 'friendly-querystring';
+import {getKeyValuePairs, mapDomainDescription} from '../helpers';
 
 const validationMessages = {
   valid: d => `${d} exists`,
@@ -87,7 +87,7 @@ export default {
         this.recentDomains.unshift(domain);
         localStorage.setItem(
           'recent-domains',
-          JSON.stringify(this.recentDomains),
+          JSON.stringify(this.recentDomains)
         );
       }
     },
@@ -99,7 +99,7 @@ export default {
             this.$router.currentRoute.query,
             'workflowId',
             'runId',
-            'workflowName',
+            'workflowName'
           ),
         });
         this.recordDomain(this.d);
@@ -108,7 +108,7 @@ export default {
     },
     domainLink(d) {
       return `/domain/${d}/workflows?${stringify(
-        this.$router.currentRoute.query,
+        this.$router.currentRoute.query
       )}`;
     },
     recordDomainFromClick(e) {
@@ -137,7 +137,7 @@ export default {
               };
               return 'valid';
             },
-            res => (res.status === 404 ? 'invalid' : 'error'),
+            res => (res.status === 404 ? 'invalid' : 'error')
           )
           .then(v => {
             this.$emit('validate', this.d, v);

@@ -1,4 +1,6 @@
+// eslint-disable-next-line no-undef
 if (module.hot) {
+  // eslint-disable-next-line no-undef
   module.hot.addStatusHandler(status => {
     if (status === 'apply') {
       window.location.reload();
@@ -16,7 +18,7 @@ const mochaCss = document.createElement('link');
 mochaCss.setAttribute('rel', 'stylesheet');
 mochaCss.setAttribute(
   'href',
-  'https://cdnjs.cloudflare.com/ajax/libs/mocha/3.4.2/mocha.css',
+  'https://cdnjs.cloudflare.com/ajax/libs/mocha/3.4.2/mocha.css'
 );
 document.head.appendChild(mochaCss);
 
@@ -78,9 +80,9 @@ window.it = function it(...args) {
             currScenario
               ? currScenario.tearDown(this.test).then(
                   () => Promise.reject(e),
-                  () => Promise.reject(e),
+                  () => Promise.reject(e)
                 )
-              : Promise.reject(e),
+              : Promise.reject(e)
         );
       }
       // eslint-disable-next-line no-undef
@@ -95,7 +97,7 @@ window.it = function it(...args) {
 
 HTMLInputElement.prototype.input = function input(text) {
   this.value = text;
-  this.trigger('input', { testTarget: this });
+  this.trigger('input', {testTarget: this});
 };
 
 HTMLElement.prototype.selectItem = async function selectItem(text) {
@@ -103,7 +105,7 @@ HTMLElement.prototype.selectItem = async function selectItem(text) {
   this.querySelector('.dropdown-toggle').dispatchEvent(openDropdown);
 
   const itemToClick = Array.from(
-    await this.waitUntilAllExist('ul.dropdown-menu li a'),
+    await this.waitUntilAllExist('ul.dropdown-menu li a')
   ).find(a => a.innerText.trim() === text);
   const selectedItem = new MouseEvent('mousedown');
 

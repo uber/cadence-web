@@ -1,5 +1,5 @@
 <template>
-  <section :class="{ 'stack-trace': true, loading }">
+  <section :class="{'stack-trace': true, loading}">
     <header v-if="stackTraceTimestamp">
       <span>Stack trace at {{ stackTraceTimestamp.format('h:mm:ss a') }}</span>
       <a href="#" class="refresh" @click="getStackTrace">Refresh</a>
@@ -32,7 +32,7 @@ export default {
       this.loading = true;
       return this.$http
         .post(`${this.baseAPIURL}/queries/__stack_trace`)
-        .then(({ queryResult }) => {
+        .then(({queryResult}) => {
           this.stackTrace = queryResult;
           this.stackTraceTimestamp = moment();
         })

@@ -41,7 +41,7 @@ export default {
     };
     window.addEventListener('resize', this.checkOverflow);
     ['item', 'highlight', 'compact'].forEach(e =>
-      this.$watch(e, this.checkOverflow),
+      this.$watch(e, this.checkOverflow)
     );
     this.$watch(() => this.$route, this.checkOverflow);
   },
@@ -55,7 +55,7 @@ export default {
     viewFullScreen() {
       this.$modal.show(
         {
-          components: { prism: Prism },
+          components: {prism: Prism},
           props: ['code', 'title'],
           template: `
             <div class="data-viewer-fullscreen">
@@ -74,7 +74,7 @@ export default {
         },
         {
           name: 'data-viewer-fullscreen',
-        },
+        }
       );
     },
   },

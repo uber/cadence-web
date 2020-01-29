@@ -8,7 +8,7 @@ export default {
   },
   update(el) {
     if (el.scrolledToBottom) {
-      setImmediate(() => {
+      setTimeout(() => {
         // eslint-disable-next-line no-param-reassign
         el.scrollTop = el.scrollHeight - el.offsetHeight;
       });

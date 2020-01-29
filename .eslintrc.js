@@ -1,3 +1,5 @@
+// see https://github.com/uber-web/uber-eslint for settings
+
 module.exports = {
   env: {
     browser: true,
@@ -7,7 +9,7 @@ module.exports = {
   extends: [
     'plugin:chai-friendly/recommended',
     'plugin:vue/essential',
-    'airbnb-base',
+    'eslint:recommended',
     'plugin:prettier/recommended',
   ],
   globals: {
@@ -25,24 +27,40 @@ module.exports = {
     'vue',
   ],
   rules: {
+    'no-unused-vars': [
+      'error',
+      {
+        vars: 'all',
+        args: 'none',
+        ignoreRestSiblings: true,
+      },
+    ],
     'prettier/prettier': [
       'error',
       {
+        printWidth: 80,
+        tabWidth: 2,
+        useTabs: false,
+        semi: true,
         singleQuote: true,
-        trailingComma: 'all',
+        trailingComma: 'es5',
+        bracketSpacing: false,
+        jsxBracketSameLine: false,
+        rangeStart: 0,
+        rangeEnd: Infinity,
       },
     ],
     // see https://stackoverflow.com/questions/44939304/eslint-should-be-listed-in-the-projects-dependencies-not-devdependencies#answer-55863857
-    "import/no-extraneous-dependencies": [
-      "error",
-      {
-        "devDependencies": [
-          "client/test/index.js",
-          "client/test/scenario.js",
-          "**/*.test.js",
-          "**/*.spec.js",
-        ],
-      },
-    ],
+    // "import/no-extraneous-dependencies": [
+    //   "error",
+    //   {
+    //     "devDependencies": [
+    //       "client/test/index.js",
+    //       "client/test/scenario.js",
+    //       "**/*.test.js",
+    //       "**/*.spec.js",
+    //     ],
+    //   },
+    // ],
   },
 };

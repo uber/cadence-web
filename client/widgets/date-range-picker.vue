@@ -26,17 +26,17 @@
 </template>
 
 <script>
-import { DateRange } from 'vue-date-range';
+import {DateRange} from 'vue-date-range';
 import moment from 'moment';
 
 const baseRelativeRangeOptions = [
-  { label: 'Last 3 hours', value: 'last-3-hours', daysAgo: 0.2 },
-  { label: 'Last 24 hours', value: 'last-24-hours', daysAgo: 1 },
-  { label: 'Last 3 days', value: 'last-3-days', daysAgo: 3 },
-  { label: 'Last 7 days', value: 'last-7-days', daysAgo: 7 },
-  { label: 'Last 30 days', value: 'last-30-days', daysAgo: 30 },
-  { label: 'Last 3 months', value: 'last-3-months', daysAgo: 90 },
-  { label: 'Custom range', value: 'custom', daysAgo: Number.MAX_VALUE },
+  {label: 'Last 3 hours', value: 'last-3-hours', daysAgo: 0.2},
+  {label: 'Last 24 hours', value: 'last-24-hours', daysAgo: 1},
+  {label: 'Last 3 days', value: 'last-3-days', daysAgo: 3},
+  {label: 'Last 7 days', value: 'last-7-days', daysAgo: 7},
+  {label: 'Last 30 days', value: 'last-30-days', daysAgo: 30},
+  {label: 'Last 3 months', value: 'last-3-months', daysAgo: 90},
+  {label: 'Custom range', value: 'custom', daysAgo: Number.MAX_VALUE},
 ];
 
 export default {
@@ -101,7 +101,7 @@ export default {
     },
     customRangeDisplay() {
       return `${this.customRange.startDate.format(
-        'MMM Do',
+        'MMM Do'
       )} - ${this.customRange.endDate.format('MMM Do')}`;
     },
     maxStartDate() {
@@ -120,7 +120,7 @@ export default {
       }
     },
     onDateRangeChange(r) {
-      this.$emit('change', { startTime: r.startDate, endTime: r.endDate });
+      this.$emit('change', {startTime: r.startDate, endTime: r.endDate});
     },
     isDayDisabled(day) {
       if (this.maxDays) {

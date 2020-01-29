@@ -1,6 +1,6 @@
 import moment from 'moment';
-import { shortName } from '../../../helpers';
-import { summarizeEvents } from './summarize-events';
+import {shortName} from '../../../helpers';
+import {summarizeEvents} from './summarize-events';
 
 export default function(historyEvents) {
   const events = [];
@@ -25,7 +25,7 @@ export default function(historyEvents) {
         'activityId' in e.details
           ? e
           : historyEvents[e.details.scheduledEventId - 1];
-      const { activityId } = scheduledEvent.details;
+      const {activityId} = scheduledEvent.details;
       let item = hash[`activity${activityId}`];
 
       if (!item) {
@@ -37,7 +37,7 @@ export default function(historyEvents) {
           ongoing: true,
           content: `Activity ${activityId}: ${shortName(
             scheduledEvent.details.activityType &&
-              scheduledEvent.details.activityType.name,
+              scheduledEvent.details.activityType.name
           )}`,
           details: {
             input: e.details.input,
@@ -115,7 +115,7 @@ export default function(historyEvents) {
         start: moment(e.timestamp),
         end: moment(e.timestamp).add(
           e.details.startToFireTimeoutSeconds,
-          'seconds',
+          'seconds'
         ),
         content: `Timer ${e.details.timerId} (${moment
           .duration(e.details.startToFireTimeoutSeconds, 'seconds')
@@ -165,7 +165,7 @@ export default function(historyEvents) {
         ongoing: true,
         content: 'External Workflow Signaled',
         details: summarizeEvents.SignalExternalWorkflowExecutionInitiated(
-          e.details,
+          e.details
         ),
       });
     } else if (e.eventType === 'ExternalWorkflowExecutionSignaled') {
