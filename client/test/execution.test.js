@@ -595,7 +595,8 @@ describe('Execution', () => {
       });
 
       // TODO: need to investigate how to trigger the events needed to simulate a click for the timeline - looks like it uses Hammer.js and listens to PointerEvents
-      // eslint-disable-next-line jest/no-disabled-tests
+      // eslint-disable-next-line jest/no-commented-out-tests
+      /*
       it.skip('should scroll the event into view if an event is clicked from the timeline, updating the URL', async function test() {
         const [timelineEl, , scenario] = await compactViewTest(this.test);
         timelineEl.timeline.fit();
@@ -614,6 +615,7 @@ describe('Execution', () => {
           )
         );
       });
+      */
 
       it('should show event details when an event is clicked', async function test() {
         const [timelineEl, compactViewEl, scenario] = await compactViewTest(
