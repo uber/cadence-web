@@ -1,11 +1,15 @@
 <template>
-  <loader class="bar"><div></div><div></div><div></div></loader>
+  <loader class="bar"
+    ><div></div>
+    <div></div>
+    <div></div
+  ></loader>
 </template>
 
 <script>
 export default {
-  name: 'bar-loader'
-}
+  name: 'bar-loader',
+};
 </script>
 
 <style lang="stylus">

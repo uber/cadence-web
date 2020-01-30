@@ -5,14 +5,10 @@ import vueSelect from 'vue-select';
 import vueModal from 'vue-js-modal';
 import vueSplit from 'vue-split-panel';
 import qs from 'friendly-querystring';
-import http from './http';
 import moment from 'moment';
 import promiseFinally from 'promise.prototype.finally';
 
-import {
-  injectMomentDurationFormat,
-  jsonTryParse,
-} from './helpers';
+import { http, injectMomentDurationFormat, jsonTryParse } from './helpers';
 
 import DateRangePicker from './widgets/date-range-picker.vue';
 import detailList from './widgets/detail-list.vue';
@@ -73,14 +69,14 @@ const routeOpts = {
             summary: ({ params }) => ({
               runId: params.runId,
               workflowId: params.workflowId,
-            })
+            }),
           },
         },
         {
           name: 'execution/history',
           path: '/domain/:domain/workflows/:workflowId/:runId/history',
           components: {
-            history: History
+            history: History,
           },
           props: {
             history: ({ params, query }) => ({
@@ -90,21 +86,21 @@ const routeOpts = {
               runId: params.runId,
               showGraph: query.showGraph === true,
               workflowId: params.workflowId,
-            })
+            }),
           },
         },
         {
           name: 'execution/stack-trace',
           path: '/domain/:domain/workflows/:workflowId/:runId/stack-trace',
           components: {
-            stacktrace: StackTrace
+            stacktrace: StackTrace,
           },
         },
         {
           name: 'execution/queries',
           path: '/domain/:domain/workflows/:workflowId/:runId/queries',
           components: {
-            queries: Queries
+            queries: Queries,
           },
         },
       ],
@@ -124,18 +120,18 @@ const routeOpts = {
           };
         }
 
+        const { runId, workflowId, ...queryWhitelist } = query;
+
         const newParams = {
-          runId: query.runId,
-          workflowId: query.workflowId,
+          runId,
+          workflowId,
           domain: params.domain,
-        }
-        delete query.runId;
-        delete query.workflowId;
+        };
 
         return {
           name: 'execution/history',
           params: newParams,
-          query,
+          query: queryWhitelist,
         };
       },
     },
@@ -143,23 +139,26 @@ const routeOpts = {
   parseQuery: qs.parse.bind(qs),
   stringifyQuery: query => {
     const q = qs.stringify(query);
-    return q ? ('?' + q) : '';
+
+    return q ? `?${q}` : '';
   },
 };
 
 const router = new Router(routeOpts);
 
-Object.getPrototypeOf(router).replaceQueryParam = function (prop, val) {
-  const newQuery = Object.assign(
-    {},
-    this.currentRoute.query,
-    {
-      [prop]: val,
-    },
-  );
+Object.getPrototypeOf(router).replaceQueryParam = function replaceQueryParam(
+  prop,
+  val
+) {
+  const newQuery = {
+    ...this.currentRoute.query,
+    [prop]: val,
+  };
+
   if (!newQuery[prop]) {
     delete newQuery[prop];
   }
+
   this.replace({ query: newQuery });
 };
 
@@ -167,11 +166,12 @@ injectMomentDurationFormat();
 
 JSON.tryParse = jsonTryParse;
 
-promiseFinally.shim()
+promiseFinally.shim();
 
 Vue.mixin({
-  created: function () {
+  created() {
     this.$moment = moment;
+
     if (typeof Scenario === 'undefined') {
       this.$http = http.global;
     } else if (this.$parent && this.$parent.$http) {
@@ -201,20 +201,28 @@ if (typeof mocha === 'undefined') {
     document.body.appendChild(document.createElement('main'));
   }
 
+  // eslint-disable-next-line no-new
   new Vue({
     el: 'main',
     router,
     template: '<App/>',
-    components: { App }
+    components: { App },
   });
 
   if (module.hot) {
-    module.hot.addStatusHandler(function (status) {
+    module.hot.addStatusHandler(status => {
       if (status === 'apply') {
-        document.querySelectorAll('link[href][rel=stylesheet]').forEach((link) => {
-          const nextStyleHref = link.href.replace(/(\?\d+)?$/, `?${Date.now()}`);
-          link.href = nextStyleHref;
-        });
+        document
+          .querySelectorAll('link[href][rel=stylesheet]')
+          .forEach(link => {
+            const nextStyleHref = link.href.replace(
+              /(\?\d+)?$/,
+              `?${Date.now()}`
+            );
+
+            // eslint-disable-next-line no-param-reassign
+            link.href = nextStyleHref;
+          });
       }
     });
   }

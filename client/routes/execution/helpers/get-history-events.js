@@ -16,20 +16,24 @@ const getHistoryEvents = events => {
       const eventSummary = getEventSummary(event);
       const eventFullDetails = getEventFullDetails(event);
       const timestamp = moment(event.timestamp);
-      return Object.assign({}, event, {
+
+      return {
+        ...event,
         details,
         eventSummary,
         eventFullDetails,
         timestamp,
-      });
+      };
     })
     .map((event, index, eventList) => {
       const timeStampDisplay = getTimeStampDisplay(event);
       const timeElapsedDisplay = getTimeElapsedDisplay(event, index, eventList);
-      return Object.assign({}, event, {
+
+      return {
+        ...event,
         timeStampDisplay,
         timeElapsedDisplay,
-      });
+      };
     });
 };
 

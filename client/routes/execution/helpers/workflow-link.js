@@ -1,14 +1,12 @@
-import shortName from '../../../short-name';
+import { shortName } from '../../../helpers';
 
 const workflowLink = (d, short) => {
   const text = [
-    d.workflowType
-      ? shortName(d.workflowType.name)
-      : '',
-    (short
-      ? ''
-      : d.workflowExecution.workflowId)
-  ].filter(x => x).join(' - ');
+    d.workflowType ? shortName(d.workflowType.name) : '',
+    short ? '' : d.workflowExecution.workflowId,
+  ]
+    .filter(x => x)
+    .join(' - ');
 
   return {
     routeLink: {

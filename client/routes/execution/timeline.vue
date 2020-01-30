@@ -4,8 +4,6 @@
 
 <script>
 import moment from 'moment';
-import shortName from '../../short-name';
-import { summarizeEvents } from './helpers';
 import { DataSet, Timeline, timeline } from 'vis/index-timeline-graph2d';
 
 if (navigator.language === 'en-US') {
@@ -28,15 +26,21 @@ export default {
   },
   methods: {
     heightOption() {
-      var height = this.$el.parentElement.offsetHeight - this.margin;
+      const height = this.$el.parentElement.offsetHeight - this.margin;
+
       if (height <= this.minHeight) {
-        const parentMaxHeightStr = getComputedStyle(this.$el.parentElement)['max-height'];
-        const parentMaxHeight = Number(parentMaxHeightStr.substr(0, parentMaxHeightStr.length - 2));
+        const parentMaxHeightStr = getComputedStyle(this.$el.parentElement)[
+          'max-height'
+        ];
+        const parentMaxHeight = Number(
+          parentMaxHeightStr.substr(0, parentMaxHeightStr.length - 2)
+        );
 
         if (parentMaxHeight >= this.minHeight) {
           return { maxHeight: parentMaxHeight };
         }
       }
+
       return {
         height: Math.max(height || 0, this.minHeight),
         maxHeight: 'initial',
@@ -44,34 +48,51 @@ export default {
     },
     initIfNeeded() {
       if (!this.timeline && this.items.length && this.$el) {
-        this.timeline = new Timeline(this.$el, this.items, null, Object.assign({
+        this.timeline = new Timeline(this.$el, this.items, null, {
           verticalScroll: true,
-        }, this.heightOption()));
-        this.$el.timeline = this.timeline;  // expose for testing purposes
+          ...this.heightOption(),
+        });
+        this.$el.timeline = this.timeline; // expose for testing purposes
 
         let dontFocus;
+
         this.timeline.on('select', e => {
-          var selectedItem = this.items.get(e.items[0]);
+          const selectedItem = this.items.get(e.items[0]);
+
           if (selectedItem && selectedItem.eventIds) {
             dontFocus = true;
-            this.$router.replaceQueryParam('eventId', selectedItem.eventIds[selectedItem.eventIds.length - 1]);
+            this.$router.replaceQueryParam(
+              'eventId',
+              selectedItem.eventIds[selectedItem.eventIds.length - 1]
+            );
           }
         });
 
-        const highlightSelection = sid => {
-          var selectedEvent = this.findEvent(this.selectedEventId);
+        const highlightSelection = () => {
+          const selectedEvent = this.findEvent(this.selectedEventId);
+
           this.timeline.setSelection(selectedEvent && selectedEvent.id);
+
           if (selectedEvent && !dontFocus) {
             this.timeline.focus(selectedEvent.id, true);
           }
+
           dontFocus = false;
         };
-        this.unwatch.push(this.$watch('selectedEventId', highlightSelection, { immediate: true }));
-        this.unwatch.push(this.$watch('events', highlightSelection, { immediate: true }));
+
+        this.unwatch.push(
+          this.$watch('selectedEventId', highlightSelection, {
+            immediate: true,
+          })
+        );
+        this.unwatch.push(
+          this.$watch('events', highlightSelection, { immediate: true })
+        );
       }
     },
     findEvent(eventId) {
-      return this.items.get()
+      return this.items
+        .get()
         .find(i => i.eventIds && i.eventIds.some(id => id === eventId));
     },
   },
@@ -84,13 +105,20 @@ export default {
     };
 
     this.items = new DataSet();
-    this.unwatch.push(this.$watch('events', () => {
-      const newIds = new DataSet(this.events).getIds();
-      const removed = this.items.getIds().filter(i => !newIds.includes(i));
-      this.items.update(this.events);
-      this.items.remove(removed);
-      this.initIfNeeded();
-    }, { immediate: true }));
+    this.unwatch.push(
+      this.$watch(
+        'events',
+        () => {
+          const newIds = new DataSet(this.events).getIds();
+          const removed = this.items.getIds().filter(i => !newIds.includes(i));
+
+          this.items.update(this.events);
+          this.items.remove(removed);
+          this.initIfNeeded();
+        },
+        { immediate: true }
+      )
+    );
   },
   mounted() {
     this.initIfNeeded();
@@ -98,6 +126,7 @@ export default {
     this.ongoingUpdater = setInterval(() => {
       this.items.forEach(i => {
         if (i.ongoing) {
+          // eslint-disable-next-line no-param-reassign
           i.end = moment();
           this.items.update(i);
         }
@@ -107,9 +136,10 @@ export default {
   beforeDestroy() {
     window.removeEventListener('resize', this.onResize);
     clearInterval(this.ongoingUpdater);
-    while(this.unwatch.length) {
-      (this.unwatch.pop())();
+    while (this.unwatch.length) {
+      this.unwatch.pop()();
     }
+
     if (this.timeline) {
       this.timeline.destroy();
     }
@@ -158,5 +188,4 @@ div.timeline
 
     &.marker
       border-color black
-
 </style>

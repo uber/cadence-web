@@ -3,30 +3,39 @@
     <header class="filters">
       <template v-if="filterMode === 'advanced'">
         <div class="field query-string">
-          <input type="search" class="query-string"
+          <input
+            type="search"
+            class="query-string"
             placeholder=" "
             key="sql-query"
             name="queryString"
             v-bind:value="$route.query.queryString"
-            @input="setWorkflowFilter" />
+            @input="setWorkflowFilter"
+          />
           <label for="queryString">Query</label>
         </div>
       </template>
       <template v-else>
         <div class="field workflow-id">
-          <input type="search" class="workflow-id"
+          <input
+            type="search"
+            class="workflow-id"
             placeholder=" "
             name="workflowId"
             v-bind:value="$route.query.workflowId"
-            @input="setWorkflowFilter" />
+            @input="setWorkflowFilter"
+          />
           <label for="workflowId">Workflow ID</label>
         </div>
         <div class="field workflow-name">
-          <input type="search" class="workflow-name"
+          <input
+            type="search"
+            class="workflow-name"
             placeholder=" "
             name="workflowName"
             v-bind:value="$route.query.workflowName"
-            @input="setWorkflowFilter" />
+            @input="setWorkflowFilter"
+          />
           <label for="workflowName">Workflow Name</label>
         </div>
         <date-range-picker
@@ -42,9 +51,12 @@
           :searchable="false"
         />
       </template>
-      <a class="toggle-filter" @click="toggleFilter">{{ filterMode === 'advanced' ? 'basic' : 'advanced' }}</a>
+      <a class="toggle-filter" @click="toggleFilter">{{
+        filterMode === 'advanced' ? 'basic' : 'advanced'
+      }}</a>
     </header>
-    <section class="results"
+    <section
+      class="results"
       v-infinite-scroll="nextPage"
       infinite-scroll-disabled="disableInfiniteScroll"
       infinite-scroll-distance="20"
@@ -61,25 +73,33 @@
         </thead>
         <tbody>
           <tr v-for="wf in results" :key="wf.runId">
-            <td>{{wf.workflowId}}</td>
-            <td><router-link :to="{ name: 'execution/summary', params: { runId: wf.runId, workflowId: wf.workflowId }}">{{wf.runId}}</router-link></td>
-            <td>{{wf.workflowName}}</td>
-            <td :class="wf.status">{{wf.status}}</td>
-            <td>{{wf.startTime}}</td>
-            <td>{{wf.endTime}}</td>
+            <td>{{ wf.workflowId }}</td>
+            <td>
+              <router-link
+                :to="{
+                  name: 'execution/summary',
+                  params: { runId: wf.runId, workflowId: wf.workflowId },
+                }"
+                >{{ wf.runId }}</router-link
+              >
+            </td>
+            <td>{{ wf.workflowName }}</td>
+            <td :class="wf.status">{{ wf.status }}</td>
+            <td>{{ wf.startTime }}</td>
+            <td>{{ wf.endTime }}</td>
           </tr>
         </tbody>
       </table>
     </section>
-    <span class="error" v-if="error">{{error}}</span>
+    <span class="error" v-if="error">{{ error }}</span>
     <span class="no-results" v-if="showNoResults">No Results</span>
   </section>
 </template>
 
 <script>
-import moment from 'moment'
-import pagedGrid from '../paged-grid'
-import debounce from 'lodash-es/debounce'
+import moment from 'moment';
+import debounce from 'lodash-es/debounce';
+import pagedGrid from '../widgets/paged-grid';
 
 export default pagedGrid({
   data() {
@@ -96,56 +116,73 @@ export default pagedGrid({
         { value: 'CANCELED', label: 'Cancelled' },
         { value: 'TERMINATED', label: 'Terminated' },
         { value: 'CONTINUED_AS_NEW', label: 'Continued As New' },
-        { value: 'TIMED_OUT', label: 'Timed Out'}
+        { value: 'TIMED_OUT', label: 'Timed Out' },
       ],
       maxRetentionDays: undefined,
-      filterMode: 'basic'
-    }
+      filterMode: 'basic',
+    };
   },
   created() {
     this.$http(`/api/domain/${this.$route.params.domain}`).then(r => {
-      this.maxRetentionDays = Number(r.configuration.workflowExecutionRetentionPeriodInDays) || 30
-      if (!this.isRouteRangeValid()) {
-        this.setRange(`last-${Math.min(30, this.maxRetentionDays)}-days`)
-      }
-    })
+      this.maxRetentionDays =
+        Number(r.configuration.workflowExecutionRetentionPeriodInDays) || 30;
 
-    var q = this.$route.query || {}
+      if (!this.isRouteRangeValid()) {
+        this.setRange(`last-${Math.min(30, this.maxRetentionDays)}-days`);
+      }
+    });
+
+    const q = this.$route.query || {};
+
     if (!q.range || !/^last-\d{1,2}-(hour|day|month)s?$/.test(q.range)) {
-      let prevRange = localStorage.getItem(`${this.$route.params.domain}:workflows-time-range`)
+      const prevRange = localStorage.getItem(
+        `${this.$route.params.domain}:workflows-time-range`
+      );
+
       if (prevRange) {
-        this.setRange(prevRange)
+        this.setRange(prevRange);
       }
     }
-    this.$watch('queryOnChange', () => {}, { immediate: true })
+
+    this.$watch('queryOnChange', () => {}, { immediate: true });
   },
   computed: {
     status() {
       if (!this.$route.query || !this.$route.query.status) {
-        return this.statuses[0]
+        return this.statuses[0];
       }
-      return this.statuses.find(s => s.value === this.$route.query.status)
+
+      return this.statuses.find(s => s.value === this.$route.query.status);
     },
     range() {
-      var q = this.$route.query || {}
-      return q.startTime && q.endTime ? {
-        startTime: moment(q.startTime),
-        endTime: moment(q.endTime)
-      } : q.range
+      const q = this.$route.query || {};
+
+      return q.startTime && q.endTime
+        ? {
+            startTime: moment(q.startTime),
+            endTime: moment(q.endTime),
+          }
+        : q.range;
     },
     criteria() {
-      var
-        domain = this.$route.params.domain,
-        q = this.$route.query,
-        { startTime, endTime } = q
+      const { domain } = this.$route.params;
+      const q = this.$route.query;
+      let { startTime, endTime } = q;
 
       if (q.range && typeof q.range === 'string') {
-        let [,count,unit] = q.range.split('-')
-        startTime = moment().subtract(count, unit).startOf(unit).toISOString()
-        endTime = moment().endOf(unit).toISOString()
+        const [, count, unit] = q.range.split('-');
+
+        startTime = moment()
+          .subtract(count, unit)
+          .startOf(unit)
+          .toISOString();
+        endTime = moment()
+          .endOf(unit)
+          .toISOString();
       }
 
-      this.nextPageToken = undefined
+      this.nextPageToken = undefined;
+
       return {
         domain,
         startTime,
@@ -154,94 +191,119 @@ export default pagedGrid({
         workflowId: q.workflowId,
         workflowName: q.workflowName,
         queryString: q.queryString,
-      }
+      };
     },
     queryOnChange() {
-      var
-        q = Object.assign({}, this.criteria),
-        domain = q.domain,
-        state = (!q.status || q.status === 'OPEN') ? 'open' : 'closed'
+      const q = { ...this.criteria };
+      const { domain } = q;
+      const state = !q.status || q.status === 'OPEN' ? 'open' : 'closed';
 
-      if (!q.startTime || !q.endTime || !q.status) return
-      if (['OPEN', 'CLOSED'].includes(q.status)) {
-        delete q.status
+      if (!q.startTime || !q.endTime || !q.status) {
+        return;
       }
-      delete q.domain
-      q.nextPageToken = this.nextPageToken
+
+      if (['OPEN', 'CLOSED'].includes(q.status)) {
+        delete q.status;
+      }
+
+      delete q.domain;
+      q.nextPageToken = this.nextPageToken;
 
       if (q.queryString) {
-        return this.fetch(`/api/domain/${domain}/workflows/list`, q)
+        this.fetch(`/api/domain/${domain}/workflows/list`, q);
+
+        return;
       }
 
-      return this.fetch(`/api/domain/${domain}/workflows/${state}`, q)
-    }
+      this.fetch(`/api/domain/${domain}/workflows/${state}`, q);
+    },
   },
   methods: {
-    fetch: debounce(function(url, query) {
-      this.loading = true
-      this.error = undefined
+    fetch: debounce(
+      function fetch(url, query) {
+        this.loading = true;
+        this.error = undefined;
 
-      return this.$http(url, { query })
-      .then(res => {
-        this.npt = res.nextPageToken
-        this.loading = false
-        var formattedResults = res.executions.map(data => ({
-          workflowId: data.execution.workflowId,
-          runId: data.execution.runId,
-          workflowName: data.type.name,
-          startTime: moment(data.startTime).format('lll'),
-          endTime: data.closeTime ? moment(data.closeTime).format('lll') : '',
-          status: (data.closeStatus || 'open').toLowerCase(),
-        }))
-        return this.results = query.nextPageToken ? this.results.concat(formattedResults) : formattedResults
-      }).catch(e => {
-        this.npt = undefined
-        this.loading = false
-        this.error = (e.json && e.json.message) || e.status || e.message
-        return []
-      })
-    }, typeof Mocha === 'undefined' ? 200 : 60, { maxWait: 1000 }),
+        return this.$http(url, { query })
+          .then(res => {
+            this.npt = res.nextPageToken;
+            this.loading = false;
+            const formattedResults = res.executions.map(data => ({
+              workflowId: data.execution.workflowId,
+              runId: data.execution.runId,
+              workflowName: data.type.name,
+              startTime: moment(data.startTime).format('lll'),
+              endTime: data.closeTime
+                ? moment(data.closeTime).format('lll')
+                : '',
+              status: (data.closeStatus || 'open').toLowerCase(),
+            }));
+
+            this.results = query.nextPageToken
+              ? this.results.concat(formattedResults)
+              : formattedResults;
+
+            return this.results;
+          })
+          .catch(e => {
+            this.npt = undefined;
+            this.loading = false;
+            this.error = (e.json && e.json.message) || e.status || e.message;
+
+            return [];
+          });
+      },
+      typeof Mocha === 'undefined' ? 200 : 60,
+      { maxWait: 1000 }
+    ),
     setWorkflowFilter(e) {
-      var target = e.target || e.testTarget // test hook since Event.target is readOnly and unsettable
-      this.$router.replaceQueryParam(target.getAttribute('name'), target.value)
+      const target = e.target || e.testTarget; // test hook since Event.target is readOnly and unsettable
+
+      this.$router.replaceQueryParam(target.getAttribute('name'), target.value);
     },
     setStatus(status) {
       if (status) {
         this.$router.replace({
-          query: Object.assign({}, this.$route.query, { status: status.value })
-        })
+          query: { ...this.$route.query, status: status.value },
+        });
       }
     },
     isRouteRangeValid() {
-      var q = this.$route.query || {}
-      return !!q.range && !!/^last-\d{1,2}-(hour|day|month)s?$/.test(q.range)
+      const q = this.$route.query || {};
+
+      return !!q.range && !!/^last-\d{1,2}-(hour|day|month)s?$/.test(q.range);
     },
     setRange(range) {
       if (range) {
-        var query = Object.assign({}, this.$route.query)
+        const query = { ...this.$route.query };
+
         if (typeof range === 'string') {
-          query.range = range
-          delete query.startTime
-          delete query.endTime
-          localStorage.setItem(`${this.$route.params.domain}:workflows-time-range`, range)
+          query.range = range;
+          delete query.startTime;
+          delete query.endTime;
+          localStorage.setItem(
+            `${this.$route.params.domain}:workflows-time-range`,
+            range
+          );
         } else {
-          query.startTime = range.startTime.toISOString()
-          query.endTime = range.endTime.toISOString()
-          delete query.range
+          query.startTime = range.startTime.toISOString();
+          query.endTime = range.endTime.toISOString();
+          delete query.range;
         }
-        this.$router.replace({ query })
+
+        this.$router.replace({ query });
       }
     },
     toggleFilter() {
       if (this.filterMode === 'advanced') {
-        this.filterMode = 'basic'
-        this.$route.query.queryString = ''
+        this.filterMode = 'basic';
+        this.$route.query.queryString = '';
       } else {
-        this.filterMode = 'advanced'
+        this.filterMode = 'advanced';
       }
-    }
-  }
-})
+    },
+  },
+});
 </script>
 
 <style lang="stylus">

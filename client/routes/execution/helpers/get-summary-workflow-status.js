@@ -1,14 +1,17 @@
 const getSummaryWorkflowStatus = ({
   isWorkflowRunning,
   workflow,
-  workflowCompletedEvent
+  workflowCompletedEvent,
 }) => {
   if (isWorkflowRunning) {
     return 'running';
   }
 
   if (!workflowCompletedEvent) {
-    return ((workflow && workflow.workflowExecutionInfo.closeStatus) || 'running').toLowerCase();
+    return (
+      (workflow && workflow.workflowExecutionInfo.closeStatus) ||
+      'running'
+    ).toLowerCase();
   }
 
   if (workflowCompletedEvent.eventType === 'WorkflowExecutionContinuedAsNew') {
@@ -23,7 +26,10 @@ const getSummaryWorkflowStatus = ({
       status: 'continued-as-new',
     };
   }
-  return workflowCompletedEvent.eventType.replace('WorkflowExecution', '').toLowerCase();
+
+  return workflowCompletedEvent.eventType
+    .replace('WorkflowExecution', '')
+    .toLowerCase();
 };
 
 export default getSummaryWorkflowStatus;

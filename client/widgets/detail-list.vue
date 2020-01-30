@@ -1,38 +1,49 @@
 <script>
-import moment from 'moment';
 import { preKeys } from '../constants';
 
 export default {
   name: 'details-list',
-  props: [
-    'compact',
-    'highlight',
-    'item',
-    'title',
-  ],
+  props: ['compact', 'highlight', 'item', 'title'],
   data() {
     return {};
   },
   methods: {
     format(val) {
-      return val === null ? '' : (String(val) || '""');
+      return val === null ? '' : String(val) || '""';
     },
   },
   render(h) {
-    var { highlight, compact, title } = this;
+    const { highlight, compact, title } = this;
+
     function dd(kvp) {
       if (kvp.routeLink) {
         return [h('router-link', { props: { to: kvp.routeLink } }, kvp.value)];
       }
-      return preKeys.includes(kvp.key) ? [h('data-viewer', {
-        props: { item: kvp.value, compact, highlight, title: `${title} - ${kvp.key}` }
-      })] : kvp.value;
+
+      return preKeys.includes(kvp.key)
+        ? [
+            h('data-viewer', {
+              props: {
+                item: kvp.value,
+                compact,
+                highlight,
+                title: `${title} - ${kvp.key}`,
+              },
+            }),
+          ]
+        : kvp.value;
     }
 
-    return h('dl', { class: 'details' }, this.item.kvps.map(kvp => h('div', { attrs: { 'data-prop': kvp.key } }, [
-      h('dt', null, kvp.key),
-      h('dd', null, dd(kvp))
-    ])));
+    return h(
+      'dl',
+      { class: 'details' },
+      this.item.kvps.map(kvp =>
+        h('div', { attrs: { 'data-prop': kvp.key } }, [
+          h('dt', null, kvp.key),
+          h('dd', null, dd(kvp)),
+        ])
+      )
+    );
   },
 };
 </script>

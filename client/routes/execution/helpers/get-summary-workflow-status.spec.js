@@ -7,6 +7,7 @@ describe('getSummaryWorkflowStatus', () => {
         isWorkflowRunning: true,
       };
       const output = getSummaryWorkflowStatus(event);
+
       expect(output).toEqual('running');
     });
   });
@@ -22,6 +23,7 @@ describe('getSummaryWorkflowStatus', () => {
         workflowCompletedEvent: false,
       };
       const output = getSummaryWorkflowStatus(event);
+
       expect(output).toEqual('closestatusvalue');
     });
   });
@@ -32,6 +34,7 @@ describe('getSummaryWorkflowStatus', () => {
         workflowCompletedEvent: false,
       };
       const output = getSummaryWorkflowStatus(event);
+
       expect(output).toEqual('running');
     });
   });
@@ -52,21 +55,25 @@ describe('getSummaryWorkflowStatus', () => {
 
     it('should return an object with to.name = "execution/summary".', () => {
       const output = getSummaryWorkflowStatus(event);
+
       expect(output.to.name).toEqual('execution/summary');
     });
 
     it('should return an object with to.params.runId.', () => {
       const output = getSummaryWorkflowStatus(event);
+
       expect(output.to.params.runId).toEqual('newExecutionRunIdValue');
     });
 
     it('should return an object with text = "Continued As New".', () => {
       const output = getSummaryWorkflowStatus(event);
+
       expect(output.text).toEqual('Continued As New');
     });
 
     it('should return an object with status = "continued-as-new".', () => {
       const output = getSummaryWorkflowStatus(event);
+
       expect(output.status).toEqual('continued-as-new');
     });
   });
@@ -79,6 +86,7 @@ describe('getSummaryWorkflowStatus', () => {
         },
       };
       const output = getSummaryWorkflowStatus(event);
+
       expect(output).toEqual('notcontinuedasnew');
     });
   });

@@ -1,8 +1,5 @@
-import {
-  jsonKeys,
-  preKeys,
-} from '../constants';
 import moment from 'moment';
+import { jsonKeys, preKeys } from '../constants';
 import getJsonStringObject from './get-json-string-object';
 
 const getKeyValuePairs = event => {
@@ -12,6 +9,7 @@ const getKeyValuePairs = event => {
       if (value === null || value === undefined) {
         return;
       }
+
       const key = prefix ? `${prefix}.${k}` : k;
 
       if (value.routeLink) {
@@ -90,6 +88,7 @@ const getKeyValuePairs = event => {
   };
 
   flatten('', event || {}, event);
+
   return kvps;
 };
 

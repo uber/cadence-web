@@ -7,7 +7,12 @@
       :searchable="false"
     />
     <div class="custom-range" v-show="customVisible">
-      <input type="text" class="date-range" :value="customRangeDisplay" @focus="datePickerVisible = true" @blur>
+      <input
+        type="text"
+        class="date-range"
+        :value="customRangeDisplay"
+        @focus="datePickerVisible = true"
+      />
       <daterange
         v-show="datePickerVisible"
         :sync-range="customRange"
@@ -21,8 +26,8 @@
 </template>
 
 <script>
-import {DateRange} from 'vue-date-range'
-import moment from 'moment'
+import { DateRange } from 'vue-date-range';
+import moment from 'moment';
 
 const baseRelativeRangeOptions = [
   { label: 'Last 3 hours', value: 'last-3-hours', daysAgo: 0.2 },
@@ -31,8 +36,8 @@ const baseRelativeRangeOptions = [
   { label: 'Last 7 days', value: 'last-7-days', daysAgo: 7 },
   { label: 'Last 30 days', value: 'last-30-days', daysAgo: 30 },
   { label: 'Last 3 months', value: 'last-3-months', daysAgo: 90 },
-  { label: 'Custom range', value: 'custom', daysAgo: Number.MAX_VALUE }
-]
+  { label: 'Custom range', value: 'custom', daysAgo: Number.MAX_VALUE },
+];
 
 export default {
   props: ['dateRange', 'maxDays'],
@@ -40,79 +45,99 @@ export default {
     return {
       customVisible: this.isCustom,
       datePickerVisible: false,
-    }
+    };
   },
   created() {
     this.onClickOrFocusOut = e => {
       if (!this.$el.contains(e.relatedTarget || e.target)) {
-        this.datePickerVisible = false
+        this.datePickerVisible = false;
       }
-    }
+    };
   },
   mounted() {
-    document.body.addEventListener('click', this.onClickOrFocusOut)
+    document.body.addEventListener('click', this.onClickOrFocusOut);
   },
   destroyed() {
-    document.body.removeEventListener('click', this.onClickOrFocusOut)
+    document.body.removeEventListener('click', this.onClickOrFocusOut);
   },
   computed: {
     isCustom() {
-      return typeof this.dateRange !== 'string'
+      return typeof this.dateRange !== 'string';
     },
     relativeRangeOptions() {
-      let options = baseRelativeRangeOptions
-      if (this.maxDays && options.every(o => o.daysAgo != this.maxDays) && this.maxDays < 90) {
-        options = options.slice().filter(o => o.value === 'custom' || o.daysAgo <= this.maxDays)
+      let options = baseRelativeRangeOptions;
+
+      if (
+        this.maxDays &&
+        options.every(o => o.daysAgo !== this.maxDays) &&
+        this.maxDays < 90
+      ) {
+        options = options
+          .slice()
+          .filter(o => o.value === 'custom' || o.daysAgo <= this.maxDays);
         options.push({
           label: `Last ${this.maxDays} days`,
           value: `last-${this.maxDays}-days`,
-          daysAgo: this.maxDays
-        })
-        options.sort((a, b) => a.daysAgo - b.daysAgo)
+          daysAgo: this.maxDays,
+        });
+        options.sort((a, b) => a.daysAgo - b.daysAgo);
       }
-      return options
+
+      return options;
     },
     relativeRange() {
-      return this.isCustom ?
-        this.relativeRangeOptions[this.relativeRangeOptions.length - 1] :
-        this.relativeRangeOptions.find(o => o.value === this.dateRange)
+      return this.isCustom
+        ? this.relativeRangeOptions[this.relativeRangeOptions.length - 1]
+        : this.relativeRangeOptions.find(o => o.value === this.dateRange);
     },
     customRange() {
       return {
-        startDate: (this.dateRange && this.dateRange.startTime) || moment().subtract(this.maxDays || 30, 'days').startOf('day'),
-        endDate: (this.dateRange && this.dateRange.endTime) || moment().endOf('day')
-      }
+        startDate:
+          (this.dateRange && this.dateRange.startTime) ||
+          moment()
+            .subtract(this.maxDays || 30, 'days')
+            .startOf('day'),
+        endDate:
+          (this.dateRange && this.dateRange.endTime) || moment().endOf('day'),
+      };
     },
-    customRangeDisplay(d) {
-      return `${this.customRange.startDate.format('MMM Do')} - ${this.customRange.endDate.format('MMM Do')}`
+    customRangeDisplay() {
+      return `${this.customRange.startDate.format(
+        'MMM Do'
+      )} - ${this.customRange.endDate.format('MMM Do')}`;
     },
     maxStartDate() {
-      return moment().startOf('day').subtract(this.maxDays, 'days')
-    }
+      return moment()
+        .startOf('day')
+        .subtract(this.maxDays, 'days');
+    },
   },
   methods: {
     onRelativeRangeChange(r) {
       if (r.value === 'custom') {
-        this.customVisible = true
+        this.customVisible = true;
       } else {
-        this.customVisible = false
-        this.$emit('change', r.value)
+        this.customVisible = false;
+        this.$emit('change', r.value);
       }
     },
     onDateRangeChange(r) {
-      this.$emit('change', { startTime: r.startDate, endTime: r.endDate })
+      this.$emit('change', { startTime: r.startDate, endTime: r.endDate });
     },
     isDayDisabled(day) {
       if (this.maxDays) {
-        if (day.isBefore(this.maxStartDate)) return true
+        if (day.isBefore(this.maxStartDate)) {
+          return true;
+        }
       }
-      return day.isAfter(moment().endOf('day'))
-    }
+
+      return day.isAfter(moment().endOf('day'));
+    },
   },
   components: {
-    daterange: DateRange
-  }
-}
+    daterange: DateRange,
+  },
+};
 </script>
 
 <style lang="stylus">

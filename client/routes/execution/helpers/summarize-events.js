@@ -1,5 +1,5 @@
 import moment from 'moment';
-import shortName from '../../../short-name';
+import { shortName } from '../../../helpers';
 import parentWorkflowLink from './parent-workflow-link';
 import workflowLink from './workflow-link';
 
@@ -11,7 +11,9 @@ export const summarizeEvents = {
     reason: d.reason,
   }),
   ActivityTaskScheduled: d => ({
-    'Close Timeout': moment.duration(d.scheduleToCloseTimeoutSeconds, 'seconds').format(),
+    'Close Timeout': moment
+      .duration(d.scheduleToCloseTimeoutSeconds, 'seconds')
+      .format(),
     ID: d.activityId,
     input: d.input,
     Name: shortName(d.activityType.name),
@@ -44,15 +46,19 @@ export const summarizeEvents = {
 
     if (d.markerName === 'LocalActivity') {
       const la = { 'Local Activity ID': details.ActivityID };
+
       if (details.ErrJSON) {
         la.Error = JSON.tryParse(details.ErrJSON) || details.ErrJSON;
       }
+
       if (details.ErrReason) {
         la.reason = details.ErrReason;
       }
+
       if (details.ResultJSON) {
         la.result = JSON.tryParse(details.ResultJSON) || details.ResultJSON;
       }
+
       return la;
     }
 
@@ -83,12 +89,16 @@ export const summarizeEvents = {
     Workflow: workflowLink(d),
   }),
   TimerStarted: d => ({
-    'Fire Timeout': moment.duration(d.startToFireTimeoutSeconds, 'seconds').format(),
+    'Fire Timeout': moment
+      .duration(d.startToFireTimeoutSeconds, 'seconds')
+      .format(),
     'Timer ID': d.timerId,
   }),
   WorkflowExecutionStarted: d => {
     const summary = {
-      'Close Timeout': moment.duration(d.executionStartToCloseTimeoutSeconds, 'seconds').format(),
+      'Close Timeout': moment
+        .duration(d.executionStartToCloseTimeoutSeconds, 'seconds')
+        .format(),
       identity: d.identity,
       input: d.input,
       Parent: undefined,

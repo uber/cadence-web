@@ -9,6 +9,7 @@ const
 module.exports = {
   devtool: 'source-map',
   entry: [
+    process.env.TEST_RUN ? 'babel-polyfill' : '',
     path.join(__dirname, process.env.TEST_RUN ? 'client/test/index' : 'client/main')
   ].filter(x => x),
   output: {
@@ -34,36 +35,54 @@ module.exports = {
     })
   ].filter(x => x),
   module: {
-    rules: [{
-      test: /\.vue?$/,
-      loader: 'vue-loader',
-      options: {
-        loaders: {
-          stylus: ExtractTextPlugin.extract({
-            use: extractStylus,
-            fallback: 'vue-style-loader'
-          }),
-        }
-      }
-    }, {
-      test: /\.svg$/,
-      use: [{
-        loader: 'html-loader',
+    rules: [
+      {
+        test: /\.js$/,
+        loader: 'babel-loader',
         options: {
-          minimize: true
+          configFile: path.resolve(__dirname, '.babelrc'),
+        },
+      },
+      {
+        test: /\.vue?$/,
+        loader: 'vue-loader',
+        options: {
+          loaders: {
+            js: {
+              loader: 'babel-loader',
+              options: {
+                configFile: path.resolve(__dirname, '.babelrc'),
+              },
+            },
+            stylus: ExtractTextPlugin.extract({
+              use: extractStylus,
+              fallback: 'vue-style-loader'
+            }),
+          }
         }
-      }]
-    }, {
-      test: /\.(png|jpg|gif)$/,
-      loader: 'file-loader',
-      options: {
-        name: '[name].[ext]?[hash]'
+      },
+      {
+        test: /\.svg$/,
+        use: [{
+          loader: 'html-loader',
+          options: {
+            minimize: true
+          }
+        }]
+      },
+      {
+        test: /\.(png|jpg|gif)$/,
+        loader: 'file-loader',
+        options: {
+          name: '[name].[ext]?[hash]'
+        }
+      },
+      {
+        test: /\.styl$/,
+        use: ExtractTextPlugin.extract({ use: extractStylus, fallback: 'raw-loader' }),
+        include: path.join(__dirname, 'src')
       }
-    }, {
-      test: /\.styl$/,
-      use: ExtractTextPlugin.extract({ use: extractStylus, fallback: 'raw-loader' }),
-      include: path.join(__dirname, 'src')
-    }]
+    ]
   },
   resolve: {
     extensions: ['.js', '.vue']

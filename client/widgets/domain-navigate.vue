@@ -2,7 +2,11 @@
   <div class="domain-navigation" :class="'validation-' + validation">
     <div class="input-and-validation">
       <div class="input-wrapper">
-        <input type="text" name="domain" spellcheck="false" autocorrect="off"
+        <input
+          type="text"
+          name="domain"
+          spellcheck="false"
+          autocorrect="off"
           ref="input"
           v-bind:value="d"
           :placeholder="$props.placeholder"
@@ -10,18 +14,33 @@
           @keydown.enter="changeDomain"
           @keydown.esc="onEsc"
         />
-        <a :href="validation === 'valid' ? '#' : ''" class="change-domain" @click="changeDomain"></a>
+        <a
+          :href="validation === 'valid' ? '#' : ''"
+          class="change-domain"
+          @click="changeDomain"
+        ></a>
       </div>
-      <p :class="'validation validation-' + validation">{{validationMessage}}</p>
+      <p :class="'validation validation-' + validation">
+        {{ validationMessage }}
+      </p>
     </div>
     <ul class="recent-domains" v-if="recentDomains.length">
       <h3>Recent Domains</h3>
       <li v-for="domain in recentDomains" :key="domain">
-        <a :href="domainLink(domain)" :data-domain="domain" @click="recordDomainFromClick" @mouseover="showDomainDesc(domain)">{{domain}}</a>
+        <a
+          :href="domainLink(domain)"
+          :data-domain="domain"
+          @click="recordDomainFromClick"
+          @mouseover="showDomainDesc(domain)"
+          >{{ domain }}</a
+        >
       </li>
     </ul>
-    <div :class="{ 'domain-description': true, pending: !!domainDescRequest }" v-if="domainDesc">
-      <span class="domain-name">{{domainDescName}}</span>
+    <div
+      :class="{ 'domain-description': true, pending: !!domainDescRequest }"
+      v-if="domainDesc"
+    >
+      <span class="domain-name">{{ domainDescName }}</span>
       <details-list :item="domainDesc" :title="domainDescName" />
     </div>
   </div>
@@ -31,10 +50,7 @@
 import debounce from 'lodash-es/debounce';
 import omit from 'lodash-es/omit';
 import { stringify } from 'friendly-querystring';
-import {
-  getKeyValuePairs,
-  mapDomainDescription,
-} from '../helpers';
+import { getKeyValuePairs, mapDomainDescription } from '../helpers';
 
 const validationMessages = {
   valid: d => `${d} exists`,
@@ -49,7 +65,8 @@ export default {
       d: this.$props.domain,
       validation: 'unknown',
       validationMessage: undefined,
-      recentDomains: JSON.tryParse(localStorage.getItem('recent-domains')) || [],
+      recentDomains:
+        JSON.tryParse(localStorage.getItem('recent-domains')) || [],
       domainDesc: undefined,
       domainDescName: undefined,
       domainDescRequest: undefined,
@@ -57,6 +74,7 @@ export default {
   },
   created() {
     this.domainDescCache = {};
+
     if (this.$route && this.$route.params && this.$route.params.domain) {
       this.recordDomain(this.$route.params.domain);
     }
@@ -64,26 +82,39 @@ export default {
   methods: {
     recordDomain(domain) {
       if (domain) {
-        this.recentDomains = this.recentDomains.filter(d => d && d !== domain).slice(0, 15);
+        this.recentDomains = this.recentDomains
+          .filter(d => d && d !== domain)
+          .slice(0, 15);
         this.recentDomains.unshift(domain);
-        localStorage.setItem('recent-domains', JSON.stringify(this.recentDomains));
+        localStorage.setItem(
+          'recent-domains',
+          JSON.stringify(this.recentDomains)
+        );
       }
     },
     changeDomain() {
       if (this.validation === 'valid') {
         this.$router.push({
           path: `/domain/${this.d}/workflows`,
-          query: omit(this.$router.currentRoute.query, 'workflowId', 'runId', 'workflowName'),
-        })
+          query: omit(
+            this.$router.currentRoute.query,
+            'workflowId',
+            'runId',
+            'workflowName'
+          ),
+        });
         this.recordDomain(this.d);
         this.$emit('navigate', this.d);
       }
     },
     domainLink(d) {
-      return `/domain/${d}/workflows?${stringify(this.$router.currentRoute.query)}`;
+      return `/domain/${d}/workflows?${stringify(
+        this.$router.currentRoute.query
+      )}`;
     },
     recordDomainFromClick(e) {
-      var domain = e.target.getAttribute('data-domain');
+      const domain = e.target.getAttribute('data-domain');
+
       this.recordDomain(domain);
       this.$emit('navigate', domain);
     },
@@ -91,34 +122,42 @@ export default {
       if (this.domainDescCache[d]) {
         return Promise.resolve(this.domainDescCache[d]);
       }
+
       return this.$http(`/api/domain/${d}`).then(r => {
-        return this.domainDescCache[d] = mapDomainDescription(r);
+        this.domainDescCache[d] = mapDomainDescription(r);
+
+        return this.domainDescCache[d];
       });
     },
-    checkValidity: debounce(function (x) {
+    checkValidity: debounce(function checkValidity() {
       const check = newDomain => {
         this.validation = 'pending';
-        this.domainDescRequest = this.getDomainDesc(newDomain).then(
-          desc => {
-            this.domainDescName = newDomain;
-            this.domainDesc = {
-              kvps: getKeyValuePairs(desc),
-            };
-            return 'valid';
-          },
-          res => res.status === 404 ? 'invalid' : 'error'
-        ).then(v => {
-          this.$emit('validate', this.d, v);
-          if (v in validationMessages) {
-            this.validationMessage = validationMessages[v](this.d);
-          }
-          if (this.d === newDomain || !this.d) {
-            this.validation = this.d ? v : 'unknown';
-            this.domainDescRequest = null;
-          } else {
-            check.call(this, this.d);
-          }
-        });
+        this.domainDescRequest = this.getDomainDesc(newDomain)
+          .then(
+            desc => {
+              this.domainDescName = newDomain;
+              this.domainDesc = {
+                kvps: getKeyValuePairs(desc),
+              };
+
+              return 'valid';
+            },
+            res => (res.status === 404 ? 'invalid' : 'error')
+          )
+          .then(v => {
+            this.$emit('validate', this.d, v);
+
+            if (v in validationMessages) {
+              this.validationMessage = validationMessages[v](this.d);
+            }
+
+            if (this.d === newDomain || !this.d) {
+              this.validation = this.d ? v : 'unknown';
+              this.domainDescRequest = null;
+            } else {
+              check.call(this, this.d);
+            }
+          });
       };
 
       if (!this.domainDescRequest && this.d) {
@@ -132,7 +171,9 @@ export default {
     showDomainDesc(d) {
       this.domainDescName = d;
       this.domainDescRequest = this.getDomainDesc(d)
-        .catch(res => ({ error: `${res.statusText || res.message} ${res.status}` }))
+        .catch(res => ({
+          error: `${res.statusText || res.message} ${res.status}`,
+        }))
         .then(desc => {
           if (this.domainDescName === d) {
             this.domainDesc = {
@@ -145,8 +186,8 @@ export default {
     onEsc(e) {
       this.$emit('cancel', e);
     },
-  }
-}
+  },
+};
 </script>
 
 <style lang="stylus">

@@ -1,21 +1,60 @@
 <template>
-  <section :class="{ history: true, loading, 'has-results': !!events.length, 'split-enabled': true }">
+  <section
+    :class="{
+      history: true,
+      loading,
+      'has-results': !!events.length,
+      'split-enabled': true,
+    }"
+  >
     <header class="controls">
       <div class="view-format">
         <label for="format">View Format</label>
         <div class="view-formats">
-          <a href="#" class="compact" @click.prevent="setFormat('compact')" :class="format === 'compact' ? 'active' : ''">Compact</a>
-          <a href="#" class="grid" @click.prevent="setFormat('grid')" :class="format === 'grid' ? 'active' : ''">Grid</a>
-          <a href="#" class="json" @click.prevent="setFormat('json')" :class="format === 'json' ? 'active' : ''">JSON</a>
+          <a
+            href="#"
+            class="compact"
+            @click.prevent="setFormat('compact')"
+            :class="format === 'compact' ? 'active' : ''"
+            >Compact</a
+          >
+          <a
+            href="#"
+            class="grid"
+            @click.prevent="setFormat('grid')"
+            :class="format === 'grid' ? 'active' : ''"
+            >Grid</a
+          >
+          <a
+            href="#"
+            class="json"
+            @click.prevent="setFormat('json')"
+            :class="format === 'json' ? 'active' : ''"
+            >JSON</a
+          >
         </div>
       </div>
       <div class="actions">
-        <a href="#" @click.prevent="toggleShowGraph()">{{ showGraph ? 'hide' : 'show' }} graph</a>
-        <a class="export" :href="baseAPIURL + '/export'" :download="exportFilename">Export</a>
+        <a href="#" @click.prevent="toggleShowGraph()"
+          >{{ showGraph ? 'hide' : 'show' }} graph</a
+        >
+        <a
+          class="export"
+          :href="baseAPIURL + '/export'"
+          :download="exportFilename"
+          >Export</a
+        >
       </div>
     </header>
 
-    <Split class="split-panel" direction="vertical" @onDrag="onSplitResize" @onDragStart="enableSplitting" v-if="!showNoResults && !error" ref="splitPanel">
+    <Split
+      class="split-panel"
+      direction="vertical"
+      @onDrag="onSplitResize"
+      @onDragStart="enableSplitting"
+      v-if="!showNoResults && !error"
+      ref="splitPanel"
+    >
       <SplitArea
         class="timeline-split"
         :min-size="splitSizeMinSet[0]"
@@ -24,7 +63,7 @@
         <timeline
           :events="timelineEvents"
           :selected-event-id="eventId"
-          v-if="format !== 'json' && showGraph"
+          v-if="showGraph"
         />
       </SplitArea>
       <SplitArea
@@ -34,7 +73,11 @@
         :size="splitSizeSet[1]"
       >
         <section v-snapscroll class="results" ref="results">
-          <div class="table" v-if="format === 'grid' && showTable" :class="{ compact: compactDetails }">
+          <div
+            class="table"
+            v-if="format === 'grid' && showTable"
+            :class="{ compact: compactDetails }"
+          >
             <div class="thead" ref="thead">
               <div class="th col-id">ID</div>
               <div class="th col-type">
@@ -48,12 +91,34 @@
                 />
               </div>
               <div class="th col-time">
-                <a class="elapsed" :href="tsFormat === 'elapsed' ? null : '#'" @click.prevent="setTsFormat('elapsed')">Elapsed</a> /
-                <a class="ts" :href="tsFormat === 'elapsed' ? '#' : null" @click.prevent="setTsFormat('ts')">Time</a>
+                <a
+                  class="elapsed"
+                  :href="tsFormat === 'elapsed' ? null : '#'"
+                  @click.prevent="setTsFormat('elapsed')"
+                  >Elapsed</a
+                >
+                /
+                <a
+                  class="ts"
+                  :href="tsFormat === 'elapsed' ? '#' : null"
+                  @click.prevent="setTsFormat('ts')"
+                  >Time</a
+                >
               </div>
               <div class="th col-summary">
-                <a class="summary" :href="compactDetails ? null : '#'" @click.prevent="setCompactDetails(true)">Summary</a> /
-                <a class="details" :href="compactDetails ? '#' : null" @click.prevent="setCompactDetails(false)">Full Details</a>
+                <a
+                  class="summary"
+                  :href="compactDetails ? null : '#'"
+                  @click.prevent="setCompactDetails(true)"
+                  >Summary</a
+                >
+                /
+                <a
+                  class="details"
+                  :href="compactDetails ? '#' : null"
+                  @click.prevent="setCompactDetails(false)"
+                  >Full Details</a
+                >
               </div>
             </div>
             <div class="spacer" />
@@ -77,14 +142,26 @@
                     :class="{ active: item.expanded, odd: index % 2 === 1 }"
                     :data-event-type="item.eventType"
                     :data-event-id="item.eventId"
-                    @click.prevent="$router.replaceQueryParam('eventId', item.eventId)"
+                    @click.prevent="
+                      $router.replaceQueryParam('eventId', item.eventId)
+                    "
                   >
-                    <div class="td col-id">{{item.eventId}}</div>
-                    <div class="td col-type">{{item.eventType}}</div>
-                    <div class="td col-time">{{tsFormat === 'elapsed' ? item.timeElapsedDisplay : item.timeStampDisplay}}</div>
+                    <div class="td col-id">{{ item.eventId }}</div>
+                    <div class="td col-type">{{ item.eventType }}</div>
+                    <div class="td col-time">
+                      {{
+                        tsFormat === 'elapsed'
+                          ? item.timeElapsedDisplay
+                          : item.timeStampDisplay
+                      }}
+                    </div>
                     <div class="td col-summary">
                       <event-details
-                        :event="(compactDetails && !item.expanded) ? item.eventSummary : item.eventFullDetails"
+                        :event="
+                          compactDetails && !item.expanded
+                            ? item.eventSummary
+                            : item.eventFullDetails
+                        "
                         :compact="compactDetails && !item.expanded"
                         :highlight="events.length < 100"
                       />
@@ -94,8 +171,15 @@
               </template>
             </DynamicScroller>
           </div>
-          <prism class="json" language="json" v-if="format === 'json' && events.length < 90">{{JSON.stringify(events, null, 2)}}</prism>
-          <pre class="json" v-if="format === 'json' && events.length >= 90">{{JSON.stringify(events, null, 2)}}</pre>
+          <prism
+            class="json"
+            language="json"
+            v-if="format === 'json' && events.length < 90"
+            >{{ JSON.stringify(events, null, 2) }}</prism
+          >
+          <pre class="json" v-if="format === 'json' && events.length >= 90">{{
+            JSON.stringify(events, null, 2)
+          }}</pre>
           <div class="compact-view" v-if="format === 'compact'">
             <RecycleScroller
               class="scroller-compact"
@@ -107,10 +191,14 @@
             >
               <template v-slot="{ item }">
                 <div
-                  :class="`timeline-event ${item.className || ''} ${(item === selectedTimelineEvent ? ' vis-selected' : '')}`"
+                  :class="
+                    `timeline-event ${item.className || ''} ${
+                      item === selectedTimelineEvent ? ' vis-selected' : ''
+                    }`
+                  "
                   @click.prevent="selectTimelineEvent(item)"
                 >
-                  <span class="event-title">{{item.content}}</span>
+                  <span class="event-title">{{ item.content }}</span>
                   <details-list
                     :compact="true"
                     :item="item.details"
@@ -119,51 +207,84 @@
                 </div>
               </template>
             </RecycleScroller>
-            <div class="selected-event-details" v-if="selectedTimelineEvent" :class="{ active: !!selectedTimelineEvent }">
+            <div
+              class="selected-event-details"
+              v-if="selectedTimelineEvent"
+              :class="{ active: !!selectedTimelineEvent }"
+            >
               <a href="#" class="close" @click.prevent="deselectEvent"></a>
-              <span class="event-title" v-if="!selectedTimelineEvent.titleLink">{{selectedTimelineEvent.content}}</span>
-              <router-link class="event-title" v-if="selectedTimelineEvent.titleLink" :to="selectedTimelineEvent.titleLink">{{selectedTimelineEvent.content}}</router-link>
-              <details-list class="timeline-details" :item="selectedTimelineEvent.details" :title="selectedTimelineEvent.content" />
+              <span
+                class="event-title"
+                v-if="!selectedTimelineEvent.titleLink"
+                >{{ selectedTimelineEvent.content }}</span
+              >
+              <router-link
+                class="event-title"
+                v-if="selectedTimelineEvent.titleLink"
+                :to="selectedTimelineEvent.titleLink"
+                >{{ selectedTimelineEvent.content }}</router-link
+              >
+              <details-list
+                class="timeline-details"
+                :item="selectedTimelineEvent.details"
+                :title="selectedTimelineEvent.content"
+              />
               <div class="event-tabs">
                 <span>Events</span>
-                <a href="#"
+                <a
+                  href="#"
                   :class="'event' + (eventId === eid ? ' active' : '')"
                   v-for="eid in selectedTimelineEvent.eventIds"
                   :key="eid"
                   @click.prevent="$router.replaceQueryParam('eventId', eid)"
-                  :data-event-id="eid">
-                    {{events.find(event => event.eventId === eid).eventType}}
+                  :data-event-id="eid"
+                >
+                  {{ events.find(event => event.eventId === eid).eventType }}
                 </a>
               </div>
-              <details-list class="event-details" :item="selectedEventDetails" :title="`${selectedTimelineEvent.content} - ${selectedEvent.eventType}`" />
+              <details-list
+                class="event-details"
+                :item="selectedEventDetails"
+                :title="
+                  `${selectedTimelineEvent.content} - ${selectedEvent.eventType}`
+                "
+              />
             </div>
           </div>
         </section>
       </SplitArea>
     </Split>
 
-    <span class="error" v-if="error">{{error}}</span>
+    <span class="error" v-if="error">{{ error }}</span>
     <span class="no-results" v-if="showNoResults">No Results</span>
   </section>
 </template>
 
 <script>
-import moment from 'moment';
-import eventDetails from './event-details.vue';
 import Prism from 'vue-prism-component';
-import { DynamicScroller, DynamicScrollerItem, RecycleScroller } from 'vue-virtual-scroller';
-import timeline from './timeline.vue';
+import {
+  DynamicScroller,
+  DynamicScrollerItem,
+  RecycleScroller,
+} from 'vue-virtual-scroller';
 import debounce from 'lodash-es/debounce';
 import omit from 'lodash-es/omit';
+import timeline from './timeline.vue';
+import eventDetails from './event-details.vue';
 
 export default {
+  name: 'history',
   data() {
     return {
-      tsFormat: localStorage.getItem(`${this.domain}:history-ts-col-format`) || 'elapsed',
-      compactDetails: localStorage.getItem(`${this.domain}:history-compact-details`) === 'true',
+      tsFormat:
+        localStorage.getItem(`${this.domain}:history-ts-col-format`) ||
+        'elapsed',
+      compactDetails:
+        localStorage.getItem(`${this.domain}:history-compact-details`) ===
+        'true',
       scrolledToEventOnInit: false,
       splitEnabled: false,
-      eventType: "",
+      eventType: '',
       eventTypes: [
         { value: 'All', label: 'All' },
         { value: 'Decision', label: 'Decision' },
@@ -195,51 +316,59 @@ export default {
     this.onResizeWindow = debounce(() => {
       const { scrollerCompact, scrollerGrid, thead, viewSplit } = this.$refs;
       const scroller = this.isGrid ? scrollerGrid : scrollerCompact;
+
       if (!scroller) {
         return;
       }
+
       const offsetHeight = this.isGrid ? thead.offsetHeight : 0;
       const viewSplitHeight = viewSplit.$el.offsetHeight;
       const scrollerHeight = viewSplitHeight - offsetHeight;
+
       scroller.$el.style.height = `${scrollerHeight}px`;
     }, 5);
   },
   mounted() {
     this.splitSizeSet = this.showGraph ? [20, 80] : [1, 99];
-    this.unwatch.push(this.$watch(
-      () => `${this.events.length}${this.tsFormat.length}${this.$route.query.format}${this.compactDetails}`,
-      this.onResizeWindow,
-      { immediate: true },
-    ));
+    this.unwatch.push(
+      this.$watch(
+        () =>
+          `${this.events.length}${this.tsFormat.length}${this.$route.query.format}${this.compactDetails}`,
+        this.onResizeWindow,
+        { immediate: true }
+      )
+    );
     window.addEventListener('resize', this.onResizeWindow);
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.onResizeWindow);
-    while(this.unwatch.length) {
-      (this.unwatch.pop())();
+    while (this.unwatch.length) {
+      this.unwatch.pop()();
     }
   },
   computed: {
     exportFilename() {
-      return `${this.workflowId.replace(/[\\~#%&*{}\/:<>?|\"-]/g, ' ')} - ${this.runId}.json`;
+      return `${this.workflowId.replace(/[\\~#%&*{}/:<>?|"-]/g, ' ')} - ${
+        this.runId
+      }.json`;
     },
     filteredEvents() {
-      const {
-        eventId,
-        eventType,
-      } = this;
-      const formattedEvents = this.events.map((event) => Object.assign({}, event, {
+      const { eventId, eventType } = this;
+      const formattedEvents = this.events.map(event => ({
+        ...event,
         expanded: event.eventId === eventId,
       }));
-      return eventType && eventType !== 'All' ?
-        formattedEvents.filter(result => result.eventType.includes(eventType)) :
-        formattedEvents;
+
+      return eventType && eventType !== 'All'
+        ? formattedEvents.filter(result => result.eventType.includes(eventType))
+        : formattedEvents;
     },
     filteredEventIdToIndex() {
       return this.filteredEvents
         .map(({ eventId }) => eventId)
         .reduce((accumulator, eventId, index) => {
           accumulator[eventId] = index;
+
           return accumulator;
         }, {});
     },
@@ -256,10 +385,12 @@ export default {
       if (!this.selectedEvent) {
         return {};
       }
-      return Object.assign({
+
+      return {
         timestamp: this.selectedEvent.timestamp.format('MMM Do h:mm:ss a'),
         eventId: this.selectedEvent.eventId,
-      }, this.selectedEvent.details);
+        ...this.selectedEvent.details,
+      };
     },
     showTable() {
       return !this.error && (this.loading || this.events.length);
@@ -270,11 +401,17 @@ export default {
     timelineEventIdToIndex() {
       return this.timelineEvents
         .map(({ eventIds }) => eventIds)
-        .reduce((accumulator, eventIds, index) =>
-          Object.assign({}, accumulator, eventIds.reduce((acc, eventId) => {
-            acc[eventId] = index;
-            return acc;
-          }, {})), {});
+        .reduce(
+          (accumulator, eventIds, index) => ({
+            ...accumulator,
+            ...eventIds.reduce((acc, eventId) => {
+              acc[eventId] = index;
+
+              return acc;
+            }, {}),
+          }),
+          {}
+        );
     },
   },
   methods: {
@@ -283,21 +420,25 @@ export default {
     },
     enableSplitting() {
       if (!this.splitEnabled) {
-        var timelineHeightPct = (this.$refs.splitPanel.$el.firstElementChild.offsetHeight / this.$refs.splitPanel.$el.offsetHeight) * 100;
+        const timelineHeightPct =
+          (this.$refs.splitPanel.$el.firstElementChild.offsetHeight /
+            this.$refs.splitPanel.$el.offsetHeight) *
+          100;
+
         this.splitSizeSet = [timelineHeightPct, 100 - timelineHeightPct];
         this.splitEnabled = true;
       }
     },
-    onSplitResize: debounce(function (size) {
+    onSplitResize: debounce(() => {
       window.dispatchEvent(new Event('resize'));
     }, 5),
-    setEventType(et){
+    setEventType(et) {
       this.eventType = et.value;
       setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
     },
     setFormat(format) {
       this.$router.replace({
-        query: Object.assign({}, this.$route.query, { format }),
+        query: { ...this.$route.query, format },
       });
       setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
     },
@@ -307,15 +448,19 @@ export default {
     },
     setCompactDetails(compact) {
       const { scrollerGrid } = this.$refs;
+
       this.compactDetails = compact;
-      localStorage.setItem(`${this.domain}:history-compact-details`, JSON.stringify(compact));
+      localStorage.setItem(
+        `${this.domain}:history-compact-details`,
+        JSON.stringify(compact)
+      );
       scrollerGrid.forceUpdate();
       setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
     },
     scrollEventIntoView(eventId) {
-      const index = this.isGrid ?
-        this.filteredEventIdToIndex[eventId] :
-        this.timelineEventIdToIndex[eventId];
+      const index = this.isGrid
+        ? this.filteredEventIdToIndex[eventId]
+        : this.timelineEventIdToIndex[eventId];
 
       this.scrollToItem(index);
 
@@ -327,27 +472,34 @@ export default {
     scrollToItem(index, forceUpdate) {
       const { scrollerCompact, scrollerGrid } = this.$refs;
       const scroller = this.isGrid ? scrollerGrid : scrollerCompact;
+
       if (index === undefined || !scroller) {
         return;
       }
+
       try {
         scroller.scrollToItem(index);
+
         if (forceUpdate) {
           scroller.forceUpdate();
         }
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.warn('vue-virtual-scroller: Could not scrollToItem:', error);
       }
     },
     selectTimelineEvent(i) {
-      this.$router.replaceQueryParam('eventId', i.eventIds[i.eventIds.length - 1]);
+      this.$router.replaceQueryParam(
+        'eventId',
+        i.eventIds[i.eventIds.length - 1]
+      );
     },
     toggleShowGraph() {
       if (this.showGraph) {
         this.$router.replace({ query: omit(this.$route.query, 'showGraph') });
       } else {
         this.$router.replace({
-          query: Object.assign({}, this.$route.query, { showGraph: true }),
+          query: { ...this.$route.query, showGraph: true },
         });
       }
     },
@@ -358,9 +510,9 @@ export default {
     },
     filteredEvents() {
       if (
-        !this.scrolledToEventOnInit
-        && this.eventId !== undefined
-        && this.filteredEventIdToIndex[this.eventId] !== undefined
+        !this.scrolledToEventOnInit &&
+        this.eventId !== undefined &&
+        this.filteredEventIdToIndex[this.eventId] !== undefined
       ) {
         this.scrolledToEventOnInit = true;
         setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
@@ -375,11 +527,11 @@ export default {
     DynamicScroller,
     DynamicScrollerItem,
     'event-details': eventDetails,
-    'prism': Prism,
+    prism: Prism,
     RecycleScroller,
     timeline,
-  }
-}
+  },
+};
 </script>
 
 <style lang="stylus">
@@ -565,6 +717,7 @@ section.history
 
     .timeline-event
       border 2px solid primary-color
+      cursor: pointer;
       padding 6px
       margin-bottom layout-spacing-small
       history-item-state-color(3%)
@@ -622,5 +775,4 @@ section.history
           padding 4px
       a.close
         top layout-spacing-small
-
 </style>

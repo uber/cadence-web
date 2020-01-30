@@ -1,8 +1,16 @@
 <template>
   <div class="data-viewer">
-    <a href="#" class="view-full-screen" @click.stop.prevent="viewFullScreen"></a>
-    <prism v-if="highlight !== false" language="json" ref="codebox">{{item.jsonStringDisplay}}</prism>
-    <pre v-if="highlight === false" ref="codebox">{{item.jsonStringDisplay}}</pre>
+    <a
+      href="#"
+      class="view-full-screen"
+      @click.stop.prevent="viewFullScreen"
+    ></a>
+    <prism v-if="highlight !== false" language="json" ref="codebox">{{
+      item.jsonStringDisplay
+    }}</prism>
+    <pre v-if="highlight === false" ref="codebox">{{
+      item.jsonStringDisplay
+    }}</pre>
   </div>
 </template>
 
@@ -13,27 +21,30 @@ import Prism from 'vue-prism-component';
 
 export default {
   name: 'data-viewer',
-  props: [
-    'compact',
-    'highlight',
-    'item',
-    'title',
-  ],
+  props: ['compact', 'highlight', 'item', 'title'],
   data() {
     return {};
   },
   created() {
     this.checkOverflow = () => {
       const el = this.$refs.codebox;
+
       if (!el) {
         return;
       }
 
-      const action = el.scrollWidth > (el.offsetWidth + 2) || el.scrollHeight > (el.offsetHeight + 2) ? 'add' : 'remove';
+      const action =
+        el.scrollWidth > el.offsetWidth + 2 ||
+        el.scrollHeight > el.offsetHeight + 2
+          ? 'add'
+          : 'remove';
+
       this.$el.classList[action]('overflow');
     };
     window.addEventListener('resize', this.checkOverflow);
-    ['item', 'highlight', 'compact'].forEach(e => this.$watch(e, this.checkOverflow));
+    ['item', 'highlight', 'compact'].forEach(e =>
+      this.$watch(e, this.checkOverflow)
+    );
     this.$watch(() => this.$route, this.checkOverflow);
   },
   mounted() {
@@ -65,7 +76,7 @@ export default {
         },
         {
           name: 'data-viewer-fullscreen',
-        },
+        }
       );
     },
   },

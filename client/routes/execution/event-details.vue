@@ -4,8 +4,9 @@ export default {
   props: ['event', 'compact', 'highlight'],
   render(h) {
     if (!this.event) {
-      return;
+      return null;
     }
+
     return h('details-list', {
       props: {
         item: this.event,

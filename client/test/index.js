@@ -1,7 +1,7 @@
 if (module.hot) {
-  module.hot.addStatusHandler(function (status) {
+  module.hot.addStatusHandler(status => {
     if (status === 'apply') {
-      location.reload();
+      window.location.reload();
     }
   });
 }
@@ -9,15 +9,21 @@ if (module.hot) {
 require('mocha/mocha');
 
 const mochaDiv = document.createElement('div');
+
 mochaDiv.id = 'mocha';
 document.body.appendChild(mochaDiv);
 
 const mochaCss = document.createElement('link');
+
 mochaCss.setAttribute('rel', 'stylesheet');
-mochaCss.setAttribute('href', 'https://cdnjs.cloudflare.com/ajax/libs/mocha/3.4.2/mocha.css');
+mochaCss.setAttribute(
+  'href',
+  'https://cdnjs.cloudflare.com/ajax/libs/mocha/3.4.2/mocha.css'
+);
 document.head.appendChild(mochaCss);
 
 const extraStyling = document.createElement('style');
+
 extraStyling.setAttribute('type', 'text/css');
 extraStyling.textContent = `
 #mocha li:nth-child(2n),
@@ -37,7 +43,10 @@ main {
 document.head.appendChild(extraStyling);
 document.title = 'Cadence Tests';
 
-var chai = window.chai = require('chai');
+const chai = require('chai');
+
+window.chai = chai;
+
 chai.should();
 chai.use(require('chai-dom'));
 chai.use(require('chai-string'));
@@ -51,58 +60,75 @@ mocha.setup({
   slow: 500,
 });
 
-beforeEach(function () {
+beforeEach(() => {
   localStorage.clear();
 });
 
 // hack workaround for https://github.com/mochajs/mocha/issues/1635
 const oldIt = window.it;
-window.it = function (name, func) {
+
+window.it = function it(...args) {
+  const [name, func] = args;
+
   if (func) {
     const origFunc = func;
 
-    const wrapperFunc = function () {
+    const wrapperFunc = function wrapperFunc() {
       const result = func.call(this);
+
       if (result && typeof result.then === 'function') {
-        var currScenario = this.test.scenario;
+        const currScenario = this.test.scenario;
+
         return result.then(
           () => currScenario && currScenario.tearDown(this.test),
-          e => currScenario ? currScenario.tearDown(this.test).then(() => Promise.reject(e), () => Promise.reject(e)) : Promise.reject(e)
+          e =>
+            currScenario
+              ? currScenario.tearDown(this.test).then(
+                  () => Promise.reject(e),
+                  () => Promise.reject(e)
+                )
+              : Promise.reject(e)
         );
-      } else {
-        return scenario && scenario.tearDown(this.test).then(() => result);
       }
+
+      return scenario && scenario.tearDown(this.test).then(() => result);
     };
+
     wrapperFunc.toString = origFunc.toString.bind(origFunc);
 
     return oldIt(name, wrapperFunc);
-  } else {
-    return oldIt.apply(null, arguments);
   }
+
+  return oldIt(...args);
 };
 
-HTMLInputElement.prototype.input = function(text) {
+HTMLInputElement.prototype.input = function input(text) {
   this.value = text;
   this.trigger('input', { testTarget: this });
-}
+};
 
-HTMLElement.prototype.selectItem = async function(text) {
+HTMLElement.prototype.selectItem = async function selectItem(text) {
   const openDropdown = new MouseEvent('mousedown');
+
   this.querySelector('.dropdown-toggle').dispatchEvent(openDropdown);
 
-  const itemToClick = Array.from(await this.waitUntilAllExist('ul.dropdown-menu li a')).find(a => a.innerText.trim() === text);
-  const selectItem = new MouseEvent('mousedown');
+  const itemToClick = Array.from(
+    await this.waitUntilAllExist('ul.dropdown-menu li a')
+  ).find(a => a.innerText.trim() === text);
+  const selectedItem = new MouseEvent('mousedown');
 
-  itemToClick.dispatchEvent(selectItem);
-}
+  itemToClick.dispatchEvent(selectedItem);
+};
 
-HTMLElement.prototype.selectOptions = async function(text) {
+HTMLElement.prototype.selectOptions = async function selectOptions() {
   const openDropdown = new MouseEvent('mousedown');
+
   this.querySelector('.dropdown-toggle').dispatchEvent(openDropdown);
 
   await this.waitUntilAllExist('ul.dropdown-menu li a');
+
   return this.textNodes('ul.dropdown-menu li a');
-}
+};
 
 require('./scenario');
 

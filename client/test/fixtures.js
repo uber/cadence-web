@@ -1,44 +1,60 @@
-import moment from 'moment'
+import moment from 'moment';
 
-const timeBasis = moment().startOf('day').add(5, 'hours'),
-  emailRun1Start = moment(timeBasis).subtract(3, 'minutes').subtract(1, 'day'),
-  exampleTimeoutStart = moment(timeBasis).subtract(2, 'hours'),
-  timelineVarietyStart = moment(timeBasis).subtract(5, 'hours')
+const timeBasis = moment()
+  .startOf('day')
+  .add(5, 'hours');
+const emailRun1Start = moment(timeBasis)
+  .subtract(3, 'minutes')
+  .subtract(1, 'day');
+const exampleTimeoutStart = moment(timeBasis).subtract(2, 'hours');
+const timelineVarietyStart = moment(timeBasis).subtract(5, 'hours');
 
 export default {
   timeBasis,
   workflows: {
-    open: [{
-      execution: {
-        workflowId: 'github.com/uber/cadence-web/email-daily-summaries-2',
-        runId: 'ef2c889e-e709-4d50-99ee-3748dfa0a101'
+    open: [
+      {
+        execution: {
+          workflowId: 'github.com/uber/cadence-web/email-daily-summaries-2',
+          runId: 'ef2c889e-e709-4d50-99ee-3748dfa0a101',
+        },
+        type: {
+          name: 'email-daily-summaries',
+        },
+        startTime: moment(timeBasis)
+          .subtract(3, 'minutes')
+          .toISOString(),
       },
-      type: {
-        name: 'email-daily-summaries'
+      {
+        execution: {
+          workflowId: 'github.com/uber/cadence-web/example-1',
+          runId: 'db8da3c0-b7d3-48b7-a9b3-b6f566e58207',
+        },
+        type: {
+          name: 'example',
+        },
+        startTime: moment(timeBasis)
+          .subtract(20, 'seconds')
+          .toISOString(),
       },
-      startTime: moment(timeBasis).subtract(3, 'minutes').toISOString(),
-    }, {
-      execution: {
-        workflowId: 'github.com/uber/cadence-web/example-1',
-        runId: 'db8da3c0-b7d3-48b7-a9b3-b6f566e58207'
+    ],
+    closed: [
+      {
+        execution: {
+          workflowId: 'email-daily-summaries',
+          runId: '51ccc0d1-6ffe-4a7a-a89f-6b5154df86f7',
+        },
+        type: {
+          name: 'github.com/uber/cadence-web/email-daily-summaries-1',
+        },
+        closeStatus: 'COMPLETED',
+        startTime: emailRun1Start.toISOString(),
+        closeTime: moment(timeBasis)
+          .subtract(2, 'minutes')
+          .subtract(1, 'day')
+          .toISOString(),
       },
-      type: {
-        name: 'example'
-      },
-      startTime: moment(timeBasis).subtract(20, 'seconds').toISOString(),
-    }],
-    closed: [{
-      execution: {
-        workflowId: 'email-daily-summaries',
-        runId: '51ccc0d1-6ffe-4a7a-a89f-6b5154df86f7'
-      },
-      type: {
-        name: 'github.com/uber/cadence-web/email-daily-summaries-1'
-      },
-      closeStatus: 'COMPLETED',
-      startTime: emailRun1Start.toISOString(),
-      closeTime: moment(timeBasis).subtract(2, 'minutes').subtract(1, 'day').toISOString(),
-    }]
+    ],
   },
   history: {
     emailRun1: [
@@ -48,35 +64,38 @@ export default {
         eventId: 1,
         details: {
           workflowType: {
-            name: 'email-daily-summaries'
+            name: 'email-daily-summaries',
           },
           taskList: {
-            name: 'ci-task-queue'
+            name: 'ci-task-queue',
           },
-          input:[839134, { env: "prod" }],
+          input: [839134, { env: 'prod' }],
           executionStartToCloseTimeoutSeconds: 360,
-          taskStartToCloseTimeoutSeconds: 180
-        }
-      }, {
+          taskStartToCloseTimeoutSeconds: 180,
+        },
+      },
+      {
         timestamp: emailRun1Start.toISOString(),
         eventType: 'DecisionTaskScheduled',
         eventId: 2,
         details: {
           taskList: {
-            name: 'ci-task-queue'
+            name: 'ci-task-queue',
           },
-          zero: 0
-        }
-      }, {
+          zero: 0,
+        },
+      },
+      {
         timestamp: emailRun1Start.toISOString(),
         eventType: 'DecisionTaskStarted',
         eventId: 3,
         details: {
           scheduledEventId: 2,
           question: 'What is the answer to life, the universe, and everything?',
-          requestId: 'abefc8d3-c654-49e6-8e17-126847bf315f'
-        }
-      }, {
+          requestId: 'abefc8d3-c654-49e6-8e17-126847bf315f',
+        },
+      },
+      {
         timestamp: emailRun1Start.add(1, 'second').toISOString(),
         eventType: 'DecisionTaskCompleted',
         eventId: 4,
@@ -84,137 +103,146 @@ export default {
           scheduledEventId: 2,
           startedEventId: 3,
           answer: 42,
-        }
-      }, {
+        },
+      },
+      {
         timestamp: emailRun1Start.add(1, 'second').toISOString(),
         eventType: 'MarkerRecorded',
         eventId: 5,
         details: {
           markerName: 'Version',
           details: [0, 'initial version'],
-          decisionTaskCompletedEventId: 4
-        }
-      }, {
+          decisionTaskCompletedEventId: 4,
+        },
+      },
+      {
         timestamp: emailRun1Start.add(1, 'second').toISOString(),
         eventType: 'ActivityTaskScheduled',
         eventId: 6,
         details: {
           activityId: '0',
           activityType: {
-            name: 'send-emails'
+            name: 'send-emails',
           },
           taskList: {
-            name: 'ci-task-queue'
+            name: 'ci-task-queue',
           },
-          input: [12345, ["bob@example.com", "jane@somewhere.com"]],
+          input: [12345, ['bob@example.com', 'jane@somewhere.com']],
           scheduleToCloseTimeoutSeconds: 360,
           scheduleToStartTimeoutSeconds: 180,
           startToCloseTimeoutSeconds: 180,
           heartbeatTimeoutSeconds: 0,
-          decisionTaskCompletedEventId: 4
-        }
-      }, {
+          decisionTaskCompletedEventId: 4,
+        },
+      },
+      {
         timestamp: emailRun1Start.add(5, 'second').toISOString(),
         eventType: 'ActivityTaskStarted',
         eventId: 7,
         details: {
           scheduledEventId: 6,
-          requestId: '13624219-683c-401e-a321-db04cdac724a'
-        }
-      }, {
+          requestId: '13624219-683c-401e-a321-db04cdac724a',
+        },
+      },
+      {
         timestamp: emailRun1Start.add(11, 'second').toISOString(),
         eventType: 'ActivityTaskCompleted',
         eventId: 8,
         details: {
-          result: '{IntVal:9223372036854775807,IntPtrVal:9223372036854775807,FloatVal:1.7976931348623157e+308,StringVal:canary_echo_test,StringPtrVal:canary_echo_test,SliceVal:[canary,.,echoWorkflow],MapVal:{us-east-1:dca1a,us-west-1:sjc1a}}',
+          result:
+            '{IntVal:9223372036854775807,IntPtrVal:9223372036854775807,FloatVal:1.7976931348623157e+308,StringVal:canary_echo_test,StringPtrVal:canary_echo_test,SliceVal:[canary,.,echoWorkflow],MapVal:{us-east-1:dca1a,us-west-1:sjc1a}}',
           scheduledEventId: 6,
           startedEventId: 7,
-        }
-      }, {
+        },
+      },
+      {
         timestamp: emailRun1Start.add(11, 'second').toISOString(),
         eventType: 'DecisionTaskScheduled',
         eventId: 9,
-        details: { taskList: { name: 'ci-task-queue' } }
-      }, {
+        details: { taskList: { name: 'ci-task-queue' } },
+      },
+      {
         timestamp: emailRun1Start.add(11, 'second').toISOString(),
         eventType: 'DecisionTaskStarted',
         eventId: 10,
         details: {
           scheduledEventId: 9,
-          foo: 'bar'
-        }
-      }, {
+          foo: 'bar',
+        },
+      },
+      {
         timestamp: emailRun1Start.add(11, 'second').toISOString(),
         eventType: 'DecisionTaskCompleted',
         eventId: 11,
         details: {
           scheduledEventId: 9,
-          startedEventId: 10
-        }
-      }, {
+          startedEventId: 10,
+        },
+      },
+      {
         timestamp: emailRun1Start.add(12, 'second').toISOString(),
         eventType: 'WorkflowExecutionCompleted',
         eventId: 12,
         details: {
           result: {
             recipients: ['bob@example.com', 'jane@example.com'],
-            trackingTag: 'foobarbaz'
+            trackingTag: 'foobarbaz',
           },
-          decisionTaskCompletedEventId: 11
-        }
-      }
+          decisionTaskCompletedEventId: 11,
+        },
+      },
     ],
     exampleTimeout: [
       {
         details: {
           executionStartToCloseTimeoutSeconds: 360,
           taskList: {
-            name: 'canary-task-queue'
+            name: 'canary-task-queue',
           },
           taskStartToCloseTimeoutSeconds: 180,
           workflowType: {
-            name: 'example'
-          }
+            name: 'example',
+          },
         },
         eventId: 1,
         eventType: 'WorkflowExecutionStarted',
-        timestamp: exampleTimeoutStart.toISOString()
+        timestamp: exampleTimeoutStart.toISOString(),
       },
       {
         eventId: 2,
         eventType: 'DecisionTaskScheduled',
-        timestamp: exampleTimeoutStart.toISOString()
-      },
-      {
-        details: {
-          scheduledEventId: 2
-        },
-        eventId: 3,
-        eventType: 'DecisionTaskStarted',
-        timestamp: exampleTimeoutStart.toISOString()
+        timestamp: exampleTimeoutStart.toISOString(),
       },
       {
         details: {
           scheduledEventId: 2,
-          startedEventId: 3
         },
-        eventId: 4,
-        eventType: 'DecisionTaskCompleted',
-        timestamp: exampleTimeoutStart.toISOString()
+        eventId: 3,
+        eventType: 'DecisionTaskStarted',
+        timestamp: exampleTimeoutStart.toISOString(),
       },
       {
         details: {
-          decisionTaskCompletedEventId: 4
+          scheduledEventId: 2,
+          startedEventId: 3,
+        },
+        eventId: 4,
+        eventType: 'DecisionTaskCompleted',
+        timestamp: exampleTimeoutStart.toISOString(),
+      },
+      {
+        details: {
+          decisionTaskCompletedEventId: 4,
         },
         eventId: 5,
         eventType: 'MarkerRecorded',
-        timestamp: exampleTimeoutStart.toISOString()
+        timestamp: exampleTimeoutStart.toISOString(),
       },
       {
         details: {
           activityId: 0,
           activityType: {
-            name: 'activity.timeout'
+            name: 'activity.timeout',
           },
           decisionTaskCompletedEventId: 4,
           heartbeatTimeoutSeconds: 0,
@@ -222,70 +250,70 @@ export default {
           scheduleToStartTimeoutSeconds: 1,
           startToCloseTimeoutSeconds: 1,
           taskList: {
-            name: 'ci-task-queue'
-          }
+            name: 'ci-task-queue',
+          },
         },
         eventId: 6,
         eventType: 'ActivityTaskScheduled',
-        timestamp: exampleTimeoutStart.add(1, 'second').toISOString()
+        timestamp: exampleTimeoutStart.add(1, 'second').toISOString(),
       },
       {
         details: {
           requestId: '71e3bef1-d6db-4ce1-b705-cf81732a6faf',
-          scheduledEventId: 6
+          scheduledEventId: 6,
         },
         eventId: 7,
         eventType: 'ActivityTaskStarted',
-        timestamp: exampleTimeoutStart.add(1, 'second').toISOString()
+        timestamp: exampleTimeoutStart.add(1, 'second').toISOString(),
       },
       {
         details: {
           scheduledEventId: 6,
           startedEventId: 7,
-          timeoutType: 'START_TO_CLOSE'
+          timeoutType: 'START_TO_CLOSE',
         },
         eventId: 8,
         eventType: 'ActivityTaskTimedOut',
-        timestamp: exampleTimeoutStart.add(2, 'second').toISOString()
+        timestamp: exampleTimeoutStart.add(2, 'second').toISOString(),
       },
       {
         details: {
           startToCloseTimeoutSeconds: 180,
           taskList: {
-            name: 'compute3330-sjc1:43b62b8e-aa2a-4b58-9571-39062a073d24'
-          }
+            name: 'compute3330-sjc1:43b62b8e-aa2a-4b58-9571-39062a073d24',
+          },
         },
         eventId: 9,
         eventType: 'DecisionTaskScheduled',
-        timestamp: exampleTimeoutStart.add(2, 'second').toISOString()
+        timestamp: exampleTimeoutStart.add(2, 'second').toISOString(),
       },
       {
         details: {
-          scheduledEventId: 9
+          scheduledEventId: 9,
         },
         eventId: 10,
         eventType: 'DecisionTaskStarted',
-        timestamp: exampleTimeoutStart.add(2, 'second').toISOString()
+        timestamp: exampleTimeoutStart.add(2, 'second').toISOString(),
       },
       {
         details: {
           executionContext: null,
           scheduledEventId: 9,
-          startedEventId: 10
+          startedEventId: 10,
         },
         eventId: 11,
         eventType: 'DecisionTaskCompleted',
-        timestamp: exampleTimeoutStart.add(2, 'second').toISOString()
+        timestamp: exampleTimeoutStart.add(2, 'second').toISOString(),
       },
       {
         details: {
           reason: 'activityTimeout',
-          activityId: 0
+          activityId: 0,
         },
         eventId: 12,
         eventType: 'WorkflowExecutionCompleted',
-        timestamp: exampleTimeoutStart.add(2, 'second').toISOString()
-      }
+        timestamp: exampleTimeoutStart.add(2, 'second').toISOString(),
+      },
     ],
     timelineVariety: [
       {
@@ -294,35 +322,38 @@ export default {
         eventId: 1,
         details: {
           workflowType: {
-            name: 'email-daily-summaries'
+            name: 'email-daily-summaries',
           },
           taskList: {
-            name: 'ci-task-queue'
+            name: 'ci-task-queue',
           },
-          input:[839134, { env: "prod" }],
+          input: [839134, { env: 'prod' }],
           executionStartToCloseTimeoutSeconds: 360,
-          taskStartToCloseTimeoutSeconds: 180
-        }
-      }, {
+          taskStartToCloseTimeoutSeconds: 180,
+        },
+      },
+      {
         timestamp: timelineVarietyStart.toISOString(),
         eventType: 'DecisionTaskScheduled',
         eventId: 2,
         details: {
           taskList: {
-            name: 'ci-task-queue'
+            name: 'ci-task-queue',
           },
-          zero: 0
-        }
-      }, {
+          zero: 0,
+        },
+      },
+      {
         timestamp: timelineVarietyStart.toISOString(),
         eventType: 'DecisionTaskStarted',
         eventId: 3,
         details: {
           scheduledEventId: 2,
           question: 'What is the answer to life, the universe, and everything?',
-          requestId: 'abefc8d3-c654-49e6-8e17-126847bf315f'
-        }
-      }, {
+          requestId: 'abefc8d3-c654-49e6-8e17-126847bf315f',
+        },
+      },
+      {
         timestamp: timelineVarietyStart.add(1, 'second').toISOString(),
         eventType: 'DecisionTaskCompleted',
         eventId: 4,
@@ -330,52 +361,57 @@ export default {
           scheduledEventId: 2,
           startedEventId: 3,
           answer: 42,
-        }
-      }, {
+        },
+      },
+      {
         timestamp: timelineVarietyStart.add(1, 'second').toISOString(),
         eventType: 'MarkerRecorded',
         eventId: 5,
         details: {
           markerName: 'Version',
           details: [0, 'initial version'],
-          decisionTaskCompletedEventId: 4
-        }
-      }, {
+          decisionTaskCompletedEventId: 4,
+        },
+      },
+      {
         timestamp: timelineVarietyStart.add(1, 'second').toISOString(),
         eventType: 'ActivityTaskScheduled',
         eventId: 6,
         details: {
           activityId: 0,
           activityType: {
-            name: 'search-for-treasure'
+            name: 'search-for-treasure',
           },
           taskList: {
-            name: 'ci-task-queue'
+            name: 'ci-task-queue',
           },
           input: { location: 'volcanic island' },
           scheduleToCloseTimeoutSeconds: 360,
           scheduleToStartTimeoutSeconds: 180,
           startToCloseTimeoutSeconds: 180,
           heartbeatTimeoutSeconds: 0,
-          decisionTaskCompletedEventId: 4
-        }
-      }, {
+          decisionTaskCompletedEventId: 4,
+        },
+      },
+      {
         timestamp: timelineVarietyStart.add(5, 'second').toISOString(),
         eventType: 'ActivityTaskStarted',
         eventId: 7,
         details: {
           scheduledEventId: 6,
-          requestId: '13624219-683c-401e-a321-db04cdac724a'
-        }
-      }, {
+          requestId: '13624219-683c-401e-a321-db04cdac724a',
+        },
+      },
+      {
         timestamp: timelineVarietyStart.add(1, 'second').toISOString(),
         eventType: 'MarkerRecorded',
         eventId: 8,
         details: {
           markerName: 'SideEffect',
-          details: [0, btoa(JSON.stringify({ foo: 'bar' }))]
-        }
-      }, {
+          details: [0, btoa(JSON.stringify({ foo: 'bar' }))],
+        },
+      },
+      {
         timestamp: timelineVarietyStart.add(11, 'second').toISOString(),
         eventType: 'ActivityTaskCompleted',
         eventId: 9,
@@ -383,17 +419,19 @@ export default {
           result: 'no treasure',
           scheduledEventId: 6,
           startedEventId: 7,
-        }
-      }, {
+        },
+      },
+      {
         timestamp: timelineVarietyStart.add(11, 'second').toISOString(),
         eventType: 'StartChildWorkflowExecutionInitiated',
         eventId: 10,
         details: {
           workflowType: { name: 'sail-the-ocean' },
           taskList: { name: 'another-queue' },
-          input: { direction: 'west' }
-        }
-      }, {
+          input: { direction: 'west' },
+        },
+      },
+      {
         timestamp: timelineVarietyStart.add(11, 'second').toISOString(),
         eventType: 'ChildWorkflowExecutionStarted',
         eventId: 11,
@@ -402,38 +440,41 @@ export default {
           workflowType: { name: 'sail-the-ocean' },
           workflowExecution: {
             workflowId: 'sail-the-ocean-1',
-            runId: 'arrr56'
+            runId: 'arrr56',
           },
-          initiatedEventId: 10
-        }
-      }, {
+          initiatedEventId: 10,
+        },
+      },
+      {
         timestamp: timelineVarietyStart.add(11, 'second').toISOString(),
         eventType: 'ActivityTaskScheduled',
         eventId: 12,
         details: {
           activityId: 1,
           activityType: {
-            name: 'swab-the-deck'
+            name: 'swab-the-deck',
           },
           taskList: {
-            name: 'ci-task-queue'
+            name: 'ci-task-queue',
           },
           input: { moveTheGrogToo: true },
           scheduleToCloseTimeoutSeconds: 3600,
           scheduleToStartTimeoutSeconds: 180,
           startToCloseTimeoutSeconds: 3780,
-          heartbeatTimeoutSeconds: 0
-        }
-      }, {
+          heartbeatTimeoutSeconds: 0,
+        },
+      },
+      {
         timestamp: timelineVarietyStart.add(12, 'second').toISOString(),
         eventType: 'ActivityTaskStarted',
         eventId: 13,
         details: {
           scheduledEventId: 12,
           attempt: 1,
-          requestId: 'e44b387b-7315-4238-93c5-dc0e1e67f317'
-        }
-      }, {
+          requestId: 'e44b387b-7315-4238-93c5-dc0e1e67f317',
+        },
+      },
+      {
         timestamp: timelineVarietyStart.add(13, 'second').toISOString(),
         eventType: 'MarkerRecorded',
         eventId: 14,
@@ -442,10 +483,11 @@ export default {
           details: {
             ActivityID: 1,
             ErrReason: 'child process failed',
-            ErrJSON: JSON.stringify({ exitcode: 1 })
-          }
-        }
-      }, {
+            ErrJSON: JSON.stringify({ exitcode: 1 }),
+          },
+        },
+      },
+      {
         timestamp: timelineVarietyStart.add(15, 'second').toISOString(),
         eventType: 'MarkerRecorded',
         eventId: 15,
@@ -453,57 +495,73 @@ export default {
           markerName: 'LocalActivity',
           details: {
             ActivityID: 2,
-            ResultJSON: JSON.stringify({ parrot_name: 'squaky' })
-          }
-        }
-      }, {
-        timestamp: timelineVarietyStart.add(1, 'minute').add(2, 'second').toISOString(),
+            ResultJSON: JSON.stringify({ parrot_name: 'squaky' }),
+          },
+        },
+      },
+      {
+        timestamp: timelineVarietyStart
+          .add(1, 'minute')
+          .add(2, 'second')
+          .toISOString(),
         eventType: 'ActivityTaskFailed',
         eventId: 16,
         details: {
-          reason: `couldn't find the mop`,
+          reason: "couldn't find the mop",
           details: { pirate_name: 'McShorty' },
           scheduledEventId: 12,
-          startedEventId: 13
-        }
-      }, {
-        timestamp: timelineVarietyStart.add(1, 'minute').add(20, 'second').toISOString(),
+          startedEventId: 13,
+        },
+      },
+      {
+        timestamp: timelineVarietyStart
+          .add(1, 'minute')
+          .add(20, 'second')
+          .toISOString(),
         eventType: 'WorkflowExecutionSignaled',
         eventId: 17,
         details: {
           input: {
             message: 'enemy ship spotted!',
-            position: `7 o'clock`
-          }
-        }
-      }, {
-        timestamp: timelineVarietyStart.add(2, 'minute').add(10, 'seconds').toISOString(),
+            position: "7 o'clock",
+          },
+        },
+      },
+      {
+        timestamp: timelineVarietyStart
+          .add(2, 'minute')
+          .add(10, 'seconds')
+          .toISOString(),
         eventType: 'ChildWorkflowExecutionCompleted',
         eventId: 18,
         details: {
           workflowType: { name: 'sail-the-ocean' },
           workflowExecution: {
             workflowId: 'sail-the-ocean-1',
-            runId: 'arrr56'
+            runId: 'arrr56',
           },
           result: {
             treasure: false,
-            notes: 'enemies abound!'
+            notes: 'enemies abound!',
           },
-          initiatedEventId: 10
-        }
-      }, {
-        timestamp: timelineVarietyStart.add(2, 'minute').add(10, 'seconds').toISOString(),
+          initiatedEventId: 10,
+        },
+      },
+      {
+        timestamp: timelineVarietyStart
+          .add(2, 'minute')
+          .add(10, 'seconds')
+          .toISOString(),
         eventType: 'WorkflowExecutionCompleted',
         eventId: 19,
         details: {
           result: {
             recipients: ['bob@example.com', 'jane@example.com'],
-            trackingTag: 'foobarbaz'
+            trackingTag: 'foobarbaz',
           },
-          decisionTaskCompletedEventId: 11
-        }
-      }
+          decisionTaskCompletedEventId: 11,
+        },
+      },
     ],
-  }
-}
+  },
+};
