@@ -1327,6 +1327,9 @@ describe('Execution', () => {
         const wfStatus = summaryEl.querySelector('.workflow-status');
 
         wfStatus.should.have.attr('data-status', 'running');
+
+        await summaryEl.waitUntilExists('.workflow-status[data-status="completed"]');
+
         await retry(() =>
           wfStatus.should.have.attr('data-status', 'completed')
         );
