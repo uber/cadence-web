@@ -63,7 +63,7 @@ describe('Execution', () => {
           .should.have.text('CIDemoWorkflow');
         summaryEl
           .querySelector('.task-list dd a[href]')
-          .should.have.text('ci_task_list')
+          .should.contain.text('ci_task_list')
           .and.have.attr('href', '/domain/ci-test/task-lists/ci_task_list');
         summaryEl.querySelector('.started-at dd').should.have.text(
           moment()
@@ -668,23 +668,23 @@ describe('Execution', () => {
     describe('Grid View', () => {
       it('should show full results in a grid', async function test() {
         return historyTest(this.test).then(async ([historyEl]) => {
-          await historyEl.waitUntilExists('.results tbody tr:nth-child(4)');
+          await historyEl.waitUntilExists('.results .table .vue-recycle-scroller__item-view:nth-child(4) .tr');
 
           historyEl
-            .textNodes('table tbody td:nth-child(1)')
+            .textNodes('.table .vue-recycle-scroller__item-view .td.col-id')
             .length.should.be.lessThan(12);
-          const textNodes = historyEl.textNodes('table thead th').slice(0, 2);
+          const textNodes = historyEl.textNodes('.table .thead .th').slice(0, 2);
           textNodes[0].should.equal('ID');
           textNodes[1].should.include('Type');
           await retry(() =>
             historyEl
-              .textNodes('table tbody td:nth-child(1)')
+              .textNodes('.table .vue-recycle-scroller__item-view .td.col-id')
               .should.deep.equal(
-                new Array(12).fill('').map((_, i) => String(i + 1))
+                new Array(6).fill('').map((_, i) => String(i + 1))
               )
           );
           historyEl
-            .textNodes('table tbody td:nth-child(2)')
+            .textNodes('.table .vue-recycle-scroller__item-view .td.col-type')
             .slice(0, 3)
             .should.deep.equal([
               'WorkflowExecutionStarted',
@@ -692,7 +692,7 @@ describe('Execution', () => {
               'DecisionTaskStarted',
             ]);
           historyEl
-            .textNodes('table tbody td:nth-child(3)')
+            .textNodes('.table .vue-recycle-scroller__item-view .td.col-time')
             .should.deep.equal([
               moment(fixtures.history.emailRun1[0].timestamp).format(
                 'MMM Do h:mm:ss a'
@@ -702,12 +702,6 @@ describe('Execution', () => {
               '1s (+1s)',
               '2s (+1s)',
               '3s (+1s)',
-              '8s (+5s)',
-              '19s (+11s)',
-              '30s (+11s)',
-              '41s (+11s)',
-              '52s (+11s)',
-              '1m 4s (+12s)',
             ]);
         });
       });
