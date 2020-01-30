@@ -1,3 +1,4 @@
+// @flow
 export default {
   bind(el) {
     el.addEventListener('scroll', () => {

@@ -1,3 +1,4 @@
+// @flow
 const getSummaryWorkflowStatus = ({
   isWorkflowRunning,
   workflow,

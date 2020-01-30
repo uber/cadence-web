@@ -1,3 +1,4 @@
+// @flow
 import getStringElipsis from './get-string-elipsis';
 
 const getJsonStringObject = value => {

@@ -30,6 +30,8 @@
 </template>
 
 <script>
+// @flow
+
 import domainNav from '../widgets/domain-navigate.vue';
 
 export default {

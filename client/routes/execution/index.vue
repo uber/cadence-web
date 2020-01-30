@@ -44,6 +44,8 @@
 </template>
 
 <script>
+// @flow
+
 import {
   getHistoryEvents,
   getHistoryTimelineEvents,

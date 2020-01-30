@@ -1,4 +1,6 @@
 <script>
+// @flow
+
 import moment from 'moment';
 import {getKeyValuePairs, shortName} from '../../helpers';
 

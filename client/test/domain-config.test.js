@@ -1,3 +1,4 @@
+// @flow
 describe('Domain Configuration', () => {
   async function domainConfigTest(mochaTest, desc) {
     const [testEl, scenario] = new Scenario(mochaTest)

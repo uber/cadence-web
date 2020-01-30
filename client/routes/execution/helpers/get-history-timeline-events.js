@@ -1,3 +1,4 @@
+// @flow
 import getEventDetails from './get-event-details';
 import mapTimelineEvents from './map-timeline-events';
 

@@ -1,3 +1,4 @@
+// @flow
 import Vue from 'vue';
 import Router from 'vue-router';
 import infiniteScroll from 'vue-infinite-scroll';
@@ -205,9 +206,9 @@ if (typeof mocha === 'undefined') {
     components: {App},
   });
 
-  // eslint-disable-next-line no-undef
+  // eslint-disable-next-line cup/no-undef
   if (module.hot) {
-    // eslint-disable-next-line no-undef
+    // eslint-disable-next-line cup/no-undef
     module.hot.addStatusHandler(status => {
       if (status === 'apply') {
         document

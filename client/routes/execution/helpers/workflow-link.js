@@ -1,3 +1,4 @@
+// @flow
 import {shortName} from '../../../helpers';
 
 const workflowLink = (d, short) => {

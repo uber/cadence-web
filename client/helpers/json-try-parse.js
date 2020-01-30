@@ -1,3 +1,4 @@
+// @flow
 function jsonTryParse(...args) {
   try {
     return JSON.parse.apply(this, args);

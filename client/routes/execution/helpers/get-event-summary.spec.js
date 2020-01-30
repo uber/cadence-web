@@ -1,3 +1,4 @@
+// @flow
 import getEventSummary from './get-event-summary';
 
 jest.mock('../../../helpers');

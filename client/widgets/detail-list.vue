@@ -1,4 +1,6 @@
 <script>
+// @flow
+
 import {preKeys} from '../constants';
 
 export default {

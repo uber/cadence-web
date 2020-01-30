@@ -26,6 +26,8 @@
 </template>
 
 <script>
+// @flow
+
 import {DateRange} from 'vue-date-range';
 import moment from 'moment';
 

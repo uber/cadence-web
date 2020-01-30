@@ -1,3 +1,4 @@
+// @flow
 export const eventFullTransforms = {
   MarkerRecorded: d => {
     if (d.markerName === 'SideEffect') {

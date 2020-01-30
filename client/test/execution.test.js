@@ -1,3 +1,4 @@
+// @flow
 import moment from 'moment';
 import fixtures from './fixtures';
 
@@ -52,7 +53,7 @@ describe('Execution', () => {
 
   describe('Workflow Statistics', () => {
     it('should show statistics from the workflow', async function test() {
-      summaryTest(this.test).then(([summaryEl]) => {
+      return summaryTest(this.test).then(([summaryEl]) => {
         summaryEl
           .querySelector('.workflow-id dd')
           .should.have.text('email-daily-summaries');
@@ -594,8 +595,9 @@ describe('Execution', () => {
         });
       });
 
-      // need to investigate how to trigger the events needed to simulate a click for the timeline - looks like it uses Hammer.js and listens to PointerEvents
-      xit('should scroll the event into view if an event is clicked from the timeline, updating the URL', async function test() {
+      // TODO: need to investigate how to trigger the events needed to simulate a click for the timeline - looks like it uses Hammer.js and listens to PointerEvents
+      // eslint-disable-next-line jest/no-disabled-tests
+      it.skip('should scroll the event into view if an event is clicked from the timeline, updating the URL', async function test() {
         const [timelineEl, , scenario] = await compactViewTest(this.test);
         timelineEl.timeline.fit();
 
@@ -664,7 +666,7 @@ describe('Execution', () => {
 
     describe('Grid View', () => {
       it('should show full results in a grid', async function test() {
-        historyTest(this.test).then(async ([historyEl]) => {
+        return historyTest(this.test).then(async ([historyEl]) => {
           await historyEl.waitUntilExists('.results tbody tr:nth-child(4)');
 
           historyEl
@@ -1092,10 +1094,6 @@ describe('Execution', () => {
             .scrollTop.should.be.above(450);
         });
       });
-
-      it(
-        'should allow the divider between the grid and timeline to be resized'
-      );
     });
   });
 
@@ -1291,7 +1289,7 @@ describe('Execution', () => {
     });
 
     it('should update the status of the workflow when it completes', async function test() {
-      summaryTest(this.test).then(async ([summaryEl]) => {
+      return summaryTest(this.test).then(async ([summaryEl]) => {
         const wfStatus = summaryEl.querySelector('.workflow-status');
         wfStatus.should.have.attr('data-status', 'running');
         await retry(() =>

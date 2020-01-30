@@ -1,3 +1,4 @@
+// @flow
 import parentWorkflowLink from './parent-workflow-link';
 
 describe('parentWorkflowLink', () => {

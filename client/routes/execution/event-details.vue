@@ -1,4 +1,6 @@
 <script>
+// @flow
+
 export default {
   name: 'event-details',
   props: ['event', 'compact', 'highlight'],

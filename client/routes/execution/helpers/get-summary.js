@@ -1,3 +1,4 @@
+// @flow
 import {getJsonStringObject, getKeyValuePairs} from '../../../helpers';
 import getSummaryWorkflowStatus from './get-summary-workflow-status';
 import parentWorkflowLink from './parent-workflow-link';

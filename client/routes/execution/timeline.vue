@@ -3,6 +3,8 @@
 </template>
 
 <script>
+// @flow
+
 import moment from 'moment';
 import {DataSet, Timeline, timeline} from 'vis/index-timeline-graph2d';
 

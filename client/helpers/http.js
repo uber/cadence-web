@@ -1,3 +1,4 @@
+// @flow
 export default function http(fetch, url, o) {
   const opts = {
     credentials: 'same-origin',

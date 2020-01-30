@@ -1,3 +1,4 @@
+// @flow
 import moment from 'moment';
 import getTimeElapsedDisplay from './get-time-elapsed-display';
 import getTimeStampDisplay from './get-time-stamp-display';

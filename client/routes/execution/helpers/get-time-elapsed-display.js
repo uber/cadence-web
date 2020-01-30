@@ -1,3 +1,4 @@
+// @flow
 import moment from 'moment';
 
 const getTimeElapsedDisplay = ({timestamp}, index, eventList) => {

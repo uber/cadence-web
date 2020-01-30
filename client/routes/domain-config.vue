@@ -13,6 +13,8 @@
 </template>
 
 <script>
+// @flow
+
 import {getKeyValuePairs, mapDomainDescription} from '../helpers';
 
 export default {

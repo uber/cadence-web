@@ -3,6 +3,8 @@
 </template>
 
 <script>
+// @flow
+
 export default {
   props: ['text'],
   methods: {

@@ -1,6 +1,7 @@
-// eslint-disable-next-line no-undef
+// @flow
+// eslint-disable-next-line cup/no-undef
 if (module.hot) {
-  // eslint-disable-next-line no-undef
+  // eslint-disable-next-line cup/no-undef
   module.hot.addStatusHandler(status => {
     if (status === 'apply') {
       window.location.reload();
@@ -85,7 +86,7 @@ window.it = function it(...args) {
               : Promise.reject(e)
         );
       }
-      // eslint-disable-next-line no-undef
+      // eslint-disable-next-line cup/no-undef
       return scenario && scenario.tearDown(this.test).then(() => result);
     };
     wrapperFunc.toString = origFunc.toString.bind(origFunc);
