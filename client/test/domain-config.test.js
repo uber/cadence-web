@@ -7,6 +7,7 @@ describe('Domain Configuration', () => {
       .go();
 
     const configEl = await testEl.waitUntilExists('section.domain-config');
+
     return [configEl, scenario];
   }
 

@@ -3,7 +3,7 @@ import logo from './assets/logo.svg';
 
 export default {
   data() {
-    return {logo};
+    return { logo };
   },
   methods: {
     globalClick(e) {
@@ -13,6 +13,7 @@ export default {
 
       if (e.target.tagName === 'A') {
         const href = e.target.getAttribute('href');
+
         if (
           href &&
           href.startsWith('/') &&

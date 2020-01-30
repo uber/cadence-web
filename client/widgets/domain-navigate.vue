@@ -37,7 +37,7 @@
       </li>
     </ul>
     <div
-      :class="{'domain-description': true, pending: !!domainDescRequest}"
+      :class="{ 'domain-description': true, pending: !!domainDescRequest }"
       v-if="domainDesc"
     >
       <span class="domain-name">{{ domainDescName }}</span>
@@ -49,8 +49,8 @@
 <script>
 import debounce from 'lodash-es/debounce';
 import omit from 'lodash-es/omit';
-import {stringify} from 'friendly-querystring';
-import {getKeyValuePairs, mapDomainDescription} from '../helpers';
+import { stringify } from 'friendly-querystring';
+import { getKeyValuePairs, mapDomainDescription } from '../helpers';
 
 const validationMessages = {
   valid: d => `${d} exists`,
@@ -74,6 +74,7 @@ export default {
   },
   created() {
     this.domainDescCache = {};
+
     if (this.$route && this.$route.params && this.$route.params.domain) {
       this.recordDomain(this.$route.params.domain);
     }
@@ -113,6 +114,7 @@ export default {
     },
     recordDomainFromClick(e) {
       const domain = e.target.getAttribute('data-domain');
+
       this.recordDomain(domain);
       this.$emit('navigate', domain);
     },
@@ -120,8 +122,10 @@ export default {
       if (this.domainDescCache[d]) {
         return Promise.resolve(this.domainDescCache[d]);
       }
+
       return this.$http(`/api/domain/${d}`).then(r => {
         this.domainDescCache[d] = mapDomainDescription(r);
+
         return this.domainDescCache[d];
       });
     },
@@ -135,15 +139,18 @@ export default {
               this.domainDesc = {
                 kvps: getKeyValuePairs(desc),
               };
+
               return 'valid';
             },
             res => (res.status === 404 ? 'invalid' : 'error')
           )
           .then(v => {
             this.$emit('validate', this.d, v);
+
             if (v in validationMessages) {
               this.validationMessage = validationMessages[v](this.d);
             }
+
             if (this.d === newDomain || !this.d) {
               this.validation = this.d ? v : 'unknown';
               this.domainDescRequest = null;

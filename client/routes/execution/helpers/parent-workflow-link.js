@@ -12,5 +12,6 @@ export default function(wfStartDetails) {
       text: wfStartDetails.parentWorkflowExecution.workflowId,
     };
   }
+
   return null;
 }

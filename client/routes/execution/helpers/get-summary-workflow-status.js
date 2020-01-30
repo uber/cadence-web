@@ -26,6 +26,7 @@ const getSummaryWorkflowStatus = ({
       status: 'continued-as-new',
     };
   }
+
   return workflowCompletedEvent.eventType
     .replace('WorkflowExecution', '')
     .toLowerCase();

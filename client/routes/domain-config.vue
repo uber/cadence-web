@@ -1,5 +1,5 @@
 <template>
-  <section :class="{'domain-config domain-description': true, loading}">
+  <section :class="{ 'domain-config domain-description': true, loading }">
     <header>
       <h3>{{ domain }}</h3>
     </header>
@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import {getKeyValuePairs, mapDomainDescription} from '../helpers';
+import { getKeyValuePairs, mapDomainDescription } from '../helpers';
 
 export default {
   data() {
@@ -30,7 +30,8 @@ export default {
         r => {
           const domainConfig = mapDomainDescription(r);
           const kvps = getKeyValuePairs(domainConfig);
-          this.domainConfig = {...domainConfig, kvps};
+
+          this.domainConfig = { ...domainConfig, kvps };
         },
         res => {
           this.error = `${res.statusText || res.message} ${res.status}`;

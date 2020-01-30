@@ -8,10 +8,12 @@ export default {
   methods: {
     copy() {
       const element = document.createElement('div');
+
       element.textContent = this.text;
       document.body.appendChild(element);
 
       const range = document.createRange();
+
       range.selectNode(element);
       window.getSelection().removeAllRanges();
       window.getSelection().addRange(range);

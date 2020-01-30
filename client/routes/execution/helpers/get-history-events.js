@@ -16,6 +16,7 @@ const getHistoryEvents = events => {
       const eventSummary = getEventSummary(event);
       const eventFullDetails = getEventFullDetails(event);
       const timestamp = moment(event.timestamp);
+
       return {
         ...event,
         details,
@@ -27,6 +28,7 @@ const getHistoryEvents = events => {
     .map((event, index, eventList) => {
       const timeStampDisplay = getTimeStampDisplay(event);
       const timeElapsedDisplay = getTimeElapsedDisplay(event, index, eventList);
+
       return {
         ...event,
         timeStampDisplay,

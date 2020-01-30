@@ -11,6 +11,7 @@ describe('Workflows', () => {
       .go();
 
     const workflows = await testEl.waitUntilExists('section.workflows');
+
     return [workflows, scenario];
   }
 
@@ -20,7 +21,7 @@ describe('Workflows', () => {
         workflowId: 'demoWfId',
         runId: 'demoRunId',
       },
-      type: {name: 'demo'},
+      type: { name: 'demo' },
     },
   ];
 
@@ -125,6 +126,7 @@ describe('Workflows', () => {
       .querySelector('.selected-tag')
       .should.have.trimmed.text('Last 14 days');
     const relativeOptions = await dateRangePicker.selectOptions();
+
     relativeOptions.should.deep.equal([
       'Last 3 hours',
       'Last 24 hours',
@@ -165,6 +167,7 @@ describe('Workflows', () => {
       .querySelector('.selected-tag')
       .should.have.trimmed.text('Last 30 days');
     const relativeOptions = await dateRangePicker.selectOptions();
+
     relativeOptions.should.deep.equal([
       'Last 3 hours',
       'Last 24 hours',
@@ -262,7 +265,7 @@ describe('Workflows', () => {
             workflowId: '1234',
             runId: '5678',
           },
-          type: {name: 'demo'},
+          type: { name: 'demo' },
         },
       ]
     );
@@ -340,12 +343,14 @@ describe('Workflows', () => {
         '.date-range-picker .ayou-calendar .ayou-day-cell'
       )
     );
+
     dayCells.find(d => d.textContent === '11 ').trigger('click');
 
     await Promise.delay(50);
 
     const year = moment().year();
     const month = moment().month();
+
     scenario.withWorkflows(
       'open',
       {
@@ -369,7 +374,7 @@ describe('Workflows', () => {
       statusEl.querySelector('.selected-tag').should.have.trimmed.text('Open')
     );
 
-    scenario.withWorkflows('closed', {status: 'FAILED'}, demoWf);
+    scenario.withWorkflows('closed', { status: 'FAILED' }, demoWf);
     await statusEl.selectItem('Failed');
 
     await retry(() =>
@@ -396,7 +401,7 @@ describe('Workflows', () => {
             workflowId: '1234',
             runId: '5678',
           },
-          type: {name: 'demo'},
+          type: { name: 'demo' },
         },
       ]
     );
@@ -451,6 +456,7 @@ describe('Workflows', () => {
       .go();
 
     const workflowsEl = await testEl.waitUntilExists('section.workflows');
+
     workflowsEl
       .querySelector('header.filters input[name="workflowName"]')
       .value.should.equal('demo');

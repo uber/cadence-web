@@ -4,7 +4,7 @@
 
 <script>
 import moment from 'moment';
-import {DataSet, Timeline, timeline} from 'vis/index-timeline-graph2d';
+import { DataSet, Timeline, timeline } from 'vis/index-timeline-graph2d';
 
 if (navigator.language === 'en-US') {
   timeline.TimeStep.FORMAT.minorLabels.minute = 'h:mm a';
@@ -27,6 +27,7 @@ export default {
   methods: {
     heightOption() {
       const height = this.$el.parentElement.offsetHeight - this.margin;
+
       if (height <= this.minHeight) {
         const parentMaxHeightStr = getComputedStyle(this.$el.parentElement)[
           'max-height'
@@ -36,9 +37,10 @@ export default {
         );
 
         if (parentMaxHeight >= this.minHeight) {
-          return {maxHeight: parentMaxHeight};
+          return { maxHeight: parentMaxHeight };
         }
       }
+
       return {
         height: Math.max(height || 0, this.minHeight),
         maxHeight: 'initial',
@@ -53,8 +55,10 @@ export default {
         this.$el.timeline = this.timeline; // expose for testing purposes
 
         let dontFocus;
+
         this.timeline.on('select', e => {
           const selectedItem = this.items.get(e.items[0]);
+
           if (selectedItem && selectedItem.eventIds) {
             dontFocus = true;
             this.$router.replaceQueryParam(
@@ -66,19 +70,23 @@ export default {
 
         const highlightSelection = () => {
           const selectedEvent = this.findEvent(this.selectedEventId);
+
           this.timeline.setSelection(selectedEvent && selectedEvent.id);
+
           if (selectedEvent && !dontFocus) {
             this.timeline.focus(selectedEvent.id, true);
           }
+
           dontFocus = false;
         };
+
         this.unwatch.push(
           this.$watch('selectedEventId', highlightSelection, {
             immediate: true,
           })
         );
         this.unwatch.push(
-          this.$watch('events', highlightSelection, {immediate: true})
+          this.$watch('events', highlightSelection, { immediate: true })
         );
       }
     },
@@ -103,11 +111,12 @@ export default {
         () => {
           const newIds = new DataSet(this.events).getIds();
           const removed = this.items.getIds().filter(i => !newIds.includes(i));
+
           this.items.update(this.events);
           this.items.remove(removed);
           this.initIfNeeded();
         },
-        {immediate: true}
+        { immediate: true }
       )
     );
   },
@@ -130,6 +139,7 @@ export default {
     while (this.unwatch.length) {
       this.unwatch.pop()();
     }
+
     if (this.timeline) {
       this.timeline.destroy();
     }

@@ -9,6 +9,7 @@ describe('Task List', () => {
       .go();
 
     const taskListEl = await testEl.waitUntilExists('section.task-list');
+
     return [taskListEl, scenario];
   }
 

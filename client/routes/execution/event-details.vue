@@ -6,6 +6,7 @@ export default {
     if (!this.event) {
       return null;
     }
+
     return h('details-list', {
       props: {
         item: this.event,

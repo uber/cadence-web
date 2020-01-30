@@ -1,6 +1,6 @@
 import moment from 'moment';
-import {shortName} from '../../../helpers';
-import {summarizeEvents} from './summarize-events';
+import { shortName } from '../../../helpers';
+import { summarizeEvents } from './summarize-events';
 
 export default function(historyEvents) {
   const events = [];
@@ -9,6 +9,7 @@ export default function(historyEvents) {
   const add = i => {
     hash[i.id] = i;
     events.push(i);
+
     return i;
   };
 
@@ -25,7 +26,7 @@ export default function(historyEvents) {
         'activityId' in e.details
           ? e
           : historyEvents[e.details.scheduledEventId - 1];
-      const {activityId} = scheduledEvent.details;
+      const { activityId } = scheduledEvent.details;
       let item = hash[`activity${activityId}`];
 
       if (!item) {
@@ -49,6 +50,7 @@ export default function(historyEvents) {
         });
       } else {
         item.eventIds.push(e.eventId);
+
         if (e.eventType !== 'ActivityTaskStarted') {
           Object.assign(item.details, summarizeEvents[e.eventType](e.details));
         }
@@ -85,8 +87,10 @@ export default function(historyEvents) {
         });
       } else {
         item.eventIds.push(e.eventId);
+
         if (e.eventType in summarizeEvents) {
           const summary = summarizeEvents[e.eventType](e.details);
+
           if (
             !item.titleLink &&
             summary.Workflow &&
@@ -94,6 +98,7 @@ export default function(historyEvents) {
           ) {
             item.titleLink = summary.Workflow.routeLink;
           }
+
           Object.assign(item.details);
         }
       }
@@ -123,6 +128,7 @@ export default function(historyEvents) {
       });
     } else if (e.eventType === 'TimerFired') {
       const timerStartedEvent = hash[`timer${e.details.timerId}`];
+
       if (timerStartedEvent) {
         timerStartedEvent.eventIds.push(e.eventId);
       }
@@ -170,6 +176,7 @@ export default function(historyEvents) {
       });
     } else if (e.eventType === 'ExternalWorkflowExecutionSignaled') {
       const initiatedEvent = hash[`extsignal${e.eventId}`];
+
       if (initiatedEvent) {
         initiatedEvent.eventIds.push(e.eventId);
         // TODO - code will break as item is not defined.

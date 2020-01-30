@@ -8,6 +8,7 @@ describe('getTimeStampDisplay', () => {
     it('should return "".', () => {
       const event = {};
       const output = getTimeStampDisplay(event);
+
       expect(output).toEqual('');
     });
   });
@@ -19,6 +20,7 @@ describe('getTimeStampDisplay', () => {
       };
       const index = -1;
       const output = getTimeStampDisplay(event, index);
+
       expect(output).toEqual('');
     });
   });
@@ -30,6 +32,7 @@ describe('getTimeStampDisplay', () => {
       };
       const index = 0;
       const output = getTimeStampDisplay(event, index);
+
       expect(output).toEqual('Jan 1st 12:00:00 am');
     });
   });

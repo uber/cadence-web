@@ -42,7 +42,7 @@ describe('Intro', () => {
 
     await Promise.delay(50);
 
-    domainInput.trigger('keydown', {code: 13, keyCode: 13, key: 'Enter'});
+    domainInput.trigger('keydown', { code: 13, keyCode: 13, key: 'Enter' });
     await Promise.delay(50);
 
     scenario.withDomainDescription('ci-tests');
@@ -63,6 +63,7 @@ describe('Intro', () => {
     const descriptionEl = await testEl.waitUntilExists(
       '.intro .domain-description'
     );
+
     descriptionEl.should.have
       .descendant('span.domain-name')
       .with.text('ci-tests');
@@ -104,7 +105,7 @@ describe('Intro', () => {
       .withDomain('ci-tests')
       .withWorkflows('open')
       .withDomainDescription('ci-tests');
-    domainInput.trigger('keydown', {code: 13, keyCode: 13, key: 'Enter'});
+    domainInput.trigger('keydown', { code: 13, keyCode: 13, key: 'Enter' });
 
     await testEl.waitUntilExists('section.workflows');
     const headerBar = testEl.querySelector('header.top-bar');
@@ -190,14 +191,15 @@ describe('Intro', () => {
     );
 
     scenario.withDomainDescription('demo', {
-      domainInfo: {description: 'demo playground'},
-      configuration: {workflowExecutionRetentionPeriodInDays: 3},
+      domainInfo: { description: 'demo playground' },
+      configuration: { workflowExecutionRetentionPeriodInDays: 3 },
     });
     recentDomains.querySelectorAll('li a')[0].trigger('mouseover');
 
     const descriptionEl = await testEl.waitUntilExists(
       '.intro .domain-description'
     );
+
     descriptionEl
       .textNodes('dl.details dd')
       .should.deep.equal([

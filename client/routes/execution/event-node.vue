@@ -1,6 +1,6 @@
 <script>
 import moment from 'moment';
-import {getKeyValuePairs, shortName} from '../../helpers';
+import { getKeyValuePairs, shortName } from '../../helpers';
 
 const titlesForGroups = {
   ActivityTaskScheduled: n =>
@@ -54,6 +54,7 @@ function findActiveGroupNode(node, id, topLevel) {
   // eslint-disable-next-line no-restricted-syntax
   for (const c of node.children) {
     const activeChild = findActiveGroupNode(c, id);
+
     if (activeChild) {
       return activeChild;
     }
@@ -103,7 +104,7 @@ export default {
           }`,
         },
         [
-          groupTitle && h('span', {class: 'group-title'}, groupTitle),
+          groupTitle && h('span', { class: 'group-title' }, groupTitle),
           h(
             'a',
             {

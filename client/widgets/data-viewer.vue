@@ -28,6 +28,7 @@ export default {
   created() {
     this.checkOverflow = () => {
       const el = this.$refs.codebox;
+
       if (!el) {
         return;
       }
@@ -37,6 +38,7 @@ export default {
         el.scrollHeight > el.offsetHeight + 2
           ? 'add'
           : 'remove';
+
       this.$el.classList[action]('overflow');
     };
     window.addEventListener('resize', this.checkOverflow);
@@ -55,7 +57,7 @@ export default {
     viewFullScreen() {
       this.$modal.show(
         {
-          components: {prism: Prism},
+          components: { prism: Prism },
           props: ['code', 'title'],
           template: `
             <div class="data-viewer-fullscreen">

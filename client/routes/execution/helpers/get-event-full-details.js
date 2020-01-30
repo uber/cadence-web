@@ -1,12 +1,12 @@
-import {eventFullTransforms} from './event-full-transforms';
-import {getKeyValuePairs} from '../../../helpers';
+import { getKeyValuePairs } from '../../../helpers';
+import { eventFullTransforms } from './event-full-transforms';
 
 const getEventFullDetails = event => {
   if (!event) {
     return event;
   }
 
-  const {eventId, eventType} = event;
+  const { eventId, eventType } = event;
 
   const maps = eventFullTransforms;
 

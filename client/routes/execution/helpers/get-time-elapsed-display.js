@@ -1,6 +1,6 @@
 import moment from 'moment';
 
-const getTimeElapsedDisplay = ({timestamp}, index, eventList) => {
+const getTimeElapsedDisplay = ({ timestamp }, index, eventList) => {
   if (!timestamp || index === -1) {
     return '';
   }
@@ -17,6 +17,7 @@ const getTimeElapsedDisplay = ({timestamp}, index, eventList) => {
   if (deltaFromPrev.asSeconds() >= 1) {
     elapsed += ` (+${deltaFromPrev.format()})`;
   }
+
   return elapsed;
 };
 

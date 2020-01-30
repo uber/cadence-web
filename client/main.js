@@ -8,7 +8,7 @@ import qs from 'friendly-querystring';
 import moment from 'moment';
 import promiseFinally from 'promise.prototype.finally';
 
-import {http, injectMomentDurationFormat, jsonTryParse} from './helpers';
+import { http, injectMomentDurationFormat, jsonTryParse } from './helpers';
 
 import DateRangePicker from './widgets/date-range-picker.vue';
 import detailList from './widgets/detail-list.vue';
@@ -45,7 +45,7 @@ const routeOpts = {
       name: 'domain-config',
       path: '/domain/:domain/config',
       component: DomainConfig,
-      props: ({params}) => ({
+      props: ({ params }) => ({
         domain: params.domain,
       }),
     },
@@ -53,7 +53,7 @@ const routeOpts = {
       name: 'execution',
       path: '/domain/:domain/workflows/:workflowId/:runId',
       component: ExecutionTabs,
-      props: ({params}) => ({
+      props: ({ params }) => ({
         domain: params.domain,
         runId: params.runId,
         workflowId: params.workflowId,
@@ -66,7 +66,7 @@ const routeOpts = {
             summary: ExecutionSummary,
           },
           props: {
-            summary: ({params}) => ({
+            summary: ({ params }) => ({
               runId: params.runId,
               workflowId: params.workflowId,
             }),
@@ -79,7 +79,7 @@ const routeOpts = {
             history: History,
           },
           props: {
-            history: ({params, query}) => ({
+            history: ({ params, query }) => ({
               domain: params.domain,
               eventId: Number(query.eventId) || undefined,
               format: query.format || 'grid',
@@ -112,7 +112,7 @@ const routeOpts = {
     },
     {
       path: '/domain/:domain/history',
-      redirect: ({params, query}) => {
+      redirect: ({ params, query }) => {
         if (!query.runId || !query.workflowId) {
           return {
             name: 'workflows',
@@ -120,7 +120,7 @@ const routeOpts = {
           };
         }
 
-        const {runId, workflowId, ...queryWhitelist} = query;
+        const { runId, workflowId, ...queryWhitelist } = query;
 
         const newParams = {
           runId,
@@ -139,6 +139,7 @@ const routeOpts = {
   parseQuery: qs.parse.bind(qs),
   stringifyQuery: query => {
     const q = qs.stringify(query);
+
     return q ? `?${q}` : '';
   },
 };
@@ -153,10 +154,12 @@ Object.getPrototypeOf(router).replaceQueryParam = function replaceQueryParam(
     ...this.currentRoute.query,
     [prop]: val,
   };
+
   if (!newQuery[prop]) {
     delete newQuery[prop];
   }
-  this.replace({query: newQuery});
+
+  this.replace({ query: newQuery });
 };
 
 injectMomentDurationFormat();
@@ -168,6 +171,7 @@ promiseFinally.shim();
 Vue.mixin({
   created() {
     this.$moment = moment;
+
     if (typeof Scenario === 'undefined') {
       this.$http = http.global;
     } else if (this.$parent && this.$parent.$http) {
@@ -202,7 +206,7 @@ if (typeof mocha === 'undefined') {
     el: 'main',
     router,
     template: '<App/>',
-    components: {App},
+    components: { App },
   });
 
   // eslint-disable-next-line cup/no-undef
@@ -217,6 +221,7 @@ if (typeof mocha === 'undefined') {
               /(\?\d+)?$/,
               `?${Date.now()}`
             );
+
             // eslint-disable-next-line no-param-reassign
             link.href = nextStyleHref;
           });

@@ -1,8 +1,8 @@
-import {getJsonStringObject, getKeyValuePairs} from '../../../helpers';
+import { getJsonStringObject, getKeyValuePairs } from '../../../helpers';
 import getSummaryWorkflowStatus from './get-summary-workflow-status';
 import parentWorkflowLink from './parent-workflow-link';
 
-const getSummary = ({events, isWorkflowRunning, workflow}) => {
+const getSummary = ({ events, isWorkflowRunning, workflow }) => {
   const formattedWorkflow = workflow.pendingActivities
     ? {
         ...workflow,

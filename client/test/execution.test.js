@@ -34,10 +34,12 @@ describe('Execution', () => {
       view: 'summary',
       ...o,
     });
+
     scenario.withFullHistory(opts.events);
     const summaryEl = await scenario
       .render(opts.attach)
       .waitUntilExists('section.execution section.execution-summary dl');
+
     return [summaryEl.parentElement, scenario];
   }
 
@@ -122,7 +124,7 @@ describe('Execution', () => {
 
       summaryEl
         .querySelector('.workflow-input pre')
-        .should.have.text(JSON.stringify([839134, {env: 'prod'}], null, 2));
+        .should.have.text(JSON.stringify([839134, { env: 'prod' }], null, 2));
     });
 
     it('should show a full screen view option for input that overflows the area', async function test() {
@@ -162,6 +164,7 @@ describe('Execution', () => {
       const modal = await scenario.vm.$el.waitUntilExists(
         '[data-modal="data-viewer-fullscreen"]'
       );
+
       await retry(() => {
         modal.should.have
           .descendant('h3')
@@ -186,7 +189,7 @@ describe('Execution', () => {
                 name: 'ci-input-overflow-test',
               },
               execution: {},
-              input: {greet: 'hello'},
+              input: { greet: 'hello' },
             },
             timestamp: new Date().toISOString(),
           },
@@ -267,7 +270,7 @@ describe('Execution', () => {
             timestamp: moment().toISOString(),
             eventId: 1,
             details: {
-              workflowType: {name: 'com.github/uber/ci-test-parent'},
+              workflowType: { name: 'com.github/uber/ci-test-parent' },
               parentWorkflowDomain: 'another-domain',
               parentWorkflowExecution: {
                 workflowId: 'the-parent-wfid',
@@ -304,6 +307,7 @@ describe('Execution', () => {
         const confirmTerminateEl = await summaryEl.waitUntilExists(
           '[data-modal="confirm-termination"]'
         );
+
         confirmTerminateEl.should.contain.text(
           'Are you sure you want to terminate this workflow?'
         );
@@ -315,6 +319,7 @@ describe('Execution', () => {
 
       it('should terminate the workflow with the provided reason', async function test() {
         const [summaryEl, scenario] = await summaryTest(this.test);
+
         (await summaryEl.waitUntilExists('aside.actions a.terminate')).trigger(
           'click'
         );
@@ -323,6 +328,7 @@ describe('Execution', () => {
           '[data-modal="confirm-termination"]'
         );
         const reasonEl = confirmTerminateEl.querySelector('input');
+
         reasonEl.value = 'example termination';
         reasonEl.trigger('input');
         await Promise.delay(10);
@@ -336,6 +342,7 @@ describe('Execution', () => {
 
       it('should terminate the workflow without a reason', async function test() {
         const [summaryEl, scenario] = await summaryTest(this.test);
+
         (await summaryEl.waitUntilExists('aside.actions a.terminate')).trigger(
           'click'
         );
@@ -343,6 +350,7 @@ describe('Execution', () => {
         const terminateEl = await summaryEl.waitUntilExists(
           '[data-modal="confirm-termination"] a.terminate'
         );
+
         scenario.withWorkflowTermination();
         terminateEl.trigger('click');
 
@@ -353,6 +361,7 @@ describe('Execution', () => {
 
       it('should allow the user to cancel the termination prompt, doing nothing', async function test() {
         const [summaryEl] = await summaryTest(this.test);
+
         (await summaryEl.waitUntilExists('aside.actions a.terminate')).trigger(
           'click'
         );
@@ -360,6 +369,7 @@ describe('Execution', () => {
         const cancelDialog = await summaryEl.waitUntilExists(
           '[data-modal="confirm-termination"] a.cancel'
         );
+
         cancelDialog.trigger('click');
         await retry(() =>
           summaryEl.should.not.contain('[data-modal="confirm-termination"]')
@@ -395,6 +405,7 @@ describe('Execution', () => {
       const historyEl = await scenario
         .render(opts.attach)
         .waitUntilExists('section.history');
+
       return [historyEl, scenario];
     }
 
@@ -407,13 +418,14 @@ describe('Execution', () => {
         eventId: (offset || 0) + i + 2,
         details: {
           activityId: String(i),
-          activityType: {name: 'send-emails'},
+          activityType: { name: 'send-emails' },
         },
       }));
     }
 
     it('should allow the user to change the view format', async function test() {
       const [historyEl, scenario] = await historyTest(this.test);
+
       await historyEl.waitUntilExists('section.results');
       const resultsEl = historyEl.querySelector('section.results');
 
@@ -440,6 +452,7 @@ describe('Execution', () => {
       const jsonView = await resultsEl.waitUntilExists(
         'pre.json.language-json'
       );
+
       jsonView.should.contain.text('"eventId":');
       resultsEl.should.not.have.descendant('.compact-view');
       scenario.location.should.equal(
@@ -467,6 +480,7 @@ describe('Execution', () => {
       this.timeout(4000);
       let prevPollInterval;
       let prevRetryAttempts;
+
       before(() => {
         prevPollInterval = window.retry.pollInterval;
         prevRetryAttempts = window.retry.retryAttempts;
@@ -577,6 +591,7 @@ describe('Execution', () => {
         const failedActivity = await compactViewEl.waitUntilExists(
           '.timeline-event.activity.failed'
         );
+
         failedActivity.trigger('click');
 
         await retry(() => {
@@ -627,6 +642,7 @@ describe('Execution', () => {
         const childWf = await compactViewEl.waitUntilExists(
           '.timeline-event.child-workflow.completed '
         );
+
         childWf.trigger('click');
 
         await retry(() => {
@@ -651,6 +667,7 @@ describe('Execution', () => {
           query: 'format=compact&eventId=8',
           attach: true,
         });
+
         await summaryEl.waitUntilExists('.results .compact-view');
         const compactViewEl = summaryEl.querySelector('.results .compact-view');
 
@@ -668,12 +685,17 @@ describe('Execution', () => {
     describe('Grid View', () => {
       it('should show full results in a grid', async function test() {
         return historyTest(this.test).then(async ([historyEl]) => {
-          await historyEl.waitUntilExists('.results .table .vue-recycle-scroller__item-view:nth-child(4) .tr');
+          await historyEl.waitUntilExists(
+            '.results .table .vue-recycle-scroller__item-view:nth-child(4) .tr'
+          );
 
           historyEl
             .textNodes('.table .vue-recycle-scroller__item-view .td.col-id')
             .length.should.be.lessThan(12);
-          const textNodes = historyEl.textNodes('.table .thead .th').slice(0, 2);
+          const textNodes = historyEl
+            .textNodes('.table .thead .th')
+            .slice(0, 2);
+
           textNodes[0].should.equal('ID');
           textNodes[1].should.include('Type');
           await retry(() =>
@@ -708,6 +730,7 @@ describe('Execution', () => {
 
       it('should allow toggling of the time column between elapsed and local timestamp', async function test() {
         const [historyEl] = await historyTest(this.test);
+
         await historyEl.waitUntilExists(
           '.results .vue-recycle-scroller__item-view:nth-child(4) .tr'
         );
@@ -715,6 +738,7 @@ describe('Execution', () => {
         const [elapsedEl, tsEl] = historyEl.querySelectorAll(
           '.thead .th:nth-child(3) a'
         );
+
         elapsedEl.should.have.text('Elapsed').and.not.have.attr('href');
         tsEl.should.have.text('Time').and.have.attr('href', '#');
 
@@ -736,6 +760,7 @@ describe('Execution', () => {
       it('should use the timestamp format from local storage if available', async function test() {
         localStorage.setItem('ci-test:history-ts-col-format', 'ts');
         const [historyEl] = await historyTest(this.test);
+
         await retry(() =>
           historyEl
             .textNodes('.td.col-time')
@@ -806,11 +831,13 @@ describe('Execution', () => {
         const viewFullScreen = await historyEl.waitUntilExists(
           '.results .td:nth-child(4) .data-viewer.overflow a.view-full-screen'
         );
+
         viewFullScreen.trigger('click');
 
         const modal = await scenario.vm.$el.waitUntilExists(
           '[data-modal="data-viewer-fullscreen"]'
         );
+
         await retry(() => {
           modal.should.have
             .descendant('h3')
@@ -826,6 +853,7 @@ describe('Execution', () => {
 
       it('should allow toggling of the details column between summary and full details', async function test() {
         const [historyEl] = await historyTest(this.test);
+
         await historyEl.waitUntilExists(
           '.results .vue-recycle-scroller__item-view:nth-child(4) .tr'
         );
@@ -833,6 +861,7 @@ describe('Execution', () => {
         const [summaryEl, fullDetailsEl] = historyEl.querySelectorAll(
           '.thead .th:nth-child(4) a'
         );
+
         summaryEl.should.have.text('Summary').and.have.attr('href', '#');
         fullDetailsEl.should.have
           .text('Full Details')
@@ -849,6 +878,7 @@ describe('Execution', () => {
           const ddTextNodes = historyEl.textNodes(
             '.results .vue-recycle-scroller__item-view:first-child .tr .td.col-summary dl.details dd'
           );
+
           ddTextNodes[0].should.equal('6m');
           ddTextNodes[1].should.equalIgnoreSpaces(
             JSON.stringify(fixtures.history.emailRun1[0].details.input)
@@ -863,6 +893,7 @@ describe('Execution', () => {
       it('should use the details format from local storage if available', async function test() {
         localStorage.setItem('ci-test:history-compact-details', 'true');
         const [historyEl] = await historyTest(this.test);
+
         await retry(() =>
           historyEl
             .textNodes(
@@ -900,7 +931,7 @@ describe('Execution', () => {
               eventType: 'MarkerRecorded',
               details: {
                 markerName: 'SideEffect',
-                details: [0, btoa(JSON.stringify({foo: 'bar'}))],
+                details: [0, btoa(JSON.stringify({ foo: 'bar' }))],
               },
               timestamp: new Date().toISOString(),
             },
@@ -911,15 +942,16 @@ describe('Execution', () => {
                 markerName: 'LocalActivity',
                 details: {
                   ActivityID: 2,
-                  ErrJSON: JSON.stringify({err: 'in json'}),
+                  ErrJSON: JSON.stringify({ err: 'in json' }),
                   ErrReason: 'string error reason',
-                  ResultJSON: JSON.stringify({result: 'in json'}),
+                  ResultJSON: JSON.stringify({ result: 'in json' }),
                 },
               },
               timestamp: new Date().toISOString(),
             },
           ],
         });
+
         await historyEl.waitUntilExists(
           '.results .vue-recycle-scroller__item-view:nth-child(4) .tr'
         );
@@ -940,7 +972,7 @@ describe('Execution', () => {
           .querySelector(
             '.vue-recycle-scroller__item-view:nth-child(3) .tr [data-prop="data"] dd'
           )
-          .should.have.trimmed.text(JSON.stringify({foo: 'bar'}, null, 2));
+          .should.have.trimmed.text(JSON.stringify({ foo: 'bar' }, null, 2));
 
         historyEl.querySelector('.thead a.summary').trigger('click');
         await Promise.delay(50);
@@ -962,6 +994,7 @@ describe('Execution', () => {
         const ddTextNodes = historyEl.textNodes(
           '.vue-recycle-scroller__item-view:not(:first-child) .tr dl.details dd'
         );
+
         ddTextNodes[0].should.equal('initial version');
         ddTextNodes[1].should.equal('0');
         ddTextNodes[2].should.equalIgnoreSpaces('{"foo":"bar"}');
@@ -999,7 +1032,7 @@ describe('Execution', () => {
               timestamp: moment().toISOString(),
               eventId: 1,
               details: {
-                workflowType: {name: 'com.github/uber/ci-test-parent'},
+                workflowType: { name: 'com.github/uber/ci-test-parent' },
               },
             },
             {
@@ -1012,7 +1045,7 @@ describe('Execution', () => {
                   workflowId: 'child-wfid',
                   runId: '2345',
                 },
-                workflowType: {name: 'some-child-workflow'},
+                workflowType: { name: 'some-child-workflow' },
               },
             },
           ],
@@ -1095,6 +1128,7 @@ describe('Execution', () => {
   describe('Stack Trace', () => {
     it('should also show a stack trace tab for running workflows', async function test() {
       const [, scenario] = await summaryTest(this.test);
+
       scenario.vm.$el
         .attrValues('section.execution > nav a', 'href')
         .should.deep.equal([
@@ -1147,14 +1181,16 @@ describe('Execution', () => {
         .api.post(`${scenario.execApiBase()}/queries/__stack_trace`, () => {
           // eslint-disable-next-line no-plusplus
           if (++called === 1) {
-            return {queryResult: 'goroutine 1:\n\tat foo.go:56'};
+            return { queryResult: 'goroutine 1:\n\tat foo.go:56' };
           }
+
           if (called === 2) {
             return {
               queryResult:
                 'goroutine 1:\n\tat foo.go:56\n\n\tgoroutine 2:\n\tat bar.go:42',
             };
           }
+
           throw new Error(
             `stack trace query API was called too many times (${called})`
           );
@@ -1163,6 +1199,7 @@ describe('Execution', () => {
       const stackTraceEl = await scenario
         .render()
         .waitUntilExists('section.stack-trace');
+
       await retry(() =>
         stackTraceEl
           .querySelector('pre')
@@ -1182,13 +1219,14 @@ describe('Execution', () => {
 
   describe('Queries', () => {
     async function queriesTest(mochaTest, queries) {
-      const [scenario] = executionTest(mochaTest, {view: 'queries'});
+      const [scenario] = executionTest(mochaTest, { view: 'queries' });
 
       scenario.withHistory(fixtures.history.emailRun1).withQueries(queries);
 
       const queriesEl = await scenario
         .render()
         .waitUntilExists('section.execution section.queries');
+
       return [queriesEl, scenario];
     }
 
@@ -1203,13 +1241,14 @@ describe('Execution', () => {
         '.query-name .dropdown'
       );
       const options = await queriesDropdown.selectOptions();
+
       options.should.deep.equal(['foo', 'bar']);
     });
 
     it('should show an error if queries could not be listed', async function test() {
       const [queriesEl] = await queriesTest(this.test, {
         status: 400,
-        body: {message: 'I do not understand'},
+        body: { message: 'I do not understand' },
       });
 
       await retry(() =>
@@ -1245,7 +1284,7 @@ describe('Execution', () => {
 
       scenario.withQueryResult('status', {
         status: 503,
-        body: {message: 'Server Unavailable'},
+        body: { message: 'Server Unavailable' },
       });
       runButton.trigger('click');
 
@@ -1286,6 +1325,7 @@ describe('Execution', () => {
     it('should update the status of the workflow when it completes', async function test() {
       return summaryTest(this.test).then(async ([summaryEl]) => {
         const wfStatus = summaryEl.querySelector('.workflow-status');
+
         wfStatus.should.have.attr('data-status', 'running');
         await retry(() =>
           wfStatus.should.have.attr('data-status', 'completed')

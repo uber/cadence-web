@@ -69,7 +69,7 @@ export default {
           taskList: {
             name: 'ci-task-queue',
           },
-          input: [839134, {env: 'prod'}],
+          input: [839134, { env: 'prod' }],
           executionStartToCloseTimeoutSeconds: 360,
           taskStartToCloseTimeoutSeconds: 180,
         },
@@ -159,7 +159,7 @@ export default {
         timestamp: emailRun1Start.add(11, 'second').toISOString(),
         eventType: 'DecisionTaskScheduled',
         eventId: 9,
-        details: {taskList: {name: 'ci-task-queue'}},
+        details: { taskList: { name: 'ci-task-queue' } },
       },
       {
         timestamp: emailRun1Start.add(11, 'second').toISOString(),
@@ -327,7 +327,7 @@ export default {
           taskList: {
             name: 'ci-task-queue',
           },
-          input: [839134, {env: 'prod'}],
+          input: [839134, { env: 'prod' }],
           executionStartToCloseTimeoutSeconds: 360,
           taskStartToCloseTimeoutSeconds: 180,
         },
@@ -385,7 +385,7 @@ export default {
           taskList: {
             name: 'ci-task-queue',
           },
-          input: {location: 'volcanic island'},
+          input: { location: 'volcanic island' },
           scheduleToCloseTimeoutSeconds: 360,
           scheduleToStartTimeoutSeconds: 180,
           startToCloseTimeoutSeconds: 180,
@@ -408,7 +408,7 @@ export default {
         eventId: 8,
         details: {
           markerName: 'SideEffect',
-          details: [0, btoa(JSON.stringify({foo: 'bar'}))],
+          details: [0, btoa(JSON.stringify({ foo: 'bar' }))],
         },
       },
       {
@@ -426,9 +426,9 @@ export default {
         eventType: 'StartChildWorkflowExecutionInitiated',
         eventId: 10,
         details: {
-          workflowType: {name: 'sail-the-ocean'},
-          taskList: {name: 'another-queue'},
-          input: {direction: 'west'},
+          workflowType: { name: 'sail-the-ocean' },
+          taskList: { name: 'another-queue' },
+          input: { direction: 'west' },
         },
       },
       {
@@ -437,7 +437,7 @@ export default {
         eventId: 11,
         details: {
           domain: 'pirates',
-          workflowType: {name: 'sail-the-ocean'},
+          workflowType: { name: 'sail-the-ocean' },
           workflowExecution: {
             workflowId: 'sail-the-ocean-1',
             runId: 'arrr56',
@@ -457,7 +457,7 @@ export default {
           taskList: {
             name: 'ci-task-queue',
           },
-          input: {moveTheGrogToo: true},
+          input: { moveTheGrogToo: true },
           scheduleToCloseTimeoutSeconds: 3600,
           scheduleToStartTimeoutSeconds: 180,
           startToCloseTimeoutSeconds: 3780,
@@ -483,7 +483,7 @@ export default {
           details: {
             ActivityID: 1,
             ErrReason: 'child process failed',
-            ErrJSON: JSON.stringify({exitcode: 1}),
+            ErrJSON: JSON.stringify({ exitcode: 1 }),
           },
         },
       },
@@ -495,7 +495,7 @@ export default {
           markerName: 'LocalActivity',
           details: {
             ActivityID: 2,
-            ResultJSON: JSON.stringify({parrot_name: 'squaky'}),
+            ResultJSON: JSON.stringify({ parrot_name: 'squaky' }),
           },
         },
       },
@@ -508,7 +508,7 @@ export default {
         eventId: 16,
         details: {
           reason: "couldn't find the mop",
-          details: {pirate_name: 'McShorty'},
+          details: { pirate_name: 'McShorty' },
           scheduledEventId: 12,
           startedEventId: 13,
         },
@@ -535,7 +535,7 @@ export default {
         eventType: 'ChildWorkflowExecutionCompleted',
         eventId: 18,
         details: {
-          workflowType: {name: 'sail-the-ocean'},
+          workflowType: { name: 'sail-the-ocean' },
           workflowExecution: {
             workflowId: 'sail-the-ocean-1',
             runId: 'arrr56',

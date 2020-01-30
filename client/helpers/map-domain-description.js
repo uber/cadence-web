@@ -2,7 +2,8 @@ export default function(d) {
   // eslint-disable-next-line no-param-reassign
   d.configuration = d.configuration || {};
   // eslint-disable-next-line no-param-reassign
-  d.replicationConfiguration = d.replicationConfiguration || {clusters: []};
+  d.replicationConfiguration = d.replicationConfiguration || { clusters: [] };
+
   return {
     description: d.domainInfo.description,
     owner: d.domainInfo.ownerEmail,

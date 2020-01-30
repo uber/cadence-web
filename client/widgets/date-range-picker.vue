@@ -26,17 +26,17 @@
 </template>
 
 <script>
-import {DateRange} from 'vue-date-range';
+import { DateRange } from 'vue-date-range';
 import moment from 'moment';
 
 const baseRelativeRangeOptions = [
-  {label: 'Last 3 hours', value: 'last-3-hours', daysAgo: 0.2},
-  {label: 'Last 24 hours', value: 'last-24-hours', daysAgo: 1},
-  {label: 'Last 3 days', value: 'last-3-days', daysAgo: 3},
-  {label: 'Last 7 days', value: 'last-7-days', daysAgo: 7},
-  {label: 'Last 30 days', value: 'last-30-days', daysAgo: 30},
-  {label: 'Last 3 months', value: 'last-3-months', daysAgo: 90},
-  {label: 'Custom range', value: 'custom', daysAgo: Number.MAX_VALUE},
+  { label: 'Last 3 hours', value: 'last-3-hours', daysAgo: 0.2 },
+  { label: 'Last 24 hours', value: 'last-24-hours', daysAgo: 1 },
+  { label: 'Last 3 days', value: 'last-3-days', daysAgo: 3 },
+  { label: 'Last 7 days', value: 'last-7-days', daysAgo: 7 },
+  { label: 'Last 30 days', value: 'last-30-days', daysAgo: 30 },
+  { label: 'Last 3 months', value: 'last-3-months', daysAgo: 90 },
+  { label: 'Custom range', value: 'custom', daysAgo: Number.MAX_VALUE },
 ];
 
 export default {
@@ -66,6 +66,7 @@ export default {
     },
     relativeRangeOptions() {
       let options = baseRelativeRangeOptions;
+
       if (
         this.maxDays &&
         options.every(o => o.daysAgo !== this.maxDays) &&
@@ -81,6 +82,7 @@ export default {
         });
         options.sort((a, b) => a.daysAgo - b.daysAgo);
       }
+
       return options;
     },
     relativeRange() {
@@ -120,12 +122,15 @@ export default {
       }
     },
     onDateRangeChange(r) {
-      this.$emit('change', {startTime: r.startDate, endTime: r.endDate});
+      this.$emit('change', { startTime: r.startDate, endTime: r.endDate });
     },
     isDayDisabled(day) {
       if (this.maxDays) {
-        if (day.isBefore(this.maxStartDate)) return true;
+        if (day.isBefore(this.maxStartDate)) {
+          return true;
+        }
       }
+
       return day.isAfter(moment().endOf('day'));
     },
   },

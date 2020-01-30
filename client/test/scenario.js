@@ -7,7 +7,7 @@ import vueModal from 'vue-js-modal';
 import deepmerge from 'deepmerge';
 
 import main from '../main';
-import {http} from '../helpers';
+import { http } from '../helpers';
 import fixtures from './fixtures';
 
 export default function Scenario(test) {
@@ -18,9 +18,11 @@ export default function Scenario(test) {
     let msg = `Unexpected request: ${url}${
       opts && opts.query ? `?${opts.query}` : ''
     }`;
+
     if (req.body) {
       msg += `\n${req.body}`;
     }
+
     mocha.throwError(new Error(msg));
   });
 }
@@ -33,12 +35,14 @@ Scenario.prototype.isDebuggingJustThisTest = function isDebuggingJustThisTest() 
 
 Scenario.prototype.render = function render(attachToBody) {
   const $http = http.bind(null, this.api);
+
   $http.post = http.post.bind(null, this.api);
 
-  this.router = new Router({...main.routeOpts, mode: 'abstract'});
+  this.router = new Router({ ...main.routeOpts, mode: 'abstract' });
   this.router.push(this.initialUrl || '/');
 
   const el = document.createElement('div');
+
   if (attachToBody || this.isDebuggingJustThisTest()) {
     document.body.appendChild(el);
   }
@@ -48,7 +52,7 @@ Scenario.prototype.render = function render(attachToBody) {
     el,
     router: this.router,
     template: '<App/>',
-    components: {App: main.App},
+    components: { App: main.App },
     mixins: [
       {
         created() {
@@ -59,6 +63,7 @@ Scenario.prototype.render = function render(attachToBody) {
   });
 
   vueModal.rootInstance = this.vm;
+
   return this.vm.$el;
 };
 
@@ -68,6 +73,7 @@ Scenario.prototype.go = function go(...args) {
 
 Scenario.prototype.startingAt = function startingAt(url) {
   this.initialUrl = url;
+
   return this;
 };
 
@@ -81,9 +87,11 @@ Scenario.prototype.tearDown = function tearDown() {
   ) {
     this.vm.$el.parentElement.removeChild(this.vm.$el);
   }
+
   delete window.Mocha.copiedText;
 
-  const {unmatched} = this.api.calls();
+  const { unmatched } = this.api.calls();
+
   return unmatched.length
     ? Promise.reject(
         new Error(`${unmatched.length} outstanding expected API calls:
@@ -103,6 +111,7 @@ Object.defineProperty(Scenario.prototype, 'location', {
 
 Scenario.prototype.withDomain = function withDomain(domain) {
   this.domain = domain;
+
   return this;
 };
 
@@ -138,6 +147,7 @@ Scenario.prototype.withDomainDescription = function withDomainDescription(
       domainDesc || {}
     )
   );
+
   return this;
 };
 
@@ -163,7 +173,7 @@ Scenario.prototype.withWorkflows = function withWorkflows(
   })}`;
 
   const response = Array.isArray(workflows)
-    ? {executions: workflows}
+    ? { executions: workflows }
     : workflows;
 
   this.api.getOnce(url, response);
@@ -187,14 +197,14 @@ Scenario.prototype.withExecution = function withExecution(
 
   this.api.getOnce(this.execApiBase(), {
     executionConfiguration: {
-      taskList: {name: 'ci_task_list'},
+      taskList: { name: 'ci_task_list' },
       executionStartToCloseTimeoutSeconds: 3600,
       taskStartToCloseTimeoutSeconds: 10,
       childPolicy: 'TERMINATE',
     },
     workflowExecutionInfo: {
-      execution: {workflowId, runId},
-      type: {name: 'CIDemoWorkflow'},
+      execution: { workflowId, runId },
+      type: { name: 'CIDemoWorkflow' },
       startTime: moment()
         .startOf('hour')
         .subtract(2, 'minutes'),
@@ -220,7 +230,7 @@ Scenario.prototype.withHistory = function withHistory(events, hasMorePages) {
     );
 
   let url = `${this.execApiBase()}/history?waitForNewEvent=true`;
-  const response = Array.isArray(events) ? {history: {events}} : events;
+  const response = Array.isArray(events) ? { history: { events } } : events;
 
   if (this.historyNpt[this.runId]) {
     url += `&nextPageToken=${encodeURIComponent(makeToken())}`;
@@ -253,14 +263,16 @@ Scenario.prototype.withQueries = function withQueries(queries) {
     `${this.execApiBase()}/queries`,
     queries || ['__stack_trace', 'status']
   );
+
   return this;
 };
 
 Scenario.prototype.withQueryResult = function withQueryResult(query, result) {
   this.api.postOnce(
     `${this.execApiBase()}/queries/${query}`,
-    result && result.status ? result : {queryResult: result}
+    result && result.status ? result : { queryResult: result }
   );
+
   return this;
 };
 
@@ -269,7 +281,7 @@ Scenario.prototype.withWorkflowTermination = function withWorkflowTermination(
   runId,
   reason
 ) {
-  this.api.postOnce(`${this.execApiBase()}/terminate`, {reason});
+  this.api.postOnce(`${this.execApiBase()}/terminate`, { reason });
 
   return this;
 };
@@ -301,6 +313,7 @@ Scenario.prototype.withTaskListPollers = function withTaskListPollers(
       },
     }
   );
+
   return this;
 };
 

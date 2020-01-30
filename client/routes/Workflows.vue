@@ -1,5 +1,5 @@
 <template>
-  <section :class="{workflows: true, loading}">
+  <section :class="{ workflows: true, loading }">
     <header class="filters">
       <template v-if="filterMode === 'advanced'">
         <div class="field query-string">
@@ -78,7 +78,7 @@
               <router-link
                 :to="{
                   name: 'execution/summary',
-                  params: {runId: wf.runId, workflowId: wf.workflowId},
+                  params: { runId: wf.runId, workflowId: wf.workflowId },
                 }"
                 >{{ wf.runId }}</router-link
               >
@@ -109,14 +109,14 @@ export default pagedGrid({
       error: undefined,
       nextPageToken: undefined,
       statuses: [
-        {value: 'OPEN', label: 'Open'},
-        {value: 'CLOSED', label: 'Closed'},
-        {value: 'COMPLETED', label: 'Completed'},
-        {value: 'FAILED', label: 'Failed'},
-        {value: 'CANCELED', label: 'Cancelled'},
-        {value: 'TERMINATED', label: 'Terminated'},
-        {value: 'CONTINUED_AS_NEW', label: 'Continued As New'},
-        {value: 'TIMED_OUT', label: 'Timed Out'},
+        { value: 'OPEN', label: 'Open' },
+        { value: 'CLOSED', label: 'Closed' },
+        { value: 'COMPLETED', label: 'Completed' },
+        { value: 'FAILED', label: 'Failed' },
+        { value: 'CANCELED', label: 'Cancelled' },
+        { value: 'TERMINATED', label: 'Terminated' },
+        { value: 'CONTINUED_AS_NEW', label: 'Continued As New' },
+        { value: 'TIMED_OUT', label: 'Timed Out' },
       ],
       maxRetentionDays: undefined,
       filterMode: 'basic',
@@ -126,31 +126,37 @@ export default pagedGrid({
     this.$http(`/api/domain/${this.$route.params.domain}`).then(r => {
       this.maxRetentionDays =
         Number(r.configuration.workflowExecutionRetentionPeriodInDays) || 30;
+
       if (!this.isRouteRangeValid()) {
         this.setRange(`last-${Math.min(30, this.maxRetentionDays)}-days`);
       }
     });
 
     const q = this.$route.query || {};
+
     if (!q.range || !/^last-\d{1,2}-(hour|day|month)s?$/.test(q.range)) {
       const prevRange = localStorage.getItem(
         `${this.$route.params.domain}:workflows-time-range`
       );
+
       if (prevRange) {
         this.setRange(prevRange);
       }
     }
-    this.$watch('queryOnChange', () => {}, {immediate: true});
+
+    this.$watch('queryOnChange', () => {}, { immediate: true });
   },
   computed: {
     status() {
       if (!this.$route.query || !this.$route.query.status) {
         return this.statuses[0];
       }
+
       return this.statuses.find(s => s.value === this.$route.query.status);
     },
     range() {
       const q = this.$route.query || {};
+
       return q.startTime && q.endTime
         ? {
             startTime: moment(q.startTime),
@@ -159,12 +165,13 @@ export default pagedGrid({
         : q.range;
     },
     criteria() {
-      const {domain} = this.$route.params;
+      const { domain } = this.$route.params;
       const q = this.$route.query;
-      let {startTime, endTime} = q;
+      let { startTime, endTime } = q;
 
       if (q.range && typeof q.range === 'string') {
         const [, count, unit] = q.range.split('-');
+
         startTime = moment()
           .subtract(count, unit)
           .startOf(unit)
@@ -175,6 +182,7 @@ export default pagedGrid({
       }
 
       this.nextPageToken = undefined;
+
       return {
         domain,
         startTime,
@@ -186,19 +194,24 @@ export default pagedGrid({
       };
     },
     queryOnChange() {
-      const q = {...this.criteria};
-      const {domain} = q;
+      const q = { ...this.criteria };
+      const { domain } = q;
       const state = !q.status || q.status === 'OPEN' ? 'open' : 'closed';
 
-      if (!q.startTime || !q.endTime || !q.status) return;
+      if (!q.startTime || !q.endTime || !q.status) {
+        return;
+      }
+
       if (['OPEN', 'CLOSED'].includes(q.status)) {
         delete q.status;
       }
+
       delete q.domain;
       q.nextPageToken = this.nextPageToken;
 
       if (q.queryString) {
         this.fetch(`/api/domain/${domain}/workflows/list`, q);
+
         return;
       }
 
@@ -211,7 +224,7 @@ export default pagedGrid({
         this.loading = true;
         this.error = undefined;
 
-        return this.$http(url, {query})
+        return this.$http(url, { query })
           .then(res => {
             this.npt = res.nextPageToken;
             this.loading = false;
@@ -236,30 +249,34 @@ export default pagedGrid({
             this.npt = undefined;
             this.loading = false;
             this.error = (e.json && e.json.message) || e.status || e.message;
+
             return [];
           });
       },
       typeof Mocha === 'undefined' ? 200 : 60,
-      {maxWait: 1000}
+      { maxWait: 1000 }
     ),
     setWorkflowFilter(e) {
       const target = e.target || e.testTarget; // test hook since Event.target is readOnly and unsettable
+
       this.$router.replaceQueryParam(target.getAttribute('name'), target.value);
     },
     setStatus(status) {
       if (status) {
         this.$router.replace({
-          query: {...this.$route.query, status: status.value},
+          query: { ...this.$route.query, status: status.value },
         });
       }
     },
     isRouteRangeValid() {
       const q = this.$route.query || {};
+
       return !!q.range && !!/^last-\d{1,2}-(hour|day|month)s?$/.test(q.range);
     },
     setRange(range) {
       if (range) {
-        const query = {...this.$route.query};
+        const query = { ...this.$route.query };
+
         if (typeof range === 'string') {
           query.range = range;
           delete query.startTime;
@@ -273,7 +290,8 @@ export default pagedGrid({
           query.endTime = range.endTime.toISOString();
           delete query.range;
         }
-        this.$router.replace({query});
+
+        this.$router.replace({ query });
       }
     },
     toggleFilter() {

@@ -5,6 +5,7 @@ function jsonTryParse(...args) {
     // eslint-disable-next-line no-console
     console.warn('JSON.parse failed for args:', args);
   }
+
   return undefined;
 }
 

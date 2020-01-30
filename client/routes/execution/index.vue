@@ -1,20 +1,20 @@
 <template>
-  <section :class="{execution: true, loading: wfLoading}">
+  <section :class="{ execution: true, loading: wfLoading }">
     <nav>
-      <router-link :to="{name: 'execution/summary'}" class="summary"
+      <router-link :to="{ name: 'execution/summary' }" class="summary"
         >Summary</router-link
       >
-      <router-link :to="{name: 'execution/history'}" class="history"
+      <router-link :to="{ name: 'execution/history' }" class="history"
         >History</router-link
       >
       <router-link
-        :to="{name: 'execution/stack-trace'}"
+        :to="{ name: 'execution/stack-trace' }"
         class="stack-trace"
         v-show="isWorkflowRunning"
         >Stack Trace</router-link
       >
       <router-link
-        :to="{name: 'execution/queries'}"
+        :to="{ name: 'execution/queries' }"
         class="queries"
         v-show="isWorkflowRunning"
         >Queries</router-link
@@ -82,7 +82,7 @@ export default {
   props: ['domain', 'runId', 'workflowId'],
   created() {
     this.unwatch.push(
-      this.$watch('baseAPIURL', this.onBaseApiUrlChange, {immediate: true})
+      this.$watch('baseAPIURL', this.onBaseApiUrlChange, { immediate: true })
     );
   },
   beforeDestroy() {
@@ -92,16 +92,19 @@ export default {
   },
   computed: {
     baseAPIURL() {
-      const {domain, workflowId, runId} = this;
+      const { domain, workflowId, runId } = this;
+
       return `/api/domain/${domain}/workflows/${encodeURIComponent(
         workflowId
       )}/${encodeURIComponent(runId)}`;
     },
     queryUrl() {
       const queryUrl = `${this.baseAPIURL}/history?waitForNewEvent=true`;
+
       if (!this.nextPageToken) {
         return queryUrl;
       }
+
       return `${queryUrl}&nextPageToken=${encodeURIComponent(
         this.nextPageToken
       )}`;
@@ -110,8 +113,10 @@ export default {
   methods: {
     fetchHistoryPage(pagedQueryUrl) {
       this.history.error = undefined;
+
       if (!pagedQueryUrl) {
         this.history.loading = false;
+
         return;
       }
 
@@ -144,7 +149,8 @@ export default {
             this.$route.query.eventId &&
             this.events.length <= this.$route.query.eventId;
 
-          const {events} = res.history;
+          const { events } = res.history;
+
           this.events = this.events.concat(events);
 
           this.history.events = getHistoryEvents(this.events);
@@ -167,10 +173,12 @@ export default {
         .catch(e => {
           // eslint-disable-next-line no-console
           console.error(e);
+
           // eslint-disable-next-line no-underscore-dangle
           if (this._isDestroyed || this.pqu !== pagedQueryUrl) {
             return;
           }
+
           this.history.error =
             (e.json && e.json.message) || e.status || e.message;
         })
@@ -186,6 +194,7 @@ export default {
       this.history.events = [];
       this.history.timelineEvents = [];
       this.nextPageToken = undefined;
+
       return this.$http(baseAPIURL)
         .then(
           wf => {
@@ -210,7 +219,7 @@ export default {
       }
 
       this.unwatch.push(
-        this.$watch('queryUrl', this.onQueryUrlChange, {immediate: true})
+        this.$watch('queryUrl', this.onQueryUrlChange, { immediate: true })
       );
     },
   },

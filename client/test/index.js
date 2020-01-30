@@ -11,10 +11,12 @@ if (module.hot) {
 require('mocha/mocha');
 
 const mochaDiv = document.createElement('div');
+
 mochaDiv.id = 'mocha';
 document.body.appendChild(mochaDiv);
 
 const mochaCss = document.createElement('link');
+
 mochaCss.setAttribute('rel', 'stylesheet');
 mochaCss.setAttribute(
   'href',
@@ -23,6 +25,7 @@ mochaCss.setAttribute(
 document.head.appendChild(mochaCss);
 
 const extraStyling = document.createElement('style');
+
 extraStyling.setAttribute('type', 'text/css');
 extraStyling.textContent = `
 #mocha li:nth-child(2n),
@@ -65,15 +68,19 @@ beforeEach(() => {
 
 // hack workaround for https://github.com/mochajs/mocha/issues/1635
 const oldIt = window.it;
+
 window.it = function it(...args) {
   const [name, func] = args;
+
   if (func) {
     const origFunc = func;
 
     const wrapperFunc = function wrapperFunc() {
       const result = func.call(this);
+
       if (result && typeof result.then === 'function') {
         const currScenario = this.test.scenario;
+
         return result.then(
           () => currScenario && currScenario.tearDown(this.test),
           e =>
@@ -85,23 +92,27 @@ window.it = function it(...args) {
               : Promise.reject(e)
         );
       }
+
       // eslint-disable-next-line cup/no-undef
       return scenario && scenario.tearDown(this.test).then(() => result);
     };
+
     wrapperFunc.toString = origFunc.toString.bind(origFunc);
 
     return oldIt(name, wrapperFunc);
   }
+
   return oldIt(...args);
 };
 
 HTMLInputElement.prototype.input = function input(text) {
   this.value = text;
-  this.trigger('input', {testTarget: this});
+  this.trigger('input', { testTarget: this });
 };
 
 HTMLElement.prototype.selectItem = async function selectItem(text) {
   const openDropdown = new MouseEvent('mousedown');
+
   this.querySelector('.dropdown-toggle').dispatchEvent(openDropdown);
 
   const itemToClick = Array.from(
@@ -114,9 +125,11 @@ HTMLElement.prototype.selectItem = async function selectItem(text) {
 
 HTMLElement.prototype.selectOptions = async function selectOptions() {
   const openDropdown = new MouseEvent('mousedown');
+
   this.querySelector('.dropdown-toggle').dispatchEvent(openDropdown);
 
   await this.waitUntilAllExist('ul.dropdown-menu li a');
+
   return this.textNodes('ul.dropdown-menu li a');
 };
 

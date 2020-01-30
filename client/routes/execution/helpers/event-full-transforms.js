@@ -7,6 +7,7 @@ export const eventFullTransforms = {
         decisionTaskCompletedEventId: d.decisionTaskCompletedEventId,
       };
     }
+
     return d;
   },
 };

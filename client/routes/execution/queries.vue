@@ -1,5 +1,5 @@
 <template>
-  <section :class="{queries: true, loading}">
+  <section :class="{ queries: true, loading }">
     <header v-if="queries && queries.length">
       <div class="query-name">
         <v-select
@@ -12,7 +12,7 @@
       </div>
       <a
         :href="queryName && !running ? '#' : undefined"
-        :class="{run: true, running}"
+        :class="{ run: true, running }"
         @click.prevent="run"
       >
         Run
@@ -46,6 +46,7 @@ export default {
       .then(
         queries => {
           this.queries = queries.filter(query => query !== '__stack_trace');
+
           if (!this.queryName) {
             [this.queryName] = this.queries;
           }
