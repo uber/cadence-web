@@ -1,4 +1,3 @@
-// @flow
 export default function(wfStartDetails) {
   if (wfStartDetails && wfStartDetails.parentWorkflowExecution) {
     return {

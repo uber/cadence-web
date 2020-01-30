@@ -1,4 +1,3 @@
-// @flow
 export const jsonKeys = ['result', 'input', 'details', 'data', 'Error'];
 export const preKeys = jsonKeys.concat(['stackTrace', 'details.stackTrace']);
 

@@ -13,8 +13,6 @@
 </template>
 
 <script>
-// @flow
-
 import moment from 'moment';
 
 export default {

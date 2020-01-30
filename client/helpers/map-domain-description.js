@@ -1,4 +1,3 @@
-// @flow
 export default function(d) {
   // eslint-disable-next-line no-param-reassign
   d.configuration = d.configuration || {};

@@ -1,4 +1,3 @@
-// @flow
 import Router from 'vue-router';
 import Vue from 'vue';
 import moment from 'moment';

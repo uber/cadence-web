@@ -1,4 +1,3 @@
-// @flow
 import getEventFullDetails from './get-event-full-details';
 
 jest.mock('../../../helpers');

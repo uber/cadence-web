@@ -1,4 +1,3 @@
-// @flow
 import moment from 'moment';
 import {shortName} from '../../../helpers';
 import parentWorkflowLink from './parent-workflow-link';

@@ -1,4 +1,3 @@
-// @flow
 // eslint-disable-next-line cup/no-undef
 if (module.hot) {
   // eslint-disable-next-line cup/no-undef

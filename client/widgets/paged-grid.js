@@ -1,4 +1,3 @@
-// @flow
 import deepmerge from 'deepmerge';
 
 export default function(vue) {

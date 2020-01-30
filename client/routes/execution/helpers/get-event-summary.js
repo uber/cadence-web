@@ -1,4 +1,3 @@
-// @flow
 import {summarizeEvents} from './summarize-events';
 import {getKeyValuePairs} from '../../../helpers';
 

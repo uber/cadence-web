@@ -1,4 +1,3 @@
-// @flow
 import moment from 'moment';
 import fixtures from './fixtures';
 

@@ -261,8 +261,6 @@
 </template>
 
 <script>
-// @flow
-
 import Prism from 'vue-prism-component';
 import {
   DynamicScroller,

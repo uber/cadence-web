@@ -47,8 +47,6 @@
 </template>
 
 <script>
-// @flow
-
 import debounce from 'lodash-es/debounce';
 import omit from 'lodash-es/omit';
 import {stringify} from 'friendly-querystring';

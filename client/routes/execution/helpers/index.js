@@ -1,4 +1,3 @@
-// @flow
 export {default as getEventDetails} from './get-event-details';
 export {default as getEventFullDetails} from './get-event-full-details';
 export {default as getEventSummary} from './get-event-summary';

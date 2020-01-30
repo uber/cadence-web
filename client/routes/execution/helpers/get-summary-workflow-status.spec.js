@@ -1,4 +1,3 @@
-// @flow
 import getSummaryWorkflowStatus from './get-summary-workflow-status';
 
 describe('getSummaryWorkflowStatus', () => {

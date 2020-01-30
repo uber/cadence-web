@@ -1,4 +1,3 @@
-// @flow
 describe('Intro', () => {
   it('should provide links to learn about cadence', async function test() {
     const testEl = new Scenario(this.test).render();

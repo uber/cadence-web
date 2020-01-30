@@ -1,4 +1,3 @@
-// @flow
 import {getKeyValuePairs} from '../../../helpers';
 
 const getEventDetails = event => {

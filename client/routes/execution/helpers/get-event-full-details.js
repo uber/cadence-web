@@ -1,4 +1,3 @@
-// @flow
 import {eventFullTransforms} from './event-full-transforms';
 import {getKeyValuePairs} from '../../../helpers';
 

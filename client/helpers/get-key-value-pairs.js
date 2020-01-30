@@ -1,4 +1,3 @@
-// @flow
 import moment from 'moment';
 import {jsonKeys, preKeys} from '../constants';
 import getJsonStringObject from './get-json-string-object';

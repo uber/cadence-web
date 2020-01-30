@@ -15,8 +15,6 @@
 </template>
 
 <script>
-// @flow
-
 import 'prismjs';
 import 'prismjs/components/prism-json';
 import Prism from 'vue-prism-component';

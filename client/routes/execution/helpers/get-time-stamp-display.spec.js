@@ -1,4 +1,3 @@
-// @flow
 import moment from 'moment';
 import getTimeStampDisplay from './get-time-stamp-display';
 

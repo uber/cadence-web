@@ -7,8 +7,6 @@
 </template>
 
 <script>
-// @flow
-
 export default {
   name: 'bar-loader',
 };

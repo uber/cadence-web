@@ -97,8 +97,6 @@
 </template>
 
 <script>
-// @flow
-
 import moment from 'moment';
 import debounce from 'lodash-es/debounce';
 import pagedGrid from '../widgets/paged-grid';
