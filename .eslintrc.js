@@ -9,7 +9,8 @@ module.exports = {
     'node': true,
   },
   globals: {
-    module: true,
+    module: true,   // hot reloading
+    scenario: true, // mocha
   },
   plugins: ['jest', 'import'],
   rules: {
