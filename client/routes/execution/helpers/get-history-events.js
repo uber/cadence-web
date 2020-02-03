@@ -12,16 +12,10 @@ const getHistoryEvents = events => {
 
   return events
     .map(event => {
-      const details = getEventDetails(event);
-      const eventSummary = getEventSummary(event);
-      const eventFullDetails = getEventFullDetails(event);
       const timestamp = moment(event.timestamp);
 
       return {
         ...event,
-        details,
-        eventSummary,
-        eventFullDetails,
         timestamp,
       };
     })
@@ -33,6 +27,18 @@ const getHistoryEvents = events => {
         ...event,
         timeStampDisplay,
         timeElapsedDisplay,
+      };
+    })
+    .map(event => {
+      const details = getEventDetails(event);
+      const eventSummary = getEventSummary(event);
+      const eventFullDetails = getEventFullDetails(event);
+
+      return {
+        ...event,
+        details,
+        eventSummary,
+        eventFullDetails,
       };
     });
 };
