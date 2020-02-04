@@ -144,6 +144,7 @@ export default {
 
       if (!pagedQueryUrl) {
         this.history.loading = false;
+
         return;
       }
 
