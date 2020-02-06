@@ -86,9 +86,7 @@ export default {
     );
   },
   beforeDestroy() {
-    while (this.unwatch.length) {
-      this.unwatch.pop()();
-    }
+    this.clearWatches();
   },
   computed: {
     baseAPIURL() {
@@ -111,6 +109,36 @@ export default {
     },
   },
   methods: {
+    clearState() {
+      this.events = [];
+      this.isWorkflowRunning = undefined;
+      this.nextPageToken = undefined;
+      this.wfError = undefined;
+      this.wfLoading = true;
+      this.workflow = undefined;
+
+      this.history.error = undefined;
+      this.history.events = [];
+      this.history.loading = undefined;
+      this.history.timelineEvents = [];
+
+      this.summary.input = undefined;
+      this.summary.isWorkflowRunning = undefined;
+      this.summary.parentWorkflowRoute = undefined;
+      this.summary.result = undefined;
+      this.summary.wfStatus = undefined;
+      this.summary.workflow = undefined;
+    },
+    clearWatches() {
+      while (this.unwatch.length) {
+        this.unwatch.pop()();
+      }
+    },
+    clearQueryUrlWatch() {
+      while (this.unwatch.length > 1) {
+        this.unwatch.pop()();
+      }
+    },
     fetchHistoryPage(pagedQueryUrl) {
       this.history.error = undefined;
 
@@ -190,10 +218,9 @@ export default {
         });
     },
     onBaseApiUrlChange(baseAPIURL) {
-      this.events = [];
-      this.history.events = [];
-      this.history.timelineEvents = [];
-      this.nextPageToken = undefined;
+      this.clearQueryUrlWatch();
+      this.clearState();
+      this.wfLoading = true;
 
       return this.$http(baseAPIURL)
         .then(
@@ -214,10 +241,7 @@ export default {
       this.fetchHistoryPage(queryUrl);
     },
     setupQueryUrlWatch() {
-      while (this.unwatch.length > 1) {
-        this.unwatch.pop()();
-      }
-
+      this.clearQueryUrlWatch();
       this.unwatch.push(
         this.$watch('queryUrl', this.onQueryUrlChange, { immediate: true })
       );
