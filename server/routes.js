@@ -25,10 +25,6 @@ router.get('/api/domain/:domain', async function (ctx) {
 router.get('/api/domain/:domain/permission', async (ctx, next) => {
   ctx.body = [
     {
-      name: 'reset',
-      value: true,
-    },
-    {
       name: 'terminate',
       value: true,
     },
