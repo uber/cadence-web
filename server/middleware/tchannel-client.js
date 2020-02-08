@@ -79,7 +79,7 @@ const peers = process.env.CADENCE_TCHANNEL_PEERS ?
   process.env.CADENCE_TCHANNEL_PEERS.split(',') :
   ['127.0.0.1:7933']
 
-async function makeChannel(client, ctx) {
+async function makeChannel(client, { bridge }) {
   var ipPeers = await Promise.all(peers.map(peer => {
     var [host, port] = peer.split(':')
     if (!isIPv4(host)) {
@@ -99,7 +99,7 @@ async function makeChannel(client, ctx) {
     entryPoint: path.join(__dirname, '../idl/cadence.thrift')
   });
 
-  if (!ctx.bridge) {
+  if (!bridge) {
     return tchannelAsThrift;
   }
 

@@ -17,6 +17,30 @@ router.get('/api/domain/:domain', async function (ctx) {
   ctx.body = await ctx.cadence.describeDomain({ name: ctx.params.domain })
 })
 
+//
+/**
+ * Stub which can be overwritten to enable authorization per domain.
+ * Simply copy router.get route and write to ctx.body.
+ */
+router.get('/api/domain/:domain/permission', async (ctx, next) => {
+  ctx.body = [
+    {
+      name: 'reset',
+      value: true,
+    },
+    {
+      name: 'terminate',
+      value: true,
+    },
+    {
+      name: 'view',
+      value: true,
+    },
+  ];
+
+  await next();
+});
+
 async function listWorkflows(state, ctx) {
   var q = ctx.query || {},
       startTime = moment(q.startTime || NaN),
