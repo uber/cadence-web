@@ -100,9 +100,11 @@ async function makeChannel(client, { bridge }) {
   });
 
   if (!bridge) {
+    console.log('bridge not found');
     return tchannelAsThrift;
   }
 
+  console.log('bridge found:', !!bridge.tracedChannel);
   return bridge.tracedChannel(tchannelAsThrift);
 }
 
