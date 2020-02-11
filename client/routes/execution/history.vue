@@ -80,11 +80,15 @@
           >
             <div class="thead" ref="thead">
               <div class="th col-id">
-                <a
-                  class="icon icon_down-arrow"
-                  @click.prevent="toggleSortParam('ID')"
-                >
-                ID
+                <a class="cursor" @click.prevent="toggleSortParam('ID')">
+                  ID
+                  <span
+                    class="icon"
+                    :class="{
+                      'icon_down-arrow': this.sortParam.ascending,
+                      'icon_up-arrow': !this.sortParam.ascending,
+                    }"
+                  />
                 </a>
               </div>
               <div class="th col-type">
@@ -571,6 +575,10 @@ section.history
   display flex
   flex-direction column
   flex 1 1 auto
+
+  .cursor {
+    cursor: pointer;
+  }
 
   header.controls
     display flex
