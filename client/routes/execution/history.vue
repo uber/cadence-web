@@ -80,7 +80,7 @@
           >
             <div class="thead" ref="thead">
               <div class="th col-id">
-                <a class="cursor" @click.prevent="toggleSortParam('id')">
+                <a class="cursor" @click.prevent="toggleSortParam('eventId')">
                   ID
                   <span
                     class="icon"
@@ -88,7 +88,7 @@
                       'icon_down-arrow': this.sortParam.ascending,
                       'icon_up-arrow': !this.sortParam.ascending,
                     }"
-                    v-if="this.sortParam.key === 'id'"
+                    v-if="this.sortParam.key === 'eventId'"
                   />
                 </a>
               </div>
@@ -306,7 +306,7 @@ export default {
         { value: 'ChildWorkflow', label: 'ChildWorkflow' },
         { value: 'Workflow', label: 'Workflow' },
       ],
-      sortParam: JSON.tryParse(localStorage.getItem(`${this.domain}:history-sort-param`)) || { key: 'id', ascending: true },
+      sortParam: JSON.tryParse(localStorage.getItem(`${this.domain}:history-sort-param`)) || { key: 'eventId', ascending: true },
       splitSizeSet: [1, 99],
       splitSizeMinSet: [0, 0],
       unwatch: [],
@@ -404,7 +404,12 @@ export default {
     },
     sortedEvents() {
       // TODO - Add sorting logic here...
-      return this.filteredEvents;
+      console.log('filteredEvents = ', this.filteredEvents);
+
+      console.log('sortedEvents = ', this.filteredEvents.sort(this.sortComparator(this.sortParam.key, this.sortParam.ascending)));
+
+      return this.filteredEvents.sort(this.sortComparator(this.sortParam.key, this.sortParam.ascending));
+      // return this.filteredEvents;
     },
     sortedEventIdToIndex() {
       return this.sortedEvents
@@ -511,6 +516,18 @@ export default {
         i.eventIds[i.eventIds.length - 1]
       );
     },
+    sortComparator(key, ascending) {
+      switch (key) {
+        case 'eventId':
+          return this.sortComparatorEventId(ascending);
+        default:
+          return this.sortComparatorEventId(ascending);
+      }
+    },
+    sortComparatorEventId(ascending) {
+      const sign = ascending ? 1 : -1;
+      return (eventA, eventB) => sign * (eventB.eventId - eventA.eventId);
+    },
     toggleShowGraph() {
       if (this.showGraph) {
         this.$router.replace({ query: omit(this.$route.query, 'showGraph') });
@@ -540,7 +557,12 @@ export default {
     eventId(eventId) {
       this.scrollEventIntoView(eventId);
     },
+    showGraph() {
+      this.splitSizeSet = this.showGraph ? [20, 80] : [1, 99];
+      this.onSplitResize();
+    },
     sortedEvents() {
+      console.log('sortedEvents watch called???');
       if (
         !this.scrolledToEventOnInit &&
         this.eventId !== undefined &&
@@ -550,9 +572,10 @@ export default {
         setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
       }
     },
-    showGraph() {
-      this.splitSizeSet = this.showGraph ? [20, 80] : [1, 99];
-      this.onSplitResize();
+    sortParam() {
+      const { scrollerCompact, scrollerGrid } = this.$refs;
+      const scroller = this.isGrid ? scrollerGrid : scrollerCompact;
+      scroller.forceUpdate();
     },
   },
   components: {
