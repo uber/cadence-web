@@ -79,7 +79,14 @@
             :class="{ compact: compactDetails }"
           >
             <div class="thead" ref="thead">
-              <div class="th col-id">ID</div>
+              <div class="th col-id">
+                <a
+                  class="icon icon_down-arrow"
+                  @click.prevent="toggleSortParam('ID')"
+                >
+                ID
+                </a>
+              </div>
               <div class="th col-type">
                 Type
                 <v-select
@@ -275,6 +282,7 @@ import eventDetails from './event-details.vue';
 export default {
   name: 'history',
   data() {
+    console.log('data:sortParam = ', JSON.tryParse(localStorage.getItem(`${this.domain}:history-sort-param`)));
     return {
       tsFormat:
         localStorage.getItem(`${this.domain}:history-ts-col-format`) ||
@@ -294,6 +302,7 @@ export default {
         { value: 'ChildWorkflow', label: 'ChildWorkflow' },
         { value: 'Workflow', label: 'Workflow' },
       ],
+      sortParam: JSON.tryParse(localStorage.getItem(`${this.domain}:history-sort-param`)) || { key: 'ID', ascending: true },
       splitSizeSet: [1, 99],
       splitSizeMinSet: [0, 0],
       unwatch: [],
@@ -358,6 +367,8 @@ export default {
         ...event,
         expanded: event.eventId === eventId,
       }));
+
+      console.log('sortParam = ', this.sortParam);
 
       return eventType && eventType !== 'All'
         ? formattedEvents.filter(result => result.eventType.includes(eventType))
@@ -502,6 +513,24 @@ export default {
           query: { ...this.$route.query, showGraph: true },
         });
       }
+    },
+    toggleSortParam(key) {
+      console.log('toggleSortParam:', key);
+      const ascending = key === this.sortParam.key
+        ? !this.sortParam.ascending
+        : true;
+
+      this.sortParam = {
+        ascending,
+        key,
+      };
+
+      console.log('this.sortParam:', this.sortParam);
+
+      localStorage.setItem(
+        `${this.domain}:history-sort-param`,
+        JSON.stringify(this.sortParam)
+      );
     },
   },
   watch: {
