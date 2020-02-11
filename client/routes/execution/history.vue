@@ -80,7 +80,7 @@
           >
             <div class="thead" ref="thead">
               <div class="th col-id">
-                <a class="cursor" @click.prevent="toggleSortParam('ID')">
+                <a class="cursor" @click.prevent="toggleSortParam('id')">
                   ID
                   <span
                     class="icon"
@@ -88,6 +88,7 @@
                       'icon_down-arrow': this.sortParam.ascending,
                       'icon_up-arrow': !this.sortParam.ascending,
                     }"
+                    v-if="this.sortParam.key === 'id'"
                   />
                 </a>
               </div>
@@ -135,7 +136,7 @@
             <div class="spacer" />
             <DynamicScroller
               key-field="eventId"
-              :items="filteredEvents"
+              :items="sortedEvents"
               :min-item-size="38"
               ref="scrollerGrid"
               style="height: 0px;"
@@ -286,7 +287,6 @@ import eventDetails from './event-details.vue';
 export default {
   name: 'history',
   data() {
-    console.log('data:sortParam = ', JSON.tryParse(localStorage.getItem(`${this.domain}:history-sort-param`)));
     return {
       tsFormat:
         localStorage.getItem(`${this.domain}:history-ts-col-format`) ||
@@ -306,7 +306,7 @@ export default {
         { value: 'ChildWorkflow', label: 'ChildWorkflow' },
         { value: 'Workflow', label: 'Workflow' },
       ],
-      sortParam: JSON.tryParse(localStorage.getItem(`${this.domain}:history-sort-param`)) || { key: 'ID', ascending: true },
+      sortParam: JSON.tryParse(localStorage.getItem(`${this.domain}:history-sort-param`)) || { key: 'id', ascending: true },
       splitSizeSet: [1, 99],
       splitSizeMinSet: [0, 0],
       unwatch: [],
@@ -372,20 +372,9 @@ export default {
         expanded: event.eventId === eventId,
       }));
 
-      console.log('sortParam = ', this.sortParam);
-
       return eventType && eventType !== 'All'
         ? formattedEvents.filter(result => result.eventType.includes(eventType))
         : formattedEvents;
-    },
-    filteredEventIdToIndex() {
-      return this.filteredEvents
-        .map(({ eventId }) => eventId)
-        .reduce((accumulator, eventId, index) => {
-          accumulator[eventId] = index;
-
-          return accumulator;
-        }, {});
     },
     isGrid() {
       return this.format === 'grid';
@@ -412,6 +401,19 @@ export default {
     },
     showNoResults() {
       return !this.error && !this.loading && this.events.length === 0;
+    },
+    sortedEvents() {
+      // TODO - Add sorting logic here...
+      return this.filteredEvents;
+    },
+    sortedEventIdToIndex() {
+      return this.sortedEvents
+        .map(({ eventId }) => eventId)
+        .reduce((accumulator, eventId, index) => {
+          accumulator[eventId] = index;
+
+          return accumulator;
+        }, {});
     },
     timelineEventIdToIndex() {
       return this.timelineEvents
@@ -474,7 +476,7 @@ export default {
     },
     scrollEventIntoView(eventId) {
       const index = this.isGrid
-        ? this.filteredEventIdToIndex[eventId]
+        ? this.sortedEventIdToIndex[eventId]
         : this.timelineEventIdToIndex[eventId];
 
       this.scrollToItem(index);
@@ -519,7 +521,6 @@ export default {
       }
     },
     toggleSortParam(key) {
-      console.log('toggleSortParam:', key);
       const ascending = key === this.sortParam.key
         ? !this.sortParam.ascending
         : true;
@@ -528,8 +529,6 @@ export default {
         ascending,
         key,
       };
-
-      console.log('this.sortParam:', this.sortParam);
 
       localStorage.setItem(
         `${this.domain}:history-sort-param`,
@@ -541,11 +540,11 @@ export default {
     eventId(eventId) {
       this.scrollEventIntoView(eventId);
     },
-    filteredEvents() {
+    sortedEvents() {
       if (
         !this.scrolledToEventOnInit &&
         this.eventId !== undefined &&
-        this.filteredEventIdToIndex[this.eventId] !== undefined
+        this.sortedEventIdToIndex[this.eventId] !== undefined
       ) {
         this.scrolledToEventOnInit = true;
         setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
