@@ -85,8 +85,8 @@
                   <span
                     class="icon"
                     :class="{
-                      'icon_down-arrow': this.sortParam.ascending,
-                      'icon_up-arrow': !this.sortParam.ascending,
+                      'icon_down-arrow': !this.sortParam.ascending,
+                      'icon_up-arrow': this.sortParam.ascending,
                     }"
                     v-if="this.sortParam.key === 'eventId'"
                   />
