@@ -403,13 +403,9 @@ export default {
       return !this.error && !this.loading && this.events.length === 0;
     },
     sortedEvents() {
-      // TODO - Add sorting logic here...
-      console.log('filteredEvents = ', this.filteredEvents);
-
-      console.log('sortedEvents = ', this.filteredEvents.sort(this.sortComparator(this.sortParam.key, this.sortParam.ascending)));
-
-      return this.filteredEvents.sort(this.sortComparator(this.sortParam.key, this.sortParam.ascending));
-      // return this.filteredEvents;
+      return this.filteredEvents
+        .slice()
+        .sort(this.sortComparator(this.sortParam.key, this.sortParam.ascending));
     },
     sortedEventIdToIndex() {
       return this.sortedEvents
@@ -525,7 +521,7 @@ export default {
       }
     },
     sortComparatorEventId(ascending) {
-      const sign = ascending ? 1 : -1;
+      const sign = ascending ? -1 : 1;
       return (eventA, eventB) => sign * (eventB.eventId - eventA.eventId);
     },
     toggleShowGraph() {
@@ -562,7 +558,6 @@ export default {
       this.onSplitResize();
     },
     sortedEvents() {
-      console.log('sortedEvents watch called???');
       if (
         !this.scrolledToEventOnInit &&
         this.eventId !== undefined &&
@@ -571,11 +566,6 @@ export default {
         this.scrolledToEventOnInit = true;
         setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
       }
-    },
-    sortParam() {
-      const { scrollerCompact, scrollerGrid } = this.$refs;
-      const scroller = this.isGrid ? scrollerGrid : scrollerCompact;
-      scroller.forceUpdate();
     },
   },
   components: {
