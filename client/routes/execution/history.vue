@@ -283,6 +283,7 @@ import debounce from 'lodash-es/debounce';
 import omit from 'lodash-es/omit';
 import timeline from './timeline.vue';
 import eventDetails from './event-details.vue';
+import { sortComparatorNumeric } from './helpers';
 
 export default {
   name: 'history',
@@ -405,7 +406,9 @@ export default {
     sortedEvents() {
       return this.filteredEvents
         .slice()
-        .sort(this.sortComparator(this.sortParam.key, this.sortParam.ascending));
+        .sort(
+          sortComparatorNumeric(this.sortParam.key, this.sortParam.ascending)
+        );
     },
     sortedEventIdToIndex() {
       return this.sortedEvents
@@ -511,18 +514,6 @@ export default {
         'eventId',
         i.eventIds[i.eventIds.length - 1]
       );
-    },
-    sortComparator(key, ascending) {
-      switch (key) {
-        case 'eventId':
-          return this.sortComparatorEventId(ascending);
-        default:
-          return this.sortComparatorEventId(ascending);
-      }
-    },
-    sortComparatorEventId(ascending) {
-      const sign = ascending ? -1 : 1;
-      return (eventA, eventB) => sign * (eventB.eventId - eventA.eventId);
     },
     toggleShowGraph() {
       if (this.showGraph) {
