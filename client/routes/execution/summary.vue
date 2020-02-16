@@ -118,17 +118,16 @@
         </dd>
       </div>
     </dl>
-    <span class="error" v-if="terminationError">{{ terminationError }}</span>
   </section>
 </template>
 
 <script>
 import moment from 'moment';
+import { NOTIFICATION_TYPE_ERROR } from '../../constants';
 
 export default {
   data() {
     return {
-      terminationError: undefined,
       terminationReason: undefined,
     };
   },
@@ -170,8 +169,10 @@ export default {
             console.dir(r);
           },
           resp => {
-            this.terminationError =
-              resp.message || resp.status || resp.statusCode;
+            this.$emit('onNotification', {
+              message: resp.message || 'An error has occurred. Please check you have the correct permissions to terminate this workflow and try again.',
+              type: NOTIFICATION_TYPE_ERROR,
+            });
           }
         );
     },
