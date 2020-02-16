@@ -29,6 +29,7 @@
       :result="summary.result"
       :wfStatus="summary.wfStatus"
       :workflow="summary.workflow"
+      @onNotification="onNotification"
     />
     <router-view
       name="history"
@@ -37,9 +38,18 @@
       :events="history.events"
       :loading="history.loading"
       :timelineEvents="history.timelineEvents"
+      @onNotification="onNotification"
     />
-    <router-view name="stacktrace" :baseAPIURL="baseAPIURL" />
-    <router-view name="queries" :baseAPIURL="baseAPIURL" />
+    <router-view
+      name="stacktrace"
+      :baseAPIURL="baseAPIURL"
+      @onNotification="onNotification"
+    />
+    <router-view
+      name="queries"
+      :baseAPIURL="baseAPIURL"
+      @onNotification="onNotification"
+    />
   </section>
 </template>
 
@@ -239,6 +249,9 @@ export default {
     },
     onQueryUrlChange(queryUrl) {
       this.fetchHistoryPage(queryUrl);
+    },
+    onNotification(event) {
+      this.$emit('onNotification', event);
     },
     setupQueryUrlWatch() {
       this.clearQueryUrlWatch();

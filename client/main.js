@@ -10,11 +10,11 @@ import promiseFinally from 'promise.prototype.finally';
 
 import { http, injectMomentDurationFormat, jsonTryParse } from './helpers';
 
-import DateRangePicker from './widgets/date-range-picker.vue';
-import detailList from './widgets/detail-list.vue';
-import barLoader from './widgets/bar-loader.vue';
-import dataViewer from './widgets/data-viewer.vue';
-import copyButton from './widgets/copy.vue';
+import DateRangePicker from './components/date-range-picker.vue';
+import detailList from './components/detail-list.vue';
+import barLoader from './components/bar-loader.vue';
+import dataViewer from './components/data-viewer.vue';
+import copyButton from './components/copy.vue';
 
 import snapscroll from './directives/snapscroll';
 
