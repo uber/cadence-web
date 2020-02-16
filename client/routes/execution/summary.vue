@@ -125,7 +125,7 @@
 import moment from 'moment';
 import {
   NOTIFICATION_TYPE_ERROR,
-  NOTIFICATION_TYPE_SUCCESS
+  NOTIFICATION_TYPE_SUCCESS,
 } from '../../constants';
 
 export default {
