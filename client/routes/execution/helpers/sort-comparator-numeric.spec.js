@@ -43,6 +43,7 @@ describe('sortComparatorNumeric', () => {
     describe('and ascending = true', () => {
       it('should sort the list into ascending order.', () => {
         const list = initList();
+
         list.sort(sortComparatorNumeric('id', true));
         expect(list).toEqual(LIST_ASCENDING_ORDER);
       });
@@ -50,6 +51,7 @@ describe('sortComparatorNumeric', () => {
     describe('and ascending = false', () => {
       it('should sort the list into descending order.', () => {
         const list = initList();
+
         list.sort(sortComparatorNumeric('id', false));
         expect(list).toEqual(LIST_DESCENDING_ORDER);
       });

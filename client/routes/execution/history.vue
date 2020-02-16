@@ -307,7 +307,9 @@ export default {
         { value: 'ChildWorkflow', label: 'ChildWorkflow' },
         { value: 'Workflow', label: 'Workflow' },
       ],
-      sortParam: JSON.tryParse(localStorage.getItem(`${this.domain}:history-sort-param`)) || { key: 'eventId', ascending: true },
+      sortParam: JSON.tryParse(
+        localStorage.getItem(`${this.domain}:history-sort-param`)
+      ) || { key: 'eventId', ascending: true },
       splitSizeSet: [1, 99],
       splitSizeMinSet: [0, 0],
       unwatch: [],
@@ -525,9 +527,8 @@ export default {
       }
     },
     toggleSortParam(key) {
-      const ascending = key === this.sortParam.key
-        ? !this.sortParam.ascending
-        : true;
+      const ascending =
+        key === this.sortParam.key ? !this.sortParam.ascending : true;
 
       this.sortParam = {
         ascending,
