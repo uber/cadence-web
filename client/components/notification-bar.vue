@@ -1,17 +1,10 @@
 <template>
   <transition name="fade">
-    <div
-      class="notification-bar"
-      :class="type"
-      v-if="show"
-    >
+    <div class="notification-bar" :class="type" v-if="show">
       <div class="message">
         {{ message }}
       </div>
-      <span
-        class="close icon icon_delete"
-        @click="onClose"
-      />
+      <span class="close icon icon_delete" @click="onClose" />
     </div>
   </transition>
 </template>
@@ -23,7 +16,7 @@ export default {
     'message',
     'onClose',
     'show',
-    'type',  // 'error', 'success', 'warning'
+    'type', // 'error', 'success', 'warning'
   ],
 };
 </script>

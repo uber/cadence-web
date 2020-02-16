@@ -170,7 +170,9 @@ export default {
           },
           resp => {
             this.$emit('onNotification', {
-              message: resp.message || 'An error has occurred. Please check you have the correct permissions to terminate this workflow and try again.',
+              message:
+                resp.message ||
+                'An error has occurred. Please check you have the correct permissions to terminate this workflow and try again.',
               type: NOTIFICATION_TYPE_ERROR,
             });
           }

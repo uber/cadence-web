@@ -1,7 +1,7 @@
 <script>
 import logo from './assets/logo.svg';
 import NotificationBar from './components/notification-bar.vue';
-import { NOTIFICATION_TYPE_ERROR, NOTIFICATION_TIMEOUT } from './constants';
+import { NOTIFICATION_TIMEOUT } from './constants';
 
 export default {
   components: {
@@ -54,11 +54,15 @@ export default {
   watch: {
     'notification.show'(value) {
       clearTimeout(this.notification.timeout);
+
       if (value) {
-        this.notification.timeout = setTimeout(this.onNotificationClose, NOTIFICATION_TIMEOUT);
+        this.notification.timeout = setTimeout(
+          this.onNotificationClose,
+          NOTIFICATION_TIMEOUT
+        );
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
