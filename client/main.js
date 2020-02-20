@@ -8,6 +8,7 @@ import qs from 'friendly-querystring';
 import moment from 'moment';
 import promiseFinally from 'promise.prototype.finally';
 
+import { basePathUrl } from './constants';
 import { http, injectMomentDurationFormat, jsonTryParse } from './helpers';
 
 import DateRangePicker from './widgets/date-range-picker.vue';
@@ -30,6 +31,7 @@ import Queries from './routes/execution/queries.vue';
 import TaskList from './routes/task-list.vue';
 
 const routeOpts = {
+  base: basePathUrl,
   mode: 'history',
   routes: [
     {

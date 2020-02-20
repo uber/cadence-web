@@ -6,6 +6,8 @@ const
   extractStylus = 'css-loader?sourceMap!stylus-loader',
   development = !['production', 'ci'].includes(process.env.NODE_ENV)
 
+const basePath = process.env.CADENCE_WEB_ROOT || '/';
+
 module.exports = {
   devtool: 'source-map',
   entry: [
@@ -15,12 +17,13 @@ module.exports = {
   output: {
     path: path.join(__dirname, 'dist'),
     filename: 'cadence.[hash].js',
-    publicPath: '/'
+    publicPath: basePath,
   },
   plugins: [
     !development && new webpack.DefinePlugin({
       'process.env': {
-        NODE_ENV: '"production"'
+        NODE_ENV: '"production"',
+        CADENCE_WEB_ROOT: "'" + basePath + "'",
       }
     }),
     new ExtractTextPlugin({ filename: development ? 'cadence.css' : 'cadence.[hash].css', allChunks: true }),

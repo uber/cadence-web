@@ -1,13 +1,14 @@
-const
-  Koa = require('koa'),
-  bodyparser = require('koa-bodyparser'),
-  send = require('koa-send'),
-  path = require('path'),
-  staticRoot = path.join(__dirname, '../dist'),
-  app = new Koa(),
-  router = require('./routes')
+const Koa = require('koa');
+const bodyparser = require('koa-bodyparser');
+const mount = require('koa-mount');
+const send = require('koa-send');
+const path = require('path');
+const staticRoot = path.join(__dirname, '../dist');
+const app = new Koa();
+const router = require('./routes');
+const { basePath } = require('./constants');
 
-app.webpackConfig = require('../webpack.config')
+app.webpackConfig = require('../webpack.config');
 
 app.init = function(options) {
   options = options || {}
@@ -19,7 +20,8 @@ app.init = function(options) {
         compiler = Webpack(app.webpackConfig)
   }
 
-  app.use(async (ctx, next) => {
+  const innerApp = new Koa();
+  innerApp.use(async (ctx, next) => {
     try {
       await next()
     } catch (err) {
@@ -66,7 +68,8 @@ app.init = function(options) {
     }
   })
 
-  return app
+  app.use(mount(basePath, innerApp));
+  return app;
 }
 
 module.exports = app
