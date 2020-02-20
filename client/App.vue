@@ -26,8 +26,7 @@ export default {
             name: 'workflows',
             params: {
               domain: $route.params.domain
-            },
-            query: this.$route.query
+            }
           }">{{$route.params.domain}}</router-link>
         <router-link
           :class="{
