@@ -20,6 +20,12 @@ module.exports = {
     publicPath: basePath,
   },
   plugins: [
+    development && new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: '"development"',
+        CADENCE_WEB_ROOT: "'" + basePath + "'",
+      }
+    }),
     !development && new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: '"production"',
