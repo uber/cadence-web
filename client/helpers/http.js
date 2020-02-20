@@ -1,3 +1,5 @@
+import { basePathApi } from '../constants';
+
 export default function http(fetch, url, o) {
   const opts = {
     credentials: 'same-origin',
@@ -6,7 +8,7 @@ export default function http(fetch, url, o) {
     },
     ...o,
   };
-  let fetchUrl = url;
+  let fetchUrl = `${basePathApi}${url}`;
 
   if (opts.query) {
     const qs = Object.keys(opts.query)
@@ -15,7 +17,7 @@ export default function http(fetch, url, o) {
       .join('&');
 
     if (qs) {
-      fetchUrl = `${url}?${qs}`;
+      fetchUrl = `${basePathApi}${url}?${qs}`;
     }
   }
 

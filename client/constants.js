@@ -1,3 +1,5 @@
+export const basePathUrl = process.env.CADENCE_WEB_ROOT || '/';
+export const basePathApi = basePathUrl === '/' ? '' : process.env.CADENCE_WEB_ROOT;
 export const jsonKeys = ['result', 'input', 'details', 'data', 'Error'];
 export const preKeys = jsonKeys.concat(['stackTrace', 'details.stackTrace']);
 

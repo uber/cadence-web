@@ -1,9 +1,13 @@
 <script>
 import logo from './assets/logo.svg';
+import { basePathUrl } from './constants';
 
 export default {
   data() {
-    return { logo, basePath: process.env.CADENCE_WEB_ROOT || '/'};
+    return {
+      basePath: basePathUrl,
+      logo,
+    };
   },
 };
 </script>
