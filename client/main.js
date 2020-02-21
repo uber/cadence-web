@@ -9,7 +9,7 @@ import moment from 'moment';
 import promiseFinally from 'promise.prototype.finally';
 
 import { basePathUrl } from './constants';
-import { http, injectMomentDurationFormat, jsonTryParse } from './helpers';
+import { http, injectMomentDurationFormat, jsonTryParse, patchRouter } from './helpers';
 
 import DateRangePicker from './widgets/date-range-picker.vue';
 import detailList from './widgets/detail-list.vue';
@@ -148,21 +148,7 @@ const routeOpts = {
 
 const router = new Router(routeOpts);
 
-Object.getPrototypeOf(router).replaceQueryParam = function replaceQueryParam(
-  prop,
-  val
-) {
-  const newQuery = {
-    ...this.currentRoute.query,
-    [prop]: val,
-  };
-
-  if (!newQuery[prop]) {
-    delete newQuery[prop];
-  }
-
-  this.replace({ query: newQuery });
-};
+patchRouter(router);
 
 injectMomentDurationFormat();
 
