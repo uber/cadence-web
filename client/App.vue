@@ -20,7 +20,8 @@ export default {
         <router-link
           exact
           :class="{
-            workflows: true
+            'router-link-active': $route.name === 'workflows',
+            workflows: true,
           }"
           :to="{
             name: 'workflows',
