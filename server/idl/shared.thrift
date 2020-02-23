@@ -28,6 +28,10 @@ exception InternalServiceError {
   1: required string message
 }
 
+exception InternalDataInconsistencyError {
+  1: required string message
+}
+
 exception DomainAlreadyExistsError {
   1: required string message
 }
@@ -77,10 +81,26 @@ exception RetryTaskError {
   5: optional i64 (js.type = "Long") nextEventId
 }
 
+exception RetryTaskV2Error {
+  1: required string message
+  2: optional string domainId
+  3: optional string workflowId
+  4: optional string runId
+  5: optional i64 (js.type = "Long") startEventId
+  6: optional i64 (js.type = "Long") startEventVersion
+  7: optional i64 (js.type = "Long") endEventId
+  8: optional i64 (js.type = "Long") endEventVersion
+}
+
 exception ClientVersionNotSupportedError {
   1: required string featureVersion
   2: required string clientImpl
   3: required string supportedVersions
+}
+
+exception CurrentBranchChangedError {
+  10: required string message
+  20: required binary currentBranchToken
 }
 
 enum WorkflowIdReusePolicy {
@@ -113,6 +133,13 @@ enum TimeoutType {
   SCHEDULE_TO_CLOSE,
   HEARTBEAT,
 }
+
+enum ParentClosePolicy {
+	ABANDON,
+	REQUEST_CANCEL,
+	TERMINATE,
+}
+
 
 // whenever this list of decision is changed
 // do change the mutableStateBuilder.go
@@ -217,6 +244,9 @@ enum ChildWorkflowExecutionFailedCause {
   WORKFLOW_ALREADY_RUNNING,
 }
 
+// TODO: when migrating to gRPC, add a running / none status,
+//  currently, customer is using null / nil as an indication
+//  that workflow is still running
 enum WorkflowExecutionCloseStatus {
   COMPLETED,
   FAILED,
@@ -226,14 +256,13 @@ enum WorkflowExecutionCloseStatus {
   TIMED_OUT,
 }
 
-enum ChildPolicy {
-  TERMINATE,
-  REQUEST_CANCEL,
-  ABANDON,
-}
-
 enum QueryTaskCompletedType {
   COMPLETED,
+  FAILED,
+}
+
+enum QueryResultType {
+  ANSWERED,
   FAILED,
 }
 
@@ -286,6 +315,21 @@ struct TaskList {
 
 enum EncodingType {
   ThriftRW,
+  JSON,
+}
+
+enum QueryRejectCondition {
+  // NOT_OPEN indicates that query should be rejected if workflow is not open
+  NOT_OPEN
+  // NOT_COMPLETED_CLEANLY indicates that query should be rejected if workflow did not complete cleanly
+  NOT_COMPLETED_CLEANLY
+}
+
+enum QueryConsistencyLevel {
+  // EVENTUAL indicates that query should be eventually consistent
+  EVENTUAL
+  // STRONG indicates that any events that came before query should be reflected in workflow state before running query
+  STRONG
 }
 
 struct DataBlob {
@@ -315,6 +359,11 @@ struct SearchAttributes {
   10: optional map<string,binary> indexedFields
 }
 
+struct WorkerVersionInfo {
+  10: optional string impl
+  20: optional string featureVersion
+}
+
 struct WorkflowExecutionInfo {
   10: optional WorkflowExecution execution
   20: optional WorkflowType type
@@ -334,7 +383,7 @@ struct WorkflowExecutionConfiguration {
   10: optional TaskList taskList
   20: optional i32 executionStartToCloseTimeoutSeconds
   30: optional i32 taskStartToCloseTimeoutSeconds
-  40: optional ChildPolicy childPolicy
+//  40: optional ChildPolicy childPolicy -- Removed but reserve the IDL order number
 }
 
 struct TransientDecisionInfo {
@@ -423,6 +472,8 @@ struct ContinueAsNewWorkflowExecutionDecisionAttributes {
   110: optional binary lastCompletionResult
   120: optional string cronSchedule
   130: optional Header header
+  140: optional Memo memo
+  150: optional SearchAttributes searchAttributes
 }
 
 struct StartChildWorkflowExecutionDecisionAttributes {
@@ -433,12 +484,15 @@ struct StartChildWorkflowExecutionDecisionAttributes {
   50: optional binary input
   60: optional i32 executionStartToCloseTimeoutSeconds
   70: optional i32 taskStartToCloseTimeoutSeconds
-  80: optional ChildPolicy childPolicy
+//  80: optional ChildPolicy childPolicy -- Removed but reserve the IDL order number
+  81: optional ParentClosePolicy parentClosePolicy
   90: optional binary control
   100: optional WorkflowIdReusePolicy workflowIdReusePolicy
   110: optional RetryPolicy retryPolicy
   120: optional string cronSchedule
   130: optional Header header
+  140: optional Memo memo
+  150: optional SearchAttributes searchAttributes
 }
 
 struct Decision {
@@ -467,7 +521,7 @@ struct WorkflowExecutionStartedEventAttributes {
   30: optional binary input
   40: optional i32 executionStartToCloseTimeoutSeconds
   50: optional i32 taskStartToCloseTimeoutSeconds
-  52: optional ChildPolicy childPolicy
+//  52: optional ChildPolicy childPolicy -- Removed but reserve the IDL order number
   54: optional string continuedExecutionRunId
   55: optional ContinueAsNewInitiator initiator
   56: optional string continuedFailureReason
@@ -535,6 +589,8 @@ struct WorkflowExecutionContinuedAsNewEventAttributes {
   110: optional binary failureDetails
   120: optional binary lastCompletionResult
   130: optional Header header
+  140: optional Memo memo
+  150: optional SearchAttributes searchAttributes
 }
 
 struct DecisionTaskScheduledEventAttributes {
@@ -574,6 +630,7 @@ struct DecisionTaskFailedEventAttributes {
   60: optional string baseRunId
   70: optional string newRunId
   80: optional i64 (js.type = "Long") forkEventVersion
+  90: optional string binaryChecksum
 }
 
 struct ActivityTaskScheduledEventAttributes {
@@ -618,6 +675,10 @@ struct ActivityTaskTimedOutEventAttributes {
   10: optional i64 (js.type = "Long") scheduledEventId
   20: optional i64 (js.type = "Long") startedEventId
   30: optional TimeoutType timeoutType
+  // For retry activity, it may have a failure before timeout. It's important to keep those information for debug.
+  // Client can also provide the info for making next decision
+  40: optional string lastFailureReason
+  50: optional binary lastFailureDetails
 }
 
 struct ActivityTaskCancelRequestedEventAttributes {
@@ -757,13 +818,16 @@ struct StartChildWorkflowExecutionInitiatedEventAttributes {
   50:  optional binary input
   60:  optional i32 executionStartToCloseTimeoutSeconds
   70:  optional i32 taskStartToCloseTimeoutSeconds
-  80:  optional ChildPolicy childPolicy
+//  80:  optional ChildPolicy childPolicy -- Removed but reserve the IDL order number
+  81:  optional ParentClosePolicy parentClosePolicy
   90:  optional binary control
   100: optional i64 (js.type = "Long") decisionTaskCompletedEventId
   110: optional WorkflowIdReusePolicy workflowIdReusePolicy
   120: optional RetryPolicy retryPolicy
   130: optional string cronSchedule
   140: optional Header header
+  150: optional Memo memo
+  160: optional SearchAttributes searchAttributes
 }
 
 struct StartChildWorkflowExecutionFailedEventAttributes {
@@ -885,6 +949,7 @@ struct History {
 
 struct WorkflowExecutionFilter {
   10: optional string workflowId
+  20: optional string runId
 }
 
 struct WorkflowTypeFilter {
@@ -909,11 +974,11 @@ struct DomainInfo {
 struct DomainConfiguration {
   10: optional i32 workflowExecutionRetentionPeriodInDays
   20: optional bool emitMetric
-  30: optional string archivalBucketName
-  40: optional i32 archivalRetentionPeriodInDays
-  50: optional ArchivalStatus archivalStatus
-  60: optional string archivalBucketOwner
   70: optional BadBinaries badBinaries
+  80: optional ArchivalStatus historyArchivalStatus
+  90: optional string historyArchivalURI
+  100: optional ArchivalStatus visibilityArchivalStatus
+  110: optional string visibilityArchivalURI
 }
 
 struct BadBinaries{
@@ -947,15 +1012,17 @@ struct RegisterDomainRequest {
   20: optional string description
   30: optional string ownerEmail
   40: optional i32 workflowExecutionRetentionPeriodInDays
-  50: optional bool emitMetric
+  50: optional bool emitMetric = true
   60: optional list<ClusterReplicationConfiguration> clusters
   70: optional string activeClusterName
   // A key-value map for any customized purpose
   80: optional map<string,string> data
   90: optional string securityToken
-  100: optional ArchivalStatus archivalStatus
-  110: optional string archivalBucketName
   120: optional bool isGlobalDomain
+  130: optional ArchivalStatus historyArchivalStatus
+  140: optional string historyArchivalURI
+  150: optional ArchivalStatus visibilityArchivalStatus
+  160: optional string visibilityArchivalURI
 }
 
 struct ListDomainsRequest {
@@ -1014,7 +1081,7 @@ struct StartWorkflowExecutionRequest {
   80: optional string identity
   90: optional string requestId
   100: optional WorkflowIdReusePolicy workflowIdReusePolicy
-  110: optional ChildPolicy childPolicy
+//  110: optional ChildPolicy childPolicy -- Removed but reserve the IDL order number
   120: optional RetryPolicy retryPolicy
   130: optional string cronSchedule
   140: optional Memo memo
@@ -1047,6 +1114,7 @@ struct PollForDecisionTaskResponse {
   90: optional TaskList WorkflowExecutionTaskList
   100:  optional i64 (js.type = "Long") scheduledTimestamp
   110:  optional i64 (js.type = "Long") startedTimestamp
+  120:  optional map<string, WorkflowQuery> queries
 }
 
 struct StickyExecutionAttributes {
@@ -1063,6 +1131,7 @@ struct RespondDecisionTaskCompletedRequest {
   60: optional bool returnNewDecisionTask
   70: optional bool forceCreateNewDecisionTask
   80: optional string binaryChecksum
+  90: optional map<string, WorkflowQueryResult> queryResults
 }
 
 struct RespondDecisionTaskCompletedResponse {
@@ -1074,6 +1143,7 @@ struct RespondDecisionTaskFailedRequest {
   20: optional DecisionTaskFailedCause cause
   30: optional binary details
   40: optional string identity
+  50: optional string binaryChecksum
 }
 
 struct PollForActivityTaskRequest {
@@ -1282,6 +1352,18 @@ struct ListWorkflowExecutionsResponse {
   20: optional binary nextPageToken
 }
 
+struct ListArchivedWorkflowExecutionsRequest {
+  10: optional string domain
+  20: optional i32 pageSize
+  30: optional binary nextPageToken
+  40: optional string query
+}
+
+struct ListArchivedWorkflowExecutionsResponse {
+  10: optional list<WorkflowExecutionInfo> executions
+  20: optional binary nextPageToken
+}
+
 struct CountWorkflowExecutionsRequest {
   10: optional string domain
   20: optional string query
@@ -1299,10 +1381,18 @@ struct QueryWorkflowRequest {
   10: optional string domain
   20: optional WorkflowExecution execution
   30: optional WorkflowQuery query
+  // QueryRejectCondition can used to reject the query if workflow state does not satisify condition
+  40: optional QueryRejectCondition queryRejectCondition
+  50: optional QueryConsistencyLevel queryConsistencyLevel
+}
+
+struct QueryRejected {
+  10: optional WorkflowExecutionCloseStatus closeStatus
 }
 
 struct QueryWorkflowResponse {
   10: optional binary queryResult
+  20: optional QueryRejected queryRejected
 }
 
 struct WorkflowQuery {
@@ -1325,6 +1415,13 @@ struct RespondQueryTaskCompletedRequest {
   20: optional QueryTaskCompletedType completedType
   30: optional binary queryResult
   40: optional string errorMessage
+  50: optional WorkerVersionInfo workerVersionInfo
+}
+
+struct WorkflowQueryResult {
+  10: optional QueryResultType resultType
+  20: optional binary answer
+  30: optional string errorMessage
 }
 
 struct DescribeWorkflowExecutionRequest {
@@ -1343,12 +1440,24 @@ struct PendingActivityInfo {
   80: optional i32 maximumAttempts
   90: optional i64 (js.type = "Long") scheduledTimestamp
   100: optional i64 (js.type = "Long") expirationTimestamp
+  110: optional string lastFailureReason
+  120: optional string lastWorkerIdentity
+  130: optional binary lastFailureDetails
+}
+
+struct PendingChildExecutionInfo {
+  10: optional string workflowID
+  20: optional string runID
+  30: optional string workflowTypName
+  40: optional i64 (js.type = "Long") initiatedID
+  50: optional ParentClosePolicy parentClosePolicy
 }
 
 struct DescribeWorkflowExecutionResponse {
   10: optional WorkflowExecutionConfiguration executionConfiguration
   20: optional WorkflowExecutionInfo workflowExecutionInfo
   30: optional list<PendingActivityInfo> pendingActivities
+  40: optional list<PendingChildExecutionInfo> pendingChildren
 }
 
 struct DescribeTaskListRequest {
@@ -1361,6 +1470,21 @@ struct DescribeTaskListRequest {
 struct DescribeTaskListResponse {
   10: optional list<PollerInfo> pollers
   20: optional TaskListStatus taskListStatus
+}
+
+struct ListTaskListPartitionsRequest {
+  10: optional string domain
+  20: optional TaskList taskList
+}
+
+struct TaskListPartitionMetadata {
+  10: optional string key
+  20: optional string ownerHostName
+}
+
+struct ListTaskListPartitionsResponse {
+  10: optional list<TaskListPartitionMetadata> activityTaskListPartitions
+  20: optional list<TaskListPartitionMetadata> decisionTaskListPartitions
 }
 
 struct TaskListStatus {
@@ -1381,6 +1505,16 @@ struct DescribeHistoryHostRequest {
   10: optional string               hostAddress //ip:port
   20: optional i32                  shardIdForHost
   30: optional WorkflowExecution    executionForHost
+}
+
+struct RemoveTaskRequest {
+  10: optional i32                      shardID
+  20: optional i32                      type
+  30: optional i64 (js.type = "Long")   taskID
+}
+
+struct CloseShardRequest {
+  10: optional i32               shardID
 }
 
 struct DescribeHistoryHostResponse{
@@ -1452,5 +1586,58 @@ struct HistoryBranchRange{
 struct HistoryBranch{
   10: optional string treeID
   20: optional string branchID
-  30: optional list<HistoryBranchRange>  ancestors
+  30: optional list<HistoryBranchRange> ancestors
+}
+
+// VersionHistoryItem contains signal eventID and the corresponding version
+struct VersionHistoryItem{
+  10: optional i64 (js.type = "Long") eventID
+  20: optional i64 (js.type = "Long") version
+}
+
+// VersionHistory contains the version history of a branch
+struct VersionHistory{
+  10: optional binary branchToken
+  20: optional list<VersionHistoryItem> items
+}
+
+// VersionHistories contains all version histories from all branches
+struct VersionHistories{
+  10: optional i32 currentVersionHistoryIndex
+  20: optional list<VersionHistory> histories
+}
+
+// ReapplyEventsRequest is the request for reapply events API
+struct ReapplyEventsRequest{
+  10: optional string domainName
+  20: optional WorkflowExecution workflowExecution
+  30: optional DataBlob events
+}
+
+// SupportedClientVersions contains the support versions for client library
+struct SupportedClientVersions{
+  10: optional string goSdk
+  20: optional string javaSdk
+}
+
+// ClusterInfo contains information about cadence cluster
+struct ClusterInfo{
+  10: optional SupportedClientVersions supportedClientVersions
+}
+
+struct GetWorkflowExecutionRawHistoryRequest {
+  10: optional string domain
+  20: optional WorkflowExecution execution
+  30: optional i32 maximumPageSize
+  40: optional binary nextPageToken
+}
+
+struct GetWorkflowExecutionRawHistoryResponse {
+  10: optional list<DataBlob> rawHistory
+  20: optional binary nextPageToken
+}
+
+struct RefreshWorkflowTasksRequest {
+  10: optional string domain
+  20: optional WorkflowExecution execution
 }

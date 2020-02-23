@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-include "./shared.thrift"
+include "shared.thrift"
 
 namespace java com.uber.cadence.matching
 
@@ -26,6 +26,7 @@ struct PollForDecisionTaskRequest {
   10: optional string domainUUID
   15: optional string pollerID
   20: optional shared.PollForDecisionTaskRequest pollRequest
+  30: optional string forwardedFrom
 }
 
 struct PollForDecisionTaskResponse {
@@ -43,14 +44,16 @@ struct PollForDecisionTaskResponse {
   100: optional shared.TaskList WorkflowExecutionTaskList
   110: optional i32 eventStoreVersion
   120: optional binary branchToken
-  130:  optional i64 (js.type = "Long") scheduledTimestamp
-  140:  optional i64 (js.type = "Long") startedTimestamp
+  130: optional i64 (js.type = "Long") scheduledTimestamp
+  140: optional i64 (js.type = "Long") startedTimestamp
+  150: optional map<string, shared.WorkflowQuery> queries
 }
 
 struct PollForActivityTaskRequest {
   10: optional string domainUUID
   15: optional string pollerID
   20: optional shared.PollForActivityTaskRequest pollRequest
+  30: optional string forwardedFrom
 }
 
 struct AddDecisionTaskRequest {
@@ -59,6 +62,7 @@ struct AddDecisionTaskRequest {
   30: optional shared.TaskList taskList
   40: optional i64 (js.type = "Long") scheduleId
   50: optional i32 scheduleToStartTimeoutSeconds
+  60: optional string forwardedFrom
 }
 
 struct AddActivityTaskRequest {
@@ -68,12 +72,14 @@ struct AddActivityTaskRequest {
   40: optional shared.TaskList taskList
   50: optional i64 (js.type = "Long") scheduleId
   60: optional i32 scheduleToStartTimeoutSeconds
+  70: optional string forwardedFrom
 }
 
 struct QueryWorkflowRequest {
   10: optional string domainUUID
   20: optional shared.TaskList taskList
   30: optional shared.QueryWorkflowRequest queryRequest
+  40: optional string forwardedFrom
 }
 
 struct RespondQueryTaskCompletedRequest {
@@ -93,6 +99,11 @@ struct CancelOutstandingPollRequest {
 struct DescribeTaskListRequest {
   10: optional string domainUUID
   20: optional shared.DescribeTaskListRequest descRequest
+}
+
+struct ListTaskListPartitionsRequest {
+  10: optional string domain
+  20: optional shared.TaskList taskList
 }
 
 /**
@@ -205,4 +216,15 @@ service MatchingService {
         3: shared.EntityNotExistsError entityNotExistError,
         4: shared.ServiceBusyError serviceBusyError,
       )
+
+
+  /**
+  * ListTaskListPartitions returns a map of partitionKey and hostAddress for a taskList
+  **/
+  shared.ListTaskListPartitionsResponse ListTaskListPartitions(1: ListTaskListPartitionsRequest request)
+    throws (
+        1: shared.BadRequestError badRequestError,
+        2: shared.InternalServiceError internalServiceError,
+        4: shared.ServiceBusyError serviceBusyError,
+    )
 }

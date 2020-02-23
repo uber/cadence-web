@@ -18,7 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-include "./shared.thrift"
+include "shared.thrift"
+include "replicator.thrift"
 
 namespace java com.uber.cadence.history
 
@@ -65,6 +66,7 @@ struct GetMutableStateRequest {
   10: optional string domainUUID
   20: optional shared.WorkflowExecution execution
   30: optional i64 (js.type = "Long") expectedNextEventId
+  40: optional binary currentBranchToken
 }
 
 struct GetMutableStateResponse {
@@ -78,11 +80,48 @@ struct GetMutableStateResponse {
   70: optional string clientLibraryVersion
   80: optional string clientFeatureVersion
   90: optional string clientImpl
+  //TODO: isWorkflowRunning is deprecating. workflowState is going replace this field
   100: optional bool isWorkflowRunning
   110: optional i32 stickyTaskListScheduleToStartTimeout
   120: optional i32 eventStoreVersion
-  130: optional binary branchToken
+  130: optional binary currentBranchToken
   140: optional map<string, shared.ReplicationInfo> replicationInfo
+  // TODO: when migrating to gRPC, make this a enum
+  // TODO: when migrating to gRPC, unify internal & external representation
+  // NOTE: workflowState & workflowCloseState are the same as persistence representation
+  150: optional i32 workflowState
+  160: optional i32 workflowCloseState
+  170: optional shared.VersionHistories versionHistories
+  180: optional bool isStickyTaskListEnabled
+}
+
+struct PollMutableStateRequest {
+  10: optional string domainUUID
+  20: optional shared.WorkflowExecution execution
+  30: optional i64 (js.type = "Long") expectedNextEventId
+  40: optional binary currentBranchToken
+}
+
+struct PollMutableStateResponse {
+  10: optional shared.WorkflowExecution execution
+  20: optional shared.WorkflowType workflowType
+  30: optional i64 (js.type = "Long") NextEventId
+  35: optional i64 (js.type = "Long") PreviousStartedEventId
+  40: optional i64 (js.type = "Long") LastFirstEventId
+  50: optional shared.TaskList taskList
+  60: optional shared.TaskList stickyTaskList
+  70: optional string clientLibraryVersion
+  80: optional string clientFeatureVersion
+  90: optional string clientImpl
+  100: optional i32 stickyTaskListScheduleToStartTimeout
+  110: optional binary currentBranchToken
+  120: optional map<string, shared.ReplicationInfo> replicationInfo
+  130: optional shared.VersionHistories versionHistories
+  // TODO: when migrating to gRPC, make this a enum
+  // TODO: when migrating to gRPC, unify internal & external representation
+  // NOTE: workflowState & workflowCloseState are the same as persistence representation
+  140: optional i32 workflowState
+  150: optional i32 workflowCloseState
 }
 
 struct ResetStickyTaskListRequest {
@@ -129,6 +168,11 @@ struct RespondActivityTaskCanceledRequest {
   20: optional shared.RespondActivityTaskCanceledRequest cancelRequest
 }
 
+struct RefreshWorkflowTasksRequest {
+  10: optional string domainUIID
+  20: optional shared.RefreshWorkflowTasksRequest request
+}
+
 struct RecordActivityTaskStartedRequest {
   10: optional string domainUUID
   20: optional shared.WorkflowExecution workflowExecution
@@ -169,8 +213,9 @@ struct RecordDecisionTaskStartedResponse {
   90: optional shared.TaskList WorkflowExecutionTaskList
   100: optional i32 eventStoreVersion
   110: optional binary branchToken
-  120:  optional i64 (js.type = "Long") scheduledTimestamp
-  130:  optional i64 (js.type = "Long") startedTimestamp
+  120: optional i64 (js.type = "Long") scheduledTimestamp
+  130: optional i64 (js.type = "Long") startedTimestamp
+  140: optional map<string, shared.WorkflowQuery> queries
 }
 
 struct SignalWorkflowExecutionRequest {
@@ -249,6 +294,7 @@ struct ReplicateEventsRequest {
   110: optional i32 eventStoreVersion
   120: optional i32 newRunEventStoreVersion
   130: optional bool resetWorkflow
+  140: optional bool newRunNDC
 }
 
 struct ReplicateRawEventsRequest {
@@ -259,6 +305,15 @@ struct ReplicateRawEventsRequest {
   50: optional shared.DataBlob newRunHistory
   60: optional i32 eventStoreVersion
   70: optional i32 newRunEventStoreVersion
+}
+
+struct ReplicateEventsV2Request {
+  10: optional string domainUUID
+  20: optional shared.WorkflowExecution workflowExecution
+  30: optional list<shared.VersionHistoryItem> versionHistoryItems
+  40: optional shared.DataBlob events
+  // new run events does not need version history since there is no prior events
+  60: optional shared.DataBlob newRunEvents
 }
 
 struct SyncShardStatusRequest {
@@ -279,6 +334,24 @@ struct SyncActivityRequest {
   90: optional i64 (js.type = "Long") lastHeartbeatTime
   100: optional binary details
   110: optional i32 attempt
+  120: optional string lastFailureReason
+  130: optional string lastWorkerIdentity
+  140: optional binary lastFailureDetails
+  150: optional shared.VersionHistory versionHistory
+}
+
+struct QueryWorkflowRequest {
+  10: optional string domainUUID
+  20: optional shared.QueryWorkflowRequest request
+}
+
+struct QueryWorkflowResponse {
+  10: optional shared.QueryWorkflowResponse response
+}
+
+struct ReapplyEventsRequest {
+  10: optional string domainUUID
+  20: optional shared.ReapplyEventsRequest request
 }
 
 /**
@@ -306,6 +379,7 @@ service HistoryService {
   /**
   * Returns the information from mutable state of workflow execution.
   * It fails with 'EntityNotExistError' if specified workflow execution in unknown to the service.
+  * It returns CurrentBranchChangedError if the workflow version branch has changed.
   **/
   GetMutableStateResponse GetMutableState(1: GetMutableStateRequest getRequest)
     throws (
@@ -315,7 +389,24 @@ service HistoryService {
       4: ShardOwnershipLostError shardOwnershipLostError,
       5: shared.LimitExceededError limitExceededError,
       6: shared.ServiceBusyError serviceBusyError,
+      7: shared.CurrentBranchChangedError currentBranchChangedError,
     )
+
+  /**
+   * Returns the information from mutable state of workflow execution.
+   * It fails with 'EntityNotExistError' if specified workflow execution in unknown to the service.
+   * It returns CurrentBranchChangedError if the workflow version branch has changed.
+   **/
+   PollMutableStateResponse PollMutableState(1: PollMutableStateRequest pollRequest)
+     throws (
+       1: shared.BadRequestError badRequestError,
+       2: shared.InternalServiceError internalServiceError,
+       3: shared.EntityNotExistsError entityNotExistError,
+       4: ShardOwnershipLostError shardOwnershipLostError,
+       5: shared.LimitExceededError limitExceededError,
+       6: shared.ServiceBusyError serviceBusyError,
+       7: shared.CurrentBranchChangedError currentBranchChangedError,
+     )
 
   /**
   * Reset the sticky tasklist related information in mutable state of a given workflow.
@@ -641,6 +732,17 @@ service HistoryService {
       7: shared.ServiceBusyError serviceBusyError,
     )
 
+  void ReplicateEventsV2(1: ReplicateEventsV2Request replicateV2Request)
+    throws (
+        1: shared.BadRequestError badRequestError,
+        2: shared.InternalServiceError internalServiceError,
+        3: shared.EntityNotExistsError entityNotExistError,
+        4: ShardOwnershipLostError shardOwnershipLostError,
+        5: shared.LimitExceededError limitExceededError,
+        6: shared.RetryTaskV2Error retryTaskError,
+        7: shared.ServiceBusyError serviceBusyError,
+    )
+
   /**
   * SyncShardStatus sync the status between shards
   **/
@@ -664,6 +766,7 @@ service HistoryService {
       4: ShardOwnershipLostError shardOwnershipLostError,
       5: shared.ServiceBusyError serviceBusyError,
       6: shared.RetryTaskError retryTaskError,
+      7: shared.RetryTaskV2Error retryTaskV2Error,
     )
 
   /**
@@ -687,5 +790,125 @@ service HistoryService {
       1: shared.BadRequestError badRequestError,
       2: shared.InternalServiceError internalServiceError,
       3: shared.AccessDeniedError accessDeniedError,
+    )
+
+  /**
+  * CloseShard close the shard
+  **/
+  void CloseShard(1: shared.CloseShardRequest request)
+    throws (
+    1: shared.BadRequestError badRequestError,
+    2: shared.InternalServiceError internalServiceError,
+    3: shared.AccessDeniedError accessDeniedError,
+    )
+
+  /**
+  * RemoveTask remove task based on type, taskid, shardid
+  **/
+  void RemoveTask(1: shared.RemoveTaskRequest request)
+     throws (
+     1: shared.BadRequestError badRequestError,
+     2: shared.InternalServiceError internalServiceError,
+     3: shared.AccessDeniedError accessDeniedError,
+     )
+
+  /**
+  * GetReplicationMessages return replication messages based on the read level
+  **/
+  replicator.GetReplicationMessagesResponse GetReplicationMessages(1: replicator.GetReplicationMessagesRequest request)
+    throws (
+      1: shared.BadRequestError badRequestError,
+      2: shared.InternalServiceError internalServiceError,
+      3: shared.LimitExceededError limitExceededError,
+      4: shared.ServiceBusyError serviceBusyError,
+      5: shared.ClientVersionNotSupportedError clientVersionNotSupportedError,
+    )
+
+  /**
+  * GetDLQReplicationMessages return replication messages based on dlq info
+  **/
+  replicator.GetDLQReplicationMessagesResponse GetDLQReplicationMessages(1: replicator.GetDLQReplicationMessagesRequest request)
+    throws (
+      1: shared.BadRequestError badRequestError,
+      2: shared.InternalServiceError internalServiceError,
+      3: shared.ServiceBusyError serviceBusyError,
+      4: shared.EntityNotExistsError entityNotExistError,
+    )
+
+  /**
+  * QueryWorkflow returns query result for a specified workflow execution
+  **/
+  QueryWorkflowResponse QueryWorkflow(1: QueryWorkflowRequest queryRequest)
+	throws (
+	  1: shared.BadRequestError badRequestError,
+	  2: shared.InternalServiceError internalServiceError,
+	  3: shared.EntityNotExistsError entityNotExistError,
+	  4: shared.QueryFailedError queryFailedError,
+	  5: shared.LimitExceededError limitExceededError,
+	  6: shared.ServiceBusyError serviceBusyError,
+	  7: shared.ClientVersionNotSupportedError clientVersionNotSupportedError,
+	)
+
+  /**
+  * ReapplyEvents applies stale events to the current workflow and current run
+  **/
+  void ReapplyEvents(1: ReapplyEventsRequest reapplyEventsRequest)
+    throws (
+      1: shared.BadRequestError badRequestError,
+      2: shared.InternalServiceError internalServiceError,
+      3: shared.DomainNotActiveError domainNotActiveError,
+      4: shared.LimitExceededError limitExceededError,
+      5: shared.ServiceBusyError serviceBusyError,
+      6: ShardOwnershipLostError shardOwnershipLostError,
+      7: shared.EntityNotExistsError entityNotExistError,
+    )
+
+  /**
+  * RefreshWorkflowTasks refreshes all tasks of a workflow
+  **/
+  void RefreshWorkflowTasks(1: RefreshWorkflowTasksRequest request)
+    throws (
+      1: shared.BadRequestError badRequestError,
+      2: shared.InternalServiceError internalServiceError,
+      3: shared.DomainNotActiveError domainNotActiveError,
+      4: ShardOwnershipLostError shardOwnershipLostError,
+      5: shared.ServiceBusyError serviceBusyError,
+      6: shared.EntityNotExistsError entityNotExistError,
+    )
+
+  /**
+  * ReadDLQMessages returns messages from DLQ
+  **/
+  replicator.ReadDLQMessagesResponse ReadDLQMessages(1: replicator.ReadDLQMessagesRequest request)
+    throws (
+      1: shared.BadRequestError badRequestError,
+      2: shared.InternalServiceError internalServiceError,
+      3: shared.ServiceBusyError serviceBusyError,
+      4: shared.EntityNotExistsError entityNotExistError,
+      5: ShardOwnershipLostError shardOwnershipLostError,
+    )
+
+  /**
+  * PurgeDLQMessages purges messages from DLQ
+  **/
+  void PurgeDLQMessages(1: replicator.PurgeDLQMessagesRequest request)
+    throws (
+      1: shared.BadRequestError badRequestError,
+      2: shared.InternalServiceError internalServiceError,
+      3: shared.ServiceBusyError serviceBusyError,
+      4: shared.EntityNotExistsError entityNotExistError,
+      5: ShardOwnershipLostError shardOwnershipLostError,
+    )
+
+  /**
+  * MergeDLQMessages merges messages from DLQ
+  **/
+  replicator.MergeDLQMessagesResponse MergeDLQMessages(1: replicator.MergeDLQMessagesRequest request)
+    throws (
+      1: shared.BadRequestError badRequestError,
+      2: shared.InternalServiceError internalServiceError,
+      3: shared.ServiceBusyError serviceBusyError,
+      4: shared.EntityNotExistsError entityNotExistError,
+      5: ShardOwnershipLostError shardOwnershipLostError,
     )
 }

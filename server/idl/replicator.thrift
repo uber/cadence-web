@@ -20,8 +20,7 @@
 
 namespace java com.uber.cadence.replicator
 
-include "./shared.thrift"
-include "./history.thrift"
+include "shared.thrift"
 
 enum ReplicationTaskType {
   Domain
@@ -29,6 +28,7 @@ enum ReplicationTaskType {
   SyncShardStatus
   SyncActivity
   HistoryMetadata
+  HistoryV2
 }
 
 enum DomainOperation {
@@ -60,6 +60,7 @@ struct HistoryTaskAttributes {
   100: optional i32 eventStoreVersion
   110: optional i32 newRunEventStoreVersion
   120: optional bool resetWorkflow
+  130: optional bool newRunNDC
 }
 
 struct HistoryMetadataTaskAttributes {
@@ -77,7 +78,7 @@ struct SyncShardStatusTaskAttributes {
   30: optional i64 (js.type = "Long") timestamp
 }
 
-struct SyncActicvityTaskAttributes {
+struct SyncActivityTaskAttributes {
   10: optional string domainId
   20: optional string workflowId
   30: optional string runId
@@ -89,14 +90,134 @@ struct SyncActicvityTaskAttributes {
   90: optional i64 (js.type = "Long") lastHeartbeatTime
   100: optional binary details
   110: optional i32 attempt
+  120: optional string lastFailureReason
+  130: optional string lastWorkerIdentity
+  140: optional binary lastFailureDetails
+  150: optional shared.VersionHistory versionHistory
+}
+
+struct HistoryTaskV2Attributes {
+  05: optional i64 (js.type = "Long") taskId
+  10: optional string domainId
+  20: optional string workflowId
+  30: optional string runId
+  40: optional list<shared.VersionHistoryItem> versionHistoryItems
+  50: optional shared.DataBlob events
+  // new run events does not need version history since there is no prior events
+  70: optional shared.DataBlob newRunEvents
 }
 
 struct ReplicationTask {
   10: optional ReplicationTaskType taskType
+  11: optional i64 (js.type = "Long") sourceTaskId
   20: optional DomainTaskAttributes domainTaskAttributes
-  30: optional HistoryTaskAttributes historyTaskAttributes
+  30: optional HistoryTaskAttributes historyTaskAttributes  // TODO deprecate once NDC migration is done
   40: optional SyncShardStatusTaskAttributes syncShardStatusTaskAttributes
-  50: optional SyncActicvityTaskAttributes syncActicvityTaskAttributes
-  60: optional HistoryMetadataTaskAttributes historyMetadataTaskAttributes
+  50: optional SyncActivityTaskAttributes syncActivityTaskAttributes
+  60: optional HistoryMetadataTaskAttributes historyMetadataTaskAttributes // TODO deprecate once kafka deprecation is done
+  70: optional HistoryTaskV2Attributes historyTaskV2Attributes
 }
 
+struct ReplicationToken {
+  10: optional i32 shardID
+  // lastRetrivedMessageId is where the next fetch should begin with
+  20: optional i64 (js.type = "Long") lastRetrievedMessageId
+  // lastProcessedMessageId is the last messageId that is processed on the passive side.
+  // This can be different than lastRetrievedMessageId if passive side supports prefetching messages.
+  30: optional i64 (js.type = "Long") lastProcessedMessageId
+}
+
+struct SyncShardStatus {
+    10: optional i64 (js.type = "Long") timestamp
+}
+
+struct ReplicationMessages {
+  10: optional list<ReplicationTask> replicationTasks
+  // This can be different than the last taskId in the above list, because sender can decide to skip tasks (e.g. for completed workflows).
+  20: optional i64 (js.type = "Long") lastRetrievedMessageId
+  30: optional bool hasMore // Hint for flow control
+  40: optional SyncShardStatus syncShardStatus
+}
+
+struct ReplicationTaskInfo {
+  10: optional string domainID
+  20: optional string workflowID
+  30: optional string runID
+  40: optional i16 taskType
+  50: optional i64 (js.type = "Long") taskID
+  60: optional i64 (js.type = "Long") version
+  70: optional i64 (js.type = "Long") firstEventID
+  80: optional i64 (js.type = "Long") nextEventID
+  90: optional i64 (js.type = "Long") scheduledID
+}
+
+struct GetReplicationMessagesRequest {
+  10: optional list<ReplicationToken> tokens
+  20: optional string clusterName
+}
+
+struct GetReplicationMessagesResponse {
+  10: optional map<i32, ReplicationMessages> messagesByShard
+}
+
+struct GetDomainReplicationMessagesRequest {
+  // lastRetrievedMessageId is where the next fetch should begin with
+  10: optional i64 (js.type = "Long") lastRetrievedMessageId
+  // lastProcessedMessageId is the last messageId that is processed on the passive side.
+  // This can be different than lastRetrievedMessageId if passive side supports prefetching messages.
+  20: optional i64 (js.type = "Long") lastProcessedMessageId
+  // clusterName is the name of the pulling cluster
+  30: optional string clusterName
+}
+
+struct GetDomainReplicationMessagesResponse {
+  10: optional ReplicationMessages messages
+}
+
+struct GetDLQReplicationMessagesRequest {
+  10: optional list<ReplicationTaskInfo> taskInfos
+}
+
+struct GetDLQReplicationMessagesResponse {
+  10: optional list<ReplicationTask> replicationTasks
+}
+
+enum DLQType {
+  Replication,
+  Domain,
+}
+
+struct ReadDLQMessagesRequest{
+  10: optional DLQType type
+  20: optional i32 shardID
+  30: optional string sourceCluster
+  40: optional i64 (js.type = "Long") inclusiveEndMessageID
+  50: optional i32 maximumPageSize
+  60: optional binary nextPageToken
+}
+
+struct ReadDLQMessagesResponse{
+  10: optional DLQType type
+  20: optional list<ReplicationTask> replicationTasks
+  30: optional binary nextPageToken
+}
+
+struct PurgeDLQMessagesRequest{
+  10: optional DLQType type
+  20: optional i32 shardID
+  30: optional string sourceCluster
+  40: optional i64 (js.type = "Long") inclusiveEndMessageID
+}
+
+struct MergeDLQMessagesRequest{
+  10: optional DLQType type
+  20: optional i32 shardID
+  30: optional string sourceCluster
+  40: optional i64 (js.type = "Long") inclusiveEndMessageID
+  50: optional i32 maximumPageSize
+  60: optional binary nextPageToken
+}
+
+struct MergeDLQMessagesResponse{
+  10: optional binary nextPageToken
+}

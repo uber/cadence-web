@@ -20,10 +20,11 @@
 
 namespace java com.uber.cadence.admin
 
-include "./shared.thrift"
+include "shared.thrift"
+include "replicator.thrift"
 
 /**
-* AdminService provides advanced APIs for debugging and analysis with admin privillege
+* AdminService provides advanced APIs for debugging and analysis with admin privilege
 **/
 service AdminService {
   /**
@@ -47,6 +48,21 @@ service AdminService {
       3: shared.AccessDeniedError     accessDeniedError,
     )
 
+  void CloseShard(1: shared.CloseShardRequest request)
+    throws (
+      1: shared.BadRequestError       badRequestError,
+      2: shared.InternalServiceError  internalServiceError,
+      3: shared.AccessDeniedError     accessDeniedError,
+    )
+
+  void RemoveTask(1: shared.RemoveTaskRequest request)
+    throws (
+      1: shared.BadRequestError       badRequestError,
+      2: shared.InternalServiceError  internalServiceError,
+      3: shared.AccessDeniedError     accessDeniedError,
+    )
+
+
   /**
   * Returns the raw history of specified workflow execution.  It fails with 'EntityNotExistError' if speficied workflow
   * execution in unknown to the service.
@@ -58,6 +74,117 @@ service AdminService {
       3: shared.EntityNotExistsError entityNotExistError,
       4: shared.ServiceBusyError serviceBusyError,
     )
+
+  /**
+  * Returns the raw history of specified workflow execution.  It fails with 'EntityNotExistError' if speficied workflow
+  * execution in unknown to the service.
+  * StartEventId defines the beginning of the event to fetch. The first event is inclusive.
+  * EndEventId and EndEventVersion defines the end of the event to fetch. The end event is exclusive.
+  **/
+  GetWorkflowExecutionRawHistoryV2Response GetWorkflowExecutionRawHistoryV2(1: GetWorkflowExecutionRawHistoryV2Request getRequest)
+    throws (
+      1: shared.BadRequestError badRequestError,
+      2: shared.InternalServiceError internalServiceError,
+      3: shared.EntityNotExistsError entityNotExistError,
+      4: shared.ServiceBusyError serviceBusyError,
+    )
+
+  replicator.GetReplicationMessagesResponse GetReplicationMessages(1: replicator.GetReplicationMessagesRequest request)
+    throws (
+      1: shared.BadRequestError badRequestError,
+      3: shared.LimitExceededError limitExceededError,
+      4: shared.ServiceBusyError serviceBusyError,
+      5: shared.ClientVersionNotSupportedError clientVersionNotSupportedError,
+      )
+
+  replicator.GetDomainReplicationMessagesResponse GetDomainReplicationMessages(1: replicator.GetDomainReplicationMessagesRequest request)
+    throws (
+      1: shared.BadRequestError badRequestError,
+      3: shared.LimitExceededError limitExceededError,
+      4: shared.ServiceBusyError serviceBusyError,
+      5: shared.ClientVersionNotSupportedError clientVersionNotSupportedError,
+    )
+
+  replicator.GetDLQReplicationMessagesResponse GetDLQReplicationMessages(1: replicator.GetDLQReplicationMessagesRequest request)
+    throws (
+      1: shared.BadRequestError badRequestError,
+      2: shared.ServiceBusyError serviceBusyError,
+    )
+
+  /**
+  * ReapplyEvents applies stale events to the current workflow and current run
+  **/
+  void ReapplyEvents(1: shared.ReapplyEventsRequest reapplyEventsRequest)
+    throws (
+      1: shared.BadRequestError badRequestError,
+      3: shared.DomainNotActiveError domainNotActiveError,
+      4: shared.LimitExceededError limitExceededError,
+      5: shared.ServiceBusyError serviceBusyError,
+      6: shared.EntityNotExistsError entityNotExistError,
+    )
+
+  /**
+  * AddSearchAttribute whitelist search attribute in request.
+  **/
+  void AddSearchAttribute(1: AddSearchAttributeRequest request)
+    throws (
+      1: shared.BadRequestError badRequestError,
+      2: shared.InternalServiceError internalServiceError,
+      3: shared.ServiceBusyError serviceBusyError,
+    )
+
+  /**
+  * DescribeCluster returns information about cadence cluster
+  **/
+  DescribeClusterResponse DescribeCluster()
+    throws (
+      1: shared.InternalServiceError internalServiceError,
+      2: shared.ServiceBusyError serviceBusyError,
+    )
+
+  /**
+  * ReadDLQMessages returns messages from DLQ
+  **/
+  replicator.ReadDLQMessagesResponse ReadDLQMessages(1: replicator.ReadDLQMessagesRequest request)
+    throws (
+      1: shared.BadRequestError badRequestError,
+      2: shared.InternalServiceError internalServiceError,
+      3: shared.ServiceBusyError serviceBusyError,
+      4: shared.EntityNotExistsError entityNotExistError,
+    )
+
+  /**
+  * PurgeDLQMessages purges messages from DLQ
+  **/
+  void PurgeDLQMessages(1: replicator.PurgeDLQMessagesRequest request)
+    throws (
+      1: shared.BadRequestError badRequestError,
+      2: shared.InternalServiceError internalServiceError,
+      3: shared.ServiceBusyError serviceBusyError,
+      4: shared.EntityNotExistsError entityNotExistError,
+    )
+
+  /**
+  * MergeDLQMessages merges messages from DLQ
+  **/
+  replicator.MergeDLQMessagesResponse MergeDLQMessages(1: replicator.MergeDLQMessagesRequest request)
+    throws (
+      1: shared.BadRequestError badRequestError,
+      2: shared.InternalServiceError internalServiceError,
+      3: shared.ServiceBusyError serviceBusyError,
+      4: shared.EntityNotExistsError entityNotExistError,
+    )
+
+  /**
+  * RefreshWorkflowTasks refreshes all tasks of a workflow
+  **/
+  void RefreshWorkflowTasks(1: shared.RefreshWorkflowTasksRequest request)
+   throws (
+      1: shared.BadRequestError badRequestError,
+      2: shared.DomainNotActiveError domainNotActiveError,
+      3: shared.ServiceBusyError serviceBusyError,
+      4: shared.EntityNotExistsError entityNotExistError,
+   )
 }
 
 struct DescribeWorkflowExecutionRequest {
@@ -65,7 +192,7 @@ struct DescribeWorkflowExecutionRequest {
   20: optional shared.WorkflowExecution     execution
 }
 
-struct DescribeWorkflowExecutionResponse{
+struct DescribeWorkflowExecutionResponse {
   10: optional string shardId
   20: optional string historyAddr
   40: optional string mutableStateInCache
@@ -86,4 +213,51 @@ struct GetWorkflowExecutionRawHistoryResponse {
   20: optional list<shared.DataBlob> historyBatches
   30: optional map<string, shared.ReplicationInfo> replicationInfo
   40: optional i32 eventStoreVersion
+}
+
+/**
+  * StartEventId defines the beginning of the event to fetch. The first event is exclusive.
+  * EndEventId and EndEventVersion defines the end of the event to fetch. The end event is exclusive.
+  **/
+struct GetWorkflowExecutionRawHistoryV2Request {
+  10: optional string domain
+  20: optional shared.WorkflowExecution execution
+  30: optional i64 (js.type = "Long") startEventId
+  40: optional i64 (js.type = "Long") startEventVersion
+  50: optional i64 (js.type = "Long") endEventId
+  60: optional i64 (js.type = "Long") endEventVersion
+  70: optional i32 maximumPageSize
+  80: optional binary nextPageToken
+}
+
+struct GetWorkflowExecutionRawHistoryV2Response {
+  10: optional binary nextPageToken
+  20: optional list<shared.DataBlob> historyBatches
+  30: optional shared.VersionHistory versionHistory
+}
+
+struct AddSearchAttributeRequest {
+  10: optional map<string, shared.IndexedValueType> searchAttribute
+  20: optional string securityToken
+}
+
+struct HostInfo {
+  10: optional string Identity
+}
+
+struct RingInfo {
+  10: optional string role
+  20: optional i32 memberCount
+  30: optional list<HostInfo> members
+}
+
+struct MembershipInfo {
+  10: optional HostInfo currentHost
+  20: optional list<string> reachableMembers
+  30: optional list<RingInfo> rings
+}
+
+struct DescribeClusterResponse {
+  10: optional shared.SupportedClientVersions supportedClientVersions
+  20: optional MembershipInfo membershipInfo
 }

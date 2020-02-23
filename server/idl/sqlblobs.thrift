@@ -20,7 +20,7 @@
 
 namespace java com.uber.cadence.sqlblobs
 
-include "./shared.thrift"
+include "shared.thrift"
 
 struct ShardInfo {
   10: optional i32 stolenSinceRenew
@@ -32,6 +32,7 @@ struct ShardInfo {
   34: optional map<string, i64> clusterTransferAckLevel
   36: optional map<string, i64> clusterTimerAckLevel
   38: optional string owner
+  40: optional map<string, i64> clusterReplicationLevel
 }
 
 struct DomainInfo {
@@ -52,6 +53,10 @@ struct DomainInfo {
   38: optional map<string, string> data
   39: optional binary badBinaries
   40: optional string badBinariesEncoding
+  42: optional i16 historyArchivalStatus
+  44: optional string historyArchivalURI
+  46: optional i16 visibilityArchivalStatus
+  48: optional string visibilityArchivalURI
 }
 
 struct HistoryTreeInfo {
@@ -97,6 +102,7 @@ struct WorkflowExecutionInfo {
   68: optional i64 (js.type = "Long") decisionStartedTimestampNanos
   69: optional i64 (js.type = "Long") decisionScheduledTimestampNanos
   70: optional bool cancelRequested
+  71: optional i64 (js.type = "Long") decisionOriginalScheduledTimestampNanos
   72: optional string createRequestID
   74: optional string decisionRequestID
   76: optional string cancelRequestID
@@ -122,6 +128,9 @@ struct WorkflowExecutionInfo {
   115: optional binary autoResetPoints
   116: optional string autoResetPointsEncoding
   118: optional map<string, binary> searchAttributes
+  120: optional map<string, binary> memo
+  122: optional binary versionHistories
+  124: optional string versionHistoriesEncoding
 }
 
 struct ActivityInfo {
@@ -153,6 +162,9 @@ struct ActivityInfo {
   60: optional i64 (js.type = "Long") retryExpirationTimeNanos
   62: optional double retryBackoffCoefficient
   64: optional list<string> retryNonRetryableErrors
+  66: optional string retryLastFailureReason
+  68: optional string retryLastWorkerIdentity
+  70: optional binary retryLastFailureDetails
 }
 
 struct ChildExecutionInfo {
@@ -168,10 +180,12 @@ struct ChildExecutionInfo {
   28: optional string createRequestID
   30: optional string domainName
   32: optional string workflowTypeName
+  35: optional i32 parentClosePolicy
 }
 
 struct SignalInfo {
   10: optional i64 (js.type = "Long") version
+  11: optional i64 (js.type = "Long") initiatedEventBatchID
   12: optional string requestID
   14: optional string name
   16: optional binary input
@@ -180,6 +194,7 @@ struct SignalInfo {
 
 struct RequestCancelInfo {
   10: optional i64 (js.type = "Long") version
+  11: optional i64 (js.type = "Long") initiatedEventBatchID
   12: optional string cancelRequestID
 }
 
@@ -187,6 +202,9 @@ struct TimerInfo {
   10: optional i64 (js.type = "Long") version
   12: optional i64 (js.type = "Long") startedID
   14: optional i64 (js.type = "Long") expiryTimeNanos
+  // TaskID is a misleading variable, it actually serves
+  // the purpose of indicating whether a timer task is
+  // generated for this timer info
   16: optional i64 (js.type = "Long") taskID
 }
 

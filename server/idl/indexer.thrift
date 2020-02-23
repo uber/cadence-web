@@ -20,7 +20,7 @@
 
 namespace java com.uber.cadence.indexer
 
-include "./shared.thrift"
+include "shared.thrift"
 
 enum MessageType {
   Index
