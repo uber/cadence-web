@@ -29,7 +29,9 @@ describe('Query Workflow', function() {
         query: {
           queryType: 'state',
           queryArgs: null
-        }
+        },
+        queryConsistencyLevel: null,
+        queryRejectCondition: null,
       })
 
       return { queryResult: Buffer.from('foobar') }
@@ -40,6 +42,7 @@ describe('Query Workflow', function() {
       .expect(200)
       .expect('Content-Type', /json/)
       .expect({
+        queryRejected: null,
         queryResult: 'foobar',
         queryResult_base64: Buffer.from('foobar').toString('base64')
       })
