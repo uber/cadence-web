@@ -19,7 +19,7 @@ before(function(done) {
   })
   var tchan = TChannelAsThrift({
     channel: cadenceChan,
-    entryPoint: path.join(__dirname, '../idl/cadence.thrift')
+    entryPoint: path.join(__dirname, '../idl/thrift/cadence.thrift')
   })
 
   const handler = (ctx, req, head, body, cb) => {
