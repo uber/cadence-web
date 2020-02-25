@@ -12,12 +12,12 @@ describe('Describe Domain', function() {
       isGlobalDomain: false,
       failoverVersion: 0,
       configuration: {
-        archivalBucketName: null,
-        archivalBucketOwner: null,
-        archivalRetentionPeriodInDays: null,
-        archivalStatus: null,
         badBinaries: null,
         emitMetric: false,
+        historyArchivalStatus: null,
+        historyArchivalURI: null,
+        visibilityArchivalStatus: null,
+        visibilityArchivalURI: null,
         workflowExecutionRetentionPeriodInDays: 14
       },
       replicationConfiguration: {
@@ -51,13 +51,13 @@ describe('Describe Domain', function() {
       failoverVersion: 0,
       isGlobalDomain: true,
       configuration: {
-        archivalBucketName: null,
-        archivalBucketOwner: null,
-        archivalRetentionPeriodInDays: null,
-        archivalStatus: null,
         badBinaries: null,
         workflowExecutionRetentionPeriodInDays: 14,
-        emitMetric: true
+        emitMetric: true,
+        historyArchivalStatus: null,
+        historyArchivalURI: null,
+        visibilityArchivalStatus: null,
+        visibilityArchivalURI: null
       },
       replicationConfiguration: {
         activeClusterName: 'ci-cluster',
