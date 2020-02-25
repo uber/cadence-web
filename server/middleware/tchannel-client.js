@@ -101,7 +101,7 @@ module.exports = async function(ctx, next) {
     cadenceChannel = await makeChannel(client),
     tchannelAsThrift = TChannelAsThrift({
       channel: cadenceChannel,
-      entryPoint: path.join(__dirname, '../../node_modules/cadence-idl/thrift/cadence.thrift')
+      entryPoint: path.join(__dirname, '../idl/cadence.thrift')
     })
 
   function req(method, reqName, bodyTransform, resTransform) {
