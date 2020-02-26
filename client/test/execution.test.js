@@ -1062,66 +1062,6 @@ describe('Execution', () => {
             '/domain/child-domain/workflows/child-wfid/2345/summary'
           );
       });
-
-      it('should scroll the selected event id from compact view into view', async function test() {
-        const [testEl, scenario] = new Scenario(this.test)
-          .withDomain('ci-test')
-          .startingAt(
-            '/domain/ci-test/workflows/long-running-op-1/theRunId/history?format=compact&showGraph=true'
-          )
-          .withExecution('long-running-op-1', 'theRunId')
-          .withHistory(
-            [
-              {
-                timestamp: moment().toISOString(),
-                eventType: 'WorkflowExecutionStarted',
-                eventId: 1,
-                details: {
-                  workflowType: {
-                    name: 'long-running-op',
-                  },
-                },
-              },
-            ].concat(generateActivityEvents(100))
-          )
-          .go(true);
-
-        const historyEl = await testEl.waitUntilExists('section.history');
-
-        await retry(() => {
-          historyEl
-            .querySelectorAll('.compact-view .timeline-event.activity')
-            .should.have.length(8);
-          testEl
-            .querySelectorAll('section.history .timeline .vis-range.activity')
-            .should.have.length(100);
-        });
-
-        historyEl
-          .querySelector(
-            '.vue-recycle-scroller__item-view:nth-of-type(8) .timeline-event.activity'
-          )
-          .trigger('click');
-        await retry(() =>
-          scenario.location.should.equal(
-            '/domain/ci-test/workflows/long-running-op-1/theRunId/history?format=compact&showGraph=true&eventId=9'
-          )
-        );
-        await Promise.delay(100);
-
-        testEl.querySelector('.view-formats a.grid').trigger('click');
-
-        await retry(() => {
-          testEl
-            .querySelectorAll(
-              'section.results .vue-recycle-scroller__item-view .tr'
-            )
-            .should.have.length(17);
-          testEl
-            .querySelector('section.results .vue-recycle-scroller')
-            .scrollTop.should.be.above(450);
-        });
-      });
     });
   });
 
