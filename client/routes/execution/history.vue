@@ -488,13 +488,6 @@ export default {
         console.warn('vue-virtual-scroller: Could not scrollToItem:', error);
       }
     },
-    scrollerUpdate() {
-      const { scrollerCompact, scrollerGrid } = this.$refs;
-      const scroller = this.isGrid ? scrollerGrid : scrollerCompact;
-      if (scroller && scroller.forceUpdate) {
-        scroller.forceUpdate();
-      }
-    },
     selectTimelineEvent(i) {
       this.$router.replaceQueryParam(
         'eventId',
@@ -512,9 +505,6 @@ export default {
     },
   },
   watch: {
-    eventId(eventId) {
-      this.scrollerUpdate();
-    },
     filteredEvents() {
       if (
         !this.scrolledToEventOnInit &&
@@ -652,6 +642,7 @@ section.history
     .tr
       display: flex;
       flex: 1;
+      border: 1px solid transparent;
       &.odd
         background-color: #f8f8f9;
     .td, .th
