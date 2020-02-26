@@ -163,7 +163,7 @@ header.top-bar
     color: #c6c6c6;
     font-size: 10px;
     position: absolute;
-    right: 3px;
+    right: 4px;
     bottom: 0;
   }
 
