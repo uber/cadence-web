@@ -1,6 +1,6 @@
 <script>
-import logo from './assets/logo.svg';
 import { version } from '../package.json';
+import logo from './assets/logo.svg';
 
 export default {
   data() {
