@@ -1,9 +1,12 @@
 <script>
 import logo from './assets/logo.svg';
+import { version } from '../package.json';
 
 export default {
   data() {
-    return { logo };
+    return {
+      logo,
+    };
   },
   methods: {
     globalClick(e) {
@@ -27,13 +30,21 @@ export default {
       }
     },
   },
+  computed: {
+    version() {
+      return `v${version}`;
+    },
+  },
 };
 </script>
 
 <template>
   <main @click="globalClick">
     <header class="top-bar">
-      <a href="/" class="logo" v-html="logo"></a>
+      <a href="/" class="logo">
+        <div v-html="logo"></div>
+        <span class="version">{{ version }}</span>
+      </a>
       <div class="domain" v-if="$route.params.domain">
         <a
           :href="`/domain/${$route.params.domain}/workflows`"
@@ -102,8 +113,11 @@ header.top-bar
     &.config
       margin-left inline-spacing-medium
       icon('\ea5f')
-    &.logo
-      margin-right layout-spacing-medium
+    &.logo {
+      margin-right: layout-spacing-medium;
+      position: relative;
+    }
+
   svg
     display inline-block
     height top-nav-height - 20px
@@ -145,6 +159,13 @@ header.top-bar
       content 'WORKFLOW ID'
   div.task-list span::before
       content 'TASK LIST'
+  .version {
+    color: #c6c6c6;
+    font-size: 10px;
+    position: absolute;
+    right: 3px;
+    bottom: 0;
+  }
 
 body, main
   height 100%
