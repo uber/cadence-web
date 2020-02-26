@@ -488,6 +488,11 @@ export default {
         console.warn('vue-virtual-scroller: Could not scrollToItem:', error);
       }
     },
+    scrollerUpdate() {
+      const { scrollerCompact, scrollerGrid } = this.$refs;
+      const scroller = this.isGrid ? scrollerGrid : scrollerCompact;
+      scroller.forceUpdate();
+    },
     selectTimelineEvent(i) {
       this.$router.replaceQueryParam(
         'eventId',
@@ -506,7 +511,7 @@ export default {
   },
   watch: {
     eventId(eventId) {
-      this.scrollEventIntoView(eventId);
+      this.scrollerUpdate();
     },
     filteredEvents() {
       if (
