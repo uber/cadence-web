@@ -491,7 +491,9 @@ export default {
     scrollerUpdate() {
       const { scrollerCompact, scrollerGrid } = this.$refs;
       const scroller = this.isGrid ? scrollerGrid : scrollerCompact;
-      scroller.forceUpdate();
+      if (scroller && scroller.forceUpdate) {
+        scroller.forceUpdate();
+      }
     },
     selectTimelineEvent(i) {
       this.$router.replaceQueryParam(
