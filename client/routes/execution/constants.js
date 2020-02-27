@@ -1,1 +1,2 @@
-export const RESULT_THRESHOLD = 1000;
+export const RETRY_COUNT_MAX = 3;
+export const RETRY_TIMEOUT = 6000;

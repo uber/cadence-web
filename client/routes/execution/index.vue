@@ -55,6 +55,7 @@
 <script>
 import { NOTIFICATION_TYPE_ERROR } from '../../constants';
 import { getErrorMessage } from '../../helpers';
+import { RETRY_COUNT_MAX, RETRY_TIMEOUT } from './constants';
 import {
   getHistoryEvents,
   getHistoryTimelineEvents,
@@ -64,9 +65,11 @@ import {
 export default {
   data() {
     return {
+      baseApiUrlRetryCount: 0,
       events: [],
       isWorkflowRunning: undefined,
       nextPageToken: undefined,
+      fetchHistoryPageRetryCount: 0,
       wfLoading: true,
       workflow: undefined,
 
@@ -122,6 +125,7 @@ export default {
       this.events = [];
       this.isWorkflowRunning = undefined;
       this.nextPageToken = undefined;
+      this.fetchHistoryPageRetryCount = 0;
       this.wfLoading = true;
       this.workflow = undefined;
 
@@ -147,7 +151,7 @@ export default {
       }
     },
     fetchHistoryPage(pagedQueryUrl) {
-      if (!pagedQueryUrl) {
+      if (!pagedQueryUrl || this.fetchHistoryPageRetryCount >= RETRY_COUNT_MAX) {
         this.history.loading = false;
 
         return;
@@ -201,6 +205,7 @@ export default {
             this.$emit('highlight-event-id', this.$route.query.eventId);
           }
 
+          this.fetchHistoryPageRetryCount = 0;
           return this.events;
         })
         .catch(error => {
@@ -216,6 +221,9 @@ export default {
             message: getErrorMessage(error),
             type: NOTIFICATION_TYPE_ERROR,
           });
+
+          this.fetchHistoryPageRetryCount += 1;
+          setTimeout(() => this.fetchHistoryPage(pagedQueryUrl), RETRY_TIMEOUT);
         })
         .finally(() => {
           // eslint-disable-next-line no-underscore-dangle
@@ -225,6 +233,10 @@ export default {
         });
     },
     onBaseApiUrlChange(baseAPIURL) {
+      if (this.baseApiUrlRetryCount >= RETRY_COUNT_MAX) {
+        return;
+      }
+
       this.clearQueryUrlWatch();
       this.clearState();
       this.wfLoading = true;
@@ -235,12 +247,15 @@ export default {
             this.workflow = wf;
             this.isWorkflowRunning = !wf.workflowExecutionInfo.closeTime;
             this.setupQueryUrlWatch();
+            this.baseApiUrlRetryCount = 0;
           },
           error => {
             this.$emit('onNotification', {
               message: getErrorMessage(error),
               type: NOTIFICATION_TYPE_ERROR,
             });
+            this.baseApiUrlRetryCount += 1;
+            setTimeout(() => this.onBaseApiUrlChange(baseAPIURL), RETRY_TIMEOUT);
           }
         )
         .finally(() => {
