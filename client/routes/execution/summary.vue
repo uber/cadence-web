@@ -127,6 +127,8 @@ import {
   NOTIFICATION_TYPE_ERROR,
   NOTIFICATION_TYPE_SUCCESS,
 } from '../../constants';
+import { getErrorMessage } from '../../helpers';
+import { TERMINATE_DEFAULT_ERROR_MESSAGE } from './constants';
 
 export default {
   data() {
@@ -175,11 +177,9 @@ export default {
             // eslint-disable-next-line no-console
             console.dir(r);
           },
-          resp => {
+          error => {
             this.$emit('onNotification', {
-              message:
-                resp.message ||
-                'An error has occurred. Please check you have the correct permissions to terminate this workflow and try again.',
+              message: getErrorMessage(error, TERMINATE_DEFAULT_ERROR_MESSAGE),
               type: NOTIFICATION_TYPE_ERROR,
             });
           }
