@@ -34,7 +34,6 @@
     <router-view
       name="history"
       :baseAPIURL="baseAPIURL"
-      :error="history.error"
       :events="history.events"
       :loading="history.loading"
       :timelineEvents="history.timelineEvents"
@@ -54,6 +53,8 @@
 </template>
 
 <script>
+import { NOTIFICATION_TYPE_ERROR } from '../../constants';
+import { getErrorMessage } from '../../helpers';
 import {
   getHistoryEvents,
   getHistoryTimelineEvents,
@@ -66,12 +67,10 @@ export default {
       events: [],
       isWorkflowRunning: undefined,
       nextPageToken: undefined,
-      wfError: undefined,
       wfLoading: true,
       workflow: undefined,
 
       history: {
-        error: undefined,
         events: [],
         loading: undefined,
         timelineEvents: [],
@@ -123,11 +122,9 @@ export default {
       this.events = [];
       this.isWorkflowRunning = undefined;
       this.nextPageToken = undefined;
-      this.wfError = undefined;
       this.wfLoading = true;
       this.workflow = undefined;
 
-      this.history.error = undefined;
       this.history.events = [];
       this.history.loading = undefined;
       this.history.timelineEvents = [];
@@ -150,8 +147,6 @@ export default {
       }
     },
     fetchHistoryPage(pagedQueryUrl) {
-      this.history.error = undefined;
-
       if (!pagedQueryUrl) {
         this.history.loading = false;
 
@@ -208,17 +203,19 @@ export default {
 
           return this.events;
         })
-        .catch(e => {
+        .catch(error => {
           // eslint-disable-next-line no-console
-          console.error(e);
+          console.error(error);
 
           // eslint-disable-next-line no-underscore-dangle
           if (this._isDestroyed || this.pqu !== pagedQueryUrl) {
             return;
           }
 
-          this.history.error =
-            (e.json && e.json.message) || e.status || e.message;
+          this.$emit('onNotification', {
+            message: getErrorMessage(error),
+            type: NOTIFICATION_TYPE_ERROR,
+          });
         })
         .finally(() => {
           // eslint-disable-next-line no-underscore-dangle
@@ -239,8 +236,11 @@ export default {
             this.isWorkflowRunning = !wf.workflowExecutionInfo.closeTime;
             this.setupQueryUrlWatch();
           },
-          e => {
-            this.wfError = (e.json && e.json.message) || e.status || e.message;
+          error => {
+            this.$emit('onNotification', {
+              message: getErrorMessage(error),
+              type: NOTIFICATION_TYPE_ERROR,
+            });
           }
         )
         .finally(() => {

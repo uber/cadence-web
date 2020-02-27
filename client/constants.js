@@ -6,6 +6,8 @@ export const MAXIMUM_JSON_MESSAGE =
   '\n ... to see more open full screen mode from top right arrow.';
 
 export const NOTIFICATION_TYPE_ERROR = 'error';
+export const NOTIFICATION_TYPE_ERROR_MESSAGE_DEFAULT =
+  'An unexpected error has occurred. Please try again. If problems persist contact cadence-support.';
 export const NOTIFICATION_TYPE_SUCCESS = 'success';
 export const NOTIFICATION_TYPE_WARNING = 'warning';
 export const NOTIFICATION_TIMEOUT = 5000;

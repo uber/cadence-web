@@ -1,7 +1,7 @@
 <script>
 import logo from './assets/logo.svg';
 import NotificationBar from './components/notification-bar.vue';
-import { NOTIFICATION_TIMEOUT } from './constants';
+import { NOTIFICATION_TIMEOUT, NOTIFICATION_TYPE_SUCCESS } from './constants';
 
 export default {
   components: {
@@ -42,7 +42,7 @@ export default {
         }
       }
     },
-    onNotification({ message, type = 'success' }) {
+    onNotification({ message, type = NOTIFICATION_TYPE_SUCCESS }) {
       this.notification.message = message;
       this.notification.type = type;
       this.notification.show = true;
