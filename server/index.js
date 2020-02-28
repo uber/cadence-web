@@ -69,6 +69,7 @@ app.init = function(options) {
   })
 
   app.use(mount(basePath, innerApp));
+  app.use(mount('/', innerApp));
   return app;
 }
 
