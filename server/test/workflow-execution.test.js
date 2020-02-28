@@ -15,7 +15,6 @@ describe('Workflow Execution', function() {
       .expect('Content-Type', /json/)
       .expect({
         executionConfiguration: {
-          childPolicy: null,
           taskList: {
             name: 'ci-task-list',
             kind: null
@@ -24,6 +23,7 @@ describe('Workflow Execution', function() {
           executionStartToCloseTimeoutSeconds: null
         },
         workflowExecutionInfo: null,
+        pendingChildren: null,
         pendingActivities: null
       })
   })
