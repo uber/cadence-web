@@ -1,4 +1,5 @@
 <script>
+import { version } from '../package.json';
 import logo from './assets/logo.svg';
 import { basePathUrl } from './constants';
 
@@ -9,13 +10,21 @@ export default {
       logo,
     };
   },
+  computed: {
+    version() {
+      return `v${version}`;
+    },
+  },
 };
 </script>
 
 <template>
   <main>
     <header class="top-bar">
-      <a :href="basePath" class="logo" v-html="logo"></a>
+      <a :href="basePath" class="logo">
+        <div v-html="logo"></div>
+        <span class="version">{{ version }}</span>
+      </a>
       <div class="domain" v-if="$route.params.domain">
         <router-link
           exact
@@ -89,8 +98,11 @@ header.top-bar
     &.config
       margin-left inline-spacing-medium
       icon('\ea5f')
-    &.logo
-      margin-right layout-spacing-medium
+    &.logo {
+      margin-right: layout-spacing-medium;
+      position: relative;
+    }
+
   svg
     display inline-block
     height top-nav-height - 20px
@@ -132,6 +144,13 @@ header.top-bar
       content 'WORKFLOW ID'
   div.task-list span::before
       content 'TASK LIST'
+  .version {
+    color: #c6c6c6;
+    font-size: 10px;
+    position: absolute;
+    right: 4px;
+    bottom: 0;
+  }
 
 body, main
   height 100%
