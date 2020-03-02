@@ -23,10 +23,7 @@ export default {
   beforeDestroy() {
     clearTimeout(this.notification.timeout);
   },
-  computed: {
-    version() {
-      return `v${version}`;
-    },
+  methods: {
     onNotification({ message, type = NOTIFICATION_TYPE_SUCCESS }) {
       this.notification.message = message;
       this.notification.type = type;
