@@ -503,9 +503,6 @@ export default {
     },
   },
   watch: {
-    eventId(eventId) {
-      this.scrollEventIntoView(eventId);
-    },
     filteredEvents() {
       if (
         !this.scrolledToEventOnInit &&
@@ -643,6 +640,7 @@ section.history
     .tr
       display: flex;
       flex: 1;
+      border: 1px solid transparent;
       &.odd
         background-color: #f8f8f9;
     .td, .th

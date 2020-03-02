@@ -259,7 +259,7 @@ export default pagedGrid({
     setWorkflowFilter(e) {
       const target = e.target || e.testTarget; // test hook since Event.target is readOnly and unsettable
 
-      this.$router.replaceQueryParam(target.getAttribute('name'), target.value);
+      this.$router.replaceQueryParam(target.getAttribute('name'), target.value.trim());
     },
     setStatus(status) {
       if (status) {
