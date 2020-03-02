@@ -52,7 +52,7 @@
       direction="vertical"
       @onDrag="onSplitResize"
       @onDragStart="enableSplitting"
-      v-if="!showNoResults && !error"
+      v-if="!showNoResults"
       ref="splitPanel"
     >
       <SplitArea
@@ -255,7 +255,6 @@
       </SplitArea>
     </Split>
 
-    <span class="error" v-if="error">{{ error }}</span>
     <span class="no-results" v-if="showNoResults">No Results</span>
   </section>
 </template>
@@ -302,7 +301,6 @@ export default {
   props: [
     'baseAPIURL',
     'domain',
-    'error',
     'eventId',
     'events',
     'format',
@@ -393,10 +391,10 @@ export default {
       };
     },
     showTable() {
-      return !this.error && (this.loading || this.events.length);
+      return this.loading || this.events.length;
     },
     showNoResults() {
-      return !this.error && !this.loading && this.events.length === 0;
+      return !this.loading && this.events.length === 0;
     },
     timelineEventIdToIndex() {
       return this.timelineEvents
@@ -505,9 +503,6 @@ export default {
     },
   },
   watch: {
-    eventId(eventId) {
-      this.scrollEventIntoView(eventId);
-    },
     filteredEvents() {
       if (
         !this.scrolledToEventOnInit &&
@@ -645,6 +640,7 @@ section.history
     .tr
       display: flex;
       flex: 1;
+      border: 1px solid transparent;
       &.odd
         background-color: #f8f8f9;
     .td, .th

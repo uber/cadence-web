@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import domainNav from '../widgets/domain-navigate.vue';
+import domainNav from '../components/domain-navigate.vue';
 
 export default {
   data() {

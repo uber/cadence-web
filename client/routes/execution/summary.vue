@@ -118,17 +118,21 @@
         </dd>
       </div>
     </dl>
-    <span class="error" v-if="terminationError">{{ terminationError }}</span>
   </section>
 </template>
 
 <script>
 import moment from 'moment';
+import {
+  NOTIFICATION_TYPE_ERROR,
+  NOTIFICATION_TYPE_SUCCESS,
+} from '../../constants';
+import { getErrorMessage } from '../../helpers';
+import { TERMINATE_DEFAULT_ERROR_MESSAGE } from './constants';
 
 export default {
   data() {
     return {
-      terminationError: undefined,
       terminationReason: undefined,
     };
   },
@@ -166,12 +170,18 @@ export default {
         })
         .then(
           r => {
+            this.$emit('onNotification', {
+              message: 'Workflow terminated.',
+              type: NOTIFICATION_TYPE_SUCCESS,
+            });
             // eslint-disable-next-line no-console
             console.dir(r);
           },
-          resp => {
-            this.terminationError =
-              resp.message || resp.status || resp.statusCode;
+          error => {
+            this.$emit('onNotification', {
+              message: getErrorMessage(error, TERMINATE_DEFAULT_ERROR_MESSAGE),
+              type: NOTIFICATION_TYPE_ERROR,
+            });
           }
         );
     },

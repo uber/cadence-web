@@ -99,7 +99,7 @@
 <script>
 import moment from 'moment';
 import debounce from 'lodash-es/debounce';
-import pagedGrid from '../widgets/paged-grid';
+import pagedGrid from '../components/paged-grid';
 
 export default pagedGrid({
   data() {
@@ -259,7 +259,7 @@ export default pagedGrid({
     setWorkflowFilter(e) {
       const target = e.target || e.testTarget; // test hook since Event.target is readOnly and unsettable
 
-      this.$router.replaceQueryParam(target.getAttribute('name'), target.value);
+      this.$router.replaceQueryParam(target.getAttribute('name'), target.value.trim());
     },
     setStatus(status) {
       if (status) {
