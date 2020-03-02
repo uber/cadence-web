@@ -99,7 +99,7 @@
 <script>
 import moment from 'moment';
 import debounce from 'lodash-es/debounce';
-import pagedGrid from '../widgets/paged-grid';
+import pagedGrid from '../components/paged-grid';
 
 export default pagedGrid({
   data() {

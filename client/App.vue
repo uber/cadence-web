@@ -1,12 +1,26 @@
 <script>
 import { version } from '../package.json';
 import logo from './assets/logo.svg';
+import NotificationBar from './components/notification-bar.vue';
+import { NOTIFICATION_TIMEOUT, NOTIFICATION_TYPE_SUCCESS } from './constants';
 
 export default {
+  components: {
+    NotificationBar,
+  },
   data() {
     return {
       logo,
+      notification: {
+        message: '',
+        show: false,
+        type: '',
+        timeout: undefined,
+      },
     };
+  },
+  beforeDestroy() {
+    clearTimeout(this.notification.timeout);
   },
   methods: {
     globalClick(e) {
@@ -29,6 +43,26 @@ export default {
         }
       }
     },
+    onNotification({ message, type = NOTIFICATION_TYPE_SUCCESS }) {
+      this.notification.message = message;
+      this.notification.type = type;
+      this.notification.show = true;
+    },
+    onNotificationClose() {
+      this.notification.show = false;
+    },
+  },
+  watch: {
+    'notification.show'(value) {
+      clearTimeout(this.notification.timeout);
+
+      if (value) {
+        this.notification.timeout = setTimeout(
+          this.onNotificationClose,
+          NOTIFICATION_TIMEOUT
+        );
+      }
+    },
   },
   computed: {
     version() {
@@ -40,6 +74,12 @@ export default {
 
 <template>
   <main @click="globalClick">
+    <NotificationBar
+      :message="notification.message"
+      :onClose="onNotificationClose"
+      :show="notification.show"
+      :type="notification.type"
+    />
     <header class="top-bar">
       <a href="/" class="logo">
         <div v-html="logo"></div>
@@ -74,7 +114,7 @@ export default {
         <span>{{ $route.params.taskList }}</span>
       </div>
     </header>
-    <router-view></router-view>
+    <router-view @onNotification="onNotification"></router-view>
     <modals-container />
     <v-dialog />
   </main>
