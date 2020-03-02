@@ -1,3 +1,4 @@
+export { default as getErrorMessage } from './get-error-message';
 export { default as getJsonStringObject } from './get-json-string-object';
 export { default as getKeyValuePairs } from './get-key-value-pairs';
 export { default as getStringElipsis } from './get-string-elipsis';

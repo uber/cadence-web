@@ -1,9 +1,26 @@
 <script>
+import { version } from '../package.json';
 import logo from './assets/logo.svg';
+import NotificationBar from './components/notification-bar.vue';
+import { NOTIFICATION_TIMEOUT, NOTIFICATION_TYPE_SUCCESS } from './constants';
 
 export default {
+  components: {
+    NotificationBar,
+  },
   data() {
-    return { logo };
+    return {
+      logo,
+      notification: {
+        message: '',
+        show: false,
+        type: '',
+        timeout: undefined,
+      },
+    };
+  },
+  beforeDestroy() {
+    clearTimeout(this.notification.timeout);
   },
   methods: {
     globalClick(e) {
@@ -26,14 +43,48 @@ export default {
         }
       }
     },
+    onNotification({ message, type = NOTIFICATION_TYPE_SUCCESS }) {
+      this.notification.message = message;
+      this.notification.type = type;
+      this.notification.show = true;
+    },
+    onNotificationClose() {
+      this.notification.show = false;
+    },
+  },
+  watch: {
+    'notification.show'(value) {
+      clearTimeout(this.notification.timeout);
+
+      if (value) {
+        this.notification.timeout = setTimeout(
+          this.onNotificationClose,
+          NOTIFICATION_TIMEOUT
+        );
+      }
+    },
+  },
+  computed: {
+    version() {
+      return `v${version}`;
+    },
   },
 };
 </script>
 
 <template>
   <main @click="globalClick">
+    <NotificationBar
+      :message="notification.message"
+      :onClose="onNotificationClose"
+      :show="notification.show"
+      :type="notification.type"
+    />
     <header class="top-bar">
-      <a href="/" class="logo" v-html="logo"></a>
+      <a href="/" class="logo">
+        <div v-html="logo"></div>
+        <span class="version">{{ version }}</span>
+      </a>
       <div class="domain" v-if="$route.params.domain">
         <a
           :href="`/domain/${$route.params.domain}/workflows`"
@@ -63,7 +114,7 @@ export default {
         <span>{{ $route.params.taskList }}</span>
       </div>
     </header>
-    <router-view></router-view>
+    <router-view @onNotification="onNotification"></router-view>
     <modals-container />
     <v-dialog />
   </main>
@@ -102,8 +153,11 @@ header.top-bar
     &.config
       margin-left inline-spacing-medium
       icon('\ea5f')
-    &.logo
-      margin-right layout-spacing-medium
+    &.logo {
+      margin-right: layout-spacing-medium;
+      position: relative;
+    }
+
   svg
     display inline-block
     height top-nav-height - 20px
@@ -145,6 +199,13 @@ header.top-bar
       content 'WORKFLOW ID'
   div.task-list span::before
       content 'TASK LIST'
+  .version {
+    color: #c6c6c6;
+    font-size: 10px;
+    position: absolute;
+    right: 4px;
+    bottom: 0;
+  }
 
 body, main
   height 100%

@@ -29,21 +29,33 @@
       :result="summary.result"
       :wfStatus="summary.wfStatus"
       :workflow="summary.workflow"
+      @onNotification="onNotification"
     />
     <router-view
       name="history"
       :baseAPIURL="baseAPIURL"
-      :error="history.error"
       :events="history.events"
       :loading="history.loading"
       :timelineEvents="history.timelineEvents"
+      @onNotification="onNotification"
     />
-    <router-view name="stacktrace" :baseAPIURL="baseAPIURL" />
-    <router-view name="queries" :baseAPIURL="baseAPIURL" />
+    <router-view
+      name="stacktrace"
+      :baseAPIURL="baseAPIURL"
+      @onNotification="onNotification"
+    />
+    <router-view
+      name="queries"
+      :baseAPIURL="baseAPIURL"
+      @onNotification="onNotification"
+    />
   </section>
 </template>
 
 <script>
+import { NOTIFICATION_TYPE_ERROR } from '../../constants';
+import { getErrorMessage } from '../../helpers';
+import { RETRY_COUNT_MAX, RETRY_TIMEOUT } from './constants';
 import {
   getHistoryEvents,
   getHistoryTimelineEvents,
@@ -53,15 +65,15 @@ import {
 export default {
   data() {
     return {
+      baseApiUrlRetryCount: 0,
       events: [],
       isWorkflowRunning: undefined,
       nextPageToken: undefined,
-      wfError: undefined,
+      fetchHistoryPageRetryCount: 0,
       wfLoading: true,
       workflow: undefined,
 
       history: {
-        error: undefined,
         events: [],
         loading: undefined,
         timelineEvents: [],
@@ -113,11 +125,10 @@ export default {
       this.events = [];
       this.isWorkflowRunning = undefined;
       this.nextPageToken = undefined;
-      this.wfError = undefined;
+      this.fetchHistoryPageRetryCount = 0;
       this.wfLoading = true;
       this.workflow = undefined;
 
-      this.history.error = undefined;
       this.history.events = [];
       this.history.loading = undefined;
       this.history.timelineEvents = [];
@@ -140,9 +151,7 @@ export default {
       }
     },
     fetchHistoryPage(pagedQueryUrl) {
-      this.history.error = undefined;
-
-      if (!pagedQueryUrl) {
+      if (!pagedQueryUrl || this.fetchHistoryPageRetryCount >= RETRY_COUNT_MAX) {
         this.history.loading = false;
 
         return;
@@ -196,19 +205,25 @@ export default {
             this.$emit('highlight-event-id', this.$route.query.eventId);
           }
 
+          this.fetchHistoryPageRetryCount = 0;
           return this.events;
         })
-        .catch(e => {
+        .catch(error => {
           // eslint-disable-next-line no-console
-          console.error(e);
+          console.error(error);
 
           // eslint-disable-next-line no-underscore-dangle
           if (this._isDestroyed || this.pqu !== pagedQueryUrl) {
             return;
           }
 
-          this.history.error =
-            (e.json && e.json.message) || e.status || e.message;
+          this.$emit('onNotification', {
+            message: getErrorMessage(error),
+            type: NOTIFICATION_TYPE_ERROR,
+          });
+
+          this.fetchHistoryPageRetryCount += 1;
+          setTimeout(() => this.fetchHistoryPage(pagedQueryUrl), RETRY_TIMEOUT);
         })
         .finally(() => {
           // eslint-disable-next-line no-underscore-dangle
@@ -218,6 +233,10 @@ export default {
         });
     },
     onBaseApiUrlChange(baseAPIURL) {
+      if (this.baseApiUrlRetryCount >= RETRY_COUNT_MAX) {
+        return;
+      }
+
       this.clearQueryUrlWatch();
       this.clearState();
       this.wfLoading = true;
@@ -228,9 +247,15 @@ export default {
             this.workflow = wf;
             this.isWorkflowRunning = !wf.workflowExecutionInfo.closeTime;
             this.setupQueryUrlWatch();
+            this.baseApiUrlRetryCount = 0;
           },
-          e => {
-            this.wfError = (e.json && e.json.message) || e.status || e.message;
+          error => {
+            this.$emit('onNotification', {
+              message: getErrorMessage(error),
+              type: NOTIFICATION_TYPE_ERROR,
+            });
+            this.baseApiUrlRetryCount += 1;
+            setTimeout(() => this.onBaseApiUrlChange(baseAPIURL), RETRY_TIMEOUT);
           }
         )
         .finally(() => {
@@ -239,6 +264,9 @@ export default {
     },
     onQueryUrlChange(queryUrl) {
       this.fetchHistoryPage(queryUrl);
+    },
+    onNotification(event) {
+      this.$emit('onNotification', event);
     },
     setupQueryUrlWatch() {
       this.clearQueryUrlWatch();
