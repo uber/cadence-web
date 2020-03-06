@@ -1,13 +1,14 @@
 <template>
   <div class="date-range-picker" @focusout="onClickOrFocusOut">
     <v-select
+      class="relative-range"
       :value="relativeRange"
       :options="relativeRangeOptions"
       :on-change="onRelativeRangeChange"
       :searchable="false"
     />
     <div class="custom-range" v-show="customVisible">
-      <input
+      <!-- <input
         type="text"
         class="date-range"
         :value="customRangeDisplay"
@@ -20,13 +21,18 @@
         lang="en"
         :disabled-func="isDayDisabled"
         monthYearFormat="MMMM YYYY"
+      /> -->
+      <FunctionalCalendar
+        :is-modal="true"
       />
+
     </div>
   </div>
 </template>
 
 <script>
 import { DateRange } from 'vue-date-range';
+import FunctionalCalendar from 'vue-functional-calendar';
 import moment from 'moment';
 
 const baseRelativeRangeOptions = [
@@ -136,6 +142,7 @@ export default {
   },
   components: {
     daterange: DateRange,
+    FunctionalCalendar,
   },
 };
 </script>
@@ -144,17 +151,22 @@ export default {
 @require "../styles/definitions"
 
 .date-range-picker
-  display flex
+  display: flex;
 
   bkgnd-color = #f2f2f4
   cell-size = 36px
   header-height = 46px
   brdr = 1px solid uber-white-40
-  .custom-range
-    position relative
-    flex 0 0 252px
-  input, .custom-range
-    width 252px
+
+  .relative-range {
+    width: 160px;
+  }
+  .custom-range {
+    position: relative;
+  }
+  input {
+    width: 170px;
+  }
   .ayou-date-range
     position absolute
     box-shadow 1px 1px 2px rgba(0,0,0,0.2)
@@ -221,4 +233,5 @@ export default {
             background-color uber-blue
         &:nth-child(7n)
           border-right none
+
 </style>

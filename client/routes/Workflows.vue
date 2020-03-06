@@ -314,10 +314,9 @@ section.workflows
     flex-wrap wrap
     > .field
       flex 1 1 auto
-    .date-range-picker
-      flex 1 1 auto
-    .v-select
-      flex 1 1 240px
+    .status {
+      width: 160px;
+    }
     a.toggle-filter
       action-button()
 

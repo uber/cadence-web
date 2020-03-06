@@ -224,7 +224,7 @@ main
       margin-bottom layout-spacing-small
     > header
       display flex
-      align-items center
+      align-items: start;
       flex 0 0 auto
       > *
         margin inline-spacing-small
