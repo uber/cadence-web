@@ -7,7 +7,13 @@
       :on-change="onRelativeRangeChange"
       :searchable="false"
     />
-    <div class="custom-range" v-show="customVisible">
+    <div class="custom-range" v-if="customVisible">
+      <date-picker
+        range
+        type="datetime"
+        v-model="customRange"
+      />
+
       <!-- <input
         type="text"
         class="date-range"
@@ -22,9 +28,7 @@
         :disabled-func="isDayDisabled"
         monthYearFormat="MMMM YYYY"
       /> -->
-      <FunctionalCalendar
-        :is-modal="true"
-      />
+
 
     </div>
   </div>
@@ -32,7 +36,7 @@
 
 <script>
 import { DateRange } from 'vue-date-range';
-import FunctionalCalendar from 'vue-functional-calendar';
+import DatePicker from 'vue2-datepicker';
 import moment from 'moment';
 
 const baseRelativeRangeOptions = [
@@ -49,6 +53,15 @@ export default {
   props: ['dateRange', 'maxDays'],
   data() {
     return {
+      customRange: [
+        moment()
+          .startOf('minute')
+          .subtract(this.maxDays || 30, 'days')
+          .toDate(),
+        moment()
+          .startOf('minute')
+          .toDate()
+      ],
       customVisible: this.isCustom,
       datePickerVisible: false,
     };
@@ -96,7 +109,10 @@ export default {
         ? this.relativeRangeOptions[this.relativeRangeOptions.length - 1]
         : this.relativeRangeOptions.find(o => o.value === this.dateRange);
     },
-    customRange() {
+    // customRange() {
+      // return [];  // [new Date(2019, 9, 8), new Date(2019, 9, 19)]
+
+      /*
       return {
         startDate:
           (this.dateRange && this.dateRange.startTime) ||
@@ -106,7 +122,8 @@ export default {
         endDate:
           (this.dateRange && this.dateRange.endTime) || moment().endOf('day'),
       };
-    },
+      */
+    // },
     customRangeDisplay() {
       return `${this.customRange.startDate.format(
         'MMM Do'
@@ -142,13 +159,19 @@ export default {
   },
   components: {
     daterange: DateRange,
-    FunctionalCalendar,
+    DatePicker,
   },
 };
 </script>
 
 <style lang="stylus">
 @require "../styles/definitions"
+
+.mx-datepicker-popup {
+  td {
+    text-align: center;
+  }
+}
 
 .date-range-picker
   display: flex;
@@ -162,9 +185,17 @@ export default {
     width: 160px;
   }
   .custom-range {
+    padding-left: 10px;
     position: relative;
+
+    input {
+      height: auto;
+      margin: 0;
+      padding: 12px 30px 11px 10px;
+      width: 325px;
+    }
   }
-  input {
+  input.form-control {
     width: 170px;
   }
   .ayou-date-range

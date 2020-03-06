@@ -73,6 +73,7 @@
     "vue-style-loader": "^3.1.2",
     "vue-template-compiler": "^2.5.2",
     "vue-virtual-scroller": "^1.0.0-rc.2",
+    "vue2-datepicker": "^3.4.1",
     "webpack": "^3.12.0"
   },
   "devDependencies": {
