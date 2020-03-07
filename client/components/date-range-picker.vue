@@ -16,23 +16,6 @@
         :disabled-time="isTimeDisabled"
         @change="onDateRangeChange"
       />
-
-      <!-- <input
-        type="text"
-        class="date-range"
-        :value="customRangeDisplay"
-        @focus="datePickerVisible = true"
-      />
-      <daterange
-        v-show="datePickerVisible"
-        :sync-range="customRange"
-        @change="onDateRangeChange"
-        lang="en"
-        :disabled-func="isDayDisabled"
-        monthYearFormat="MMMM YYYY"
-      /> -->
-
-
     </div>
   </div>
 </template>
@@ -195,6 +178,9 @@ export default {
     position: relative;
 
     input {
+      border: 1px solid #e5e5e4;
+      border-radius: 0;
+      box-shadow: none;
       height: auto;
       margin: 0;
       padding: 12px 30px 11px 10px;
