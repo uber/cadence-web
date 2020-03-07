@@ -12,6 +12,9 @@
         range
         type="datetime"
         v-model="customRange"
+        :disabled-date="isDayDisabled"
+        :disabled-time="isTimeDisabled"
+        @change="onDateRangeChange"
       />
 
       <!-- <input
@@ -53,17 +56,10 @@ export default {
   props: ['dateRange', 'maxDays'],
   data() {
     return {
-      customRange: [
-        moment()
-          .startOf('minute')
-          .subtract(this.maxDays || 30, 'days')
-          .toDate(),
-        moment()
-          .startOf('minute')
-          .toDate()
-      ],
+      customRange: this.getCustomRange(),
       customVisible: this.isCustom,
       datePickerVisible: false,
+      relativeRangeOptions: this.getRelativeRangeOptions()
     };
   },
   created() {
@@ -83,17 +79,39 @@ export default {
     isCustom() {
       return typeof this.dateRange !== 'string';
     },
-    relativeRangeOptions() {
+    relativeRange() {
+      return this.isCustom
+        ? this.relativeRangeOptions[this.relativeRangeOptions.length - 1]
+        : this.relativeRangeOptions.find(o => o.value === this.dateRange);
+    },
+    maxStartDate() {
+      return moment()
+        .startOf('day')
+        .subtract(this.maxDays, 'days');
+    },
+  },
+  methods: {
+    getCustomRange() {
+      return [
+        moment()
+          .startOf('minute')
+          .subtract(this.maxDays || 30, 'days')
+          .toDate(),
+        moment()
+          .startOf('minute')
+          .toDate()
+      ];
+    },
+    getRelativeRangeOptions() {
       let options = baseRelativeRangeOptions;
 
       if (
         this.maxDays &&
-        options.every(o => o.daysAgo !== this.maxDays) &&
         this.maxDays < 90
       ) {
         options = options
           .slice()
-          .filter(o => o.value === 'custom' || o.daysAgo <= this.maxDays);
+          .filter(o => o.value === 'custom' || o.daysAgo < this.maxDays);
         options.push({
           label: `Last ${this.maxDays} days`,
           value: `last-${this.maxDays}-days`,
@@ -104,62 +122,50 @@ export default {
 
       return options;
     },
-    relativeRange() {
-      return this.isCustom
-        ? this.relativeRangeOptions[this.relativeRangeOptions.length - 1]
-        : this.relativeRangeOptions.find(o => o.value === this.dateRange);
-    },
-    // customRange() {
-      // return [];  // [new Date(2019, 9, 8), new Date(2019, 9, 19)]
-
-      /*
-      return {
-        startDate:
-          (this.dateRange && this.dateRange.startTime) ||
-          moment()
-            .subtract(this.maxDays || 30, 'days')
-            .startOf('day'),
-        endDate:
-          (this.dateRange && this.dateRange.endTime) || moment().endOf('day'),
-      };
-      */
-    // },
-    customRangeDisplay() {
-      return `${this.customRange.startDate.format(
-        'MMM Do'
-      )} - ${this.customRange.endDate.format('MMM Do')}`;
-    },
-    maxStartDate() {
-      return moment()
-        .startOf('day')
-        .subtract(this.maxDays, 'days');
-    },
-  },
-  methods: {
     onRelativeRangeChange(r) {
       if (r.value === 'custom') {
         this.customVisible = true;
+        const [startDate, endDate] = this.customRange;
+        if (startDate && endDate) {
+          this.$emit('change', { startTime: startDate, endTime: endDate });
+        }
       } else {
         this.customVisible = false;
         this.$emit('change', r.value);
       }
     },
-    onDateRangeChange(r) {
-      this.$emit('change', { startTime: r.startDate, endTime: r.endDate });
+    onDateRangeChange(range) {
+      const [startDate, endDate] = range;
+      if (!startDate || !endDate) {
+        return;
+      }
+      this.$emit('change', { startTime: startDate, endTime: endDate });
     },
-    isDayDisabled(day) {
+    isDayDisabled(date) {
+      const momentDate = moment(date);
+
       if (this.maxDays) {
-        if (day.isBefore(this.maxStartDate)) {
+        if (momentDate.isBefore(this.maxStartDate)) {
           return true;
         }
       }
 
-      return day.isAfter(moment().endOf('day'));
+      return momentDate.isAfter(moment().endOf('day'));
+    },
+    isTimeDisabled(date) {
+      const momentDate = moment(date);
+      return momentDate.isAfter(moment().endOf('minute'));
     },
   },
   components: {
     daterange: DateRange,
     DatePicker,
+  },
+  watch: {
+    maxDays() {
+      this.customRange = this.getCustomRange();
+      this.relativeRangeOptions = this.getRelativeRangeOptions();
+    },
   },
 };
 </script>
