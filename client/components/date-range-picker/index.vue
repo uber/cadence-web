@@ -8,8 +8,6 @@
       type="datetime"
       v-model="customRange"
       :disabled-date="isDayDisabled"
-      :disabled-time="isTimeDisabled"
-
       :showTimePanel="showTimePanel"
       :shortcuts="relativeRangeOptions"
       :open.sync="open"
@@ -118,18 +116,18 @@ export default {
         return [this.dateRange.startTime.toDate(), this.dateRange.endTime.toDate()];
       }
 
-      const rangeOption = baseRelativeRangeOptions.find(o => o.value === this.dateRange)
-      if (!rangeOption) {
-        return [];
-      }
+      const [, count, unit] = this.dateRange.split('-');
 
-      const rangeDateTime = moment()
-        .subtract(rangeOption.daysAgo * 24, 'hours')
-        .toDate();
+      const startTime = moment()
+          .subtract(count, unit)
+          .startOf(unit)
+          .toDate();
 
-      const now = moment().toDate();
-      console.log('relative range = Ago:', rangeOption.daysAgo, 'range: ', [rangeDateTime, now]);
-      return [rangeDateTime, now];
+      const endTime = moment()
+          .endOf(unit)
+          .toDate();
+
+      return [startTime, endTime];
     },
     isDayDisabled(date) {
       const momentDate = moment(date);
@@ -141,10 +139,6 @@ export default {
       }
 
       return momentDate.isAfter(moment().endOf('day'));
-    },
-    isTimeDisabled(date) {
-      const momentDate = moment(date);
-      return momentDate.isAfter(moment().endOf('minute'));
     },
     onRelativeRangeChange(r) {
       this.$emit('change', r.value);
@@ -171,7 +165,6 @@ export default {
   },
   watch: {
     dateRange() {
-      console.log('dateRange = ', this.dateRange);
       this.isCleared = false;
       this.customRange = this.getCustomRange();
     },
