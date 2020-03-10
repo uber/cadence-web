@@ -21,7 +21,7 @@
       </template>
       <template v-slot:footer>
         <button class="mx-btn mx-btn-text" @click="onClickTimePanelLabel">
-          {{ showTimePanel ? 'select date' : 'select time' }}
+          {{ timePanelLabel }}
         </button>
       </template>
     </date-picker>
@@ -38,6 +38,7 @@ import {
 } from './constants';
 import {
   getRange,
+  getShortcuts,
   isDayDisabled,
 } from './helpers';
 
@@ -80,27 +81,10 @@ export default {
       return `Last ${parsedCount} ${unit}`;
     },
     shortcuts() {
-      let options = RANGE_OPTIONS.slice();
-
-      if (this.maxDays && this.maxDays < 90) {
-        options = options.filter(o => o.daysAgo < this.maxDays);
-
-        const option = {
-          daysAgo: this.maxDays,
-          text: `Last ${this.maxDays} days`,
-          value: `last-${this.maxDays}-days`,
-        };
-
-        options.push(option);
-        options.sort((a, b) => a.daysAgo - b.daysAgo);
-      }
-
-      options = options.map(option => ({
-        ...option,
-        onClick: () => this.onRelativeRangeChange(option),
-      }));
-
-      return options;
+      return getShortcuts(this.maxDays, this.onRelativeRangeChange);
+    },
+    timePanelLabel() {
+      return this.showTimePanel ? 'select date' : 'select time';
     },
     maxStartDate() {
       return moment()
