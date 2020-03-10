@@ -32,6 +32,7 @@ import DatePicker from 'vue2-datepicker';
 import moment from 'moment';
 
 const baseRelativeRangeOptions = [
+  { text: 'Last 1 second', value: 'last-1-seconds', daysAgo: 0.00001 },
   { text: 'Last 10 seconds', value: 'last-10-seconds', daysAgo: 0.0001 },
   { text: 'Last 60 seconds', value: 'last-60-seconds', daysAgo: 0.0007 },
   { text: 'Last 10 minutes', value: 'last-10-minutes', daysAgo: 0.007 },
