@@ -37,6 +37,7 @@ import {
   RANGE_OPTIONS,
 } from './constants';
 import {
+  getMaxStartDate,
   getRange,
   getShortcuts,
   isDayDisabled,
@@ -87,9 +88,7 @@ export default {
       return this.showTimePanel ? 'select date' : 'select time';
     },
     maxStartDate() {
-      return moment()
-        .startOf('day')
-        .subtract(this.maxDays, 'days');
+      return getMaxStartDate(this.maxDays);
     },
   },
   methods: {

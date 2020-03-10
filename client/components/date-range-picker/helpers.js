@@ -1,6 +1,10 @@
 import moment from 'moment';
 import { RANGE_OPTIONS } from './constants';
 
+export const getMaxStartDate = (maxDays) => moment()
+  .startOf('day')
+  .subtract(maxDays, 'days');
+
 export const getRange = (dateRange) => {
   if (!dateRange) {
     return [];
