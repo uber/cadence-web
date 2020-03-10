@@ -127,23 +127,20 @@ export default pagedGrid({
       this.maxRetentionDays =
         Number(r.configuration.workflowExecutionRetentionPeriodInDays) || 30;
 
-      if (!this.isRouteRangeValid()) {
-        this.setRange(`last-${Math.min(30, this.maxRetentionDays)}-days`);
+      if (!this.isRouteRangeValid(this.maxRetentionDays)) {
+        const prevRange = localStorage.getItem(
+          `${this.$route.params.domain}:workflows-time-range`
+        );
+
+        if (prevRange && this.isRangeValid(prevRange, this.maxRetentionDays)) {
+          this.setRange(prevRange);
+        } else {
+          this.setRange(`last-${Math.min(30, this.maxRetentionDays)}-days`);
+        }
       }
     });
 
     const q = this.$route.query || {};
-
-    if (!q.range || !/^last-\d{1,2}-(hour|day|month)s?$/.test(q.range)) {
-      const prevRange = localStorage.getItem(
-        `${this.$route.params.domain}:workflows-time-range`
-      );
-
-      if (prevRange) {
-        this.setRange(prevRange);
-      }
-    }
-
     this.$watch('queryOnChange', () => {}, { immediate: true });
   },
   computed: {
@@ -268,10 +265,58 @@ export default pagedGrid({
         });
       }
     },
-    isRouteRangeValid() {
-      const q = this.$route.query || {};
+    isRangeValid(range, maxRetentionDays) {
+      const maxRetentionPeriod = moment()
+        .subtract(maxRetentionDays, 'days')
+        .startOf('days');
 
-      return !!q.range && !!/^last-\d{1,2}-(hour|day|month)s?$/.test(q.range);
+      if (typeof range === 'string') {
+        const [, count, unit] = range.split('-');
+        let startTime;
+
+        try {
+          startTime = moment()
+            .subtract(count, unit)
+            .startOf(unit);
+        } catch (e) {
+          return false;
+        }
+
+        if (startTime < maxRetentionPeriod) {
+          return false;
+        }
+
+        return true;
+      }
+
+      if (range.startTime && range.endTime) {
+        const startTime = moment(range.startTime);
+        const endTime = moment(range.endTime);
+        if (startTime > endTime) {
+          return false;
+        }
+        if (startTime < maxRetentionPeriod) {
+          return false;
+        }
+        return true;
+      }
+
+      return false;
+    },
+    isRouteRangeValid(maxRetentionDays) {
+      const q = this.$route.query || {};
+      const { endTime, range, startTime } = q;
+
+
+      if (range) {
+        return this.isRangeValid(range, maxRetentionDays);
+      }
+
+      if (startTime && endTime) {
+        return this.isRangeValid({ endTime, startTime }, maxRetentionDays);
+      }
+
+      return false;
     },
     setRange(range) {
       if (range) {
