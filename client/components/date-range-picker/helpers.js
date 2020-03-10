@@ -55,6 +55,8 @@ export const getShortcuts = (maxDays, onClickHandler) => {
   return options;
 };
 
+export const getTimePanelLabel = (showTimePanel) => showTimePanel ? 'select date' : 'select time';
+
 export const isDayDisabled = (maxStartDate) => (date) => {
   const momentDate = moment(date);
 

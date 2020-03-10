@@ -40,6 +40,7 @@ import {
   getMaxStartDate,
   getRange,
   getShortcuts,
+  getTimePanelLabel,
   isDayDisabled,
 } from './helpers';
 
@@ -55,6 +56,9 @@ export default {
   computed: {
     isDayDisabled() {
       return isDayDisabled(this.maxStartDate);
+    },
+    maxStartDate() {
+      return getMaxStartDate(this.maxDays);
     },
     rangeDisplayText() {
       if (!this.dateRange) {
@@ -85,10 +89,7 @@ export default {
       return getShortcuts(this.maxDays, this.onRelativeRangeChange);
     },
     timePanelLabel() {
-      return this.showTimePanel ? 'select date' : 'select time';
-    },
-    maxStartDate() {
-      return getMaxStartDate(this.maxDays);
+      return getTimePanelLabel(this.showTimePanel);
     },
   },
   methods: {
