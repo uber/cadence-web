@@ -7,6 +7,7 @@
       range
       type="datetime"
       v-model="range"
+      :clearable="false"
       :disabled-date="isDayDisabled"
       :showTimePanel="showTimePanel"
       :shortcuts="relativeRangeOptions"
@@ -15,7 +16,7 @@
       @clear="onDateRangeClear"
     >
       <template v-slot:input>
-        <input readonly type="text" :value="formattedRange" />
+        <input placeholder="Date Range" readonly type="text" :value="formattedRange" />
       </template>
       <template v-slot:footer>
         <button class="mx-btn mx-btn-text" @click="onClickTimePanelLabel">
@@ -32,7 +33,7 @@ import DatePicker from 'vue2-datepicker';
 import moment from 'moment';
 
 const baseRelativeRangeOptions = [
-  { text: 'Last 1 second', value: 'last-1-seconds', daysAgo: 0.00001 },
+  { text: 'Last 1 second', value: 'last-1-second', daysAgo: 0.00001 },
   { text: 'Last 10 seconds', value: 'last-10-seconds', daysAgo: 0.0001 },
   { text: 'Last 60 seconds', value: 'last-60-seconds', daysAgo: 0.0007 },
   { text: 'Last 10 minutes', value: 'last-10-minutes', daysAgo: 0.007 },
@@ -46,6 +47,19 @@ const baseRelativeRangeOptions = [
 ];
 
 const dateTimeFormat = 'MM/DD/YYYY HH:mm:ss';
+
+const ALLOWED_PERIOD_TYPES = [
+  'second',
+  'seconds',
+  'minute',
+  'minutes',
+  'hour',
+  'hours',
+  'day',
+  'days',
+  'month',
+  'months',
+];
 
 export default {
   props: ['dateRange', 'maxDays'],
@@ -66,12 +80,18 @@ export default {
         return `${this.dateRange.startTime.format(dateTimeFormat)} - ${this.dateRange.endTime.format(dateTimeFormat)}`;
       }
 
-      const relativeRangeOption = this.relativeRangeOptions.find(o => o.value === this.dateRange);
-      if (!relativeRangeOption) {
+      const [, count, unit] = this.dateRange.split('-');
+
+      const parsedCount = parseInt(count);
+      if (!parsedCount) {
         return '';
       }
 
-      return relativeRangeOption.text;
+      if (!ALLOWED_PERIOD_TYPES.includes(unit)) {
+        return '';
+      }
+
+      return `Last ${parsedCount} ${unit}`;
     },
     relativeRangeOptions() {
       let options = baseRelativeRangeOptions.slice();
