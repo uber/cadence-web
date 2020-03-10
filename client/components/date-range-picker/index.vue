@@ -32,6 +32,10 @@ import DatePicker from 'vue2-datepicker';
 import moment from 'moment';
 
 const baseRelativeRangeOptions = [
+  { text: 'Last 10 seconds', value: 'last-10-seconds', daysAgo: 0.0001 },
+  { text: 'Last 60 seconds', value: 'last-60-seconds', daysAgo: 0.0007 },
+  { text: 'Last 10 minutes', value: 'last-10-minutes', daysAgo: 0.007 },
+  { text: 'Last 60 minutes', value: 'last-60-minutes', daysAgo: 0.041 },
   { text: 'Last 3 hours', value: 'last-3-hours', daysAgo: 0.125 },
   { text: 'Last 24 hours', value: 'last-24-hours', daysAgo: 1 },
   { text: 'Last 3 days', value: 'last-3-days', daysAgo: 3 },
@@ -182,10 +186,10 @@ export default {
   }
 
   .mx-datepicker-sidebar {
-    width: 110px;
+    width: 125px;
 
     &+ .mx-datepicker-content {
-      margin-left: 110px !important;
+      margin-left: 125px;
     }
   }
 }
