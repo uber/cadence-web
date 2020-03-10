@@ -2,6 +2,7 @@ import moment from 'moment';
 import {
   getMaxStartDate,
   getRange,
+  getRangeDisplayText,
   getShortcuts,
   getTimePanelLabel,
   isDayDisabled,
@@ -214,7 +215,88 @@ describe('DateRangePicker helpers', () => {
   });
 
   describe('getRangeDisplayText', () => {
-    // TODO
+    describe('When dateRange = ""', () => {
+      it('should return "".', () => {
+        const dateRange = '';
+        const output = getRangeDisplayText(dateRange);
+        expect(output).toEqual('');
+      });
+    });
+
+    describe('When dateRange = { startTime: March 9th 2020, endTime: March 10th 2020 }.', () => {
+      it('should return "03/09/2020 00:00:00 - 03/10/2020 00:00:00".', () => {
+        const dateRange = {
+          startTime: moment(new Date(2020, 2, 9)),
+          endTime: moment(new Date(2020, 2, 10)),
+        };
+        const output = getRangeDisplayText(dateRange);
+        expect(output).toEqual('03/09/2020 00:00:00 - 03/10/2020 00:00:00');
+      });
+    });
+
+    describe('When dateRange = "last-1-second"', () => {
+      it('should return "Last 1 second".', () => {
+        const dateRange = 'last-1-second';
+        const output = getRangeDisplayText(dateRange);
+        expect(output).toEqual('Last 1 second');
+      });
+    });
+
+    describe('When dateRange = "last-10-seconds"', () => {
+      it('should return "Last 10 seconds".', () => {
+        const dateRange = 'last-10-seconds';
+        const output = getRangeDisplayText(dateRange);
+        expect(output).toEqual('Last 10 seconds');
+      });
+    });
+
+    describe('When dateRange = "last-1-minute"', () => {
+      it('should return "Last 1 minute".', () => {
+        const dateRange = 'last-1-minute';
+        const output = getRangeDisplayText(dateRange);
+        expect(output).toEqual('Last 1 minute');
+      });
+    });
+
+    describe('When dateRange = "last-10-minutes"', () => {
+      it('should return "Last 10 minutes".', () => {
+        const dateRange = 'last-10-minutes';
+        const output = getRangeDisplayText(dateRange);
+        expect(output).toEqual('Last 10 minutes');
+      });
+    });
+
+    describe('When dateRange = "last-1-hour"', () => {
+      it('should return "Last 1 hour".', () => {
+        const dateRange = 'last-1-hour';
+        const output = getRangeDisplayText(dateRange);
+        expect(output).toEqual('Last 1 hour');
+      });
+    });
+
+    describe('When dateRange = "last-3-hours"', () => {
+      it('should return "Last 3 hours".', () => {
+        const dateRange = 'last-3-hours';
+        const output = getRangeDisplayText(dateRange);
+        expect(output).toEqual('Last 3 hours');
+      });
+    });
+
+    describe('When dateRange = "last-1-day"', () => {
+      it('should return "Last 1 day".', () => {
+        const dateRange = 'last-1-day';
+        const output = getRangeDisplayText(dateRange);
+        expect(output).toEqual('Last 1 day');
+      });
+    });
+
+    describe('When dateRange = "last-3-days"', () => {
+      it('should return "Last 3 days".', () => {
+        const dateRange = 'last-3-days';
+        const output = getRangeDisplayText(dateRange);
+        expect(output).toEqual('Last 3 days');
+      });
+    });
   });
 
   describe('getShortcuts', () => {
