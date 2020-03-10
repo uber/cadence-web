@@ -1,6 +1,7 @@
 import moment from 'moment';
 import {
   getMaxStartDate,
+  getShortcuts,
   getTimePanelLabel,
   isDayDisabled,
 } from './helpers';
@@ -47,7 +48,95 @@ describe('DateRangePicker helpers', () => {
   });
 
   describe('getShortcuts', () => {
-    // TODO
+    describe('When maxDays = 1', () => {
+      const maxDays = 1;
+
+      describe('and onClick function is called', () => {
+        it('should try to call the passed in onClickHandler.', () => {
+          const onClickHandler = jest.fn();
+          const output = getShortcuts(maxDays, onClickHandler);
+          output[0].onClick();
+          expect(onClickHandler).toHaveBeenCalled();
+        });
+      });
+
+      it('should return 7 shortcuts.', () => {
+        const output = getShortcuts(maxDays);
+        expect(output.length).toEqual(7);
+      });
+
+      it('should not contain "Last 24 hours".', () => {
+        const output = getShortcuts(maxDays);
+        const last24HourOption = output.find((option) => option.text === 'Last 24 hours');
+        expect(last24HourOption).toEqual(undefined);
+      });
+
+      it('should return the last option as "Last 1 day".', () => {
+        const output = getShortcuts(maxDays);
+        const lastOption = output[output.length - 1];
+        expect(lastOption.text).toEqual('Last 1 day');
+      });
+    });
+
+    describe('When maxDays = 3', () => {
+      const maxDays = 3;
+
+      it('should return 8 shortcuts.', () => {
+        const output = getShortcuts(maxDays);
+        expect(output.length).toEqual(8);
+      });
+
+      it('should return the last option as "Last 3 days".', () => {
+        const output = getShortcuts(maxDays);
+        const lastOption = output[output.length - 1];
+        expect(lastOption.text).toEqual('Last 3 days');
+      });
+    });
+
+    describe('When maxDays = 7', () => {
+      const maxDays = 7;
+
+      it('should return 9 shortcuts.', () => {
+        const output = getShortcuts(maxDays);
+        expect(output.length).toEqual(9);
+      });
+
+      it('should return the last option as "Last 7 days".', () => {
+        const output = getShortcuts(maxDays);
+        const lastOption = output[output.length - 1];
+        expect(lastOption.text).toEqual('Last 7 days');
+      });
+    });
+
+    describe('When maxDays = 30', () => {
+      const maxDays = 30;
+
+      it('should return 10 shortcuts.', () => {
+        const output = getShortcuts(maxDays);
+        expect(output.length).toEqual(10);
+      });
+
+      it('should return the last option as "Last 30 days".', () => {
+        const output = getShortcuts(maxDays);
+        const lastOption = output[output.length - 1];
+        expect(lastOption.text).toEqual('Last 30 days');
+      });
+    });
+
+    describe('When maxDays = 90', () => {
+      const maxDays = 90;
+
+      it('should return 11 shortcuts.', () => {
+        const output = getShortcuts(maxDays);
+        expect(output.length).toEqual(11);
+      });
+
+      it('should return the last option as "Last 3 months".', () => {
+        const output = getShortcuts(maxDays);
+        const lastOption = output[output.length - 1];
+        expect(lastOption.text).toEqual('Last 3 months');
+      });
+    });
   });
 
   describe('getTimePanelLabel', () => {

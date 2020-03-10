@@ -66,11 +66,12 @@ export const getShortcuts = (maxDays, onClickHandler) => {
 
   if (maxDays && maxDays < 90) {
     options = options.filter(o => o.daysAgo < maxDays);
+    const periodType = maxDays === 1 ? 'day' : 'days';
 
     const option = {
       daysAgo: maxDays,
-      text: `Last ${maxDays} days`,
-      value: `last-${maxDays}-days`,
+      text: `Last ${maxDays} ${periodType}`,
+      value: `last-${maxDays}-${periodType}`,
     };
 
     options.push(option);
