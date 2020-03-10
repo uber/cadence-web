@@ -13,7 +13,12 @@
       @clear="onDateRangeClear"
     >
       <template v-slot:input>
-        <input placeholder="Date Range" readonly type="text" :value="formattedRange" />
+        <input
+          placeholder="Date Range"
+          readonly
+          type="text"
+          :value="rangeDisplayText"
+        />
       </template>
       <template v-slot:footer>
         <button class="mx-btn mx-btn-text" @click="onClickTimePanelLabel">
@@ -25,10 +30,13 @@
 </template>
 
 <script>
-import { DateRange } from 'vue-date-range';
 import DatePicker from 'vue2-datepicker';
 import moment from 'moment';
-import { ALLOWED_PERIOD_TYPES, DATETIME_FORMAT, RANGE_OPTIONS } from './constants';
+import {
+  ALLOWED_PERIOD_TYPES,
+  DATETIME_FORMAT,
+  RANGE_OPTIONS,
+} from './constants';
 
 export default {
   props: ['dateRange', 'maxDays'],
@@ -40,18 +48,21 @@ export default {
     };
   },
   computed: {
-    formattedRange() {
+    rangeDisplayText() {
       if (!this.dateRange) {
         return '';
       }
 
       if (typeof this.dateRange !== 'string') {
-        return `${this.dateRange.startTime.format(DATETIME_FORMAT)} - ${this.dateRange.endTime.format(DATETIME_FORMAT)}`;
+        return `${this.dateRange.startTime.format(
+          DATETIME_FORMAT
+        )} - ${this.dateRange.endTime.format(DATETIME_FORMAT)}`;
       }
 
       const [, count, unit] = this.dateRange.split('-');
 
       const parsedCount = parseInt(count);
+
       if (!parsedCount) {
         return '';
       }
@@ -65,12 +76,8 @@ export default {
     shortcuts() {
       let options = RANGE_OPTIONS.slice();
 
-      if (
-        this.maxDays &&
-        this.maxDays < 90
-      ) {
-        options = options
-          .filter(o => o.daysAgo < this.maxDays);
+      if (this.maxDays && this.maxDays < 90) {
+        options = options.filter(o => o.daysAgo < this.maxDays);
 
         const option = {
           daysAgo: this.maxDays,
@@ -82,7 +89,7 @@ export default {
         options.sort((a, b) => a.daysAgo - b.daysAgo);
       }
 
-      options = options.map((option) => ({
+      options = options.map(option => ({
         ...option,
         onClick: () => this.onRelativeRangeChange(option),
       }));
@@ -102,19 +109,22 @@ export default {
       }
 
       if (typeof this.dateRange !== 'string') {
-        return [this.dateRange.startTime.toDate(), this.dateRange.endTime.toDate()];
+        return [
+          this.dateRange.startTime.toDate(),
+          this.dateRange.endTime.toDate(),
+        ];
       }
 
       const [, count, unit] = this.dateRange.split('-');
 
       const startTime = moment()
-          .subtract(count, unit)
-          .startOf(unit)
-          .toDate();
+        .subtract(count, unit)
+        .startOf(unit)
+        .toDate();
 
       const endTime = moment()
-          .endOf(unit)
-          .toDate();
+        .endOf(unit)
+        .toDate();
 
       return [startTime, endTime];
     },
@@ -135,9 +145,11 @@ export default {
     },
     onDateRangeChange(range) {
       const [startTime, endTime] = range;
+
       if (!startTime || !endTime) {
         return;
       }
+
       this.$emit('change', { startTime, endTime });
     },
     onDateRangeClear() {

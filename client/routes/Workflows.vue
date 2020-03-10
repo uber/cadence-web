@@ -140,7 +140,6 @@ export default pagedGrid({
       }
     });
 
-    const q = this.$route.query || {};
     this.$watch('queryOnChange', () => {}, { immediate: true });
   },
   computed: {
@@ -256,7 +255,10 @@ export default pagedGrid({
     setWorkflowFilter(e) {
       const target = e.target || e.testTarget; // test hook since Event.target is readOnly and unsettable
 
-      this.$router.replaceQueryParam(target.getAttribute('name'), target.value.trim());
+      this.$router.replaceQueryParam(
+        target.getAttribute('name'),
+        target.value.trim()
+      );
     },
     setStatus(status) {
       if (status) {
@@ -292,12 +294,15 @@ export default pagedGrid({
       if (range.startTime && range.endTime) {
         const startTime = moment(range.startTime);
         const endTime = moment(range.endTime);
+
         if (startTime > endTime) {
           return false;
         }
+
         if (startTime < maxRetentionPeriod) {
           return false;
         }
+
         return true;
       }
 
@@ -306,7 +311,6 @@ export default pagedGrid({
     isRouteRangeValid(maxRetentionDays) {
       const q = this.$route.query || {};
       const { endTime, range, startTime } = q;
-
 
       if (range) {
         return this.isRangeValid(range, maxRetentionDays);
@@ -320,6 +324,7 @@ export default pagedGrid({
     },
     setRange(range) {
       const query = { ...this.$route.query };
+
       if (range) {
         if (typeof range === 'string') {
           query.range = range;
@@ -339,6 +344,7 @@ export default pagedGrid({
         delete query.startTime;
         delete query.endTime;
       }
+
       this.$router.replace({ query });
     },
     toggleFilter() {
