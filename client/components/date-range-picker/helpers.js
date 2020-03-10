@@ -1,5 +1,9 @@
 import moment from 'moment';
-import { RANGE_OPTIONS } from './constants';
+import {
+  ALLOWED_PERIOD_TYPES,
+  DATETIME_FORMAT,
+  RANGE_OPTIONS,
+} from './constants';
 
 export const getMaxStartDate = (maxDays) => moment()
   .startOf('day')
@@ -29,6 +33,32 @@ export const getRange = (dateRange) => {
     .toDate();
 
   return [startTime, endTime];
+};
+
+export const getRangeDisplayText = (dateRange) => {
+  if (!dateRange) {
+    return '';
+  }
+
+  if (typeof dateRange !== 'string') {
+    return `${dateRange.startTime.format(
+      DATETIME_FORMAT
+    )} - ${dateRange.endTime.format(DATETIME_FORMAT)}`;
+  }
+
+  const [, count, unit] = dateRange.split('-');
+
+  const parsedCount = parseInt(count);
+
+  if (!parsedCount) {
+    return '';
+  }
+
+  if (!ALLOWED_PERIOD_TYPES.includes(unit)) {
+    return '';
+  }
+
+  return `Last ${parsedCount} ${unit}`;
 };
 
 export const getShortcuts = (maxDays, onClickHandler) => {

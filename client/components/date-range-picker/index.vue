@@ -32,13 +32,9 @@
 import DatePicker from 'vue2-datepicker';
 import moment from 'moment';
 import {
-  ALLOWED_PERIOD_TYPES,
-  DATETIME_FORMAT,
-  RANGE_OPTIONS,
-} from './constants';
-import {
   getMaxStartDate,
   getRange,
+  getRangeDisplayText,
   getShortcuts,
   getTimePanelLabel,
   isDayDisabled,
@@ -61,29 +57,7 @@ export default {
       return getMaxStartDate(this.maxDays);
     },
     rangeDisplayText() {
-      if (!this.dateRange) {
-        return '';
-      }
-
-      if (typeof this.dateRange !== 'string') {
-        return `${this.dateRange.startTime.format(
-          DATETIME_FORMAT
-        )} - ${this.dateRange.endTime.format(DATETIME_FORMAT)}`;
-      }
-
-      const [, count, unit] = this.dateRange.split('-');
-
-      const parsedCount = parseInt(count);
-
-      if (!parsedCount) {
-        return '';
-      }
-
-      if (!ALLOWED_PERIOD_TYPES.includes(unit)) {
-        return '';
-      }
-
-      return `Last ${parsedCount} ${unit}`;
+      return getRangeDisplayText(this.dateRange);
     },
     shortcuts() {
       return getShortcuts(this.maxDays, this.onRelativeRangeChange);
