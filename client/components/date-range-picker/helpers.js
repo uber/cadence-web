@@ -26,3 +26,14 @@ export const getRange = (dateRange) => {
   return [startTime, endTime];
 };
 
+export const isDayDisabled = (maxStartDate) => (date) => {
+  const momentDate = moment(date);
+
+  if (maxStartDate) {
+    if (momentDate.isBefore(maxStartDate)) {
+      return true;
+    }
+  }
+
+  return momentDate.isAfter(moment().endOf('day'));
+};

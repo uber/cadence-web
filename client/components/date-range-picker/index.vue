@@ -39,6 +39,7 @@ import {
 } from './constants';
 import {
   getRange,
+  isDayDisabled,
 } from './helpers';
 
 export default {
@@ -51,6 +52,9 @@ export default {
     };
   },
   computed: {
+    isDayDisabled() {
+      return isDayDisabled(this.maxStartDate);
+    },
     rangeDisplayText() {
       if (!this.dateRange) {
         return '';
@@ -106,17 +110,6 @@ export default {
     },
   },
   methods: {
-    isDayDisabled(date) {
-      const momentDate = moment(date);
-
-      if (this.maxStartDate) {
-        if (momentDate.isBefore(this.maxStartDate)) {
-          return true;
-        }
-      }
-
-      return momentDate.isAfter(moment().endOf('day'));
-    },
     onRelativeRangeChange(r) {
       this.$emit('change', r.value);
       this.open = false;
@@ -142,9 +135,6 @@ export default {
   },
   watch: {
     dateRange() {
-      this.range = getRange(this.dateRange);
-    },
-    maxDays() {
       this.range = getRange(this.dateRange);
     },
   },
