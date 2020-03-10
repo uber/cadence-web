@@ -10,7 +10,6 @@
       :shortcuts="shortcuts"
       :open.sync="open"
       @change="onDateRangeChange"
-      @clear="onDateRangeClear"
     >
       <template v-slot:input>
         <input
@@ -122,9 +121,6 @@ export default {
       }
 
       this.$emit('change', { startTime, endTime });
-    },
-    onDateRangeClear() {
-      this.$emit('change', null);
     },
     onClickTimePanelLabel() {
       this.showTimePanel = !this.showTimePanel;
