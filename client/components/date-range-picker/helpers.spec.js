@@ -2,7 +2,27 @@ import { getTimePanelLabel } from './helpers';
 
 describe('DateRangePicker helpers', () => {
   describe('getMaxStartDate', () => {
-    // TODO
+    describe('When moment is set to March 10th 2020', () => {
+
+
+      describe('and maxDays = 1', () => {
+        it('should return date March 9th 2020.', () => {
+          // TODO
+        });
+      });
+
+      describe('and maxDays = 3', () => {
+        it('should return date March 7th 2020.', () => {
+          // TODO
+        });
+      });
+
+      describe('and maxDays = 30', () => {
+        it('should return date Feburary 10th 2020.', () => {
+          // TODO
+        });
+      });
+    });
   });
 
   describe('getRange', () => {
