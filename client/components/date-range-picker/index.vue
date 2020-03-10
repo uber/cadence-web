@@ -37,12 +37,15 @@ import {
   DATETIME_FORMAT,
   RANGE_OPTIONS,
 } from './constants';
+import {
+  getRange,
+} from './helpers';
 
 export default {
   props: ['dateRange', 'maxDays'],
   data() {
     return {
-      range: this.getRange(),
+      range: getRange(this.dateRange),
       open: false,
       showTimePanel: false,
     };
@@ -103,31 +106,6 @@ export default {
     },
   },
   methods: {
-    getRange() {
-      if (!this.dateRange) {
-        return [];
-      }
-
-      if (typeof this.dateRange !== 'string') {
-        return [
-          this.dateRange.startTime.toDate(),
-          this.dateRange.endTime.toDate(),
-        ];
-      }
-
-      const [, count, unit] = this.dateRange.split('-');
-
-      const startTime = moment()
-        .subtract(count, unit)
-        .startOf(unit)
-        .toDate();
-
-      const endTime = moment()
-        .endOf(unit)
-        .toDate();
-
-      return [startTime, endTime];
-    },
     isDayDisabled(date) {
       const momentDate = moment(date);
 
@@ -164,10 +142,10 @@ export default {
   },
   watch: {
     dateRange() {
-      this.range = this.getRange();
+      this.range = getRange(this.dateRange);
     },
     maxDays() {
-      this.range = this.getRange();
+      this.range = getRange(this.dateRange);
     },
   },
 };
