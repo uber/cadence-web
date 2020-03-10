@@ -319,9 +319,8 @@ export default pagedGrid({
       return false;
     },
     setRange(range) {
+      const query = { ...this.$route.query };
       if (range) {
-        const query = { ...this.$route.query };
-
         if (typeof range === 'string') {
           query.range = range;
           delete query.startTime;
@@ -335,9 +334,12 @@ export default pagedGrid({
           query.endTime = range.endTime.toISOString();
           delete query.range;
         }
-
-        this.$router.replace({ query });
+      } else {
+        delete query.range;
+        delete query.startTime;
+        delete query.endTime;
       }
+      this.$router.replace({ query });
     },
     toggleFilter() {
       if (this.filterMode === 'advanced') {

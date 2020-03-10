@@ -6,7 +6,7 @@
     <date-picker
       range
       type="datetime"
-      v-model="customRange"
+      v-model="range"
       :disabled-date="isDayDisabled"
       :showTimePanel="showTimePanel"
       :shortcuts="relativeRangeOptions"
@@ -51,22 +51,18 @@ export default {
   props: ['dateRange', 'maxDays'],
   data() {
     return {
-      isCleared: false,
-      customRange: this.getCustomRange(),
+      range: this.getRange(),
       open: false,
       showTimePanel: false,
     };
   },
   computed: {
-    isCustom() {
-      return typeof this.dateRange !== 'string';
-    },
     formattedRange() {
-      if (this.isCleared) {
+      if (!this.dateRange) {
         return '';
       }
 
-      if (this.isCustom) {
+      if (typeof this.dateRange !== 'string') {
         return `${this.dateRange.startTime.format(dateTimeFormat)} - ${this.dateRange.endTime.format(dateTimeFormat)}`;
       }
 
@@ -76,11 +72,6 @@ export default {
       }
 
       return relativeRangeOption.text;
-    },
-    relativeRange() {
-      return this.isCustom
-        ? this.relativeRangeOptions[this.relativeRangeOptions.length - 1]
-        : this.relativeRangeOptions.find(o => o.value === this.dateRange);
     },
     relativeRangeOptions() {
       let options = baseRelativeRangeOptions.slice();
@@ -116,7 +107,11 @@ export default {
     },
   },
   methods: {
-    getCustomRange() {
+    getRange() {
+      if (!this.dateRange) {
+        return [];
+      }
+
       if (typeof this.dateRange !== 'string') {
         return [this.dateRange.startTime.toDate(), this.dateRange.endTime.toDate()];
       }
@@ -137,7 +132,7 @@ export default {
     isDayDisabled(date) {
       const momentDate = moment(date);
 
-      if (this.maxDays) {
+      if (this.maxStartDate) {
         if (momentDate.isBefore(this.maxStartDate)) {
           return true;
         }
@@ -150,31 +145,28 @@ export default {
       this.open = false;
     },
     onDateRangeChange(range) {
-      const [startDate, endDate] = range;
-      if (!startDate || !endDate) {
+      const [startTime, endTime] = range;
+      if (!startTime || !endTime) {
         return;
       }
-      this.$emit('change', { startTime: startDate, endTime: endDate });
+      this.$emit('change', { startTime, endTime });
     },
     onDateRangeClear() {
-      this.isCleared = true;
-      this.customRange = [];
+      this.$emit('change', null);
     },
     onClickTimePanelLabel() {
       this.showTimePanel = !this.showTimePanel;
     },
   },
   components: {
-    daterange: DateRange,
     DatePicker,
   },
   watch: {
     dateRange() {
-      this.isCleared = false;
-      this.customRange = this.getCustomRange();
+      this.range = this.getRange();
     },
     maxDays() {
-      this.customRange = this.getCustomRange();
+      this.range = this.getRange();
     },
   },
 };
