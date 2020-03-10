@@ -212,6 +212,7 @@ export default {
     border: 1px solid #e5e5e4;
     border-radius: 0;
     box-shadow: none;
+    cursor: pointer;
     height: auto;
     margin: 0;
     padding: 8px 30px 8px 10px;
