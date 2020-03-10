@@ -20,10 +20,7 @@
         />
       </template>
       <template v-slot:footer>
-        <button
-          class="mx-btn mx-btn-text"
-          @click="onClickTimePanelLabel"
-        >
+        <button class="mx-btn mx-btn-text" @click="onClickTimePanelLabel">
           {{ timePanelLabel }}
         </button>
       </template>
@@ -33,7 +30,6 @@
 
 <script>
 import DatePicker from 'vue2-datepicker';
-import moment from 'moment';
 import {
   getMaxStartDate,
   getRange,

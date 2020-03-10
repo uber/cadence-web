@@ -5,20 +5,18 @@ import {
   RANGE_OPTIONS,
 } from './constants';
 
-export const getMaxStartDate = (maxDays) => moment()
-  .startOf('day')
-  .subtract(maxDays, 'days');
+export const getMaxStartDate = maxDays =>
+  moment()
+    .startOf('day')
+    .subtract(maxDays, 'days');
 
-export const getRange = (dateRange) => {
+export const getRange = dateRange => {
   if (!dateRange) {
     return [];
   }
 
   if (typeof dateRange !== 'string') {
-    return [
-      dateRange.startTime.toDate(),
-      dateRange.endTime.toDate(),
-    ];
+    return [dateRange.startTime.toDate(), dateRange.endTime.toDate()];
   }
 
   const [, count, unit] = dateRange.split('-');
@@ -35,7 +33,7 @@ export const getRange = (dateRange) => {
   return [startTime, endTime];
 };
 
-export const getRangeDisplayText = (dateRange) => {
+export const getRangeDisplayText = dateRange => {
   if (!dateRange) {
     return '';
   }
@@ -86,9 +84,10 @@ export const getShortcuts = (maxDays, onClickHandler) => {
   return options;
 };
 
-export const getTimePanelLabel = (showTimePanel) => showTimePanel ? 'select date' : 'select time';
+export const getTimePanelLabel = showTimePanel =>
+  showTimePanel ? 'select date' : 'select time';
 
-export const isDayDisabled = (maxStartDate) => (date) => {
+export const isDayDisabled = maxStartDate => date => {
   const momentDate = moment(date);
 
   if (maxStartDate) {
