@@ -20,7 +20,10 @@
         />
       </template>
       <template v-slot:footer>
-        <button class="mx-btn mx-btn-text" @click="onClickTimePanelLabel">
+        <button
+          class="mx-btn mx-btn-text"
+          @click="onClickTimePanelLabel"
+        >
           {{ timePanelLabel }}
         </button>
       </template>
@@ -60,15 +63,15 @@ export default {
       return getRangeDisplayText(this.dateRange);
     },
     shortcuts() {
-      return getShortcuts(this.maxDays, this.onRelativeRangeChange);
+      return getShortcuts(this.maxDays, this.onShortcutClick);
     },
     timePanelLabel() {
       return getTimePanelLabel(this.showTimePanel);
     },
   },
   methods: {
-    onRelativeRangeChange(r) {
-      this.$emit('change', r.value);
+    onShortcutClick(range) {
+      this.$emit('change', range.value);
       this.open = false;
     },
     onDateRangeChange(range) {
