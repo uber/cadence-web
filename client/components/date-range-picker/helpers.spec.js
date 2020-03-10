@@ -1,6 +1,7 @@
 import moment from 'moment';
 import {
   getMaxStartDate,
+  getRange,
   getShortcuts,
   getTimePanelLabel,
   isDayDisabled,
@@ -40,7 +41,176 @@ describe('DateRangePicker helpers', () => {
   });
 
   describe('getRange', () => {
-    // TODO
+    describe('When dateRange = "".', () => {
+      it('should return [].', () => {
+        const dateRange = '';
+        const output = getRange(dateRange);
+        expect(output).toEqual([]);
+      });
+    });
+
+    describe('When dateRange = { startTime: March 9th 2020, endTime: March 10th 2020 }.', () => {
+      const dateRange = {
+        startTime: moment(new Date(2020, 2, 9)),
+        endTime: moment(new Date(2020, 2, 10)),
+      };
+
+      it('should return range[0] = March 9th 2020.', () => {
+        const output = getRange(dateRange);
+        expect(output[0].toISOString()).toEqual('2020-03-09T07:00:00.000Z');
+      });
+
+      it('should return range[1] = March 10th 2020.', () => {
+        const output = getRange(dateRange);
+        expect(output[1].toISOString()).toEqual('2020-03-10T07:00:00.000Z');
+      });
+    });
+
+    describe('When moment is set to March 10th 2020', () => {
+      beforeEach(() => {
+        jest.spyOn(Date, 'now').mockImplementation(() => new Date(2020, 2, 10).getTime());
+      });
+
+      describe('and dateRange = "last-1-second".', () => {
+        const dateRange = 'last-1-second';
+
+        it('should return range[0] = "2020-03-10T06:59:59.000Z".', () => {
+          const output = getRange(dateRange);
+          expect(output[0].toISOString()).toEqual('2020-03-10T06:59:59.000Z');
+        });
+
+        it('should return range[1] = "2020-03-10T07:00:00.999Z".', () => {
+          const output = getRange(dateRange);
+          expect(output[1].toISOString()).toEqual('2020-03-10T07:00:00.999Z');
+        });
+      });
+
+      describe('and dateRange = "last-60-seconds".', () => {
+        const dateRange = 'last-60-seconds';
+
+        it('should return range[0] = "2020-03-10T06:59:00.000Z".', () => {
+          const output = getRange(dateRange);
+          expect(output[0].toISOString()).toEqual('2020-03-10T06:59:00.000Z');
+        });
+
+        it('should return range[1] = "2020-03-10T07:00:00.999Z".', () => {
+          const output = getRange(dateRange);
+          expect(output[1].toISOString()).toEqual('2020-03-10T07:00:00.999Z');
+        });
+      });
+
+      describe('and dateRange = "last-1-minute".', () => {
+        const dateRange = 'last-1-minute';
+
+        it('should return range[0] = "2020-03-10T06:59:00.000Z".', () => {
+          const output = getRange(dateRange);
+          expect(output[0].toISOString()).toEqual('2020-03-10T06:59:00.000Z');
+        });
+
+        it('should return range[1] = "2020-03-10T07:00:59.999Z".', () => {
+          const output = getRange(dateRange);
+          expect(output[1].toISOString()).toEqual('2020-03-10T07:00:59.999Z');
+        });
+      });
+
+      describe('and dateRange = "last-10-minutes".', () => {
+        const dateRange = 'last-10-minutes';
+
+        it('should return range[0] = "2020-03-10T06:50:00.000Z".', () => {
+          const output = getRange(dateRange);
+          expect(output[0].toISOString()).toEqual('2020-03-10T06:50:00.000Z');
+        });
+
+        it('should return range[1] = "2020-03-10T07:00:59.999Z".', () => {
+          const output = getRange(dateRange);
+          expect(output[1].toISOString()).toEqual('2020-03-10T07:00:59.999Z');
+        });
+      });
+
+      describe('and dateRange = "last-1-hour".', () => {
+        const dateRange = 'last-1-hour';
+
+        it('should return range[0] = "2020-03-10T06:00:00.000Z".', () => {
+          const output = getRange(dateRange);
+          expect(output[0].toISOString()).toEqual('2020-03-10T06:00:00.000Z');
+        });
+
+        it('should return range[1] = "2020-03-10T07:59:59.999Z".', () => {
+          const output = getRange(dateRange);
+          expect(output[1].toISOString()).toEqual('2020-03-10T07:59:59.999Z');
+        });
+      });
+
+      describe('and dateRange = "last-3-hours".', () => {
+        const dateRange = 'last-3-hours';
+
+        it('should return range[0] = "2020-03-10T04:00:00.000Z".', () => {
+          const output = getRange(dateRange);
+          expect(output[0].toISOString()).toEqual('2020-03-10T04:00:00.000Z');
+        });
+
+        it('should return range[1] = "2020-03-10T07:59:59.999Z".', () => {
+          const output = getRange(dateRange);
+          expect(output[1].toISOString()).toEqual('2020-03-10T07:59:59.999Z');
+        });
+      });
+
+      describe('and dateRange = "last-1-day".', () => {
+        const dateRange = 'last-1-day';
+
+        it('should return range[0] = "2020-03-09T07:00:00.000Z".', () => {
+          const output = getRange(dateRange);
+          expect(output[0].toISOString()).toEqual('2020-03-09T07:00:00.000Z');
+        });
+
+        it('should return range[1] = "2020-03-11T06:59:59.999Z".', () => {
+          const output = getRange(dateRange);
+          expect(output[1].toISOString()).toEqual('2020-03-11T06:59:59.999Z');
+        });
+      });
+
+      describe('and dateRange = "last-3-days".', () => {
+        const dateRange = 'last-3-days';
+
+        it('should return range[0] = "2020-03-07T08:00:00.000Z".', () => {
+          const output = getRange(dateRange);
+          expect(output[0].toISOString()).toEqual('2020-03-07T08:00:00.000Z');
+        });
+
+        it('should return range[1] = "2020-03-11T06:59:59.999Z".', () => {
+          const output = getRange(dateRange);
+          expect(output[1].toISOString()).toEqual('2020-03-11T06:59:59.999Z');
+        });
+      });
+
+      describe('and dateRange = "last-1-month".', () => {
+        const dateRange = 'last-1-month';
+
+        it('should return range[0] = "2020-02-01T08:00:00.000Z".', () => {
+          const output = getRange(dateRange);
+          expect(output[0].toISOString()).toEqual('2020-02-01T08:00:00.000Z');
+        });
+
+        it('should return range[1] = "2020-04-01T06:59:59.999Z".', () => {
+          const output = getRange(dateRange);
+          expect(output[1].toISOString()).toEqual('2020-04-01T06:59:59.999Z');
+        });
+      });
+
+      describe('and dateRange = "last-3-months".', () => {
+        const dateRange = 'last-3-months';
+
+        it('should return range[0] = "2019-12-01T08:00:00.000Z".', () => {
+          const output = getRange(dateRange);
+          expect(output[0].toISOString()).toEqual('2019-12-01T08:00:00.000Z');
+        });
+
+        it('should return range[1] = "2020-04-01T06:59:59.999Z".', () => {
+          const output = getRange(dateRange);
+          expect(output[1].toISOString()).toEqual('2020-04-01T06:59:59.999Z');
+        });
+      });
+    });
   });
 
   describe('getRangeDisplayText', () => {
