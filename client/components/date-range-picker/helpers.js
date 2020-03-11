@@ -60,7 +60,7 @@ export const getRangeDisplayText = dateRange => {
 };
 
 export const getShortcuts = (maxDays, onClickHandler) => {
-  let options = RANGE_OPTIONS.slice();
+  let options = RANGE_OPTIONS;
 
   if (maxDays && maxDays < 90) {
     options = options.filter(o => o.daysAgo < maxDays);
