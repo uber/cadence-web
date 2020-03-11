@@ -31,7 +31,7 @@
 <script>
 import DatePicker from 'vue2-datepicker';
 import {
-  getMaxStartDate,
+  getMinStartDate,
   getRange,
   getRangeDisplayText,
   getShortcuts,
@@ -50,10 +50,10 @@ export default {
   },
   computed: {
     isDayDisabled() {
-      return isDayDisabled(this.maxStartDate);
+      return isDayDisabled(this.minStartDate);
     },
-    maxStartDate() {
-      return getMaxStartDate(this.maxDays);
+    minStartDate() {
+      return getMinStartDate(this.maxDays);
     },
     rangeDisplayText() {
       return getRangeDisplayText(this.dateRange);
@@ -95,16 +95,18 @@ export default {
 </script>
 
 <style lang="stylus">
+sidebarWidth = 125px;
+
 .mx-datepicker-popup {
   td {
     text-align: center;
   }
 
   .mx-datepicker-sidebar {
-    width: 125px;
+    width: sidebarWidth;
 
     &+ .mx-datepicker-content {
-      margin-left: 125px;
+      margin-left: sidebarWidth;
     }
   }
 }

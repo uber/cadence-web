@@ -5,7 +5,7 @@ import {
   RANGE_OPTIONS,
 } from './constants';
 
-export const getMaxStartDate = maxDays =>
+export const getMinStartDate = maxDays =>
   moment()
     .startOf('day')
     .subtract(maxDays, 'days');
@@ -85,13 +85,13 @@ export const getShortcuts = (maxDays, onClickHandler) => {
 };
 
 export const getTimePanelLabel = showTimePanel =>
-  showTimePanel ? 'select date' : 'select time';
+  showTimePanel ? 'Select date' : 'Select time';
 
-export const isDayDisabled = maxStartDate => date => {
+export const isDayDisabled = minStartDate => date => {
   const momentDate = moment(date);
 
-  if (maxStartDate) {
-    if (momentDate.isBefore(maxStartDate)) {
+  if (minStartDate) {
+    if (momentDate.isBefore(minStartDate)) {
       return true;
     }
   }
