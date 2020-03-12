@@ -17,6 +17,7 @@ describe('DateRangePicker helpers', () => {
       it('should return "2020-03-10 00:00:00".', () => {
         const date = moment('2020-03-10 00:00:00');
         const output = getDateString(date);
+
         expect(output).toEqual('2020-03-10 00:00:00');
       });
     });
@@ -32,6 +33,7 @@ describe('DateRangePicker helpers', () => {
 
       it('should return date = the end of March 10th 2020.', () => {
         const output = getMaxEndDate();
+
         expect(output.toISOString()).toEqual('2020-03-11T06:59:59.999Z');
       });
     });
@@ -558,6 +560,7 @@ describe('DateRangePicker helpers', () => {
 
   describe('isDateValid', () => {
     let minStartDate, maxEndDate;
+
     beforeEach(() => {
       minStartDate = moment('2020-03-07 00:00:00');
       maxEndDate = moment('2020-03-10 00:00:00');
@@ -567,6 +570,7 @@ describe('DateRangePicker helpers', () => {
       it('should return false.', () => {
         const date = { _isValid: false };
         const output = isDateValid(date, minStartDate, maxEndDate);
+
         expect(output).toEqual(false);
       });
     });
@@ -575,6 +579,7 @@ describe('DateRangePicker helpers', () => {
       it('should return false.', () => {
         const date = moment('2020-03-06 00:00:00');
         const output = isDateValid(date, minStartDate, maxEndDate);
+
         expect(output).toEqual(false);
       });
     });
@@ -583,6 +588,7 @@ describe('DateRangePicker helpers', () => {
       it('should return false.', () => {
         const date = moment('2020-03-11 00:00:00');
         const output = isDateValid(date, minStartDate, maxEndDate);
+
         expect(output).toEqual(false);
       });
     });
@@ -591,6 +597,7 @@ describe('DateRangePicker helpers', () => {
       it('should return true.', () => {
         const date = moment('2020-03-08 00:00:00');
         const output = isDateValid(date, minStartDate, maxEndDate);
+
         expect(output).toEqual(true);
       });
     });
