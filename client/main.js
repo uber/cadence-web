@@ -10,7 +10,7 @@ import promiseFinally from 'promise.prototype.finally';
 
 import { http, injectMomentDurationFormat, jsonTryParse } from './helpers';
 
-import DateRangePicker from './components/date-range-picker.vue';
+import DateRangePicker from './components/date-range-picker';
 import detailList from './components/detail-list.vue';
 import barLoader from './components/bar-loader.vue';
 import dataViewer from './components/data-viewer.vue';

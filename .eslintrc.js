@@ -62,4 +62,7 @@ module.exports = {
     ],
     'space-before-blocks': 'error',
   },
+  settings: {
+    'import/resolver': 'webpack',
+  },
 };

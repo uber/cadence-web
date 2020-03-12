@@ -151,7 +151,10 @@ export default {
       }
     },
     fetchHistoryPage(pagedQueryUrl) {
-      if (!pagedQueryUrl || this.fetchHistoryPageRetryCount >= RETRY_COUNT_MAX) {
+      if (
+        !pagedQueryUrl ||
+        this.fetchHistoryPageRetryCount >= RETRY_COUNT_MAX
+      ) {
         this.history.loading = false;
 
         return;
@@ -206,6 +209,7 @@ export default {
           }
 
           this.fetchHistoryPageRetryCount = 0;
+
           return this.events;
         })
         .catch(error => {
@@ -255,7 +259,10 @@ export default {
               type: NOTIFICATION_TYPE_ERROR,
             });
             this.baseApiUrlRetryCount += 1;
-            setTimeout(() => this.onBaseApiUrlChange(baseAPIURL), RETRY_TIMEOUT);
+            setTimeout(
+              () => this.onBaseApiUrlChange(baseAPIURL),
+              RETRY_TIMEOUT
+            );
           }
         )
         .finally(() => {

@@ -409,20 +409,6 @@ describe('Execution', () => {
       return [historyEl, scenario];
     }
 
-    function generateActivityEvents(count, offset) {
-      return new Array(count).fill('').map((_, i) => ({
-        timestamp: moment()
-          .add(offset + i, 'second')
-          .toISOString(),
-        eventType: 'ActivityTaskScheduled',
-        eventId: (offset || 0) + i + 2,
-        details: {
-          activityId: String(i),
-          activityType: { name: 'send-emails' },
-        },
-      }));
-    }
-
     it('should allow the user to change the view format', async function test() {
       const [historyEl, scenario] = await historyTest(this.test);
 
