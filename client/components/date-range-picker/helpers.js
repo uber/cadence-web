@@ -7,9 +7,7 @@ import {
 
 export const getDateString = date => moment(date).format(DATETIME_FORMAT);
 
-export const getMaxEndDate = () =>
-  moment()
-    .endOf('day');
+export const getMaxEndDate = () => moment().endOf('day');
 
 export const getMinStartDate = maxDays =>
   moment()

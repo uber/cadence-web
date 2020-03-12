@@ -7,7 +7,6 @@
       :clearable="false"
       :disabled-date="isDayDisabled"
       :showTimePanel="showTimePanel"
-
       :open.sync="open"
       @change="onDateRangeChange"
     >
@@ -28,7 +27,8 @@
             v-for="shortcut in shortcuts"
             :key="shortcut.value"
             @click="onShortcutClick(shortcut)"
-          >{{ shortcut.text }}
+          >
+            {{ shortcut.text }}
           </button>
         </div>
         <div class="sidebar-column sidebar-column-custom-range">
@@ -54,11 +54,7 @@
             </div>
             <div>
               <label for="custom-range-filter-by">Filter by:</label>
-              <input
-                id="custom-range-filter-by"
-                disabled
-                :value="filterBy"
-              />
+              <input id="custom-range-filter-by" disabled :value="filterBy" />
             </div>
             <div>
               <button
@@ -97,11 +93,7 @@ import {
 } from './helpers';
 
 export default {
-  props: [
-    'dateRange',
-    'filterBy',
-    'maxDays',
-  ],
+  props: ['dateRange', 'filterBy', 'maxDays'],
   data() {
     const range = getRange(this.dateRange);
 
