@@ -1,14 +1,42 @@
 import moment from 'moment';
 import {
+  getDateString,
+  getMaxEndDate,
   getMinStartDate,
   getRange,
   getRangeDisplayText,
   getShortcuts,
   getTimePanelLabel,
+  isDateValid,
   isDayDisabled,
 } from './helpers';
 
 describe('DateRangePicker helpers', () => {
+  describe('getDateString', () => {
+    describe('When date = March 10th 2020', () => {
+      it('should return "2020-03-10 00:00:00".', () => {
+        const date = moment('2020-03-10 00:00:00');
+        const output = getDateString(date);
+        expect(output).toEqual('2020-03-10 00:00:00');
+      });
+    });
+  });
+
+  describe('getMaxEndDate', () => {
+    describe('When moment is set to March 10th 2020', () => {
+      beforeEach(() => {
+        jest
+          .spyOn(Date, 'now')
+          .mockImplementation(() => new Date(2020, 2, 10).getTime());
+      });
+
+      it('should return date = the end of March 10th 2020.', () => {
+        const output = getMaxEndDate();
+        expect(output.toISOString()).toEqual('2020-03-11T06:59:59.999Z');
+      });
+    });
+  });
+
   describe('getMinStartDate', () => {
     describe('When moment is set to March 10th 2020', () => {
       beforeEach(() => {
@@ -524,6 +552,46 @@ describe('DateRangePicker helpers', () => {
             expect(output).toEqual(true);
           });
         });
+      });
+    });
+  });
+
+  describe('isDateValid', () => {
+    let minStartDate, maxEndDate;
+    beforeEach(() => {
+      minStartDate = moment('2020-03-07 00:00:00');
+      maxEndDate = moment('2020-03-10 00:00:00');
+    });
+
+    describe('when passing an invalid date', () => {
+      it('should return false.', () => {
+        const date = { _isValid: false };
+        const output = isDateValid(date, minStartDate, maxEndDate);
+        expect(output).toEqual(false);
+      });
+    });
+
+    describe('when passing a date before minStartDate', () => {
+      it('should return false.', () => {
+        const date = moment('2020-03-06 00:00:00');
+        const output = isDateValid(date, minStartDate, maxEndDate);
+        expect(output).toEqual(false);
+      });
+    });
+
+    describe('when passing a date after maxEndDate', () => {
+      it('should return false.', () => {
+        const date = moment('2020-03-11 00:00:00');
+        const output = isDateValid(date, minStartDate, maxEndDate);
+        expect(output).toEqual(false);
+      });
+    });
+
+    describe('when passing a date between minStartDate and maxEndDate', () => {
+      it('should return true.', () => {
+        const date = moment('2020-03-08 00:00:00');
+        const output = isDateValid(date, minStartDate, maxEndDate);
+        expect(output).toEqual(true);
       });
     });
   });
