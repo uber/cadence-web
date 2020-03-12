@@ -40,6 +40,7 @@
         </div>
         <date-range-picker
           :date-range="range"
+          :filter-by="filterBy"
           :max-days="maxRetentionDays"
           @change="setRange"
         />
@@ -143,6 +144,9 @@ export default pagedGrid({
     this.$watch('queryOnChange', () => {}, { immediate: true });
   },
   computed: {
+    filterBy() {
+      return this.status.value === 'OPEN' ? 'StartTime' : 'CloseTime';
+    },
     status() {
       if (!this.$route.query || !this.$route.query.status) {
         return this.statuses[0];

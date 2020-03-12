@@ -54,8 +54,11 @@
             </div>
             <div>
               <label for="custom-range-filter-by">Filter by:</label>
-              <!-- open workflow it is by startTime, for closed workflow is is by closeTime -->
-              <input id="custom-range-filter-by" disabled value="StartTime" />
+              <input
+                id="custom-range-filter-by"
+                disabled
+                :value="filterBy"
+              />
             </div>
             <div>
               <button
@@ -92,7 +95,11 @@ import {
 } from './helpers';
 
 export default {
-  props: ['dateRange', 'maxDays'],
+  props: [
+    'dateRange',
+    'filterBy',
+    'maxDays',
+  ],
   data() {
     const range = getRange(this.dateRange);
 
@@ -109,7 +116,7 @@ export default {
       return moment(this.endTimeString);
     },
     endTimeInvalid() {
-      return !this.endTime._isValid;
+      return !this.endTime._isValid || this.endTime.isBefore(this.minStartDate);
     },
     isDayDisabled() {
       return isDayDisabled(this.minStartDate);
@@ -127,7 +134,7 @@ export default {
       return moment(this.startTimeString);
     },
     startTimeInvalid() {
-      return !this.startTime._isValid;
+      return !this.startTime._isValid || this.startTime.isBefore(this.minStartDate);
     },
     startOrEndTimeInvalid() {
       return this.startTimeInvalid || this.endTimeInvalid;
