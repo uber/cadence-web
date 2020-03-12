@@ -32,23 +32,41 @@
           </button>
         </div>
         <div class="sidebar-column sidebar-column-custom-range">
-          <h5>Custom range</h5>
-          <div>
-            <label for="custom-range-from">From:</label>
-            <input id="custom-range-from" value="2020-03-10 14:09:00" />
-          </div>
-          <div>
-            <label for="custom-range-to">to:</label>
-            <input id="custom-range-to" value="2020-03-10 14:09:00" />
-          </div>
-          <div>
-            <label for="custom-range-filtered-by">Filtered by:</label>
-            <!-- open workflow it is by startTime, for closed workflow is is by closeTime -->
-            <input id="custom-range-filtered-by" disabled value="StartTime" />
-          </div>
-          <div>
-            <button class="sidebar-button">Apply</button>
-          </div>
+          <form @submit.prevent="onCustomRangeSubmit">
+            <h5>Custom range</h5>
+            <div>
+              <label for="custom-range-from">From:</label>
+              <input
+                id="custom-range-from"
+                maxlength="19"
+                v-model="startTimeString"
+                :class="{ invalid: startTimeInvalid }"
+              />
+            </div>
+            <div>
+              <label for="custom-range-to">To:</label>
+              <input
+                id="custom-range-to"
+                maxlength="19"
+                v-model="endTimeString"
+                :class="{ invalid: endTimeInvalid }"
+              />
+            </div>
+            <div>
+              <label for="custom-range-filter-by">Filter by:</label>
+              <!-- open workflow it is by startTime, for closed workflow is is by closeTime -->
+              <input id="custom-range-filter-by" disabled value="StartTime" />
+            </div>
+            <div>
+              <button
+                class="sidebar-button"
+                type="submit"
+                :disabled="startOrEndTimeInvalid"
+              >
+                Apply
+              </button>
+            </div>
+          </form>
         </div>
       </template>
       <template v-slot:footer>
@@ -61,8 +79,10 @@
 </template>
 
 <script>
+import moment from 'moment';
 import DatePicker from 'vue2-datepicker';
 import {
+  getDateString,
   getMinStartDate,
   getRange,
   getRangeDisplayText,
@@ -74,13 +94,23 @@ import {
 export default {
   props: ['dateRange', 'maxDays'],
   data() {
+    const range = getRange(this.dateRange);
+
     return {
-      range: getRange(this.dateRange),
+      range,
+      startTimeString: getDateString(range[0]),
+      endTimeString: getDateString(range[1]),
       open: false,
       showTimePanel: false,
     };
   },
   computed: {
+    endTime() {
+      return moment(this.endTimeString);
+    },
+    endTimeInvalid() {
+      return !this.endTime._isValid;
+    },
     isDayDisabled() {
       return isDayDisabled(this.minStartDate);
     },
@@ -92,6 +122,15 @@ export default {
     },
     shortcuts() {
       return getShortcuts(this.maxDays, this.onShortcutClick);
+    },
+    startTime() {
+      return moment(this.startTimeString);
+    },
+    startTimeInvalid() {
+      return !this.startTime._isValid;
+    },
+    startOrEndTimeInvalid() {
+      return this.startTimeInvalid || this.endTimeInvalid;
     },
     timePanelLabel() {
       return getTimePanelLabel(this.showTimePanel);
@@ -111,6 +150,24 @@ export default {
 
       this.$emit('change', { startTime, endTime });
     },
+    onCustomRangeSubmit() {
+      let { startTime, endTime } = this;
+
+      if (this.startOrEndTimeInvalid) {
+        return;
+      }
+
+      if (endTime.isBefore(startTime)) {
+        startTime = this.endTime;
+        endTime = this.startTime;
+      }
+
+      this.$emit('change', {
+        startTime,
+        endTime,
+      });
+      this.open = false;
+    },
     onClickTimePanelLabel() {
       this.showTimePanel = !this.showTimePanel;
     },
@@ -121,6 +178,8 @@ export default {
   watch: {
     dateRange() {
       this.range = getRange(this.dateRange);
+      this.startTimeString = getDateString(this.range[0]);
+      this.endTimeString = getDateString(this.range[1]);
     },
   },
 };
@@ -168,6 +227,18 @@ sidebarWidth = sidebarColumnShortcutsWidth + sidebarColumnCustomRangeWidth;
       margin: 0 0 8px 0;
       padding: 8px 10px;
       width: 160px;
+
+      &.invalid {
+        border: 1px solid #D44333;
+
+        &:focus {
+          outline: #D44333 auto 3px;
+        }
+      }
+    }
+
+    h5 {
+      text-transform: none;
     }
   }
 
@@ -183,11 +254,17 @@ sidebarWidth = sidebarColumnShortcutsWidth + sidebarColumnCustomRangeWidth;
     background-color: #11939a;
     border: none;
     color: #fff;
+    cursor: pointer;
     display: inline-block;
     float: right;
     font-size: 12px;
     font-weight: bold;
     padding: 8px 12px;
+
+    &:disabled {
+      background-color: #75F7FE;
+      cursor: not-allowed;
+    }
   }
 }
 

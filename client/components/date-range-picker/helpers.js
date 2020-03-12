@@ -5,6 +5,8 @@ import {
   RANGE_OPTIONS,
 } from './constants';
 
+export const getDateString = date => moment(date).format(DATETIME_FORMAT);
+
 export const getMinStartDate = maxDays =>
   moment()
     .startOf('day')
