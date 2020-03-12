@@ -38,18 +38,18 @@
           />
           <label for="workflowName">Workflow Name</label>
         </div>
-        <date-range-picker
-          :date-range="range"
-          :filter-by="filterBy"
-          :max-days="maxRetentionDays"
-          @change="setRange"
-        />
         <v-select
           class="status"
           :value="status"
           :options="statuses"
           :on-change="setStatus"
           :searchable="false"
+        />
+        <date-range-picker
+          :date-range="range"
+          :filter-by="filterBy"
+          :max-days="maxRetentionDays"
+          @change="setRange"
         />
       </template>
       <a class="toggle-filter" @click="toggleFilter">{{

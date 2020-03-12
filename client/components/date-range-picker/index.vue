@@ -200,7 +200,7 @@ export default {
 </script>
 
 <style lang="stylus">
-sidebarColumnCustomRangeWidth = 185px;
+sidebarColumnCustomRangeWidth = 175px;
 sidebarColumnShortcutsWidth = 130px;
 sidebarColumnPadding = 12px;
 sidebarWidth = sidebarColumnShortcutsWidth + sidebarColumnCustomRangeWidth;
@@ -240,7 +240,7 @@ sidebarWidth = sidebarColumnShortcutsWidth + sidebarColumnCustomRangeWidth;
     input {
       margin: 0 0 8px 0;
       padding: 8px 10px;
-      width: 160px;
+      width: 150px;
 
       &.invalid {
         border: 1px solid #D44333;
