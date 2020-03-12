@@ -7,6 +7,10 @@ import {
 
 export const getDateString = date => moment(date).format(DATETIME_FORMAT);
 
+export const getMaxEndDate = () =>
+  moment()
+    .endOf('day');
+
 export const getMinStartDate = maxDays =>
   moment()
     .startOf('day')
@@ -100,3 +104,8 @@ export const isDayDisabled = minStartDate => date => {
 
   return momentDate.isAfter(moment().endOf('day'));
 };
+
+export const isDateValid = (date, minStartDate, maxEndDate) =>
+  date._isValid &&
+  date.isSameOrAfter(minStartDate) &&
+  date.isSameOrBefore(maxEndDate);

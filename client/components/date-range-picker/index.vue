@@ -86,11 +86,13 @@ import moment from 'moment';
 import DatePicker from 'vue2-datepicker';
 import {
   getDateString,
+  getMaxEndDate,
   getMinStartDate,
   getRange,
   getRangeDisplayText,
   getShortcuts,
   getTimePanelLabel,
+  isDateValid,
   isDayDisabled,
 } from './helpers';
 
@@ -116,10 +118,13 @@ export default {
       return moment(this.endTimeString);
     },
     endTimeInvalid() {
-      return !this.endTime._isValid || this.endTime.isBefore(this.minStartDate);
+      return !isDateValid(this.endTime, this.minStartDate, this.maxEndDate);
     },
     isDayDisabled() {
       return isDayDisabled(this.minStartDate);
+    },
+    maxEndDate() {
+      return getMaxEndDate();
     },
     minStartDate() {
       return getMinStartDate(this.maxDays);
@@ -134,7 +139,7 @@ export default {
       return moment(this.startTimeString);
     },
     startTimeInvalid() {
-      return !this.startTime._isValid || this.startTime.isBefore(this.minStartDate);
+      return !isDateValid(this.startTime, this.minStartDate, this.maxEndDate);
     },
     startOrEndTimeInvalid() {
       return this.startTimeInvalid || this.endTimeInvalid;
@@ -194,7 +199,7 @@ export default {
 
 <style lang="stylus">
 sidebarColumnCustomRangeWidth = 185px;
-sidebarColumnShortcutsWidth = 145px;
+sidebarColumnShortcutsWidth = 130px;
 sidebarColumnPadding = 12px;
 sidebarWidth = sidebarColumnShortcutsWidth + sidebarColumnCustomRangeWidth;
 
