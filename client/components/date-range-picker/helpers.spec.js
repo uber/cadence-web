@@ -255,14 +255,14 @@ describe('DateRangePicker helpers', () => {
     });
 
     describe('When dateRange = { startTime: March 9th 2020, endTime: March 10th 2020 }.', () => {
-      it('should return "03/09/2020 00:00:00 - 03/10/2020 00:00:00".', () => {
+      it('should return "2020-03-09 00:00:00 - 2020-03-10 00:00:00".', () => {
         const dateRange = {
           startTime: moment(new Date(2020, 2, 9)),
           endTime: moment(new Date(2020, 2, 10)),
         };
         const output = getRangeDisplayText(dateRange);
 
-        expect(output).toEqual('03/09/2020 00:00:00 - 03/10/2020 00:00:00');
+        expect(output).toEqual('2020-03-09 00:00:00 - 2020-03-10 00:00:00');
       });
     });
 
@@ -353,10 +353,10 @@ describe('DateRangePicker helpers', () => {
         });
       });
 
-      it('should return 7 shortcuts.', () => {
+      it('should return 4 shortcuts.', () => {
         const output = getShortcuts(maxDays);
 
-        expect(output.length).toEqual(7);
+        expect(output.length).toEqual(4);
       });
 
       it('should not contain "Last 24 hours".', () => {
@@ -379,10 +379,10 @@ describe('DateRangePicker helpers', () => {
     describe('When maxDays = 3', () => {
       const maxDays = 3;
 
-      it('should return 8 shortcuts.', () => {
+      it('should return 5 shortcuts.', () => {
         const output = getShortcuts(maxDays);
 
-        expect(output.length).toEqual(8);
+        expect(output.length).toEqual(5);
       });
 
       it('should return the last option as "Last 3 days".', () => {
@@ -396,10 +396,10 @@ describe('DateRangePicker helpers', () => {
     describe('When maxDays = 7', () => {
       const maxDays = 7;
 
-      it('should return 9 shortcuts.', () => {
+      it('should return 6 shortcuts.', () => {
         const output = getShortcuts(maxDays);
 
-        expect(output.length).toEqual(9);
+        expect(output.length).toEqual(6);
       });
 
       it('should return the last option as "Last 7 days".', () => {
@@ -413,10 +413,10 @@ describe('DateRangePicker helpers', () => {
     describe('When maxDays = 30', () => {
       const maxDays = 30;
 
-      it('should return 10 shortcuts.', () => {
+      it('should return 7 shortcuts.', () => {
         const output = getShortcuts(maxDays);
 
-        expect(output.length).toEqual(10);
+        expect(output.length).toEqual(7);
       });
 
       it('should return the last option as "Last 30 days".', () => {
@@ -430,10 +430,10 @@ describe('DateRangePicker helpers', () => {
     describe('When maxDays = 90', () => {
       const maxDays = 90;
 
-      it('should return 11 shortcuts.', () => {
+      it('should return 8 shortcuts.', () => {
         const output = getShortcuts(maxDays);
 
-        expect(output.length).toEqual(11);
+        expect(output.length).toEqual(8);
       });
 
       it('should return the last option as "Last 3 months".', () => {
