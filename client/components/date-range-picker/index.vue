@@ -98,12 +98,22 @@ export default {
     const range = getRange(this.dateRange);
 
     return {
+      interval: undefined,
       range,
       startTimeString: getDateString(range[0]),
       endTimeString: getDateString(range[1]),
+      now: new Date(),
       open: false,
       showTimePanel: false,
     };
+  },
+  mounted() {
+    this.interval = setInterval(() => {
+      this.now = new Date();
+    }, 60 * 1000);
+  },
+  beforeDestroy() {
+    clearInterval(this.interval);
   },
   computed: {
     endTime() {
@@ -116,10 +126,10 @@ export default {
       return isDayDisabled(this.minStartDate);
     },
     maxEndDate() {
-      return getMaxEndDate();
+      return getMaxEndDate(this.now);
     },
     minStartDate() {
-      return getMinStartDate(this.maxDays);
+      return getMinStartDate(this.maxDays, this.now);
     },
     rangeDisplayText() {
       return getRangeDisplayText(this.dateRange);
