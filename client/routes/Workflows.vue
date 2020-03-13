@@ -183,19 +183,8 @@ export default pagedGrid({
     criteria() {
       const { domain } = this.$route.params;
       const q = this.$route.query;
-      let { startTime, endTime } = q;
-
-      if (q.range && typeof q.range === 'string') {
-        const [, count, unit] = q.range.split('-');
-
-        startTime = moment()
-          .subtract(count, unit)
-          .startOf(unit)
-          .toISOString();
-        endTime = moment()
-          .endOf(unit)
-          .toISOString();
-      }
+      const startTime = this.getStartTimeIsoString(q.range, q.startTime);
+      const endTime = this.getEndTimeIsoString(q.range, q.endTime);
 
       this.nextPageToken = undefined;
 
@@ -219,9 +208,15 @@ export default pagedGrid({
       }
 
       if (!this.isRouteRangeValid(this.minStartDate)) {
-        this.setRange(`last-${Math.min(30, this.maxRetentionDays)}-days`);
+        const updatedQuery = this.setRange(
+          `last-${Math.min(30, this.maxRetentionDays)}-days`
+        );
 
-        return;
+        q.startTime = this.getStartTimeIsoString(
+          updatedQuery.range,
+          q.startTime
+        );
+        q.endTime = this.getEndTimeIsoString(updatedQuery.range, q.endTime);
       }
 
       if (['OPEN', 'CLOSED'].includes(q.status)) {
@@ -255,6 +250,29 @@ export default pagedGrid({
     },
   },
   methods: {
+    getStartTimeIsoString(range, startTimeString) {
+      if (range && typeof range === 'string') {
+        const [, count, unit] = range.split('-');
+
+        return moment()
+          .subtract(count, unit)
+          .startOf(unit)
+          .toISOString();
+      }
+
+      return startTimeString;
+    },
+    getEndTimeIsoString(range, endTimeString) {
+      if (range && typeof range === 'string') {
+        const [, , unit] = range.split('-');
+
+        return moment()
+          .endOf(unit)
+          .toISOString();
+      }
+
+      return endTimeString;
+    },
     fetch: debounce(
       function fetch(url, query) {
         this.loading = true;
@@ -382,6 +400,8 @@ export default pagedGrid({
       }
 
       this.$router.replace({ query });
+
+      return query;
     },
     toggleFilter() {
       if (this.filterMode === 'advanced') {
