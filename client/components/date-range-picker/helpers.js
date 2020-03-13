@@ -85,9 +85,11 @@ export const getShortcuts = (maxDays, minStartDate) => {
 export const getTimePanelLabel = showTimePanel =>
   showTimePanel ? 'Select date' : 'Select time';
 
-export const isDateValid = (date, minStartDate, maxEndDate) => date.isValid &&
-  !date.isAfter(maxEndDate) &&
-  !(minStartDate && date.isBefore(minStartDate)) || false;
+export const isDateValid = (date, minStartDate, maxEndDate) =>
+  (date.isValid &&
+    !date.isAfter(maxEndDate) &&
+    !(minStartDate && date.isBefore(minStartDate))) ||
+  false;
 
 export const isDayDisabled = minStartDate => date => {
   const momentDate = moment(date);
