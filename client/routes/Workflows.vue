@@ -220,6 +220,7 @@ export default pagedGrid({
 
       if (!this.isRouteRangeValid(this.minStartDate)) {
         this.setRange(`last-${Math.min(30, this.maxRetentionDays)}-days`);
+
         return;
       }
 
@@ -239,7 +240,10 @@ export default pagedGrid({
       this.fetch(`/api/domain/${domain}/workflows/${state}`, q);
     },
     minStartDate() {
-      const { maxRetentionDays, status: { value: status } } = this;
+      const {
+        maxRetentionDays,
+        status: { value: status },
+      } = this;
 
       if (status === 'OPEN') {
         return null;
@@ -342,7 +346,7 @@ export default pagedGrid({
     },
     isRouteRangeValid(minStartDate) {
       const q = this.$route.query || {};
-      const { endTime, range, startTime, status: { value: status } } = q;
+      const { endTime, range, startTime } = q;
 
       if (range) {
         return this.isRangeValid(range, minStartDate);
