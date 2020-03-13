@@ -53,10 +53,6 @@
               />
             </div>
             <div>
-              <label for="custom-range-filter-by">Filter by:</label>
-              <input id="custom-range-filter-by" disabled :value="filterBy" />
-            </div>
-            <div>
               <button
                 class="sidebar-button"
                 type="submit"
@@ -83,7 +79,6 @@ import DatePicker from 'vue2-datepicker';
 import {
   getDateString,
   getMaxEndDate,
-  getMinStartDate,
   getRange,
   getRangeDisplayText,
   getShortcuts,
@@ -93,7 +88,7 @@ import {
 } from './helpers';
 
 export default {
-  props: ['dateRange', 'filterBy', 'maxDays'],
+  props: ['dateRange', 'maxDays', 'minStartDate'],
   data() {
     const range = getRange(this.dateRange);
 
@@ -128,14 +123,11 @@ export default {
     maxEndDate() {
       return getMaxEndDate(this.now);
     },
-    minStartDate() {
-      return getMinStartDate(this.maxDays, this.now);
-    },
     rangeDisplayText() {
       return getRangeDisplayText(this.dateRange);
     },
     shortcuts() {
-      return getShortcuts(this.maxDays, this.onShortcutClick);
+      return getShortcuts(this.maxDays, this.minStartDate);
     },
     startTime() {
       return moment(this.startTimeString);
@@ -200,7 +192,7 @@ export default {
 </script>
 
 <style lang="stylus">
-sidebarColumnCustomRangeWidth = 175px;
+sidebarColumnCustomRangeWidth = 181px;
 sidebarColumnShortcutsWidth = 130px;
 sidebarColumnPadding = 12px;
 sidebarWidth = sidebarColumnShortcutsWidth + sidebarColumnCustomRangeWidth;
@@ -240,7 +232,7 @@ sidebarWidth = sidebarColumnShortcutsWidth + sidebarColumnCustomRangeWidth;
     input {
       margin: 0 0 8px 0;
       padding: 8px 10px;
-      width: 150px;
+      width: 156px;
 
       &.invalid {
         border: 1px solid #D44333;
