@@ -87,7 +87,7 @@ export const getTimePanelLabel = showTimePanel =>
 
 export const isDateValid = (date, minStartDate, maxEndDate) => date.isValid &&
   !date.isAfter(maxEndDate) &&
-  !(minStartDate && date.isBefore(minStartDate));
+  !(minStartDate && date.isBefore(minStartDate)) || false;
 
 export const isDayDisabled = minStartDate => date => {
   const momentDate = moment(date);
