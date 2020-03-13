@@ -2,7 +2,6 @@ import moment from 'moment';
 import {
   getDateString,
   getMaxEndDate,
-  getMinStartDate,
   getRange,
   getRangeDisplayText,
   getShortcuts,
@@ -35,43 +34,6 @@ describe('DateRangePicker helpers', () => {
         const output = getMaxEndDate();
 
         expect(output.toISOString()).toEqual('2020-03-11T06:59:59.999Z');
-      });
-    });
-  });
-
-  describe('getMinStartDate', () => {
-    describe('When moment is set to March 10th 2020', () => {
-      beforeEach(() => {
-        jest
-          .spyOn(Date, 'now')
-          .mockImplementation(() => new Date(2020, 2, 10).getTime());
-      });
-
-      describe('and maxDays = 1', () => {
-        it('should return date March 9th 2020.', () => {
-          const maxDays = 1;
-          const output = getMinStartDate(maxDays);
-
-          expect(output.toISOString()).toEqual('2020-03-09T07:00:00.000Z');
-        });
-      });
-
-      describe('and maxDays = 3', () => {
-        it('should return date March 7th 2020.', () => {
-          const maxDays = 3;
-          const output = getMinStartDate(maxDays);
-
-          expect(output.toISOString()).toEqual('2020-03-07T08:00:00.000Z');
-        });
-      });
-
-      describe('and maxDays = 30', () => {
-        it('should return date Feburary 9th 2020.', () => {
-          const maxDays = 30;
-          const output = getMinStartDate(maxDays);
-
-          expect(output.toISOString()).toEqual('2020-02-09T08:00:00.000Z');
-        });
       });
     });
   });
@@ -370,27 +332,18 @@ describe('DateRangePicker helpers', () => {
   });
 
   describe('getShortcuts', () => {
-    describe('When maxDays = 1', () => {
+    describe('When maxDays = 1 and minStartDate is defined', () => {
       const maxDays = 1;
-
-      describe('and onClick function is called', () => {
-        it('should try to call the passed in onClickHandler.', () => {
-          const onClickHandler = jest.fn();
-          const output = getShortcuts(maxDays, onClickHandler);
-
-          output[0].onClick();
-          expect(onClickHandler).toHaveBeenCalled();
-        });
-      });
+      const minStartDate = {};
 
       it('should return 4 shortcuts.', () => {
-        const output = getShortcuts(maxDays);
+        const output = getShortcuts(maxDays, minStartDate);
 
         expect(output.length).toEqual(4);
       });
 
       it('should not contain "Last 24 hours".', () => {
-        const output = getShortcuts(maxDays);
+        const output = getShortcuts(maxDays, minStartDate);
         const last24HourOption = output.find(
           option => option.text === 'Last 24 hours'
         );
@@ -399,75 +352,97 @@ describe('DateRangePicker helpers', () => {
       });
 
       it('should return the last option as "Last 1 day".', () => {
-        const output = getShortcuts(maxDays);
+        const output = getShortcuts(maxDays, minStartDate);
         const lastOption = output[output.length - 1];
 
         expect(lastOption.text).toEqual('Last 1 day');
       });
     });
 
-    describe('When maxDays = 3', () => {
+    describe('When maxDays = 3 and minStartDate is defined', () => {
       const maxDays = 3;
+      const minStartDate = {};
 
       it('should return 5 shortcuts.', () => {
-        const output = getShortcuts(maxDays);
+        const output = getShortcuts(maxDays, minStartDate);
 
         expect(output.length).toEqual(5);
       });
 
       it('should return the last option as "Last 3 days".', () => {
-        const output = getShortcuts(maxDays);
+        const output = getShortcuts(maxDays, minStartDate);
         const lastOption = output[output.length - 1];
 
         expect(lastOption.text).toEqual('Last 3 days');
       });
     });
 
-    describe('When maxDays = 7', () => {
+    describe('When maxDays = 7 and minStartDate is defined', () => {
       const maxDays = 7;
+      const minStartDate = {};
 
       it('should return 6 shortcuts.', () => {
-        const output = getShortcuts(maxDays);
+        const output = getShortcuts(maxDays, minStartDate);
 
         expect(output.length).toEqual(6);
       });
 
       it('should return the last option as "Last 7 days".', () => {
-        const output = getShortcuts(maxDays);
+        const output = getShortcuts(maxDays, minStartDate);
         const lastOption = output[output.length - 1];
 
         expect(lastOption.text).toEqual('Last 7 days');
       });
     });
 
-    describe('When maxDays = 30', () => {
+    describe('When maxDays = 30 and minStartDate is defined', () => {
       const maxDays = 30;
+      const minStartDate = {};
 
       it('should return 7 shortcuts.', () => {
-        const output = getShortcuts(maxDays);
+        const output = getShortcuts(maxDays, minStartDate);
 
         expect(output.length).toEqual(7);
       });
 
       it('should return the last option as "Last 30 days".', () => {
-        const output = getShortcuts(maxDays);
+        const output = getShortcuts(maxDays, minStartDate);
         const lastOption = output[output.length - 1];
 
         expect(lastOption.text).toEqual('Last 30 days');
       });
     });
 
-    describe('When maxDays = 90', () => {
+    describe('When maxDays = 90 and minStartDate is defined', () => {
       const maxDays = 90;
+      const minStartDate = {};
 
       it('should return 8 shortcuts.', () => {
-        const output = getShortcuts(maxDays);
+        const output = getShortcuts(maxDays, minStartDate);
 
         expect(output.length).toEqual(8);
       });
 
       it('should return the last option as "Last 3 months".', () => {
-        const output = getShortcuts(maxDays);
+        const output = getShortcuts(maxDays, minStartDate);
+        const lastOption = output[output.length - 1];
+
+        expect(lastOption.text).toEqual('Last 3 months');
+      });
+    });
+
+    describe('When maxDays = 3 and minStartDate = null', () => {
+      const maxDays = 3;
+      const minStartDate = null;
+
+      it('should return 8 shortcuts', () => {
+        const output = getShortcuts(maxDays, minStartDate);
+
+        expect(output.length).toEqual(8);
+      });
+
+      it('should return the last option as "Last 3 months".', () => {
+        const output = getShortcuts(maxDays, minStartDate);
         const lastOption = output[output.length - 1];
 
         expect(lastOption.text).toEqual('Last 3 months');

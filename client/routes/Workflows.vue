@@ -45,10 +45,18 @@
           :on-change="setStatus"
           :searchable="false"
         />
+        <div class="field workflow-filter-by">
+          <input
+            class="workflow-filter-by"
+            placeholder=" "
+            readonly
+            v-bind:value="filterBy"
+          />
+        </div>
         <date-range-picker
           :date-range="range"
-          :filter-by="filterBy"
           :max-days="maxRetentionDays"
+          :min-start-date="minStartDate"
           @change="setRange"
         />
       </template>
@@ -119,7 +127,7 @@ export default pagedGrid({
         { value: 'CONTINUED_AS_NEW', label: 'Continued As New' },
         { value: 'TIMED_OUT', label: 'Timed Out' },
       ],
-      maxRetentionDays: undefined,
+      maxRetentionDays: 30,
       filterMode: 'basic',
     };
   },
@@ -128,12 +136,12 @@ export default pagedGrid({
       this.maxRetentionDays =
         Number(r.configuration.workflowExecutionRetentionPeriodInDays) || 30;
 
-      if (!this.isRouteRangeValid(this.maxRetentionDays)) {
+      if (!this.isRouteRangeValid(this.minStartDate)) {
         const prevRange = localStorage.getItem(
           `${this.$route.params.domain}:workflows-time-range`
         );
 
-        if (prevRange && this.isRangeValid(prevRange, this.maxRetentionDays)) {
+        if (prevRange && this.isRangeValid(prevRange, this.minStartDate)) {
           this.setRange(prevRange);
         } else {
           this.setRange(`last-${Math.min(30, this.maxRetentionDays)}-days`);
@@ -142,6 +150,14 @@ export default pagedGrid({
     });
 
     this.$watch('queryOnChange', () => {}, { immediate: true });
+  },
+  mounted() {
+    this.interval = setInterval(() => {
+      this.now = new Date();
+    }, 60 * 1000);
+  },
+  beforeDestroy() {
+    clearInterval(this.interval);
   },
   computed: {
     filterBy() {
@@ -167,19 +183,8 @@ export default pagedGrid({
     criteria() {
       const { domain } = this.$route.params;
       const q = this.$route.query;
-      let { startTime, endTime } = q;
-
-      if (q.range && typeof q.range === 'string') {
-        const [, count, unit] = q.range.split('-');
-
-        startTime = moment()
-          .subtract(count, unit)
-          .startOf(unit)
-          .toISOString();
-        endTime = moment()
-          .endOf(unit)
-          .toISOString();
-      }
+      const startTime = this.getStartTimeIsoString(q.range, q.startTime);
+      const endTime = this.getEndTimeIsoString(q.range, q.endTime);
 
       this.nextPageToken = undefined;
 
@@ -202,6 +207,18 @@ export default pagedGrid({
         return;
       }
 
+      if (!this.isRouteRangeValid(this.minStartDate)) {
+        const updatedQuery = this.setRange(
+          `last-${Math.min(30, this.maxRetentionDays)}-days`
+        );
+
+        q.startTime = this.getStartTimeIsoString(
+          updatedQuery.range,
+          q.startTime
+        );
+        q.endTime = this.getEndTimeIsoString(updatedQuery.range, q.endTime);
+      }
+
       if (['OPEN', 'CLOSED'].includes(q.status)) {
         delete q.status;
       }
@@ -217,8 +234,45 @@ export default pagedGrid({
 
       this.fetch(`/api/domain/${domain}/workflows/${state}`, q);
     },
+    minStartDate() {
+      const {
+        maxRetentionDays,
+        status: { value: status },
+      } = this;
+
+      if (status === 'OPEN') {
+        return null;
+      }
+
+      return moment(this.now)
+        .subtract(maxRetentionDays, 'days')
+        .startOf('days');
+    },
   },
   methods: {
+    getStartTimeIsoString(range, startTimeString) {
+      if (range && typeof range === 'string') {
+        const [, count, unit] = range.split('-');
+
+        return moment()
+          .subtract(count, unit)
+          .startOf(unit)
+          .toISOString();
+      }
+
+      return startTimeString;
+    },
+    getEndTimeIsoString(range, endTimeString) {
+      if (range && typeof range === 'string') {
+        const [, , unit] = range.split('-');
+
+        return moment()
+          .endOf(unit)
+          .toISOString();
+      }
+
+      return endTimeString;
+    },
     fetch: debounce(
       function fetch(url, query) {
         this.loading = true;
@@ -271,11 +325,7 @@ export default pagedGrid({
         });
       }
     },
-    isRangeValid(range, maxRetentionDays) {
-      const maxRetentionPeriod = moment()
-        .subtract(maxRetentionDays, 'days')
-        .startOf('days');
-
+    isRangeValid(range, minStartDate) {
       if (typeof range === 'string') {
         const [, count, unit] = range.split('-');
         let startTime;
@@ -288,7 +338,7 @@ export default pagedGrid({
           return false;
         }
 
-        if (startTime < maxRetentionPeriod) {
+        if (minStartDate && startTime < minStartDate) {
           return false;
         }
 
@@ -303,7 +353,7 @@ export default pagedGrid({
           return false;
         }
 
-        if (startTime < maxRetentionPeriod) {
+        if (minStartDate && startTime < minStartDate) {
           return false;
         }
 
@@ -312,16 +362,16 @@ export default pagedGrid({
 
       return false;
     },
-    isRouteRangeValid(maxRetentionDays) {
+    isRouteRangeValid(minStartDate) {
       const q = this.$route.query || {};
       const { endTime, range, startTime } = q;
 
       if (range) {
-        return this.isRangeValid(range, maxRetentionDays);
+        return this.isRangeValid(range, minStartDate);
       }
 
       if (startTime && endTime) {
-        return this.isRangeValid({ endTime, startTime }, maxRetentionDays);
+        return this.isRangeValid({ endTime, startTime }, minStartDate);
       }
 
       return false;
@@ -350,6 +400,8 @@ export default pagedGrid({
       }
 
       this.$router.replace({ query });
+
+      return query;
     },
     toggleFilter() {
       if (this.filterMode === 'advanced') {
@@ -373,6 +425,9 @@ section.workflows
       flex 1 1 auto
     .status {
       width: 160px;
+    }
+    .workflow-filter-by {
+      max-width: 105px;
     }
     a.toggle-filter
       action-button()
