@@ -1,24 +1,32 @@
 <template>
   <section>
-    <nav>
-      <router-link :to="{ name: 'domain-search' }" class="search">
-        Search
-      </router-link>
-      <router-link :to="{ name: 'help' }" class="help">
-        Help
-      </router-link>
-      <router-view />
-    </nav>
+    <navigation-bar>
+      <navigation-link
+        :exact="true"
+        label="Search"
+        :to="{ name: 'domain-search' }"
+      />
+      <navigation-link
+        label="Help"
+        :to="{ name: 'help' }"
+      />
+    </navigation-bar>
+    <router-view />
   </section>
 </template>
 
 <script>
-export default {
+import NavigationBar from '../components/navigation-bar';
+import NavigationLink from '../components/navigation-link';
 
+export default {
+  components: {
+    'navigation-bar': NavigationBar,
+    'navigation-link': NavigationLink,
+  }
 };
 </script>
 
 <style lang="stylus">
-  @require "../styles/definitions.styl"
 
 </style>
