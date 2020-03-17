@@ -23,26 +23,6 @@ export default {
     clearTimeout(this.notification.timeout);
   },
   methods: {
-    globalClick(e) {
-      if (this.editing && !this.$refs.domain.contains(e.target)) {
-        this.clearEdit();
-      }
-
-      if (e.target.tagName === 'A') {
-        const href = e.target.getAttribute('href');
-
-        if (
-          href &&
-          href.startsWith('/') &&
-          !e.target.getAttribute('download') &&
-          !e.target.getAttribute('target')
-        ) {
-          e.preventDefault();
-          e.stopPropagation();
-          this.$router.push(href);
-        }
-      }
-    },
     onNotification({ message, type = NOTIFICATION_TYPE_SUCCESS }) {
       this.notification.message = message;
       this.notification.type = type;
@@ -73,7 +53,7 @@ export default {
 </script>
 
 <template>
-  <main @click="globalClick">
+  <main>
     <NotificationBar
       :message="notification.message"
       :onClose="onNotificationClose"
