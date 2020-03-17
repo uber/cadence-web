@@ -2,7 +2,7 @@
 import { version } from '../package.json';
 import logo from './assets/logo.svg';
 import { NotificationBar } from '@components';
-import { NOTIFICATION_TIMEOUT, NOTIFICATION_TYPE_SUCCESS } from './constants';
+import { NOTIFICATION_TIMEOUT, NOTIFICATION_TYPE_SUCCESS } from '@constants';
 
 export default {
   components: {

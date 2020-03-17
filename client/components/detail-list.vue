@@ -1,5 +1,5 @@
 <script>
-import { preKeys } from '../constants';
+import { preKeys } from '@constants';
 import DataViewer from './data-viewer';
 
 export default {

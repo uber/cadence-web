@@ -8,7 +8,7 @@ import qs from 'friendly-querystring';
 import moment from 'moment';
 import promiseFinally from 'promise.prototype.finally';
 
-import { http, injectMomentDurationFormat, jsonTryParse } from './helpers';
+import { http, injectMomentDurationFormat, jsonTryParse } from '@helpers';
 
 import snapscroll from './directives/snapscroll';
 

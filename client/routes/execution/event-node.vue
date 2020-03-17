@@ -1,6 +1,6 @@
 <script>
 import moment from 'moment';
-import { getKeyValuePairs, shortName } from '../../helpers';
+import { getKeyValuePairs, shortName } from '@helpers';
 import { DetailList } from '@components';
 
 const titlesForGroups = {

@@ -1,4 +1,4 @@
-import { getKeyValuePairs } from '../../../helpers';
+import { getKeyValuePairs } from '@helpers';
 import { summarizeEvents } from './summarize-events';
 
 const getEventSummary = event => {

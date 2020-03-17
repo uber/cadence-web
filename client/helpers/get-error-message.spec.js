@@ -1,4 +1,4 @@
-import { NOTIFICATION_TYPE_ERROR_MESSAGE_DEFAULT } from '../constants';
+import { NOTIFICATION_TYPE_ERROR_MESSAGE_DEFAULT } from '@constants';
 import getErrorMessage from './get-error-message';
 
 describe('getErrorMessage', () => {

@@ -1,4 +1,4 @@
-import { getKeyValuePairs } from '../../../helpers';
+import { getKeyValuePairs } from '@helpers';
 import { eventFullTransforms } from './event-full-transforms';
 
 const getEventFullDetails = event => {

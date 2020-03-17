@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { getKeyValuePairs, mapDomainDescription } from '../helpers';
+import { getKeyValuePairs, mapDomainDescription } from '@helpers';
 import { DetailList } from '@components';
 
 export default {
