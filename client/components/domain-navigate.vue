@@ -41,7 +41,7 @@
       v-if="domainDesc"
     >
       <span class="domain-name">{{ domainDescName }}</span>
-      <details-list :item="domainDesc" :title="domainDescName" />
+      <detail-list :item="domainDesc" :title="domainDescName" />
     </div>
   </div>
 </template>
@@ -51,6 +51,7 @@ import debounce from 'lodash-es/debounce';
 import omit from 'lodash-es/omit';
 import { stringify } from 'friendly-querystring';
 import { getKeyValuePairs, mapDomainDescription } from '../helpers';
+import { DetailList } from '../components';
 
 const validationMessages = {
   valid: d => `${d} exists`,
@@ -71,6 +72,9 @@ export default {
       domainDescName: undefined,
       domainDescRequest: undefined,
     };
+  },
+  components: {
+    'detail-list': DetailList,
   },
   created() {
     this.domainDescCache = {};

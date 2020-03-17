@@ -18,8 +18,7 @@
 </template>
 
 <script>
-import NavigationBar from '../components/navigation-bar';
-import NavigationLink from '../components/navigation-link';
+import { NavigationBar, NavigationLink } from '../components';
 
 export default {
   components: {

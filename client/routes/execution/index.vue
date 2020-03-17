@@ -1,25 +1,29 @@
 <template>
   <section :class="{ execution: true, loading: wfLoading }">
-    <nav>
-      <router-link :to="{ name: 'execution/summary' }" class="summary"
-        >Summary</router-link
-      >
-      <router-link :to="{ name: 'execution/history' }" class="history"
-        >History</router-link
-      >
-      <router-link
+    <navigation-bar>
+      <navigation-link
+        icon="icon_receipt"
+        label="Summary"
+        :to="{ name: 'execution/summary' }"
+      />
+      <navigation-link
+        icon="icon_trip-history"
+        label="History"
+        :to="{ name: 'execution/history' }"
+      />
+      <navigation-link
+        icon="icon_trips"
+        label="Stack Trace"
         :to="{ name: 'execution/stack-trace' }"
-        class="stack-trace"
         v-show="isWorkflowRunning"
-        >Stack Trace</router-link
-      >
-      <router-link
+      />
+      <navigation-link
+        icon="icon_lost"
+        label="Queries"
         :to="{ name: 'execution/queries' }"
-        class="queries"
         v-show="isWorkflowRunning"
-        >Queries</router-link
-      >
-    </nav>
+      />
+    </navigation-bar>
     <router-view
       name="summary"
       :baseAPIURL="baseAPIURL"
@@ -61,6 +65,7 @@ import {
   getHistoryTimelineEvents,
   getSummary,
 } from './helpers';
+import { NavigationBar, NavigationLink } from '../../components';
 
 export default {
   data() {
@@ -99,6 +104,10 @@ export default {
   },
   beforeDestroy() {
     this.clearWatches();
+  },
+  components: {
+    'navigation-bar': NavigationBar,
+    'navigation-link': NavigationLink,
   },
   computed: {
     baseAPIURL() {

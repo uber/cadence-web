@@ -101,6 +101,7 @@
 import moment from 'moment';
 import debounce from 'lodash-es/debounce';
 import pagedGrid from '../components/paged-grid';
+import { DateRangePicker } from '../components';
 
 export default pagedGrid({
   data() {
@@ -142,6 +143,9 @@ export default pagedGrid({
     });
 
     this.$watch('queryOnChange', () => {}, { immediate: true });
+  },
+  components: {
+    'date-range-picker': DateRangePicker,
   },
   computed: {
     filterBy() {

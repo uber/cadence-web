@@ -5,14 +5,14 @@
 </template>
 
 <script>
-import domainNav from '../components/domain-navigate.vue';
+import { DomainNavigate } from '../components';
 
 export default {
   data() {
     return {};
   },
   components: {
-    'domain-navigation': domainNav,
+    'domain-navigation': DomainNavigate,
   },
 };
 </script>

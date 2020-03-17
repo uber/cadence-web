@@ -10,12 +10,6 @@ import promiseFinally from 'promise.prototype.finally';
 
 import { http, injectMomentDurationFormat, jsonTryParse } from './helpers';
 
-import DateRangePicker from './components/date-range-picker';
-import detailList from './components/detail-list.vue';
-import barLoader from './components/bar-loader.vue';
-import dataViewer from './components/data-viewer.vue';
-import copyButton from './components/copy.vue';
-
 import snapscroll from './directives/snapscroll';
 
 import App from './App.vue';
@@ -202,11 +196,6 @@ Vue.use(vueModal, {
 });
 Vue.use(vueSplit);
 Vue.component('v-select', vueSelect);
-Vue.component('date-range-picker', DateRangePicker);
-Vue.component('copy', copyButton);
-Vue.component('bar-loader', barLoader);
-Vue.component('data-viewer', dataViewer);
-Vue.component('details-list', detailList);
 Vue.directive('snapscroll', snapscroll);
 Vue.config.ignoredElements = ['loader'];
 
