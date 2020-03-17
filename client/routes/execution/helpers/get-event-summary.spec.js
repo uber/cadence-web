@@ -1,6 +1,6 @@
 import getEventSummary from './get-event-summary';
 
-jest.mock('../../../helpers');
+jest.mock('@helpers');
 
 describe('getEventSummary', () => {
   describe('When passed no event', () => {

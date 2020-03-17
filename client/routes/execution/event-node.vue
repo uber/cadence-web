@@ -1,6 +1,7 @@
 <script>
 import moment from 'moment';
-import { getKeyValuePairs, shortName } from '../../helpers';
+import { getKeyValuePairs, shortName } from '@helpers';
+import { DetailList } from '@components';
 
 const titlesForGroups = {
   ActivityTaskScheduled: n =>
@@ -73,6 +74,9 @@ function titleForNode(n) {
 export default {
   name: 'event-node',
   props: ['node'],
+  components: {
+    'detail-list': DetailList,
+  },
   render(h) {
     const activeId = this.$route.query.eventId;
     const router = this.$router;
@@ -87,7 +91,7 @@ export default {
         showDetails && findActiveGroupNode(node, activeId, true);
       const detailsList =
         activeGroupNode &&
-        h('details-list', {
+        h('detail-list', {
           props: {
             item: {
               kvps: getKeyValuePairs(activeGroupNode.details),

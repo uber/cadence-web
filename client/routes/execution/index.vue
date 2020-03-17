@@ -53,14 +53,14 @@
 </template>
 
 <script>
-import { NOTIFICATION_TYPE_ERROR } from '../../constants';
-import { getErrorMessage } from '../../helpers';
 import { RETRY_COUNT_MAX, RETRY_TIMEOUT } from './constants';
 import {
   getHistoryEvents,
   getHistoryTimelineEvents,
   getSummary,
 } from './helpers';
+import { NOTIFICATION_TYPE_ERROR } from '@constants';
+import { getErrorMessage } from '@helpers';
 
 export default {
   data() {

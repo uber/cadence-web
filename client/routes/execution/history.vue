@@ -199,7 +199,7 @@
                   @click.prevent="selectTimelineEvent(item)"
                 >
                   <span class="event-title">{{ item.content }}</span>
-                  <details-list
+                  <detail-list
                     :compact="true"
                     :item="item.details"
                     :title="item.content"
@@ -224,7 +224,7 @@
                 :to="selectedTimelineEvent.titleLink"
                 >{{ selectedTimelineEvent.content }}</router-link
               >
-              <details-list
+              <detail-list
                 class="timeline-details"
                 :item="selectedTimelineEvent.details"
                 :title="selectedTimelineEvent.content"
@@ -242,7 +242,7 @@
                   {{ events.find(event => event.eventId === eid).eventType }}
                 </a>
               </div>
-              <details-list
+              <detail-list
                 class="event-details"
                 :item="selectedEventDetails"
                 :title="
@@ -270,6 +270,7 @@ import debounce from 'lodash-es/debounce';
 import omit from 'lodash-es/omit';
 import timeline from './timeline.vue';
 import eventDetails from './event-details.vue';
+import { DetailList } from '@components';
 
 export default {
   name: 'history',
@@ -519,6 +520,7 @@ export default {
     },
   },
   components: {
+    'detail-list': DetailList,
     DynamicScroller,
     DynamicScrollerItem,
     'event-details': eventDetails,

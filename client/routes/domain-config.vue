@@ -3,7 +3,7 @@
     <header>
       <h3>{{ domain }}</h3>
     </header>
-    <details-list
+    <detail-list
       v-if="domainConfig"
       :item="domainConfig"
       :title="`Domain ${domain} Configuration`"
@@ -13,7 +13,8 @@
 </template>
 
 <script>
-import { getKeyValuePairs, mapDomainDescription } from '../helpers';
+import { getKeyValuePairs, mapDomainDescription } from '@helpers';
+import { DetailList } from '@components';
 
 export default {
   data() {
@@ -24,6 +25,9 @@ export default {
     };
   },
   props: ['domain'],
+  components: {
+    'detail-list': DetailList,
+  },
   created() {
     this.$http(`/api/domain/${this.domain}`)
       .then(

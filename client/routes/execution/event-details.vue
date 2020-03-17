@@ -1,13 +1,18 @@
 <script>
+import { DetailList } from '@components';
+
 export default {
   name: 'event-details',
   props: ['event', 'compact', 'highlight'],
+  components: {
+    'detail-list': DetailList,
+  },
   render(h) {
     if (!this.event) {
       return null;
     }
 
-    return h('details-list', {
+    return h('detail-list', {
       props: {
         item: this.event,
         highlight: this.highlight,

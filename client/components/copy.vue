@@ -4,6 +4,7 @@
 
 <script>
 export default {
+  name: 'copy',
   props: ['text'],
   methods: {
     copy() {
