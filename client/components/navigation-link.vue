@@ -1,6 +1,7 @@
 <template>
   <router-link
     class="navigation-link"
+    :class="icon"
     :exact="exact"
     :to="to"
   >
@@ -10,8 +11,13 @@
 
 <script>
 export default {
-  props: ['exact', 'icon', 'label', 'to'],
-
+  name: 'navigation-link',
+  props: [
+    'exact',
+    'icon',
+    'label',
+    'to'
+  ],
 };
 </script>
 
@@ -23,6 +29,11 @@ export default {
     font-weight: 500;
     text-transform: uppercase;
     border-bottom: 4px solid transparent;
+
+    &:before {
+      font-family: 'uber-icons';
+      margin-right: 5px;
+    }
 
     &.router-link-active {
       border-bottom-color: #11939a;

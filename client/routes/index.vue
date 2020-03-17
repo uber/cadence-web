@@ -3,11 +3,13 @@
     <navigation-bar>
       <navigation-link
         :exact="true"
+        icon="icon_search"
         label="Search"
         :to="{ name: 'domain-search' }"
       />
       <navigation-link
         label="Help"
+        icon="icon_help"
         :to="{ name: 'help' }"
       />
     </navigation-bar>
