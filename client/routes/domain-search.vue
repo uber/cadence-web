@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { DomainNavigate } from '../components';
+import { DomainNavigate } from '@components';
 
 export default {
   data() {

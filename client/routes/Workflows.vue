@@ -100,8 +100,8 @@
 <script>
 import moment from 'moment';
 import debounce from 'lodash-es/debounce';
-import pagedGrid from '../components/paged-grid';
-import { DateRangePicker } from '../components';
+import pagedGrid from '@components/paged-grid';
+import { DateRangePicker } from '@components';
 
 export default pagedGrid({
   data() {

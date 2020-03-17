@@ -129,7 +129,7 @@ import {
 } from '../../constants';
 import { getErrorMessage } from '../../helpers';
 import { TERMINATE_DEFAULT_ERROR_MESSAGE } from './constants';
-import { BarLoader, DataViewer, DetailList } from '../../components';
+import { BarLoader, DataViewer, DetailList } from '@components';
 
 export default {
   data() {

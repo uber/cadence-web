@@ -65,7 +65,7 @@ import {
   getHistoryTimelineEvents,
   getSummary,
 } from './helpers';
-import { NavigationBar, NavigationLink } from '../../components';
+import { NavigationBar, NavigationLink } from '@components';
 
 export default {
   data() {

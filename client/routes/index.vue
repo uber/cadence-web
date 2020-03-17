@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { NavigationBar, NavigationLink } from '../components';
+import { NavigationBar, NavigationLink } from '@components';
 
 export default {
   components: {

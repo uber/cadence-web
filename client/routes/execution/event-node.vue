@@ -1,7 +1,7 @@
 <script>
 import moment from 'moment';
 import { getKeyValuePairs, shortName } from '../../helpers';
-import { DetailList } from '../../components';
+import { DetailList } from '@components';
 
 const titlesForGroups = {
   ActivityTaskScheduled: n =>

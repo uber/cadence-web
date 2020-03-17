@@ -14,7 +14,7 @@
 
 <script>
 import { getKeyValuePairs, mapDomainDescription } from '../helpers';
-import { DetailList } from '../components';
+import { DetailList } from '@components';
 
 export default {
   data() {
