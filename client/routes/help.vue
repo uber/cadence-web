@@ -40,6 +40,9 @@ export default {
 @require "../styles/definitions"
 
 section.help
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
   margin layout-spacing-large
   @media (min-width 1600px)
     width 1580px
