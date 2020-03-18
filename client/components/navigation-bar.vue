@@ -11,9 +11,9 @@ export default {
 </script>
 
 <style lang="stylus">
-  .navigation-bar {
-    flex-wrap: wrap;
-    background-color: #000;
-    padding: 0 12px;
-  }
+.navigation-bar {
+  flex-wrap: wrap;
+  background-color: #000;
+  padding: 0 12px;
+}
 </style>

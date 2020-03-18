@@ -43,7 +43,7 @@ const routeOpts = {
           path: '/help',
           component: Help,
         },
-      ]
+      ],
     },
     {
       name: 'workflows',

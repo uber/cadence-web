@@ -7,11 +7,7 @@
         label="Search"
         :to="{ name: 'domain-search' }"
       />
-      <navigation-link
-        label="Help"
-        icon="icon_help"
-        :to="{ name: 'help' }"
-      />
+      <navigation-link label="Help" icon="icon_help" :to="{ name: 'help' }" />
     </navigation-bar>
     <router-view />
   </section>
@@ -24,10 +20,8 @@ export default {
   components: {
     'navigation-bar': NavigationBar,
     'navigation-link': NavigationLink,
-  }
+  },
 };
 </script>
 
-<style lang="stylus">
-
-</style>
+<style lang="stylus"></style>
