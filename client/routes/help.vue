@@ -83,26 +83,8 @@
         </a>
       </div>
     </section>
-    <section>
+    <section class="faq">
       <h3>FAQ</h3>
-      <div>
-        <a
-          href=""
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          size limits
-        </a>
-      </div>
-      <div>
-        <a
-          href=""
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          investigation of non-deterministic errors
-        </a>
-      </div>
     </section>
     <section>
       <h3>Contact us</h3>
@@ -174,6 +156,10 @@ section.help {
   @media (min-width max-iframe-width) {
     width: max-iframe-width;
     margin: layout-spacing-large auto;
+  }
+
+  .faq {
+    display: none;
   }
 
   .video-outer-container {
