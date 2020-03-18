@@ -13,8 +13,8 @@
 </template>
 
 <script>
-import { getKeyValuePairs, mapDomainDescription } from '@helpers';
-import { DetailList } from '@components';
+import { getKeyValuePairs, mapDomainDescription } from '~helpers';
+import { DetailList } from '~components';
 
 export default {
   data() {

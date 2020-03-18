@@ -1,8 +1,8 @@
 <script>
 import { version } from '../package.json';
 import logo from './assets/logo.svg';
-import { NotificationBar } from '@components';
-import { NOTIFICATION_TIMEOUT, NOTIFICATION_TYPE_SUCCESS } from '@constants';
+import { NotificationBar } from '~components';
+import { NOTIFICATION_TIMEOUT, NOTIFICATION_TYPE_SUCCESS } from '~constants';
 
 export default {
   components: {
@@ -23,6 +23,23 @@ export default {
     clearTimeout(this.notification.timeout);
   },
   methods: {
+    globalClick(e) {
+      // Code required for mocha tests to run correctly without infinite looping.
+      if (e.target.tagName === 'A') {
+        const href = e.target.getAttribute('href');
+
+        if (
+          href &&
+          href.startsWith('/') &&
+          !e.target.getAttribute('download') &&
+          !e.target.getAttribute('target')
+        ) {
+          e.preventDefault();
+          e.stopPropagation();
+          this.$router.push(href);
+        }
+      }
+    },
     onNotification({ message, type = NOTIFICATION_TYPE_SUCCESS }) {
       this.notification.message = message;
       this.notification.type = type;
@@ -53,7 +70,7 @@ export default {
 </script>
 
 <template>
-  <main>
+  <main @click="globalClick">
     <NotificationBar
       :message="notification.message"
       :onClose="onNotificationClose"

@@ -57,15 +57,15 @@
 </template>
 
 <script>
-import { NOTIFICATION_TYPE_ERROR } from '@constants';
-import { getErrorMessage } from '@helpers';
 import { RETRY_COUNT_MAX, RETRY_TIMEOUT } from './constants';
 import {
   getHistoryEvents,
   getHistoryTimelineEvents,
   getSummary,
 } from './helpers';
-import { NavigationBar, NavigationLink } from '@components';
+import { NOTIFICATION_TYPE_ERROR } from '~constants';
+import { getErrorMessage } from '~helpers';
+import { NavigationBar, NavigationLink } from '~components';
 
 export default {
   data() {

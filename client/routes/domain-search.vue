@@ -5,14 +5,14 @@
 </template>
 
 <script>
-import { DomainNavigate } from '@components';
+import { DomainNavigation } from '~components';
 
 export default {
   data() {
     return {};
   },
   components: {
-    'domain-navigation': DomainNavigate,
+    'domain-navigation': DomainNavigation,
   },
 };
 </script>

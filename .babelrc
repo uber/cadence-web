@@ -1,4 +1,16 @@
 {
+  "plugins": [
+    [
+      "module-resolver",
+      {
+        "alias": {
+          "~constants": "./client/constants",
+          "~components": "./client/components",
+          "~helpers": "./client/helpers"
+        }
+      }
+    ]
+  ],
   "presets": [
     [
       "env",

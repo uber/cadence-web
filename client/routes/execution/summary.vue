@@ -123,13 +123,10 @@
 
 <script>
 import moment from 'moment';
-import {
-  NOTIFICATION_TYPE_ERROR,
-  NOTIFICATION_TYPE_SUCCESS,
-} from '@constants';
-import { getErrorMessage } from '@helpers';
 import { TERMINATE_DEFAULT_ERROR_MESSAGE } from './constants';
-import { BarLoader, DataViewer, DetailList } from '@components';
+import { NOTIFICATION_TYPE_ERROR, NOTIFICATION_TYPE_SUCCESS } from '~constants';
+import { getErrorMessage } from '~helpers';
+import { BarLoader, DataViewer, DetailList } from '~components';
 
 export default {
   data() {

@@ -8,7 +8,7 @@ import qs from 'friendly-querystring';
 import moment from 'moment';
 import promiseFinally from 'promise.prototype.finally';
 
-import { http, injectMomentDurationFormat, jsonTryParse } from '@helpers';
+import copyButton from './components/copy.vue';
 
 import snapscroll from './directives/snapscroll';
 
@@ -24,6 +24,7 @@ import History from './routes/execution/history.vue';
 import StackTrace from './routes/execution/stack-trace.vue';
 import Queries from './routes/execution/queries.vue';
 import TaskList from './routes/task-list.vue';
+import { http, injectMomentDurationFormat, jsonTryParse } from '~helpers';
 
 const routeOpts = {
   mode: 'history',
@@ -196,6 +197,7 @@ Vue.use(vueModal, {
 });
 Vue.use(vueSplit);
 Vue.component('v-select', vueSelect);
+Vue.component('copy', copyButton);
 Vue.directive('snapscroll', snapscroll);
 Vue.config.ignoredElements = ['loader'];
 

@@ -1,5 +1,5 @@
-import { getKeyValuePairs } from '@helpers';
 import { summarizeEvents } from './summarize-events';
+import { getKeyValuePairs } from '~helpers';
 
 const getEventSummary = event => {
   if (!event) {

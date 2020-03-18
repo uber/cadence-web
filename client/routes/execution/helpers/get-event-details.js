@@ -1,4 +1,4 @@
-import { getKeyValuePairs } from '@helpers';
+import { getKeyValuePairs } from '~helpers';
 
 const getEventDetails = event => {
   const { details, eventId, eventType, timeStampDisplay } = event;

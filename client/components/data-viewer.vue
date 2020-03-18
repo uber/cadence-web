@@ -18,7 +18,6 @@
 import 'prismjs';
 import 'prismjs/components/prism-json';
 import Prism from 'vue-prism-component';
-import { Copy } from '@components';
 
 export default {
   name: 'data-viewer',
@@ -82,7 +81,6 @@ export default {
     },
   },
   components: {
-    copy: Copy,
     prism: Prism,
   },
 };

@@ -1,6 +1,6 @@
 import getEventDetails from './get-event-details';
 
-jest.mock('@helpers');
+jest.mock('~helpers');
 
 describe('getEventDetails', () => {
   describe('When passed an event', () => {

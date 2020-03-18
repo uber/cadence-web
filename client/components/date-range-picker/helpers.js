@@ -9,11 +9,6 @@ export const getDateString = date => moment(date).format(DATETIME_FORMAT);
 
 export const getMaxEndDate = now => moment(now).endOf('day');
 
-export const getMinStartDate = (maxDays, now) =>
-  moment(now)
-    .startOf('day')
-    .subtract(maxDays, 'days');
-
 export const getRange = dateRange => {
   if (!dateRange) {
     return [];
@@ -63,8 +58,12 @@ export const getRangeDisplayText = dateRange => {
   return `Last ${parsedCount} ${unit}`;
 };
 
-export const getShortcuts = (maxDays, onClickHandler) => {
+export const getShortcuts = (maxDays, minStartDate) => {
   let options = RANGE_OPTIONS;
+
+  if (!minStartDate) {
+    return options;
+  }
 
   if (maxDays && maxDays < 90) {
     options = options.filter(o => o.daysAgo < maxDays);
@@ -80,11 +79,6 @@ export const getShortcuts = (maxDays, onClickHandler) => {
     options.sort((a, b) => a.daysAgo - b.daysAgo);
   }
 
-  options = options.map(option => ({
-    ...option,
-    onClick: () => onClickHandler(option),
-  }));
-
   return options;
 };
 
@@ -92,9 +86,10 @@ export const getTimePanelLabel = showTimePanel =>
   showTimePanel ? 'Select date' : 'Select time';
 
 export const isDateValid = (date, minStartDate, maxEndDate) =>
-  date._isValid &&
-  date.isSameOrAfter(minStartDate) &&
-  date.isSameOrBefore(maxEndDate);
+  (date.isValid &&
+    !date.isAfter(maxEndDate) &&
+    !(minStartDate && date.isBefore(minStartDate))) ||
+  false;
 
 export const isDayDisabled = minStartDate => date => {
   const momentDate = moment(date);

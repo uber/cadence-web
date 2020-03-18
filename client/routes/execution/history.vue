@@ -270,7 +270,7 @@ import debounce from 'lodash-es/debounce';
 import omit from 'lodash-es/omit';
 import timeline from './timeline.vue';
 import eventDetails from './event-details.vue';
-import { DetailList } from '@components';
+import { DetailList } from '~components';
 
 export default {
   name: 'history',

@@ -1,5 +1,5 @@
 <script>
-import { DetailList } from '@components';
+import { DetailList } from '~components';
 
 export default {
   name: 'event-details',

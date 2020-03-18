@@ -1,6 +1,6 @@
 <script>
-import { preKeys } from '@constants';
-import DataViewer from './data-viewer';
+import { DataViewer } from '~components';
+import { preKeys } from '~constants';
 
 export default {
   name: 'detail-list',
