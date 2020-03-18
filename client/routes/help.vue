@@ -83,9 +83,7 @@
         </a>
       </div>
     </section>
-    <section class="faq">
-      <h3>FAQ</h3>
-    </section>
+    <slot />
     <section>
       <h3>Contact us</h3>
       <p>Our office hours are 9am - 5pm PDT</p>
@@ -156,10 +154,6 @@ section.help {
   @media (min-width max-iframe-width) {
     width: max-iframe-width;
     margin: layout-spacing-large auto;
-  }
-
-  .faq {
-    display: none;
   }
 
   .video-outer-container {

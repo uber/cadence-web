@@ -36,12 +36,16 @@ const routeOpts = {
         {
           name: 'domain-search',
           path: '/',
-          component: DomainSearch,
+          components: {
+            'domain-search': DomainSearch
+          },
         },
         {
           name: 'help',
           path: '/help',
-          component: Help,
+          components: {
+            help: Help
+          },
         },
       ],
     },

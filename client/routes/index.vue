@@ -9,7 +9,8 @@
       />
       <navigation-link label="Help" icon="icon_help" :to="{ name: 'help' }" />
     </navigation-bar>
-    <router-view />
+    <router-view name="domain-search" />
+    <router-view name="help" />
   </section>
 </template>
 
