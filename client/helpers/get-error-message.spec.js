@@ -1,5 +1,5 @@
 import getErrorMessage from './get-error-message';
-import { NOTIFICATION_TYPE_ERROR_MESSAGE_DEFAULT } from '@constants';
+import { NOTIFICATION_TYPE_ERROR_MESSAGE_DEFAULT } from '~constants';
 
 describe('getErrorMessage', () => {
   describe('When passing error.json.message', () => {

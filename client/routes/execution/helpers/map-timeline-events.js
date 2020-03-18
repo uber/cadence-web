@@ -1,6 +1,6 @@
 import moment from 'moment';
 import { summarizeEvents } from './summarize-events';
-import { shortName } from '@helpers';
+import { shortName } from '~helpers';
 
 export default function(historyEvents) {
   const events = [];

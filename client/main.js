@@ -22,7 +22,7 @@ import History from './routes/execution/history.vue';
 import StackTrace from './routes/execution/stack-trace.vue';
 import Queries from './routes/execution/queries.vue';
 import TaskList from './routes/task-list.vue';
-import { http, injectMomentDurationFormat, jsonTryParse } from '@helpers';
+import { http, injectMomentDurationFormat, jsonTryParse } from '~helpers';
 
 const routeOpts = {
   mode: 'history',

@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { DomainNavigation } from '@components';
+import { DomainNavigation } from '~components';
 
 export default {
   data() {

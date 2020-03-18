@@ -59,8 +59,8 @@ import {
   getHistoryTimelineEvents,
   getSummary,
 } from './helpers';
-import { NOTIFICATION_TYPE_ERROR } from '@constants';
-import { getErrorMessage } from '@helpers';
+import { NOTIFICATION_TYPE_ERROR } from '~constants';
+import { getErrorMessage } from '~helpers';
 
 export default {
   data() {
