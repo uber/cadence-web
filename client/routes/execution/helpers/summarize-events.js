@@ -1,7 +1,7 @@
 import moment from 'moment';
-import { shortName } from '../../../helpers';
 import parentWorkflowLink from './parent-workflow-link';
 import workflowLink from './workflow-link';
+import { shortName } from '~helpers';
 
 export const summarizeEvents = {
   ActivityTaskCancelRequested: d => ({ ID: d.activityId }),

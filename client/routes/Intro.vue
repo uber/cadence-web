@@ -30,14 +30,14 @@
 </template>
 
 <script>
-import domainNav from '../components/domain-navigate.vue';
+import { DomainNavigation } from '~components';
 
 export default {
   data() {
     return {};
   },
   components: {
-    'domain-navigation': domainNav,
+    'domain-navigation': DomainNavigation,
   },
 };
 </script>

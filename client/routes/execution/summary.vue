@@ -114,7 +114,7 @@
       <div class="pending-activities" v-if="workflow.pendingActivities">
         <dt>Pending Activities</dt>
         <dd v-for="pa in workflow.pendingActivities" :key="pa.activityID">
-          <details-list :item="pa" />
+          <detail-list :item="pa" />
         </dd>
       </div>
     </dl>
@@ -123,12 +123,10 @@
 
 <script>
 import moment from 'moment';
-import {
-  NOTIFICATION_TYPE_ERROR,
-  NOTIFICATION_TYPE_SUCCESS,
-} from '../../constants';
-import { getErrorMessage } from '../../helpers';
 import { TERMINATE_DEFAULT_ERROR_MESSAGE } from './constants';
+import { NOTIFICATION_TYPE_ERROR, NOTIFICATION_TYPE_SUCCESS } from '~constants';
+import { getErrorMessage } from '~helpers';
+import { BarLoader, DataViewer, DetailList } from '~components';
 
 export default {
   data() {
@@ -147,6 +145,11 @@ export default {
     'workflow',
     'workflowId',
   ],
+  components: {
+    'bar-loader': BarLoader,
+    'data-viewer': DataViewer,
+    'detail-list': DetailList,
+  },
   computed: {
     workflowCloseTime() {
       return this.workflow.workflowExecutionInfo.closeTime

@@ -1,8 +1,5 @@
-import {
-  MAXIMUM_JSON_CHARACTER_LIMIT,
-  MAXIMUM_JSON_MESSAGE,
-} from '../constants';
 import getStringElipsis from './get-string-elipsis';
+import { MAXIMUM_JSON_CHARACTER_LIMIT, MAXIMUM_JSON_MESSAGE } from '~constants';
 
 describe('getStringElipsis', () => {
   describe('when passed a string that has a length less than MAXIMUM_JSON_CHARACTER_LIMIT', () => {
