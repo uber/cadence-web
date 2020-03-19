@@ -1,8 +1,12 @@
 <template>
   <section class="help">
-    <section>
+    <section id="getting-started">
       <h1>Welcome to Cadence!</h1>
-      <h3>Getting started</h3>
+      <h3>
+        <a href="#getting-started">
+          Getting started
+        </a>
+      </h3>
       <p>
         If you are new to Cadence, here's some resources to get you started!
       </p>
@@ -73,8 +77,12 @@
       </div>
 
     </section>
-    <section>
-      <h3>Latest release notes</h3>
+    <section id="release-notes">
+      <h3>
+        <a href="#release-notes">
+          Latest release notes
+        </a>
+      </h3>
       <div>
         <a
           href="https://github.com/uber/cadence/releases/latest"
@@ -96,8 +104,12 @@
       <slot name="release-notes" />
     </section>
     <slot name="other" />
-    <section>
-      <h3>Contact us</h3>
+    <section id="contact-us">
+      <h3>
+        <a href="#contact-us">
+          Contact us
+        </a>
+      </h3>
       <p>Our office hours are 9am - 5pm PDT</p>
       <div v-if="!hideStackOverflow">
         <a
@@ -188,6 +200,11 @@ section.help {
 
   p, h3 {
     margin: 1em 0 0.5em;
+  }
+
+  h3 > a {
+    color: #494949;
+    line-height: 24px;
   }
 
   a {
