@@ -38,6 +38,18 @@ describe('Help', () => {
       ]);
   });
 
+  it('should provide commands under common CLI commands', async function test() {
+    const [helpEl] = await helpTest(this.test);
+    const linksEl = await helpEl.waitUntilExists('section#cli');
+
+    linksEl
+      .textNodes('pre')
+      .should.deep.equal([
+        "cadence workflow 1",
+        "cadence workflow 2",
+      ]);
+  });
+
   it('should provide links to contact cadence team', async function test() {
     const [helpEl] = await helpTest(this.test);
     const linksEl = await helpEl.waitUntilExists('section#contact-us');

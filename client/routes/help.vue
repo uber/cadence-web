@@ -79,7 +79,7 @@
     </section>
     <section id="cli">
       <h3>
-        <a href="#release-notes">
+        <a href="#cli">
           Common CLI commands
         </a>
       </h3>
