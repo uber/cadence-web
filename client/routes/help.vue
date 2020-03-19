@@ -193,6 +193,11 @@ section.help {
   a {
     line-height: 2em;
 
+    &:after {
+      content: '';
+      background: none;
+    }
+
     &:nth-child(2n) {
       background: none;
     }
