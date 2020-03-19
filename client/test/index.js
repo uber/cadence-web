@@ -134,7 +134,8 @@ require('./scenario');
 
 mocha.checkLeaks();
 
-require('./intro.test');
+require('./domain-search.test');
+require('./help.test');
 require('./workflows.test');
 require('./execution.test');
 require('./domain-config.test');

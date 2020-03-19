@@ -1,18 +1,4 @@
-describe('Intro', () => {
-  it('should provide links to learn about cadence', async function test() {
-    const testEl = new Scenario(this.test).render();
-    const linksEl = await testEl.waitUntilExists('section.intro .links');
-
-    linksEl.should.have.descendant('h1').with.text('Welcome to Cadence!');
-    linksEl
-      .textNodes('a')
-      .should.deep.equal([
-        'Introductory to Cadence Video',
-        'Code Samples',
-        'Source code on GitHub',
-      ]);
-  });
-
+describe('Domain search', () => {
   it('should show a header bar without a breadcrumb or domain changer', async function test() {
     const testEl = new Scenario(this.test).render();
     const headerBar = await testEl.waitUntilExists('header.top-bar');
