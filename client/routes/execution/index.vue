@@ -2,22 +2,26 @@
   <section :class="{ execution: true, loading: wfLoading }">
     <navigation-bar>
       <navigation-link
+        id="nav-link-summary"
         icon="icon_receipt"
         label="Summary"
         :to="{ name: 'execution/summary' }"
       />
       <navigation-link
+        id="nav-link-history"
         icon="icon_trip-history"
         label="History"
         :to="{ name: 'execution/history' }"
       />
       <navigation-link
+        id="nav-link-stack-trace"
         icon="icon_trips"
         label="Stack Trace"
         :to="{ name: 'execution/stack-trace' }"
         v-show="isWorkflowRunning"
       />
       <navigation-link
+        id="nav-link-queries"
         icon="icon_lost"
         label="Queries"
         :to="{ name: 'execution/queries' }"

@@ -1,5 +1,11 @@
 <template>
-  <router-link class="navigation-link" :class="icon" :exact="exact" :to="to">
+  <router-link
+    class="navigation-link"
+    :class="icon"
+    :exact="exact"
+    :id="id"
+    :to="to"
+  >
     {{ label }}
   </router-link>
 </template>
@@ -7,7 +13,7 @@
 <script>
 export default {
   name: 'navigation-link',
-  props: ['exact', 'icon', 'label', 'to'],
+  props: ['exact', 'icon', 'id', 'label', 'to'],
 };
 </script>
 
