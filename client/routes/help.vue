@@ -77,6 +77,18 @@
       </div>
 
     </section>
+    <section id="cli">
+      <h3>
+        <a href="#release-notes">
+          Common CLI commands
+        </a>
+      </h3>
+      <p>Here are a some useful common CLI commands to get started with Cadence.</p>
+      <label for="cli-command-1">To do common task 1</label>
+      <pre id="cli-command-1">cadence workflow 1</pre>
+      <label for="cli-command-2">To do common task 2</label>
+      <pre id="cli-command-2">cadence workflow 2</pre>
+    </section>
     <section id="release-notes">
       <h3>
         <a href="#release-notes">
@@ -194,19 +206,6 @@ section.help {
     }
   }
 
-  h1 {
-    margin-bottom: base-font-size*2;
-  }
-
-  p, h3 {
-    margin: 1em 0 0.5em;
-  }
-
-  h3 > a {
-    color: #494949;
-    line-height: 24px;
-  }
-
   a {
     line-height: 2em;
 
@@ -218,6 +217,33 @@ section.help {
     &:nth-child(2n) {
       background: none;
     }
+  }
+
+  h1 {
+    margin-bottom: base-font-size*2;
+  }
+
+  h3 {
+    margin: 1em 0 0.5em;
+
+    > a {
+      color: #494949;
+      line-height: 24px;
+    }
+  }
+
+  label {
+    display: block;
+    margin: 20px 0 10px;
+  }
+
+  p {
+    margin: 1em 0 0.5em;
+  }
+
+  pre {
+    max-width: 250px;
+    margin-bottom: 5px;
   }
 }
 
