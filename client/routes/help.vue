@@ -39,7 +39,7 @@
         </div>
       </div>
       <slot name="getting-started" />
-      <div>
+      <div v-if="!hideDocs">
         <a
           href="https://cadenceworkflow.io/docs"
           target="_blank"
@@ -145,7 +145,7 @@
 
 <script>
 export default {
-  props: ['hideSlack', 'hideStackOverflow'],
+  props: ['hideDocs', 'hideSlack', 'hideStackOverflow'],
   data() {
     return {};
   },
