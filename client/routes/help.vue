@@ -90,7 +90,7 @@
     <section>
       <h3>Contact us</h3>
       <p>Our office hours are 9am - 5pm PDT</p>
-      <div>
+      <div v-if="!hideStackOverflow">
         <a
           href="https://stackoverflow.com/questions/tagged/cadence-workflow"
           target="_blank"
@@ -124,7 +124,7 @@
 
 <script>
 export default {
-  props: ['hideSlack'],
+  props: ['hideSlack', 'hideStackOverflow'],
   data() {
     return {};
   },
