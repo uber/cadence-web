@@ -62,6 +62,7 @@
         </a>
       </div>
     </section>
+    <slot />
     <section>
       <h3>Latest release notes</h3>
       <div>
@@ -83,7 +84,6 @@
         </a>
       </div>
     </section>
-    <slot />
     <section>
       <h3>Contact us</h3>
       <p>Our office hours are 9am - 5pm PDT</p>
