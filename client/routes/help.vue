@@ -59,7 +59,16 @@
           target="_blank"
           rel="noopener noreferrer"
         >
-          Source code on GitHub
+          Cadence source code on GitHub
+        </a>
+      </div>
+      <div>
+        <a
+          href="https://github.com/uber/cadence-web"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Cadence UI source code on GitHub
         </a>
       </div>
 
