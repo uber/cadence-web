@@ -61,8 +61,8 @@
           Source code on GitHub
         </a>
       </div>
+      <slot name="getting-started" />
     </section>
-    <slot />
     <section>
       <h3>Latest release notes</h3>
       <div>
@@ -83,7 +83,9 @@
           Cadence UI
         </a>
       </div>
+      <slot name="release-notes" />
     </section>
+    <slot name="other" />
     <section>
       <h3>Contact us</h3>
       <p>Our office hours are 9am - 5pm PDT</p>
@@ -114,15 +116,7 @@
           Join our slack channel
         </a>
       </div>
-      <div>
-        <a
-          href="mailto:cadence-users-group@uber.com"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Email us
-        </a>
-      </div>
+      <slot name="contact-us" />
     </section>
   </section>
 </template>
