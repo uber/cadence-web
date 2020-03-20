@@ -45,8 +45,12 @@ describe('Help', () => {
     linksEl
       .textNodes('pre')
       .should.deep.equal([
-        "cadence workflow 1",
-        "cadence workflow 2",
+        "cadence --domain {domain-name} domain register --global_domain false",
+        "cadence --domain {domain-name} domain describe",
+        "cadence --domain {domain-name} workflow run --tl {task-list-name} --wt {workflow-type-name} --et 60 -i '\"{input-string}\"'",
+        "cadence --domain {domain-name} workflow show -w {workflow-id} -r {run-id}",
+        "cadence --domain {domain-name} workflow list",
+        "cadence --domain {domain-name} workflow list --open",
       ]);
   });
 

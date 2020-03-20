@@ -84,10 +84,25 @@
         </a>
       </h3>
       <p>Here are a some useful common CLI commands to get started with Cadence.</p>
-      <label for="cli-command-1">To do common task 1</label>
-      <pre id="cli-command-1">cadence workflow 1</pre>
-      <label for="cli-command-2">To do common task 2</label>
-      <pre id="cli-command-2">cadence workflow 2</pre>
+
+      <label for="cli-command-domain-register">Register a domain (local only)</label>
+      <pre id="cli-command-domain-register">cadence --domain {domain-name} domain register --global_domain false</pre>
+
+      <label for="cli-command-domain-describe">List domain settings</label>
+      <pre id="cli-command-domain-describe">cadence --domain {domain-name} domain describe</pre>
+
+      <label for="cli-command-workflow-run">Run a workflow</label>
+      <pre id="cli-command-workflow-run">cadence --domain {domain-name} workflow run --tl {task-list-name} --wt {workflow-type-name} --et 60 -i '"{input-string}"'</pre>
+
+      <label for="cli-command-workflow-show">See a workflow history</label>
+      <pre id="cli-command-workflow-show">cadence --domain {domain-name} workflow show -w {workflow-id} -r {run-id}</pre>
+
+      <label for="cli-command-workflow-list">List closed workflows</label>
+      <pre id="cli-command-workflow-list">cadence --domain {domain-name} workflow list</pre>
+
+      <label for="cli-command-workflow-list-open">List open workflows</label>
+      <pre id="cli-command-workflow-list-open">cadence --domain {domain-name} workflow list --open</pre>
+
     </section>
     <section id="release-notes">
       <h3>
@@ -242,7 +257,7 @@ section.help {
   }
 
   pre {
-    max-width: 250px;
+    display: inline-block;
     margin-bottom: 5px;
   }
 }
