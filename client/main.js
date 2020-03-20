@@ -50,8 +50,9 @@ const routeOpts = {
       ],
     },
     {
-      name: 'workflows',
-      path: '/domain/:domain/workflows',
+      name: 'workflow-list',
+      path: '/domain/:domain/workflow',
+      alias: '/domain/:domain/workflows',
       component: WorkflowList,
     },
     {
@@ -64,7 +65,8 @@ const routeOpts = {
     },
     {
       name: 'workflow',
-      path: '/domain/:domain/workflows/:workflowId/:runId',
+      path: '/domain/:domain/workflow/:workflowId/:runId',
+      alias: '/domain/:domain/workflows/:workflowId/:runId',
       component: WorkflowTabs,
       props: ({ params }) => ({
         domain: params.domain,
@@ -74,7 +76,8 @@ const routeOpts = {
       children: [
         {
           name: 'workflow/summary',
-          path: '/domain/:domain/workflows/:workflowId/:runId/summary',
+          path: '/domain/:domain/workflow/:workflowId/:runId/summary',
+          alias: '/domain/:domain/workflows/:workflowId/:runId/summary',
           components: {
             summary: WorkflowSummary,
           },
@@ -87,7 +90,8 @@ const routeOpts = {
         },
         {
           name: 'workflow/history',
-          path: '/domain/:domain/workflows/:workflowId/:runId/history',
+          path: '/domain/:domain/workflow/:workflowId/:runId/history',
+          alias: '/domain/:domain/workflows/:workflowId/:runId/history',
           components: {
             history: History,
           },
@@ -104,14 +108,16 @@ const routeOpts = {
         },
         {
           name: 'workflow/stack-trace',
-          path: '/domain/:domain/workflows/:workflowId/:runId/stack-trace',
+          path: '/domain/:domain/workflow/:workflowId/:runId/stack-trace',
+          alias: '/domain/:domain/workflows/:workflowId/:runId/stack-trace',
           components: {
             stacktrace: StackTrace,
           },
         },
         {
           name: 'workflow/queries',
-          path: '/domain/:domain/workflows/:workflowId/:runId/queries',
+          path: '/domain/:domain/workflow/:workflowId/:runId/queries',
+          alias: '/domain/:domain/workflows/:workflowId/:runId/queries',
           components: {
             queries: Queries,
           },
@@ -128,7 +134,7 @@ const routeOpts = {
       redirect: ({ params, query }) => {
         if (!query.runId || !query.workflowId) {
           return {
-            name: 'workflows',
+            name: 'workflow-list',
             params,
           };
         }

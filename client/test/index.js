@@ -136,7 +136,7 @@ mocha.checkLeaks();
 
 require('./domain-search.test');
 require('./help.test');
-require('./workflows.test');
+require('./workflow-list.test');
 require('./workflow.test');
 require('./domain-config.test');
 require('./task-list.test');

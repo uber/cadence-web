@@ -99,7 +99,7 @@ export default {
     changeDomain() {
       if (this.validation === 'valid') {
         this.$router.push({
-          path: `/domain/${this.d}/workflows`,
+          path: `/domain/${this.d}/workflow`,
           query: omit(
             this.$router.currentRoute.query,
             'workflowId',
@@ -112,7 +112,7 @@ export default {
       }
     },
     domainLink(d) {
-      return `/domain/${d}/workflows?${stringify(
+      return `/domain/${d}/workflow?${stringify(
         this.$router.currentRoute.query
       )}`;
     },

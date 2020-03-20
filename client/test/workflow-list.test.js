@@ -1,16 +1,16 @@
 import moment from 'moment';
 import fixtures from './fixtures';
 
-describe('Workflows', () => {
+describe('Workflow list', () => {
   async function workflowsTest(mochaTest, initialWorkflows, query, domainDesc) {
     const [testEl, scenario] = new Scenario(mochaTest)
       .withDomain('ci-test')
-      .startingAt('/domain/ci-test/workflows')
+      .startingAt('/domain/ci-test/workflow')
       .withWorkflows('open', query, initialWorkflows)
       .withDomainDescription('ci-test', domainDesc)
       .go();
 
-    const workflows = await testEl.waitUntilExists('section.workflows');
+    const workflows = await testEl.waitUntilExists('section.workflow-list');
 
     return [workflows, scenario];
   }
@@ -32,7 +32,7 @@ describe('Workflows', () => {
     header.should.have
       .descendant('a.workflows')
       .and.have.class('router-link-active')
-      .and.have.attribute('href', '/domain/ci-test/workflows');
+      .and.have.attribute('href', '/domain/ci-test/workflow');
 
     header.should.have
       .descendant('a.config')
@@ -76,8 +76,8 @@ describe('Workflows', () => {
     resultsEl
       .attrValues('tbody td:nth-child(2) a', 'href')
       .should.deep.equal([
-        '/domain/ci-test/workflows/github.com%2Fuber%2Fcadence-web%2Femail-daily-summaries-2/ef2c889e-e709-4d50-99ee-3748dfa0a101/summary',
-        '/domain/ci-test/workflows/github.com%2Fuber%2Fcadence-web%2Fexample-1/db8da3c0-b7d3-48b7-a9b3-b6f566e58207/summary',
+        '/domain/ci-test/workflow/github.com%2Fuber%2Fcadence-web%2Femail-daily-summaries-2/ef2c889e-e709-4d50-99ee-3748dfa0a101/summary',
+        '/domain/ci-test/workflow/github.com%2Fuber%2Fcadence-web%2Fexample-1/db8da3c0-b7d3-48b7-a9b3-b6f566e58207/summary',
       ]);
     resultsEl
       .textNodes('tbody td:nth-child(3)')
@@ -148,7 +148,7 @@ describe('Workflows', () => {
 
     await retry(() =>
       testEl
-        .querySelectorAll('section.workflows section.results tbody tr')
+        .querySelectorAll('section.workflow-list section.results tbody tr')
         .should.have.length(1)
     );
     await Promise.delay(50);
@@ -270,7 +270,7 @@ describe('Workflows', () => {
       .withDomainDescription('ci-test')
       .go();
 
-    const workflowsEl = await testEl.waitUntilExists('section.workflows');
+    const workflowsEl = await testEl.waitUntilExists('section.workflow-list');
 
     workflowsEl
       .querySelector('header.filters input[name="workflowName"]')

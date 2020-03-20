@@ -1,5 +1,5 @@
 <template>
-  <section class="workflows" :class="{ loading }">
+  <section class="workflow-list" :class="{ loading }">
     <header class="filters">
       <template v-if="filterMode === 'advanced'">
         <div class="field query-string">
@@ -422,7 +422,7 @@ export default pagedGrid({
 <style lang="stylus">
 @require "../../styles/definitions.styl"
 
-section.workflows
+section.workflow-list
   .filters
     flex-wrap wrap
     > .field

@@ -93,13 +93,13 @@ describe('Domain search', () => {
       .withDomainDescription('ci-tests');
     domainInput.trigger('keydown', { code: 13, keyCode: 13, key: 'Enter' });
 
-    await testEl.waitUntilExists('section.workflows');
+    await testEl.waitUntilExists('section.workflow-list');
     const headerBar = testEl.querySelector('header.top-bar');
 
     headerBar.should.have
       .descendant('div.domain')
       .that.contains.text('ci-test');
-    scenario.location.should.contain('/domain/ci-tests/workflows');
+    scenario.location.should.contain('/domain/ci-tests/workflow');
     localStorage.getItem('recent-domains').should.equal('["ci-tests"]');
   });
 
@@ -129,13 +129,13 @@ describe('Domain search', () => {
       .withWorkflows('open');
     changeDomain.trigger('click');
 
-    await testEl.waitUntilExists('section.workflows');
+    await testEl.waitUntilExists('section.workflow-list');
     const headerBar = testEl.querySelector('header.top-bar');
 
     headerBar.should.have
       .descendant('div.domain')
       .that.contains.text('ci-test');
-    scenario.location.should.contain('/domain/ci-tests/workflows');
+    scenario.location.should.contain('/domain/ci-tests/workflow');
     localStorage.getItem('recent-domains').should.equal('["ci-tests"]');
 
     await Promise.delay(100);
@@ -162,7 +162,7 @@ describe('Domain search', () => {
       .withDomainDescription('ci-tests')
       .withWorkflows('open');
 
-    await testEl.waitUntilExists('section.workflows');
+    await testEl.waitUntilExists('section.workflow-list');
     localStorage.getItem('recent-domains').should.equal('["ci-tests","demo"]');
   });
 
