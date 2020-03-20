@@ -25,7 +25,7 @@ export default {
 </script>
 
 <style lang="stylus">
-@require "../../styles/definitions.styl"
+@require "../../../styles/definitions.styl"
 
 .event-node
   font-size 16px

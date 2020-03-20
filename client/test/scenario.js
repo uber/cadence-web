@@ -187,7 +187,7 @@ Scenario.prototype.execApiBase = function execApiBase(workflowId, runId) {
   )}/${encodeURIComponent(runId || this.runId)}`;
 };
 
-Scenario.prototype.withExecution = function withExecution(
+Scenario.prototype.withWorkflow = function withWorkflow(
   workflowId,
   runId,
   description

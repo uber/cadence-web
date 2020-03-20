@@ -1,30 +1,30 @@
 <template>
-  <section :class="{ execution: true, loading: wfLoading }">
+  <section class="workflow" :class="{ loading: wfLoading }">
     <navigation-bar>
       <navigation-link
         id="nav-link-summary"
         icon="icon_receipt"
         label="Summary"
-        :to="{ name: 'execution/summary' }"
+        :to="{ name: 'workflow/summary' }"
       />
       <navigation-link
         id="nav-link-history"
         icon="icon_trip-history"
         label="History"
-        :to="{ name: 'execution/history' }"
+        :to="{ name: 'workflow/history' }"
       />
       <navigation-link
         id="nav-link-stack-trace"
         icon="icon_trips"
         label="Stack Trace"
-        :to="{ name: 'execution/stack-trace' }"
+        :to="{ name: 'workflow/stack-trace' }"
         v-show="isWorkflowRunning"
       />
       <navigation-link
         id="nav-link-queries"
         icon="icon_lost"
         label="Queries"
-        :to="{ name: 'execution/queries' }"
+        :to="{ name: 'workflow/queries' }"
         v-show="isWorkflowRunning"
       />
     </navigation-bar>
@@ -301,7 +301,7 @@ export default {
 <style lang="stylus">
 @require "../../styles/definitions.styl"
 
-section.execution
+section.workflow
   & > nav
     flex-wrap wrap
     background-color black

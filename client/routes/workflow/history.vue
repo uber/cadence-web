@@ -268,8 +268,8 @@ import {
 } from 'vue-virtual-scroller';
 import debounce from 'lodash-es/debounce';
 import omit from 'lodash-es/omit';
-import timeline from './timeline.vue';
-import eventDetails from './event-details.vue';
+import Timeline from './components/timeline.vue';
+import EventDetails from './components/event-details.vue';
 import { DetailList } from '~components';
 
 export default {
@@ -523,10 +523,10 @@ export default {
     'detail-list': DetailList,
     DynamicScroller,
     DynamicScrollerItem,
-    'event-details': eventDetails,
+    'event-details': EventDetails,
     prism: Prism,
     RecycleScroller,
-    timeline,
+    'timeline': Timeline,
   },
 };
 </script>

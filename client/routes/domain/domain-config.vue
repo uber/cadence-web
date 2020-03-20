@@ -50,7 +50,7 @@ export default {
 </script>
 
 <style lang="stylus">
-@require "../styles/definitions.styl"
+@require "../../styles/definitions.styl"
 
 section.domain-config
   .foobar

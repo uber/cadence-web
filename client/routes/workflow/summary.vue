@@ -1,5 +1,5 @@
 <template>
-  <section class="execution-summary">
+  <section class="workflow-summary">
     <aside class="actions">
       <a
         href=""
@@ -195,7 +195,7 @@ export default {
 <style lang="stylus">
 @require "../../styles/definitions.styl"
 
-section.execution-summary
+section.workflow-summary
   overflow auto
   padding layout-spacing-small
 

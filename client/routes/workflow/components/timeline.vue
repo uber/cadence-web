@@ -148,8 +148,8 @@ export default {
 </script>
 
 <style lang="stylus">
-@require "../../styles/definitions.styl"
-@require "../../styles/vis.styl"
+@require "../../../styles/definitions.styl"
+@require "../../../styles/vis.styl"
 
 div.timeline
   padding 0 10px

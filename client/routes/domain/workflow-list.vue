@@ -1,5 +1,5 @@
 <template>
-  <section :class="{ workflows: true, loading }">
+  <section class="workflows" :class="{ loading }">
     <header class="filters">
       <template v-if="filterMode === 'advanced'">
         <div class="field query-string">
@@ -86,7 +86,7 @@
             <td>
               <router-link
                 :to="{
-                  name: 'execution/summary',
+                  name: 'workflow/summary',
                   params: { runId: wf.runId, workflowId: wf.workflowId },
                 }"
                 >{{ wf.runId }}</router-link
@@ -420,7 +420,7 @@ export default pagedGrid({
 </script>
 
 <style lang="stylus">
-@require "../styles/definitions.styl"
+@require "../../styles/definitions.styl"
 
 section.workflows
   .filters

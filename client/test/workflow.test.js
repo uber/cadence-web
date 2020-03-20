@@ -1,8 +1,8 @@
 import moment from 'moment';
 import fixtures from './fixtures';
 
-describe('Execution', () => {
-  function executionTest(mochaTest, options) {
+describe('Workflow', () => {
+  function workflowTest(mochaTest, options) {
     const extendedOptions = {
       workflowId: 'email-daily-summaries',
       runId: 'emailRun1',
@@ -13,7 +13,7 @@ describe('Execution', () => {
     return [
       new Scenario(mochaTest)
         .withDomain('ci-test')
-        .withExecution(
+        .withWorkflow(
           extendedOptions.workflowId,
           extendedOptions.runId,
           extendedOptions.execution
@@ -30,7 +30,7 @@ describe('Execution', () => {
   }
 
   async function summaryTest(mochaTest, o) {
-    const [scenario, opts] = executionTest(mochaTest, {
+    const [scenario, opts] = workflowTest(mochaTest, {
       view: 'summary',
       ...o,
     });
@@ -38,7 +38,7 @@ describe('Execution', () => {
     scenario.withFullHistory(opts.events);
     const summaryEl = await scenario
       .render(opts.attach)
-      .waitUntilExists('section.execution section.execution-summary dl');
+      .waitUntilExists('section.workflow section.workflow-summary dl');
 
     return [summaryEl.parentElement, scenario];
   }
@@ -395,7 +395,7 @@ describe('Execution', () => {
 
   describe('History', () => {
     async function historyTest(mochaTest, o) {
-      const [scenario, opts] = executionTest(mochaTest, {
+      const [scenario, opts] = workflowTest(mochaTest, {
         view: 'history',
         ...o,
       });
@@ -1056,7 +1056,7 @@ describe('Execution', () => {
       const [, scenario] = await summaryTest(this.test);
 
       scenario.vm.$el
-        .attrValues('section.execution > nav a', 'href')
+        .attrValues('section.workflow > nav a', 'href')
         .should.deep.equal([
           '/domain/ci-test/workflows/email-daily-summaries/emailRun1/summary',
           '/domain/ci-test/workflows/email-daily-summaries/emailRun1/history',
@@ -1064,15 +1064,15 @@ describe('Execution', () => {
           '/domain/ci-test/workflows/email-daily-summaries/emailRun1/queries',
         ]);
       scenario.vm.$el
-        .querySelector('section.execution > nav a#nav-link-stack-trace')
+        .querySelector('section.workflow > nav a#nav-link-stack-trace')
         .should.not.have.property('display', 'none');
       scenario.vm.$el
-        .querySelector('section.execution > nav a#nav-link-queries')
+        .querySelector('section.workflow > nav a#nav-link-queries')
         .should.not.have.property('display', 'none');
     });
 
     it('should show the current stack trace', async function test() {
-      const [scenario] = executionTest(this.test, {
+      const [scenario] = workflowTest(this.test, {
         view: 'stack-trace',
       });
 
@@ -1097,7 +1097,7 @@ describe('Execution', () => {
     });
 
     it('should allow the user to refresh the stack trace', async function test() {
-      const [scenario] = executionTest(this.test, {
+      const [scenario] = workflowTest(this.test, {
         view: 'stack-trace',
       });
       let called = 0;
@@ -1145,13 +1145,13 @@ describe('Execution', () => {
 
   describe('Queries', () => {
     async function queriesTest(mochaTest, queries) {
-      const [scenario] = executionTest(mochaTest, { view: 'queries' });
+      const [scenario] = workflowTest(mochaTest, { view: 'queries' });
 
       scenario.withHistory(fixtures.history.emailRun1).withQueries(queries);
 
       const queriesEl = await scenario
         .render()
-        .waitUntilExists('section.execution section.queries');
+        .waitUntilExists('section.workflow section.queries');
 
       return [queriesEl, scenario];
     }
@@ -1230,7 +1230,7 @@ describe('Execution', () => {
       });
 
       scenario.vm.$el
-        .attrValues('section.execution > nav a', 'href')
+        .attrValues('section.workflow > nav a', 'href')
         .should.deep.equal([
           '/domain/ci-test/workflows/email-daily-summaries/emailRun1/summary',
           '/domain/ci-test/workflows/email-daily-summaries/emailRun1/history',
@@ -1238,12 +1238,12 @@ describe('Execution', () => {
           '/domain/ci-test/workflows/email-daily-summaries/emailRun1/queries',
         ]);
       scenario.vm.$el
-        .querySelector('section.execution > nav a#nav-link-summary')
+        .querySelector('section.workflow > nav a#nav-link-summary')
         .should.have.class('router-link-active');
       await retry(() => {
-        scenario.vm.$el.querySelector('section.execution > nav a#nav-link-stack-trace')
+        scenario.vm.$el.querySelector('section.workflow > nav a#nav-link-stack-trace')
           .should.not.be.displayed;
-        scenario.vm.$el.querySelector('section.execution > nav a#nav-link-queries')
+        scenario.vm.$el.querySelector('section.workflow > nav a#nav-link-queries')
           .should.not.be.displayed;
       });
     });

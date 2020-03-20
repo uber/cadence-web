@@ -16,14 +16,14 @@ import App from './App.vue';
 import Root from './routes/index.vue';
 import Help from './routes/help.vue';
 import DomainSearch from './routes/domain-search.vue';
-import Workflows from './routes/Workflows.vue';
-import DomainConfig from './routes/domain-config.vue';
-import ExecutionTabs from './routes/execution/index.vue';
-import ExecutionSummary from './routes/execution/summary.vue';
-import History from './routes/execution/history.vue';
-import StackTrace from './routes/execution/stack-trace.vue';
-import Queries from './routes/execution/queries.vue';
-import TaskList from './routes/task-list.vue';
+import WorkflowList from './routes/domain/workflow-list.vue';
+import DomainConfig from './routes/domain/domain-config.vue';
+import WorkflowTabs from './routes/workflow/index.vue';
+import WorkflowSummary from './routes/workflow/summary.vue';
+import History from './routes/workflow/history.vue';
+import StackTrace from './routes/workflow/stack-trace.vue';
+import Queries from './routes/workflow/queries.vue';
+import TaskList from './routes/domain/task-list.vue';
 import { http, injectMomentDurationFormat, jsonTryParse } from '~helpers';
 
 const routeOpts = {
@@ -52,7 +52,7 @@ const routeOpts = {
     {
       name: 'workflows',
       path: '/domain/:domain/workflows',
-      component: Workflows,
+      component: WorkflowList,
     },
     {
       name: 'domain-config',
@@ -63,9 +63,9 @@ const routeOpts = {
       }),
     },
     {
-      name: 'execution',
+      name: 'workflow',
       path: '/domain/:domain/workflows/:workflowId/:runId',
-      component: ExecutionTabs,
+      component: WorkflowTabs,
       props: ({ params }) => ({
         domain: params.domain,
         runId: params.runId,
@@ -73,10 +73,10 @@ const routeOpts = {
       }),
       children: [
         {
-          name: 'execution/summary',
+          name: 'workflow/summary',
           path: '/domain/:domain/workflows/:workflowId/:runId/summary',
           components: {
-            summary: ExecutionSummary,
+            summary: WorkflowSummary,
           },
           props: {
             summary: ({ params }) => ({
@@ -86,7 +86,7 @@ const routeOpts = {
           },
         },
         {
-          name: 'execution/history',
+          name: 'workflow/history',
           path: '/domain/:domain/workflows/:workflowId/:runId/history',
           components: {
             history: History,
@@ -103,14 +103,14 @@ const routeOpts = {
           },
         },
         {
-          name: 'execution/stack-trace',
+          name: 'workflow/stack-trace',
           path: '/domain/:domain/workflows/:workflowId/:runId/stack-trace',
           components: {
             stacktrace: StackTrace,
           },
         },
         {
-          name: 'execution/queries',
+          name: 'workflow/queries',
           path: '/domain/:domain/workflows/:workflowId/:runId/queries',
           components: {
             queries: Queries,
@@ -142,7 +142,7 @@ const routeOpts = {
         };
 
         return {
-          name: 'execution/history',
+          name: 'workflow/history',
           params: newParams,
           query: queryWhitelist,
         };
