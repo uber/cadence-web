@@ -88,34 +88,48 @@ export default {
 <style lang="stylus">
 @require "../../styles/definitions.styl"
 
-section.query
-  padding layout-spacing-small
-  header
-    display flex
-    padding-top layout-spacing-small
-    margin-bottom layout-spacing-medium
-    align-items center
-    .query-name
-      flex 0 0 auto
-      min-width 350px
-      superlabel()
-      &::before
-        top -16px
-        content 'query'
-    a.run
-      flex 0 0 auto
-      margin 0 1em
-      action-button()
-      icon-play()
-      &:not([href="#"])
-        opacity 0.7
-      &.running
-        icon-refresh()
+section.query {
+  padding: layout-spacing-small;
 
-  span.no-queries
-    display block
-    width 100%
-    text-align center
-    font-size 16px
-    color uber-black-60
+  header {
+    display: flex;
+    padding-top: layout-spacing-small;
+    margin-bottom: layout-spacing-medium;
+    align-items: center;
+
+    .query-name {
+      flex: 0 0 auto;
+      min-width: 350px;
+      superlabel();
+
+      &::before {
+        top: -16px;
+        content: 'query';
+      }
+    }
+
+    a.run {
+      flex: 0 0 auto;
+      margin: 0 1em;
+      action-button();
+      icon-play();
+
+      &:not([href="#"]) {
+        opacity: 0.7;
+      }
+
+      &.running {
+        icon-refresh();
+      }
+    }
+  }
+
+  span.no-queries {
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-size: 16px;
+    color: uber-black-60;
+  }
+}
 </style>
