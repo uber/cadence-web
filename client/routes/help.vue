@@ -103,6 +103,15 @@
       <label for="cli-command-workflow-list-open">List open workflows</label>
       <pre id="cli-command-workflow-list-open">cadence --domain {domain-name} workflow list --open</pre>
 
+      <div>
+        <a
+          href="https://cadenceworkflow.io/docs/08_cli"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          See more CLI commands
+        </a>
+      </div>
     </section>
     <section id="release-notes">
       <h3>
