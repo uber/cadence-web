@@ -21,10 +21,10 @@
         v-show="isWorkflowRunning"
       />
       <navigation-link
-        id="nav-link-queries"
+        id="nav-link-query"
         icon="icon_lost"
-        label="Queries"
-        :to="{ name: 'workflow/queries' }"
+        label="Query"
+        :to="{ name: 'workflow/query' }"
         v-show="isWorkflowRunning"
       />
     </navigation-bar>
@@ -53,7 +53,7 @@
       @onNotification="onNotification"
     />
     <router-view
-      name="queries"
+      name="query"
       :baseAPIURL="baseAPIURL"
       @onNotification="onNotification"
     />
@@ -297,33 +297,3 @@ export default {
   },
 };
 </script>
-
-<style lang="stylus">
-@require "../../styles/definitions.styl"
-
-section.workflow
-  & > nav
-    flex-wrap wrap
-    background-color black
-    padding 0 12px // eyeballed lining up summary icon link with Cadence logo
-
-    a
-      display inline-block
-      padding 11px 18px
-      transition all 400ms ease
-      //font-size 16px
-      font-weight 500
-      text-transform uppercase
-      border-bottom 4px solid transparent
-      &.router-link-active
-        border-bottom-color uber-blue
-
-    a.stack-trace
-      icon-trips()
-    a.history
-      icon-history()
-    a.summary
-      icon('\ea59')
-    a.queries
-      icon('\ea40')
-</style>

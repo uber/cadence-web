@@ -258,10 +258,10 @@ Scenario.prototype.withFullHistory = function withFullHistory(events) {
     .withHistory(parsedEvents.slice(third + third));
 };
 
-Scenario.prototype.withQueries = function withQueries(queries) {
+Scenario.prototype.withQuery = function withQuery(query) {
   this.api.getOnce(
-    `${this.execApiBase()}/queries`,
-    queries || ['__stack_trace', 'status']
+    `${this.execApiBase()}/query`,
+    query || ['__stack_trace', 'status']
   );
 
   return this;
@@ -269,7 +269,7 @@ Scenario.prototype.withQueries = function withQueries(queries) {
 
 Scenario.prototype.withQueryResult = function withQueryResult(query, result) {
   this.api.postOnce(
-    `${this.execApiBase()}/queries/${query}`,
+    `${this.execApiBase()}/query/${query}`,
     result && result.status ? result : { queryResult: result }
   );
 

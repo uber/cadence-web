@@ -1,5 +1,5 @@
 <template>
-  <section :class="{ queries: true, loading }">
+  <section class="query" :class="{ loading }">
     <header v-if="queries && queries.length">
       <div class="query-name">
         <v-select
@@ -42,7 +42,7 @@ export default {
   props: ['baseAPIURL'],
   created() {
     this.loading = true;
-    this.$http(`${this.baseAPIURL}/queries`)
+    this.$http(`${this.baseAPIURL}/query`)
       .then(
         queries => {
           this.queries = queries.filter(query => query !== '__stack_trace');
@@ -68,7 +68,7 @@ export default {
     run() {
       this.running = true;
       this.$http
-        .post(`${this.baseAPIURL}/queries/${this.queryName}`)
+        .post(`${this.baseAPIURL}/query/${this.queryName}`)
         .then(
           r => {
             this.queryResult = r.queryResult;
@@ -88,7 +88,7 @@ export default {
 <style lang="stylus">
 @require "../../styles/definitions.styl"
 
-section.queries
+section.query
   padding layout-spacing-small
   header
     display flex

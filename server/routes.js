@@ -96,7 +96,7 @@ router.get('/api/domain/:domain/workflow/:workflowId/:runId/export', async funct
   ctx.body = ''
 })
 
-router.get('/api/domain/:domain/workflow/:workflowId/:runId/queries', async function (ctx) {
+router.get('/api/domain/:domain/workflow/:workflowId/:runId/query', async function (ctx) {
   // workaround implementation until https://github.com/uber/cadence/issues/382 is resolved
   try {
     await ctx.cadence.queryWorkflow({
@@ -114,7 +114,7 @@ router.get('/api/domain/:domain/workflow/:workflowId/:runId/queries', async func
   }
 })
 
-router.post('/api/domain/:domain/workflow/:workflowId/:runId/queries/:queryType', async function (ctx) {
+router.post('/api/domain/:domain/workflow/:workflowId/:runId/query/:queryType', async function (ctx) {
   ctx.body = await ctx.cadence.queryWorkflow({
     query: {
       queryType: ctx.params.queryType

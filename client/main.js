@@ -22,7 +22,7 @@ import WorkflowTabs from './routes/workflow/index.vue';
 import WorkflowSummary from './routes/workflow/summary.vue';
 import History from './routes/workflow/history.vue';
 import StackTrace from './routes/workflow/stack-trace.vue';
-import Queries from './routes/workflow/queries.vue';
+import Query from './routes/workflow/query.vue';
 import TaskList from './routes/domain/task-list.vue';
 import { http, injectMomentDurationFormat, jsonTryParse } from '~helpers';
 
@@ -115,11 +115,11 @@ const routeOpts = {
           },
         },
         {
-          name: 'workflow/queries',
-          path: '/domain/:domain/workflow/:workflowId/:runId/queries',
+          name: 'workflow/query',
+          path: '/domain/:domain/workflow/:workflowId/:runId/query',
           alias: '/domain/:domain/workflows/:workflowId/:runId/queries',
           components: {
-            queries: Queries,
+            query: Query,
           },
         },
       ],
