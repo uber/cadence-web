@@ -13,7 +13,9 @@ import copyButton from './components/copy.vue';
 import snapscroll from './directives/snapscroll';
 
 import App from './App.vue';
-import Intro from './routes/Intro.vue';
+import Root from './routes/index.vue';
+import Help from './routes/help.vue';
+import DomainSearch from './routes/domain-search.vue';
 import Workflows from './routes/Workflows.vue';
 import DomainConfig from './routes/domain-config.vue';
 import ExecutionTabs from './routes/execution/index.vue';
@@ -29,7 +31,23 @@ const routeOpts = {
   routes: [
     {
       path: '/',
-      component: Intro,
+      component: Root,
+      children: [
+        {
+          name: 'domain-search',
+          path: '/',
+          components: {
+            'domain-search': DomainSearch
+          },
+        },
+        {
+          name: 'help',
+          path: '/help',
+          components: {
+            help: Help
+          },
+        },
+      ],
     },
     {
       name: 'workflows',

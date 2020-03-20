@@ -1,30 +1,5 @@
 <template>
-  <section class="intro">
-    <div class="links">
-      <h1>Welcome to Cadence!</h1>
-      <p>
-        If you are new to Cadence, here's some resources to get you started!
-      </p>
-      <a
-        href="https://www.youtube.com/watch?v=-BuIkhlc-RM&amp;t=3s"
-        target="_blank"
-        rel="noopener noreferrer"
-        >Introductory to Cadence Video</a
-      >
-      <a
-        href="https://github.com/samarabbas/cadence-samples"
-        target="_blank"
-        rel="noopener noreferrer"
-        >Code Samples</a
-      >
-      <a
-        href="https://github.com/uber/cadence"
-        target="_blank"
-        rel="noopener noreferrer"
-        >Source code on GitHub</a
-      >
-      <p>Otherwise, provide your team's domain to get started</p>
-    </div>
+  <section class="domain-search">
     <domain-navigation type="text" placeholder="cadence-canary" />
   </section>
 </template>
@@ -45,7 +20,7 @@ export default {
 <style lang="stylus">
 @require "../styles/definitions"
 
-section.intro
+section.domain-search
   margin layout-spacing-large
   @media (min-width 1600px)
     width 1580px

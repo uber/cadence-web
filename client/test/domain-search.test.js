@@ -1,18 +1,4 @@
-describe('Intro', () => {
-  it('should provide links to learn about cadence', async function test() {
-    const testEl = new Scenario(this.test).render();
-    const linksEl = await testEl.waitUntilExists('section.intro .links');
-
-    linksEl.should.have.descendant('h1').with.text('Welcome to Cadence!');
-    linksEl
-      .textNodes('a')
-      .should.deep.equal([
-        'Introductory to Cadence Video',
-        'Code Samples',
-        'Source code on GitHub',
-      ]);
-  });
-
+describe('Domain search', () => {
   it('should show a header bar without a breadcrumb or domain changer', async function test() {
     const testEl = new Scenario(this.test).render();
     const headerBar = await testEl.waitUntilExists('header.top-bar');
@@ -26,7 +12,7 @@ describe('Intro', () => {
 
   it('should validate the existance of domains as the user types', async function test() {
     const [testEl, scenario] = new Scenario(this.test).go();
-    const domainNav = await testEl.waitUntilExists('.intro .domain-navigation');
+    const domainNav = await testEl.waitUntilExists('section.domain-search .domain-navigation');
     const domainInput = domainNav.querySelector('input');
 
     domainInput.value.should.be.empty;
@@ -54,14 +40,14 @@ describe('Intro', () => {
   it('should render the details of a valid domain', async function test() {
     const [testEl, scenario] = new Scenario(this.test).go();
     const domainInput = await testEl.waitUntilExists(
-      '.intro .domain-navigation input'
+      'section.domain-search .domain-navigation input'
     );
 
     scenario.withDomainDescription('ci-tests');
     domainInput.input('ci-tests');
 
     const descriptionEl = await testEl.waitUntilExists(
-      '.intro .domain-description'
+      'section.domain-search .domain-description'
     );
 
     descriptionEl.should.have
@@ -94,7 +80,7 @@ describe('Intro', () => {
   it('should go to the workflows of the domain requested when entered', async function test() {
     const [testEl, scenario] = new Scenario(this.test).go();
     const domainInput = await testEl.waitUntilExists(
-      '.intro .domain-navigation input'
+      'section.domain-search .domain-navigation input'
     );
 
     scenario.withDomainDescription('ci-tests');
@@ -119,7 +105,7 @@ describe('Intro', () => {
 
   it('should activate the change-domain button when the domain is valid and navigate to it', async function test() {
     const [testEl, scenario] = new Scenario(this.test).go();
-    const domainNav = await testEl.waitUntilExists('.intro .domain-navigation');
+    const domainNav = await testEl.waitUntilExists('section.domain-search .domain-navigation');
     const domainInput = domainNav.querySelector('input');
     const changeDomain = domainNav.querySelector('a.change-domain');
 
@@ -197,7 +183,7 @@ describe('Intro', () => {
     recentDomains.querySelectorAll('li a')[0].trigger('mouseover');
 
     const descriptionEl = await testEl.waitUntilExists(
-      '.intro .domain-description'
+      'section.domain-search .domain-description'
     );
 
     descriptionEl

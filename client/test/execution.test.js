@@ -1064,10 +1064,10 @@ describe('Execution', () => {
           '/domain/ci-test/workflows/email-daily-summaries/emailRun1/queries',
         ]);
       scenario.vm.$el
-        .querySelector('section.execution > nav a.stack-trace')
+        .querySelector('section.execution > nav a#nav-link-stack-trace')
         .should.not.have.property('display', 'none');
       scenario.vm.$el
-        .querySelector('section.execution > nav a.queries')
+        .querySelector('section.execution > nav a#nav-link-queries')
         .should.not.have.property('display', 'none');
     });
 
@@ -1238,12 +1238,12 @@ describe('Execution', () => {
           '/domain/ci-test/workflows/email-daily-summaries/emailRun1/queries',
         ]);
       scenario.vm.$el
-        .querySelector('section.execution > nav a.summary')
+        .querySelector('section.execution > nav a#nav-link-summary')
         .should.have.class('router-link-active');
       await retry(() => {
-        scenario.vm.$el.querySelector('section.execution > nav a.stack-trace')
+        scenario.vm.$el.querySelector('section.execution > nav a#nav-link-stack-trace')
           .should.not.be.displayed;
-        scenario.vm.$el.querySelector('section.execution > nav a.queries')
+        scenario.vm.$el.querySelector('section.execution > nav a#nav-link-queries')
           .should.not.be.displayed;
       });
     });
