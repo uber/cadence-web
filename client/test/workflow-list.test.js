@@ -132,7 +132,7 @@ describe('Workflow list', () => {
   it('should respect query parameters for range and status', async function test() {
     const [testEl] = new Scenario(this.test)
       .withDomain('ci-test')
-      .startingAt('/domain/ci-test/workflows?status=FAILED&range=last-24-hours')
+      .startingAt('/domain/ci-test/workflow?status=FAILED&range=last-24-hours')
       .withWorkflows('closed', {
         startTime: moment()
           .subtract(24, 'hours')
@@ -262,7 +262,7 @@ describe('Workflow list', () => {
   it('should use query parameters from the URL', async function test() {
     const [testEl] = new Scenario(this.test)
       .withDomain('ci-test')
-      .startingAt('/domain/ci-test/workflows?status=FAILED&workflowName=demo')
+      .startingAt('/domain/ci-test/workflow?status=FAILED&workflowName=demo')
       .withWorkflows('closed', {
         status: 'FAILED',
         workflowName: 'demo',

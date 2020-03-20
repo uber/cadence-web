@@ -161,7 +161,7 @@ Scenario.prototype.withWorkflows = function withWorkflows(
     workflows = JSON.parse(JSON.stringify(fixtures.workflows[status]));
   }
 
-  const url = `/api/domain/${this.domain}/workflows/${status}?${qs.stringify({
+  const url = `/api/domain/${this.domain}/workflow/${status}?${qs.stringify({
     startTime: moment()
       .subtract(21, 'day')
       .startOf('day')
@@ -182,7 +182,7 @@ Scenario.prototype.withWorkflows = function withWorkflows(
 };
 
 Scenario.prototype.execApiBase = function execApiBase(workflowId, runId) {
-  return `/api/domain/${this.domain}/workflows/${encodeURIComponent(
+  return `/api/domain/${this.domain}/workflow/${encodeURIComponent(
     workflowId || this.workflowId
   )}/${encodeURIComponent(runId || this.runId)}`;
 };

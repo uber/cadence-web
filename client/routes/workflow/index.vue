@@ -117,7 +117,7 @@ export default {
     baseAPIURL() {
       const { domain, workflowId, runId } = this;
 
-      return `/api/domain/${domain}/workflows/${encodeURIComponent(
+      return `/api/domain/${domain}/workflow/${encodeURIComponent(
         workflowId
       )}/${encodeURIComponent(runId)}`;
     },

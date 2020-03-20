@@ -454,7 +454,7 @@ describe('Workflow', () => {
 
       exportEl.should.have.attr(
         'href',
-        '/api/domain/ci-test/workflows/email-daily-summaries/emailRun1/export'
+        '/api/domain/ci-test/workflow/email-daily-summaries/emailRun1/export'
       );
       exportEl.should.have.attr(
         'download',

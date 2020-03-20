@@ -231,12 +231,12 @@ export default pagedGrid({
       q.nextPageToken = this.nextPageToken;
 
       if (q.queryString) {
-        this.fetch(`/api/domain/${domain}/workflows/list`, q);
+        this.fetch(`/api/domain/${domain}/workflow/list`, q);
 
         return;
       }
 
-      this.fetch(`/api/domain/${domain}/workflows/${state}`, q);
+      this.fetch(`/api/domain/${domain}/workflow/${state}`, q);
     },
     minStartDate() {
       const {
