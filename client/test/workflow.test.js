@@ -623,7 +623,7 @@ describe('Workflow', () => {
           this.test
         );
 
-        compactViewEl.querySelectorAll('.selected-event-details').should.be
+        compactViewEl.querySelectorAll('.selected-event-detail').should.be
           .empty;
         const childWf = await compactViewEl.waitUntilExists(
           '.timeline-event.child-workflow.completed '
@@ -633,7 +633,7 @@ describe('Workflow', () => {
 
         await retry(() => {
           compactViewEl
-            .querySelector('.selected-event-details')
+            .querySelector('.selected-event-detail')
             .should.have.class('active');
           scenario.location.should.equal(
             '/domain/ci-test/workflow/email-daily-summaries/emailRun1/history?format=compact&showGraph=true&eventId=18'
@@ -659,7 +659,7 @@ describe('Workflow', () => {
 
         await retry(() => {
           compactViewEl
-            .querySelector('.selected-event-details')
+            .querySelector('.selected-event-detail')
             .should.have.class('active');
           compactViewEl
             .querySelector('.timeline-event.marker-sideeffect')

@@ -2,7 +2,7 @@
 import { DetailList } from '~components';
 
 export default {
-  name: 'event-details',
+  name: 'event-detail',
   props: ['event', 'compact', 'highlight'],
   components: {
     'detail-list': DetailList,
