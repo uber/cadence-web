@@ -1241,8 +1241,9 @@ describe('Workflow', () => {
         .querySelector('section.workflow > nav a#nav-link-summary')
         .should.have.class('router-link-active');
       await retry(() => {
-        scenario.vm.$el.querySelector('section.workflow > nav a#nav-link-stack-trace')
-          .should.not.be.displayed;
+        scenario.vm.$el.querySelector(
+          'section.workflow > nav a#nav-link-stack-trace'
+        ).should.not.be.displayed;
         scenario.vm.$el.querySelector('section.workflow > nav a#nav-link-query')
           .should.not.be.displayed;
       });

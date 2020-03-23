@@ -526,7 +526,7 @@ export default {
     'event-detail': EventDetail,
     prism: Prism,
     RecycleScroller,
-    'timeline': Timeline,
+    timeline: Timeline,
   },
 };
 </script>

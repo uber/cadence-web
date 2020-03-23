@@ -75,7 +75,6 @@
           Cadence UI source code on GitHub
         </a>
       </div>
-
     </section>
     <section id="cli">
       <h3>
@@ -83,14 +82,22 @@
           Common CLI commands
         </a>
       </h3>
-      <p>Here are a some useful common CLI commands to get started with Cadence.</p>
+      <p>
+        Here are a some useful common CLI commands to get started with Cadence.
+      </p>
 
-      <section v-for="commandGroup in cliCommands">
+      <section v-for="commandGroup in cliCommands" :key="commandGroup.header">
         <h5>{{ commandGroup.header }}</h5>
-        <div class="cli-command" v-for="command in commandGroup.commands">
-          <label :for="command.id">{{command.label}}</label>
-          <pre :id="command.id">{{command.value}}</pre>
-          <p v-for="description in command.describe">{{description}}</p>
+        <div
+          class="cli-command"
+          v-for="command in commandGroup.commands"
+          :key="command.id"
+        >
+          <label :for="command.id">{{ command.label }}</label>
+          <pre :id="command.id">{{ command.value }}</pre>
+          <p v-for="(description, index) in command.describe" :key="index">
+            {{ description }}
+          </p>
         </div>
       </section>
 
@@ -273,5 +280,4 @@ section.help {
     display: inline-block;
   }
 }
-
 </style>

@@ -12,7 +12,9 @@ describe('Domain search', () => {
 
   it('should validate the existance of domains as the user types', async function test() {
     const [testEl, scenario] = new Scenario(this.test).go();
-    const domainNav = await testEl.waitUntilExists('section.domain-search .domain-navigation');
+    const domainNav = await testEl.waitUntilExists(
+      'section.domain-search .domain-navigation'
+    );
     const domainInput = domainNav.querySelector('input');
 
     domainInput.value.should.be.empty;
@@ -105,7 +107,9 @@ describe('Domain search', () => {
 
   it('should activate the change-domain button when the domain is valid and navigate to it', async function test() {
     const [testEl, scenario] = new Scenario(this.test).go();
-    const domainNav = await testEl.waitUntilExists('section.domain-search .domain-navigation');
+    const domainNav = await testEl.waitUntilExists(
+      'section.domain-search .domain-navigation'
+    );
     const domainInput = domainNav.querySelector('input');
     const changeDomain = domainNav.querySelector('a.change-domain');
 

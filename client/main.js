@@ -38,14 +38,14 @@ const routeOpts = {
           name: 'domain-list',
           path: '/domains',
           components: {
-            'domain-list': DomainList
+            'domain-list': DomainList,
           },
         },
         {
           name: 'help',
           path: '/help',
           components: {
-            help: Help
+            help: Help,
           },
         },
       ],
@@ -53,7 +53,7 @@ const routeOpts = {
     {
       name: 'domains-redirect',
       path: '/domain/*',
-      redirect: '/domains/*'
+      redirect: '/domains/*',
     },
     {
       name: 'workflow-list',
