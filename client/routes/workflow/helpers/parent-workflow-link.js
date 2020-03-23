@@ -2,7 +2,7 @@ export default function(wfStartDetails) {
   if (wfStartDetails && wfStartDetails.parentWorkflowExecution) {
     return {
       to: {
-        name: 'execution/summary',
+        name: 'workflow/summary',
         params: {
           domain: wfStartDetails.parentWorkflowDomain,
           workflowId: wfStartDetails.parentWorkflowExecution.workflowId,

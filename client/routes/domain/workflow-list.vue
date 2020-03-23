@@ -1,5 +1,5 @@
 <template>
-  <section :class="{ workflows: true, loading }">
+  <section class="workflow-list" :class="{ loading }">
     <header class="filters">
       <template v-if="filterMode === 'advanced'">
         <div class="field query-string">
@@ -86,7 +86,7 @@
             <td>
               <router-link
                 :to="{
-                  name: 'execution/summary',
+                  name: 'workflow/summary',
                   params: { runId: wf.runId, workflowId: wf.workflowId },
                 }"
                 >{{ wf.runId }}</router-link
@@ -133,7 +133,7 @@ export default pagedGrid({
     };
   },
   created() {
-    this.$http(`/api/domain/${this.$route.params.domain}`).then(r => {
+    this.$http(`/api/domains/${this.$route.params.domain}`).then(r => {
       this.maxRetentionDays =
         Number(r.configuration.workflowExecutionRetentionPeriodInDays) || 30;
 
@@ -231,12 +231,12 @@ export default pagedGrid({
       q.nextPageToken = this.nextPageToken;
 
       if (q.queryString) {
-        this.fetch(`/api/domain/${domain}/workflows/list`, q);
+        this.fetch(`/api/domains/${domain}/workflows/list`, q);
 
         return;
       }
 
-      this.fetch(`/api/domain/${domain}/workflows/${state}`, q);
+      this.fetch(`/api/domains/${domain}/workflows/${state}`, q);
     },
     minStartDate() {
       const {
@@ -420,9 +420,9 @@ export default pagedGrid({
 </script>
 
 <style lang="stylus">
-@require "../styles/definitions.styl"
+@require "../../styles/definitions.styl"
 
-section.workflows
+section.workflow-list
   .filters
     flex-wrap wrap
     > .field

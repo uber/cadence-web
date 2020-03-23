@@ -17,7 +17,7 @@ const getSummaryWorkflowStatus = ({
   if (workflowCompletedEvent.eventType === 'WorkflowExecutionContinuedAsNew') {
     return {
       to: {
-        name: 'execution/summary',
+        name: 'workflow/summary',
         params: {
           runId: workflowCompletedEvent.details.newExecutionRunId,
         },

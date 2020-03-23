@@ -1,8 +1,8 @@
 import moment from 'moment';
 import fixtures from './fixtures';
 
-describe('Execution', () => {
-  function executionTest(mochaTest, options) {
+describe('Workflow', () => {
+  function workflowTest(mochaTest, options) {
     const extendedOptions = {
       workflowId: 'email-daily-summaries',
       runId: 'emailRun1',
@@ -13,13 +13,13 @@ describe('Execution', () => {
     return [
       new Scenario(mochaTest)
         .withDomain('ci-test')
-        .withExecution(
+        .withWorkflow(
           extendedOptions.workflowId,
           extendedOptions.runId,
           extendedOptions.execution
         )
         .startingAt(
-          `/domain/ci-test/workflows/${extendedOptions.workflowId}/${
+          `/domains/ci-test/workflows/${extendedOptions.workflowId}/${
             extendedOptions.runId
           }/${extendedOptions.view}${
             extendedOptions.query ? `?${extendedOptions.query}` : ''
@@ -30,7 +30,7 @@ describe('Execution', () => {
   }
 
   async function summaryTest(mochaTest, o) {
-    const [scenario, opts] = executionTest(mochaTest, {
+    const [scenario, opts] = workflowTest(mochaTest, {
       view: 'summary',
       ...o,
     });
@@ -38,7 +38,7 @@ describe('Execution', () => {
     scenario.withFullHistory(opts.events);
     const summaryEl = await scenario
       .render(opts.attach)
-      .waitUntilExists('section.execution section.execution-summary dl');
+      .waitUntilExists('section.workflow section.workflow-summary dl');
 
     return [summaryEl.parentElement, scenario];
   }
@@ -66,7 +66,7 @@ describe('Execution', () => {
         summaryEl
           .querySelector('.task-list dd a[href]')
           .should.contain.text('ci_task_list')
-          .and.have.attr('href', '/domain/ci-test/task-lists/ci_task_list');
+          .and.have.attr('href', '/domains/ci-test/task-lists/ci_task_list');
         summaryEl.querySelector('.started-at dd').should.have.text(
           moment()
             .startOf('hour')
@@ -229,7 +229,7 @@ describe('Execution', () => {
         .and.have.text('Continued As New')
         .and.have.attr(
           'href',
-          '/domain/ci-test/workflows/email-daily-summaries/617d8b6f-ea42-479c-bc7c-0ec4dacddf64/summary'
+          '/domains/ci-test/workflows/email-daily-summaries/617d8b6f-ea42-479c-bc7c-0ec4dacddf64/summary'
         );
     });
 
@@ -292,7 +292,7 @@ describe('Execution', () => {
         .should.contain.text('the-parent-wfid')
         .and.have.attr(
           'href',
-          '/domain/another-domain/workflows/the-parent-wfid/1234/summary'
+          '/domains/another-domain/workflows/the-parent-wfid/1234/summary'
         );
     });
 
@@ -395,7 +395,7 @@ describe('Execution', () => {
 
   describe('History', () => {
     async function historyTest(mochaTest, o) {
-      const [scenario, opts] = executionTest(mochaTest, {
+      const [scenario, opts] = workflowTest(mochaTest, {
         view: 'history',
         ...o,
       });
@@ -431,7 +431,7 @@ describe('Execution', () => {
       resultsEl.should.not.have.descendant('pre.json');
       resultsEl.should.not.have.descendant('table');
       scenario.location.should.equal(
-        '/domain/ci-test/workflows/email-daily-summaries/emailRun1/history?format=compact'
+        '/domains/ci-test/workflows/email-daily-summaries/emailRun1/history?format=compact'
       );
       historyEl.querySelector('.view-formats a.json').trigger('click');
 
@@ -442,7 +442,7 @@ describe('Execution', () => {
       jsonView.should.contain.text('"eventId":');
       resultsEl.should.not.have.descendant('.compact-view');
       scenario.location.should.equal(
-        '/domain/ci-test/workflows/email-daily-summaries/emailRun1/history?format=json'
+        '/domains/ci-test/workflows/email-daily-summaries/emailRun1/history?format=json'
       );
     });
 
@@ -454,7 +454,7 @@ describe('Execution', () => {
 
       exportEl.should.have.attr(
         'href',
-        '/api/domain/ci-test/workflows/email-daily-summaries/emailRun1/export'
+        '/api/domains/ci-test/workflows/email-daily-summaries/emailRun1/export'
       );
       exportEl.should.have.attr(
         'download',
@@ -563,7 +563,7 @@ describe('Execution', () => {
 
         timelineEl.timeline.fit();
         scenario.location.should.equal(
-          '/domain/ci-test/workflows/email-daily-summaries/emailRun1/history?format=compact&showGraph=true'
+          '/domains/ci-test/workflows/email-daily-summaries/emailRun1/history?format=compact&showGraph=true'
         );
         await retry(() =>
           timelineEl
@@ -582,7 +582,7 @@ describe('Execution', () => {
 
         await retry(() => {
           scenario.location.should.equal(
-            '/domain/ci-test/workflows/email-daily-summaries/emailRun1/history?format=compact&showGraph=true&eventId=16'
+            '/domains/ci-test/workflows/email-daily-summaries/emailRun1/history?format=compact&showGraph=true&eventId=16'
           );
           timelineEl
             .querySelector('.vis-range.activity.failed')
@@ -603,7 +603,7 @@ describe('Execution', () => {
         timelineEl.timeline.fit();
 
         scenario.location.should.equal(
-          '/domain/ci-test/workflows/email-daily-summaries/emailRun1/history?format=compact'
+          '/domains/ci-test/workflows/email-daily-summaries/emailRun1/history?format=compact'
         );
         const failedActivity = await timelineEl.waitUntilExists(
           '.vis-range.activity.failed'
@@ -612,7 +612,7 @@ describe('Execution', () => {
 
         await retry(() =>
           scenario.location.should.equal(
-            '/domain/ci-test/workflows/email-daily-summaries/emailRun1/history?format=compact&eventId=16'
+            '/domains/ci-test/workflows/email-daily-summaries/emailRun1/history?format=compact&eventId=16'
           )
         );
       });
@@ -623,7 +623,7 @@ describe('Execution', () => {
           this.test
         );
 
-        compactViewEl.querySelectorAll('.selected-event-details').should.be
+        compactViewEl.querySelectorAll('.selected-event-detail').should.be
           .empty;
         const childWf = await compactViewEl.waitUntilExists(
           '.timeline-event.child-workflow.completed '
@@ -633,10 +633,10 @@ describe('Execution', () => {
 
         await retry(() => {
           compactViewEl
-            .querySelector('.selected-event-details')
+            .querySelector('.selected-event-detail')
             .should.have.class('active');
           scenario.location.should.equal(
-            '/domain/ci-test/workflows/email-daily-summaries/emailRun1/history?format=compact&showGraph=true&eventId=18'
+            '/domains/ci-test/workflows/email-daily-summaries/emailRun1/history?format=compact&showGraph=true&eventId=18'
           );
           timelineEl
             .querySelector('.vis-range.child-workflow.completed')
@@ -659,7 +659,7 @@ describe('Execution', () => {
 
         await retry(() => {
           compactViewEl
-            .querySelector('.selected-event-details')
+            .querySelector('.selected-event-detail')
             .should.have.class('active');
           compactViewEl
             .querySelector('.timeline-event.marker-sideeffect')
@@ -1045,7 +1045,7 @@ describe('Execution', () => {
           .should.have.text('2345')
           .and.have.attr(
             'href',
-            '/domain/child-domain/workflows/child-wfid/2345/summary'
+            '/domains/child-domain/workflows/child-wfid/2345/summary'
           );
       });
     });
@@ -1056,29 +1056,29 @@ describe('Execution', () => {
       const [, scenario] = await summaryTest(this.test);
 
       scenario.vm.$el
-        .attrValues('section.execution > nav a', 'href')
+        .attrValues('section.workflow > nav a', 'href')
         .should.deep.equal([
-          '/domain/ci-test/workflows/email-daily-summaries/emailRun1/summary',
-          '/domain/ci-test/workflows/email-daily-summaries/emailRun1/history',
-          '/domain/ci-test/workflows/email-daily-summaries/emailRun1/stack-trace',
-          '/domain/ci-test/workflows/email-daily-summaries/emailRun1/queries',
+          '/domains/ci-test/workflows/email-daily-summaries/emailRun1/summary',
+          '/domains/ci-test/workflows/email-daily-summaries/emailRun1/history',
+          '/domains/ci-test/workflows/email-daily-summaries/emailRun1/stack-trace',
+          '/domains/ci-test/workflows/email-daily-summaries/emailRun1/query',
         ]);
       scenario.vm.$el
-        .querySelector('section.execution > nav a#nav-link-stack-trace')
+        .querySelector('section.workflow > nav a#nav-link-stack-trace')
         .should.not.have.property('display', 'none');
       scenario.vm.$el
-        .querySelector('section.execution > nav a#nav-link-queries')
+        .querySelector('section.workflow > nav a#nav-link-query')
         .should.not.have.property('display', 'none');
     });
 
     it('should show the current stack trace', async function test() {
-      const [scenario] = executionTest(this.test, {
+      const [scenario] = workflowTest(this.test, {
         view: 'stack-trace',
       });
 
       scenario
         .withFullHistory()
-        .api.postOnce(`${scenario.execApiBase()}/queries/__stack_trace`, {
+        .api.postOnce(`${scenario.execApiBase()}/query/__stack_trace`, {
           queryResult: 'goroutine 1:\n\tat foo.go:56',
         });
 
@@ -1097,14 +1097,14 @@ describe('Execution', () => {
     });
 
     it('should allow the user to refresh the stack trace', async function test() {
-      const [scenario] = executionTest(this.test, {
+      const [scenario] = workflowTest(this.test, {
         view: 'stack-trace',
       });
       let called = 0;
 
       scenario
         .withFullHistory()
-        .api.post(`${scenario.execApiBase()}/queries/__stack_trace`, () => {
+        .api.post(`${scenario.execApiBase()}/query/__stack_trace`, () => {
           // eslint-disable-next-line no-plusplus
           if (++called === 1) {
             return { queryResult: 'goroutine 1:\n\tat foo.go:56' };
@@ -1143,68 +1143,68 @@ describe('Execution', () => {
     });
   });
 
-  describe('Queries', () => {
-    async function queriesTest(mochaTest, queries) {
-      const [scenario] = executionTest(mochaTest, { view: 'queries' });
+  describe('Query', () => {
+    async function queryTest(mochaTest, query) {
+      const [scenario] = workflowTest(mochaTest, { view: 'query' });
 
-      scenario.withHistory(fixtures.history.emailRun1).withQueries(queries);
+      scenario.withHistory(fixtures.history.emailRun1).withQuery(query);
 
-      const queriesEl = await scenario
+      const queryEl = await scenario
         .render()
-        .waitUntilExists('section.execution section.queries');
+        .waitUntilExists('section.workflow section.query');
 
-      return [queriesEl, scenario];
+      return [queryEl, scenario];
     }
 
     it('should query the list of stack traces, and show it in the dropdown, enabling run as appropriate', async function test() {
-      const [queriesEl] = await queriesTest(this.test, [
+      const [queryEl] = await queryTest(this.test, [
         '__stack_trace',
         'foo',
         'bar',
       ]);
 
-      const queriesDropdown = await queriesEl.waitUntilExists(
+      const queryDropdown = await queryEl.waitUntilExists(
         '.query-name .dropdown'
       );
-      const options = await queriesDropdown.selectOptions();
+      const options = await queryDropdown.selectOptions();
 
       options.should.deep.equal(['foo', 'bar']);
     });
 
-    it('should show an error if queries could not be listed', async function test() {
-      const [queriesEl] = await queriesTest(this.test, {
+    it('should show an error if query could not be listed', async function test() {
+      const [queryEl] = await queryTest(this.test, {
         status: 400,
         body: { message: 'I do not understand' },
       });
 
       await retry(() =>
-        queriesEl
+        queryEl
           .querySelector('span.error')
           .should.have.text('I do not understand')
       );
-      queriesEl.should.not.contain('header .query-name');
+      queryEl.should.not.contain('header .query-name');
     });
 
     it('should run a query and show the result', async function test() {
-      const [queriesEl, scenario] = await queriesTest(this.test);
+      const [queryEl, scenario] = await queryTest(this.test);
 
-      await queriesEl.waitUntilExists('.query-name .dropdown');
-      const runButton = queriesEl.querySelector('a.run');
+      await queryEl.waitUntilExists('.query-name .dropdown');
+      const runButton = queryEl.querySelector('a.run');
 
       await retry(() => runButton.should.have.attr('href', '#'));
 
       scenario.withQueryResult('status', 'All is good!');
       runButton.trigger('click');
       await retry(() =>
-        queriesEl.querySelector('pre').should.have.text('All is good!')
+        queryEl.querySelector('pre').should.have.text('All is good!')
       );
     });
 
     it('should show an error if there was an error running the query', async function test() {
-      const [queriesEl, scenario] = await queriesTest(this.test);
+      const [queryEl, scenario] = await queryTest(this.test);
 
-      await queriesEl.waitUntilExists('.query-name .dropdown');
-      const runButton = queriesEl.querySelector('a.run');
+      await queryEl.waitUntilExists('.query-name .dropdown');
+      const runButton = queryEl.querySelector('a.run');
 
       await retry(() => runButton.should.have.attr('href', '#'));
 
@@ -1215,11 +1215,11 @@ describe('Execution', () => {
       runButton.trigger('click');
 
       await retry(() =>
-        queriesEl
+        queryEl
           .querySelector('span.error')
           .should.have.text('Server Unavailable')
       );
-      queriesEl.should.not.have.descendant('pre');
+      queryEl.should.not.have.descendant('pre');
     });
   });
 
@@ -1230,20 +1230,20 @@ describe('Execution', () => {
       });
 
       scenario.vm.$el
-        .attrValues('section.execution > nav a', 'href')
+        .attrValues('section.workflow > nav a', 'href')
         .should.deep.equal([
-          '/domain/ci-test/workflows/email-daily-summaries/emailRun1/summary',
-          '/domain/ci-test/workflows/email-daily-summaries/emailRun1/history',
-          '/domain/ci-test/workflows/email-daily-summaries/emailRun1/stack-trace',
-          '/domain/ci-test/workflows/email-daily-summaries/emailRun1/queries',
+          '/domains/ci-test/workflows/email-daily-summaries/emailRun1/summary',
+          '/domains/ci-test/workflows/email-daily-summaries/emailRun1/history',
+          '/domains/ci-test/workflows/email-daily-summaries/emailRun1/stack-trace',
+          '/domains/ci-test/workflows/email-daily-summaries/emailRun1/query',
         ]);
       scenario.vm.$el
-        .querySelector('section.execution > nav a#nav-link-summary')
+        .querySelector('section.workflow > nav a#nav-link-summary')
         .should.have.class('router-link-active');
       await retry(() => {
-        scenario.vm.$el.querySelector('section.execution > nav a#nav-link-stack-trace')
+        scenario.vm.$el.querySelector('section.workflow > nav a#nav-link-stack-trace')
           .should.not.be.displayed;
-        scenario.vm.$el.querySelector('section.execution > nav a#nav-link-queries')
+        scenario.vm.$el.querySelector('section.workflow > nav a#nav-link-query')
           .should.not.be.displayed;
       });
     });

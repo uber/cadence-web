@@ -21,7 +21,7 @@ describe('Domain search', () => {
       .and.not.have.class('.validation-valid');
     domainNav.should.not.have.descendant('ul.recent-domains');
 
-    scenario.api.getOnce('/api/domain/ci-', 404);
+    scenario.api.getOnce('/api/domains/ci-', 404);
     domainInput.input('ci-');
 
     await retry(() => domainNav.should.have.class('validation-invalid'));
@@ -93,13 +93,13 @@ describe('Domain search', () => {
       .withDomainDescription('ci-tests');
     domainInput.trigger('keydown', { code: 13, keyCode: 13, key: 'Enter' });
 
-    await testEl.waitUntilExists('section.workflows');
+    await testEl.waitUntilExists('section.workflow-list');
     const headerBar = testEl.querySelector('header.top-bar');
 
     headerBar.should.have
       .descendant('div.domain')
       .that.contains.text('ci-test');
-    scenario.location.should.contain('/domain/ci-tests/workflows');
+    scenario.location.should.contain('/domains/ci-tests/workflows');
     localStorage.getItem('recent-domains').should.equal('["ci-tests"]');
   });
 
@@ -110,7 +110,7 @@ describe('Domain search', () => {
     const changeDomain = domainNav.querySelector('a.change-domain');
 
     changeDomain.should.have.attr('href', '');
-    scenario.api.getOnce('/api/domain/ci-', 404);
+    scenario.api.getOnce('/api/domains/ci-', 404);
     domainInput.input('ci-');
 
     await retry(() => domainNav.should.have.class('validation-invalid'));
@@ -129,13 +129,13 @@ describe('Domain search', () => {
       .withWorkflows('open');
     changeDomain.trigger('click');
 
-    await testEl.waitUntilExists('section.workflows');
+    await testEl.waitUntilExists('section.workflow-list');
     const headerBar = testEl.querySelector('header.top-bar');
 
     headerBar.should.have
       .descendant('div.domain')
       .that.contains.text('ci-test');
-    scenario.location.should.contain('/domain/ci-tests/workflows');
+    scenario.location.should.contain('/domains/ci-tests/workflows');
     localStorage.getItem('recent-domains').should.equal('["ci-tests"]');
 
     await Promise.delay(100);
@@ -162,7 +162,7 @@ describe('Domain search', () => {
       .withDomainDescription('ci-tests')
       .withWorkflows('open');
 
-    await testEl.waitUntilExists('section.workflows');
+    await testEl.waitUntilExists('section.workflow-list');
     localStorage.getItem('recent-domains').should.equal('["ci-tests","demo"]');
   });
 

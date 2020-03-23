@@ -17,7 +17,7 @@ describe('parentWorkflowLink', () => {
     it('should return an object with to.name.', () => {
       const output = parentWorkflowLink(wfStartDetails);
 
-      expect(output.to.name).toEqual('execution/summary');
+      expect(output.to.name).toEqual('workflow/summary');
     });
 
     it('should return an object with to.params.domain.', () => {

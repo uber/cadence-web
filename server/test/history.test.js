@@ -110,7 +110,7 @@ describe('Workflow History', function() {
     }
 
     return request()
-      .get('/api/domain/canary/workflows/ci%2Fdemo/run1/history')
+      .get('/api/domains/canary/workflows/ci%2Fdemo/run1/history')
       .expect(200)
       .expect('Content-Type', /json/)
   })
@@ -126,7 +126,7 @@ describe('Workflow History', function() {
     }
 
     return request()
-      .get('/api/domain/canary/workflows/ci%2Fdemo/run1/history?nextPageToken=cGFnZTI%3D')
+      .get('/api/domains/canary/workflows/ci%2Fdemo/run1/history?nextPageToken=cGFnZTI%3D')
       .expect(200)
       .expect('Content-Type', /json/)
       .expect({
@@ -143,11 +143,11 @@ describe('Workflow History', function() {
     }
 
     return request()
-      .get('/api/domain/canary/workflows/ci%2Fdemo/run1/history?waitForNewEvent=true')
+      .get('/api/domains/canary/workflows/ci%2Fdemo/run1/history?waitForNewEvent=true')
       .expect(200)
       .expect('Content-Type', /json/)
       .then(() =>  request()
-        .get('/api/domain/canary/workflows/ci%2Fdemo/run1/history?waitForNewEvent')
+        .get('/api/domains/canary/workflows/ci%2Fdemo/run1/history?waitForNewEvent')
         .expect(200)
       )
   })
@@ -159,7 +159,7 @@ describe('Workflow History', function() {
     })
 
     return request()
-      .get('/api/domain/canary/workflows/ci%2Fdemo/run1/history')
+      .get('/api/domains/canary/workflows/ci%2Fdemo/run1/history')
       .expect(200)
       .expect({
         archived: null,
@@ -177,7 +177,7 @@ describe('Workflow History', function() {
       })
 
       return request()
-        .get('/api/domain/canary/workflows/ci%2Fdemo/run1/export')
+        .get('/api/domains/canary/workflows/ci%2Fdemo/run1/export')
         .expect(200)
         .expect(wfHistoryCliJson)
     })
@@ -200,7 +200,7 @@ describe('Workflow History', function() {
       }
 
       return request()
-        .get('/api/domain/canary/workflows/ci%2Fdemo/run1/export')
+        .get('/api/domains/canary/workflows/ci%2Fdemo/run1/export')
         .expect(200)
         .expect(wfHistoryCliJson)
     })

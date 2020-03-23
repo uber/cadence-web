@@ -1,30 +1,30 @@
 <template>
-  <section :class="{ execution: true, loading: wfLoading }">
+  <section class="workflow" :class="{ loading: wfLoading }">
     <navigation-bar>
       <navigation-link
         id="nav-link-summary"
         icon="icon_receipt"
         label="Summary"
-        :to="{ name: 'execution/summary' }"
+        :to="{ name: 'workflow/summary' }"
       />
       <navigation-link
         id="nav-link-history"
         icon="icon_trip-history"
         label="History"
-        :to="{ name: 'execution/history' }"
+        :to="{ name: 'workflow/history' }"
       />
       <navigation-link
         id="nav-link-stack-trace"
         icon="icon_trips"
         label="Stack Trace"
-        :to="{ name: 'execution/stack-trace' }"
+        :to="{ name: 'workflow/stack-trace' }"
         v-show="isWorkflowRunning"
       />
       <navigation-link
-        id="nav-link-queries"
+        id="nav-link-query"
         icon="icon_lost"
-        label="Queries"
-        :to="{ name: 'execution/queries' }"
+        label="Query"
+        :to="{ name: 'workflow/query' }"
         v-show="isWorkflowRunning"
       />
     </navigation-bar>
@@ -53,7 +53,7 @@
       @onNotification="onNotification"
     />
     <router-view
-      name="queries"
+      name="query"
       :baseAPIURL="baseAPIURL"
       @onNotification="onNotification"
     />
@@ -117,7 +117,7 @@ export default {
     baseAPIURL() {
       const { domain, workflowId, runId } = this;
 
-      return `/api/domain/${domain}/workflows/${encodeURIComponent(
+      return `/api/domains/${domain}/workflows/${encodeURIComponent(
         workflowId
       )}/${encodeURIComponent(runId)}`;
     },
@@ -297,33 +297,3 @@ export default {
   },
 };
 </script>
-
-<style lang="stylus">
-@require "../../styles/definitions.styl"
-
-section.execution
-  & > nav
-    flex-wrap wrap
-    background-color black
-    padding 0 12px // eyeballed lining up summary icon link with Cadence logo
-
-    a
-      display inline-block
-      padding 11px 18px
-      transition all 400ms ease
-      //font-size 16px
-      font-weight 500
-      text-transform uppercase
-      border-bottom 4px solid transparent
-      &.router-link-active
-        border-bottom-color uber-blue
-
-    a.stack-trace
-      icon-trips()
-    a.history
-      icon-history()
-    a.summary
-      icon('\ea59')
-    a.queries
-      icon('\ea40')
-</style>
