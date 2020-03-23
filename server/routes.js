@@ -141,7 +141,7 @@ router.get('/api/domains/:domain/task-lists/:taskList/pollers', async function (
     domain: ctx.params.domain,
     taskList: { name: ctx.params.taskList },
     taskListType
-  })).pollers
+  })).pollers || [];
 
   const r = type => (o, poller) => {
     let i = o[poller.identity] || {}
@@ -154,7 +154,7 @@ router.get('/api/domains/:domain/task-lists/:taskList/pollers', async function (
   }
 
   const activityL = await descTaskList('Activity'),
-  decisionL = await descTaskList('Decision')
+    decisionL = await descTaskList('Decision');
 
   ctx.body = activityL.reduce(r('activity'), decisionL.reduce(r('decision'), {}))
 })
