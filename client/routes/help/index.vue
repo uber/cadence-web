@@ -85,23 +85,15 @@
       </h3>
       <p>Here are a some useful common CLI commands to get started with Cadence.</p>
 
-      <label for="cli-command-domain-register">Register a domain (local only)</label>
-      <pre id="cli-command-domain-register">cadence --domain {domain-name} domain register --global_domain false</pre>
-
-      <label for="cli-command-domain-describe">List domain settings</label>
-      <pre id="cli-command-domain-describe">cadence --domain {domain-name} domain describe</pre>
-
-      <label for="cli-command-workflow-run">Run a workflow</label>
-      <pre id="cli-command-workflow-run">cadence --domain {domain-name} workflow run --tl {task-list-name} --wt {workflow-type-name} --et 60 -i '"{input-string}"'</pre>
-
-      <label for="cli-command-workflow-show">See a workflow history</label>
-      <pre id="cli-command-workflow-show">cadence --domain {domain-name} workflow show -w {workflow-id} -r {run-id}</pre>
-
-      <label for="cli-command-workflow-list">List closed workflows</label>
-      <pre id="cli-command-workflow-list">cadence --domain {domain-name} workflow list</pre>
-
-      <label for="cli-command-workflow-list-open">List open workflows</label>
-      <pre id="cli-command-workflow-list-open">cadence --domain {domain-name} workflow list --open</pre>
+      <section v-for="commandGroup in cliCommands">
+        <h5>{{ commandGroup.header }}</h5>
+        <div v-for="command in commandGroup.commands">
+          <label :for="command.id">{{command.label}}</label>
+          <div v-for="(value, index) in command.values">
+            <pre :id="index === 0 ? command.id : undefined">{{value}}</pre>
+          </div>
+        </div>
+      </section>
 
       <div>
         <a
@@ -180,16 +172,20 @@
 </template>
 
 <script>
+import { cliCommands } from './constants';
+
 export default {
   props: ['hideDocs', 'hideSlack', 'hideStackOverflow'],
   data() {
-    return {};
+    return {
+      cliCommands,
+    };
   },
 };
 </script>
 
 <style lang="stylus">
-@require "../styles/definitions"
+@require "../../styles/definitions"
 
 iframe-height = 315px;
 iframe-scrollbar-height = 15px;
@@ -256,13 +252,17 @@ section.help {
     }
   }
 
+  h5 {
+    margin: 1em 0 0.5em;
+  }
+
   label {
     display: block;
-    margin: 20px 0 10px;
+    margin: 1em 0 0.5em;
   }
 
   p {
-    margin: 1em 0 0.5em;
+    margin: 0.5em 0 0.5em;
   }
 
   pre {

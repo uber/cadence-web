@@ -14,7 +14,7 @@ import snapscroll from './directives/snapscroll';
 
 import App from './App.vue';
 import Root from './routes/index.vue';
-import Help from './routes/help.vue';
+import Help from './routes/help/index.vue';
 import DomainSearch from './routes/domain-search.vue';
 import Workflows from './routes/Workflows.vue';
 import DomainConfig from './routes/domain-config.vue';
