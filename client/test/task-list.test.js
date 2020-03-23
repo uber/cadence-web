@@ -4,7 +4,7 @@ describe('Task List', () => {
   async function taskListTest(mochaTest, pollers) {
     const [testEl, scenario] = new Scenario(mochaTest)
       .withDomain('ci-test')
-      .startingAt('/domain/ci-test/task-lists/ci_task_list')
+      .startingAt('/domains/ci-test/task-lists/ci_task_list')
       .withTaskListPollers('ci_task_list', pollers)
       .go();
 

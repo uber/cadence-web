@@ -99,7 +99,7 @@ export default {
     changeDomain() {
       if (this.validation === 'valid') {
         this.$router.push({
-          path: `/domain/${this.d}/workflow`,
+          path: `/domains/${this.d}/workflows`,
           query: omit(
             this.$router.currentRoute.query,
             'workflowId',
@@ -112,7 +112,7 @@ export default {
       }
     },
     domainLink(d) {
-      return `/domain/${d}/workflow?${stringify(
+      return `/domains/${d}/workflows?${stringify(
         this.$router.currentRoute.query
       )}`;
     },
@@ -127,7 +127,7 @@ export default {
         return Promise.resolve(this.domainDescCache[d]);
       }
 
-      return this.$http(`/api/domain/${d}`).then(r => {
+      return this.$http(`/api/domains/${d}`).then(r => {
         this.domainDescCache[d] = mapDomainDescription(r);
 
         return this.domainDescCache[d];

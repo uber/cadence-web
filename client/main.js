@@ -15,7 +15,7 @@ import snapscroll from './directives/snapscroll';
 import App from './App.vue';
 import Root from './routes/index.vue';
 import Help from './routes/help.vue';
-import DomainSearch from './routes/domain-search.vue';
+import DomainList from './routes/domain-list.vue';
 import WorkflowList from './routes/domain/workflow-list.vue';
 import DomainConfig from './routes/domain/domain-config.vue';
 import WorkflowTabs from './routes/workflow/index.vue';
@@ -31,13 +31,14 @@ const routeOpts = {
   routes: [
     {
       path: '/',
+      redirect: '/domains',
       component: Root,
       children: [
         {
-          name: 'domain-search',
-          path: '/',
+          name: 'domain-list',
+          path: '/domains',
           components: {
-            'domain-search': DomainSearch
+            'domain-list': DomainList
           },
         },
         {
@@ -50,14 +51,18 @@ const routeOpts = {
       ],
     },
     {
+      name: 'domains-redirect',
+      path: '/domain/*',
+      redirect: '/domains/*'
+    },
+    {
       name: 'workflow-list',
-      path: '/domain/:domain/workflow',
-      alias: '/domain/:domain/workflows',
+      path: '/domains/:domain/workflows',
       component: WorkflowList,
     },
     {
       name: 'domain-config',
-      path: '/domain/:domain/config',
+      path: '/domains/:domain/config',
       component: DomainConfig,
       props: ({ params }) => ({
         domain: params.domain,
@@ -65,8 +70,7 @@ const routeOpts = {
     },
     {
       name: 'workflow',
-      path: '/domain/:domain/workflow/:workflowId/:runId',
-      alias: '/domain/:domain/workflows/:workflowId/:runId',
+      path: '/domains/:domain/workflows/:workflowId/:runId',
       component: WorkflowTabs,
       props: ({ params }) => ({
         domain: params.domain,
@@ -76,8 +80,7 @@ const routeOpts = {
       children: [
         {
           name: 'workflow/summary',
-          path: '/domain/:domain/workflow/:workflowId/:runId/summary',
-          alias: '/domain/:domain/workflows/:workflowId/:runId/summary',
+          path: '/domains/:domain/workflows/:workflowId/:runId/summary',
           components: {
             summary: WorkflowSummary,
           },
@@ -90,8 +93,7 @@ const routeOpts = {
         },
         {
           name: 'workflow/history',
-          path: '/domain/:domain/workflow/:workflowId/:runId/history',
-          alias: '/domain/:domain/workflows/:workflowId/:runId/history',
+          path: '/domains/:domain/workflows/:workflowId/:runId/history',
           components: {
             history: History,
           },
@@ -108,16 +110,14 @@ const routeOpts = {
         },
         {
           name: 'workflow/stack-trace',
-          path: '/domain/:domain/workflow/:workflowId/:runId/stack-trace',
-          alias: '/domain/:domain/workflows/:workflowId/:runId/stack-trace',
+          path: '/domains/:domain/workflows/:workflowId/:runId/stack-trace',
           components: {
             stacktrace: StackTrace,
           },
         },
         {
           name: 'workflow/query',
-          path: '/domain/:domain/workflow/:workflowId/:runId/query',
-          alias: '/domain/:domain/workflows/:workflowId/:runId/queries',
+          path: '/domains/:domain/workflows/:workflowId/:runId/query',
           components: {
             query: Query,
           },
@@ -126,11 +126,11 @@ const routeOpts = {
     },
     {
       name: 'task-list',
-      path: '/domain/:domain/task-lists/:taskList',
+      path: '/domains/:domain/task-lists/:taskList',
       component: TaskList,
     },
     {
-      path: '/domain/:domain/history',
+      path: '/domains/:domain/history',
       redirect: ({ params, query }) => {
         if (!query.runId || !query.workflowId) {
           return {

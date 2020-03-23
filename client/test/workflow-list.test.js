@@ -5,7 +5,7 @@ describe('Workflow list', () => {
   async function workflowsTest(mochaTest, initialWorkflows, query, domainDesc) {
     const [testEl, scenario] = new Scenario(mochaTest)
       .withDomain('ci-test')
-      .startingAt('/domain/ci-test/workflow')
+      .startingAt('/domains/ci-test/workflows')
       .withWorkflows('open', query, initialWorkflows)
       .withDomainDescription('ci-test', domainDesc)
       .go();
@@ -32,7 +32,7 @@ describe('Workflow list', () => {
     header.should.have
       .descendant('a.workflows')
       .and.have.class('router-link-active')
-      .and.have.attribute('href', '/domain/ci-test/workflow');
+      .and.have.attribute('href', '/domains/ci-test/workflows');
 
     header.should.have
       .descendant('a.config')
@@ -76,8 +76,8 @@ describe('Workflow list', () => {
     resultsEl
       .attrValues('tbody td:nth-child(2) a', 'href')
       .should.deep.equal([
-        '/domain/ci-test/workflow/github.com%2Fuber%2Fcadence-web%2Femail-daily-summaries-2/ef2c889e-e709-4d50-99ee-3748dfa0a101/summary',
-        '/domain/ci-test/workflow/github.com%2Fuber%2Fcadence-web%2Fexample-1/db8da3c0-b7d3-48b7-a9b3-b6f566e58207/summary',
+        '/domains/ci-test/workflows/github.com%2Fuber%2Fcadence-web%2Femail-daily-summaries-2/ef2c889e-e709-4d50-99ee-3748dfa0a101/summary',
+        '/domains/ci-test/workflows/github.com%2Fuber%2Fcadence-web%2Fexample-1/db8da3c0-b7d3-48b7-a9b3-b6f566e58207/summary',
       ]);
     resultsEl
       .textNodes('tbody td:nth-child(3)')
@@ -132,7 +132,7 @@ describe('Workflow list', () => {
   it('should respect query parameters for range and status', async function test() {
     const [testEl] = new Scenario(this.test)
       .withDomain('ci-test')
-      .startingAt('/domain/ci-test/workflow?status=FAILED&range=last-24-hours')
+      .startingAt('/domains/ci-test/workflows?status=FAILED&range=last-24-hours')
       .withWorkflows('closed', {
         startTime: moment()
           .subtract(24, 'hours')
@@ -262,7 +262,7 @@ describe('Workflow list', () => {
   it('should use query parameters from the URL', async function test() {
     const [testEl] = new Scenario(this.test)
       .withDomain('ci-test')
-      .startingAt('/domain/ci-test/workflow?status=FAILED&workflowName=demo')
+      .startingAt('/domains/ci-test/workflows?status=FAILED&workflowName=demo')
       .withWorkflows('closed', {
         status: 'FAILED',
         workflowName: 'demo',

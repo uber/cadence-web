@@ -33,7 +33,7 @@ export default {
   },
   created() {
     this.$http(
-      `/api/domain/${this.$route.params.domain}/task-lists/${this.$route.params.taskList}/pollers`
+      `/api/domains/${this.$route.params.domain}/task-lists/${this.$route.params.taskList}/pollers`
     )
       .then(
         p => {

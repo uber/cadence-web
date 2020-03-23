@@ -6,14 +6,14 @@ const
   losslessJSON = require('lossless-json'),
   momentToLong = m => Long.fromValue(m.unix()).mul(1000000000)
 
-router.get('/api/domain', async function (ctx) {
+router.get('/api/domains', async function (ctx) {
   ctx.body = await ctx.cadence.listDomains({
     pageSize: 50,
     nextPageToken: ctx.query.nextPageToken ? Buffer.from(ctx.query.nextPageToken, 'base64') : undefined
   })
 })
 
-router.get('/api/domain/:domain', async function (ctx) {
+router.get('/api/domains/:domain', async function (ctx) {
   ctx.body = await ctx.cadence.describeDomain({ name: ctx.params.domain })
 })
 
@@ -36,10 +36,10 @@ async function listWorkflows(state, ctx) {
   })
 }
 
-router.get('/api/domain/:domain/workflow/open', listWorkflows.bind(null, 'open'))
-router.get('/api/domain/:domain/workflow/closed', listWorkflows.bind(null, 'closed'))
+router.get('/api/domains/:domain/workflows/open', listWorkflows.bind(null, 'open'))
+router.get('/api/domains/:domain/workflows/closed', listWorkflows.bind(null, 'closed'))
 
-router.get('/api/domain/:domain/workflow/list', async function (ctx) {
+router.get('/api/domains/:domain/workflows/list', async function (ctx) {
   var q = ctx.query || {}
   ctx.body = await ctx.cadence['listWorkflows']({
     query: q.queryString || undefined,
@@ -47,7 +47,7 @@ router.get('/api/domain/:domain/workflow/list', async function (ctx) {
   })
 })
 
-router.get('/api/domain/:domain/workflow/:workflowId/:runId/history', async function (ctx) {
+router.get('/api/domains/:domain/workflows/:workflowId/:runId/history', async function (ctx) {
   var q = ctx.query || {}
 
   ctx.body = await ctx.cadence.getHistory({
@@ -80,7 +80,7 @@ router.get('/api/domain/:domain/workflow/:workflowId/:runId/history', async func
   }
 })
 
-router.get('/api/domain/:domain/workflow/:workflowId/:runId/export', async function (ctx) {
+router.get('/api/domains/:domain/workflows/:workflowId/:runId/export', async function (ctx) {
   var nextPageToken
 
   do {
@@ -96,7 +96,7 @@ router.get('/api/domain/:domain/workflow/:workflowId/:runId/export', async funct
   ctx.body = ''
 })
 
-router.get('/api/domain/:domain/workflow/:workflowId/:runId/query', async function (ctx) {
+router.get('/api/domains/:domain/workflows/:workflowId/:runId/query', async function (ctx) {
   // workaround implementation until https://github.com/uber/cadence/issues/382 is resolved
   try {
     await ctx.cadence.queryWorkflow({
@@ -114,7 +114,7 @@ router.get('/api/domain/:domain/workflow/:workflowId/:runId/query', async functi
   }
 })
 
-router.post('/api/domain/:domain/workflow/:workflowId/:runId/query/:queryType', async function (ctx) {
+router.post('/api/domains/:domain/workflows/:workflowId/:runId/query/:queryType', async function (ctx) {
   ctx.body = await ctx.cadence.queryWorkflow({
     query: {
       queryType: ctx.params.queryType
@@ -122,21 +122,21 @@ router.post('/api/domain/:domain/workflow/:workflowId/:runId/query/:queryType', 
   })
 })
 
-router.post('/api/domain/:domain/workflow/:workflowId/:runId/terminate', async function (ctx) {
+router.post('/api/domains/:domain/workflows/:workflowId/:runId/terminate', async function (ctx) {
   ctx.body = await ctx.cadence.terminateWorkflow({
     reason: ctx.request.body && ctx.request.body.reason
   })
 })
 
-router.post('/api/domain/:domain/workflow/:workflowId/:runId/signal/:signal', async function (ctx) {
+router.post('/api/domains/:domain/workflows/:workflowId/:runId/signal/:signal', async function (ctx) {
   ctx.body = await ctx.cadence.signalWorkflow({ signalName: ctx.params.signal })
 })
 
-router.get('/api/domain/:domain/workflow/:workflowId/:runId', async function (ctx) {
+router.get('/api/domains/:domain/workflows/:workflowId/:runId', async function (ctx) {
   ctx.body = await ctx.cadence.describeWorkflow()
 })
 
-router.get('/api/domain/:domain/task-lists/:taskList/pollers', async function (ctx) {
+router.get('/api/domains/:domain/task-lists/:taskList/pollers', async function (ctx) {
   const descTaskList = async (taskListType) => (await ctx.cadence.describeTaskList({
     domain: ctx.params.domain,
     taskList: { name: ctx.params.taskList },

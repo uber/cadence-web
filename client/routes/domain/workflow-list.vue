@@ -133,7 +133,7 @@ export default pagedGrid({
     };
   },
   created() {
-    this.$http(`/api/domain/${this.$route.params.domain}`).then(r => {
+    this.$http(`/api/domains/${this.$route.params.domain}`).then(r => {
       this.maxRetentionDays =
         Number(r.configuration.workflowExecutionRetentionPeriodInDays) || 30;
 
@@ -231,12 +231,12 @@ export default pagedGrid({
       q.nextPageToken = this.nextPageToken;
 
       if (q.queryString) {
-        this.fetch(`/api/domain/${domain}/workflow/list`, q);
+        this.fetch(`/api/domains/${domain}/workflows/list`, q);
 
         return;
       }
 
-      this.fetch(`/api/domain/${domain}/workflow/${state}`, q);
+      this.fetch(`/api/domains/${domain}/workflows/${state}`, q);
     },
     minStartDate() {
       const {
