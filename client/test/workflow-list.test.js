@@ -132,7 +132,9 @@ describe('Workflow list', () => {
   it('should respect query parameters for range and status', async function test() {
     const [testEl] = new Scenario(this.test)
       .withDomain('ci-test')
-      .startingAt('/domains/ci-test/workflows?status=FAILED&range=last-24-hours')
+      .startingAt(
+        '/domains/ci-test/workflows?status=FAILED&range=last-24-hours'
+      )
       .withWorkflows('closed', {
         startTime: moment()
           .subtract(24, 'hours')

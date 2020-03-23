@@ -14,7 +14,7 @@ import snapscroll from './directives/snapscroll';
 
 import App from './App.vue';
 import Root from './routes/index.vue';
-import Help from './routes/help.vue';
+import Help from './routes/help/index.vue';
 import DomainList from './routes/domain-list.vue';
 import WorkflowList from './routes/domain/workflow-list.vue';
 import DomainConfig from './routes/domain/domain-config.vue';
@@ -38,14 +38,14 @@ const routeOpts = {
           name: 'domain-list',
           path: '/domains',
           components: {
-            'domain-list': DomainList
+            'domain-list': DomainList,
           },
         },
         {
           name: 'help',
           path: '/help',
           components: {
-            help: Help
+            help: Help,
           },
         },
       ],
@@ -53,7 +53,7 @@ const routeOpts = {
     {
       name: 'domains-redirect',
       path: '/domain/*',
-      redirect: '/domains/*'
+      redirect: '/domains/*',
     },
     {
       name: 'workflow-list',

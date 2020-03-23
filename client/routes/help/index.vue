@@ -75,7 +75,6 @@
           Cadence UI source code on GitHub
         </a>
       </div>
-
     </section>
     <section id="cli">
       <h3>
@@ -83,25 +82,24 @@
           Common CLI commands
         </a>
       </h3>
-      <p>Here are a some useful common CLI commands to get started with Cadence.</p>
+      <p>
+        Here are a some useful common CLI commands to get started with Cadence.
+      </p>
 
-      <label for="cli-command-domain-register">Register a domain (local only)</label>
-      <pre id="cli-command-domain-register">cadence --domain {domain-name} domain register --global_domain false</pre>
-
-      <label for="cli-command-domain-describe">List domain settings</label>
-      <pre id="cli-command-domain-describe">cadence --domain {domain-name} domain describe</pre>
-
-      <label for="cli-command-workflow-run">Run a workflow</label>
-      <pre id="cli-command-workflow-run">cadence --domain {domain-name} workflow run --tl {task-list-name} --wt {workflow-type-name} --et 60 -i '"{input-string}"'</pre>
-
-      <label for="cli-command-workflow-show">See a workflow history</label>
-      <pre id="cli-command-workflow-show">cadence --domain {domain-name} workflow show -w {workflow-id} -r {run-id}</pre>
-
-      <label for="cli-command-workflow-list">List closed workflows</label>
-      <pre id="cli-command-workflow-list">cadence --domain {domain-name} workflow list</pre>
-
-      <label for="cli-command-workflow-list-open">List open workflows</label>
-      <pre id="cli-command-workflow-list-open">cadence --domain {domain-name} workflow list --open</pre>
+      <section v-for="commandGroup in cliCommands" :key="commandGroup.header">
+        <h5>{{ commandGroup.header }}</h5>
+        <div
+          class="cli-command"
+          v-for="command in commandGroup.commands"
+          :key="command.id"
+        >
+          <label :for="command.id">{{ command.label }}</label>
+          <pre :id="command.id">{{ command.value }}</pre>
+          <p v-for="(description, index) in command.description" :key="index">
+            {{ description }}
+          </p>
+        </div>
+      </section>
 
       <div>
         <a
@@ -180,16 +178,20 @@
 </template>
 
 <script>
+import { cliCommands } from './constants';
+
 export default {
   props: ['hideDocs', 'hideSlack', 'hideStackOverflow'],
   data() {
-    return {};
+    return {
+      cliCommands,
+    };
   },
 };
 </script>
 
 <style lang="stylus">
-@require "../styles/definitions"
+@require "../../styles/definitions"
 
 iframe-height = 315px;
 iframe-scrollbar-height = 15px;
@@ -207,6 +209,10 @@ section.help {
   @media (min-width max-iframe-width) {
     width: max-iframe-width;
     margin: layout-spacing-large auto;
+  }
+
+  .cli-command {
+    margin-bottom: 25px;
   }
 
   .video-outer-container {
@@ -256,19 +262,22 @@ section.help {
     }
   }
 
+  h5 {
+    margin: 1em 0 0.5em;
+  }
+
   label {
     display: block;
-    margin: 20px 0 10px;
+    font-weight: 500;
+    margin: 1em 0 0.5em;
   }
 
   p {
-    margin: 1em 0 0.5em;
+    margin: 0.5em 0 0.5em;
   }
 
   pre {
     display: inline-block;
-    margin-bottom: 5px;
   }
 }
-
 </style>
