@@ -87,11 +87,10 @@
 
       <section v-for="commandGroup in cliCommands">
         <h5>{{ commandGroup.header }}</h5>
-        <div v-for="command in commandGroup.commands">
+        <div class="cli-command" v-for="command in commandGroup.commands">
           <label :for="command.id">{{command.label}}</label>
-          <div v-for="(value, index) in command.values">
-            <pre :id="index === 0 ? command.id : undefined">{{value}}</pre>
-          </div>
+          <pre :id="command.id">{{command.value}}</pre>
+          <p v-for="description in command.describe">{{description}}</p>
         </div>
       </section>
 
@@ -205,6 +204,10 @@ section.help {
     margin: layout-spacing-large auto;
   }
 
+  .cli-command {
+    margin-bottom: 25px;
+  }
+
   .video-outer-container {
     height: iframe-height + iframe-scrollbar-height;
     margin: 20px 0;
@@ -258,6 +261,7 @@ section.help {
 
   label {
     display: block;
+    font-weight: 500;
     margin: 1em 0 0.5em;
   }
 
@@ -267,7 +271,6 @@ section.help {
 
   pre {
     display: inline-block;
-    margin-bottom: 5px;
   }
 }
 
