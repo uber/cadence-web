@@ -58,7 +58,7 @@ export const cliCommands = [
       },
 
       {
-        describe: [
+        description: [
           'Where event_id is the event to reset from',
           'and reset_type can be FirstDecisionTaskCompleted, LastDecisionTaskCompleted, LastContinueAsNew, BadBinary',
         ],
@@ -68,7 +68,7 @@ export const cliCommands = [
           'cadence workflow reset -w {workflow-id} -r {run-id} --event_id {event-id} --reason \'"{reason}"\' --reset_type {reset-type} --reset_bad_binary_checksum {bad-binary-SHA}',
       },
       {
-        describe: [
+        description: [
           'Where query can be any query that returns a list of workflows',
           'and reset_type can be FirstDecisionTaskCompleted, LastDecisionTaskCompleted, LastContinueAsNew, BadBinary',
         ],

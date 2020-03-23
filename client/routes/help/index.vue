@@ -95,7 +95,7 @@
         >
           <label :for="command.id">{{ command.label }}</label>
           <pre :id="command.id">{{ command.value }}</pre>
-          <p v-for="(description, index) in command.describe" :key="index">
+          <p v-for="(description, index) in command.description" :key="index">
             {{ description }}
           </p>
         </div>
