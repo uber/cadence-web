@@ -33,7 +33,7 @@ export default {
   },
   created() {
     this.$http(
-      `/api/domain/${this.$route.params.domain}/task-lists/${this.$route.params.taskList}/pollers`
+      `/api/domains/${this.$route.params.domain}/task-lists/${this.$route.params.taskList}/pollers`
     )
       .then(
         p => {
@@ -57,7 +57,7 @@ export default {
 </script>
 
 <style lang="stylus">
-@require "../styles/definitions.styl"
+@require "../../styles/definitions.styl"
 
 section.task-list
   > header

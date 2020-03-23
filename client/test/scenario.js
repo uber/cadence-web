@@ -120,7 +120,7 @@ Scenario.prototype.withDomainDescription = function withDomainDescription(
   domainDesc
 ) {
   this.api.getOnce(
-    `/api/domain/${domain}`,
+    `/api/domains/${domain}`,
     deepmerge(
       {
         domainInfo: {
@@ -161,7 +161,7 @@ Scenario.prototype.withWorkflows = function withWorkflows(
     workflows = JSON.parse(JSON.stringify(fixtures.workflows[status]));
   }
 
-  const url = `/api/domain/${this.domain}/workflows/${status}?${qs.stringify({
+  const url = `/api/domains/${this.domain}/workflows/${status}?${qs.stringify({
     startTime: moment()
       .subtract(21, 'day')
       .startOf('day')
@@ -182,12 +182,12 @@ Scenario.prototype.withWorkflows = function withWorkflows(
 };
 
 Scenario.prototype.execApiBase = function execApiBase(workflowId, runId) {
-  return `/api/domain/${this.domain}/workflows/${encodeURIComponent(
+  return `/api/domains/${this.domain}/workflows/${encodeURIComponent(
     workflowId || this.workflowId
   )}/${encodeURIComponent(runId || this.runId)}`;
 };
 
-Scenario.prototype.withExecution = function withExecution(
+Scenario.prototype.withWorkflow = function withWorkflow(
   workflowId,
   runId,
   description
@@ -258,10 +258,10 @@ Scenario.prototype.withFullHistory = function withFullHistory(events) {
     .withHistory(parsedEvents.slice(third + third));
 };
 
-Scenario.prototype.withQueries = function withQueries(queries) {
+Scenario.prototype.withQuery = function withQuery(query) {
   this.api.getOnce(
-    `${this.execApiBase()}/queries`,
-    queries || ['__stack_trace', 'status']
+    `${this.execApiBase()}/query`,
+    query || ['__stack_trace', 'status']
   );
 
   return this;
@@ -269,7 +269,7 @@ Scenario.prototype.withQueries = function withQueries(queries) {
 
 Scenario.prototype.withQueryResult = function withQueryResult(query, result) {
   this.api.postOnce(
-    `${this.execApiBase()}/queries/${query}`,
+    `${this.execApiBase()}/query/${query}`,
     result && result.status ? result : { queryResult: result }
   );
 
@@ -291,7 +291,7 @@ Scenario.prototype.withTaskListPollers = function withTaskListPollers(
   pollers
 ) {
   this.api.getOnce(
-    `/api/domain/${this.domain}/task-lists/${taskList}/pollers`,
+    `/api/domains/${this.domain}/task-lists/${taskList}/pollers`,
     pollers || {
       node1: {
         lastAccessTime: moment()

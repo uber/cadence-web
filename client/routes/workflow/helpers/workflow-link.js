@@ -10,7 +10,7 @@ const workflowLink = (d, short) => {
 
   return {
     routeLink: {
-      name: 'execution/summary',
+      name: 'workflow/summary',
       params: {
         domain: d.domain,
         workflowId: d.workflowExecution.workflowId,

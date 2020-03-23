@@ -10,7 +10,7 @@ describe('Workflow Execution', function() {
     }
 
     return request()
-      .get('/api/domain/canary/workflows/ci%2Fdemo/run1')
+      .get('/api/domains/canary/workflows/ci%2Fdemo/run1')
       .expect(200)
       .expect('Content-Type', /json/)
       .expect({
@@ -38,7 +38,7 @@ describe('Workflow Execution', function() {
     }
 
     return request()
-      .post('/api/domain/canary/workflows/ci%2Fdemo/run1/terminate')
+      .post('/api/domains/canary/workflows/ci%2Fdemo/run1/terminate')
       .send({ reason: 'example reason' })
       .expect(204)
       .expect(() => reason.should.equal('example reason'))
@@ -54,7 +54,7 @@ describe('Workflow Execution', function() {
     }
 
     return request()
-      .post('/api/domain/canary/workflows/ci%2Fdemo/run2/signal/firealarm')
+      .post('/api/domains/canary/workflows/ci%2Fdemo/run2/signal/firealarm')
       .expect(204)
       .expect(() => signal.should.equal('firealarm'))
   })

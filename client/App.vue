@@ -78,30 +78,31 @@ export default {
       :type="notification.type"
     />
     <header class="top-bar">
-      <a href="/" class="logo">
+      <a href="/domains" class="logo">
         <div v-html="logo"></div>
         <span class="version">{{ version }}</span>
       </a>
       <div class="domain" v-if="$route.params.domain">
         <a
-          :href="`/domain/${$route.params.domain}/workflows`"
+          class="workflows"
           :class="{
             'router-link-active':
-              $route.path === `/domain/${$route.params.domain}/workflows`,
-            workflows: true,
+              $route.path === `/domains/${$route.params.domain}/workflows`,
           }"
-          >{{ $route.params.domain }}</a
+          :href="`/domains/${$route.params.domain}/workflows`"
         >
+          {{ $route.params.domain }}
+        </a>
         <a
-          :href="`/domain/${$route.params.domain}/config`"
+          class="config"
           :class="{
             'router-link-active':
-              $route.path === `/domain/${$route.params.domain}/config`,
-            config: true,
+              $route.path === `/domains/${$route.params.domain}/config`,
           }"
+          :href="`/domains/${$route.params.domain}/config`"
         ></a>
       </div>
-      <div class="list-workflows" v-if="$route.name === 'workflows'">
+      <div v-if="$route.name === 'workflow-list'">
         Workflows
       </div>
       <div class="detail-view workflow-id" v-if="$route.params.workflowId">

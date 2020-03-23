@@ -32,7 +32,7 @@ export default {
       this.loading = true;
 
       return this.$http
-        .post(`${this.baseAPIURL}/queries/__stack_trace`)
+        .post(`${this.baseAPIURL}/query/__stack_trace`)
         .then(({ queryResult }) => {
           this.stackTrace = queryResult;
           this.stackTraceTimestamp = moment();

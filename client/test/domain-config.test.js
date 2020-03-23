@@ -2,7 +2,7 @@ describe('Domain Configuration', () => {
   async function domainConfigTest(mochaTest, desc) {
     const [testEl, scenario] = new Scenario(mochaTest)
       .withDomain('ci-test')
-      .startingAt('/domain/ci-test/config')
+      .startingAt('/domains/ci-test/config')
       .withDomainDescription('ci-test', desc)
       .go();
 

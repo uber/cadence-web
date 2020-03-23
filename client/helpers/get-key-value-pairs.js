@@ -24,7 +24,7 @@ const getKeyValuePairs = event => {
         kvps.push({
           key,
           routeLink: {
-            name: 'execution/summary',
+            name: 'workflow/summary',
             params: {
               runId: value,
             },
@@ -35,7 +35,7 @@ const getKeyValuePairs = event => {
         kvps.push({
           key,
           routeLink: {
-            name: 'execution/summary',
+            name: 'workflow/summary',
             params: {
               domain: root.parentWorkflowDomain,
               runId: value,
@@ -48,7 +48,7 @@ const getKeyValuePairs = event => {
         kvps.push({
           key,
           routeLink: {
-            name: 'execution/summary',
+            name: 'workflow/summary',
             params: {
               domain: root.domain,
               runId: value,

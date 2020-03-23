@@ -22,7 +22,7 @@ describe('Task List Pollers', function() {
     }
 
     return request()
-      .get('/api/domain/canary/task-lists/demo-task-list/pollers')
+      .get('/api/domains/canary/task-lists/demo-task-list/pollers')
       .expect(200)
       .expect('Content-Type', /json/)
       .expect({

@@ -156,7 +156,7 @@
                       }}
                     </div>
                     <div class="td col-summary">
-                      <event-details
+                      <event-detail
                         :event="
                           compactDetails && !item.expanded
                             ? item.eventSummary
@@ -208,7 +208,7 @@
               </template>
             </RecycleScroller>
             <div
-              class="selected-event-details"
+              class="selected-event-detail"
               v-if="selectedTimelineEvent"
               :class="{ active: !!selectedTimelineEvent }"
             >
@@ -243,7 +243,7 @@
                 </a>
               </div>
               <detail-list
-                class="event-details"
+                class="event-detail"
                 :item="selectedEventDetails"
                 :title="
                   `${selectedTimelineEvent.content} - ${selectedEvent.eventType}`
@@ -268,8 +268,8 @@ import {
 } from 'vue-virtual-scroller';
 import debounce from 'lodash-es/debounce';
 import omit from 'lodash-es/omit';
-import timeline from './timeline.vue';
-import eventDetails from './event-details.vue';
+import Timeline from './components/timeline.vue';
+import EventDetail from './components/event-detail.vue';
 import { DetailList } from '~components';
 
 export default {
@@ -523,10 +523,10 @@ export default {
     'detail-list': DetailList,
     DynamicScroller,
     DynamicScrollerItem,
-    'event-details': eventDetails,
+    'event-detail': EventDetail,
     prism: Prism,
     RecycleScroller,
-    timeline,
+    'timeline': Timeline,
   },
 };
 </script>
@@ -737,7 +737,7 @@ section.history
           pre
             max-width none
 
-    .selected-event-details
+    .selected-event-detail
       position absolute
       width "calc(100vw - %s)" % (wide-title-width + 30px)
       height 100%
