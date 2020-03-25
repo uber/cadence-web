@@ -238,7 +238,7 @@ area-loader, section.loading
     height size
     border-radius size
     left "calc(50% - %s)" % (size/2)
-    top "calc(25% - %s)" % (size/2)
+    top 300px;
     border 3px solid uber-blue
     border-bottom-color transparent
     animation spin 800ms linear infinite
