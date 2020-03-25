@@ -1,4 +1,4 @@
-describe('Domain search', () => {
+describe('Domain list', () => {
   it('should show a header bar without a breadcrumb or domain changer', async function test() {
     const testEl = new Scenario(this.test).render();
     const headerBar = await testEl.waitUntilExists('header.top-bar');

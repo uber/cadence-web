@@ -1,4 +1,4 @@
-describe('Domain Configuration', () => {
+describe('Domain Settings', () => {
   async function domainConfigTest(mochaTest, desc) {
     const [testEl, scenario] = new Scenario(mochaTest)
       .withDomain('ci-test')
