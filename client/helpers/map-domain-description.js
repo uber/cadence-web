@@ -28,7 +28,7 @@ export default function(domain) {
     'Emit Metrics': emitMetric ? 'Yes' : 'No',
     'History Archival': historyArchivalStatus === 'ENABLED' ? 'Enabled' : 'Disabled',
     'Visibility Archival': visibilityArchivalStatus === 'ENABLED' ? 'Enabled' : 'Disabled',
-    ...(failoverVersion && { 'Failover Version': failoverVersion }),
+    ...(failoverVersion !== undefined && { 'Failover Version': failoverVersion }),
     clusters: clusters.length ?
       clusters
         .map(({ clusterName }) =>
