@@ -167,13 +167,16 @@ export default pagedGrid({
   computed: {
     fetchUrl() {
       const { domain, queryString, state } = this;
+
       if (queryString) {
         return `/api/domains/${domain}/workflows/list`;
       }
+
       return `/api/domains/${domain}/workflows/${state}`;
     },
     endTime() {
       const { endTime, range } = this.$route.query;
+
       return this.getEndTimeIsoString(range, endTime);
     },
     filterBy() {
@@ -181,16 +184,18 @@ export default pagedGrid({
     },
     startTime() {
       const { range, startTime } = this.$route.query;
+
       return this.getStartTimeIsoString(range, startTime);
     },
     state() {
       const { statusName } = this;
+
       return !statusName || statusName === 'OPEN' ? 'open' : 'closed';
     },
     status() {
-      return !this.$route.query || !this.$route.query.status ?
-        this.statuses[0] :
-        this.statuses.find(s => s.value === this.$route.query.status);
+      return !this.$route.query || !this.$route.query.status
+        ? this.statuses[0]
+        : this.statuses.find(s => s.value === this.$route.query.status);
     },
     statusName() {
       return this.status.value;
@@ -207,7 +212,10 @@ export default pagedGrid({
           updatedQuery.range,
           query.startTime
         );
-        query.endTime = this.getEndTimeIsoString(updatedQuery.range, query.endTime);
+        query.endTime = this.getEndTimeIsoString(
+          updatedQuery.range,
+          query.endTime
+        );
       }
 
       return query.startTime && query.endTime
@@ -219,13 +227,12 @@ export default pagedGrid({
     },
     criteria() {
       const {
-        domain,
         endTime,
         queryString,
         startTime,
         statusName: status,
         workflowId,
-        workflowName
+        workflowName,
       } = this;
 
       this.nextPageToken = undefined;
@@ -234,17 +241,16 @@ export default pagedGrid({
         return null;
       }
 
+      const includeStatus = !['OPEN', 'CLOSED'].includes(status);
+
       const criteria = {
         startTime,
         endTime,
+        ...(queryString && { queryString }),
+        ...(includeStatus && { status }),
         ...(workflowId && { workflowId }),
         ...(workflowName && { workflowName }),
-        ...(queryString && { queryString }),
       };
-
-      if (!['OPEN', 'CLOSED'].includes(status)) {
-        criteria.status = status;
-      }
 
       return criteria;
     },
@@ -252,8 +258,10 @@ export default pagedGrid({
       if (!this.criteria) {
         return;
       }
+
       const { fetchUrl, nextPageToken } = this;
       const query = { ...this.criteria, nextPageToken };
+
       this.fetch(fetchUrl, query);
     },
     queryString() {
@@ -414,10 +422,7 @@ export default pagedGrid({
           query.range = range;
           delete query.startTime;
           delete query.endTime;
-          localStorage.setItem(
-            `${this.domain}:workflows-time-range`,
-            range
-          );
+          localStorage.setItem(`${this.domain}:workflows-time-range`, range);
         } else {
           query.startTime = range.startTime.toISOString();
           query.endTime = range.endTime.toISOString();

@@ -6,16 +6,14 @@
         label="Workflows"
         :to="{ name: 'workflow-list' }"
       />
-      <navigation-link label="Settings" icon="icon_settings" :to="{ name: 'domain-settings' }" />
+      <navigation-link
+        label="Settings"
+        icon="icon_settings"
+        :to="{ name: 'domain-settings' }"
+      />
     </navigation-bar>
-    <router-view
-      name="workflow-list"
-      :domain="domain"
-    />
-    <router-view
-      name="domain-settings"
-      :domain="domain"
-    />
+    <router-view name="workflow-list" :domain="domain" />
+    <router-view name="domain-settings" :domain="domain" />
   </section>
 </template>
 

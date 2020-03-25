@@ -148,7 +148,7 @@ const routeOpts = {
     {
       name: 'domain-config-redirect',
       path: '/domains/:domain/config',
-      redirect: '/domains/:domain/settings'
+      redirect: '/domains/:domain/settings',
     },
     {
       path: '/domains/:domain/history',
