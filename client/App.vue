@@ -93,17 +93,6 @@ export default {
         >
           {{ $route.params.domain }}
         </a>
-        <a
-          class="config"
-          :class="{
-            'router-link-active':
-              $route.path === `/domains/${$route.params.domain}/settings`,
-          }"
-          :href="`/domains/${$route.params.domain}/settings`"
-        ></a>
-      </div>
-      <div v-if="$route.name === 'workflow-list'">
-        Workflows
       </div>
       <div class="detail-view workflow-id" v-if="$route.params.workflowId">
         <span>{{ $route.params.workflowId }}</span>
