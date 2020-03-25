@@ -1,5 +1,5 @@
 <template>
-  <section :class="{ 'domain-config domain-description': true, loading }">
+  <section class="domain-settings domain-description" :class="{ loading }">
     <header>
       <h3>{{ domain }}</h3>
     </header>
@@ -52,7 +52,7 @@ export default {
 <style lang="stylus">
 @require "../../styles/definitions.styl"
 
-section.domain-config
+section.domain-settings
   .foobar
     display none
 </style>

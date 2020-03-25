@@ -13,17 +13,19 @@ import copyButton from './components/copy.vue';
 import snapscroll from './directives/snapscroll';
 
 import App from './App.vue';
-import Root from './routes/index.vue';
-import Help from './routes/help/index.vue';
+import Domain from './routes/domain/index.vue';
 import DomainList from './routes/domain-list.vue';
-import WorkflowList from './routes/domain/workflow-list.vue';
-import DomainConfig from './routes/domain/domain-config.vue';
-import WorkflowTabs from './routes/workflow/index.vue';
-import WorkflowSummary from './routes/workflow/summary.vue';
+import DomainSettings from './routes/domain/domain-settings.vue';
+import Help from './routes/help/index.vue';
 import History from './routes/workflow/history.vue';
-import StackTrace from './routes/workflow/stack-trace.vue';
 import Query from './routes/workflow/query.vue';
+import Root from './routes/index.vue';
+import StackTrace from './routes/workflow/stack-trace.vue';
 import TaskList from './routes/domain/task-list.vue';
+import WorkflowList from './routes/domain/workflow-list.vue';
+import WorkflowSummary from './routes/workflow/summary.vue';
+import WorkflowTabs from './routes/workflow/index.vue';
+
 import { http, injectMomentDurationFormat, jsonTryParse } from '~helpers';
 
 const routeOpts = {
@@ -51,22 +53,28 @@ const routeOpts = {
       ],
     },
     {
-      name: 'domains-redirect',
-      path: '/domain/*',
-      redirect: '/domains/*',
-    },
-    {
-      name: 'workflow-list',
-      path: '/domains/:domain/workflows',
-      component: WorkflowList,
-    },
-    {
-      name: 'domain-config',
-      path: '/domains/:domain/config',
-      component: DomainConfig,
+      name: 'domain',
+      path: '/domains/:domain',
+      component: Domain,
       props: ({ params }) => ({
         domain: params.domain,
       }),
+      children: [
+        {
+          name: 'workflow-list',
+          path: '/domains/:domain/workflows',
+          components: {
+            'workflow-list': WorkflowList,
+          },
+        },
+        {
+          name: 'domain-settings',
+          path: '/domains/:domain/settings',
+          components: {
+            'domain-settings': DomainSettings,
+          },
+        },
+      ],
     },
     {
       name: 'workflow',
@@ -128,6 +136,19 @@ const routeOpts = {
       name: 'task-list',
       path: '/domains/:domain/task-lists/:taskList',
       component: TaskList,
+    },
+
+    // redirects
+
+    {
+      name: 'domains-redirect',
+      path: '/domain/*',
+      redirect: '/domains/*',
+    },
+    {
+      name: 'domain-config-redirect',
+      path: '/domains/:domain/config',
+      redirect: '/domains/:domain/settings'
     },
     {
       path: '/domains/:domain/history',

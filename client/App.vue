@@ -97,9 +97,9 @@ export default {
           class="config"
           :class="{
             'router-link-active':
-              $route.path === `/domains/${$route.params.domain}/config`,
+              $route.path === `/domains/${$route.params.domain}/settings`,
           }"
-          :href="`/domains/${$route.params.domain}/config`"
+          :href="`/domains/${$route.params.domain}/settings`"
         ></a>
       </div>
       <div v-if="$route.name === 'workflow-list'">

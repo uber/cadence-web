@@ -6,7 +6,7 @@ describe('Domain Configuration', () => {
       .withDomainDescription('ci-test', desc)
       .go();
 
-    const configEl = await testEl.waitUntilExists('section.domain-config');
+    const configEl = await testEl.waitUntilExists('section.domain-settings');
 
     return [configEl, scenario];
   }

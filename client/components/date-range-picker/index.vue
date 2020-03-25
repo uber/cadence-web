@@ -282,7 +282,7 @@ sidebarWidth = sidebarColumnShortcutsWidth + sidebarColumnCustomRangeWidth;
     cursor: pointer;
     height: auto;
     margin: 0;
-    padding: 8px 30px 8px 10px;
+    padding: 9px 30px 9px 10px;
     width: 325px;
   }
 
