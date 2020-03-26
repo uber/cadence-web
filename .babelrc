@@ -9,7 +9,8 @@
           "~helpers": "./client/helpers"
         }
       }
-    ]
+    ],
+    ["@babel/plugin-transform-regenerator"]
   ],
   "presets": [
     [

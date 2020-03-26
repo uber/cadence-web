@@ -11,9 +11,15 @@
         icon="icon_settings"
         :to="{ name: 'domain-settings' }"
       />
+      <navigation-link
+        label="Archives"
+        icon="icon_trip-history"
+        :to="{ name: 'workflow-archives' }"
+      />
     </navigation-bar>
     <router-view name="workflow-list" :domain="domain" />
     <router-view name="domain-settings" :domain="domain" />
+    <router-view name="workflow-archives" :domain="domain" />
   </section>
 </template>
 
