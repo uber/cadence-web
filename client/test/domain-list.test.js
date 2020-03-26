@@ -63,6 +63,8 @@ describe('Domain list', () => {
         'Global?',
         'Retention Period',
         'Emit Metrics',
+        'History Archival',
+        'Visibility Archival',
         'Failover Version',
         'clusters',
       ]);
@@ -74,6 +76,8 @@ describe('Domain list', () => {
         'No',
         '21 days',
         'Yes',
+        'Enabled',
+        'Disabled',
         '0',
         'ci-test-cluster (active)',
       ]);
@@ -198,6 +202,8 @@ describe('Domain list', () => {
         'No',
         '3 days',
         'Yes',
+        'Enabled',
+        'Disabled',
         '0',
         'ci-test-cluster (active)',
       ]);
