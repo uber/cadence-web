@@ -1,11 +1,13 @@
+import get from 'lodash-es/get';
+
 export const getDomain = domainSettings =>
-  domainSettings && domainSettings.domainInfo.name || '';
+  get(domainSettings, 'domainInfo.name', '');
 
 export const getHistoryArchivalStatus = domainSettings =>
-  domainSettings && domainSettings.configuration.historyArchivalStatus || '';
+  get(domainSettings, 'configuration.historyArchivalStatus', '');
 
 export const getVisibilityArchivalStatus = domainSettings =>
-  domainSettings && domainSettings.configuration.visibilityArchivalStatus || '';
+  get(domainSettings, 'configuration.visibilityArchivalStatus', '');
 
 export const isHistoryArchivalEnabled = domainSettings =>
   getHistoryArchivalStatus(domainSettings) === 'ENABLED';

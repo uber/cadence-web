@@ -1,4 +1,4 @@
-{
+module.exports = {
   "plugins": [
     [
       "module-resolver",
@@ -23,4 +23,4 @@
     ],
     "@babel/preset-env"
   ]
-}
+};

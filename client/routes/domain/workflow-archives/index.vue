@@ -14,7 +14,7 @@
           <p>
             {{ historyArchivalDisabledMessage }}
           </p>
-          <div>
+          <div v-if="historyArchivalEnableCommand">
             <pre>{{ historyArchivalEnableCommand }}</pre>
           </div>
         </div>
@@ -22,7 +22,7 @@
           <p>
             {{ visibilityArchivalDisabledMessage }}
           </p>
-          <div>
+          <div v-if="visibilityArchivalEnableCommand">
             <pre>{{ visibilityArchivalEnableCommand }}</pre>
           </div>
         </div>
