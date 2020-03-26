@@ -1,7 +1,10 @@
 import {
   getDomain,
+  getHistoryArchivalStatus,
+  getVisibilityArchivalStatus,
   isHistoryArchivalEnabled,
   isVisibilityArchivalEnabled,
+  replaceDomain,
 } from './helpers';
 
 describe('workflow-archives helpers', () => {
@@ -23,6 +26,50 @@ describe('workflow-archives helpers', () => {
         };
         const output = getDomain(domainSettings);
         expect(output).toEqual('DomainName');
+      });
+    });
+  });
+
+  describe('getHistoryArchivalStatus', () => {
+    describe('When domainSettings is not defined', () => {
+      it('should return "".', () => {
+        const domainSettings = undefined;
+        const output = getHistoryArchivalStatus(domainSettings);
+        expect(output).toEqual('');
+      });
+    });
+
+    describe('When domainSettings.configuration.historyArchivalStatus = "ENABLED"', () => {
+      it('should return "ENABLED".', () => {
+        const domainSettings = {
+          configuration: {
+            historyArchivalStatus: 'ENABLED',
+          },
+        };
+        const output = getHistoryArchivalStatus(domainSettings);
+        expect(output).toEqual('ENABLED');
+      });
+    });
+  });
+
+  describe('getVisibilityArchivalStatus', () => {
+    describe('When domainSettings is not defined', () => {
+      it('should return "".', () => {
+        const domainSettings = undefined;
+        const output = getVisibilityArchivalStatus(domainSettings);
+        expect(output).toEqual('');
+      });
+    });
+
+    describe('When domainSettings.configuration.visibilityArchivalStatus = "ENABLED"', () => {
+      it('should return "ENABLED".', () => {
+        const domainSettings = {
+          configuration: {
+            visibilityArchivalStatus: 'ENABLED',
+          },
+        };
+        const output = getVisibilityArchivalStatus(domainSettings);
+        expect(output).toEqual('ENABLED');
       });
     });
   });
@@ -95,5 +142,19 @@ describe('workflow-archives helpers', () => {
     });
   });
 
+  describe('replaceDomain', () => {
+    describe('When message = "message containing {domain}" and domainSettings.domainInfo.name = "DomainName"', () => {
+      it('should return "message containing DomainName".', () => {
+        const message = 'message containing {domain}';
+        const domainSettings = {
+          domainInfo: {
+            name: 'DomainName',
+          },
+        };
 
+        const output = replaceDomain(message, domainSettings);
+        expect(output).toEqual('message containing DomainName');
+      });
+    });
+  });
 });
