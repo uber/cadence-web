@@ -13,13 +13,8 @@
 </template>
 
 <script>
-
 import DomainService from '../domain-service';
-import {
-  isArchivalEnabled,
-  isVisibilityArchivalEnabled,
-  replaceDomain,
-} from './helpers';
+import { isArchivalEnabled } from './helpers';
 import ArchivesDisabledMessaging from './components/archives-disabled-messaging';
 
 export default {
@@ -32,6 +27,7 @@ export default {
   },
   async created() {
     const domainService = DomainService();
+
     this.domainSettings = await domainService.getDomainSettings(this.domain);
     this.loading = false;
   },
@@ -47,7 +43,7 @@ export default {
 </script>
 
 <style lang="stylus">
-  section.workflow-archives {
+section.workflow-archives {
 
-  }
+}
 </style>

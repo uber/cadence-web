@@ -6,11 +6,9 @@ export const archivesDisabledMessage = [
 export const historyArchivalDisabledMessage =
   'Set HistoryArchivalStatus to ENABLED by running command:';
 
-export const historyArchivalEnableCommand =
-  `cadence --do {domain} domain update --has enabled`;
+export const historyArchivalEnableCommand = `cadence --do {domain} domain update --has enabled`;
 
 export const visibilityArchivalDisabledMessage =
   'Set VisibilityArchivalStatus to ENABLED by running command:';
 
-export const visibilityArchivalEnableCommand =
-  `cadence --do {domain} domain update --vas enabled`;
+export const visibilityArchivalEnableCommand = `cadence --do {domain} domain update --vas enabled`;

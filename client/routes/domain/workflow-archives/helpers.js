@@ -9,15 +9,15 @@ export const getHistoryArchivalStatus = domainSettings =>
 export const getVisibilityArchivalStatus = domainSettings =>
   get(domainSettings, 'configuration.visibilityArchivalStatus', '');
 
-export const isArchivalEnabled = domainSettings =>
-  isHistoryArchivalEnabled(domainSettings) &&
-  isVisibilityArchivalEnabled(domainSettings);
-
 export const isHistoryArchivalEnabled = domainSettings =>
   getHistoryArchivalStatus(domainSettings) === 'ENABLED';
 
 export const isVisibilityArchivalEnabled = domainSettings =>
   getVisibilityArchivalStatus(domainSettings) === 'ENABLED';
+
+export const isArchivalEnabled = domainSettings =>
+  isHistoryArchivalEnabled(domainSettings) &&
+  isVisibilityArchivalEnabled(domainSettings);
 
 export const replaceDomain = (message, domainSettings) =>
   message.replace(/\{domain\}/, getDomain(domainSettings));

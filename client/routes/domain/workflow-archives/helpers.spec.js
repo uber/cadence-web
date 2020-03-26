@@ -14,6 +14,7 @@ describe('workflow-archives helpers', () => {
       it('should return "".', () => {
         const domainSettings = undefined;
         const output = getDomain(domainSettings);
+
         expect(output).toEqual('');
       });
     });
@@ -26,6 +27,7 @@ describe('workflow-archives helpers', () => {
           },
         };
         const output = getDomain(domainSettings);
+
         expect(output).toEqual('DomainName');
       });
     });
@@ -36,6 +38,7 @@ describe('workflow-archives helpers', () => {
       it('should return "".', () => {
         const domainSettings = undefined;
         const output = getHistoryArchivalStatus(domainSettings);
+
         expect(output).toEqual('');
       });
     });
@@ -48,6 +51,7 @@ describe('workflow-archives helpers', () => {
           },
         };
         const output = getHistoryArchivalStatus(domainSettings);
+
         expect(output).toEqual('ENABLED');
       });
     });
@@ -58,6 +62,7 @@ describe('workflow-archives helpers', () => {
       it('should return "".', () => {
         const domainSettings = undefined;
         const output = getVisibilityArchivalStatus(domainSettings);
+
         expect(output).toEqual('');
       });
     });
@@ -70,6 +75,7 @@ describe('workflow-archives helpers', () => {
           },
         };
         const output = getVisibilityArchivalStatus(domainSettings);
+
         expect(output).toEqual('ENABLED');
       });
     });
@@ -85,6 +91,7 @@ describe('workflow-archives helpers', () => {
           },
         };
         const output = isArchivalEnabled(domainSettings);
+
         expect(output).toEqual(false);
       });
     });
@@ -98,6 +105,7 @@ describe('workflow-archives helpers', () => {
           },
         };
         const output = isArchivalEnabled(domainSettings);
+
         expect(output).toEqual(false);
       });
     });
@@ -111,6 +119,7 @@ describe('workflow-archives helpers', () => {
           },
         };
         const output = isArchivalEnabled(domainSettings);
+
         expect(output).toEqual(false);
       });
     });
@@ -124,6 +133,7 @@ describe('workflow-archives helpers', () => {
           },
         };
         const output = isArchivalEnabled(domainSettings);
+
         expect(output).toEqual(true);
       });
     });
@@ -134,6 +144,7 @@ describe('workflow-archives helpers', () => {
       it('should return false.', () => {
         const domainSettings = undefined;
         const output = isHistoryArchivalEnabled(domainSettings);
+
         expect(output).toEqual(false);
       });
     });
@@ -146,6 +157,7 @@ describe('workflow-archives helpers', () => {
           },
         };
         const output = isHistoryArchivalEnabled(domainSettings);
+
         expect(output).toEqual(false);
       });
     });
@@ -158,6 +170,7 @@ describe('workflow-archives helpers', () => {
           },
         };
         const output = isHistoryArchivalEnabled(domainSettings);
+
         expect(output).toEqual(true);
       });
     });
@@ -168,6 +181,7 @@ describe('workflow-archives helpers', () => {
       it('should return false.', () => {
         const domainSettings = undefined;
         const output = isVisibilityArchivalEnabled(domainSettings);
+
         expect(output).toEqual(false);
       });
     });
@@ -180,6 +194,7 @@ describe('workflow-archives helpers', () => {
           },
         };
         const output = isVisibilityArchivalEnabled(domainSettings);
+
         expect(output).toEqual(false);
       });
     });
@@ -192,6 +207,7 @@ describe('workflow-archives helpers', () => {
           },
         };
         const output = isVisibilityArchivalEnabled(domainSettings);
+
         expect(output).toEqual(true);
       });
     });
@@ -208,6 +224,7 @@ describe('workflow-archives helpers', () => {
         };
 
         const output = replaceDomain(message, domainSettings);
+
         expect(output).toEqual('message containing DomainName');
       });
     });
