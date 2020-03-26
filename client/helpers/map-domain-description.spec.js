@@ -165,10 +165,7 @@ describe('mapDomainDescription', () => {
     });
   });
 
-  describe(`
-    When domain.replicationConfiguration.clusters = [{ clusterName: "cluster1" }, { clusterName: "cluster2" }]
-    and domain.replicationConfiguration.activeClusterName = "cluster1"
-  `, () => {
+  describe(`Multiple clusters with one active cluster`, () => {
     it('should return "clusters" = "cluster1 (active), cluster2".', () => {
       const domain = {
         replicationConfiguration: {
