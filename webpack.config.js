@@ -42,7 +42,7 @@ module.exports = {
         test: /\.js$/,
         loader: 'babel-loader',
         options: {
-          configFile: path.resolve(__dirname, '.babelrc'),
+          configFile: path.resolve(__dirname, 'babel.config.js'),
         },
       },
       {
@@ -53,7 +53,7 @@ module.exports = {
             js: {
               loader: 'babel-loader',
               options: {
-                configFile: path.resolve(__dirname, '.babelrc'),
+                configFile: path.resolve(__dirname, 'babel.config.js'),
               },
             },
             stylus: ExtractTextPlugin.extract({

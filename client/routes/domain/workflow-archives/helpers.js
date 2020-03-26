@@ -9,6 +9,10 @@ export const getHistoryArchivalStatus = domainSettings =>
 export const getVisibilityArchivalStatus = domainSettings =>
   get(domainSettings, 'configuration.visibilityArchivalStatus', '');
 
+export const isArchivalEnabled = domainSettings =>
+  isHistoryArchivalEnabled(domainSettings) &&
+  isVisibilityArchivalEnabled(domainSettings);
+
 export const isHistoryArchivalEnabled = domainSettings =>
   getHistoryArchivalStatus(domainSettings) === 'ENABLED';
 

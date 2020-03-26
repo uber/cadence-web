@@ -1,0 +1,91 @@
+<template>
+  <div class="archives-disabled-messaging">
+    <div class="message-group">
+      <p
+        v-for="(message, index) in archivesDisabledMessage"
+        :key="index"
+      >
+        {{ message }}
+      </p>
+    </div>
+    <div v-if="!isHistoryArchivalEnabled" class="message-group">
+      <p>
+        {{ historyArchivalDisabledMessage }}
+      </p>
+      <div v-if="historyArchivalEnableCommand">
+        <pre>{{ historyArchivalEnableCommand }}</pre>
+      </div>
+    </div>
+    <div v-if="!isVisibilityArchivalEnabled" class="message-group">
+      <p>
+        {{ visibilityArchivalDisabledMessage }}
+      </p>
+      <div v-if="visibilityArchivalEnableCommand">
+        <pre>{{ visibilityArchivalEnableCommand }}</pre>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import {
+  archivesDisabledMessage,
+  historyArchivalDisabledMessage,
+  historyArchivalEnableCommand,
+  visibilityArchivalDisabledMessage,
+  visibilityArchivalEnableCommand,
+} from './constants';
+import {
+  isHistoryArchivalEnabled,
+  isVisibilityArchivalEnabled,
+  replaceDomain,
+} from '../../helpers';
+
+export default {
+  name: 'archives-disabled-messaging',
+  props: [
+    'domainSettings'
+  ],
+  data() {
+    return {
+      archivesDisabledMessage,
+      historyArchivalDisabledMessage,
+      visibilityArchivalDisabledMessage,
+    };
+  },
+  computed: {
+    isHistoryArchivalEnabled() {
+      return isHistoryArchivalEnabled(this.domainSettings);
+    },
+    isVisibilityArchivalEnabled() {
+      return isVisibilityArchivalEnabled(this.domainSettings);
+    },
+    historyArchivalEnableCommand() {
+      return replaceDomain(historyArchivalEnableCommand, this.domainSettings);
+    },
+    visibilityArchivalEnableCommand() {
+      return replaceDomain(visibilityArchivalEnableCommand, this.domainSettings);
+    },
+  },
+};
+</script>
+
+<style lang="stylus">
+  .archives-disabled-messaging {
+    padding: 10px 50px;
+
+    .message-group {
+      margin: 20px 0;
+    }
+
+    p {
+      font-size: 20px;
+      line-height: 24px;
+      margin: 5px 0;
+    }
+
+    pre {
+      display: inline-block;
+    }
+  }
+</style>
