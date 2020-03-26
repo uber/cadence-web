@@ -1,8 +1,17 @@
+export const getDomain = domainSettings =>
+  domainSettings && domainSettings.domainInfo.name || '';
+
+export const getHistoryArchivalStatus = domainSettings =>
+  domainSettings && domainSettings.configuration.historyArchivalStatus || '';
+
+export const getVisibilityArchivalStatus = domainSettings =>
+  domainSettings && domainSettings.configuration.visibilityArchivalStatus || '';
+
 export const isHistoryArchivalEnabled = domainSettings =>
-  domainSettings && domainSettings.configuration.historyArchivalStatus === 'ENABLED'
-  || false;
+  getHistoryArchivalStatus(domainSettings) === 'ENABLED';
 
 export const isVisibilityArchivalEnabled = domainSettings =>
-  domainSettings && domainSettings.configuration.visibilityArchivalStatus === 'ENABLED'
-  || false;
+  getVisibilityArchivalStatus(domainSettings) === 'ENABLED';
 
+export const replaceDomain = (message, domainSettings) =>
+  message.replace(/\{domain\}/, getDomain(domainSettings));

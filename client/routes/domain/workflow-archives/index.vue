@@ -1,11 +1,31 @@
 <template>
-  <section :class="{ loading }">
+  <section class="workflow-archives" :class="{ loading }">
     <div v-if="!loading">
-      <div v-if="!isHistoryArchivalEnabled">
-        {{ historyArchivalDisabledMessage }}
-      </div>
-      <div v-if="!isVisibilityArchivalEnabled">
-        {{ visibilityArchivalDisabledMessage }}
+      <div class="disabled-messages" v-if="!isEnabled">
+        <div class="message-group">
+          <p
+            v-for="(message, index) in archivesDisabledMessage"
+            :key="index"
+          >
+            {{ message }}
+          </p>
+        </div>
+        <div v-if="!isHistoryArchivalEnabled" class="message-group">
+          <p>
+            {{ historyArchivalDisabledMessage }}
+          </p>
+          <div>
+            <pre>{{ historyArchivalEnableCommand }}</pre>
+          </div>
+        </div>
+        <div v-if="!isVisibilityArchivalEnabled" class="message-group">
+          <p>
+            {{ visibilityArchivalDisabledMessage }}
+          </p>
+          <div>
+            <pre>{{ visibilityArchivalEnableCommand }}</pre>
+          </div>
+        </div>
       </div>
       <div v-if="isEnabled">
         Page Enabled!
@@ -16,28 +36,43 @@
 
 <script>
 import {
+  archivesDisabledMessage,
   historyArchivalDisabledMessage,
+  historyArchivalEnableCommand,
   visibilityArchivalDisabledMessage,
+  visibilityArchivalEnableCommand,
 } from './constants';
 import DomainService from '../domain-service';
 import {
   isHistoryArchivalEnabled,
   isVisibilityArchivalEnabled,
+  replaceDomain,
 } from './helpers';
 
 export default {
   props: ['domain'],
   data() {
     return {
+      archivesDisabledMessage,
       domainSettings: {},
       historyArchivalDisabledMessage,
+      historyArchivalEnableCommand: '',
       loading: true,
       visibilityArchivalDisabledMessage,
+      visibilityArchivalEnableCommand: '',
     };
   },
   async created() {
     const domainService = DomainService();
     this.domainSettings = await domainService.getDomainSettings(this.domain);
+    this.historyArchivalEnableCommand = replaceDomain(
+      historyArchivalEnableCommand,
+      this.domainSettings,
+    );
+    this.visibilityArchivalEnableCommand = replaceDomain(
+      visibilityArchivalEnableCommand,
+      this.domainSettings,
+    );
     this.loading = false;
   },
   computed: {
@@ -55,5 +90,23 @@ export default {
 </script>
 
 <style lang="stylus">
+  section.workflow-archives {
+    .disabled-messages {
+      padding: 10px 50px;
+    }
 
+    .message-group {
+      margin: 20px 0;
+    }
+
+    p {
+      font-size: 20px;
+      line-height: 24px;
+      margin: 5px 0;
+    }
+
+    pre {
+      display: inline-block;
+    }
+  }
 </style>
