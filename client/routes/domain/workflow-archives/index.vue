@@ -20,6 +20,10 @@ import {
   visibilityArchivalDisabledMessage,
 } from './constants';
 import DomainService from '../domain-service';
+import {
+  isHistoryArchivalEnabled,
+  isVisibilityArchivalEnabled,
+} from './helpers';
 
 export default {
   props: ['domain'],
@@ -41,12 +45,10 @@ export default {
       return this.isHistoryArchivalEnabled && this.isVisibilityArchivalEnabled;
     },
     isHistoryArchivalEnabled() {
-      // TODO
-      return true;
+      return isHistoryArchivalEnabled(this.domainSettings);
     },
     isVisibilityArchivalEnabled() {
-      // TODO
-      return true;
+      return isVisibilityArchivalEnabled(this.domainSettings);
     },
   },
 };
