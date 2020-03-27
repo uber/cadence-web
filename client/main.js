@@ -22,7 +22,7 @@ import Query from './routes/workflow/query';
 import Root from './routes';
 import StackTrace from './routes/workflow/stack-trace';
 import TaskList from './routes/domain/task-list';
-import WorkflowArchives from './routes/domain/workflow-archives';
+import WorkflowArchival from './routes/domain/workflow-archival';
 import WorkflowList from './routes/domain/workflow-list';
 import WorkflowSummary from './routes/workflow/summary';
 import WorkflowTabs from './routes/workflow';
@@ -56,6 +56,7 @@ const routeOpts = {
     {
       name: 'domain',
       path: '/domains/:domain',
+      redirect: '/domains/:domain/workflows',
       component: Domain,
       props: ({ params }) => ({
         domain: params.domain,
@@ -76,10 +77,10 @@ const routeOpts = {
           },
         },
         {
-          name: 'workflow-archives',
-          path: '/domains/:domain/archives',
+          name: 'workflow-archival',
+          path: '/domains/:domain/archival',
           components: {
-            'workflow-archives': WorkflowArchives,
+            'workflow-archival': WorkflowArchival,
           },
         },
       ],

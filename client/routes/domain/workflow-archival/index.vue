@@ -1,7 +1,7 @@
 <template>
-  <section class="workflow-archives" :class="{ loading }">
+  <section class="workflow-archival" :class="{ loading }">
     <div v-if="!loading">
-      <archives-disabled-messaging
+      <archival-disabled-messaging
         v-if="!isArchivalEnabled"
         :domain-settings="domainSettings"
       />
@@ -15,7 +15,7 @@
 <script>
 import DomainService from '../domain-service';
 import { isArchivalEnabled } from './helpers';
-import ArchivesDisabledMessaging from './components/archives-disabled-messaging';
+import ArchivalDisabledMessaging from './components/archival-disabled-messaging';
 
 export default {
   props: ['domain'],
@@ -37,13 +37,13 @@ export default {
     },
   },
   components: {
-    'archives-disabled-messaging': ArchivesDisabledMessaging,
+    'archival-disabled-messaging': ArchivalDisabledMessaging,
   },
 };
 </script>
 
 <style lang="stylus">
-section.workflow-archives {
+section.workflow-archival {
 
 }
 </style>
