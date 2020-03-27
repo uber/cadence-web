@@ -8,6 +8,8 @@ export const historyArchivalDisabledMessage =
 
 export const historyArchivalEnableCommand = `cadence --do {domain} domain update --has enabled`;
 
+export const historyArchivalLinks = null;
+
 export const visibilityArchivalDisabledMessage =
   'Set VisibilityArchivalStatus to ENABLED by running command:';
 
