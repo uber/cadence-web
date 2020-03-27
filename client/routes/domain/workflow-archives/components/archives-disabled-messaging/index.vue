@@ -94,14 +94,12 @@ export default {
 
   a {
     font-size: 20px;
-    line-height: 24px;
-    margin: 5px 0;
+    line-height: 36px;
   }
 
   p {
     font-size: 20px;
-    line-height: 24px;
-    margin: 5px 0;
+    line-height: 36px;
   }
 
   pre {
