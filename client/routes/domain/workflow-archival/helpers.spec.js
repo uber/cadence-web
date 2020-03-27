@@ -8,7 +8,7 @@ import {
   replaceDomain,
 } from './helpers';
 
-describe('workflow-archives helpers', () => {
+describe('workflow-archival helpers', () => {
   describe('getDomain', () => {
     describe('When domainSettings is not defined', () => {
       it('should return "".', () => {
