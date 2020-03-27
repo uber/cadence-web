@@ -4,6 +4,14 @@
       <p v-for="(message, index) in archivesDisabledMessage" :key="index">
         {{ message }}
       </p>
+      <a
+        v-if="historyArchivalLink"
+        :href="historyArchivalLink.href"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        {{ historyArchivalLink.label }}
+      </a>
     </div>
     <div v-if="!isHistoryArchivalEnabled" class="message-group">
       <p>
@@ -34,6 +42,7 @@ import {
   archivesDisabledMessage,
   historyArchivalDisabledMessage,
   historyArchivalEnableCommand,
+  historyArchivalLink,
   visibilityArchivalDisabledMessage,
   visibilityArchivalEnableCommand,
 } from './constants';
@@ -45,6 +54,7 @@ export default {
     return {
       archivesDisabledMessage,
       historyArchivalDisabledMessage,
+      historyArchivalLink,
       visibilityArchivalDisabledMessage,
     };
   },
@@ -74,6 +84,12 @@ export default {
 
   .message-group {
     margin: 20px 0;
+  }
+
+  a {
+    font-size: 20px;
+    line-height: 24px;
+    margin: 5px 0;
   }
 
   p {
