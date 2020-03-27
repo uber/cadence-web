@@ -93,17 +93,6 @@ export default {
         >
           {{ $route.params.domain }}
         </a>
-        <a
-          class="config"
-          :class="{
-            'router-link-active':
-              $route.path === `/domains/${$route.params.domain}/config`,
-          }"
-          :href="`/domains/${$route.params.domain}/config`"
-        ></a>
-      </div>
-      <div v-if="$route.name === 'workflow-list'">
-        Workflows
       </div>
       <div class="detail-view workflow-id" v-if="$route.params.workflowId">
         <span>{{ $route.params.workflowId }}</span>
@@ -238,7 +227,7 @@ area-loader, section.loading
     height size
     border-radius size
     left "calc(50% - %s)" % (size/2)
-    top "calc(25% - %s)" % (size/2)
+    top 300px;
     border 3px solid uber-blue
     border-bottom-color transparent
     animation spin 800ms linear infinite

@@ -1,4 +1,4 @@
-describe('Domain Configuration', () => {
+describe('Domain Settings', () => {
   async function domainConfigTest(mochaTest, desc) {
     const [testEl, scenario] = new Scenario(mochaTest)
       .withDomain('ci-test')
@@ -6,7 +6,7 @@ describe('Domain Configuration', () => {
       .withDomainDescription('ci-test', desc)
       .go();
 
-    const configEl = await testEl.waitUntilExists('section.domain-config');
+    const configEl = await testEl.waitUntilExists('section.domain-settings');
 
     return [configEl, scenario];
   }

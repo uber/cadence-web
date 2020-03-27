@@ -25,21 +25,6 @@ describe('Workflow list', () => {
     },
   ];
 
-  it('should show the domain with configuration link and workflows breadcrumb in the nav bar', async function test() {
-    const [, scenario] = await workflowsTest(this.test);
-    const header = scenario.vm.$el.querySelector('header.top-bar');
-
-    header.should.have
-      .descendant('a.workflows')
-      .and.have.class('router-link-active')
-      .and.have.attribute('href', '/domains/ci-test/workflows');
-
-    header.should.have
-      .descendant('a.config')
-      .and.not.have.class('router-link-active')
-      .and.have.attribute('href', 'domain/ci-test/config');
-  });
-
   it('should query for open workflows and show the results in a grid', async function test() {
     const [workflowsEl] = await workflowsTest(this.test);
     const resultsEl = workflowsEl.querySelector('section.results');
