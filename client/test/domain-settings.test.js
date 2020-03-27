@@ -24,6 +24,8 @@ describe('Domain Settings', () => {
         'Global?',
         'Retention Period',
         'Emit Metrics',
+        'History Archival',
+        'Visibility Archival',
         'Failover Version',
         'clusters',
       ]);
@@ -35,6 +37,8 @@ describe('Domain Settings', () => {
         'No',
         '21 days',
         'Yes',
+        'Enabled',
+        'Disabled',
         '0',
         'ci-test-cluster (active)',
       ]);
