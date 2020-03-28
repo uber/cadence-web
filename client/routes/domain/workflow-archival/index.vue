@@ -6,7 +6,14 @@
         :domain-settings="domainSettings"
       />
       <div v-if="isArchivalEnabled">
-        <!-- TODO: will work on enabled state in future PR -->
+        <router-view
+          name="workflow-archival-advanced"
+          :domain-settings="domainSettings"
+        />
+        <router-view
+          name="workflow-archival-basic"
+          :domain-settings="domainSettings"
+        />
       </div>
     </div>
   </section>
@@ -15,9 +22,10 @@
 <script>
 import DomainService from '../domain-service';
 import { isArchivalEnabled } from './helpers';
-import ArchivalDisabledMessaging from './components/archival-disabled-messaging';
+import { ArchivalDisabledMessaging } from './components';
 
 export default {
+  name: 'workflow-archival',
   props: ['domain'],
   data() {
     return {
