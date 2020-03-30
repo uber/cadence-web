@@ -6,5 +6,6 @@ export { default as DateRangePicker } from './date-range-picker';
 export { default as DomainNavigation } from './domain-navigation';
 export { default as NavigationBar } from './navigation-bar';
 export { default as NavigationLink } from './navigation-link';
+export { default as NoResults } from './no-results';
 export { default as NotificationBar } from './notification-bar';
 export { default as TextInput } from './text-input';

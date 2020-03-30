@@ -8,11 +8,9 @@
       <div v-if="isArchivalEnabled">
         <router-view
           name="workflow-archival-advanced"
-          :domain-settings="domainSettings"
         />
         <router-view
           name="workflow-archival-basic"
-          :domain-settings="domainSettings"
         />
       </div>
     </div>
