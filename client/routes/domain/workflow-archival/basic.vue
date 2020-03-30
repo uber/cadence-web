@@ -20,36 +20,14 @@
         />
       </search-bar-item>
     </search-bar>
-    <table>
-      <thead>
-        <th>Workflow ID</th>
-        <th>Run ID</th>
-        <th>Visibility Record</th>
-      </thead>
-      <tbody v-if="results && results.length">
-        <tr v-for="result in results" :key="result.runId">
-          <td>
-            {{ result.workflowId }}
-          </td>
-          <td>
-            <router-link
-              :to="{
-                name: 'workflow/summary',
-                params: {
-                  runId: result.runId,
-                  workflowId: result.workflowId
-                },
-              }"
-            >
-              {{ result.runId}}
-            </router-link>
-          </td>
-          <td>
-            { TODO - Visibility record }
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <archival-table>
+      <archival-table-row
+        v-for="result in results"
+        :key="result.runId"
+        :run-id="result.runId"
+        :workflow-id="result.workflowId"
+      />
+    </archival-table>
     <no-results :results="results" />
   </section>
 </template>
@@ -57,7 +35,7 @@
 <script>
 import debounce from 'lodash-es/debounce';
 import { NoResults, TextInput } from '~components';
-import { SearchBar, SearchBarItem } from './components';
+import { ArchivalTable, ArchivalTableRow, SearchBar, SearchBarItem } from './components';
 import WorkflowArchivalService from './workflow-archival-service';
 
 export default {
@@ -127,6 +105,8 @@ export default {
     },
   },
   components: {
+    'archival-table': ArchivalTable,
+    'archival-table-row': ArchivalTableRow,
     'no-results': NoResults,
     'search-bar': SearchBar,
     'search-bar-item': SearchBarItem,
