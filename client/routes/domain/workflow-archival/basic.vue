@@ -44,9 +44,13 @@
     <archival-table>
       <archival-table-row
         v-for="result in results"
+        :close-status="result.closeStatus"
+        :close-time="result.closeTime"
         :key="result.runId"
         :run-id="result.runId"
+        :start-time="result.startTime"
         :workflow-id="result.workflowId"
+        :workflow-type="result.workflowType"
       />
     </archival-table>
     <no-results :results="results" />
@@ -75,7 +79,8 @@ export default {
   },
   computed: {
     endTime() {
-      const { endTime, range } = this.$route.query;
+      const { range } = this;
+      const { endTime } = this.$route.query;
       return getEndTimeIsoString(range, endTime);
     },
     queryParams() {
@@ -117,7 +122,8 @@ export default {
         : this.statusList.find(({ value }) => value === statusValue);
     },
     startTime() {
-      const { range, startTime } = this.$route.query;
+      const { range } = this;
+      const { startTime } = this.$route.query;
       return getStartTimeIsoString(range, startTime);
     },
     workflowId() {
@@ -148,7 +154,11 @@ export default {
           {
             workflowId: 'helloworld_5a992dab-b0f2-4306-aa5d-13fe8faffe35',
             runId: '76711cfb-4afb-48f4-97fd-b0679a2cdba6',
-          }
+            workflowType: 'main.Workflow',
+            closeStatus: 'Timed_out',
+            startTime: moment('Mar 27, 2020 5:15 PM'),
+            closeTime: moment('Mar 27, 2020 5:16 PM'),
+          },
         ];
       }, 2000);
     }, 200),

@@ -17,7 +17,7 @@
       </router-link>
     </td>
     <td>
-      {{ workflowName }}
+      {{ workflowType }}
     </td>
     <td>
       {{ closeStatus }}
@@ -34,6 +34,6 @@
 <script>
 export default {
   name: 'archival-table-row',
-  props: ['runId', 'workflowId', 'workflowType'],
+  props: ['closeStatus', 'closeTime', 'runId', 'startTime', 'workflowId', 'workflowType'],
 };
 </script>

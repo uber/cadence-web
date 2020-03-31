@@ -7,9 +7,6 @@
       />
       <div v-if="isArchivalEnabled">
         <router-view
-          name="workflow-archival-advanced"
-        />
-        <router-view
           name="workflow-archival-basic"
         />
       </div>
