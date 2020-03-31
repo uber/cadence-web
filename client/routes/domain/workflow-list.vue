@@ -299,7 +299,7 @@ export default pagedGrid({
 
         return this.$http(url, { query })
           .then(res => {
-            this.npt = res.nextPageToken;
+            this.nextPageToken = res.nextPageToken;
             this.loading = false;
             const formattedResults = res.executions.map(data => ({
               workflowId: data.execution.workflowId,
@@ -319,7 +319,7 @@ export default pagedGrid({
             return this.results;
           })
           .catch(e => {
-            this.npt = undefined;
+            this.nextPageToken = undefined;
             this.loading = false;
             this.error = (e.json && e.json.message) || e.status || e.message;
 

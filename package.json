@@ -110,6 +110,6 @@
     "webpack-hot-client": "^1.3.0"
   },
   "napa": {
-    "cadence-idl": "uber/cadence-idl#db27bb7ac668de0b4ba582b4de9bbc280b5a1243"
+    "cadence-idl": "uber/cadence-idl#05e89125b82c75ae61930a9d4029d18de6988c6a"
   }
 }

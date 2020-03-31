@@ -73,6 +73,7 @@ export default {
     return {
       filterBy: 'CloseTime',
       loading: false,
+      nextPageToken: undefined,
       results: undefined,
       statusList: ARCHIVAL_STATUS_LIST
     };
@@ -85,6 +86,8 @@ export default {
     },
     queryParams() {
       const { endTime, runId, status, startTime, workflowId } = this;
+
+      this.nextPageToken = undefined;
 
       if (!startTime || !endTime) {
         return null;
@@ -189,7 +192,8 @@ export default {
   },
   watch: {
     queryParams(queryParams) {
-      this.onQueryChange(queryParams);
+      const { nextPageToken } = this;
+      this.onQueryChange({ ...queryParams, nextPageToken });
     },
   },
   components: {
