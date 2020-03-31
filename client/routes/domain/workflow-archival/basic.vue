@@ -1,65 +1,69 @@
 <template>
   <section class="workflow-archival-basic">
-    <grid>
-      <grid-column>
-        <text-input
-          label="Workflow ID"
-          name="workflowId"
-          type="search"
-          :value="workflowId"
-          @input="onTextChange"
+    <header>
+      <grid>
+        <grid-column>
+          <text-input
+            label="Workflow ID"
+            name="workflowId"
+            type="search"
+            :value="workflowId"
+            @input="onTextChange"
+          />
+        </grid-column>
+        <grid-column>
+          <text-input
+            label="Run ID"
+            name="runId"
+            type="search"
+            :value="runId"
+            @input="onTextChange"
+          />
+        </grid-column>
+        <grid-column width="160px">
+          <v-select
+            :on-change="onSelectChange"
+            :options="statusList"
+            :searchable="false"
+            :value="status"
+          />
+        </grid-column>
+        <grid-column width="165px">
+          <text-input
+            label="Filter by"
+            readonly
+            :value="filterBy"
+          />
+        </grid-column>
+        <grid-column width="325px">
+          <date-range-picker
+            :date-range="range"
+            @change="onDateRangeChange"
+          />
+        </grid-column>
+      </grid>
+    </header>
+    <section class="results">
+      <archival-table
+        v-infinite-scroll="nextPage"
+        infinite-scroll-disabled="disableInfiniteScroll"
+        infinite-scroll-distance="20"
+        infinite-scroll-immediate-check="false"
+      >
+        <archival-table-row
+          v-for="result in results"
+          :close-status="result.closeStatus"
+          :close-time="result.closeTime"
+          :key="result.runId"
+          :run-id="result.runId"
+          :start-time="result.startTime"
+          :workflow-id="result.workflowId"
+          :workflow-type="result.workflowType"
         />
-      </grid-column>
-      <grid-column>
-        <text-input
-          label="Run ID"
-          name="runId"
-          type="search"
-          :value="runId"
-          @input="onTextChange"
-        />
-      </grid-column>
-      <grid-column width="160px">
-        <v-select
-          :on-change="onSelectChange"
-          :options="statusList"
-          :searchable="false"
-          :value="status"
-        />
-      </grid-column>
-      <grid-column width="165px">
-        <text-input
-          label="Filter by"
-          readonly
-          :value="filterBy"
-        />
-      </grid-column>
-      <grid-column width="325px">
-        <date-range-picker
-          :date-range="range"
-          @change="onDateRangeChange"
-        />
-      </grid-column>
-    </grid>
-    <archival-table
-      v-infinite-scroll="nextPage"
-      infinite-scroll-disabled="disableInfiniteScroll"
-      infinite-scroll-distance="20"
-      infinite-scroll-immediate-check="false"
-    >
-      <archival-table-row
-        v-for="result in results"
-        :close-status="result.closeStatus"
-        :close-time="result.closeTime"
-        :key="result.runId"
-        :run-id="result.runId"
-        :start-time="result.startTime"
-        :workflow-id="result.workflowId"
-        :workflow-type="result.workflowType"
-      />
-    </archival-table>
-    <no-results :results="results" />
-    <loading-spinner v-if="loading" />
+      </archival-table>
+      <no-results :results="results" />
+      <loading-spinner v-if="loading" />
+    </section>
   </section>
 </template>
 
@@ -218,8 +222,20 @@ export default pagedGrid({
 </script>
 
 <style lang="stylus">
-.workflow-archival-basic {
-  padding: 16px;
+section.workflow-archival-basic {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  overflow-y: auto;
+
+  header {
+    padding: 16px;
+  }
+
+  section.results {
+    margin-top: 16px;
+    overflow: auto;
+  }
 
   paged-grid();
 }

@@ -1,16 +1,13 @@
 <template>
   <section class="workflow-archival" :class="{ loading }">
-    <div v-if="!loading">
-      <archival-disabled-messaging
-        v-if="!isArchivalEnabled"
-        :domain-settings="domainSettings"
-      />
-      <div v-if="isArchivalEnabled">
-        <router-view
-          name="workflow-archival-basic"
-        />
-      </div>
-    </div>
+    <archival-disabled-messaging
+      v-if="!loading && !isArchivalEnabled"
+      :domain-settings="domainSettings"
+    />
+    <router-view
+      name="workflow-archival-basic"
+      v-if="!loading && isArchivalEnabled"
+    />
   </section>
 </template>
 
@@ -47,6 +44,9 @@ export default {
 
 <style lang="stylus">
 section.workflow-archival {
-
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  overflow-y: auto;
 }
 </style>

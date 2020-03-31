@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section class="domain">
     <navigation-bar>
       <navigation-link
         icon="icon_search"
@@ -35,4 +35,11 @@ export default {
 };
 </script>
 
-<style lang="stylus"></style>
+<style lang="stylus">
+  section.domain {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    overflow-y: auto;
+  }
+</style>

@@ -15,7 +15,14 @@
 </template>
 
 <style lang="stylus">
-  .archival-table {
-    margin-top: 16px;
+  table.archival-table {
+    overflow-y: auto;
+    position: relative;
+
+    th {
+      position: sticky;
+      top: 0;
+      background-color: white;
+    }
   }
 </style>
