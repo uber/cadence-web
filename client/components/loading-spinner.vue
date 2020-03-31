@@ -6,7 +6,7 @@
 
 <style lang="stylus">
   .loading-spinner {
-    margin: 16px auto 0;
+    margin: 16px auto;
     height: 32px;
     width: 32px;
 

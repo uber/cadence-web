@@ -84,6 +84,7 @@ export default pagedGrid({
     return {
       filterBy: 'CloseTime',
       loading: false,
+      nextPageToken: undefined,
       results: undefined,
       statusList: ARCHIVAL_STATUS_LIST
     };
@@ -143,7 +144,7 @@ export default pagedGrid({
   created() {
     const { queryParams } = this;
     this.workflowArchivalService = WorkflowArchivalService();
-    this.onQueryChange(queryParams);
+    this.onQueryChange({ ...queryParams, nextPageToken: undefined });
   },
   methods: {
     clearResults() {
@@ -162,8 +163,6 @@ export default pagedGrid({
           ? this.results.concat(results)
           : results;
 
-        console.log('results = ', results);
-        console.log('this.results = ', this.results);
         this.npt = nextPageToken;
       } catch (error) {
         // TODO - Handle error here...
@@ -186,6 +185,11 @@ export default pagedGrid({
     },
     onQueryChange(queryParams) {
       this.clearResults();
+      if (queryParams) {
+        this.fetchArchivalRecord({ ...queryParams, nextPageToken: undefined });
+      }
+    },
+    onNextTokenChange(queryParams) {
       this.fetchArchivalRecord(queryParams);
     },
     onTextChange({ target: { name, value } }) {
@@ -200,9 +204,12 @@ export default pagedGrid({
   },
   watch: {
     queryParams(queryParams) {
-      this.nextPageToken = undefined;
-      if (queryParams) {
-        this.onQueryChange({ ...queryParams, nextPageToken: this.nextPageToken });
+      this.onQueryChange(queryParams);
+    },
+    nextPageToken(nextPageToken) {
+      const { queryParams } = this;
+      if (nextPageToken && queryParams) {
+        this.onNextTokenChange({ ...queryParams, nextPageToken });
       }
     },
   },

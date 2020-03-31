@@ -157,7 +157,7 @@ export default () => {
                 closeTime: moment('Mar 27, 2020 5:16 PM').format('lll'),
               },
             ],
-            nextPageToken: 'a token',
+            nextPageToken: (new Date()).getTime(),
             }
           );
         }, 5000);
