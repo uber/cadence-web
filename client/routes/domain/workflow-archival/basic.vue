@@ -112,11 +112,10 @@ export default {
       return 'last-30-days';
     },
     runId() {
-      return this.$route.query.runId || '';
+      return this.$route.query && this.$route.query.runId || '';
     },
     status() {
       const statusValue = this.$route.query && this.$route.query.status;
-      // console.log('this.statusList[0] = ', this.statusList[0]);
       return !statusValue
         ? ARCHIVAL_STATUS_LIST[0]
         : this.statusList.find(({ value }) => value === statusValue);
@@ -140,7 +139,7 @@ export default {
       this.results = undefined;
     },
     fetchArchivalRecord: debounce(async function fetchArchivalRecord(queryParams) {
-      if (!queryParams.startTime || !queryParams.endTime) {
+      if (!queryParams || !queryParams.startTime || !queryParams.endTime) {
         return;
       }
 

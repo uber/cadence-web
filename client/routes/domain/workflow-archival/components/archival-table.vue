@@ -16,6 +16,6 @@
 
 <style lang="stylus">
   .archival-table {
-    margin-top: 50px;
+    margin-top: 16px;
   }
 </style>
