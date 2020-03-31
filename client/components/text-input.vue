@@ -3,6 +3,7 @@
     <input
       :name="name"
       placeholder=" "
+      :readonly="readonly"
       :type="type"
       :value="value"
       @input="onInputChange"
@@ -17,6 +18,7 @@ export default {
   props: [
     'label',
     'name',
+    'readonly',
     'type',
     'value',
   ],

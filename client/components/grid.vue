@@ -1,13 +1,13 @@
 <template>
-  <header class="search-bar">
+  <div class="grid">
     <slot></slot>
-  </header>
+  </div>
 </template>
 
 <style lang="stylus">
-.search-bar {
+.grid {
   display: flex;
-  padding: 16px;
   flex-direction: row;
+  flex-wrap: wrap;
 }
 </style>

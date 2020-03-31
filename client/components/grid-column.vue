@@ -1,18 +1,18 @@
 <template>
-  <div class="search-bar-item" :style="{ maxWidth }">
+  <div class="grid-column" :style="{ maxWidth: width }">
     <slot></slot>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'search-bar-item',
-  props: ['maxWidth'],
+  name: 'grid-column',
+  props: ['width'],
 }
 </script>
 
 <style lang="stylus">
-.search-bar-item {
+.grid-column {
   flex-grow: 1;
   margin-right: 5px;
 

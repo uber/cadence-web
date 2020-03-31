@@ -17,7 +17,16 @@
       </router-link>
     </td>
     <td>
-      { TODO - Visibility record }
+      {{ workflowName }}
+    </td>
+    <td>
+      {{ closeStatus }}
+    </td>
+    <td>
+      {{ startTime }}
+    </td>
+    <td>
+      {{ closeTime }}
     </td>
   </tr>
 </template>
@@ -25,6 +34,6 @@
 <script>
 export default {
   name: 'archival-table-row',
-  props: ['runId', 'workflowId'],
+  props: ['runId', 'workflowId', 'workflowType'],
 };
 </script>
