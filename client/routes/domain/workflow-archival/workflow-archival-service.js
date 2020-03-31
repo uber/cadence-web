@@ -9,7 +9,8 @@ export default () => {
 
       return new Promise((resolve, reject) => {
         setTimeout(() => {
-          resolve({
+          resolve(
+            {
             results: [
               {
                 workflowId: 'helloworld_5a992dab-b0f2-4306-aa5d-13fe8faffe35',
@@ -157,7 +158,8 @@ export default () => {
               },
             ],
             nextPageToken: 'a token',
-          });
+            }
+          );
         }, 5000);
       });
     },

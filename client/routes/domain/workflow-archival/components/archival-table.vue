@@ -16,7 +16,6 @@
 
 <style lang="stylus">
   table.archival-table {
-    overflow-y: auto;
     position: relative;
 
     th {

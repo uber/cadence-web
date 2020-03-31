@@ -234,6 +234,7 @@ section.workflow-archival-basic {
 
   section.results {
     margin-top: 16px;
+    min-height: 100px;
     overflow: auto;
   }
 
