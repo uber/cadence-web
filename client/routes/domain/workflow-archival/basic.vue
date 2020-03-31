@@ -156,8 +156,8 @@ export default {
             runId: '76711cfb-4afb-48f4-97fd-b0679a2cdba6',
             workflowType: 'main.Workflow',
             closeStatus: 'Timed_out',
-            startTime: moment('Mar 27, 2020 5:15 PM'),
-            closeTime: moment('Mar 27, 2020 5:16 PM'),
+            startTime: moment('Mar 27, 2020 5:15 PM').format('lll'),
+            closeTime: moment('Mar 27, 2020 5:16 PM').format('lll'),
           },
         ];
       }, 2000);
@@ -185,10 +185,7 @@ export default {
       this.setQueryParam('status', value);
     },
     setQueryParam(name, value) {
-      this.$router.replaceQueryParam(
-        name,
-        value,
-      );
+      this.$router.replaceQueryParam(name, value);
     },
   },
   watch: {
