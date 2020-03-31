@@ -6,6 +6,7 @@ export { default as DateRangePicker } from './date-range-picker';
 export { default as DomainNavigation } from './domain-navigation';
 export { default as Grid } from './grid';
 export { default as GridColumn } from './grid-column';
+export { default as LoadingSpinner } from './loading-spinner';
 export { default as NavigationBar } from './navigation-bar';
 export { default as NavigationLink } from './navigation-link';
 export { default as NoResults } from './no-results';

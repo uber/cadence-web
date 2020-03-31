@@ -158,7 +158,7 @@ export default () => {
             ],
             nextPageToken: 'a token',
           });
-        }, 2000);
+        }, 5000);
       });
     },
   };

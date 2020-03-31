@@ -1,5 +1,5 @@
 <template>
-  <section class="workflow-archival-basic" :class="{ loading }">
+  <section class="workflow-archival-basic">
     <grid>
       <grid-column>
         <text-input
@@ -59,6 +59,7 @@
       />
     </archival-table>
     <no-results :results="results" />
+    <loading-spinner v-if="loading" />
   </section>
 </template>
 
@@ -66,7 +67,7 @@
 import debounce from 'lodash-es/debounce';
 import moment from 'moment';
 import pagedGrid from '~components/paged-grid';
-import { DateRangePicker, Grid, GridColumn, NoResults, TextInput } from '~components';
+import { DateRangePicker, Grid, GridColumn, LoadingSpinner, NoResults, TextInput } from '~components';
 import { getEndTimeIsoString, getStartTimeIsoString } from '~helpers';
 import { ArchivalTable, ArchivalTableRow, SearchBar, SearchBarItem } from './components';
 import { ARCHIVAL_STATUS_LIST } from './constants';
@@ -207,6 +208,7 @@ export default pagedGrid({
     'date-range-picker': DateRangePicker,
     'grid': Grid,
     'grid-column': GridColumn,
+    'loading-spinner': LoadingSpinner,
     'no-results': NoResults,
     'search-bar': SearchBar,
     'search-bar-item': SearchBarItem,
