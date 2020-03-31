@@ -41,7 +41,12 @@
         />
       </grid-column>
     </grid>
-    <archival-table>
+    <archival-table
+      v-infinite-scroll="nextPage"
+      infinite-scroll-disabled="disableInfiniteScroll"
+      infinite-scroll-distance="20"
+      infinite-scroll-immediate-check="false"
+    >
       <archival-table-row
         v-for="result in results"
         :close-status="result.closeStatus"
@@ -60,20 +65,20 @@
 <script>
 import debounce from 'lodash-es/debounce';
 import moment from 'moment';
+import pagedGrid from '~components/paged-grid';
 import { DateRangePicker, Grid, GridColumn, NoResults, TextInput } from '~components';
 import { getEndTimeIsoString, getStartTimeIsoString } from '~helpers';
 import { ArchivalTable, ArchivalTableRow, SearchBar, SearchBarItem } from './components';
 import { ARCHIVAL_STATUS_LIST } from './constants';
 import WorkflowArchivalService from './workflow-archival-service';
 
-export default {
+export default pagedGrid({
   name: 'workflow-archival-basic',
   props: [],
   data() {
     return {
       filterBy: 'CloseTime',
       loading: false,
-      nextPageToken: undefined,
       results: undefined,
       statusList: ARCHIVAL_STATUS_LIST
     };
@@ -86,8 +91,6 @@ export default {
     },
     queryParams() {
       const { endTime, runId, status, startTime, workflowId } = this;
-
-      this.nextPageToken = undefined;
 
       if (!startTime || !endTime) {
         return null;
@@ -147,22 +150,22 @@ export default {
       }
 
       this.loading = true;
-      this.workflowArchivalService.fetchArchivalRecord(queryParams);
 
-      // TODO - Make API call and populate here...
-      setTimeout(() => {
-        this.loading = false;
-        this.results = [
-          {
-            workflowId: 'helloworld_5a992dab-b0f2-4306-aa5d-13fe8faffe35',
-            runId: '76711cfb-4afb-48f4-97fd-b0679a2cdba6',
-            workflowType: 'main.Workflow',
-            closeStatus: 'Timed_out',
-            startTime: moment('Mar 27, 2020 5:15 PM').format('lll'),
-            closeTime: moment('Mar 27, 2020 5:16 PM').format('lll'),
-          },
-        ];
-      }, 2000);
+      try {
+        const { results, nextPageToken } = await this.workflowArchivalService.fetchArchivalRecords(queryParams);
+        this.results = this.results
+          ? this.results.concat(results)
+          : results;
+
+        console.log('results = ', results);
+        console.log('this.results = ', this.results);
+        this.npt = nextPageToken;
+      } catch (error) {
+        // TODO - Handle error here...
+        this.npt = undefined;
+      }
+
+      this.loading = false;
     }, 200),
     onDateRangeChange(updatedRange) {
       const { endTime, startTime, range, ...query } = { ...this.$route.query };
@@ -192,8 +195,10 @@ export default {
   },
   watch: {
     queryParams(queryParams) {
-      const { nextPageToken } = this;
-      this.onQueryChange({ ...queryParams, nextPageToken });
+      this.nextPageToken = undefined;
+      if (queryParams) {
+        this.onQueryChange({ ...queryParams, nextPageToken: this.nextPageToken });
+      }
     },
   },
   components: {
@@ -207,11 +212,13 @@ export default {
     'search-bar-item': SearchBarItem,
     'text-input': TextInput,
   },
-};
+});
 </script>
 
 <style lang="stylus">
 .workflow-archival-basic {
   padding: 16px;
+
+  paged-grid();
 }
 </style>
