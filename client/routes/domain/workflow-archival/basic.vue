@@ -80,7 +80,7 @@ export default {
   computed: {
     endTime() {
       const { range } = this;
-      const { endTime } = this.$route.query;
+      const { endTime } = this.$route.query || {};
       return getEndTimeIsoString(range, endTime);
     },
     queryParams() {
@@ -122,11 +122,11 @@ export default {
     },
     startTime() {
       const { range } = this;
-      const { startTime } = this.$route.query;
+      const { startTime } = this.$route.query || {};
       return getStartTimeIsoString(range, startTime);
     },
     workflowId() {
-      return this.$route.query.workflowId || '';
+      return this.$route.query && this.$route.query.workflowId || '';
     },
   },
   created() {
