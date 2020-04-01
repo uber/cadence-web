@@ -10,11 +10,11 @@
 export default {
   name: 'error-message',
   props: ['error'],
-}
+};
 </script>
 
 <style lang="stylus">
-  .error-message-container {
-    padding: 70px 0;
-  }
+.error-message-container {
+  padding: 70px 0;
+}
 </style>

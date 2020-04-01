@@ -9,11 +9,11 @@
           name: 'workflow/summary',
           params: {
             runId: runId,
-            workflowId: workflowId
+            workflowId: workflowId,
           },
         }"
       >
-        {{ runId}}
+        {{ runId }}
       </router-link>
     </td>
     <td>
@@ -34,6 +34,13 @@
 <script>
 export default {
   name: 'archival-table-row',
-  props: ['closeStatus', 'closeTime', 'runId', 'startTime', 'workflowId', 'workflowName'],
+  props: [
+    'closeStatus',
+    'closeTime',
+    'runId',
+    'startTime',
+    'workflowId',
+    'workflowName',
+  ],
 };
 </script>

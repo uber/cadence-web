@@ -215,10 +215,7 @@ export default pagedGrid({
           updatedQuery.range,
           query.startTime
         );
-        query.endTime = getEndTimeIsoString(
-          updatedQuery.range,
-          query.endTime
-        );
+        query.endTime = getEndTimeIsoString(updatedQuery.range, query.endTime);
       }
 
       return query.startTime && query.endTime

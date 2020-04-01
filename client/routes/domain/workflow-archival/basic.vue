@@ -29,17 +29,10 @@
           />
         </grid-column>
         <grid-column width="165px">
-          <text-input
-            label="Filter by"
-            readonly
-            :value="filterBy"
-          />
+          <text-input label="Filter by" readonly :value="filterBy" />
         </grid-column>
         <grid-column width="325px">
-          <date-range-picker
-            :date-range="range"
-            @change="onDateRangeChange"
-          />
+          <date-range-picker :date-range="range" @change="onDateRangeChange" />
         </grid-column>
         <grid-column width="120px">
           <button-fill
@@ -80,12 +73,21 @@
 <script>
 import debounce from 'lodash-es/debounce';
 import moment from 'moment';
-import pagedGrid from '~components/paged-grid';
-import { ButtonFill, DateRangePicker, ErrorMessage, Grid, GridColumn, LoadingSpinner, NoResults, TextInput } from '~components';
-import { getEndTimeIsoString, getStartTimeIsoString } from '~helpers';
 import { ArchivalTable, ArchivalTableRow } from './components';
 import { ARCHIVAL_STATUS_LIST } from './constants';
 import WorkflowArchivalService from './workflow-archival-service';
+import pagedGrid from '~components/paged-grid';
+import {
+  ButtonFill,
+  DateRangePicker,
+  ErrorMessage,
+  Grid,
+  GridColumn,
+  LoadingSpinner,
+  NoResults,
+  TextInput,
+} from '~components';
+import { getEndTimeIsoString, getStartTimeIsoString } from '~helpers';
 
 export default pagedGrid({
   name: 'workflow-archival-basic',
@@ -98,17 +100,24 @@ export default pagedGrid({
       nextPageToken: undefined,
       npt: undefined,
       results: undefined,
-      statusList: ARCHIVAL_STATUS_LIST
+      statusList: ARCHIVAL_STATUS_LIST,
     };
   },
   computed: {
     endTime() {
       const { range } = this;
       const { endTime } = this.$route.query || {};
+
       return getEndTimeIsoString(range, endTime);
     },
     queryParams() {
-      const { endTime, workflowName, statusName: status, startTime, workflowId } = this;
+      const {
+        endTime,
+        workflowName,
+        statusName: status,
+        startTime,
+        workflowId,
+      } = this;
 
       if (!startTime || !endTime) {
         return null;
@@ -126,22 +135,26 @@ export default pagedGrid({
     },
     range() {
       const { endTime, range, startTime } = this.$route.query || {};
+
       if (startTime && endTime) {
         return {
           endTime: moment(endTime),
           startTime: moment(startTime),
         };
       }
+
       if (range) {
         return range;
       }
+
       return 'last-30-days';
     },
     workflowName() {
-      return this.$route.query && this.$route.query.workflowName || '';
+      return (this.$route.query && this.$route.query.workflowName) || '';
     },
     status() {
       const statusValue = this.$route.query && this.$route.query.status;
+
       return !statusValue
         ? ARCHIVAL_STATUS_LIST[0]
         : this.statusList.find(({ value }) => value === statusValue);
@@ -152,14 +165,16 @@ export default pagedGrid({
     startTime() {
       const { range } = this;
       const { startTime } = this.$route.query || {};
+
       return getStartTimeIsoString(range, startTime);
     },
     workflowId() {
-      return this.$route.query && this.$route.query.workflowId || '';
+      return (this.$route.query && this.$route.query.workflowId) || '';
     },
   },
   created() {
     const { domain, queryParams } = this;
+
     this.workflowArchivalService = WorkflowArchivalService({ domain });
     this.onQueryChange({ ...queryParams, nextPageToken: undefined });
   },
@@ -171,7 +186,9 @@ export default pagedGrid({
       this.npt = undefined;
       this.nextPageToken = undefined;
     },
-    fetchArchivalRecord: debounce(async function fetchArchivalRecord(queryParams) {
+    fetchArchivalRecord: debounce(async function fetchArchivalRecord(
+      queryParams
+    ) {
       if (!queryParams || !queryParams.startTime || !queryParams.endTime) {
         return;
       }
@@ -179,25 +196,35 @@ export default pagedGrid({
       this.loading = true;
 
       try {
-        const { results, nextPageToken } = await this.workflowArchivalService.fetchArchivalRecords(queryParams);
-        this.results = this.results
-          ? this.results.concat(results)
-          : results;
+        const {
+          results,
+          nextPageToken,
+        } = await this.workflowArchivalService.fetchArchivalRecords(
+          queryParams
+        );
+
+        this.results = this.results ? this.results.concat(results) : results;
 
         this.npt = nextPageToken;
       } catch (error) {
         this.npt = undefined;
-        this.error = (error.json && error.json.message) || error.status || error.message;
+        this.error =
+          (error.json && error.json.message) || error.status || error.message;
       }
 
       this.loading = false;
-    }, 200),
+    },
+    200),
     onDateRangeChange(updatedRange) {
       const { endTime, startTime, range, ...query } = { ...this.$route.query };
 
       if (typeof updatedRange === 'string') {
         query.range = updatedRange;
-      } else if (typeof updatedRange === 'object' && updatedRange.endTime && updatedRange.startTime) {
+      } else if (
+        typeof updatedRange === 'object' &&
+        updatedRange.endTime &&
+        updatedRange.startTime
+      ) {
         query.endTime = updatedRange.endTime.toISOString();
         query.startTime = updatedRange.startTime.toISOString();
       }
@@ -206,6 +233,7 @@ export default pagedGrid({
     },
     onQueryChange(queryParams) {
       this.resetState();
+
       if (queryParams) {
         this.fetchArchivalRecord({ ...queryParams, nextPageToken: undefined });
       }
@@ -229,6 +257,7 @@ export default pagedGrid({
     },
     nextPageToken(nextPageToken) {
       const { queryParams } = this;
+
       if (nextPageToken && queryParams) {
         this.onNextTokenChange({ ...queryParams, nextPageToken });
       }
@@ -240,7 +269,7 @@ export default pagedGrid({
     'button-fill': ButtonFill,
     'date-range-picker': DateRangePicker,
     'error-message': ErrorMessage,
-    'grid': Grid,
+    grid: Grid,
     'grid-column': GridColumn,
     'loading-spinner': LoadingSpinner,
     'no-results': NoResults,

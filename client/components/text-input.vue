@@ -15,22 +15,15 @@
 <script>
 export default {
   name: 'text-input',
-  props: [
-    'label',
-    'name',
-    'readonly',
-    'type',
-    'value',
-  ],
+  props: ['label', 'name', 'readonly', 'type', 'value'],
   methods: {
     onInputChange(...args) {
       this.$emit('input', ...args);
     },
-  }
+  },
 };
 </script>
 
 <style lang="stylus">
 @require "../styles/base.styl"
-
 </style>

@@ -8,7 +8,7 @@
 export default {
   name: 'grid-column',
   props: ['width'],
-}
+};
 </script>
 
 <style lang="stylus">

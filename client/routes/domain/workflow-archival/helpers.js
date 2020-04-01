@@ -21,25 +21,24 @@ export const isArchivalEnabled = domainSettings =>
   isVisibilityArchivalEnabled(domainSettings);
 
 export const mapArchivedWorkflowResponse = ({ executions, nextPageToken }) => ({
-  results: !executions ? [] : executions.map(({
-    closeStatus,
-    closeTime,
-    execution: {
-      runId,
-      workflowId,
-    },
-    startTime,
-    type: {
-      name,
-    }
-  }) => ({
-    workflowId,
-    runId,
-    workflowName: name,
-    closeStatus,
-    startTime: moment(startTime).format('lll'),
-    closeTime: moment(closeTime).format('lll'),
-  })),
+  results: !executions
+    ? []
+    : executions.map(
+        ({
+          closeStatus,
+          closeTime,
+          execution: { runId, workflowId },
+          startTime,
+          type: { name },
+        }) => ({
+          workflowId,
+          runId,
+          workflowName: name,
+          closeStatus,
+          startTime: moment(startTime).format('lll'),
+          closeTime: moment(closeTime).format('lll'),
+        })
+      ),
   nextPageToken,
 });
 

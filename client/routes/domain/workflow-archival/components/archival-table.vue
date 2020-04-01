@@ -15,13 +15,13 @@
 </template>
 
 <style lang="stylus">
-  table.archival-table {
-    position: relative;
+table.archival-table {
+  position: relative;
 
-    th {
-      position: sticky;
-      top: 0;
-      background-color: white;
-    }
+  th {
+    position: sticky;
+    top: 0;
+    background-color: white;
   }
+}
 </style>

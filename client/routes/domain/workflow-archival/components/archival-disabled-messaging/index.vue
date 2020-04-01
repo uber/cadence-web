@@ -5,15 +5,8 @@
         {{ message }}
       </p>
       <div v-if="historyArchivalLinks">
-        <div
-          v-for="(link, index) in historyArchivalLinks"
-          :key="index"
-        >
-          <a
-            :href="link.href"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
+        <div v-for="(link, index) in historyArchivalLinks" :key="index">
+          <a :href="link.href" rel="noopener noreferrer" target="_blank">
             {{ link.label }}
           </a>
         </div>

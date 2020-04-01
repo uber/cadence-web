@@ -49,10 +49,18 @@
 
 <script>
 import debounce from 'lodash-es/debounce';
-import pagedGrid from '~components/paged-grid';
-import { ButtonFill, ErrorMessage, Grid, GridColumn, LoadingSpinner, NoResults, TextInput } from '~components';
 import { ArchivalTable, ArchivalTableRow } from './components';
 import WorkflowArchivalService from './workflow-archival-service';
+import pagedGrid from '~components/paged-grid';
+import {
+  ButtonFill,
+  ErrorMessage,
+  Grid,
+  GridColumn,
+  LoadingSpinner,
+  NoResults,
+  TextInput,
+} from '~components';
 
 export default pagedGrid({
   name: 'workflow-archival-advanced',
@@ -68,11 +76,12 @@ export default pagedGrid({
   },
   computed: {
     queryString() {
-      return this.$route.query && this.$route.query.queryString || '';
+      return (this.$route.query && this.$route.query.queryString) || '';
     },
   },
   created() {
     const { domain, queryString } = this;
+
     this.workflowArchivalService = WorkflowArchivalService({ domain });
     this.onQueryChange({ queryString });
   },
@@ -84,7 +93,9 @@ export default pagedGrid({
       this.npt = undefined;
       this.nextPageToken = undefined;
     },
-    fetchArchivalRecord: debounce(async function fetchArchivalRecord(queryParams) {
+    fetchArchivalRecord: debounce(async function fetchArchivalRecord(
+      queryParams
+    ) {
       if (!queryParams || !queryParams.queryString) {
         return;
       }
@@ -92,21 +103,28 @@ export default pagedGrid({
       this.loading = true;
 
       try {
-        const { results, nextPageToken } = await this.workflowArchivalService.fetchArchivalRecords(queryParams);
-        this.results = this.results
-          ? this.results.concat(results)
-          : results;
+        const {
+          results,
+          nextPageToken,
+        } = await this.workflowArchivalService.fetchArchivalRecords(
+          queryParams
+        );
+
+        this.results = this.results ? this.results.concat(results) : results;
 
         this.npt = nextPageToken;
       } catch (error) {
         this.npt = undefined;
-        this.error = (error.json && error.json.message) || error.status || error.message;
+        this.error =
+          (error.json && error.json.message) || error.status || error.message;
       }
 
       this.loading = false;
-    }, 200),
+    },
+    200),
     onQueryChange(queryParams) {
       this.resetState();
+
       if (queryParams) {
         this.fetchArchivalRecord({ ...queryParams, nextPageToken: undefined });
       }
@@ -127,6 +145,7 @@ export default pagedGrid({
     },
     nextPageToken(nextPageToken) {
       const { queryString } = this;
+
       if (nextPageToken && queryString) {
         this.onNextTokenChange({ queryString, nextPageToken });
       }
@@ -137,7 +156,7 @@ export default pagedGrid({
     'archival-table-row': ArchivalTableRow,
     'button-fill': ButtonFill,
     'error-message': ErrorMessage,
-    'grid': Grid,
+    grid: Grid,
     'grid-column': GridColumn,
     'loading-spinner': LoadingSpinner,
     'no-results': NoResults,

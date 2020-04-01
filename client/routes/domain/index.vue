@@ -36,10 +36,10 @@ export default {
 </script>
 
 <style lang="stylus">
-  section.domain {
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 auto;
-    overflow-y: auto;
-  }
+section.domain {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  overflow-y: auto;
+}
 </style>

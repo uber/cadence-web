@@ -26,7 +26,7 @@ export default {
     },
     to: {
       type: Object,
-    }
+    },
   },
   methods: {
     onClick(...args) {
@@ -37,14 +37,14 @@ export default {
 </script>
 
 <style lang="stylus">
-  .button-fill {
-    cursor: pointer;
-    display: inline-block;
-    padding: 13px 21px;
-    transition: all 400ms ease;
-    font-weight: 600;
-    color: #fff !important;
-    background-color: #11939a;
-    white-space: nowrap;
-  }
+.button-fill {
+  cursor: pointer;
+  display: inline-block;
+  padding: 13px 21px;
+  transition: all 400ms ease;
+  font-weight: 600;
+  color: #fff !important;
+  background-color: #11939a;
+  white-space: nowrap;
+}
 </style>
