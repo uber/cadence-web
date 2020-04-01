@@ -1,10 +1,10 @@
 export const ARCHIVAL_STATUS_LIST = [
   { value: 'CLOSED', label: 'Closed' },
-  { value: 'COMPLETED', label: 'Completed' },
-  { value: 'FAILED', label: 'Failed' },
-  { value: 'CANCELED', label: 'Cancelled' },
-  { value: 'TERMINATED', label: 'Terminated' },
-  { value: 'CONTINUED_AS_NEW', label: 'Continued As New' },
-  { value: 'TIMED_OUT', label: 'Timed Out' },
+  { value: '0', label: 'Completed' },
+  { value: '1', label: 'Failed' },
+  { value: '2', label: 'Cancelled' },
+  { value: '3', label: 'Terminated' },
+  { value: '4', label: 'Continued As New' },
+  { value: '5', label: 'Timed Out' },
 ];
 

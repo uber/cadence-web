@@ -41,6 +41,15 @@
             @change="onDateRangeChange"
           />
         </grid-column>
+        <grid-column width="120px">
+          <button-fill
+            label="ADVANCED"
+            tag="router-link"
+            :to="{
+              name: 'workflow-archival-advanced',
+            }"
+          />
+        </grid-column>
       </grid>
     </header>
     <section class="results">
@@ -72,7 +81,7 @@
 import debounce from 'lodash-es/debounce';
 import moment from 'moment';
 import pagedGrid from '~components/paged-grid';
-import { DateRangePicker, ErrorMessage, Grid, GridColumn, LoadingSpinner, NoResults, TextInput } from '~components';
+import { ButtonFill, DateRangePicker, ErrorMessage, Grid, GridColumn, LoadingSpinner, NoResults, TextInput } from '~components';
 import { getEndTimeIsoString, getStartTimeIsoString } from '~helpers';
 import { ArchivalTable, ArchivalTableRow, SearchBar, SearchBarItem } from './components';
 import { ARCHIVAL_STATUS_LIST } from './constants';
@@ -228,6 +237,7 @@ export default pagedGrid({
   components: {
     'archival-table': ArchivalTable,
     'archival-table-row': ArchivalTableRow,
+    'button-fill': ButtonFill,
     'date-range-picker': DateRangePicker,
     'error-message': ErrorMessage,
     'grid': Grid,
