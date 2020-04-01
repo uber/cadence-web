@@ -21,7 +21,7 @@ export const isArchivalEnabled = domainSettings =>
   isVisibilityArchivalEnabled(domainSettings);
 
 export const mapArchivedWorkflowResponse = ({ executions, nextPageToken }) => ({
-  results: executions.map(({
+  results: !executions ? [] : executions.map(({
     closeStatus,
     closeTime,
     execution: {

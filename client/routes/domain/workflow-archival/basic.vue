@@ -61,6 +61,7 @@
           :workflow-name="result.workflowName"
         />
       </archival-table>
+      <error-message :error="error" />
       <no-results :results="results" />
       <loading-spinner v-if="loading" />
     </section>
@@ -71,7 +72,7 @@
 import debounce from 'lodash-es/debounce';
 import moment from 'moment';
 import pagedGrid from '~components/paged-grid';
-import { DateRangePicker, Grid, GridColumn, LoadingSpinner, NoResults, TextInput } from '~components';
+import { DateRangePicker, ErrorMessage, Grid, GridColumn, LoadingSpinner, NoResults, TextInput } from '~components';
 import { getEndTimeIsoString, getStartTimeIsoString } from '~helpers';
 import { ArchivalTable, ArchivalTableRow, SearchBar, SearchBarItem } from './components';
 import { ARCHIVAL_STATUS_LIST } from './constants';
@@ -82,9 +83,11 @@ export default pagedGrid({
   props: ['domain'],
   data() {
     return {
+      error: undefined,
       filterBy: 'CloseTime',
       loading: false,
       nextPageToken: undefined,
+      npt: undefined,
       results: undefined,
       statusList: ARCHIVAL_STATUS_LIST
     };
@@ -152,8 +155,12 @@ export default pagedGrid({
     this.onQueryChange({ ...queryParams, nextPageToken: undefined });
   },
   methods: {
-    clearResults() {
+    resetState() {
+      this.error = undefined;
+      this.loading = false;
       this.results = undefined;
+      this.npt = undefined;
+      this.nextPageToken = undefined;
     },
     fetchArchivalRecord: debounce(async function fetchArchivalRecord(queryParams) {
       if (!queryParams || !queryParams.startTime || !queryParams.endTime) {
@@ -170,8 +177,8 @@ export default pagedGrid({
 
         this.npt = nextPageToken;
       } catch (error) {
-        // TODO - Handle error here...
         this.npt = undefined;
+        this.error = (error.json && error.json.message) || error.status || error.message;
       }
 
       this.loading = false;
@@ -189,7 +196,7 @@ export default pagedGrid({
       this.$router.replace({ query });
     },
     onQueryChange(queryParams) {
-      this.clearResults();
+      this.resetState();
       if (queryParams) {
         this.fetchArchivalRecord({ ...queryParams, nextPageToken: undefined });
       }
@@ -222,6 +229,7 @@ export default pagedGrid({
     'archival-table': ArchivalTable,
     'archival-table-row': ArchivalTableRow,
     'date-range-picker': DateRangePicker,
+    'error-message': ErrorMessage,
     'grid': Grid,
     'grid-column': GridColumn,
     'loading-spinner': LoadingSpinner,
