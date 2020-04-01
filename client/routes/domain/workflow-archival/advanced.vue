@@ -85,8 +85,6 @@ export default pagedGrid({
       this.nextPageToken = undefined;
     },
     fetchArchivalRecord: debounce(async function fetchArchivalRecord(queryParams) {
-      console.log('fetchArchivalRecord called?', queryParams);
-
       if (!queryParams || !queryParams.queryString) {
         return;
       }
