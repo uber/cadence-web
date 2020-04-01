@@ -43,7 +43,7 @@ export default {
     padding: 13px 21px;
     transition: all 400ms ease;
     font-weight: 600;
-    color: #fff;
+    color: #fff !important;
     background-color: #11939a;
     white-space: nowrap;
   }

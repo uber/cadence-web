@@ -83,7 +83,7 @@ import moment from 'moment';
 import pagedGrid from '~components/paged-grid';
 import { ButtonFill, DateRangePicker, ErrorMessage, Grid, GridColumn, LoadingSpinner, NoResults, TextInput } from '~components';
 import { getEndTimeIsoString, getStartTimeIsoString } from '~helpers';
-import { ArchivalTable, ArchivalTableRow, SearchBar, SearchBarItem } from './components';
+import { ArchivalTable, ArchivalTableRow } from './components';
 import { ARCHIVAL_STATUS_LIST } from './constants';
 import WorkflowArchivalService from './workflow-archival-service';
 
@@ -244,8 +244,6 @@ export default pagedGrid({
     'grid-column': GridColumn,
     'loading-spinner': LoadingSpinner,
     'no-results': NoResults,
-    'search-bar': SearchBar,
-    'search-bar-item': SearchBarItem,
     'text-input': TextInput,
   },
 });

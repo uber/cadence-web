@@ -49,12 +49,17 @@ const buildQueryString = (startTime, endTime, { status, workflowId, workflowName
 
 router.get('/api/domains/:domain/workflows/archived', async function (ctx) {
   const { nextPageToken, ...query } = ctx.query || {};
-  const startTime = moment(query.startTime || NaN);
-  const endTime = moment(query.endTime || NaN);
+  let queryString;
 
-  ctx.assert(startTime.isValid() && endTime.isValid(), 400);
+  if (query.queryString) {
+    queryString = query.queryString;
+  } else {
+    const startTime = moment(query.startTime || NaN);
+    const endTime = moment(query.endTime || NaN);
 
-  const queryString = query.queryString ? query.queryString : buildQueryString(startTime, endTime, query);
+    ctx.assert(startTime.isValid() && endTime.isValid(), 400);
+    queryString = buildQueryString(startTime, endTime, query);
+  }
 
   ctx.body = await ctx.cadence['archivedWorkflows']({
     query: queryString,

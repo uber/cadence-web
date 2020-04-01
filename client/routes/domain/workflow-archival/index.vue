@@ -5,6 +5,11 @@
       :domain-settings="domainSettings"
     />
     <router-view
+      name="workflow-archival-advanced"
+      v-if="!loading && isArchivalEnabled"
+      :domain="domain"
+    />
+    <router-view
       name="workflow-archival-basic"
       v-if="!loading && isArchivalEnabled"
       :domain="domain"
