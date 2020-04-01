@@ -7,6 +7,7 @@
     <router-view
       name="workflow-archival-basic"
       v-if="!loading && isArchivalEnabled"
+      :domain="domain"
     />
   </section>
 </template>

@@ -13,10 +13,10 @@
         </grid-column>
         <grid-column>
           <text-input
-            label="Run ID"
-            name="runId"
+            label="Workflow Name"
+            name="workflowName"
             type="search"
-            :value="runId"
+            :value="workflowName"
             @input="onTextChange"
           />
         </grid-column>
@@ -58,7 +58,7 @@
           :run-id="result.runId"
           :start-time="result.startTime"
           :workflow-id="result.workflowId"
-          :workflow-type="result.workflowType"
+          :workflow-name="result.workflowName"
         />
       </archival-table>
       <no-results :results="results" />
@@ -79,7 +79,7 @@ import WorkflowArchivalService from './workflow-archival-service';
 
 export default pagedGrid({
   name: 'workflow-archival-basic',
-  props: [],
+  props: ['domain'],
   data() {
     return {
       filterBy: 'CloseTime',
@@ -96,18 +96,20 @@ export default pagedGrid({
       return getEndTimeIsoString(range, endTime);
     },
     queryParams() {
-      const { endTime, runId, status, startTime, workflowId } = this;
+      const { endTime, workflowName, statusName: status, startTime, workflowId } = this;
 
       if (!startTime || !endTime) {
         return null;
       }
 
+      const includeStatus = status !== 'CLOSED';
+
       return {
         endTime,
-        runId,
-        status,
         startTime,
-        workflowId,
+        ...(includeStatus && { status }),
+        ...(workflowId && { workflowId }),
+        ...(workflowName && { workflowName }),
       };
     },
     range() {
@@ -123,14 +125,17 @@ export default pagedGrid({
       }
       return 'last-30-days';
     },
-    runId() {
-      return this.$route.query && this.$route.query.runId || '';
+    workflowName() {
+      return this.$route.query && this.$route.query.workflowName || '';
     },
     status() {
       const statusValue = this.$route.query && this.$route.query.status;
       return !statusValue
         ? ARCHIVAL_STATUS_LIST[0]
         : this.statusList.find(({ value }) => value === statusValue);
+    },
+    statusName() {
+      return this.status.value;
     },
     startTime() {
       const { range } = this;
@@ -142,8 +147,8 @@ export default pagedGrid({
     },
   },
   created() {
-    const { queryParams } = this;
-    this.workflowArchivalService = WorkflowArchivalService();
+    const { domain, queryParams } = this;
+    this.workflowArchivalService = WorkflowArchivalService({ domain });
     this.onQueryChange({ ...queryParams, nextPageToken: undefined });
   },
   methods: {

@@ -1,4 +1,5 @@
 import get from 'lodash-es/get';
+import moment from 'moment';
 
 export const getDomain = domainSettings =>
   get(domainSettings, 'domainInfo.name', '');
@@ -18,6 +19,29 @@ export const isVisibilityArchivalEnabled = domainSettings =>
 export const isArchivalEnabled = domainSettings =>
   isHistoryArchivalEnabled(domainSettings) &&
   isVisibilityArchivalEnabled(domainSettings);
+
+export const mapArchivedWorkflowResponse = ({ executions, nextPageToken }) => ({
+  results: executions.map(({
+    closeStatus,
+    closeTime,
+    execution: {
+      runId,
+      workflowId,
+    },
+    startTime,
+    type: {
+      name,
+    }
+  }) => ({
+    workflowId,
+    runId,
+    workflowName: name,
+    closeStatus,
+    startTime: moment(startTime).format('lll'),
+    closeTime: moment(closeTime).format('lll'),
+  })),
+  nextPageToken,
+});
 
 export const replaceDomain = (message, domainSettings) =>
   message.replace(/\{domain\}/, getDomain(domainSettings));
