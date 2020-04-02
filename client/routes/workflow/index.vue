@@ -1,5 +1,5 @@
 <template>
-  <section class="executions" :class="{ loading: wfLoading }">
+  <section class="execution" :class="{ loading: wfLoading }">
     <navigation-bar>
       <navigation-link
         id="nav-link-summary"
