@@ -72,9 +72,15 @@
 
 <script>
 import debounce from 'lodash-es/debounce';
-import moment from 'moment';
 import { ArchivalTable, ArchivalTableRow } from './components';
 import { ARCHIVAL_STATUS_LIST } from './constants';
+import {
+  getQueryParams,
+  getRange,
+  getStatus,
+  getStatusName,
+  updateQueryFromRange,
+} from './helpers';
 import WorkflowArchivalService from './workflow-archival-service';
 import pagedGrid from '~components/paged-grid';
 import {
@@ -111,56 +117,36 @@ export default pagedGrid({
       return getEndTimeIsoString(range, endTime);
     },
     queryParams() {
-      const {
+      const { endTime, workflowName, statusName, startTime, workflowId } = this;
+
+      return getQueryParams({
         endTime,
         workflowName,
-        statusName: status,
+        statusName,
         startTime,
         workflowId,
-      } = this;
-
-      if (!startTime || !endTime) {
-        return null;
-      }
-
-      const includeStatus = status !== 'CLOSED';
-
-      return {
-        endTime,
-        startTime,
-        ...(includeStatus && { status }),
-        ...(workflowId && { workflowId }),
-        ...(workflowName && { workflowName }),
-      };
+      });
     },
     range() {
       const { endTime, range, startTime } = this.$route.query || {};
 
-      if (startTime && endTime) {
-        return {
-          endTime: moment(endTime),
-          startTime: moment(startTime),
-        };
-      }
-
-      if (range) {
-        return range;
-      }
-
-      return 'last-30-days';
+      return getRange({ endTime, range, startTime });
     },
     workflowName() {
-      return (this.$route.query && this.$route.query.workflowName) || '';
+      const { workflowName = '' } = this.$route.query || {};
+
+      return workflowName;
     },
     status() {
       const statusValue = this.$route.query && this.$route.query.status;
+      const { statusList } = this;
 
-      return !statusValue
-        ? ARCHIVAL_STATUS_LIST[0]
-        : this.statusList.find(({ value }) => value === statusValue);
+      return getStatus({ statusList, statusValue });
     },
     statusName() {
-      return this.status.value;
+      const { status, statusList } = this;
+
+      return getStatusName({ status, statusList });
     },
     startTime() {
       const { range } = this;
@@ -169,7 +155,9 @@ export default pagedGrid({
       return getStartTimeIsoString(range, startTime);
     },
     workflowId() {
-      return (this.$route.query && this.$route.query.workflowId) || '';
+      const { workflowId = '' } = this.$route.query || {};
+
+      return workflowId;
     },
   },
   created() {
@@ -216,20 +204,10 @@ export default pagedGrid({
     },
     200),
     onDateRangeChange(updatedRange) {
-      const { endTime, startTime, range, ...query } = { ...this.$route.query };
+      const { query = {} } = this.$route;
+      const updatedQuery = updateQueryFromRange(query, updatedRange);
 
-      if (typeof updatedRange === 'string') {
-        query.range = updatedRange;
-      } else if (
-        typeof updatedRange === 'object' &&
-        updatedRange.endTime &&
-        updatedRange.startTime
-      ) {
-        query.endTime = updatedRange.endTime.toISOString();
-        query.startTime = updatedRange.startTime.toISOString();
-      }
-
-      this.$router.replace({ query });
+      this.$router.replace({ query: updatedQuery });
     },
     onQueryChange(queryParams) {
       this.resetState();
