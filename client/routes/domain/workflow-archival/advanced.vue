@@ -61,6 +61,7 @@ import {
   NoResults,
   TextInput,
 } from '~components';
+import { getErrorMessage } from '~helpers';
 
 export default pagedGrid({
   name: 'workflow-archival-advanced',
@@ -76,7 +77,9 @@ export default pagedGrid({
   },
   computed: {
     queryString() {
-      return (this.$route.query && this.$route.query.queryString) || '';
+      const { queryString = '' } = this.$route.query || {};
+
+      return queryString;
     },
   },
   created() {
@@ -115,8 +118,7 @@ export default pagedGrid({
         this.npt = nextPageToken;
       } catch (error) {
         this.npt = undefined;
-        this.error =
-          (error.json && error.json.message) || error.status || error.message;
+        this.error = getErrorMessage(error);
       }
 
       this.loading = false;

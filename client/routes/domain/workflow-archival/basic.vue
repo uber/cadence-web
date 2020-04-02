@@ -93,7 +93,7 @@ import {
   NoResults,
   TextInput,
 } from '~components';
-import { getEndTimeIsoString, getStartTimeIsoString } from '~helpers';
+import { getEndTimeIsoString, getErrorMessage, getStartTimeIsoString } from '~helpers';
 
 export default pagedGrid({
   name: 'workflow-archival-basic',
@@ -196,8 +196,7 @@ export default pagedGrid({
         this.npt = nextPageToken;
       } catch (error) {
         this.npt = undefined;
-        this.error =
-          (error.json && error.json.message) || error.status || error.message;
+        this.error = getErrorMessage(error);
       }
 
       this.loading = false;
