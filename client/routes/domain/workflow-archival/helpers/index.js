@@ -3,7 +3,7 @@ export { default as getHistoryArchivalStatus } from './get-history-archival-stat
 export { default as getQueryParams } from './get-query-params';
 export { default as getRange } from './get-range';
 export { default as getStatus } from './get-status';
-export { default as getStatusName } from './get-status-name';
+export { default as getStatusValue } from './get-status-value';
 export { default as getVisibilityArchivalStatus } from './get-visibility-archival-status';
 export { default as isArchivalEnabled } from './is-archival-enabled';
 export { default as isHistoryArchivalEnabled } from './is-history-archival-enabled';

@@ -78,7 +78,7 @@ import {
   getQueryParams,
   getRange,
   getStatus,
-  getStatusName,
+  getStatusValue,
   updateQueryFromRange,
 } from './helpers';
 import WorkflowArchivalService from './workflow-archival-service';
@@ -117,12 +117,12 @@ export default pagedGrid({
       return getEndTimeIsoString(range, endTime);
     },
     queryParams() {
-      const { endTime, workflowName, statusName, startTime, workflowId } = this;
+      const { endTime, workflowName, statusValue, startTime, workflowId } = this;
 
       return getQueryParams({
         endTime,
         workflowName,
-        statusName,
+        statusValue,
         startTime,
         workflowId,
       });
@@ -143,10 +143,10 @@ export default pagedGrid({
 
       return getStatus({ statusList, statusValue });
     },
-    statusName() {
+    statusValue() {
       const { status, statusList } = this;
 
-      return getStatusName({ status, statusList });
+      return getStatusValue({ status, statusList });
     },
     startTime() {
       const { range } = this;

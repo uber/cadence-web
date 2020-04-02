@@ -1,7 +1,7 @@
 export default ({
   endTime,
   workflowName,
-  statusName,
+  statusValue,
   startTime,
   workflowId,
 }) => {
@@ -9,12 +9,12 @@ export default ({
     return null;
   }
 
-  const includeStatus = statusName !== 'CLOSED';
+  const includeStatus = statusValue !== 'CLOSED';
 
   return {
     endTime,
     startTime,
-    ...(includeStatus && { status: statusName }),
+    ...(includeStatus && { status: statusValue }),
     ...(workflowId && { workflowId }),
     ...(workflowName && { workflowName }),
   };
