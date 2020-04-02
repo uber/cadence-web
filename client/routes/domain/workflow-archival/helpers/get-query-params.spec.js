@@ -1,1 +1,3 @@
-// TODO
+describe('getQueryParams', () => {
+  // TODO
+});
