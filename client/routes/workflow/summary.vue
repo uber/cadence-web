@@ -199,6 +199,14 @@ section.workflow-summary
   overflow auto
   padding layout-spacing-small
 
+  .pending-activities {
+    dl.details {
+      dd {
+        white-space: normal;
+      }
+    }
+  }
+
   dl:not(.details)
     & > div
       margin-bottom 1em

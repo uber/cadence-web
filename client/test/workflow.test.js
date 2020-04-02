@@ -38,7 +38,7 @@ describe('Workflow', () => {
     scenario.withFullHistory(opts.events);
     const summaryEl = await scenario
       .render(opts.attach)
-      .waitUntilExists('section.workflow section.workflow-summary dl');
+      .waitUntilExists('section.execution section.workflow-summary dl');
 
     return [summaryEl.parentElement, scenario];
   }
@@ -1056,7 +1056,7 @@ describe('Workflow', () => {
       const [, scenario] = await summaryTest(this.test);
 
       scenario.vm.$el
-        .attrValues('section.workflow > nav a', 'href')
+        .attrValues('section.execution > nav a', 'href')
         .should.deep.equal([
           '/domains/ci-test/workflows/email-daily-summaries/emailRun1/summary',
           '/domains/ci-test/workflows/email-daily-summaries/emailRun1/history',
@@ -1064,10 +1064,10 @@ describe('Workflow', () => {
           '/domains/ci-test/workflows/email-daily-summaries/emailRun1/query',
         ]);
       scenario.vm.$el
-        .querySelector('section.workflow > nav a#nav-link-stack-trace')
+        .querySelector('section.execution > nav a#nav-link-stack-trace')
         .should.not.have.property('display', 'none');
       scenario.vm.$el
-        .querySelector('section.workflow > nav a#nav-link-query')
+        .querySelector('section.execution > nav a#nav-link-query')
         .should.not.have.property('display', 'none');
     });
 
@@ -1151,7 +1151,7 @@ describe('Workflow', () => {
 
       const queryEl = await scenario
         .render()
-        .waitUntilExists('section.workflow section.query');
+        .waitUntilExists('section.execution section.query');
 
       return [queryEl, scenario];
     }
@@ -1230,7 +1230,7 @@ describe('Workflow', () => {
       });
 
       scenario.vm.$el
-        .attrValues('section.workflow > nav a', 'href')
+        .attrValues('section.execution > nav a', 'href')
         .should.deep.equal([
           '/domains/ci-test/workflows/email-daily-summaries/emailRun1/summary',
           '/domains/ci-test/workflows/email-daily-summaries/emailRun1/history',
@@ -1238,13 +1238,13 @@ describe('Workflow', () => {
           '/domains/ci-test/workflows/email-daily-summaries/emailRun1/query',
         ]);
       scenario.vm.$el
-        .querySelector('section.workflow > nav a#nav-link-summary')
+        .querySelector('section.execution > nav a#nav-link-summary')
         .should.have.class('router-link-active');
       await retry(() => {
         scenario.vm.$el.querySelector(
-          'section.workflow > nav a#nav-link-stack-trace'
+          'section.execution > nav a#nav-link-stack-trace'
         ).should.not.be.displayed;
-        scenario.vm.$el.querySelector('section.workflow > nav a#nav-link-query')
+        scenario.vm.$el.querySelector('section.execution > nav a#nav-link-query')
           .should.not.be.displayed;
       });
     });
