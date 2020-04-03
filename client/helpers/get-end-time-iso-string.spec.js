@@ -6,6 +6,7 @@ describe('getEndTimeIsoString', () => {
       const range = undefined;
       const endTimeString = '2020-03-30T00:00:00Z';
       const output = getEndTimeIsoString(range, endTimeString);
+
       expect(output).toEqual(endTimeString);
     });
   });
@@ -18,6 +19,7 @@ describe('getEndTimeIsoString', () => {
       const range = 'last-30-days';
       const endTimeString = '';
       const output = getEndTimeIsoString(range, endTimeString);
+
       expect(output).toEqual('2020-03-02T07:59:59.999Z');
     });
   });

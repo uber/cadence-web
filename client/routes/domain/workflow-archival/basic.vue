@@ -93,7 +93,11 @@ import {
   NoResults,
   TextInput,
 } from '~components';
-import { getEndTimeIsoString, getErrorMessage, getStartTimeIsoString } from '~helpers';
+import {
+  getEndTimeIsoString,
+  getErrorMessage,
+  getStartTimeIsoString,
+} from '~helpers';
 
 export default pagedGrid({
   name: 'workflow-archival-basic',
@@ -117,7 +121,13 @@ export default pagedGrid({
       return getEndTimeIsoString(range, endTime);
     },
     queryParams() {
-      const { endTime, workflowName, statusValue, startTime, workflowId } = this;
+      const {
+        endTime,
+        workflowName,
+        statusValue,
+        startTime,
+        workflowId,
+      } = this;
 
       return getQueryParams({
         endTime,

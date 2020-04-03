@@ -6,6 +6,7 @@ describe('getStartTimeIsoString', () => {
       const range = undefined;
       const startTimeString = '2020-03-30T00:00:00Z';
       const output = getStartTimeIsoString(range, startTimeString);
+
       expect(output).toEqual(startTimeString);
     });
   });
@@ -18,6 +19,7 @@ describe('getStartTimeIsoString', () => {
       const range = 'last-30-days';
       const startTimeString = '';
       const output = getStartTimeIsoString(range, startTimeString);
+
       expect(output).toEqual('2020-01-31T08:00:00.000Z');
     });
   });

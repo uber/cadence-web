@@ -5,6 +5,7 @@ describe('mapArchivedWorkflowResponse', () => {
     it('should return nextPageToken = "123".', () => {
       const nextPageToken = '123';
       const output = mapArchivedWorkflowResponse({ nextPageToken });
+
       expect(output.nextPageToken).toEqual('123');
     });
   });
@@ -16,17 +17,18 @@ describe('mapArchivedWorkflowResponse', () => {
         closeTime: '2020-03-30T00:00:00Z',
         execution: {
           runId: 'runIdValue',
-          workflowId: 'workflowIdValue'
+          workflowId: 'workflowIdValue',
         },
         startTime: '2020-03-01T00:00:00Z',
         type: {
-          name: 'workflowNameValue'
+          name: 'workflowNameValue',
         },
-      }
+      },
     ];
 
     it('should return a flattened results array', () => {
       const output = mapArchivedWorkflowResponse({ executions });
+
       expect(output.results[0].closeStatus).toEqual('closeStatusValue');
       expect(output.results[0].closeTime).toEqual('Mar 29, 2020 5:00 PM');
       expect(output.results[0].runId).toEqual('runIdValue');
