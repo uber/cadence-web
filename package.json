@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "NODE_ENV=development node server.js",
     "eslint": "eslint --ext .js,.vue client --fix",
-    "install": "napa && cp -R node_modules/cadence-idl/thrift server/idl",
+    "install": "napa && rm -rf server/idl && cp -R node_modules/cadence-idl/thrift server/idl",
     "start": "npm run build && NODE_ENV=production node server.js",
     "test": "mocha server/test && mocha-chrome http://localhost:8090",
     "test:unit": "jest",
@@ -110,6 +110,6 @@
     "webpack-hot-client": "^1.3.0"
   },
   "napa": {
-    "cadence-idl": "uber/cadence-idl#db27bb7ac668de0b4ba582b4de9bbc280b5a1243"
+    "cadence-idl": "uber/cadence-idl#ecaf5a6121ad015e836b7a8cfda111e3400e45ed"
   }
 }
