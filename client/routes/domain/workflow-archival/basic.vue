@@ -205,6 +205,10 @@ export default pagedGrid({
 
         this.npt = nextPageToken;
       } catch (error) {
+        if (error.name === 'AbortError') {
+          return;
+        }
+
         this.npt = undefined;
         this.error = getErrorMessage(error);
       }

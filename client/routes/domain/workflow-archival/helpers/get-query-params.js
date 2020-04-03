@@ -9,7 +9,7 @@ export default ({
     return null;
   }
 
-  const includeStatus = statusValue !== 'CLOSED';
+  const includeStatus = statusValue !== '-1';
 
   return {
     endTime,
