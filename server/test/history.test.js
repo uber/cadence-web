@@ -100,6 +100,7 @@ describe('Workflow History', function() {
         },
         maximumPageSize: 100,
         nextPageToken: null,
+        skipArchival: null,
         waitForNewEvent: null
       })
 
@@ -121,7 +122,7 @@ describe('Workflow History', function() {
 
       return {
         history: { events: [] },
-        nextPageToken: new Buffer('page3')
+        nextPageToken: new Buffer('page3'),
       }
     }
 
@@ -132,7 +133,8 @@ describe('Workflow History', function() {
       .expect({
         archived: null,
         history: { events: [] },
-        nextPageToken: 'cGFnZTM='
+        nextPageToken: 'cGFnZTM=',
+        rawHistory: null,
       })
   })
 
@@ -155,7 +157,7 @@ describe('Workflow History', function() {
   it('should transform Long numbers to JavaScript numbers, Long dates to ISO date strings, and line-delimited JSON buffers to JSON', function() {
     this.test.GetWorkflowExecutionHistory = ({ getRequest }) => ({
       history: { events: wfHistoryThrift },
-      nextPageToken: new Buffer('page2')
+      nextPageToken: new Buffer('page2'),
     })
 
     return request()
@@ -164,7 +166,8 @@ describe('Workflow History', function() {
       .expect({
         archived: null,
         history: { events: wfHistoryJson },
-        nextPageToken: 'cGFnZTI='
+        nextPageToken: 'cGFnZTI=',
+        rawHistory: null,
       })
   })
 
