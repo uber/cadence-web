@@ -10,12 +10,12 @@ export default ({ executions, nextPageToken }) => ({
           startTime,
           type: { name },
         }) => ({
-          workflowId,
-          runId,
-          workflowName: name,
           closeStatus,
-          startTime: moment(startTime).format('lll'),
           closeTime: moment(closeTime).format('lll'),
+          runId,
+          startTime: moment(startTime).format('lll'),
+          workflowId,
+          workflowName: name,
         })
       ),
   nextPageToken,
