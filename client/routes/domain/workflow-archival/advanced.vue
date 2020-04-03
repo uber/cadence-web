@@ -1,8 +1,8 @@
 <template>
   <section class="workflow-archival-basic">
     <header>
-      <grid>
-        <grid-column>
+      <flex-grid>
+        <flex-grid-item>
           <text-input
             label="Query"
             name="queryString"
@@ -10,8 +10,8 @@
             :value="queryString"
             @input="onTextChange"
           />
-        </grid-column>
-        <grid-column width="85px">
+        </flex-grid-item>
+        <flex-grid-item width="85px">
           <button-fill
             label="BASIC"
             tag="router-link"
@@ -19,8 +19,8 @@
               name: 'workflow-archival-basic',
             }"
           />
-        </grid-column>
-      </grid>
+        </flex-grid-item>
+      </flex-grid>
     </header>
     <section class="results">
       <archival-table
@@ -55,8 +55,8 @@ import pagedGrid from '~components/paged-grid';
 import {
   ButtonFill,
   ErrorMessage,
-  Grid,
-  GridColumn,
+  FlexGrid,
+  FlexGridItem,
   LoadingSpinner,
   NoResults,
   TextInput,
@@ -158,8 +158,8 @@ export default pagedGrid({
     'archival-table-row': ArchivalTableRow,
     'button-fill': ButtonFill,
     'error-message': ErrorMessage,
-    grid: Grid,
-    'grid-column': GridColumn,
+    'flex-grid': FlexGrid,
+    'flex-grid-item': FlexGridItem,
     'loading-spinner': LoadingSpinner,
     'no-results': NoResults,
     'text-input': TextInput,

@@ -1,8 +1,8 @@
 <template>
   <section class="workflow-archival-basic">
     <header>
-      <grid>
-        <grid-column>
+      <flex-grid>
+        <flex-grid-item>
           <text-input
             label="Workflow ID"
             name="workflowId"
@@ -10,8 +10,8 @@
             :value="workflowId"
             @input="onTextChange"
           />
-        </grid-column>
-        <grid-column>
+        </flex-grid-item>
+        <flex-grid-item>
           <text-input
             label="Workflow Name"
             name="workflowName"
@@ -19,22 +19,22 @@
             :value="workflowName"
             @input="onTextChange"
           />
-        </grid-column>
-        <grid-column width="160px">
+        </flex-grid-item>
+        <flex-grid-item width="160px">
           <v-select
             :on-change="onSelectChange"
             :options="statusList"
             :searchable="false"
             :value="status"
           />
-        </grid-column>
-        <grid-column width="165px">
+        </flex-grid-item>
+        <flex-grid-item width="165px">
           <text-input label="Filter by" readonly :value="filterBy" />
-        </grid-column>
-        <grid-column width="325px">
+        </flex-grid-item>
+        <flex-grid-item width="325px">
           <date-range-picker :date-range="range" @change="onDateRangeChange" />
-        </grid-column>
-        <grid-column width="120px">
+        </flex-grid-item>
+        <flex-grid-item width="120px">
           <button-fill
             label="ADVANCED"
             tag="router-link"
@@ -42,8 +42,8 @@
               name: 'workflow-archival-advanced',
             }"
           />
-        </grid-column>
-      </grid>
+        </flex-grid-item>
+      </flex-grid>
     </header>
     <section class="results">
       <archival-table
@@ -87,8 +87,8 @@ import {
   ButtonFill,
   DateRangePicker,
   ErrorMessage,
-  Grid,
-  GridColumn,
+  FlexGrid,
+  FlexGridItem,
   LoadingSpinner,
   NoResults,
   TextInput,
@@ -260,8 +260,8 @@ export default pagedGrid({
     'button-fill': ButtonFill,
     'date-range-picker': DateRangePicker,
     'error-message': ErrorMessage,
-    grid: Grid,
-    'grid-column': GridColumn,
+    'flex-grid': FlexGrid,
+    'flex-grid-item': FlexGridItem,
     'loading-spinner': LoadingSpinner,
     'no-results': NoResults,
     'text-input': TextInput,
