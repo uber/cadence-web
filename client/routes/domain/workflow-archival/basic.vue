@@ -203,8 +203,8 @@ export default pagedGrid({
     },
     200),
     onDateRangeChange(updatedRange) {
-      const { query = {} } = this.$route;
-      const updatedQuery = updateQueryFromRange(query, updatedRange);
+      const { query } = this.$route;
+      const updatedQuery = updateQueryFromRange({ query, updatedRange });
 
       this.$router.replace({ query: updatedQuery });
     },
