@@ -11,4 +11,5 @@ export { default as FlexGridItem } from './flex-grid-item';
 export { default as LoadingSpinner } from './loading-spinner';
 export { default as NavigationBar } from './navigation-bar';
 export { default as NavigationLink } from './navigation-link';
+export { default as NoResults } from './no-results';
 export { default as NotificationBar } from './notification-bar';
