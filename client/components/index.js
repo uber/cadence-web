@@ -1,9 +1,11 @@
 export { default as BarLoader } from './bar-loader';
+export { default as ButtonFill } from './button-fill';
 export { default as Copy } from './copy';
 export { default as DataViewer } from './data-viewer';
 export { default as DetailList } from './detail-list';
 export { default as DateRangePicker } from './date-range-picker';
 export { default as DomainNavigation } from './domain-navigation';
+export { default as ErrorMessage } from './error-message';
 export { default as FlexGrid } from './flex-grid';
 export { default as FlexGridColumn } from './flex-grid-column';
 export { default as NavigationBar } from './navigation-bar';
