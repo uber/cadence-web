@@ -26,7 +26,6 @@ describe('getRange', () => {
       endTime = '2020-03-30T00:00:00Z';
     });
 
-
     it('should return startTime = moment("2020-03-01T00:00:00Z").', () => {
       const output = getRange({ endTime, startTime });
       expect(output.startTime).toEqual(moment("2020-03-01T00:00:00Z"));
