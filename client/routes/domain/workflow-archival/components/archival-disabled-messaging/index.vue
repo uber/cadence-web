@@ -1,7 +1,7 @@
 <template>
-  <div class="archives-disabled-messaging">
+  <div class="archival-disabled-messaging">
     <div class="message-group">
-      <p v-for="(message, index) in archivesDisabledMessage" :key="index">
+      <p v-for="(message, index) in archivalDisabledMessage" :key="index">
         {{ message }}
       </p>
       <div v-if="historyArchivalLinks">
@@ -45,7 +45,7 @@ import {
   replaceDomain,
 } from '../../helpers';
 import {
-  archivesDisabledMessage,
+  archivalDisabledMessage,
   historyArchivalDisabledMessage,
   historyArchivalEnableCommand,
   historyArchivalLinks,
@@ -54,11 +54,11 @@ import {
 } from './constants';
 
 export default {
-  name: 'archives-disabled-messaging',
+  name: 'archival-disabled-messaging',
   props: ['domainSettings'],
   data() {
     return {
-      archivesDisabledMessage,
+      archivalDisabledMessage,
       historyArchivalDisabledMessage,
       historyArchivalLinks,
       visibilityArchivalDisabledMessage,
@@ -85,7 +85,7 @@ export default {
 </script>
 
 <style lang="stylus">
-.archives-disabled-messaging {
+.archival-disabled-messaging {
   padding: 10px 50px;
 
   .message-group {

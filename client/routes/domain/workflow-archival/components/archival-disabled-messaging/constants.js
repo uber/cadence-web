@@ -1,4 +1,4 @@
-export const archivesDisabledMessage = [
+export const archivalDisabledMessage = [
   'This domain is currently not enabled for archival.',
   'To enable archival:',
 ];
