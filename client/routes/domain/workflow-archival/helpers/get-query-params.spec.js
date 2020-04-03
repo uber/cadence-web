@@ -42,21 +42,21 @@ describe('getQueryParams', () => {
       expect(output.endTime).toEqual(endTime);
     });
 
-    describe('and statusValue = "CLOSED"', () => {
+    describe('and statusValue = "-1"', () => {
       it('should not include status.', () => {
-        const statusValue = 'CLOSED';
+        const statusValue = '-1';
         const output = getQueryParams({ endTime, startTime, statusValue });
 
         expect(output.status).toEqual(undefined);
       });
     });
 
-    describe('and statusValue = 1', () => {
-      it('should return status = 1.', () => {
-        const statusValue = 'CLOSED';
+    describe('and statusValue = "0"', () => {
+      it('should return status = "0".', () => {
+        const statusValue = '0';
         const output = getQueryParams({ endTime, startTime, statusValue });
 
-        expect(output.status).toEqual(undefined);
+        expect(output.status).toEqual('0');
       });
     });
 
