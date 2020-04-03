@@ -39,6 +39,34 @@ async function listWorkflows(state, ctx) {
 router.get('/api/domains/:domain/workflows/open', listWorkflows.bind(null, 'open'))
 router.get('/api/domains/:domain/workflows/closed', listWorkflows.bind(null, 'closed'))
 
+const buildQueryString = (startTime, endTime, { status, workflowId, workflowName }) => ([
+  `CloseTime <= "${endTime.toISOString()}"`,
+  `CloseTime >= "${startTime.toISOString()}"`,
+  status && `CloseStatus = "${status}"`,
+  workflowId && `WorkflowID = "${workflowId}"`,
+  workflowName && `WorkflowType = "${workflowName}"`,
+].filter((subQuery) => !!subQuery).join(' and '));
+
+router.get('/api/domains/:domain/workflows/archived', async function (ctx) {
+  const { nextPageToken, ...query } = ctx.query || {};
+  let queryString;
+
+  if (query.queryString) {
+    queryString = query.queryString;
+  } else {
+    const startTime = moment(query.startTime || NaN);
+    const endTime = moment(query.endTime || NaN);
+
+    ctx.assert(startTime.isValid() && endTime.isValid(), 400);
+    queryString = buildQueryString(startTime, endTime, query);
+  }
+
+  ctx.body = await ctx.cadence['archivedWorkflows']({
+    query: queryString,
+    nextPageToken: nextPageToken ? Buffer.from(nextPageToken, 'base64') : undefined
+  });
+});
+
 router.get('/api/domains/:domain/workflows/list', async function (ctx) {
   var q = ctx.query || {}
   ctx.body = await ctx.cadence['listWorkflows']({
