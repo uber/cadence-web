@@ -1,18 +1,18 @@
 <template>
-  <div class="flex-grid-column" :style="{ maxWidth: width }">
+  <div class="flex-grid-item" :style="{ maxWidth: width }">
     <slot></slot>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'flex-grid-column',
+  name: 'flex-grid-item',
   props: ['width'],
 };
 </script>
 
 <style lang="stylus">
-.flex-grid-column {
+.flex-grid-item {
   flex-grow: 1;
   margin-right: 5px;
   &:last-child {
