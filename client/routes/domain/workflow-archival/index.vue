@@ -45,6 +45,9 @@ export default {
 
 <style lang="stylus">
 section.workflow-archival {
-
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  overflow-y: auto;
 }
 </style>
