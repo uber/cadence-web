@@ -179,7 +179,11 @@ router.get('/api/domains/:domain/workflows/:workflowId/:runId', async function (
     }
 
     ctx.body = {
+      executionConfiguration: {
+      },
       workflowExecutionInfo: archivedWorkflowsResponse.executions[0],
+      pendingActivities: null,
+      pendingChildren: null
     };
   };
 })
