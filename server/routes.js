@@ -161,7 +161,27 @@ router.post('/api/domains/:domain/workflows/:workflowId/:runId/signal/:signal', 
 })
 
 router.get('/api/domains/:domain/workflows/:workflowId/:runId', async function (ctx) {
-  ctx.body = await ctx.cadence.describeWorkflow()
+  try {
+    ctx.body = await ctx.cadence.describeWorkflow();
+  } catch (error) {
+    if (error.name !== 'NotFoundError') {
+      throw error;
+    }
+
+    // search for workflow in history archival
+    const { runId, workflowId } = ctx.params;
+    const archivedWorkflowsResponse = await ctx.cadence['archivedWorkflows']({
+      query: `RunID = "${runId}" and WorkflowID = "${workflowId}"`
+    });
+
+    if (!archivedWorkflowsResponse.executions.length) {
+      throw error;
+    }
+
+    ctx.body = {
+      workflowExecutionInfo: archivedWorkflowsResponse.executions[0],
+    };
+  };
 })
 
 router.get('/api/domains/:domain/task-lists/:taskList/pollers', async function (ctx) {
