@@ -4,5 +4,6 @@ export default ({ statusList, statusValue }) => {
   }
 
   const parsedStatusValue = String(statusValue);
+
   return statusList.find(({ value }) => value === parsedStatusValue);
 };
