@@ -1244,8 +1244,9 @@ describe('Workflow', () => {
         scenario.vm.$el.querySelector(
           'section.execution > nav a#nav-link-stack-trace'
         ).should.not.be.displayed;
-        scenario.vm.$el.querySelector('section.execution > nav a#nav-link-query')
-          .should.not.be.displayed;
+        scenario.vm.$el.querySelector(
+          'section.execution > nav a#nav-link-query'
+        ).should.not.be.displayed;
       });
     });
 

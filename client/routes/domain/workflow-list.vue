@@ -48,10 +48,12 @@
         <div class="field workflow-filter-by">
           <input
             class="workflow-filter-by"
+            name="filterBy"
             placeholder=" "
             readonly
             v-bind:value="filterBy"
           />
+          <label for="filterBy">Filter by</label>
         </div>
         <date-range-picker
           :date-range="range"
@@ -213,10 +215,7 @@ export default pagedGrid({
           updatedQuery.range,
           query.startTime
         );
-        query.endTime = getEndTimeIsoString(
-          updatedQuery.range,
-          query.endTime
-        );
+        query.endTime = getEndTimeIsoString(updatedQuery.range, query.endTime);
       }
 
       return query.startTime && query.endTime
