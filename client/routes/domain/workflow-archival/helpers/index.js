@@ -4,4 +4,5 @@ export { default as getVisibilityArchivalStatus } from './get-visibility-archiva
 export { default as isArchivalEnabled } from './is-archival-enabled';
 export { default as isHistoryArchivalEnabled } from './is-history-archival-enabled';
 export { default as isVisibilityArchivalEnabled } from './is-visibility-archival-enabled';
+export { default as mapArchivedWorkflowResponse } from './map-archived-workflow-response';
 export { default as replaceDomain } from './replace-domain';
