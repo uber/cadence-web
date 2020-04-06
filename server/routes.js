@@ -40,8 +40,8 @@ router.get('/api/domains/:domain/workflows/open', listWorkflows.bind(null, 'open
 router.get('/api/domains/:domain/workflows/closed', listWorkflows.bind(null, 'closed'))
 
 const buildQueryString = (startTime, endTime, { status, workflowId, workflowName }) => ([
-  `CloseTime <= "${endTime.toISOString()}"`,
   `CloseTime >= "${startTime.toISOString()}"`,
+  `CloseTime <= "${endTime.toISOString()}"`,
   status && `CloseStatus = "${status}"`,
   workflowId && `WorkflowID = "${workflowId}"`,
   workflowName && `WorkflowType = "${workflowName}"`,
