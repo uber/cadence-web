@@ -75,15 +75,9 @@ router.get('/api/domains/:domain/workflows/list', async function (ctx) {
   })
 })
 
-router.get('/api/domains/:domain/workflows/:workflowId/:runId/history', async function (ctx) {
-  var q = ctx.query || {}
-  ctx.body = await ctx.cadence.getHistory({
-    nextPageToken: q.nextPageToken ? Buffer.from(q.nextPageToken, 'base64') : undefined,
-    waitForNewEvent: 'waitForNewEvent' in q ? true : undefined
-  })
-
-  if (Array.isArray(ctx.body.history && ctx.body.history.events)) {
-    ctx.body.history.events = ctx.body.history.events.map(e => {
+const mapHistoryResponse = (history) => {
+  if (Array.isArray(history && history.events)) {
+    return history.events.map(e => {
       var attr = e.eventType ?
         e.eventType.charAt(0).toLowerCase() + e.eventType.slice(1) + 'EventAttributes' : '';
       if (e[attr]) {
@@ -105,6 +99,16 @@ router.get('/api/domains/:domain/workflows/:workflowId/:runId/history', async fu
       }
     })
   }
+}
+
+router.get('/api/domains/:domain/workflows/:workflowId/:runId/history', async function (ctx) {
+  var q = ctx.query || {}
+  ctx.body = await ctx.cadence.getHistory({
+    nextPageToken: q.nextPageToken ? Buffer.from(q.nextPageToken, 'base64') : undefined,
+    waitForNewEvent: 'waitForNewEvent' in q ? true : undefined
+  })
+
+  ctx.body.history.events = mapHistoryResponse(ctx.body.history);
 })
 
 router.get('/api/domains/:domain/workflows/:workflowId/:runId/export', async function (ctx) {
@@ -177,15 +181,31 @@ router.get('/api/domains/:domain/workflows/:workflowId/:runId', async function (
       throw error;
     }
 
+    const archivedHistoryResponse = await ctx.cadence.getHistory();
+    const archivedHistoryEvents = mapHistoryResponse(archivedHistoryResponse.history);
+
+    if (!archivedHistoryEvents.length) {
+      throw error;
+    }
+
+    const {
+      taskList,
+      executionStartToCloseTimeoutSeconds,
+      taskStartToCloseTimeoutSeconds,
+    } = archivedHistoryEvents[0].details;
+
     ctx.body = {
       executionConfiguration: {
+        taskList,
+        executionStartToCloseTimeoutSeconds,
+        taskStartToCloseTimeoutSeconds,
       },
       workflowExecutionInfo: archivedWorkflowsResponse.executions[0],
       pendingActivities: null,
       pendingChildren: null
     };
   };
-})
+});
 
 router.get('/api/domains/:domain/task-lists/:taskList/pollers', async function (ctx) {
   const descTaskList = async (taskListType) => (await ctx.cadence.describeTaskList({
