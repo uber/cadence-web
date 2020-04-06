@@ -12,14 +12,14 @@
         :to="{ name: 'domain-settings' }"
       />
       <navigation-link
-        label="Archives"
+        label="Archival"
         icon="icon_trip-history"
-        :to="{ name: 'workflow-archives' }"
+        :to="{ name: 'workflow-archival' }"
       />
     </navigation-bar>
     <router-view name="workflow-list" :domain="domain" />
     <router-view name="domain-settings" :domain="domain" />
-    <router-view name="workflow-archives" :domain="domain" />
+    <router-view name="workflow-archival" :domain="domain" />
   </section>
 </template>
 
