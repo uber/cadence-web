@@ -9,6 +9,7 @@
   margin: 16px auto;
   height: 32px;
   width: 32px;
+
   .spinner {
     animation: spin 800ms linear infinite;
     border: 3px solid #11939a;

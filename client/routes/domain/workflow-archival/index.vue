@@ -15,9 +15,10 @@
 <script>
 import DomainService from '../domain-service';
 import { isArchivalEnabled } from './helpers';
-import ArchivalDisabledMessaging from './components/archival-disabled-messaging';
+import { ArchivalDisabledMessaging } from './components';
 
 export default {
+  name: 'workflow-archival',
   props: ['domain'],
   data() {
     return {
@@ -44,6 +45,9 @@ export default {
 
 <style lang="stylus">
 section.workflow-archival {
-
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  overflow-y: auto;
 }
 </style>
