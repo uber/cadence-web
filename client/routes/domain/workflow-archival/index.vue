@@ -21,7 +21,6 @@
 import DomainService from '../domain-service';
 import { isArchivalEnabled } from './helpers';
 import { ArchivalDisabledMessaging } from './components';
-
 export default {
   name: 'workflow-archival',
   props: ['domain'],
@@ -33,7 +32,6 @@ export default {
   },
   async created() {
     const domainService = DomainService();
-
     this.domainSettings = await domainService.getDomainSettings(this.domain);
     this.loading = false;
   },
