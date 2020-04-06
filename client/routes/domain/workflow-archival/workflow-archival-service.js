@@ -12,7 +12,7 @@ export default ({ domain }) => {
         requests.fetchArchivalRecords.abort();
       }
 
-      const controller = new AbortController();
+      const controller = new window.AbortController();
       const { signal } = controller;
 
       requests.fetchArchivalRecords = controller;
