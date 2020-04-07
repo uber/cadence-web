@@ -1,6 +1,6 @@
 import moment from 'moment';
 
-export default ({ endTime, range = 'last-3-days', startTime } = {}) =>
+export default ({ endTime, range = 'last-24-hours', startTime } = {}) =>
   startTime && endTime
     ? {
         endTime: moment(endTime),
