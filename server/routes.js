@@ -171,16 +171,6 @@ router.get('/api/domains/:domain/workflows/:workflowId/:runId', async function (
       throw error;
     }
 
-    // search for workflow in history archival
-    const { runId, workflowId } = ctx.params;
-    const archivedWorkflowsResponse = await ctx.cadence['archivedWorkflows']({
-      query: `RunID = "${runId}" and WorkflowID = "${workflowId}"`
-    });
-
-    if (!archivedWorkflowsResponse.executions.length) {
-      throw error;
-    }
-
     const archivedHistoryResponse = await ctx.cadence.getHistory();
     const archivedHistoryEvents = mapHistoryResponse(archivedHistoryResponse.history);
 
@@ -188,11 +178,17 @@ router.get('/api/domains/:domain/workflows/:workflowId/:runId', async function (
       throw error;
     }
 
+    const { runId, workflowId } = ctx.params;
+
     const {
-      taskList,
-      executionStartToCloseTimeoutSeconds,
-      taskStartToCloseTimeoutSeconds,
-    } = archivedHistoryEvents[0].details;
+      timestamp: startTime,
+      details: {
+        taskList,
+        executionStartToCloseTimeoutSeconds,
+        taskStartToCloseTimeoutSeconds,
+        workflowType: type,
+      },
+    } = archivedHistoryEvents[0];
 
     ctx.body = {
       executionConfiguration: {
@@ -200,7 +196,14 @@ router.get('/api/domains/:domain/workflows/:workflowId/:runId', async function (
         executionStartToCloseTimeoutSeconds,
         taskStartToCloseTimeoutSeconds,
       },
-      workflowExecutionInfo: archivedWorkflowsResponse.executions[0],
+      workflowExecutionInfo: {
+        execution: {
+          runId,
+          workflowId,
+        },
+        startTime,
+        type,
+      },
       pendingActivities: null,
       pendingChildren: null
     };
