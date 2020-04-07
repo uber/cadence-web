@@ -100,6 +100,7 @@ describe('Workflow History', function() {
         },
         maximumPageSize: 100,
         nextPageToken: null,
+        skipArchival: null,
         waitForNewEvent: null
       })
 
@@ -110,7 +111,7 @@ describe('Workflow History', function() {
     }
 
     return request()
-      .get('/api/domain/canary/workflows/ci%2Fdemo/run1/history')
+      .get('/api/domains/canary/workflows/ci%2Fdemo/run1/history')
       .expect(200)
       .expect('Content-Type', /json/)
   })
@@ -121,18 +122,19 @@ describe('Workflow History', function() {
 
       return {
         history: { events: [] },
-        nextPageToken: new Buffer('page3')
+        nextPageToken: new Buffer('page3'),
       }
     }
 
     return request()
-      .get('/api/domain/canary/workflows/ci%2Fdemo/run1/history?nextPageToken=cGFnZTI%3D')
+      .get('/api/domains/canary/workflows/ci%2Fdemo/run1/history?nextPageToken=cGFnZTI%3D')
       .expect(200)
       .expect('Content-Type', /json/)
       .expect({
         archived: null,
         history: { events: [] },
-        nextPageToken: 'cGFnZTM='
+        nextPageToken: 'cGFnZTM=',
+        rawHistory: null,
       })
   })
 
@@ -143,11 +145,11 @@ describe('Workflow History', function() {
     }
 
     return request()
-      .get('/api/domain/canary/workflows/ci%2Fdemo/run1/history?waitForNewEvent=true')
+      .get('/api/domains/canary/workflows/ci%2Fdemo/run1/history?waitForNewEvent=true')
       .expect(200)
       .expect('Content-Type', /json/)
       .then(() =>  request()
-        .get('/api/domain/canary/workflows/ci%2Fdemo/run1/history?waitForNewEvent')
+        .get('/api/domains/canary/workflows/ci%2Fdemo/run1/history?waitForNewEvent')
         .expect(200)
       )
   })
@@ -155,16 +157,17 @@ describe('Workflow History', function() {
   it('should transform Long numbers to JavaScript numbers, Long dates to ISO date strings, and line-delimited JSON buffers to JSON', function() {
     this.test.GetWorkflowExecutionHistory = ({ getRequest }) => ({
       history: { events: wfHistoryThrift },
-      nextPageToken: new Buffer('page2')
+      nextPageToken: new Buffer('page2'),
     })
 
     return request()
-      .get('/api/domain/canary/workflows/ci%2Fdemo/run1/history')
+      .get('/api/domains/canary/workflows/ci%2Fdemo/run1/history')
       .expect(200)
       .expect({
         archived: null,
         history: { events: wfHistoryJson },
-        nextPageToken: 'cGFnZTI='
+        nextPageToken: 'cGFnZTI=',
+        rawHistory: null,
       })
   })
 
@@ -177,7 +180,7 @@ describe('Workflow History', function() {
       })
 
       return request()
-        .get('/api/domain/canary/workflows/ci%2Fdemo/run1/export')
+        .get('/api/domains/canary/workflows/ci%2Fdemo/run1/export')
         .expect(200)
         .expect(wfHistoryCliJson)
     })
@@ -200,7 +203,7 @@ describe('Workflow History', function() {
       }
 
       return request()
-        .get('/api/domain/canary/workflows/ci%2Fdemo/run1/export')
+        .get('/api/domains/canary/workflows/ci%2Fdemo/run1/export')
         .expect(200)
         .expect(wfHistoryCliJson)
     })

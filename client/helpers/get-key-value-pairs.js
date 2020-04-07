@@ -1,6 +1,6 @@
 import moment from 'moment';
-import { jsonKeys, preKeys } from '../constants';
 import getJsonStringObject from './get-json-string-object';
+import { jsonKeys, preKeys } from '~constants';
 
 const getKeyValuePairs = event => {
   const kvps = [];
@@ -24,7 +24,7 @@ const getKeyValuePairs = event => {
         kvps.push({
           key,
           routeLink: {
-            name: 'execution/summary',
+            name: 'workflow/summary',
             params: {
               runId: value,
             },
@@ -35,7 +35,7 @@ const getKeyValuePairs = event => {
         kvps.push({
           key,
           routeLink: {
-            name: 'execution/summary',
+            name: 'workflow/summary',
             params: {
               domain: root.parentWorkflowDomain,
               runId: value,
@@ -48,7 +48,7 @@ const getKeyValuePairs = event => {
         kvps.push({
           key,
           routeLink: {
-            name: 'execution/summary',
+            name: 'workflow/summary',
             params: {
               domain: root.domain,
               runId: value,

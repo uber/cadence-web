@@ -3,6 +3,7 @@ FROM node:dubnium
 WORKDIR /usr/cadence-web
 
 ENV NODE_ENV=production
+ENV NPM_CONFIG_PRODUCTION=true
 
 # Install app dependencies
 COPY package*.json ./

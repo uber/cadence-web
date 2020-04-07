@@ -8,51 +8,106 @@ import qs from 'friendly-querystring';
 import moment from 'moment';
 import promiseFinally from 'promise.prototype.finally';
 
-import { http, injectMomentDurationFormat, jsonTryParse } from './helpers';
-
-import DateRangePicker from './components/date-range-picker.vue';
-import detailList from './components/detail-list.vue';
-import barLoader from './components/bar-loader.vue';
-import dataViewer from './components/data-viewer.vue';
-import copyButton from './components/copy.vue';
+import copyButton from './components/copy';
 
 import snapscroll from './directives/snapscroll';
 
-import App from './App.vue';
-import Intro from './routes/Intro.vue';
-import Workflows from './routes/Workflows.vue';
-import DomainConfig from './routes/domain-config.vue';
-import ExecutionTabs from './routes/execution/index.vue';
-import ExecutionSummary from './routes/execution/summary.vue';
-import History from './routes/execution/history.vue';
-import StackTrace from './routes/execution/stack-trace.vue';
-import Queries from './routes/execution/queries.vue';
-import TaskList from './routes/task-list.vue';
+import App from './App';
+import Domain from './routes/domain';
+import DomainList from './routes/domain-list';
+import DomainSettings from './routes/domain/domain-settings';
+import Help from './routes/help';
+import History from './routes/workflow/history';
+import Query from './routes/workflow/query';
+import Root from './routes';
+import StackTrace from './routes/workflow/stack-trace';
+import TaskList from './routes/domain/task-list';
+import WorkflowArchival from './routes/domain/workflow-archival';
+import WorkflowArchivalAdvanced from './routes/domain/workflow-archival/advanced';
+import WorkflowArchivalBasic from './routes/domain/workflow-archival/basic';
+import WorkflowList from './routes/domain/workflow-list';
+import WorkflowSummary from './routes/workflow/summary';
+import WorkflowTabs from './routes/workflow';
+
+import { http, injectMomentDurationFormat, jsonTryParse } from '~helpers';
 
 const routeOpts = {
   mode: 'history',
   routes: [
     {
       path: '/',
-      component: Intro,
+      redirect: '/domains',
+      component: Root,
+      children: [
+        {
+          name: 'domain-list',
+          path: '/domains',
+          components: {
+            'domain-list': DomainList,
+          },
+        },
+        {
+          name: 'help',
+          path: '/help',
+          components: {
+            help: Help,
+          },
+        },
+      ],
     },
     {
-      name: 'workflows',
-      path: '/domain/:domain/workflows',
-      component: Workflows,
-    },
-    {
-      name: 'domain-config',
-      path: '/domain/:domain/config',
-      component: DomainConfig,
+      name: 'domain',
+      path: '/domains/:domain',
+      redirect: '/domains/:domain/workflows',
+      component: Domain,
       props: ({ params }) => ({
         domain: params.domain,
       }),
+      children: [
+        {
+          name: 'workflow-list',
+          path: '/domains/:domain/workflows',
+          components: {
+            'workflow-list': WorkflowList,
+          },
+        },
+        {
+          name: 'domain-settings',
+          path: '/domains/:domain/settings',
+          components: {
+            'domain-settings': DomainSettings,
+          },
+        },
+        {
+          name: 'workflow-archival',
+          path: '/domains/:domain/archival',
+          redirect: '/domains/:domain/archival/basic',
+          components: {
+            'workflow-archival': WorkflowArchival,
+          },
+          children: [
+            {
+              name: 'workflow-archival-advanced',
+              path: '/domains/:domain/archival/advanced',
+              components: {
+                'workflow-archival-advanced': WorkflowArchivalAdvanced,
+              },
+            },
+            {
+              name: 'workflow-archival-basic',
+              path: '/domains/:domain/archival/basic',
+              components: {
+                'workflow-archival-basic': WorkflowArchivalBasic,
+              },
+            },
+          ],
+        },
+      ],
     },
     {
-      name: 'execution',
-      path: '/domain/:domain/workflows/:workflowId/:runId',
-      component: ExecutionTabs,
+      name: 'workflow',
+      path: '/domains/:domain/workflows/:workflowId/:runId',
+      component: WorkflowTabs,
       props: ({ params }) => ({
         domain: params.domain,
         runId: params.runId,
@@ -60,10 +115,10 @@ const routeOpts = {
       }),
       children: [
         {
-          name: 'execution/summary',
-          path: '/domain/:domain/workflows/:workflowId/:runId/summary',
+          name: 'workflow/summary',
+          path: '/domains/:domain/workflows/:workflowId/:runId/summary',
           components: {
-            summary: ExecutionSummary,
+            summary: WorkflowSummary,
           },
           props: {
             summary: ({ params }) => ({
@@ -73,8 +128,8 @@ const routeOpts = {
           },
         },
         {
-          name: 'execution/history',
-          path: '/domain/:domain/workflows/:workflowId/:runId/history',
+          name: 'workflow/history',
+          path: '/domains/:domain/workflows/:workflowId/:runId/history',
           components: {
             history: History,
           },
@@ -90,32 +145,45 @@ const routeOpts = {
           },
         },
         {
-          name: 'execution/stack-trace',
-          path: '/domain/:domain/workflows/:workflowId/:runId/stack-trace',
+          name: 'workflow/stack-trace',
+          path: '/domains/:domain/workflows/:workflowId/:runId/stack-trace',
           components: {
             stacktrace: StackTrace,
           },
         },
         {
-          name: 'execution/queries',
-          path: '/domain/:domain/workflows/:workflowId/:runId/queries',
+          name: 'workflow/query',
+          path: '/domains/:domain/workflows/:workflowId/:runId/query',
           components: {
-            queries: Queries,
+            query: Query,
           },
         },
       ],
     },
     {
       name: 'task-list',
-      path: '/domain/:domain/task-lists/:taskList',
+      path: '/domains/:domain/task-lists/:taskList',
       component: TaskList,
     },
+
+    // redirects
+
     {
-      path: '/domain/:domain/history',
+      name: 'domains-redirect',
+      path: '/domain/*',
+      redirect: '/domains/*',
+    },
+    {
+      name: 'domain-config-redirect',
+      path: '/domains/:domain/config',
+      redirect: '/domains/:domain/settings',
+    },
+    {
+      path: '/domains/:domain/history',
       redirect: ({ params, query }) => {
         if (!query.runId || !query.workflowId) {
           return {
-            name: 'workflows',
+            name: 'workflow-list',
             params,
           };
         }
@@ -129,7 +197,7 @@ const routeOpts = {
         };
 
         return {
-          name: 'execution/history',
+          name: 'workflow/history',
           params: newParams,
           query: queryWhitelist,
         };
@@ -188,11 +256,7 @@ Vue.use(vueModal, {
 });
 Vue.use(vueSplit);
 Vue.component('v-select', vueSelect);
-Vue.component('date-range-picker', DateRangePicker);
 Vue.component('copy', copyButton);
-Vue.component('bar-loader', barLoader);
-Vue.component('data-viewer', dataViewer);
-Vue.component('details-list', detailList);
 Vue.directive('snapscroll', snapscroll);
 Vue.config.ignoredElements = ['loader'];
 

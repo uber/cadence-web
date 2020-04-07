@@ -1,8 +1,8 @@
 <script>
 import { version } from '../package.json';
 import logo from './assets/logo.svg';
-import NotificationBar from './components/notification-bar.vue';
-import { NOTIFICATION_TIMEOUT, NOTIFICATION_TYPE_SUCCESS } from './constants';
+import { NotificationBar } from '~components';
+import { NOTIFICATION_TIMEOUT, NOTIFICATION_TYPE_SUCCESS } from '~constants';
 
 export default {
   components: {
@@ -24,10 +24,7 @@ export default {
   },
   methods: {
     globalClick(e) {
-      if (this.editing && !this.$refs.domain.contains(e.target)) {
-        this.clearEdit();
-      }
-
+      // Code required for mocha tests to run correctly without infinite looping.
       if (e.target.tagName === 'A') {
         const href = e.target.getAttribute('href');
 
@@ -81,31 +78,21 @@ export default {
       :type="notification.type"
     />
     <header class="top-bar">
-      <a href="/" class="logo">
+      <a href="/domains" class="logo">
         <div v-html="logo"></div>
         <span class="version">{{ version }}</span>
       </a>
       <div class="domain" v-if="$route.params.domain">
         <a
-          :href="`/domain/${$route.params.domain}/workflows`"
+          class="workflows"
           :class="{
             'router-link-active':
-              $route.path === `/domain/${$route.params.domain}/workflows`,
-            workflows: true,
+              $route.path === `/domains/${$route.params.domain}/workflows`,
           }"
-          >{{ $route.params.domain }}</a
+          :href="`/domains/${$route.params.domain}/workflows`"
         >
-        <a
-          :href="`/domain/${$route.params.domain}/config`"
-          :class="{
-            'router-link-active':
-              $route.path === `/domain/${$route.params.domain}/config`,
-            config: true,
-          }"
-        ></a>
-      </div>
-      <div class="list-workflows" v-if="$route.name === 'workflows'">
-        Workflows
+          {{ $route.params.domain }}
+        </a>
       </div>
       <div class="detail-view workflow-id" v-if="$route.params.workflowId">
         <span>{{ $route.params.workflowId }}</span>
@@ -121,6 +108,7 @@ export default {
 </template>
 
 <style src="vue-virtual-scroller/dist/vue-virtual-scroller.css"></style>
+<style src="vue2-datepicker/index.css"></style>
 <style lang="stylus">
 @import "https://d1a3f4spazzrp4.cloudfront.net/uber-fonts/4.0.0/superfine.css"
 @import "https://d1a3f4spazzrp4.cloudfront.net/uber-icons/3.14.0/uber-icons.css"
@@ -224,7 +212,7 @@ main
       margin-bottom layout-spacing-small
     > header
       display flex
-      align-items center
+      align-items: start;
       flex 0 0 auto
       > *
         margin inline-spacing-small
@@ -239,7 +227,7 @@ area-loader, section.loading
     height size
     border-radius size
     left "calc(50% - %s)" % (size/2)
-    top "calc(25% - %s)" % (size/2)
+    top 300px;
     border 3px solid uber-blue
     border-bottom-color transparent
     animation spin 800ms linear infinite

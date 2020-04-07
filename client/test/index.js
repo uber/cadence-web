@@ -134,10 +134,11 @@ require('./scenario');
 
 mocha.checkLeaks();
 
-require('./intro.test');
-require('./workflows.test');
-require('./execution.test');
-require('./domain-config.test');
+require('./domain-list.test');
+require('./help.test');
+require('./workflow-list.test');
+require('./workflow.test');
+require('./domain-settings.test');
 require('./task-list.test');
 
 mocha.run();

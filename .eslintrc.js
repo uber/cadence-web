@@ -62,4 +62,12 @@ module.exports = {
     ],
     'space-before-blocks': 'error',
   },
+  settings: {
+    'import/resolver': {
+      'babel-module': {},
+      webpack: {
+        config: 'webpack.config.js',
+      },
+    },
+  },
 };

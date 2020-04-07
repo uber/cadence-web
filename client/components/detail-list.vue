@@ -1,9 +1,13 @@
 <script>
-import { preKeys } from '../constants';
+import { DataViewer } from '~components';
+import { preKeys } from '~constants';
 
 export default {
-  name: 'details-list',
+  name: 'detail-list',
   props: ['compact', 'highlight', 'item', 'title'],
+  components: {
+    'data-viewer': DataViewer,
+  },
   data() {
     return {};
   },
