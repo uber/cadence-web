@@ -1,8 +1,13 @@
 export { default as getDomain } from './get-domain';
 export { default as getHistoryArchivalStatus } from './get-history-archival-status';
+export { default as getQueryParams } from './get-query-params';
+export { default as getRange } from './get-range';
+export { default as getStatus } from './get-status';
+export { default as getStatusValue } from './get-status-value';
 export { default as getVisibilityArchivalStatus } from './get-visibility-archival-status';
 export { default as isArchivalEnabled } from './is-archival-enabled';
 export { default as isHistoryArchivalEnabled } from './is-history-archival-enabled';
 export { default as isVisibilityArchivalEnabled } from './is-visibility-archival-enabled';
 export { default as mapArchivedWorkflowResponse } from './map-archived-workflow-response';
 export { default as replaceDomain } from './replace-domain';
+export { default as updateQueryFromRange } from './update-query-from-range';
