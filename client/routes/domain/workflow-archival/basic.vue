@@ -66,10 +66,7 @@
       <error-message :error="error" />
       <no-results :results="results" />
       <loading-spinner v-if="loading" />
-      <loading-message
-        :delay="loadingMessageDelay"
-        :loading="loading"
-      >
+      <loading-message :delay="loadingMessageDelay" :loading="loading">
         <p>It looks like this request is taking some time to process.</p>
         <p>Try narrowing the time range to improve search time.</p>
       </loading-message>

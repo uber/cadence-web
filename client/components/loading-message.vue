@@ -7,10 +7,7 @@
 <script>
 export default {
   name: 'loading-message',
-  props: [
-    'loading',
-    'delay',
-  ],
+  props: ['loading', 'delay'],
   data() {
     return {
       showMessage: false,
@@ -41,8 +38,8 @@ export default {
       } else {
         this.startTimer();
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
