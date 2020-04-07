@@ -201,6 +201,7 @@ router.get('/api/domains/:domain/workflows/:workflowId/:runId', async function (
           runId,
           workflowId,
         },
+        isArchived: true,
         startTime,
         type,
       },
