@@ -1,6 +1,7 @@
 import moment from 'moment';
+import { DEFAULT_RANGE } from '../constants';
 
-export default ({ endTime, range = 'last-24-hours', startTime } = {}) =>
+export default ({ endTime, range = DEFAULT_RANGE, startTime } = {}) =>
   startTime && endTime
     ? {
         endTime: moment(endTime),

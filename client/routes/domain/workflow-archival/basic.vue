@@ -66,14 +66,15 @@
       <error-message :error="error" />
       <no-results :results="results" />
       <loading-spinner v-if="loading" />
+      <archival-lag-messaging v-if="showRequestTimeoutMessage" />
     </section>
   </section>
 </template>
 
 <script>
 import debounce from 'lodash-es/debounce';
-import { ArchivalTable, ArchivalTableRow } from './components';
-import { ARCHIVAL_STATUS_LIST } from './constants';
+import { ArchivalLagMessaging, ArchivalTable, ArchivalTableRow } from './components';
+import { ARCHIVAL_STATUS_LIST, REQUEST_TIMEOUT } from './constants';
 import {
   getQueryParams,
   getRange,
@@ -110,6 +111,7 @@ export default pagedGrid({
       nextPageToken: undefined,
       npt: undefined,
       results: undefined,
+      showRequestTimeoutMessage: false,
       statusList: ARCHIVAL_STATUS_LIST,
     };
   },
@@ -183,6 +185,7 @@ export default pagedGrid({
       this.results = undefined;
       this.npt = undefined;
       this.nextPageToken = undefined;
+      this.showRequestTimeoutMessage = false;
     },
     fetchArchivalRecord: debounce(async function fetchArchivalRecord(
       queryParams
@@ -191,7 +194,7 @@ export default pagedGrid({
         return;
       }
 
-      this.loading = true;
+      this.startRequestTimer();
 
       try {
         const {
@@ -213,7 +216,7 @@ export default pagedGrid({
         this.error = getErrorMessage(error);
       }
 
-      this.loading = false;
+      this.stopRequestTimer();
     },
     200),
     onDateRangeChange(updatedRange) {
@@ -238,6 +241,20 @@ export default pagedGrid({
     onSelectChange({ value }) {
       this.setQueryParam('status', value);
     },
+    startRequestTimer() {
+      this.stopRequestTimer();
+      this.loading = true;
+      this.requestTimer = setTimeout(() => {
+        this.showRequestTimeoutMessage = true;
+      }, REQUEST_TIMEOUT);
+    },
+    stopRequestTimer() {
+      this.loading = false;
+      this.showRequestTimeoutMessage = false;
+      if (this.requestTimer) {
+        clearTimeout(this.requestTimer);
+      }
+    },
     setQueryParam(name, value) {
       this.$router.replaceQueryParam(name, value);
     },
@@ -255,6 +272,7 @@ export default pagedGrid({
     },
   },
   components: {
+    'archival-lag-messaging': ArchivalLagMessaging,
     'archival-table': ArchivalTable,
     'archival-table-row': ArchivalTableRow,
     'button-fill': ButtonFill,
