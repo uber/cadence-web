@@ -17,6 +17,7 @@
 <style lang="stylus">
 table.archival-table {
   position: relative;
+
   th {
     position: sticky;
     top: 0;

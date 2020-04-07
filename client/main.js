@@ -23,6 +23,8 @@ import Root from './routes';
 import StackTrace from './routes/workflow/stack-trace';
 import TaskList from './routes/domain/task-list';
 import WorkflowArchival from './routes/domain/workflow-archival';
+import WorkflowArchivalAdvanced from './routes/domain/workflow-archival/advanced';
+import WorkflowArchivalBasic from './routes/domain/workflow-archival/basic';
 import WorkflowList from './routes/domain/workflow-list';
 import WorkflowSummary from './routes/workflow/summary';
 import WorkflowTabs from './routes/workflow';
@@ -56,6 +58,7 @@ const routeOpts = {
     {
       name: 'domain',
       path: '/domains/:domain',
+      redirect: '/domains/:domain/workflows',
       component: Domain,
       props: ({ params }) => ({
         domain: params.domain,
@@ -78,9 +81,26 @@ const routeOpts = {
         {
           name: 'workflow-archival',
           path: '/domains/:domain/archival',
+          redirect: '/domains/:domain/archival/basic',
           components: {
             'workflow-archival': WorkflowArchival,
           },
+          children: [
+            {
+              name: 'workflow-archival-advanced',
+              path: '/domains/:domain/archival/advanced',
+              components: {
+                'workflow-archival-advanced': WorkflowArchivalAdvanced,
+              },
+            },
+            {
+              name: 'workflow-archival-basic',
+              path: '/domains/:domain/archival/basic',
+              components: {
+                'workflow-archival-basic': WorkflowArchivalBasic,
+              },
+            },
+          ],
         },
       ],
     },

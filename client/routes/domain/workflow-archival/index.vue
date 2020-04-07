@@ -1,14 +1,19 @@
 <template>
   <section class="workflow-archival" :class="{ loading }">
-    <div v-if="!loading">
-      <archival-disabled-messaging
-        v-if="!isArchivalEnabled"
-        :domain-settings="domainSettings"
-      />
-      <div v-if="isArchivalEnabled">
-        <!-- TODO: will work on enabled state in future PR -->
-      </div>
-    </div>
+    <archival-disabled-messaging
+      v-if="!loading && !isArchivalEnabled"
+      :domain-settings="domainSettings"
+    />
+    <router-view
+      name="workflow-archival-advanced"
+      v-if="!loading && isArchivalEnabled"
+      :domain="domain"
+    />
+    <router-view
+      name="workflow-archival-basic"
+      v-if="!loading && isArchivalEnabled"
+      :domain="domain"
+    />
   </section>
 </template>
 
