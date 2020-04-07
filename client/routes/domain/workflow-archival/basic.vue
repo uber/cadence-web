@@ -66,6 +66,13 @@
       <error-message :error="error" />
       <no-results :results="results" />
       <loading-spinner v-if="loading" />
+      <loading-message
+        :delay="loadingMessageDelay"
+        :loading="loading"
+      >
+        <p>It looks like this request is taking some time to process.</p>
+        <p>Try narrowing the time range to improve search time.</p>
+      </loading-message>
     </section>
   </section>
 </template>
@@ -73,7 +80,7 @@
 <script>
 import debounce from 'lodash-es/debounce';
 import { ArchivalTable, ArchivalTableRow } from './components';
-import { ARCHIVAL_STATUS_LIST } from './constants';
+import { ARCHIVAL_STATUS_LIST, LOADING_MESSAGE_DELAY } from './constants';
 import {
   getQueryParams,
   getRange,
@@ -89,6 +96,7 @@ import {
   ErrorMessage,
   FlexGrid,
   FlexGridItem,
+  LoadingMessage,
   LoadingSpinner,
   NoResults,
   TextInput,
@@ -107,6 +115,7 @@ export default pagedGrid({
       error: undefined,
       filterBy: 'CloseTime',
       loading: false,
+      loadingMessageDelay: LOADING_MESSAGE_DELAY,
       nextPageToken: undefined,
       npt: undefined,
       results: undefined,
@@ -262,6 +271,7 @@ export default pagedGrid({
     'error-message': ErrorMessage,
     'flex-grid': FlexGrid,
     'flex-grid-item': FlexGridItem,
+    'loading-message': LoadingMessage,
     'loading-spinner': LoadingSpinner,
     'no-results': NoResults,
     'text-input': TextInput,

@@ -8,6 +8,7 @@ export { default as DomainNavigation } from './domain-navigation';
 export { default as ErrorMessage } from './error-message';
 export { default as FlexGrid } from './flex-grid';
 export { default as FlexGridItem } from './flex-grid-item';
+export { default as LoadingMessage } from './loading-message';
 export { default as LoadingSpinner } from './loading-spinner';
 export { default as NavigationBar } from './navigation-bar';
 export { default as NavigationLink } from './navigation-link';
