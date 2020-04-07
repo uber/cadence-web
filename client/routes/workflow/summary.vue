@@ -30,8 +30,8 @@
 
     <dl v-if="workflow">
       <div v-if="workflow.workflowExecutionInfo.isArchived">
-        <dt>Workflow archived</dt>
-        <dd>This workflow has been retrieved from archival. Some summary information may be missing.</dd>
+        <h5>Workflow archived</h5>
+        <p>This workflow has been retrieved from archival. Some summary information may be missing.</p>
       </div>
       <div class="workflow-name">
         <dt>Workflow Name</dt>

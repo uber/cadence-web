@@ -10,4 +10,4 @@ export const ARCHIVAL_STATUS_LIST = [
 
 export const DEFAULT_RANGE = 'last-24-hours';
 
-export const REQUEST_TIMEOUT = 3000;
+export const LOADING_MESSAGE_DELAY = 3000;
