@@ -116,9 +116,6 @@ module.exports = async function(ctx, next) {
       try {
         channel.request({
           serviceName: process.env.CADENCE_TCHANNEL_SERVICE || 'cadence-frontend',
-          head: {
-            ...(authToken && { [authToken.key]: authToken.value }),
-          },
           headers: {
             cn: 'cadence-web',
           },
@@ -126,21 +123,28 @@ module.exports = async function(ctx, next) {
           timeout: 1000 * 60 * 5,
           retryFlags: { onConnectionError: true },
           retryLimit: Number(process.env.CADENCE_TCHANNEL_RETRY_LIMIT || 3)
-        }).send(`WorkflowService::${method}`, {}, {
-          [`${reqName ? reqName + 'R' : 'r'}equest`]: typeof bodyTransform === 'function' ? bodyTransform(body) : body
-        }, function (err, res) {
-          try {
-            if (err) {
-              reject(err)
-            } else if (res.ok) {
-              resolve((resTransform || uiTransform)(res.body))
-            } else {
-              ctx.throw(res.typeName === 'entityNotExistError' ? 404 : 400, null, res.body || res)
+        }).send(
+          `WorkflowService::${method}`,
+          {
+            ...(authToken && { [authToken.key]: authToken.value }),
+          },
+          {
+            [`${reqName ? reqName + 'R' : 'r'}equest`]: typeof bodyTransform === 'function' ? bodyTransform(body) : body
+          },
+          function (err, res) {
+            try {
+              if (err) {
+                reject(err)
+              } else if (res.ok) {
+                resolve((resTransform || uiTransform)(res.body))
+              } else {
+                ctx.throw(res.typeName === 'entityNotExistError' ? 404 : 400, null, res.body || res)
+              }
+            } catch (e) {
+              reject(e)
             }
-          } catch (e) {
-            reject(e)
           }
-        })
+        )
       } catch(e) {
         reject(e)
       }
