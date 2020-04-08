@@ -116,9 +116,11 @@ module.exports = async function(ctx, next) {
       try {
         channel.request({
           serviceName: process.env.CADENCE_TCHANNEL_SERVICE || 'cadence-frontend',
+          head: {
+            ...(authToken && { [authToken.key]: authToken.value }),
+          },
           headers: {
             cn: 'cadence-web',
-            ...(authToken && { [authToken.key]: authToken.value }),
           },
           hasNoParent: true,
           timeout: 1000 * 60 * 5,
