@@ -109,6 +109,7 @@ async function makeChannel(client, { bridge }) {
 module.exports = async function(ctx, next) {
   const client = TChannel();
   const channel = await makeChannel(client, ctx);
+  const authToken = ctx.authToken;
 
   function req(method, reqName, bodyTransform, resTransform) {
     return (body) => new Promise(function(resolve, reject) {
@@ -116,7 +117,8 @@ module.exports = async function(ctx, next) {
         channel.request({
           serviceName: process.env.CADENCE_TCHANNEL_SERVICE || 'cadence-frontend',
           headers: {
-            cn: 'cadence-web'
+            cn: 'cadence-web',
+            ...(authToken && { [authToken.key]: authToken.value }),
           },
           hasNoParent: true,
           timeout: 1000 * 60 * 5,
