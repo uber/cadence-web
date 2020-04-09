@@ -87,50 +87,60 @@ async function makeChannel(client) {
     } else {
       return peer
     }
-  }))
+  }));
 
-  return client.makeSubChannel({
+  const cadenceChannel = client.makeSubChannel({
     serviceName: 'cadence-frontend',
     peers: ipPeers
-  })
+  });
+
+  const tchannelAsThrift = TChannelAsThrift({
+    channel: cadenceChannel,
+    entryPoint: path.join(__dirname, '../idl/cadence.thrift')
+  });
+
+  return tchannelAsThrift;
 }
 
 module.exports = async function(ctx, next) {
-  const
-    client = TChannel(),
-    cadenceChannel = await makeChannel(client),
-    tchannelAsThrift = TChannelAsThrift({
-      channel: cadenceChannel,
-      entryPoint: path.join(__dirname, '../idl/cadence.thrift')
-    })
+  const client = TChannel();
+  const channel = await makeChannel(client, ctx);
+  const { authTokenHeaders = {} } = ctx;
 
   function req(method, reqName, bodyTransform, resTransform) {
     return (body) => new Promise(function(resolve, reject) {
       try {
-        tchannelAsThrift.request({
+        channel.request({
           serviceName: process.env.CADENCE_TCHANNEL_SERVICE || 'cadence-frontend',
           headers: {
-            cn: 'cadence-web'
+            cn: 'cadence-web',
           },
           hasNoParent: true,
           timeout: 1000 * 60 * 5,
           retryFlags: { onConnectionError: true },
           retryLimit: Number(process.env.CADENCE_TCHANNEL_RETRY_LIMIT || 3)
-        }).send(`WorkflowService::${method}`, {}, {
-          [`${reqName ? reqName + 'R' : 'r'}equest`]: typeof bodyTransform === 'function' ? bodyTransform(body) : body
-        }, function (err, res) {
-          try {
-            if (err) {
-              reject(err)
-            } else if (res.ok) {
-              resolve((resTransform || uiTransform)(res.body))
-            } else {
-              ctx.throw(res.typeName === 'entityNotExistError' ? 404 : 400, null, res.body || res)
+        }).send(
+          `WorkflowService::${method}`,
+          {
+            ...authTokenHeaders,
+          },
+          {
+            [`${reqName ? reqName + 'R' : 'r'}equest`]: typeof bodyTransform === 'function' ? bodyTransform(body) : body
+          },
+          function (err, res) {
+            try {
+              if (err) {
+                reject(err)
+              } else if (res.ok) {
+                resolve((resTransform || uiTransform)(res.body))
+              } else {
+                ctx.throw(res.typeName === 'entityNotExistError' ? 404 : 400, null, res.body || res)
+              }
+            } catch (e) {
+              reject(e)
             }
-          } catch (e) {
-            reject(e)
           }
-        })
+        )
       } catch(e) {
         reject(e)
       }
