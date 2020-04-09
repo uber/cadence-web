@@ -48,10 +48,12 @@
         <div class="field workflow-filter-by">
           <input
             class="workflow-filter-by"
+            name="filterBy"
             placeholder=" "
             readonly
             v-bind:value="filterBy"
           />
+          <label for="filterBy">Filter by</label>
         </div>
         <date-range-picker
           :date-range="range"
@@ -110,6 +112,7 @@ import moment from 'moment';
 import debounce from 'lodash-es/debounce';
 import pagedGrid from '~components/paged-grid';
 import { DateRangePicker } from '~components';
+import { getEndTimeIsoString, getStartTimeIsoString } from '~helpers';
 
 export default pagedGrid({
   props: ['domain'],
@@ -177,7 +180,7 @@ export default pagedGrid({
     endTime() {
       const { endTime, range } = this.$route.query;
 
-      return this.getEndTimeIsoString(range, endTime);
+      return getEndTimeIsoString(range, endTime);
     },
     filterBy() {
       return this.status.value === 'OPEN' ? 'StartTime' : 'CloseTime';
@@ -185,7 +188,7 @@ export default pagedGrid({
     startTime() {
       const { range, startTime } = this.$route.query;
 
-      return this.getStartTimeIsoString(range, startTime);
+      return getStartTimeIsoString(range, startTime);
     },
     state() {
       const { statusName } = this;
@@ -208,14 +211,11 @@ export default pagedGrid({
           `last-${Math.min(30, this.maxRetentionDays)}-days`
         );
 
-        query.startTime = this.getStartTimeIsoString(
+        query.startTime = getStartTimeIsoString(
           updatedQuery.range,
           query.startTime
         );
-        query.endTime = this.getEndTimeIsoString(
-          updatedQuery.range,
-          query.endTime
-        );
+        query.endTime = getEndTimeIsoString(updatedQuery.range, query.endTime);
       }
 
       return query.startTime && query.endTime
@@ -289,29 +289,6 @@ export default pagedGrid({
     },
   },
   methods: {
-    getStartTimeIsoString(range, startTimeString) {
-      if (range && typeof range === 'string') {
-        const [, count, unit] = range.split('-');
-
-        return moment()
-          .subtract(count, unit)
-          .startOf(unit)
-          .toISOString();
-      }
-
-      return startTimeString;
-    },
-    getEndTimeIsoString(range, endTimeString) {
-      if (range && typeof range === 'string') {
-        const [, , unit] = range.split('-');
-
-        return moment()
-          .endOf(unit)
-          .toISOString();
-      }
-
-      return endTimeString;
-    },
     fetch: debounce(
       function fetch(url, query) {
         this.loading = true;

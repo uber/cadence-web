@@ -1,4 +1,4 @@
-{
+module.exports = {
   "plugins": [
     [
       "module-resolver",
@@ -9,7 +9,8 @@
           "~helpers": "./client/helpers"
         }
       }
-    ]
+    ],
+    ["@babel/plugin-transform-regenerator"]
   ],
   "presets": [
     [
@@ -22,4 +23,4 @@
     ],
     "@babel/preset-env"
   ]
-}
+};

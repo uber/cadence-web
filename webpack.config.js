@@ -6,10 +6,12 @@ const
   extractStylus = 'css-loader?sourceMap!stylus-loader',
   development = !['production', 'ci'].includes(process.env.NODE_ENV)
 
+require('babel-polyfill');
+
 module.exports = {
   devtool: 'source-map',
   entry: [
-    process.env.TEST_RUN ? 'babel-polyfill' : '',
+    'babel-polyfill',
     path.join(__dirname, process.env.TEST_RUN ? 'client/test/index' : 'client/main')
   ].filter(x => x),
   output: {
@@ -40,7 +42,7 @@ module.exports = {
         test: /\.js$/,
         loader: 'babel-loader',
         options: {
-          configFile: path.resolve(__dirname, '.babelrc'),
+          configFile: path.resolve(__dirname, 'babel.config.js'),
         },
       },
       {
@@ -51,7 +53,7 @@ module.exports = {
             js: {
               loader: 'babel-loader',
               options: {
-                configFile: path.resolve(__dirname, '.babelrc'),
+                configFile: path.resolve(__dirname, 'babel.config.js'),
               },
             },
             stylus: ExtractTextPlugin.extract({

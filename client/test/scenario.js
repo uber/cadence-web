@@ -132,6 +132,8 @@ Scenario.prototype.withDomainDescription = function withDomainDescription(
         configuration: {
           workflowExecutionRetentionPeriodInDays: 21,
           emitMetric: true,
+          historyArchivalStatus: 'ENABLED',
+          visibilityArchivalStatus: 'DISABLED',
         },
         replicationConfiguration: {
           activeClusterName: 'ci-test-cluster',

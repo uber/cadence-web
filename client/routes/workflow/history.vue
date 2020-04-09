@@ -638,7 +638,7 @@ section.history
           width: 150px;
       & + .spacer
         width: 100%;
-        height: 60px;
+        height: 58px;
     .tr
       display: flex;
       flex: 1;

@@ -29,6 +29,13 @@
     </modal>
 
     <dl v-if="workflow">
+      <div v-if="workflow.workflowExecutionInfo.isArchived">
+        <h5>Workflow archived</h5>
+        <p>
+          This workflow has been retrieved from archival. Some summary
+          information may be missing.
+        </p>
+      </div>
       <div class="workflow-name">
         <dt>Workflow Name</dt>
         <dd>{{ workflow.workflowExecutionInfo.type.name }}</dd>

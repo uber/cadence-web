@@ -8,23 +8,26 @@ import qs from 'friendly-querystring';
 import moment from 'moment';
 import promiseFinally from 'promise.prototype.finally';
 
-import copyButton from './components/copy.vue';
+import copyButton from './components/copy';
 
 import snapscroll from './directives/snapscroll';
 
-import App from './App.vue';
-import Domain from './routes/domain/index.vue';
-import DomainList from './routes/domain-list.vue';
-import DomainSettings from './routes/domain/domain-settings.vue';
-import Help from './routes/help/index.vue';
-import History from './routes/workflow/history.vue';
-import Query from './routes/workflow/query.vue';
-import Root from './routes/index.vue';
-import StackTrace from './routes/workflow/stack-trace.vue';
-import TaskList from './routes/domain/task-list.vue';
-import WorkflowList from './routes/domain/workflow-list.vue';
-import WorkflowSummary from './routes/workflow/summary.vue';
-import WorkflowTabs from './routes/workflow/index.vue';
+import App from './App';
+import Domain from './routes/domain';
+import DomainList from './routes/domain-list';
+import DomainSettings from './routes/domain/domain-settings';
+import Help from './routes/help';
+import History from './routes/workflow/history';
+import Query from './routes/workflow/query';
+import Root from './routes';
+import StackTrace from './routes/workflow/stack-trace';
+import TaskList from './routes/domain/task-list';
+import WorkflowArchival from './routes/domain/workflow-archival';
+import WorkflowArchivalAdvanced from './routes/domain/workflow-archival/advanced';
+import WorkflowArchivalBasic from './routes/domain/workflow-archival/basic';
+import WorkflowList from './routes/domain/workflow-list';
+import WorkflowSummary from './routes/workflow/summary';
+import WorkflowTabs from './routes/workflow';
 
 import { http, injectMomentDurationFormat, jsonTryParse } from '~helpers';
 
@@ -55,6 +58,7 @@ const routeOpts = {
     {
       name: 'domain',
       path: '/domains/:domain',
+      redirect: '/domains/:domain/workflows',
       component: Domain,
       props: ({ params }) => ({
         domain: params.domain,
@@ -73,6 +77,30 @@ const routeOpts = {
           components: {
             'domain-settings': DomainSettings,
           },
+        },
+        {
+          name: 'workflow-archival',
+          path: '/domains/:domain/archival',
+          redirect: '/domains/:domain/archival/basic',
+          components: {
+            'workflow-archival': WorkflowArchival,
+          },
+          children: [
+            {
+              name: 'workflow-archival-advanced',
+              path: '/domains/:domain/archival/advanced',
+              components: {
+                'workflow-archival-advanced': WorkflowArchivalAdvanced,
+              },
+            },
+            {
+              name: 'workflow-archival-basic',
+              path: '/domains/:domain/archival/basic',
+              components: {
+                'workflow-archival-basic': WorkflowArchivalBasic,
+              },
+            },
+          ],
         },
       ],
     },
