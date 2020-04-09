@@ -2,35 +2,43 @@ import WorkflowArchivalService from './workflow-archival-service';
 
 describe('WorkflowArchivalService', () => {
   it('should make an API request when fetchArchivalRecords is called', async () => {
-    const workflowArchivalService = WorkflowArchivalService({ domain: 'samples-domain' });
-    fetch.mockResponseOnce(JSON.stringify({
-      executions: [
-        {
-          closeStatus: 'closeStatusValue',
-          closeTime: '2020-03-30T00:00:00Z',
-          execution: {
-            runId: 'runIdValue',
-            workflowId: 'workflowIdValue',
+    const workflowArchivalService = WorkflowArchivalService({
+      domain: 'samples-domain',
+    });
+
+    fetch.mockResponseOnce(
+      JSON.stringify({
+        executions: [
+          {
+            closeStatus: 'closeStatusValue',
+            closeTime: '2020-03-30T00:00:00Z',
+            execution: {
+              runId: 'runIdValue',
+              workflowId: 'workflowIdValue',
+            },
+            startTime: '2020-03-01T00:00:00Z',
+            type: {
+              name: 'workflowNameValue',
+            },
           },
-          startTime: '2020-03-01T00:00:00Z',
-          type: {
-            name: 'workflowNameValue',
-          },
-        },
-      ],
-      nextPageToken: 'nextPageTokenValue',
-    }));
-    const output = await workflowArchivalService.fetchArchivalRecords({ query: 'queryString' });
+        ],
+        nextPageToken: 'nextPageTokenValue',
+      })
+    );
+    const output = await workflowArchivalService.fetchArchivalRecords({
+      query: 'queryString',
+    });
+
     expect(output).toEqual({
       nextPageToken: 'nextPageTokenValue',
       results: [
         {
-          closeStatus: "closeStatusValue",
-          closeTime: "Mar 29, 2020 5:00 PM",
-          runId: "runIdValue",
-          startTime: "Feb 29, 2020 4:00 PM",
-          workflowId: "workflowIdValue",
-          workflowName: "workflowNameValue",
+          closeStatus: 'closeStatusValue',
+          closeTime: 'Mar 29, 2020 5:00 PM',
+          runId: 'runIdValue',
+          startTime: 'Feb 29, 2020 4:00 PM',
+          workflowId: 'workflowIdValue',
+          workflowName: 'workflowNameValue',
         },
       ],
     });

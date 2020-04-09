@@ -8,8 +8,6 @@ describe('mapArchivedWorkflowResponse', () => {
     expect(output.nextPageToken).toEqual('123');
   });
 
-
-
   it('should return a flattened results array when passed executions with 1 item', () => {
     const executions = [
       {

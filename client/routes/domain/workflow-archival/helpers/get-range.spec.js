@@ -3,10 +3,10 @@ import getRange from './get-range';
 
 describe('getRange', () => {
   describe('When nothing is passed', () => {
-    it('should return "last-3-days".', () => {
+    it('should return "last-24-hours".', () => {
       const output = getRange();
 
-      expect(output).toEqual('last-3-days');
+      expect(output).toEqual('last-24-hours');
     });
   });
 
