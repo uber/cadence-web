@@ -109,7 +109,7 @@ async function makeChannel(client, { bridge }) {
 module.exports = async function(ctx, next) {
   const client = TChannel();
   const channel = await makeChannel(client, ctx);
-  const authToken = ctx.authToken;
+  const { authTokenHeaders = {} } = ctx;
 
   function req(method, reqName, bodyTransform, resTransform) {
     return (body) => new Promise(function(resolve, reject) {
@@ -126,7 +126,7 @@ module.exports = async function(ctx, next) {
         }).send(
           `WorkflowService::${method}`,
           {
-            ...(authToken && { [authToken.key]: authToken.value }),
+            ...authTokenHeaders,
           },
           {
             [`${reqName ? reqName + 'R' : 'r'}equest`]: typeof bodyTransform === 'function' ? bodyTransform(body) : body
