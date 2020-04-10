@@ -220,6 +220,21 @@ header.top-bar
     bottom: 0;
   }
 
+  .v-select {
+    .dropdown-toggle {
+      border-color: transparent;
+    }
+
+    .open-indicator:before {
+      border-color: uber-blue;
+    }
+
+    .selected-tag {
+      color: white;
+      font-weight: bold;
+    }
+  }
+
 body, main
   height 100%
 main
