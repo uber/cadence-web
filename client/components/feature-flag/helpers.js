@@ -4,6 +4,7 @@ export const isEnabled = ({ flagHash = {}, name = '' }) =>
 export const mapFlagsToHash = (flagArray = []) => {
   return flagArray.reduce((accumulator, { name = '', value = false }) => {
     accumulator[name] = value;
+
     return accumulator;
   }, {});
 };
