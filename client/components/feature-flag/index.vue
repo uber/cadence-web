@@ -13,17 +13,10 @@ export default {
   props: ['name'],
   computed: {
     flagHash() {
-      console.log('featureFlags = ', featureFlags);
-
       return mapFlagsToHash(featureFlags);
     },
     isEnabled() {
       const { name, flagHash } = this;
-
-      console.log('flag name = ', name);
-      console.log('flagHash = ', flagHash);
-      console.log('isEnabled = ', isEnabled({ flagHash, name }));
-
       return isEnabled({ flagHash, name });
     },
   },
