@@ -16,7 +16,7 @@ export default {
       return mapFlagsToHash(featureFlags);
     },
     isEnabled() {
-      const { name, flagHash } = this;
+      const { flagHash, name } = this;
       return isEnabled({ flagHash, name });
     },
   },

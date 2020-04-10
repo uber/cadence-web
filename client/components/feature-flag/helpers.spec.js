@@ -31,10 +31,10 @@ describe('feature-flag helpers', () => {
   });
 
   describe('mapFlagsToHash', () => {
-    describe('When passed flagArray = [{ name: "workflow-terminate", value: true }]', () => {
+    describe('When passed flagArray = [{ key: "workflow-terminate", value: true }]', () => {
       it('should return { "workflow-terminate": true }.', () => {
         const flagArray = [
-          { name: 'workflow-terminate', value: true }
+          { key: 'workflow-terminate', value: true }
         ];
         const output = mapFlagsToHash(flagArray);
         expect(output).toEqual({ 'workflow-terminate': true });
