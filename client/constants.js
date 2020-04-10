@@ -4,15 +4,19 @@ export const preKeys = jsonKeys.concat(['stackTrace', 'details.stackTrace']);
 export const ENVIRONMENT_LIST = [
   {
     label: 'Production',
-    href: 'http://production.cadence.com',
+    value: 'http://<production-url>.com',
   },
   {
     label: 'Staging',
-    href: 'http://staging.cadence.com',
+    value: 'http://<staging-url>.com',
   },
   {
     label: 'Development',
-    href: 'http://development.cadence.com',
+    value: 'http://<development-url>.com',
+  },
+  {
+    label: 'Localhost',
+    value: 'http://localhost:8088',
   },
 ];
 

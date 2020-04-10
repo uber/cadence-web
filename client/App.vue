@@ -1,15 +1,27 @@
 <script>
 import { version } from '../package.json';
 import logo from './assets/logo.svg';
-import { NotificationBar } from '~components';
-import { NOTIFICATION_TIMEOUT, NOTIFICATION_TYPE_SUCCESS } from '~constants';
+import { EnvironmentSelect, NotificationBar } from '~components';
+import { ENVIRONMENT_LIST, NOTIFICATION_TIMEOUT, NOTIFICATION_TYPE_SUCCESS } from '~constants';
+import { getEnvironment } from '~helpers';
 
 export default {
   components: {
-    NotificationBar,
+    'environment-select': EnvironmentSelect,
+    'notification-bar': NotificationBar,
   },
   data() {
+    const { origin } = window.location;
+    const environmentList = ENVIRONMENT_LIST;
+
     return {
+      environment: {
+        list: environmentList,
+        value: getEnvironment({
+          environmentList,
+          origin,
+        }),
+      },
       logo,
       notification: {
         message: '',
@@ -38,6 +50,11 @@ export default {
           e.stopPropagation();
           this.$router.push(href);
         }
+      }
+    },
+    onEnvironmentSelectChange(environment) {
+      if (environment !== this.environment.value) {
+        window.location = environment.value;
       }
     },
     onNotification({ message, type = NOTIFICATION_TYPE_SUCCESS }) {
@@ -71,7 +88,7 @@ export default {
 
 <template>
   <main @click="globalClick">
-    <NotificationBar
+    <notification-bar
       :message="notification.message"
       :onClose="onNotificationClose"
       :show="notification.show"
@@ -82,6 +99,14 @@ export default {
         <div v-html="logo"></div>
         <span class="version">{{ version }}</span>
       </a>
+
+      <v-select
+        :on-change="onEnvironmentSelectChange"
+        :options="environment.list"
+        :searchable="false"
+        :value="environment.value"
+      />
+
       <div class="domain" v-if="$route.params.domain">
         <a
           class="workflows"
