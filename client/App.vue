@@ -1,13 +1,13 @@
 <script>
 import { version } from '../package.json';
 import logo from './assets/logo.svg';
-import { EnvironmentSelect, NotificationBar } from '~components';
+import { FeatureFlag, NotificationBar } from '~components';
 import { ENVIRONMENT_LIST, NOTIFICATION_TIMEOUT, NOTIFICATION_TYPE_SUCCESS } from '~constants';
 import { getEnvironment } from '~helpers';
 
 export default {
   components: {
-    'environment-select': EnvironmentSelect,
+    'feature-flag': FeatureFlag,
     'notification-bar': NotificationBar,
   },
   data() {
@@ -100,12 +100,14 @@ export default {
         <span class="version">{{ version }}</span>
       </a>
 
-      <v-select
-        :on-change="onEnvironmentSelectChange"
-        :options="environment.list"
-        :searchable="false"
-        :value="environment.value"
-      />
+      <feature-flag name="environment-select">
+        <v-select
+          :on-change="onEnvironmentSelectChange"
+          :options="environment.list"
+          :searchable="false"
+          :value="environment.value"
+        />
+      </feature-flag>
 
       <div class="domain" v-if="$route.params.domain">
         <a
@@ -221,6 +223,8 @@ header.top-bar
   }
 
   .v-select {
+    margin-right: 25px;
+
     .dropdown-toggle {
       border-color: transparent;
     }
