@@ -224,8 +224,6 @@ header.top-bar
   }
 
   .environment-select {
-    margin-right: 25px;
-
     .dropdown-toggle {
       border-color: transparent;
     }
