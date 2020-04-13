@@ -54,7 +54,7 @@ export default {
     },
     onEnvironmentSelectChange(environment) {
       if (environment !== this.environment.value) {
-        window.location = environment.value;
+        window.location = environment.value + window.location.pathname;
       }
     },
     onNotification({ message, type = NOTIFICATION_TYPE_SUCCESS }) {
