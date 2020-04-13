@@ -1,2 +1,2 @@
-export default ({ environment: { value }, pathname, search }) =>
+export default ({ environment: { value }, pathname = '', search = '' }) =>
   `${value}${pathname}${search}`;
