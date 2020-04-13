@@ -102,6 +102,7 @@ export default {
 
       <feature-flag name="environment-select">
         <v-select
+          class="environment-select"
           :on-change="onEnvironmentSelectChange"
           :options="environment.list"
           :searchable="false"
@@ -222,7 +223,7 @@ header.top-bar
     bottom: 0;
   }
 
-  .v-select {
+  .environment-select {
     margin-right: 25px;
 
     .dropdown-toggle {
