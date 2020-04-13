@@ -13,17 +13,23 @@ describe('getEnvironment', () => {
     value: UNKNOWN_DOMAIN,
   };
 
-  const ENVIRONMENT_LIST = [
-    LOCALHOST_OPTION,
-  ];
+  const ENVIRONMENT_LIST = [LOCALHOST_OPTION];
 
   it('should return UNKNOWN_OPTION when origin = UNKNOWN_DOMAIN and is not part of environmentList.', () => {
-    const output = getEnvironment({ environmentList: ENVIRONMENT_LIST, origin: UNKNOWN_DOMAIN });
+    const output = getEnvironment({
+      environmentList: ENVIRONMENT_LIST,
+      origin: UNKNOWN_DOMAIN,
+    });
+
     expect(output).toEqual(UNKNOWN_OPTION);
   });
 
   it('should return LOCALHOST_OPTION when origin = LOCALHOST_DOMAIN and environmentList = [LOCALHOST_OPTION].', () => {
-    const output = getEnvironment({ environmentList: ENVIRONMENT_LIST, origin: LOCALHOST_DOMAIN });
+    const output = getEnvironment({
+      environmentList: ENVIRONMENT_LIST,
+      origin: LOCALHOST_DOMAIN,
+    });
+
     expect(output).toEqual(LOCALHOST_OPTION);
   });
 });

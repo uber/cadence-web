@@ -2,8 +2,16 @@
 import { version } from '../package.json';
 import logo from './assets/logo.svg';
 import { FeatureFlag, NotificationBar } from '~components';
-import { ENVIRONMENT_LIST, NOTIFICATION_TIMEOUT, NOTIFICATION_TYPE_SUCCESS } from '~constants';
-import { getEnvironment, getEnvironmentList, getEnvironmentLocation } from '~helpers';
+import {
+  ENVIRONMENT_LIST,
+  NOTIFICATION_TIMEOUT,
+  NOTIFICATION_TYPE_SUCCESS,
+} from '~constants';
+import {
+  getEnvironment,
+  getEnvironmentList,
+  getEnvironmentLocation,
+} from '~helpers';
 
 export default {
   components: {
@@ -18,7 +26,7 @@ export default {
       environment: {
         list: getEnvironmentList({
           environmentList,
-          origin
+          origin,
         }),
         value: getEnvironment({
           environmentList,
@@ -58,10 +66,11 @@ export default {
     onEnvironmentSelectChange(environment) {
       if (environment !== this.environment.value) {
         const { pathname, search } = window.location;
+
         window.location = getEnvironmentLocation({
           environment,
           pathname,
-          search
+          search,
         });
       }
     },

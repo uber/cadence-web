@@ -6,6 +6,7 @@ describe('feature-flag helpers', () => {
       const name = 'workflow-terminate';
       const flagHash = {};
       const output = isFlagEnabled({ flagHash, name });
+
       expect(output).toEqual(false);
     });
 
@@ -13,6 +14,7 @@ describe('feature-flag helpers', () => {
       const name = 'workflow-terminate';
       const flagHash = { 'workflow-terminate': true };
       const output = isFlagEnabled({ flagHash, name });
+
       expect(output).toEqual(true);
     });
 
@@ -20,16 +22,16 @@ describe('feature-flag helpers', () => {
       const name = 'workflow-terminate';
       const flagHash = { 'workflow-terminate': false };
       const output = isFlagEnabled({ flagHash, name });
+
       expect(output).toEqual(false);
     });
   });
 
   describe('mapFlagsToHash', () => {
     it('should return { "workflow-terminate": true } when passed flagArray = [{ key: "workflow-terminate", value: true }].', () => {
-      const flagArray = [
-        { key: 'workflow-terminate', value: true }
-      ];
+      const flagArray = [{ key: 'workflow-terminate', value: true }];
       const output = mapFlagsToHash(flagArray);
+
       expect(output).toEqual({ 'workflow-terminate': true });
     });
   });
