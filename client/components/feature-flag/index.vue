@@ -1,12 +1,12 @@
 <template>
-  <div class="feature-flag" v-if="isEnabled">
+  <div class="feature-flag" v-if="isFlagEnabled">
     <slot></slot>
   </div>
 </template>
 
 <script>
 import featureFlags from '../../feature-flags.json';
-import { isEnabled, mapFlagsToHash } from './helpers';
+import { isFlagEnabled, mapFlagsToHash } from './helpers';
 
 export default {
   name: 'feature-flag',
@@ -15,9 +15,9 @@ export default {
     flagHash() {
       return mapFlagsToHash(featureFlags);
     },
-    isEnabled() {
+    isFlagEnabled() {
       const { flagHash, name } = this;
-      return isEnabled({ flagHash, name });
+      return isFlagEnabled({ flagHash, name });
     },
   },
 };

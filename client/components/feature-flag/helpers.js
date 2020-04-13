@@ -1,4 +1,4 @@
-export const isEnabled = ({ flagHash = {}, name = '' }) =>
+export const isFlagEnabled = ({ flagHash = {}, name = '' }) =>
   flagHash[name] || false;
 
 export const mapFlagsToHash = (flagArray = []) => {
