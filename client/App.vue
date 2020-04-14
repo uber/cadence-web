@@ -64,15 +64,17 @@ export default {
       }
     },
     onEnvironmentSelectChange(environment) {
-      if (environment !== this.environment.value) {
-        const { pathname, search } = window.location;
-
-        window.location = getEnvironmentLocation({
-          environment,
-          pathname,
-          search,
-        });
+      if (environment === this.environment.value) {
+        return;
       }
+
+      const { pathname, search } = window.location;
+
+      window.location = getEnvironmentLocation({
+        environment,
+        pathname,
+        search,
+      });
     },
     onNotification({ message, type = NOTIFICATION_TYPE_SUCCESS }) {
       this.notification.message = message;
