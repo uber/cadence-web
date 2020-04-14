@@ -5,7 +5,8 @@ main .v-select
   color text-color
 
   input {
-    height: 32px !important;
+    left: 0;
+    position: absolute !important;
   }
 
   .dropdown-toggle {
@@ -19,15 +20,12 @@ main .v-select
   .open-indicator
     height 24px
 
-  span.selected-tag
+  span.selected-tag {
+    height: 28px;
+    margin-right: 25px;
+    position: relative !important;
     one-liner-ellipsis()
-
-  &.single.open span.selected-tag
-    position static
-    opacity 1
-
-  &.unsearchable input[type="search"]
-    width 20px !important
+  }
 
   .dropdown-toggle button.clear
     display none
