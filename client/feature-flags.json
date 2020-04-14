@@ -1,0 +1,10 @@
+[
+  {
+    "key": "environment-select",
+    "value": false
+  },
+  {
+    "key": "workflow-terminate",
+    "value": true
+  }
+]

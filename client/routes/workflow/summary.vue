@@ -1,14 +1,16 @@
 <template>
   <section class="workflow-summary">
     <aside class="actions">
-      <a
-        href=""
-        class="terminate"
-        v-show="isWorkflowRunning"
-        @click.prevent="$modal.show('confirm-termination')"
-      >
-        Terminate
-      </a>
+      <feature-flag name="workflow-terminate">
+        <a
+          href=""
+          class="terminate"
+          v-show="isWorkflowRunning"
+          @click.prevent="$modal.show('confirm-termination')"
+        >
+          Terminate
+        </a>
+      </feature-flag>
     </aside>
 
     <modal name="confirm-termination">
@@ -133,7 +135,7 @@ import moment from 'moment';
 import { TERMINATE_DEFAULT_ERROR_MESSAGE } from './constants';
 import { NOTIFICATION_TYPE_ERROR, NOTIFICATION_TYPE_SUCCESS } from '~constants';
 import { getErrorMessage } from '~helpers';
-import { BarLoader, DataViewer, DetailList } from '~components';
+import { BarLoader, DataViewer, DetailList, FeatureFlag } from '~components';
 
 export default {
   data() {
@@ -156,6 +158,7 @@ export default {
     'bar-loader': BarLoader,
     'data-viewer': DataViewer,
     'detail-list': DetailList,
+    'feature-flag': FeatureFlag,
   },
   computed: {
     workflowCloseTime() {

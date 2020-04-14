@@ -6,6 +6,7 @@ export { default as DetailList } from './detail-list';
 export { default as DateRangePicker } from './date-range-picker';
 export { default as DomainNavigation } from './domain-navigation';
 export { default as ErrorMessage } from './error-message';
+export { default as FeatureFlag } from './feature-flag';
 export { default as FlexGrid } from './flex-grid';
 export { default as FlexGridItem } from './flex-grid-item';
 export { default as LoadingMessage } from './loading-message';
