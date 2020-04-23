@@ -1,10 +1,12 @@
 ---
-date: 2019-2-26
-tag: 
+date: 2019-02-26
+feed:
+  enable: true
+tag:
   - markdown
   - vuepress
 author: ULIVZ
-location: Hangzhou  
+location: Hangzhou
 ---
 
 # Markdown Slot

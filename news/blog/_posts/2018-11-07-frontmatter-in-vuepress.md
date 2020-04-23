@@ -1,10 +1,12 @@
 ---
-date: 2018-11-7
-tag: 
+date: 2018-11-07
+feed:
+  enable: true
+tag:
   - frontmatter
   - vuepress
 author: ULIVZ
-location: Hangzhou  
+location: Hangzhou
 ---
 
 # Front Matter in VuePress

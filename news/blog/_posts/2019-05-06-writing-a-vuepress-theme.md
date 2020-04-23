@@ -1,11 +1,13 @@
 ---
-date: 2019-5-6
-tag: 
+date: 2019-05-06
+feed:
+  enable: true
+tag:
   - theme
   - blog
   - vuepress
 author: ULIVZ
-location: Shanghai  
+location: Shanghai
 ---
 
 # Writing a VuePress theme
@@ -116,7 +118,7 @@ You can apply some plugins to the theme via `theme/index.js`.
 ```js
 module.exports = {
   plugins: [
-    ['@vuepress/pwa', { 
+    ['@vuepress/pwa', {
       serviceWorker: true,
       updatePopup: true
     }]
