@@ -4,6 +4,14 @@ module.exports = {
   description: '',
   theme: '@vuepress/theme-blog', // OR shortcut: @vuepress/blog
   themeConfig: {
+    directories: [
+      {
+        dirname: '_posts',
+        id: 'post',
+        itemPermalink: '/news/:year/:month/:day/:slug',
+        path: '/news/',
+      },
+    ],
     /**
      * Ref: https://vuepress-theme-blog.ulivz.com/#modifyblogpluginoptions
      */
@@ -23,6 +31,7 @@ module.exports = {
      * Ref: https://vuepress-theme-blog.ulivz.com/#footer
      */
     footer: false,
+    path: '/news/',
     summaryLength: 1000,
   },
 }
