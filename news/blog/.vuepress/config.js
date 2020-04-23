@@ -8,8 +8,8 @@ module.exports = {
       {
         dirname: '_posts',
         id: 'post',
-        itemPermalink: '/news/:year/:month/:day/:slug',
-        path: '/news/',
+        itemPermalink: '/_news/:year/:month/:day/:slug',
+        path: '/_news/',
       },
     ],
     /**
