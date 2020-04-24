@@ -8,6 +8,10 @@
 </template>
 
 <script>
+import {
+  NOTIFICATION_TYPE_ERROR,
+  NOTIFICATION_TYPE_ERROR_MESSAGE_DEFAULT,
+} from '~constants';
 export default {
   mounted() {
     const { iframe } = this.$refs;
@@ -20,13 +24,15 @@ export default {
     },
   },
   methods: {
-    onError(error) {
-      console.log('error = ', error);
+    onError() {
+      this.$emit('onNotification', {
+        message: NOTIFICATION_TYPE_ERROR_MESSAGE_DEFAULT,
+        type: NOTIFICATION_TYPE_ERROR,
+      });
     },
     onLoad() {
       const { iframe } = this.$refs;
       iframe.style.opacity = 1;
-      console.log('loaded iframe???');
     },
   },
 };
