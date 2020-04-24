@@ -14,9 +14,9 @@
     "test": "mocha server/test && mocha-chrome http://localhost:8090",
     "test:unit": "jest",
     "test-server": "CADENCE_WEB_PORT=8090 TEST_RUN=ci node server.js",
-    "build": "webpack && npm run build:news",
+    "build": "webpack",
     "build:news": "cd news && npm run build && cp -R blog/.vuepress/dist ../",
-    "build-production": "NODE_ENV=production npm run build"
+    "build-production": "NODE_ENV=production npm run build && npm run build:news"
   },
   "keywords": [
     "uber",

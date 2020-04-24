@@ -1,7 +1,7 @@
 <script>
 import { version } from '../package.json';
 import logo from './assets/logo.svg';
-import { FeatureFlag, NotificationBar } from '~components';
+import { FeatureFlag, NewsModal, NotificationBar } from '~components';
 import {
   ENVIRONMENT_LIST,
   NOTIFICATION_TIMEOUT,
@@ -11,11 +11,13 @@ import {
   getEnvironment,
   getEnvironmentList,
   getEnvironmentLocation,
+  getLatestNewsItems,
 } from '~helpers';
 
 export default {
   components: {
     'feature-flag': FeatureFlag,
+    'news-modal': NewsModal,
     'notification-bar': NotificationBar,
   },
   data() {
@@ -33,6 +35,8 @@ export default {
           origin,
         }),
       },
+      newsLastUpdated: localStorage.getItem('news-last-updated'),
+      newsItems: [],
       logo,
       notification: {
         message: '',
@@ -45,7 +49,23 @@ export default {
   beforeDestroy() {
     clearTimeout(this.notification.timeout);
   },
+  async mounted() {
+    console.log('newsLastUpdated = ', this.newsLastUpdated);
+    await this.fetchLatestNewsItems();
+    console.log('found latest news items = ', this.newsItems);
+
+    if (this.newsItems.length) {
+      console.log('showing modal???');
+      this.$modal.show('news-modal');
+      // Show modal here with items...
+    }
+  },
   methods: {
+    async fetchLatestNewsItems() {
+      const newsResponse = await this.$http('feed.json');
+      console.log('response = ', newsResponse);
+      this.newsItems = getLatestNewsItems(newsResponse, this.newsLastUpdated);
+    },
     globalClick(e) {
       // Code required for mocha tests to run correctly without infinite looping.
       if (window.mocha !== undefined && e.target.tagName === 'A') {
@@ -75,6 +95,12 @@ export default {
         pathname,
         search,
       });
+    },
+    onNewsDismiss() {
+      console.log('closed news modal!');
+      // TODO - Update newsLastUpdated local storage
+      // localStorage.setItem('news-last-updated', xxx)
+      // should use latest date of the latest item in news...
     },
     onNotification({ message, type = NOTIFICATION_TYPE_SUCCESS }) {
       this.notification.message = message;
@@ -151,6 +177,10 @@ export default {
     <router-view @onNotification="onNotification"></router-view>
     <modals-container />
     <v-dialog />
+    <news-modal
+      :news-items="newsItems"
+      @before-close="onNewsDismiss"
+    />
   </main>
 </template>
 
