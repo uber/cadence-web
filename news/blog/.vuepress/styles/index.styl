@@ -7,3 +7,21 @@
 #header-wrapper, #mobile-header, .footer {
   display: none !important;
 }
+
+.content-wrapper {
+  padding-top: 0;
+}
+
+.ui-posts {
+  padding-top: 50px;
+}
+
+@media (max-width: 719px) {
+  .content__default:not(.custom) > h1:first-child {
+    padding-top: calc(80px + 1rem);
+  }
+}
+
+.ui-post-title a {
+  transition: none !important;
+}

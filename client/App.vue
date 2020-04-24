@@ -48,7 +48,7 @@ export default {
   methods: {
     globalClick(e) {
       // Code required for mocha tests to run correctly without infinite looping.
-      if (e.target.tagName === 'A') {
+      if (window.mocha !== undefined && e.target.tagName === 'A') {
         const href = e.target.getAttribute('href');
 
         if (
