@@ -2,11 +2,6 @@
 date: 2019-02-26
 feed:
   enable: true
-tag:
-  - markdown
-  - vuepress
-author: ULIVZ
-location: Hangzhou
 ---
 
 # Markdown Slot

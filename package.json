@@ -7,12 +7,15 @@
   "scripts": {
     "dev": "NODE_ENV=development node server.js",
     "eslint": "eslint --ext .js,.vue client --fix",
-    "install": "napa && rm -rf server/idl && cp -R node_modules/cadence-idl/thrift server/idl",
+    "install": "npm run install:idl && npm run install:news",
+    "install:idl": "napa && rm -rf server/idl && cp -R node_modules/cadence-idl/thrift server/idl",
+    "install:news": "cd news && npm install",
     "start": "npm run build && NODE_ENV=production node server.js",
     "test": "mocha server/test && mocha-chrome http://localhost:8090",
     "test:unit": "jest",
     "test-server": "CADENCE_WEB_PORT=8090 TEST_RUN=ci node server.js",
-    "build": "webpack",
+    "build": "webpack && npm run build:news",
+    "build:news": "cd news && npm run build && cp -R blog/.vuepress/dist ../",
     "build-production": "NODE_ENV=production npm run build"
   },
   "keywords": [

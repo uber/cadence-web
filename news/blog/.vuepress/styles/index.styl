@@ -3,6 +3,20 @@
  *
  * ref：https://v1.vuepress.vuejs.org/config/#index-styl
  */
+$fontColorDefault = #2c3e50;
+$fontFamilyDefault = -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;
+
+body {
+  font-family: $fontFamilyDefault !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: $fontFamilyDefault !important;
+}
+
+.vuepress-blog-theme-content {
+  font-family: $fontFamilyDefault !important;
+}
 
 #header-wrapper, #mobile-header, .footer {
   display: none !important;
@@ -22,6 +36,20 @@
   }
 }
 
-.ui-post-title a {
-  transition: none !important;
+.ui-post-title {
+  font-family: $fontFamilyDefault !important;
+
+  a {
+    transition: none !important;
+  }
+}
+
+.ui-post-summary {
+  color: $fontColorDefault !important;
+  font-weight: normal !important;
+}
+
+.ui-post-date {
+  color: $fontColorDefault !important;
+  font-weight: normal !important;
 }

@@ -2,11 +2,6 @@
 date: 2018-11-07
 feed:
   enable: true
-tag:
-  - frontmatter
-  - vuepress
-author: ULIVZ
-location: Hangzhou
 ---
 
 # Front Matter in VuePress

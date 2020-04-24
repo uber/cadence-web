@@ -2,12 +2,6 @@
 date: 2019-05-06
 feed:
   enable: true
-tag:
-  - theme
-  - blog
-  - vuepress
-author: ULIVZ
-location: Shanghai
 ---
 
 # Writing a VuePress theme
