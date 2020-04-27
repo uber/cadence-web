@@ -56,9 +56,17 @@ const routeOpts = {
         },
         {
           name: 'news',
-          path: '/news',
+          path: '/news/:year?/:month?/:date?/:article?',
           components: {
             news: News,
+          },
+          props: {
+            news: ({ params: { article, date, month, year } }) => ({
+              article,
+              date,
+              month,
+              year,
+            }),
           },
         },
       ],

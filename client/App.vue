@@ -50,12 +50,12 @@ export default {
     clearTimeout(this.notification.timeout);
   },
   async mounted() {
-    console.log('newsLastUpdated = ', this.newsLastUpdated);
+    // console.log('newsLastUpdated = ', this.newsLastUpdated);
     await this.fetchLatestNewsItems();
-    console.log('found latest news items = ', this.newsItems);
+    // console.log('found latest news items = ', this.newsItems);
 
     if (this.newsItems.length) {
-      console.log('showing modal???');
+      // console.log('showing modal???');
       this.$modal.show('news-modal');
       // Show modal here with items...
     }
@@ -63,7 +63,7 @@ export default {
   methods: {
     async fetchLatestNewsItems() {
       const newsResponse = await this.$http('feed.json');
-      console.log('response = ', newsResponse);
+      // console.log('response = ', newsResponse);
       this.newsItems = getLatestNewsItems(newsResponse, this.newsLastUpdated);
     },
     globalClick(e) {
@@ -97,7 +97,7 @@ export default {
       });
     },
     onNewsDismiss() {
-      console.log('closed news modal!');
+      // console.log('closed news modal!');
       // TODO - Update newsLastUpdated local storage
       // localStorage.setItem('news-last-updated', xxx)
       // should use latest date of the latest item in news...
@@ -177,10 +177,10 @@ export default {
     <router-view @onNotification="onNotification"></router-view>
     <modals-container />
     <v-dialog />
-    <news-modal
+    <!--<news-modal
       :news-items="newsItems"
       @before-close="onNewsDismiss"
-    />
+    />-->
   </main>
 </template>
 
