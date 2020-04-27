@@ -1,3 +1,5 @@
+import get from 'lodash-es/get';
+
 export const getSrc = ({
   article,
   date,
@@ -8,4 +10,9 @@ export const getSrc = ({
     .filter((segment) => !!segment)
     .join('/');
 
-export const getLocation = pathname => `/${pathname.replace(/^\/_|[\/]$/g, '')}`;
+export const getLocation = ({ iframe, location }) => {
+  const pathname = get(iframe, 'contentWindow.location.pathname');
+  return !pathname || location.pathname === pathname ?
+    null :
+    `/${pathname.replace(/^\/_|[\/]$/g, '')}`;
+};

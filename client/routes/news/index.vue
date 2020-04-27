@@ -52,20 +52,15 @@ export default {
       iframe.style.opacity = 1;
       this.observer = new MutationObserver(this.onBodyChange);
       this.observer.observe(iframe.contentDocument.body, { childList: true });
-      this.$router.go(-1);
+      this.$router.go(-1);  // iframe.onload adds its child page to history stack
     },
     onBodyChange() {
+      const { location } = window;
       const { iframe } = this.$refs;
-      if (!iframe || !iframe.contentWindow) {
-        return;
+      const newLocation = getLocation({ iframe, location });
+      if (newLocation) {
+        this.$router.replace(newLocation);
       }
-
-      const newLocation = getLocation(iframe.contentWindow.location.pathname);
-      if (window.location.pathname === newLocation) {
-        return;
-      }
-
-      this.$router.replace(newLocation);
     }
   },
 };
