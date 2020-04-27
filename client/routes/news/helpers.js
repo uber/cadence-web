@@ -8,4 +8,4 @@ export const getSrc = ({
     .filter((segment) => !!segment)
     .join('/');
 
-export const getLocation = (pathname) => `/${pathname.slice(2)}`.replace(/[\/]$/, '');
+export const getLocation = pathname => `/${pathname.replace(/^\/_|[\/]$/g, '')}`;
