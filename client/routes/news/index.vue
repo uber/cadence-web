@@ -16,32 +16,13 @@ import { getSrc, getLocation } from './helpers';
 export default {
   props: ['article', 'date', 'month', 'year'],
   data() {
-    const { origin } = window.location;
-    const { article, date, month, year } = this;
-    const src = getSrc({
-      article,
-      date,
-      month,
-      origin,
-      year,
-    });
-
     return {
-      src,
+      src: this.getSrc(),
     };
   },
   computed: {
     url() {
-      const { origin } = window.location;
-      const { article, date, month, year } = this;
-      const url = getSrc({
-        article,
-        date,
-        month,
-        origin,
-        year,
-      });
-      return url;
+      return this.getSrc();
     },
   },
   mounted() {
@@ -55,6 +36,17 @@ export default {
     }
   },
   methods: {
+    getSrc() {
+      const { origin } = window.location;
+      const { article, date, month, year } = this;
+      return getSrc({
+        article,
+        date,
+        month,
+        origin,
+        year,
+      });
+    },
     onError() {
       this.$emit('onNotification', {
         message: NOTIFICATION_TYPE_ERROR_MESSAGE_DEFAULT,
@@ -71,9 +63,9 @@ export default {
     onBodyChange() {
       const { location } = window;
       const { iframe } = this.$refs;
-      const newLocation = getLocation({ iframe, location });
-      if (newLocation) {
-        this.$router.replace(newLocation);
+      const childLocation = getLocation({ iframe, location });
+      if (childLocation) {
+        this.$router.replace(childLocation);
       }
     },
     onParentUrlChange() {
