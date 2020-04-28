@@ -73,11 +73,22 @@ export default {
       const { iframe } = this.$refs;
       const childLocation = getLocation({ iframe, location });
       if (childLocation) {
-        // means parent url is out of sync with child - need to force it to rerender
+        // means parent url is out of sync with child
+        // this can happen when clicking on the news tab from a news story
+        // -> need to force iframe to rerender
+
         this.src = '';
+
         setTimeout(() => {
           this.src = this.url;
+          const { iframe } = this.$refs;
+          iframe.style.opacity = 0;
         }, 100);
+
+        setTimeout(() => {
+          const { iframe } = this.$refs;
+          iframe.style.opacity = 1;
+        }, 500);
       }
     },
   },

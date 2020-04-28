@@ -31,7 +31,6 @@ module.exports = {
      * Ref: https://vuepress-theme-blog.ulivz.com/#footer
      */
     footer: false,
-    path: '/news/',
     summaryLength: 1000,
   },
 }
