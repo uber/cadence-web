@@ -7,7 +7,7 @@
       <div class="header">
         <flex-grid align-items="center">
           <flex-grid-item>
-            <h2>Whats new</h2>
+            <h2>What's new</h2>
           </flex-grid-item>
           <flex-grid-item width="40px">
             <button-icon
