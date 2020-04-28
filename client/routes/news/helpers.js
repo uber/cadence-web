@@ -11,8 +11,9 @@ export const getSrc = ({
     .join('/');
 
 export const getLocation = ({ iframe, location }) => {
-  const pathname = get(iframe, 'contentWindow.location.pathname');
-  return !pathname || location.pathname === pathname ?
+  const childPath = get(iframe, 'contentWindow.location.pathname', '');
+  const parentPath = `/${childPath.replace(/^\/_|[\/]$/g, '')}`;
+  return !parentPath || location.pathname === parentPath ?
     null :
-    `/${pathname.replace(/^\/_|[\/]$/g, '')}`;
+    parentPath;
 };

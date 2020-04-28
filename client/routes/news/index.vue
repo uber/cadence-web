@@ -30,6 +30,20 @@ export default {
       src,
     };
   },
+  computed: {
+    url() {
+      const { origin } = window.location;
+      const { article, date, month, year } = this;
+      const url = getSrc({
+        article,
+        date,
+        month,
+        origin,
+        year,
+      });
+      return url;
+    },
+  },
   mounted() {
     const { iframe } = this.$refs;
     iframe.onload = this.onLoad;
@@ -61,7 +75,24 @@ export default {
       if (newLocation) {
         this.$router.replace(newLocation);
       }
-    }
+    },
+    onParentUrlChange() {
+      const { location } = window;
+      const { iframe } = this.$refs;
+      const childLocation = getLocation({ iframe, location });
+      if (childLocation) {
+        // means parent url is out of sync with child - need to force it to rerender
+        this.src = '';
+        setTimeout(() => {
+          this.src = this.url;
+        }, 100);
+      }
+    },
+  },
+  watch: {
+    url(url) {
+      this.onParentUrlChange();
+    },
   },
 };
 </script>
