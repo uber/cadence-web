@@ -4,36 +4,49 @@
     @before-close="onBeforeClose"
   >
     <div class="news-modal">
-      <div
-        class="news-item"
-        :key="id"
-        v-for="({ id, summary, title, url }) in newsItems"
-      >
-        <h3>
-          <router-link
-            :to="url"
-            v-on:click.native="onLinkClick"
-          >
-            {{ title }}
-          </router-link>
-        </h3>
-        <p>{{ summary }}</p>
+      <div class="header">
+        <flex-grid align-items="center">
+          <flex-grid-item>
+            <h2>Whats new</h2>
+          </flex-grid-item>
+          <flex-grid-item width="44px">
+            <button class="close" @click="onDismissClick">X</button>
+          </flex-grid-item>
+        </flex-grid>
       </div>
-
-    </div>
-    <flex-grid>
-      <flex-grid-item>
-        <router-link
-          to="news"
-          v-on:click.native="onLinkClick"
+      <div class="content">
+        <div
+          class="news-item"
+          :key="id"
+          v-for="({ id, summary, title, url }) in newsItems"
         >
-          See more news...
-        </router-link>
-      </flex-grid-item>
-      <flex-grid-item width="90px">
-        <button-fill label="DISMISS" @click="onDismissClick" />
-      </flex-grid-item>
-    </flex-grid>
+          <h3>
+            <router-link
+              :to="url"
+              v-on:click.native="onLinkClick"
+            >
+              {{ title }}
+            </router-link>
+          </h3>
+          <p>{{ summary }}</p>
+        </div>
+      </div>
+      <div class="footer">
+        <flex-grid align-items="center">
+          <flex-grid-item>
+            <router-link
+              to="news"
+              v-on:click.native="onLinkClick"
+            >
+              See more news...
+            </router-link>
+          </flex-grid-item>
+          <flex-grid-item width="102px">
+            <button-fill label="DISMISS" @click="onDismissClick" />
+          </flex-grid-item>
+        </flex-grid>
+      </div>
+    </div>
   </modal>
 </template>
 
@@ -62,7 +75,21 @@ export default {
 
 <style lang="stylus">
 .news-modal {
-  overflow-y: auto;
+  .close {
+    background-color: transparent;
+    border: none;
+    line-height: 44px;
+    width: 100%;
+  }
+
+  .content {
+    max-height: 400px
+    overflow-y: auto;
+  }
+
+  .footer {
+    padding-top: 15px;
+  }
 
   .news-item {
 
