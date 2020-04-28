@@ -39,10 +39,11 @@
         <flex-grid align-items="center">
           <flex-grid-item>
             <router-link
+              class="see-more"
               to="news"
               v-on:click.native="onLinkClick"
             >
-              See more news...
+              See more news . . .
             </router-link>
           </flex-grid-item>
           <flex-grid-item width="102px">
@@ -99,7 +100,19 @@ export default {
   }
 
   .news-item {
+    margin-bottom: 15px;
 
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    p {
+      line-height: 22px;
+    }
+  }
+
+  .see-more {
+    font-size: 16px;
   }
 }
 </style>
