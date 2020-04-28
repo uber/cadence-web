@@ -50,19 +50,14 @@ export default {
     clearTimeout(this.notification.timeout);
   },
   async mounted() {
-    console.log('newsLastUpdated = ', this.newsLastUpdated);
     await this.fetchLatestNewsItems();
-    console.log('found latest news items = ', this.newsItems);
-
     if (this.newsItems.length) {
-      console.log('showing modal???');
       this.$modal.show('news-modal');
-      // Show modal here with items...
     }
   },
   methods: {
     async fetchLatestNewsItems() {
-      const newsResponse = await this.$http('feed.json');
+      const newsResponse = await this.$http('/feed.json');
       this.newsItems = getLatestNewsItems(newsResponse, this.newsLastUpdated);
     },
     globalClick(e) {
@@ -96,10 +91,7 @@ export default {
       });
     },
     onNewsDismiss() {
-      console.log('closed news modal!');
-      // TODO - Update newsLastUpdated local storage
-      // localStorage.setItem('news-last-updated', xxx)
-      // should use latest date of the latest item in news...
+      localStorage.setItem('news-last-updated', this.newsItems[0].date_modified);
     },
     onNotification({ message, type = NOTIFICATION_TYPE_SUCCESS }) {
       this.notification.message = message;

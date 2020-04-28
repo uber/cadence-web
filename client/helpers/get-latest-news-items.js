@@ -1,6 +1,7 @@
 import get from 'lodash-es/get';
 
 export default (response, newsLastUpdated) => {
+  const newsLastUpdatedTime = new Date(newsLastUpdated).getTime();
   const newsItems = get(response, 'items', [])
     .map(({ url, ...newsItem }) => ({
       ...newsItem,
@@ -10,5 +11,5 @@ export default (response, newsLastUpdated) => {
   return !newsLastUpdated ?
     newsItems :
     newsItems
-      .filter(({ date_modified }) => date_modified > newsLastUpdated);
+      .filter(({ date_modified }) => new Date(date_modified).getTime() > newsLastUpdatedTime);
 };

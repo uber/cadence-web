@@ -26,6 +26,7 @@ module.exports = {
       canonical_base: '/',
       count: 5,
       json: true,
+      sort: entries => entries.sort((entryA, entryB) => new Date(entryB.frontmatter.date).getTime() - new Date(entryA.frontmatter.date).getTime()),
     },
     /**
      * Ref: https://vuepress-theme-blog.ulivz.com/#footer
