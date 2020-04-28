@@ -9,8 +9,12 @@
           <flex-grid-item>
             <h2>Whats new</h2>
           </flex-grid-item>
-          <flex-grid-item width="44px">
-            <button class="close" @click="onDismissClick">X</button>
+          <flex-grid-item width="40px">
+            <button-icon
+              icon="icon_delete-thin"
+              size="30px"
+              @click="onDismissClick"
+            />
           </flex-grid-item>
         </flex-grid>
       </div>
@@ -51,7 +55,12 @@
 </template>
 
 <script>
-import { ButtonFill, FlexGrid, FlexGridItem } from '~components';
+import {
+  ButtonFill,
+  ButtonIcon,
+  FlexGrid,
+  FlexGridItem
+} from '~components';
 export default {
   props: ['newsItems'],
   methods: {
@@ -67,6 +76,7 @@ export default {
   },
   components: {
     'button-fill': ButtonFill,
+    'button-icon': ButtonIcon,
     'flex-grid': FlexGrid,
     'flex-grid-item': FlexGridItem,
   },
@@ -75,13 +85,6 @@ export default {
 
 <style lang="stylus">
 .news-modal {
-  .close {
-    background-color: transparent;
-    border: none;
-    line-height: 44px;
-    width: 100%;
-  }
-
   .content {
     max-height: 400px
     overflow-y: auto;
@@ -89,6 +92,10 @@ export default {
 
   .footer {
     padding-top: 15px;
+  }
+
+  .header {
+    padding-bottom: 15px;
   }
 
   .news-item {
