@@ -40,9 +40,10 @@ export default {
 .button-fill {
   cursor: pointer;
   display: inline-block;
+  font-size: 14px;
+  font-weight: 600;
   padding: 13px 21px;
   transition: all 400ms ease;
-  font-weight: 600;
   color: #fff !important;
   background-color: #11939a;
   white-space: nowrap;
