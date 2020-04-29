@@ -15,6 +15,7 @@ export default {
   props: ['article', 'date', 'month', 'year'],
   data() {
     return {
+      ignoreUpdate: false,
       src: this.getIFrameSrc(),
     };
   },
@@ -62,6 +63,10 @@ export default {
       });
     },
     onIFrameLoad() {
+      if (this.ignoreUpdate) {
+        return;
+      }
+
       this.fadeInIFrame();
       this.subscribeToIFrameNavigationChange();
       // iframe.onload adds its iframe page to the history stack
@@ -69,7 +74,15 @@ export default {
     },
     onIFrameBodyChange() {
       const { location } = window;
-      const { iframe } = this.$refs;
+      const {
+        ignoreUpdate,
+        $refs: { iframe },
+      } = this;
+
+      if (ignoreUpdate) {
+        return;
+      }
+
       const iframeLocation = getUpdatedIFrameLocation({ iframe, location });
 
       if (iframeLocation) {
@@ -90,21 +103,23 @@ export default {
       }
     },
     reloadIFrame() {
+      this.ignoreUpdate = true;
+      this.fadeOutIFrame();
       this.src = '';
 
       setTimeout(() => {
+        this.ignoreUpdate = false;
         this.src = this.url;
-        this.fadeOutIFrame();
       }, 100);
-
-      setTimeout(() => {
-        this.fadeInIFrame();
-      }, 500);
     },
     subscribeToIFrameNavigationChange() {
       // need to observe iframe body change as there is no
       // event to subscribe to for iframe route change
       const { iframe } = this.$refs;
+
+      if (this.observer) {
+        this.unsubscribeToIFrameNavigationChange();
+      }
 
       this.observer = new MutationObserver(this.onIFrameBodyChange);
       this.observer.observe(iframe.contentDocument.body, { childList: true });
@@ -131,7 +146,7 @@ section.news {
     height: 100%
     width: 100%;
     opacity: 0;
-    transition: opacity 0.5s;
+    transition: opacity 0.25s;
   }
 }
 </style>
