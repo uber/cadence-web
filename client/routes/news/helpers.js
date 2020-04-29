@@ -1,6 +1,6 @@
 import get from 'lodash-es/get';
 
-export const getSrc = ({
+export const getIFrameSrc = ({
   article,
   date,
   month,
@@ -10,10 +10,10 @@ export const getSrc = ({
     .filter((segment) => !!segment)
     .join('/');
 
-export const getLocation = ({ iframe, location }) => {
-  const childPath = get(iframe, 'contentWindow.location.pathname', '');
-  const parentPath = `/${childPath.replace(/^\/_|[\/]$/g, '')}`;
-  return !parentPath || location.pathname === parentPath ?
+export const getUpdatedIFrameLocation = ({ iframe, location }) => {
+  const iframePath = get(iframe, 'contentWindow.location.pathname', '');
+  const updatedPath = `/${iframePath.replace(/^\/_|[\/]$/g, '')}`;
+  return !updatedPath || location.pathname === updatedPath ?
     null :
-    parentPath;
+    updatedPath;
 };

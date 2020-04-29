@@ -12,34 +12,40 @@ import {
   NOTIFICATION_TYPE_ERROR,
   NOTIFICATION_TYPE_ERROR_MESSAGE_DEFAULT,
 } from '~constants';
-import { getSrc, getLocation } from './helpers';
+import { getIFrameSrc, getIFrameLocation } from './helpers';
 export default {
   props: ['article', 'date', 'month', 'year'],
   data() {
     return {
-      src: this.getSrc(),
+      src: this.getIFrameSrc(),
     };
   },
   computed: {
     url() {
-      return this.getSrc();
+      return this.getIFrameSrc();
     },
   },
   mounted() {
     const { iframe } = this.$refs;
-    iframe.onload = this.onLoad;
-    iframe.onerror = this.onError;
+    iframe.onload = this.onIFrameLoad;
+    iframe.onerror = this.onIFrameError;
   },
   beforeDestroy() {
-    if (this.observer) {
-      this.observer.disconnect();
-    }
+    this.unsubscribeToIFrameNavigationChange();
   },
   methods: {
-    getSrc() {
+    fadeInIFrame() {
+      const { iframe } = this.$refs;
+      iframe.style.opacity = 1;
+    },
+    fadeOutIFrame() {
+      const { iframe } = this.$refs;
+      iframe.style.opacity = 0;
+    },
+    getIFrameSrc() {
       const { origin } = window.location;
       const { article, date, month, year } = this;
-      return getSrc({
+      return getIFrameSrc({
         article,
         date,
         month,
@@ -47,54 +53,66 @@ export default {
         year,
       });
     },
-    onError() {
+    onIFrameError() {
       this.$emit('onNotification', {
         message: NOTIFICATION_TYPE_ERROR_MESSAGE_DEFAULT,
         type: NOTIFICATION_TYPE_ERROR,
       });
     },
-    onLoad() {
-      const { iframe } = this.$refs;
-      iframe.style.opacity = 1;
-      this.observer = new MutationObserver(this.onBodyChange);
-      this.observer.observe(iframe.contentDocument.body, { childList: true });
-      this.$router.go(-1);  // iframe.onload adds its child page to history stack
+    onIFrameLoad() {
+      this.fadeInIFrame();
+      this.subscribeToIFrameNavigationChange();
+      // iframe.onload adds its iframe page to the history stack
+      this.$router.go(-1);
     },
-    onBodyChange() {
+    onIFrameBodyChange() {
       const { location } = window;
       const { iframe } = this.$refs;
-      const childLocation = getLocation({ iframe, location });
-      if (childLocation) {
-        this.$router.replace(childLocation);
+      const iframeLocation = getUpdatedIFrameLocation({ iframe, location });
+      if (iframeLocation) {
+        // means iframe has navigated to another page. Update browser url.
+        this.$router.replace(iframeLocation);
       }
     },
-    onParentUrlChange() {
+    onBrowserUrlChange() {
       const { location } = window;
       const { iframe } = this.$refs;
-      const childLocation = getLocation({ iframe, location });
-      if (childLocation) {
-        // means parent url is out of sync with child
+      const iframeLocation = getUpdatedIFrameLocation({ iframe, location });
+      if (iframeLocation) {
+        // means browser url is out of sync with iframe url
         // this can happen when clicking on the news tab from a news story
         // -> need to force iframe to rerender
+        this.reloadIFrame();
+      }
+    },
+    reloadIFrame() {
+      this.src = '';
 
-        this.src = '';
+      setTimeout(() => {
+        this.src = this.url;
+        this.fadeOutIFrame();
+      }, 100);
 
-        setTimeout(() => {
-          this.src = this.url;
-          const { iframe } = this.$refs;
-          iframe.style.opacity = 0;
-        }, 100);
-
-        setTimeout(() => {
-          const { iframe } = this.$refs;
-          iframe.style.opacity = 1;
-        }, 500);
+      setTimeout(() => {
+        this.fadeInIFrame();
+      }, 500);
+    },
+    subscribeToIFrameNavigationChange() {
+      // need to observe iframe body change as there is no
+      // event to subscribe to for iframe route change
+      const { iframe } = this.$refs;
+      this.observer = new MutationObserver(this.onIFrameBodyChange);
+      this.observer.observe(iframe.contentDocument.body, { childList: true });
+    },
+    unsubscribeToIFrameNavigationChange() {
+      if (this.observer) {
+        this.observer.disconnect();
       }
     },
   },
   watch: {
     url(url) {
-      this.onParentUrlChange();
+      this.onBrowserUrlChange();
     },
   },
 };
