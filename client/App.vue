@@ -51,6 +51,7 @@ export default {
   },
   async mounted() {
     await this.fetchLatestNewsItems();
+
     if (this.newsItems.length) {
       this.$modal.show('news-modal');
     }
@@ -58,6 +59,7 @@ export default {
   methods: {
     async fetchLatestNewsItems() {
       const newsResponse = await this.$http('/feed.json');
+
       this.newsItems = getLatestNewsItems(newsResponse, this.newsLastUpdated);
     },
     globalClick(e) {
@@ -91,7 +93,10 @@ export default {
       });
     },
     onNewsDismiss() {
-      localStorage.setItem('news-last-updated', this.newsItems[0].date_modified);
+      localStorage.setItem(
+        'news-last-updated',
+        this.newsItems[0].date_modified
+      );
     },
     onNotification({ message, type = NOTIFICATION_TYPE_SUCCESS }) {
       this.notification.message = message;
@@ -168,10 +173,7 @@ export default {
     <router-view @onNotification="onNotification"></router-view>
     <modals-container />
     <v-dialog />
-    <news-modal
-      :news-items="newsItems"
-      @before-close="onNewsDismiss"
-    />
+    <news-modal :news-items="newsItems" @before-close="onNewsDismiss" />
   </main>
 </template>
 

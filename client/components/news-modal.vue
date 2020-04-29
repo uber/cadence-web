@@ -1,8 +1,5 @@
 <template>
-  <modal
-    name="news-modal"
-    @before-close="onBeforeClose"
-  >
+  <modal name="news-modal" @before-close="onBeforeClose">
     <div class="news-modal">
       <div class="header">
         <flex-grid align-items="center">
@@ -22,13 +19,10 @@
         <div
           class="news-item"
           :key="id"
-          v-for="({ id, summary, title, url }) in newsItems"
+          v-for="{ id, summary, title, url } in newsItems"
         >
           <h3>
-            <router-link
-              :to="url"
-              v-on:click.native="onLinkClick"
-            >
+            <router-link :to="url" v-on:click.native="onLinkClick">
               {{ title }}
             </router-link>
           </h3>
@@ -56,12 +50,8 @@
 </template>
 
 <script>
-import {
-  ButtonFill,
-  ButtonIcon,
-  FlexGrid,
-  FlexGridItem
-} from '~components';
+import { ButtonFill, ButtonIcon, FlexGrid, FlexGridItem } from '~components';
+
 export default {
   props: ['newsItems'],
   methods: {

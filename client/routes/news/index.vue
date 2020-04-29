@@ -1,18 +1,16 @@
 <template>
   <section class="news">
-    <iframe
-      ref="iframe"
-      :src="src"
-    />
+    <iframe ref="iframe" :src="src" />
   </section>
 </template>
 
 <script>
+import { getIFrameSrc, getUpdatedIFrameLocation } from './helpers';
 import {
   NOTIFICATION_TYPE_ERROR,
   NOTIFICATION_TYPE_ERROR_MESSAGE_DEFAULT,
 } from '~constants';
-import { getIFrameSrc, getIFrameLocation } from './helpers';
+
 export default {
   props: ['article', 'date', 'month', 'year'],
   data() {
@@ -27,6 +25,7 @@ export default {
   },
   mounted() {
     const { iframe } = this.$refs;
+
     iframe.onload = this.onIFrameLoad;
     iframe.onerror = this.onIFrameError;
   },
@@ -36,15 +35,18 @@ export default {
   methods: {
     fadeInIFrame() {
       const { iframe } = this.$refs;
+
       iframe.style.opacity = 1;
     },
     fadeOutIFrame() {
       const { iframe } = this.$refs;
+
       iframe.style.opacity = 0;
     },
     getIFrameSrc() {
       const { origin } = window.location;
       const { article, date, month, year } = this;
+
       return getIFrameSrc({
         article,
         date,
@@ -69,6 +71,7 @@ export default {
       const { location } = window;
       const { iframe } = this.$refs;
       const iframeLocation = getUpdatedIFrameLocation({ iframe, location });
+
       if (iframeLocation) {
         // means iframe has navigated to another page. Update browser url.
         this.$router.replace(iframeLocation);
@@ -78,6 +81,7 @@ export default {
       const { location } = window;
       const { iframe } = this.$refs;
       const iframeLocation = getUpdatedIFrameLocation({ iframe, location });
+
       if (iframeLocation) {
         // means browser url is out of sync with iframe url
         // this can happen when clicking on the news tab from a news story
@@ -101,6 +105,7 @@ export default {
       // need to observe iframe body change as there is no
       // event to subscribe to for iframe route change
       const { iframe } = this.$refs;
+
       this.observer = new MutationObserver(this.onIFrameBodyChange);
       this.observer.observe(iframe.contentDocument.body, { childList: true });
     },

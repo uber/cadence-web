@@ -1,8 +1,11 @@
 <template>
-  <div class="flex-grid" :style="{
-    'align-items': alignItems,
-    'justify-content': justifyContent,
-  }">
+  <div
+    class="flex-grid"
+    :style="{
+      'align-items': alignItems,
+      'justify-content': justifyContent,
+    }"
+  >
     <slot></slot>
   </div>
 </template>
