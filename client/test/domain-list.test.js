@@ -1,6 +1,9 @@
 describe('Domain list', () => {
   it('should show a header bar without a breadcrumb or domain changer', async function test() {
-    const testEl = new Scenario(this.test).render();
+    const [testEl] = new Scenario(this.test)
+      .withNewsFeed()
+      .go();
+
     const headerBar = await testEl.waitUntilExists('header.top-bar');
 
     headerBar.should.have
@@ -11,7 +14,10 @@ describe('Domain list', () => {
   });
 
   it('should validate the existance of domains as the user types', async function test() {
-    const [testEl, scenario] = new Scenario(this.test).go();
+    const [testEl, scenario] = new Scenario(this.test)
+      .withNewsFeed()
+      .go();
+
     const domainNav = await testEl.waitUntilExists(
       'section.domain-search .domain-navigation'
     );
@@ -40,7 +46,10 @@ describe('Domain list', () => {
   });
 
   it('should render the details of a valid domain', async function test() {
-    const [testEl, scenario] = new Scenario(this.test).go();
+    const [testEl, scenario] = new Scenario(this.test)
+      .withNewsFeed()
+      .go();
+
     const domainInput = await testEl.waitUntilExists(
       'section.domain-search .domain-navigation input'
     );
@@ -84,7 +93,10 @@ describe('Domain list', () => {
   });
 
   it('should go to the workflows of the domain requested when entered', async function test() {
-    const [testEl, scenario] = new Scenario(this.test).go();
+    const [testEl, scenario] = new Scenario(this.test)
+      .withNewsFeed()
+      .go();
+
     const domainInput = await testEl.waitUntilExists(
       'section.domain-search .domain-navigation input'
     );
@@ -110,7 +122,10 @@ describe('Domain list', () => {
   });
 
   it('should activate the change-domain button when the domain is valid and navigate to it', async function test() {
-    const [testEl, scenario] = new Scenario(this.test).go();
+    const [testEl, scenario] = new Scenario(this.test)
+      .withNewsFeed()
+      .go();
+
     const domainNav = await testEl.waitUntilExists(
       'section.domain-search .domain-navigation'
     );
@@ -154,7 +169,10 @@ describe('Domain list', () => {
       'recent-domains',
       JSON.stringify(['demo', 'ci-tests'])
     );
-    const [testEl, scenario] = new Scenario(this.test).go();
+    const [testEl, scenario] = new Scenario(this.test)
+      .withNewsFeed()
+      .go();
+
     const recentDomains = await testEl.waitUntilExists(
       '.domain-navigation ul.recent-domains'
     );
@@ -179,7 +197,10 @@ describe('Domain list', () => {
       'recent-domains',
       JSON.stringify(['demo', 'ci-tests'])
     );
-    const [testEl, scenario] = new Scenario(this.test).go();
+    const [testEl, scenario] = new Scenario(this.test)
+      .withNewsFeed()
+      .go();
+
     const recentDomains = await testEl.waitUntilExists(
       '.domain-navigation ul.recent-domains'
     );

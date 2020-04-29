@@ -13,6 +13,7 @@ describe('Workflow', () => {
     return [
       new Scenario(mochaTest)
         .withDomain('ci-test')
+        .withNewsFeed()
         .withWorkflow(
           extendedOptions.workflowId,
           extendedOptions.runId,

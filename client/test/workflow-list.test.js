@@ -6,6 +6,7 @@ describe('Workflow list', () => {
     const [testEl, scenario] = new Scenario(mochaTest)
       .withDomain('ci-test')
       .startingAt('/domains/ci-test/workflows')
+      .withNewsFeed()
       .withWorkflows('open', query, initialWorkflows)
       .withDomainDescription('ci-test', domainDesc)
       .go();
@@ -120,6 +121,7 @@ describe('Workflow list', () => {
       .startingAt(
         '/domains/ci-test/workflows?status=FAILED&range=last-24-hours'
       )
+      .withNewsFeed()
       .withWorkflows('closed', {
         startTime: moment()
           .subtract(24, 'hours')
@@ -250,6 +252,7 @@ describe('Workflow list', () => {
     const [testEl] = new Scenario(this.test)
       .withDomain('ci-test')
       .startingAt('/domains/ci-test/workflows?status=FAILED&workflowName=demo')
+      .withNewsFeed()
       .withWorkflows('closed', {
         status: 'FAILED',
         workflowName: 'demo',
