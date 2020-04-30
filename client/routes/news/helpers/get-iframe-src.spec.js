@@ -5,6 +5,7 @@ describe('getIFrameSrc', () => {
 
   it('should return "http://cadence.com/_news" when only origin is provided.', () => {
     const output = getIFrameSrc({ origin });
+
     expect(output).toEqual('http://cadence.com/_news');
   });
 
@@ -14,6 +15,7 @@ describe('getIFrameSrc', () => {
     const month = '04';
     const year = '2020';
     const output = getIFrameSrc({ article, date, month, origin, year });
+
     expect(output).toEqual('http://cadence.com/_news/2020/04/30/article-1');
   });
 
@@ -21,6 +23,7 @@ describe('getIFrameSrc', () => {
     const year = 'page';
     const month = '2';
     const output = getIFrameSrc({ month, origin, year });
+
     expect(output).toEqual('http://cadence.com/_news/page/2');
   });
 });

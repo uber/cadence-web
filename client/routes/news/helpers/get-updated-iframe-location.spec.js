@@ -13,6 +13,7 @@ describe('getUpdatedIFrameLocation', () => {
       pathname: '/news',
     };
     const output = getUpdatedIFrameLocation({ iframe, location });
+
     expect(output).toEqual(null);
   });
 
@@ -28,6 +29,7 @@ describe('getUpdatedIFrameLocation', () => {
       pathname: '/news',
     };
     const output = getUpdatedIFrameLocation({ iframe, location });
+
     expect(output).toEqual('/news/2020/04/30/article-1');
   });
 });
