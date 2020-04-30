@@ -58,9 +58,10 @@ export default {
   },
   methods: {
     async fetchLatestNewsItems() {
-      const newsResponse = await this.$http('/feed.json');
+      const { newsLastUpdated } = this;
+      const response = await this.$http('/feed.json');
 
-      this.newsItems = getLatestNewsItems(newsResponse, this.newsLastUpdated);
+      this.newsItems = getLatestNewsItems({ newsLastUpdated, response });
     },
     globalClick(e) {
       // Code required for mocha tests to run correctly without infinite looping.

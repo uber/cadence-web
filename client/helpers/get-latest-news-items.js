@@ -1,6 +1,6 @@
 import get from 'lodash-es/get';
 
-export default (response, newsLastUpdated) => {
+export default ({ newsLastUpdated, response }) => {
   const newsItems = get(response, 'items', []).map(({ url, ...newsItem }) => ({
     ...newsItem,
     url: `/${url.replace(/^\/_|[/]$/g, '')}`,
