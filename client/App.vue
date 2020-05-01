@@ -35,7 +35,7 @@ export default {
           origin,
         }),
       },
-      newsLastUpdated: localStorage.getItem('news-last-updated'),
+      newsLastUpdated: localStorage.getItem('news-last-viewed-at'),
       newsItems: [],
       logo,
       notification: {
@@ -95,7 +95,7 @@ export default {
     },
     onNewsDismiss() {
       localStorage.setItem(
-        'news-last-updated',
+        'news-last-viewed-at',
         this.newsItems[0].date_modified
       );
     },
