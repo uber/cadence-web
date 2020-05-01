@@ -153,6 +153,34 @@ Scenario.prototype.withDomainDescription = function withDomainDescription(
   return this;
 };
 
+Scenario.prototype.withNewsFeed = function withNewsFeed() {
+  this.api.getOnce('/feed.json', {
+    version: 'https://jsonfeed.org/version/1',
+    title: '',
+    home_page_url: '/',
+    feed_url: '/feed.json',
+    items: [
+      {
+        id: '/_news/2019/05/05/writing-a-vuepress-theme-2/',
+        url: '/_news/2019/05/05/writing-a-vuepress-theme-2/',
+        title: 'Writing a VuePress theme',
+        summary: 'To write a theme, create a .vuepress/theme directory ...',
+        date_modified: '2019-05-06T00:00:00.000Z',
+      },
+      {
+        id: '/_news/2019/02/25/markdown-slot-3/',
+        url: '/_news/2019/02/25/markdown-slot-3/',
+        title: 'Markdown Slot',
+        summary:
+          'VuePress implements a content distribution API for Markdown...',
+        date_modified: '2019-02-26T00:00:00.000Z',
+      },
+    ],
+  });
+
+  return this;
+};
+
 Scenario.prototype.withWorkflows = function withWorkflows(
   status,
   query,

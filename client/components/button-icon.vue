@@ -1,24 +1,32 @@
 <template>
   <component
-    class="button-fill"
+    class="button-icon"
     :href="href"
     :is="tag"
     :to="to"
     @click="onClick"
   >
+    <span class="icon" :class="icon" :style="{ 'font-size': size }" />
     {{ label }}
   </component>
 </template>
 
 <script>
 export default {
-  name: 'button-fill',
+  name: 'button-icon',
   props: {
     href: {
       type: String,
     },
+    icon: {
+      type: String,
+    },
     label: {
       type: String,
+    },
+    size: {
+      type: String,
+      default: '14px',
     },
     tag: {
       type: String,
@@ -37,15 +45,19 @@ export default {
 </script>
 
 <style lang="stylus">
-.button-fill {
+.button-icon {
+  background-color: transparent;
+  border: none;
   cursor: pointer;
   display: inline-block;
-  font-size: 14px;
   font-weight: 600;
-  padding: 13px 21px;
+  line-height: 41px;
+  min-width: 44px;
   transition: all 400ms ease;
-  color: #fff !important;
-  background-color: #11939a;
   white-space: nowrap;
+
+  .icon {
+    vertical-align: middle;
+  }
 }
 </style>

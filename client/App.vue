@@ -1,7 +1,7 @@
 <script>
 import { version } from '../package.json';
 import logo from './assets/logo.svg';
-import { FeatureFlag, NotificationBar } from '~components';
+import { FeatureFlag, NewsModal, NotificationBar } from '~components';
 import {
   ENVIRONMENT_LIST,
   NOTIFICATION_TIMEOUT,
@@ -11,11 +11,13 @@ import {
   getEnvironment,
   getEnvironmentList,
   getEnvironmentLocation,
+  getLatestNewsItems,
 } from '~helpers';
 
 export default {
   components: {
     'feature-flag': FeatureFlag,
+    'news-modal': NewsModal,
     'notification-bar': NotificationBar,
   },
   data() {
@@ -33,6 +35,8 @@ export default {
           origin,
         }),
       },
+      newsLastUpdated: localStorage.getItem('news-last-viewed-at'),
+      newsItems: [],
       logo,
       notification: {
         message: '',
@@ -45,10 +49,23 @@ export default {
   beforeDestroy() {
     clearTimeout(this.notification.timeout);
   },
+  async mounted() {
+    await this.fetchLatestNewsItems();
+
+    if (this.newsItems.length) {
+      this.$modal.show('news-modal');
+    }
+  },
   methods: {
+    async fetchLatestNewsItems() {
+      const { newsLastUpdated } = this;
+      const response = await this.$http('/feed.json');
+
+      this.newsItems = getLatestNewsItems({ newsLastUpdated, response });
+    },
     globalClick(e) {
       // Code required for mocha tests to run correctly without infinite looping.
-      if (e.target.tagName === 'A') {
+      if (window.mocha !== undefined && e.target.tagName === 'A') {
         const href = e.target.getAttribute('href');
 
         if (
@@ -75,6 +92,12 @@ export default {
         pathname,
         search,
       });
+    },
+    onNewsDismiss() {
+      localStorage.setItem(
+        'news-last-viewed-at',
+        this.newsItems[0].date_modified
+      );
     },
     onNotification({ message, type = NOTIFICATION_TYPE_SUCCESS }) {
       this.notification.message = message;
@@ -151,6 +174,7 @@ export default {
     <router-view @onNotification="onNotification"></router-view>
     <modals-container />
     <v-dialog />
+    <news-modal :news-items="newsItems" @before-close="onNewsDismiss" />
   </main>
 </template>
 

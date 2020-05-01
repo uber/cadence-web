@@ -1,6 +1,9 @@
 describe('Help', () => {
   async function helpTest(mochaTest) {
-    const [testEl, scenario] = new Scenario(mochaTest).startingAt('/help').go();
+    const [testEl, scenario] = new Scenario(mochaTest)
+      .startingAt('/help')
+      .withNewsFeed()
+      .go();
 
     const helpEl = await testEl.waitUntilExists('section.help');
 
