@@ -34,7 +34,7 @@
           <flex-grid-item>
             <router-link
               class="see-more"
-              to="news"
+              :to="{ name: 'news' }"
               v-on:click.native="onLinkClick"
             >
               See more news . . .
