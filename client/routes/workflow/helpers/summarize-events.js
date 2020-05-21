@@ -6,6 +6,7 @@ import { shortName } from '~helpers';
 export const summarizeEvents = {
   ActivityTaskCancelRequested: d => ({ ID: d.activityId }),
   ActivityTaskCompleted: d => ({ result: d.result }),
+  ActivityTaskCanceled: d => ({}),
   ActivityTaskFailed: d => ({
     details: d.details,
     reason: d.reason,
