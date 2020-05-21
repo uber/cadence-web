@@ -36,6 +36,15 @@ async function listWorkflows(state, ctx) {
   })
 }
 
+
+router.get('/api/domains/:domain/authorization', async function (ctx) {
+  // override this route to perform authorization check on current user & domain they are accessing.
+  // const { domain } = ctx.params;
+  ctx.body = {
+    authorization: true,
+  };
+});
+
 router.get('/api/domains/:domain/workflows/open', listWorkflows.bind(null, 'open'))
 router.get('/api/domains/:domain/workflows/closed', listWorkflows.bind(null, 'closed'))
 

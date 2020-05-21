@@ -1,5 +1,9 @@
 [
   {
+    "key": "domain-authorization",
+    "value": true
+  },
+  {
     "key": "environment-select",
     "value": false
   },

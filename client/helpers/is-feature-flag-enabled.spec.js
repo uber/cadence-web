@@ -1,4 +1,4 @@
-import { isFlagEnabled, mapFlagsToHash } from './helpers';
+import { isFlagEnabled, mapFlagsToHash } from './is-feature-flag-enabled';
 
 describe('feature-flag helpers', () => {
   describe('isFlagEnabled', () => {

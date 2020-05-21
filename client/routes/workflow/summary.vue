@@ -2,14 +2,13 @@
   <section class="workflow-summary">
     <aside class="actions">
       <feature-flag name="workflow-terminate">
-        <a
-          href=""
-          class="terminate"
-          v-show="isWorkflowRunning"
+        <button-fill
+          color="secondary"
+          :disabled="isTerminateDisabled"
+          :disabled-label="terminateDisabledLabel"
+          label="TERMINATE"
           @click.prevent="$modal.show('confirm-termination')"
-        >
-          Terminate
-        </a>
+        />
       </feature-flag>
     </aside>
 
@@ -133,18 +132,22 @@
 <script>
 import moment from 'moment';
 import { TERMINATE_DEFAULT_ERROR_MESSAGE } from './constants';
+import { isTerminateDisabled, terminateDisabledLabel } from './helpers';
 import { NOTIFICATION_TYPE_ERROR, NOTIFICATION_TYPE_SUCCESS } from '~constants';
 import { getErrorMessage } from '~helpers';
-import { BarLoader, DataViewer, DetailList, FeatureFlag } from '~components';
+import { BarLoader, ButtonFill, DataViewer, DetailList, FeatureFlag } from '~components';
+import { isFeatureFlagEnabled } from '~helpers';
 
 export default {
   data() {
     return {
+      isAuthorized: false,
       terminationReason: undefined,
     };
   },
   props: [
     'baseAPIURL',
+    'domain',
     'input',
     'isWorkflowRunning',
     'parentWorkflowRoute',
@@ -156,11 +159,20 @@ export default {
   ],
   components: {
     'bar-loader': BarLoader,
+    'button-fill': ButtonFill,
     'data-viewer': DataViewer,
     'detail-list': DetailList,
     'feature-flag': FeatureFlag,
   },
   computed: {
+    isTerminateDisabled() {
+      const { isAuthorized, isWorkflowRunning } = this;
+      return isTerminateDisabled({ isAuthorized, isWorkflowRunning });
+    },
+    terminateDisabledLabel() {
+      const { isAuthorized, isWorkflowRunning } = this;
+      return terminateDisabledLabel({ isAuthorized, isWorkflowRunning });
+    },
     workflowCloseTime() {
       return this.workflow.workflowExecutionInfo.closeTime
         ? moment(this.workflow.workflowExecutionInfo.closeTime).format(
@@ -175,6 +187,26 @@ export default {
     },
   },
   methods: {
+    async fetchDomainAuthorization() {
+      const { domain } = this.domain;
+      try {
+        const response = await this.$http(`/api/domains/${domain}/authorization`);
+        return response.authorization;
+      } catch (error) {
+        this.$emit('onNotification', {
+          message: getErrorMessage(error),
+          type: NOTIFICATION_TYPE_ERROR,
+        });
+      };
+    },
+    async initAuthorization() {
+      if (isFeatureFlagEnabled('domain-authorization')) {
+        const authorization = await this.fetchDomainAuthorization();
+        this.isAuthorized = authorization;
+      } else {
+        this.isAuthorized = true;
+      }
+    },
     terminate() {
       this.$modal.hide('confirm-termination');
       this.$http
@@ -198,6 +230,9 @@ export default {
           }
         );
     },
+  },
+  mounted() {
+    this.initAuthorization();
   },
 };
 </script>
@@ -255,8 +290,6 @@ section.workflow-summary
   footer
     display flex
     justify-content space-between
-  a.terminate
-    action-button(uber-orange)
   a.cancel
     action-button()
 </style>

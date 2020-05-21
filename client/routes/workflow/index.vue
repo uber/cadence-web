@@ -31,6 +31,7 @@
     <router-view
       name="summary"
       :baseAPIURL="baseAPIURL"
+      :domain="domain"
       :input="summary.input"
       :isWorkflowRunning="summary.isWorkflowRunning"
       :parentWorkflowRoute="summary.parentWorkflowRoute"
