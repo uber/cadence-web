@@ -52,8 +52,7 @@ export default {
   },
   methods: {
     onClick(...args) {
-      const { disabled } = this;
-      if (!disabled) {
+      if (!this.disabled) {
         this.$emit('click', ...args);
       }
     },
