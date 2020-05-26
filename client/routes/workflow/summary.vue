@@ -169,7 +169,7 @@ export default {
       return !this.isWorkflowRunning;
     },
     terminateDisabledLabel() {
-      return !this.isWorkflowRunning && 'Workflow needs to be running to be able to terminate.';
+      return !this.isWorkflowRunning ? 'Workflow needs to be running to be able to terminate.' : '';
     },
     workflowCloseTime() {
       return this.workflow.workflowExecutionInfo.closeTime

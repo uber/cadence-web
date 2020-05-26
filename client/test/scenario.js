@@ -115,6 +115,17 @@ Scenario.prototype.withDomain = function withDomain(domain) {
   return this;
 };
 
+Scenario.prototype.withDomainAuthorization = function withDomainAuthorization(domain, authorization) {
+  this.api.getOnce(
+    `/api/domains/${domain}/authorization`,
+    {
+      authorization,
+    },
+  );
+
+  return this;
+};
+
 Scenario.prototype.withDomainDescription = function withDomainDescription(
   domain,
   domainDesc

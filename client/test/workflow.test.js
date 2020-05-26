@@ -13,6 +13,7 @@ describe('Workflow', () => {
     return [
       new Scenario(mochaTest)
         .withDomain('ci-test')
+        .withDomainAuthorization('ci-test', true)
         .withNewsFeed()
         .withWorkflow(
           extendedOptions.workflowId,
@@ -301,7 +302,7 @@ describe('Workflow', () => {
       it('should offer the user to terminate a running workflow, prompting the user for a termination reason', async function test() {
         const [summaryEl] = await summaryTest(this.test);
         const terminateEl = await summaryEl.waitUntilExists(
-          'aside.actions a.terminate'
+          'aside.actions button'
         );
 
         terminateEl.trigger('click');
@@ -321,7 +322,7 @@ describe('Workflow', () => {
       it('should terminate the workflow with the provided reason', async function test() {
         const [summaryEl, scenario] = await summaryTest(this.test);
 
-        (await summaryEl.waitUntilExists('aside.actions a.terminate')).trigger(
+        (await summaryEl.waitUntilExists('aside.actions button')).trigger(
           'click'
         );
 
@@ -344,7 +345,7 @@ describe('Workflow', () => {
       it('should terminate the workflow without a reason', async function test() {
         const [summaryEl, scenario] = await summaryTest(this.test);
 
-        (await summaryEl.waitUntilExists('aside.actions a.terminate')).trigger(
+        (await summaryEl.waitUntilExists('aside.actions button')).trigger(
           'click'
         );
 
@@ -363,7 +364,7 @@ describe('Workflow', () => {
       it('should allow the user to cancel the termination prompt, doing nothing', async function test() {
         const [summaryEl] = await summaryTest(this.test);
 
-        (await summaryEl.waitUntilExists('aside.actions a.terminate')).trigger(
+        (await summaryEl.waitUntilExists('aside.actions button')).trigger(
           'click'
         );
 
@@ -388,8 +389,7 @@ describe('Workflow', () => {
             .descendant('.workflow-status dd')
             .and.have.trimmed.text('completed')
         );
-        summaryEl.should.have.descendant('aside.actions a.terminate').and.not.be
-          .displayed;
+        summaryEl.should.have.descendant('aside.actions button.disabled');
       });
     });
   });
