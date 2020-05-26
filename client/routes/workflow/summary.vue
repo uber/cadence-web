@@ -131,10 +131,9 @@
 <script>
 import moment from 'moment';
 import { TERMINATE_DEFAULT_ERROR_MESSAGE } from './constants';
-import { isTerminateDisabled, terminateDisabledLabel } from './helpers';
 import { NOTIFICATION_TYPE_ERROR, NOTIFICATION_TYPE_SUCCESS } from '~constants';
 import { getErrorMessage } from '~helpers';
-import { BarLoader, ButtonFill, DataViewer, DetailList, FeatureFlag } from '~components';
+import { BarLoader, ButtonFill, DataViewer, DetailList } from '~components';
 import { isFeatureFlagEnabled } from '~helpers';
 
 export default {
@@ -161,7 +160,6 @@ export default {
     'button-fill': ButtonFill,
     'data-viewer': DataViewer,
     'detail-list': DetailList,
-    'feature-flag': FeatureFlag,
   },
   computed: {
     isTerminateShown() {
