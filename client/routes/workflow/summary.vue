@@ -188,7 +188,7 @@ export default {
   },
   methods: {
     async fetchDomainAuthorization() {
-      const { domain } = this.domain;
+      const { domain } = this;
       try {
         const response = await this.$http(`/api/domains/${domain}/authorization`);
         return response.authorization;

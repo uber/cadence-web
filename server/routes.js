@@ -37,12 +37,12 @@ async function listWorkflows(state, ctx) {
 }
 
 /**
- * Override this route with middleware to perform authorization check
+ * Override this route to perform authorization check
  * on current user & domain they are accessing.
  *
  * Example:
  *
- * router.use('/api/domains/:domain/authorization', () => {
+ * router.get('/api/domains/:domain/authorization', () => {
  *  const { domain } = ctx.params;
  *
  *  ctx.body = {
