@@ -47,10 +47,7 @@ export default {
   },
   computed: {
     disabledLabelText() {
-      const { disabled, disabledLabel } = this;
-      if (disabled) {
-        return disabledLabel;
-      }
+      return this.disabled && this.disabledLabel;
     }
   },
   methods: {
