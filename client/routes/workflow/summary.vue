@@ -1,15 +1,14 @@
 <template>
   <section class="workflow-summary">
     <aside class="actions">
-      <feature-flag name="workflow-terminate">
-        <button-fill
-          color="secondary"
-          :disabled="isTerminateDisabled"
-          :disabled-label="terminateDisabledLabel"
-          label="TERMINATE"
-          @click.prevent="$modal.show('confirm-termination')"
-        />
-      </feature-flag>
+      <button-fill
+        color="secondary"
+        :disabled="isTerminateDisabled"
+        :disabled-label="terminateDisabledLabel"
+        label="TERMINATE"
+        @click.prevent="$modal.show('confirm-termination')"
+        v-if="isTerminateShown"
+      />
     </aside>
 
     <modal name="confirm-termination">
@@ -165,13 +164,14 @@ export default {
     'feature-flag': FeatureFlag,
   },
   computed: {
+    isTerminateShown() {
+      return isFeatureFlagEnabled('workflow-terminate') && this.isAuthorized;
+    },
     isTerminateDisabled() {
-      const { isAuthorized, isWorkflowRunning } = this;
-      return isTerminateDisabled({ isAuthorized, isWorkflowRunning });
+      return !this.isWorkflowRunning;
     },
     terminateDisabledLabel() {
-      const { isAuthorized, isWorkflowRunning } = this;
-      return terminateDisabledLabel({ isAuthorized, isWorkflowRunning });
+      return !this.isWorkflowRunning && 'Workflow needs to be running to be able to terminate.';
     },
     workflowCloseTime() {
       return this.workflow.workflowExecutionInfo.closeTime
