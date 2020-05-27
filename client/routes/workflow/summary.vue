@@ -15,16 +15,17 @@
       <h3>Are you sure you want to terminate this workflow?</h3>
       <input v-model="terminationReason" placeholder="Reason" />
       <footer>
-        <a href="#" class="terminate" @click.prevent="terminate">
-          Terminate
-        </a>
-        <a
-          href="#"
-          class="cancel"
+        <button-fill
+          color="secondary"
+          label="TERMINATE"
+          @click.prevent="terminate"
+        />
+
+        <button-fill
+          color="primary"
+          label="CANCEL"
           @click.prevent="$modal.hide('confirm-termination')"
-        >
-          Cancel
-        </a>
+        />
       </footer>
     </modal>
 
@@ -288,6 +289,4 @@ section.workflow-summary
   footer
     display flex
     justify-content space-between
-  a.cancel
-    action-button()
 </style>
