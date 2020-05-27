@@ -18,12 +18,14 @@
         <button-fill
           color="secondary"
           label="TERMINATE"
+          name="button-terminate"
           @click.prevent="terminate"
         />
 
         <button-fill
           color="primary"
           label="CANCEL"
+          name="button-cancel"
           @click.prevent="$modal.hide('confirm-termination')"
         />
       </footer>

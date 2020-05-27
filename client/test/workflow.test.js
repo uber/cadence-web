@@ -314,8 +314,8 @@ describe('Workflow', () => {
           'Are you sure you want to terminate this workflow?'
         );
         confirmTerminateEl.should
-          .contain('a.terminate')
-          .and.contain('a.cancel')
+          .contain('button[name="button-terminate"]')
+          .and.contain('button[name="button-cancel"]')
           .and.contain('input[placeholder="Reason"]');
       });
 
@@ -336,7 +336,7 @@ describe('Workflow', () => {
         await Promise.delay(10);
 
         scenario.withWorkflowTermination('example termination');
-        confirmTerminateEl.querySelector('a.terminate').trigger('click');
+        confirmTerminateEl.querySelector('button[name="button-terminate"]').trigger('click');
         await retry(() =>
           summaryEl.should.not.contain('[data-modal="confirm-termination"]')
         );
@@ -350,7 +350,7 @@ describe('Workflow', () => {
         );
 
         const terminateEl = await summaryEl.waitUntilExists(
-          '[data-modal="confirm-termination"] a.terminate'
+          '[data-modal="confirm-termination"] button[name="button-terminate"]'
         );
 
         scenario.withWorkflowTermination();
@@ -369,7 +369,7 @@ describe('Workflow', () => {
         );
 
         const cancelDialog = await summaryEl.waitUntilExists(
-          '[data-modal="confirm-termination"] a.cancel'
+          '[data-modal="confirm-termination"] button[name="button-cancel"]'
         );
 
         cancelDialog.trigger('click');
