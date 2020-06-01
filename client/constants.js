@@ -24,6 +24,10 @@ export const ENVIRONMENT_LIST = [
   // },
 ];
 
+export const LOCAL_STORAGE_NEWS_LAST_VIEWED_AT = 'news-last-viewed-at';
+export const LOCAL_STORAGE_SETTINGS_TIME_FORMAT = 'settings-time-format';
+export const LOCAL_STORAGE_SETTINGS_TIMEZONE = 'settings-timezone';
+
 export const MAXIMUM_JSON_CHARACTER_LIMIT = 5000;
 export const MAXIMUM_JSON_MESSAGE =
   '\n ... to see more open full screen mode from top right arrow.';
@@ -34,3 +38,8 @@ export const NOTIFICATION_TYPE_ERROR_MESSAGE_DEFAULT =
 export const NOTIFICATION_TYPE_SUCCESS = 'success';
 export const NOTIFICATION_TYPE_WARNING = 'warning';
 export const NOTIFICATION_TIMEOUT = 5000;
+
+export const SETTINGS_TIME_FORMAT_12 = 'TIME_FORMAT_12';
+export const SETTINGS_TIME_FORMAT_24 = 'TIME_FORMAT_24';
+export const SETTINGS_TIMEZONE_LOCAL = 'TIMEZONE_LOCAL';
+export const SETTINGS_TIMEZONE_UTC = 'TIMEZONE_UTC';

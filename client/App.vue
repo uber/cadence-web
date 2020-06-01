@@ -1,11 +1,16 @@
 <script>
 import { version } from '../package.json';
 import logo from './assets/logo.svg';
-import { FeatureFlag, NewsModal, NotificationBar } from '~components';
+import { ButtonIcon, FeatureFlag, NewsModal, NotificationBar, SettingsModal } from '~components';
 import {
   ENVIRONMENT_LIST,
+  LOCAL_STORAGE_NEWS_LAST_VIEWED_AT,
+  LOCAL_STORAGE_SETTINGS_TIME_FORMAT,
+  LOCAL_STORAGE_SETTINGS_TIMEZONE,
   NOTIFICATION_TIMEOUT,
   NOTIFICATION_TYPE_SUCCESS,
+  SETTINGS_TIME_FORMAT_12,
+  SETTINGS_TIMEZONE_LOCAL,
 } from '~constants';
 import {
   getEnvironment,
@@ -16,9 +21,11 @@ import {
 
 export default {
   components: {
+    'button-icon': ButtonIcon,
     'feature-flag': FeatureFlag,
     'news-modal': NewsModal,
     'notification-bar': NotificationBar,
+    'settings-modal': SettingsModal,
   },
   data() {
     const { origin } = window.location;
@@ -35,7 +42,7 @@ export default {
           origin,
         }),
       },
-      newsLastUpdated: localStorage.getItem('news-last-viewed-at'),
+      newsLastUpdated: localStorage.getItem(LOCAL_STORAGE_NEWS_LAST_VIEWED_AT),
       newsItems: [],
       logo,
       notification: {
@@ -43,6 +50,11 @@ export default {
         show: false,
         type: '',
         timeout: undefined,
+      },
+      settings: {
+        show: false,
+        timeFormat: localStorage.getItem(LOCAL_STORAGE_SETTINGS_TIME_FORMAT) || SETTINGS_TIME_FORMAT_12,
+        timezone: localStorage.getItem(LOCAL_STORAGE_SETTINGS_TIMEZONE) || SETTINGS_TIMEZONE_LOCAL,
       },
     };
   },
@@ -95,7 +107,7 @@ export default {
     },
     onNewsDismiss() {
       localStorage.setItem(
-        'news-last-viewed-at',
+        LOCAL_STORAGE_NEWS_LAST_VIEWED_AT,
         this.newsItems[0].date_modified
       );
     },
@@ -106,6 +118,12 @@ export default {
     },
     onNotificationClose() {
       this.notification.show = false;
+    },
+    onSettingsChange({  }) {
+
+    },
+    onSettingsClick() {
+      this.settings.show = true;
     },
   },
   watch: {
@@ -137,39 +155,55 @@ export default {
       :type="notification.type"
     />
     <header class="top-bar">
-      <a href="/domains" class="logo">
-        <div v-html="logo"></div>
-        <span class="version">{{ version }}</span>
-      </a>
+      <flex-grid align-items="center">
+        <flex-grid-item>
+          <a href="/domains" class="logo">
+            <div v-html="logo"></div>
+            <span class="version">{{ version }}</span>
+          </a>
+        <flex-grid-item>
 
-      <feature-flag name="environment-select">
-        <v-select
-          class="environment-select"
-          :on-change="onEnvironmentSelectChange"
-          :options="environment.list"
-          :searchable="false"
-          :value="environment.value"
-        />
-      </feature-flag>
+        <feature-flag name="environment-select">
+          <flex-grid-item>
+            <v-select
+              class="environment-select"
+              :on-change="onEnvironmentSelectChange"
+              :options="environment.list"
+              :searchable="false"
+              :value="environment.value"
+            />
+          </flex-grid-item>
+        </feature-flag>
 
-      <div class="domain" v-if="$route.params.domain">
-        <a
-          class="workflows"
-          :class="{
-            'router-link-active':
-              $route.path === `/domains/${$route.params.domain}/workflows`,
-          }"
-          :href="`/domains/${$route.params.domain}/workflows`"
-        >
-          {{ $route.params.domain }}
-        </a>
-      </div>
-      <div class="detail-view workflow-id" v-if="$route.params.workflowId">
-        <span>{{ $route.params.workflowId }}</span>
-      </div>
-      <div class="detail-view task-list" v-if="$route.params.taskList">
-        <span>{{ $route.params.taskList }}</span>
-      </div>
+        <flex-grid-item v-if="$route.params.domain">
+          <a
+            class="workflows"
+            :class="{
+              'router-link-active':
+                $route.path === `/domains/${$route.params.domain}/workflows`,
+            }"
+            :href="`/domains/${$route.params.domain}/workflows`"
+          >
+            {{ $route.params.domain }}
+          </a>
+        </flex-grid-item>
+
+        <flex-grid-item v-if="$route.params.workflowId">
+          <span>{{ $route.params.workflowId }}</span>
+        </flex-grid-item>
+
+        <flex-grid-item v-if="$route.params.taskList">
+          <span>{{ $route.params.taskList }}</span>
+        </flex-grid-item>
+
+        <flex-grid-item>
+          <button-icon
+            icon="icon_delete-thin"
+            size="30px"
+            @click="onSettingsClick"
+          />
+        </flex-grid-item>
+      </flex-grid>
     </header>
     <router-view @onNotification="onNotification"></router-view>
     <modals-container />
