@@ -7,10 +7,16 @@
         label="Domains"
         :to="{ name: 'domain-list' }"
       />
+      <navigation-link
+        label="News"
+        icon="icon_messages"
+        :to="{ name: 'news' }"
+      />
       <navigation-link label="Help" icon="icon_help" :to="{ name: 'help' }" />
     </navigation-bar>
-    <router-view name="domain-list" />
-    <router-view name="help" />
+    <router-view name="domain-list" @onNotification="onNotification" />
+    <router-view name="help" @onNotification="onNotification" />
+    <router-view name="news" @onNotification="onNotification" />
   </section>
 </template>
 
@@ -21,6 +27,11 @@ export default {
   components: {
     'navigation-bar': NavigationBar,
     'navigation-link': NavigationLink,
+  },
+  methods: {
+    onNotification(event) {
+      this.$emit('onNotification', event);
+    },
   },
 };
 </script>

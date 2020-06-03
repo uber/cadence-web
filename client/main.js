@@ -18,6 +18,7 @@ import DomainList from './routes/domain-list';
 import DomainSettings from './routes/domain/domain-settings';
 import Help from './routes/help';
 import History from './routes/workflow/history';
+import News from './routes/news';
 import Query from './routes/workflow/query';
 import Root from './routes';
 import StackTrace from './routes/workflow/stack-trace';
@@ -51,6 +52,21 @@ const routeOpts = {
           path: '/help',
           components: {
             help: Help,
+          },
+        },
+        {
+          name: 'news',
+          path: '/news/:year?/:month?/:date?/:article?',
+          components: {
+            news: News,
+          },
+          props: {
+            news: ({ params: { article, date, month, year } }) => ({
+              article,
+              date,
+              month,
+              year,
+            }),
           },
         },
       ],

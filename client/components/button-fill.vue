@@ -1,9 +1,16 @@
 <template>
   <component
+    :aria-disabled="disabled"
     class="button-fill"
+    :class="{
+      disabled: disabled,
+      [color]: color,
+    }"
+    :disabled="disabled"
     :href="href"
     :is="tag"
     :to="to"
+    :title="disabledLabelText"
     @click="onClick"
   >
     {{ label }}
@@ -14,6 +21,16 @@
 export default {
   name: 'button-fill',
   props: {
+    color: {
+      type: String,
+      default: 'primary',
+    },
+    disabled: {
+      type: Boolean,
+    },
+    disabledLabel: {
+      type: String
+    },
     href: {
       type: String,
     },
@@ -28,9 +45,16 @@ export default {
       type: Object,
     },
   },
+  computed: {
+    disabledLabelText() {
+      return this.disabled ? this.disabledLabel : '';
+    }
+  },
   methods: {
     onClick(...args) {
-      this.$emit('click', ...args);
+      if (!this.disabled) {
+        this.$emit('click', ...args);
+      }
     },
   },
 };
@@ -38,13 +62,35 @@ export default {
 
 <style lang="stylus">
 .button-fill {
+  border: none;
   cursor: pointer;
   display: inline-block;
+  font-size: 14px;
+  font-weight: 600;
   padding: 13px 21px;
   transition: all 400ms ease;
-  font-weight: 600;
   color: #fff !important;
-  background-color: #11939a;
   white-space: nowrap;
+}
+
+.button-fill.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.button-fill.primary {
+  background-color: #11939a;
+
+  &:hover {
+    background-color: #0e767b;
+  }
+}
+
+.button-fill.secondary {
+  background-color: #ca3b27;
+
+  &:hover {
+    background-color: #a22f1f;
+  }
 }
 </style>

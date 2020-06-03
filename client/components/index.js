@@ -1,5 +1,6 @@
 export { default as BarLoader } from './bar-loader';
 export { default as ButtonFill } from './button-fill';
+export { default as ButtonIcon } from './button-icon';
 export { default as Copy } from './copy';
 export { default as DataViewer } from './data-viewer';
 export { default as DetailList } from './detail-list';
@@ -13,6 +14,7 @@ export { default as LoadingMessage } from './loading-message';
 export { default as LoadingSpinner } from './loading-spinner';
 export { default as NavigationBar } from './navigation-bar';
 export { default as NavigationLink } from './navigation-link';
+export { default as NewsModal } from './news-modal';
 export { default as NoResults } from './no-results';
 export { default as NotificationBar } from './notification-bar';
 export { default as TextInput } from './text-input';

@@ -91,7 +91,11 @@ async function makeChannel(client) {
 
   const cadenceChannel = client.makeSubChannel({
     serviceName: 'cadence-frontend',
-    peers: ipPeers
+    peers: ipPeers,
+    requestDefaults: {
+      hasNoParent: true,
+      headers: { 'as': 'raw', 'cn': 'cadence-web' },
+    }
   });
 
   const tchannelAsThrift = TChannelAsThrift({
@@ -112,10 +116,6 @@ module.exports = async function(ctx, next) {
       try {
         channel.request({
           serviceName: process.env.CADENCE_TCHANNEL_SERVICE || 'cadence-frontend',
-          headers: {
-            cn: 'cadence-web',
-          },
-          hasNoParent: true,
           timeout: 1000 * 60 * 5,
           retryFlags: { onConnectionError: true },
           retryLimit: Number(process.env.CADENCE_TCHANNEL_RETRY_LIMIT || 3)
