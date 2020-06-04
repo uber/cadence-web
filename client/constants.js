@@ -25,8 +25,10 @@ export const ENVIRONMENT_LIST = [
 ];
 
 export const LOCAL_STORAGE_NEWS_LAST_VIEWED_AT = 'news-last-viewed-at';
-export const LOCAL_STORAGE_SETTINGS_TIME_FORMAT = 'settings-time-format';
-export const LOCAL_STORAGE_SETTINGS_TIMEZONE = 'settings-timezone';
+export const LOCAL_STORAGE_SETTINGS = {
+  timeFormat: 'settings-time-format',
+  timezone: 'settings-timezone',
+}
 
 export const MAXIMUM_JSON_CHARACTER_LIMIT = 5000;
 export const MAXIMUM_JSON_MESSAGE =

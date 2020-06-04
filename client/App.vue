@@ -1,12 +1,11 @@
 <script>
 import { version } from '../package.json';
 import logo from './assets/logo.svg';
-import { ButtonIcon, FeatureFlag, NewsModal, NotificationBar, SettingsModal } from '~components';
+import { ButtonIcon, FeatureFlag, FlexGrid, FlexGridItem, NewsModal, NotificationBar, SettingsModal } from '~components';
 import {
   ENVIRONMENT_LIST,
   LOCAL_STORAGE_NEWS_LAST_VIEWED_AT,
-  LOCAL_STORAGE_SETTINGS_TIME_FORMAT,
-  LOCAL_STORAGE_SETTINGS_TIMEZONE,
+  LOCAL_STORAGE_SETTINGS,
   NOTIFICATION_TIMEOUT,
   NOTIFICATION_TYPE_SUCCESS,
   SETTINGS_TIME_FORMAT_12,
@@ -23,6 +22,8 @@ export default {
   components: {
     'button-icon': ButtonIcon,
     'feature-flag': FeatureFlag,
+    'flex-grid': FlexGrid,
+    'flex-grid-item': FlexGridItem,
     'news-modal': NewsModal,
     'notification-bar': NotificationBar,
     'settings-modal': SettingsModal,
@@ -53,8 +54,8 @@ export default {
       },
       settings: {
         show: false,
-        timeFormat: localStorage.getItem(LOCAL_STORAGE_SETTINGS_TIME_FORMAT) || SETTINGS_TIME_FORMAT_12,
-        timezone: localStorage.getItem(LOCAL_STORAGE_SETTINGS_TIMEZONE) || SETTINGS_TIMEZONE_LOCAL,
+        timeFormat: localStorage.getItem(LOCAL_STORAGE_SETTINGS.timeFormat) || SETTINGS_TIME_FORMAT_12,
+        timezone: localStorage.getItem(LOCAL_STORAGE_SETTINGS.timezone) || SETTINGS_TIMEZONE_LOCAL,
       },
     };
   },
@@ -119,11 +120,20 @@ export default {
     onNotificationClose() {
       this.notification.show = false;
     },
-    onSettingsChange({  }) {
-
+    onSettingsChange(values) {
+      for(key in values) {
+        const value = values[key];
+        console.log('updating localstorage:', LOCAL_STORAGE_SETTINGS[key], value);
+        localStorage.setItem(LOCAL_STORAGE_SETTINGS[key], value);
+        console.log('updating settings:', LOCAL_STORAGE_SETTINGS[key], value);
+        this.settings[key] = value;
+      }
     },
     onSettingsClick() {
       this.settings.show = true;
+    },
+    onSettingsClose() {
+      this.settings.show = false;
     },
   },
   watch: {
@@ -155,13 +165,13 @@ export default {
       :type="notification.type"
     />
     <header class="top-bar">
-      <flex-grid align-items="center">
+      <flex-grid align-items="center" width="100%">
         <flex-grid-item>
           <a href="/domains" class="logo">
             <div v-html="logo"></div>
             <span class="version">{{ version }}</span>
           </a>
-        <flex-grid-item>
+        </flex-grid-item>
 
         <feature-flag name="environment-select">
           <flex-grid-item>
@@ -175,7 +185,7 @@ export default {
           </flex-grid-item>
         </feature-flag>
 
-        <flex-grid-item v-if="$route.params.domain">
+        <flex-grid-item v-if="$route.params.domain" margin="15px">
           <a
             class="workflows"
             :class="{
@@ -196,10 +206,13 @@ export default {
           <span>{{ $route.params.taskList }}</span>
         </flex-grid-item>
 
-        <flex-grid-item>
+        <flex-grid-item grow="1">
           <button-icon
-            icon="icon_delete-thin"
+            color="primary"
+            icon="icon_settings"
+            label="SETTINGS"
             size="30px"
+            style="float: right"
             @click="onSettingsClick"
           />
         </flex-grid-item>
@@ -209,6 +222,13 @@ export default {
     <modals-container />
     <v-dialog />
     <news-modal :news-items="newsItems" @before-close="onNewsDismiss" />
+    <settings-modal
+      :show="settings.show"
+      :time-format="settings.timeFormat"
+      :timezone="settings.timezone"
+      @onClose="onSettingsClose"
+      @onChange="onSettingsChange"
+    />
   </main>
 </template>
 
@@ -258,8 +278,7 @@ header.top-bar
   spacing = 1.3em
   nav-label-color = uber-white-40
   nav-label-font-size = 11px
-  & > div
-    margin-right spacing
+
   div.domain
     flex 0 0 auto
     &::before

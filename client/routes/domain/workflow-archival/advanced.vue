@@ -2,7 +2,7 @@
   <section class="workflow-archival-basic">
     <header>
       <flex-grid>
-        <flex-grid-item>
+        <flex-grid-item grow="1">
           <text-input
             label="Query"
             name="queryString"

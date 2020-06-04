@@ -6,8 +6,8 @@
     :to="to"
     @click="onClick"
   >
-    <span class="icon" :class="icon" :style="{ 'font-size': size }" />
-    {{ label }}
+    <span class="icon" :class="{ [icon]: icon, [color]: color }" :style="{ 'font-size': size }" />
+    <span class="label" :class="{ [color]: color }">{{ label }}</span>
   </component>
 </template>
 
@@ -15,6 +15,10 @@
 export default {
   name: 'button-icon',
   props: {
+    color: {
+      type: String,
+      validator: (value) => ['black', 'white', 'primary', 'secondary'].indexOf(value) !== -1,
+    },
     href: {
       type: String,
     },
@@ -50,14 +54,36 @@ export default {
   border: none;
   cursor: pointer;
   display: inline-block;
-  font-weight: 600;
-  line-height: 41px;
+  font-weight: 500;
   min-width: 44px;
+  padding: 10px;
   transition: all 400ms ease;
   white-space: nowrap;
 
   .icon {
     vertical-align: middle;
+  }
+
+  .label {
+    margin-left: 5px;
+  }
+
+  // color palette
+
+  .black {
+    color: #000;
+  }
+
+  .white {
+    color: #fff;
+  }
+
+  .primary {
+    color: #11939a;
+  }
+
+  .secondary {
+    color: #ca3b27;
   }
 }
 </style>

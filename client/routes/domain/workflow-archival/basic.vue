@@ -2,7 +2,7 @@
   <section class="workflow-archival-basic">
     <header>
       <flex-grid>
-        <flex-grid-item>
+        <flex-grid-item grow="1">
           <text-input
             label="Workflow ID"
             name="workflowId"
@@ -11,7 +11,7 @@
             @input="onTextChange"
           />
         </flex-grid-item>
-        <flex-grid-item>
+        <flex-grid-item grow="1">
           <text-input
             label="Workflow Name"
             name="workflowName"

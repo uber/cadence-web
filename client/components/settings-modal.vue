@@ -3,7 +3,7 @@
     <div class="settings-modal">
       <div class="header">
         <flex-grid align-items="center">
-          <flex-grid-item>
+          <flex-grid-item grow="1">
             <h2>Settings</h2>
           </flex-grid-item>
           <flex-grid-item width="40px">
@@ -59,7 +59,7 @@ export default {
       // TODO
     },
     onSubmitClick() {
-      // TODO
+      // TODO - emit onChange
     },
   },
   components: {
