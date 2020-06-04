@@ -9,7 +9,9 @@ import {
   NOTIFICATION_TIMEOUT,
   NOTIFICATION_TYPE_SUCCESS,
   SETTINGS_TIME_FORMAT_12,
+  SETTINGS_TIME_FORMAT_OPTIONS,
   SETTINGS_TIMEZONE_LOCAL,
+  SETTINGS_TIMEZONE_OPTIONS,
 } from '~constants';
 import {
   getEnvironment,
@@ -53,9 +55,10 @@ export default {
         timeout: undefined,
       },
       settings: {
-        show: false,
         timeFormat: localStorage.getItem(LOCAL_STORAGE_SETTINGS.timeFormat) || SETTINGS_TIME_FORMAT_12,
+        timeFormatOptions: SETTINGS_TIME_FORMAT_OPTIONS,
         timezone: localStorage.getItem(LOCAL_STORAGE_SETTINGS.timezone) || SETTINGS_TIMEZONE_LOCAL,
+        timezoneOptions: SETTINGS_TIMEZONE_OPTIONS,
       },
     };
   },
@@ -121,19 +124,14 @@ export default {
       this.notification.show = false;
     },
     onSettingsChange(values) {
-      for(key in values) {
+      for(const key in values) {
         const value = values[key];
-        console.log('updating localstorage:', LOCAL_STORAGE_SETTINGS[key], value);
         localStorage.setItem(LOCAL_STORAGE_SETTINGS[key], value);
-        console.log('updating settings:', LOCAL_STORAGE_SETTINGS[key], value);
         this.settings[key] = value;
       }
     },
     onSettingsClick() {
-      this.settings.show = true;
-    },
-    onSettingsClose() {
-      this.settings.show = false;
+      this.$modal.show('settings-modal');
     },
   },
   watch: {
@@ -223,10 +221,10 @@ export default {
     <v-dialog />
     <news-modal :news-items="newsItems" @before-close="onNewsDismiss" />
     <settings-modal
-      :show="settings.show"
       :time-format="settings.timeFormat"
+      :time-format-options="settings.timeFormatOptions"
       :timezone="settings.timezone"
-      @onClose="onSettingsClose"
+      :timezone-options="settings.timezoneOptions"
       @onChange="onSettingsChange"
     />
   </main>

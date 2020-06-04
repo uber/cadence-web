@@ -43,5 +43,14 @@ export const NOTIFICATION_TIMEOUT = 5000;
 
 export const SETTINGS_TIME_FORMAT_12 = 'TIME_FORMAT_12';
 export const SETTINGS_TIME_FORMAT_24 = 'TIME_FORMAT_24';
+export const SETTINGS_TIME_FORMAT_OPTIONS = [
+  { label: '12 hour', value: SETTINGS_TIME_FORMAT_12 },
+  { label: '24 hour', value: SETTINGS_TIME_FORMAT_24 },
+];
+
 export const SETTINGS_TIMEZONE_LOCAL = 'TIMEZONE_LOCAL';
 export const SETTINGS_TIMEZONE_UTC = 'TIMEZONE_UTC';
+export const SETTINGS_TIMEZONE_OPTIONS = [
+  { label: 'Local', value: SETTINGS_TIMEZONE_LOCAL },
+  { label: 'UTC', value: SETTINGS_TIMEZONE_UTC },
+];

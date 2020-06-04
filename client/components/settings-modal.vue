@@ -1,5 +1,5 @@
 <template>
-  <modal name="settings-modal" @before-close="onBeforeClose" :show="show">
+  <modal name="settings-modal" @before-close="onBeforeClose">
     <div class="settings-modal">
       <div class="header">
         <flex-grid align-items="center">
@@ -10,25 +10,47 @@
             <button-icon
               icon="icon_delete-thin"
               size="30px"
-              @click="onDismissClick"
+              @click="onCloseClick"
             />
           </flex-grid-item>
         </flex-grid>
       </div>
       <div class="content">
-        <h2>Time options</h2>
+        <h3>Time options</h3>
+        <div class="content-item">
+          <label for="settingsTimeFormat">
+            Time format
+          </label>
+          <v-select
+            input-id="settingsTimeFormat"
+            :on-change="onTimeFormatChange"
+            :options="timeFormatOptions"
+            :value="modalTimeFormat"
+          />
+        </div>
+        <div class="content-item">
+          <label for="settingsTimezone">
+            Timezone
+          </label>
+          <v-select
+            input-id="settingsTimezone"
+            :on-change="onTimezoneChange"
+            :options="timezoneOptions"
+            :value="modalTimezone"
+          />
+        </div>
       </div>
       <div class="footer">
-        <flex-grid align-items="center">
+        <flex-grid align-items="center" justify-content="flex-end">
+          <flex-grid-item width="102px">
+            <button-fill color="tertiary" label="CANCEL" @click="onCloseClick" />
+          </flex-grid-item>
           <flex-grid-item>
             <button-fill
-              :disabled="applyDisabled"
+              :disabled="!isSettingsChanged"
               label="APPLY"
               @click="onSubmitClick"
             />
-          </flex-grid-item>
-          <flex-grid-item width="102px">
-            <button-fill label="CANCEL" @click="onDismissClick" />
           </flex-grid-item>
         </flex-grid>
       </div>
@@ -40,26 +62,75 @@
 import { ButtonFill, ButtonIcon, FlexGrid, FlexGridItem } from '~components';
 
 export default {
-  props: ['show', 'timeFormat', 'timezone'],
+  props: {
+    timeFormat: {
+      type: String,
+    },
+    timeFormatOptions: {
+      type: Array,
+    },
+    timezone: {
+      type: String,
+    },
+    timezoneOptions: {
+      type: Array,
+    },
+  },
+  data() {
+    return {
+      modalTimeFormat: this.getModalTimeFormat(this.timeFormat),
+      modalTimezone: this.getModalTimezone(this.timezone),
+    };
+  },
   computed: {
-    applyDisabled() {
-      // TODO - figure out if data has changed, then enable apply button
-      return false;
+    isSettingsChanged() {
+      return this.isTimeFormatChanged || this.isTimezoneChanged;
+    },
+    isTimeFormatChanged() {
+      return this.modalTimeFormat.value !== this.timeFormat;
+    },
+    isTimezoneChanged() {
+      return this.modalTimezone.value !== this.timezone;
     },
   },
   methods: {
-    onDismissClick() {
+    close() {
       this.$modal.hide('settings-modal');
     },
-    onBeforeClose() {
-      this.$emit('before-close');
+    getModalTimeFormat(timeFormat) {
+      return this.timeFormatOptions.find(({ value }) => timeFormat === value);
     },
-    onShow() {
-      // copy over data
-      // TODO
+    getModalTimezone(timezone) {
+      return this.timezoneOptions.find(({ value }) => timezone === value);
+    },
+    onCloseClick() {
+      this.close();
+    },
+    onBeforeClose() {
+      this.resetModalValues();
+    },
+    onTimeFormatChange(timeFormat) {
+      this.modalTimeFormat = timeFormat;
+    },
+    onTimezoneChange(timezone) {
+      this.modalTimezone = timezone;
     },
     onSubmitClick() {
-      // TODO - emit onChange
+      this.$emit('onChange', {
+        ...(this.isTimeFormatChanged && { timeFormat: this.modalTimeFormat.value }),
+        ...(this.isTimezoneChanged && { timezone: this.modalTimezone.value }),
+      });
+      this.close();
+    },
+    resetModalValues() {
+      this.setModalTimeFormat(this.timeFormat);
+      this.setModalTimezone(this.timezone);
+    },
+    setModalTimeFormat(timeFormat) {
+      this.modalTimeFormat = this.getModalTimeFormat(timeFormat);
+    },
+    setModalTimezone(timezone) {
+      this.modalTimezone = this.getModalTimezone(timezone);
     },
   },
   components: {
@@ -69,10 +140,11 @@ export default {
     'flex-grid-item': FlexGridItem,
   },
   watch: {
-    show(show) {
-      if (show) {
-        this.onShow();
-      }
+    timeFormat(timeFormat) {
+      this.setModalTimeFormat(timeFormat);
+    },
+    timezone(timezone) {
+      this.setModalTimezone(timezone);
     },
   },
 };
@@ -81,12 +153,22 @@ export default {
 <style lang="stylus">
 .settings-modal {
   .content {
-    max-height: 400px
+    min-height: 280px;
+    min-width: 400px;
     overflow-y: auto;
+  }
+
+  .content-item {
+    margin: 15px 0;
   }
 
   .footer {
     padding-top: 15px;
+  }
+
+  label {
+    display: inline-block;
+    margin-bottom: 5px;
   }
 
   .header {

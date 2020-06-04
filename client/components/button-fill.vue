@@ -24,6 +24,7 @@ export default {
     color: {
       type: String,
       default: 'primary',
+      validator: (value) => ['primary', 'secondary', 'tertiary'].indexOf(value) !== -1,
     },
     disabled: {
       type: Boolean,
@@ -71,26 +72,35 @@ export default {
   transition: all 400ms ease;
   color: #fff !important;
   white-space: nowrap;
-}
 
-.button-fill.disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.button-fill.primary {
-  background-color: #11939a;
-
-  &:hover {
-    background-color: #0e767b;
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
-}
 
-.button-fill.secondary {
-  background-color: #ca3b27;
+  &.primary {
+    background-color: #11939a;
 
-  &:hover {
-    background-color: #a22f1f;
+    &:hover {
+      background-color: #0e767b;
+    }
+  }
+
+  &.secondary {
+    background-color: #ca3b27;
+
+    &:hover {
+      background-color: #a22f1f;
+    }
+  }
+
+  &.tertiary {
+    background-color: transparent;
+    color: #11939a !important;
+
+    &:hover {
+      color: #0e767b  !important;
+    }
   }
 }
 </style>
