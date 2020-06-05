@@ -33,13 +33,13 @@ export const getTimeFormat = (timeFormat) => {
 
 export const getDateTimeFormat = (dateFormat, timeFormat) => `${getDateFormat(dateFormat)} ${getTimeFormat(timeFormat)}`;
 
+export const getMomentFn = (timezone) => timezone === TIMEZONE_UTC ?
+  moment.utc :
+  moment;
+
 export default ({ date, dateFormat, timeFormat, timezone }) => {
   const dateTimeFormat = getDateTimeFormat(dateFormat, timeFormat);
+  const momentFn = getMomentFn(timezone);
 
-  // TODO
-  // if (timezone === utc) {
-
-  // }
-
-  return moment(date).format(dateTimeFormat);
+  return momentFn(date).format(dateTimeFormat);
 };
