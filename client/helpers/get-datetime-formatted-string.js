@@ -24,18 +24,24 @@ export const getDateFormat = (dateFormat) => {
 export const getTimeFormat = (timeFormat) => {
   switch (timeFormat) {
     case TIME_FORMAT_24:
-      return 'HH:mm';
+      return 'HH:mm:ss';
     case TIME_FORMAT_12:
     default:
-      return 'h:mm A';
+      return 'h:mm:ss A';
   }
 };
 
 export const getDateTimeFormat = (dateFormat, timeFormat) => `${getDateFormat(dateFormat)} ${getTimeFormat(timeFormat)}`;
 
-export const getMomentFn = (timezone) => timezone === TIMEZONE_UTC ?
-  moment.utc :
-  moment;
+export const getMomentFn = (timezone) => {
+  switch (timezone) {
+    case TIMEZONE_UTC:
+      return moment.utc;
+    case TIMEZONE_LOCAL:
+    default:
+      return moment;
+  };
+}
 
 export default ({ date, dateFormat, timeFormat, timezone }) => {
   const dateTimeFormat = getDateTimeFormat(dateFormat, timeFormat);

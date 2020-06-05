@@ -31,11 +31,14 @@
     <router-view
       name="summary"
       :baseAPIURL="baseAPIURL"
+      :date-format="dateFormat"
       :domain="domain"
       :input="summary.input"
       :isWorkflowRunning="summary.isWorkflowRunning"
       :parentWorkflowRoute="summary.parentWorkflowRoute"
       :result="summary.result"
+      :time-format="timeFormat"
+      :timezone="timezone"
       :wfStatus="summary.wfStatus"
       :workflow="summary.workflow"
       @onNotification="onNotification"
@@ -101,7 +104,14 @@ export default {
       unwatch: [],
     };
   },
-  props: ['domain', 'runId', 'workflowId'],
+  props: [
+    'dateFormat',
+    'domain',
+    'runId',
+    'timeFormat',
+    'timezone',
+    'workflowId'
+  ],
   created() {
     this.unwatch.push(
       this.$watch('baseAPIURL', this.onBaseApiUrlChange, { immediate: true })

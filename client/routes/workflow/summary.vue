@@ -137,7 +137,7 @@ import { TERMINATE_DEFAULT_ERROR_MESSAGE } from './constants';
 import { NOTIFICATION_TYPE_ERROR, NOTIFICATION_TYPE_SUCCESS } from '~constants';
 import { getErrorMessage } from '~helpers';
 import { BarLoader, ButtonFill, DataViewer, DetailList } from '~components';
-import { isFeatureFlagEnabled } from '~helpers';
+import { getDatetimeFormattedString, isFeatureFlagEnabled } from '~helpers';
 
 export default {
   data() {
@@ -148,12 +148,15 @@ export default {
   },
   props: [
     'baseAPIURL',
+    'dateFormat',
     'domain',
     'input',
     'isWorkflowRunning',
     'parentWorkflowRoute',
     'result',
     'runId',
+    'timeFormat',
+    'timezone',
     'wfStatus',
     'workflow',
     'workflowId',
@@ -175,16 +178,16 @@ export default {
       return !this.isWorkflowRunning ? 'Workflow needs to be running to be able to terminate.' : '';
     },
     workflowCloseTime() {
-      return this.workflow.workflowExecutionInfo.closeTime
-        ? moment(this.workflow.workflowExecutionInfo.closeTime).format(
-            'dddd MMMM Do, h:mm:ss a'
-          )
+      const { dateFormat, timeFormat, timezone } = this;
+      const { closeTime } = this.workflow.workflowExecutionInfo;
+      return closeTime
+        ? getDatetimeFormattedString({ date: closeTime, dateFormat, timeFormat, timezone })
         : '';
     },
     workflowStartTime() {
-      return moment(this.workflow.workflowExecutionInfo.startTime).format(
-        'dddd MMMM Do, h:mm:ss a'
-      );
+      const { dateFormat, timeFormat, timezone } = this;
+      const { startTime } = this.workflow.workflowExecutionInfo;
+      return getDatetimeFormattedString({ date: startTime, dateFormat, timeFormat, timezone });
     },
   },
   methods: {
