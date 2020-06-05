@@ -221,6 +221,7 @@ export default {
       </flex-grid>
     </header>
     <router-view
+      :date-format="settings.dateFormat"
       :time-format="settings.timeFormat"
       :timezone="settings.timezone"
       @onNotification="onNotification"

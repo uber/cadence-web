@@ -112,10 +112,10 @@ import moment from 'moment';
 import debounce from 'lodash-es/debounce';
 import pagedGrid from '~components/paged-grid';
 import { DateRangePicker } from '~components';
-import { getEndTimeIsoString, getStartTimeIsoString } from '~helpers';
+import { getDatetimeFormattedString, getEndTimeIsoString, getStartTimeIsoString } from '~helpers';
 
 export default pagedGrid({
-  props: ['domain', 'timeFormat', 'timezone'],
+  props: ['dateFormat', 'domain', 'timeFormat', 'timezone'],
   data() {
     return {
       loading: true,
@@ -186,14 +186,15 @@ export default pagedGrid({
       return this.status.value === 'OPEN' ? 'StartTime' : 'CloseTime';
     },
     formattedResults() {
-      // TODO - add time formatting here according to settings...
-      return this.results.map(result => ({
+      const { dateFormat, results, timeFormat, timezone } = this;
+
+      return results.map(result => ({
         workflowId: result.execution.workflowId,
         runId: result.execution.runId,
         workflowName: result.type.name,
-        startTime: moment(result.startTime).format('lll'),
+        startTime: getDatetimeFormattedString({ date: result.startTime, dateFormat, timeFormat, timezone }),
         endTime: result.closeTime
-          ? moment(result.closeTime).format('lll')
+          ? getDatetimeFormattedString({ date: result.closeTime, dateFormat, timeFormat, timezone })
           : '',
         status: (result.closeStatus || 'open').toLowerCase(),
       }));

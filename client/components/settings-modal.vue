@@ -28,37 +28,41 @@
           />
         </div>
         <div class="content-item">
-          <label for="settingsDateFormat">
-            Date format
-          </label>
-          <v-select
-            input-id="settingsDateFormat"
-            :on-change="onDateFormatChange"
-            :options="dateFormatOptions"
-            :value="modalDateFormat"
-          />
-        </div>
-        <div class="content-item">
-          <label for="settingsTimeFormat">
-            Time format
-          </label>
-          <v-select
-            input-id="settingsTimeFormat"
-            :on-change="onTimeFormatChange"
-            :options="timeFormatOptions"
-            :value="modalTimeFormat"
-          />
-        </div>
-        <div class="content-item">
-          <label for="settingsTimezone">
-            Timezone
-          </label>
-          <v-select
-            input-id="settingsTimezone"
-            :on-change="onTimezoneChange"
-            :options="timezoneOptions"
-            :value="modalTimezone"
-          />
+          <flex-grid>
+            <flex-grid-item grow="1">
+              <label for="settingsDateFormat">
+                Date format
+              </label>
+              <v-select
+                input-id="settingsDateFormat"
+                :on-change="onDateFormatChange"
+                :options="dateFormatOptions"
+                :value="modalDateFormat"
+              />
+            </flex-grid-item>
+            <flex-grid-item grow="1">
+              <label for="settingsTimeFormat">
+                Time format
+              </label>
+              <v-select
+                input-id="settingsTimeFormat"
+                :on-change="onTimeFormatChange"
+                :options="timeFormatOptions"
+                :value="modalTimeFormat"
+              />
+            </flex-grid-item>
+            <flex-grid-item grow="1">
+              <label for="settingsTimezone">
+                Timezone
+              </label>
+              <v-select
+                input-id="settingsTimezone"
+                :on-change="onTimezoneChange"
+                :options="timezoneOptions"
+                :value="modalTimezone"
+              />
+            </flex-grid-item>
+          </flex-grid>
         </div>
       </div>
       <div class="footer">
@@ -215,13 +219,17 @@ export default {
 <style lang="stylus">
 .settings-modal {
   .content {
-    min-height: 430px;
+    min-height: 320px;
     min-width: 400px;
     overflow-y: auto;
   }
 
   .content-item {
     margin: 15px 0;
+  }
+
+  .dropdown-menu {
+    min-width: 90px !important;
   }
 
   .footer {
