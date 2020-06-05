@@ -16,7 +16,28 @@
         </flex-grid>
       </div>
       <div class="content">
-        <h3>Time options</h3>
+        <h3>DateTime options</h3>
+        <div class="content-item">
+          <label for="settingsExample">
+            Example
+          </label>
+          <text-input
+            name="settingsExample"
+            :readonly="true"
+            :value="exampleFormattedDateTime"
+          />
+        </div>
+        <div class="content-item">
+          <label for="settingsDateFormat">
+            Date format
+          </label>
+          <v-select
+            input-id="settingsDateFormat"
+            :on-change="onDateFormatChange"
+            :options="dateFormatOptions"
+            :value="modalDateFormat"
+          />
+        </div>
         <div class="content-item">
           <label for="settingsTimeFormat">
             Time format
@@ -59,10 +80,21 @@
 </template>
 
 <script>
-import { ButtonFill, ButtonIcon, FlexGrid, FlexGridItem } from '~components';
+import ButtonFill from './button-fill';
+import ButtonIcon from './button-icon';
+import FlexGrid from './flex-grid';
+import FlexGridItem from './flex-grid-item';
+import TextInput from './text-input';
+import { getDatetimeFormattedString } from '~helpers';
 
 export default {
   props: {
+    dateFormat: {
+      type: String,
+    },
+    dateFormatOptions: {
+      type: Array,
+    },
     timeFormat: {
       type: String,
     },
@@ -78,13 +110,28 @@ export default {
   },
   data() {
     return {
+      exampleDate: new Date(),
+      modalDateFormat: this.getModalDateFormat(this.dateFormat),
       modalTimeFormat: this.getModalTimeFormat(this.timeFormat),
       modalTimezone: this.getModalTimezone(this.timezone),
     };
   },
   computed: {
+    exampleFormattedDateTime() {
+      return getDatetimeFormattedString({
+        date: this.exampleDate,
+        dateFormat: this.modalDateFormat.value,
+        timeFormat: this.modalTimeFormat.value,
+        timezone: this.modalTimezone.value,
+      });
+    },
+    isDateFormatChanged() {
+      return this.modalDateFormat.value !== this.dateFormat;
+    },
     isSettingsChanged() {
-      return this.isTimeFormatChanged || this.isTimezoneChanged;
+      return this.isDateFormatChanged ||
+        this.isTimeFormatChanged ||
+        this.isTimezoneChanged;
     },
     isTimeFormatChanged() {
       return this.modalTimeFormat.value !== this.timeFormat;
@@ -96,6 +143,9 @@ export default {
   methods: {
     close() {
       this.$modal.hide('settings-modal');
+    },
+    getModalDateFormat(dateFormat) {
+      return this.dateFormatOptions.find(({ value }) => dateFormat === value);
     },
     getModalTimeFormat(timeFormat) {
       return this.timeFormatOptions.find(({ value }) => timeFormat === value);
@@ -109,6 +159,9 @@ export default {
     onBeforeClose() {
       this.resetModalValues();
     },
+    onDateFormatChange(dateFormat) {
+      this.modalDateFormat = dateFormat;
+    },
     onTimeFormatChange(timeFormat) {
       this.modalTimeFormat = timeFormat;
     },
@@ -117,14 +170,19 @@ export default {
     },
     onSubmitClick() {
       this.$emit('onChange', {
+        ...(this.isDateFormatChanged && { dateFormat: this.modalDateFormat.value }),
         ...(this.isTimeFormatChanged && { timeFormat: this.modalTimeFormat.value }),
         ...(this.isTimezoneChanged && { timezone: this.modalTimezone.value }),
       });
       this.close();
     },
     resetModalValues() {
+      this.setModalDateFormat(this.dateFormat);
       this.setModalTimeFormat(this.timeFormat);
       this.setModalTimezone(this.timezone);
+    },
+    setModalDateFormat(dateFormat) {
+      this.modalDateFormat = this.getModalDateFormat(dateFormat);
     },
     setModalTimeFormat(timeFormat) {
       this.modalTimeFormat = this.getModalTimeFormat(timeFormat);
@@ -138,8 +196,12 @@ export default {
     'button-icon': ButtonIcon,
     'flex-grid': FlexGrid,
     'flex-grid-item': FlexGridItem,
+    'text-input': TextInput,
   },
   watch: {
+    dateFormat(dateFormat) {
+      this.setModalDateFormat(dateFormat);
+    },
     timeFormat(timeFormat) {
       this.setModalTimeFormat(timeFormat);
     },
@@ -153,7 +215,7 @@ export default {
 <style lang="stylus">
 .settings-modal {
   .content {
-    min-height: 280px;
+    min-height: 430px;
     min-width: 400px;
     overflow-y: auto;
   }

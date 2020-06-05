@@ -17,7 +17,7 @@ export default {
   props: {
     color: {
       type: String,
-      validator: (value) => ['black', 'white', 'primary', 'secondary'].indexOf(value) !== -1,
+      validator: (value) => ['primary', 'secondary'].indexOf(value) !== -1,
     },
     href: {
       type: String,
@@ -66,16 +66,6 @@ export default {
 
   .label {
     margin-left: 5px;
-  }
-
-  // color palette
-
-  .black {
-    color: #000;
-  }
-
-  .white {
-    color: #fff;
   }
 
   .primary {

@@ -17,9 +17,21 @@
         :to="{ name: 'workflow-archival' }"
       />
     </navigation-bar>
-    <router-view name="workflow-list" :domain="domain" />
+    <router-view
+      name="workflow-list"
+      :date-format="dateFormat"
+      :domain="domain"
+      :time-format="timeFormat"
+      :timezone="timezone"
+    />
     <router-view name="domain-settings" :domain="domain" />
-    <router-view name="workflow-archival" :domain="domain" />
+    <router-view
+      name="workflow-archival"
+      :date-format="dateFormat"
+      :domain="domain"
+      :time-format="timeFormat"
+      :timezone="timezone"
+    />
   </section>
 </template>
 
@@ -27,7 +39,7 @@
 import { NavigationBar, NavigationLink } from '~components';
 
 export default {
-  props: ['domain'],
+  props: ['dateFormat', 'domain', 'timeFormat', 'timezone'],
   components: {
     'navigation-bar': NavigationBar,
     'navigation-link': NavigationLink,

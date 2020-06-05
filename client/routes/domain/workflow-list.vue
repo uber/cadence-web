@@ -85,7 +85,7 @@
           <th>End Time</th>
         </thead>
         <tbody>
-          <tr v-for="wf in results" :key="wf.runId">
+          <tr v-for="wf in formattedResults" :key="wf.runId">
             <td>{{ wf.workflowId }}</td>
             <td>
               <router-link
@@ -115,7 +115,7 @@ import { DateRangePicker } from '~components';
 import { getEndTimeIsoString, getStartTimeIsoString } from '~helpers';
 
 export default pagedGrid({
-  props: ['domain'],
+  props: ['domain', 'timeFormat', 'timezone'],
   data() {
     return {
       loading: true,
@@ -184,6 +184,19 @@ export default pagedGrid({
     },
     filterBy() {
       return this.status.value === 'OPEN' ? 'StartTime' : 'CloseTime';
+    },
+    formattedResults() {
+      // TODO - add time formatting here according to settings...
+      return this.results.map(result => ({
+        workflowId: result.execution.workflowId,
+        runId: result.execution.runId,
+        workflowName: result.type.name,
+        startTime: moment(result.startTime).format('lll'),
+        endTime: result.closeTime
+          ? moment(result.closeTime).format('lll')
+          : '',
+        status: (result.closeStatus || 'open').toLowerCase(),
+      }));
     },
     startTime() {
       const { range, startTime } = this.$route.query;
@@ -298,20 +311,9 @@ export default pagedGrid({
           .then(res => {
             this.npt = res.nextPageToken;
             this.loading = false;
-            const formattedResults = res.executions.map(data => ({
-              workflowId: data.execution.workflowId,
-              runId: data.execution.runId,
-              workflowName: data.type.name,
-              startTime: moment(data.startTime).format('lll'),
-              endTime: data.closeTime
-                ? moment(data.closeTime).format('lll')
-                : '',
-              status: (data.closeStatus || 'open').toLowerCase(),
-            }));
-
             this.results = query.nextPageToken
-              ? this.results.concat(formattedResults)
-              : formattedResults;
+              ? this.results.concat(res.executions)
+              : res.executions;
 
             return this.results;
           })

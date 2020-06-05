@@ -71,7 +71,7 @@ import { getErrorMessage } from '~helpers';
 
 export default pagedGrid({
   name: 'workflow-archival-advanced',
-  props: ['domain'],
+  props: ['dateFormat', 'domain', 'timeFormat', 'timezone'],
   data() {
     return {
       error: undefined,
@@ -91,6 +91,7 @@ export default pagedGrid({
   },
   created() {
     const { domain, queryString } = this;
+    console.log('timeFormat = ', this.timeFormat, 'timezone = ', this.timezone);
 
     this.workflowArchivalService = WorkflowArchivalService({ domain });
     this.onQueryChange({ queryString });

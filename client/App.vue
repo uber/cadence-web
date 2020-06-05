@@ -3,15 +3,17 @@ import { version } from '../package.json';
 import logo from './assets/logo.svg';
 import { ButtonIcon, FeatureFlag, FlexGrid, FlexGridItem, NewsModal, NotificationBar, SettingsModal } from '~components';
 import {
+  DATE_FORMAT_MMM_D_YYYY,
+  DATE_FORMAT_OPTIONS,
   ENVIRONMENT_LIST,
   LOCAL_STORAGE_NEWS_LAST_VIEWED_AT,
   LOCAL_STORAGE_SETTINGS,
   NOTIFICATION_TIMEOUT,
   NOTIFICATION_TYPE_SUCCESS,
-  SETTINGS_TIME_FORMAT_12,
-  SETTINGS_TIME_FORMAT_OPTIONS,
-  SETTINGS_TIMEZONE_LOCAL,
-  SETTINGS_TIMEZONE_OPTIONS,
+  TIME_FORMAT_12,
+  TIME_FORMAT_OPTIONS,
+  TIMEZONE_LOCAL,
+  TIMEZONE_OPTIONS,
 } from '~constants';
 import {
   getEnvironment,
@@ -55,10 +57,12 @@ export default {
         timeout: undefined,
       },
       settings: {
-        timeFormat: localStorage.getItem(LOCAL_STORAGE_SETTINGS.timeFormat) || SETTINGS_TIME_FORMAT_12,
-        timeFormatOptions: SETTINGS_TIME_FORMAT_OPTIONS,
-        timezone: localStorage.getItem(LOCAL_STORAGE_SETTINGS.timezone) || SETTINGS_TIMEZONE_LOCAL,
-        timezoneOptions: SETTINGS_TIMEZONE_OPTIONS,
+        dateFormat: localStorage.getItem(LOCAL_STORAGE_SETTINGS.dateFormat) || DATE_FORMAT_MMM_D_YYYY,
+        dateFormatOptions: DATE_FORMAT_OPTIONS,
+        timeFormat: localStorage.getItem(LOCAL_STORAGE_SETTINGS.timeFormat) || TIME_FORMAT_12,
+        timeFormatOptions: TIME_FORMAT_OPTIONS,
+        timezone: localStorage.getItem(LOCAL_STORAGE_SETTINGS.timezone) || TIMEZONE_LOCAL,
+        timezoneOptions: TIMEZONE_OPTIONS,
       },
     };
   },
@@ -216,11 +220,17 @@ export default {
         </flex-grid-item>
       </flex-grid>
     </header>
-    <router-view @onNotification="onNotification"></router-view>
+    <router-view
+      :time-format="settings.timeFormat"
+      :timezone="settings.timezone"
+      @onNotification="onNotification"
+    ></router-view>
     <modals-container />
     <v-dialog />
     <news-modal :news-items="newsItems" @before-close="onNewsDismiss" />
     <settings-modal
+      :date-format="settings.dateFormat"
+      :date-format-options="settings.dateFormatOptions"
       :time-format="settings.timeFormat"
       :time-format-options="settings.timeFormatOptions"
       :timezone="settings.timezone"
