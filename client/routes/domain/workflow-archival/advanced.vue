@@ -30,7 +30,7 @@
         infinite-scroll-immediate-check="false"
       >
         <archival-table-row
-          v-for="result in results"
+          v-for="result in formattedResults"
           :close-status="result.closeStatus"
           :close-time="result.closeTime"
           :key="result.runId"
@@ -68,6 +68,7 @@ import {
   TextInput,
 } from '~components';
 import { getErrorMessage } from '~helpers';
+import { mapArchivedWorkflowResponse } from './helpers';
 
 export default pagedGrid({
   name: 'workflow-archival-advanced',
@@ -83,6 +84,21 @@ export default pagedGrid({
     };
   },
   computed: {
+    formattedResults() {
+      const {
+        dateFormat,
+        results,
+        timeFormat,
+        timezone,
+      } = this;
+
+      return mapArchivedWorkflowResponse({
+        dateFormat,
+        results,
+        timeFormat,
+        timezone,
+      });
+    },
     queryString() {
       const { queryString = '' } = this.$route.query || {};
 
@@ -91,7 +107,6 @@ export default pagedGrid({
   },
   created() {
     const { domain, queryString } = this;
-    console.log('timeFormat = ', this.timeFormat, 'timezone = ', this.timezone);
 
     this.workflowArchivalService = WorkflowArchivalService({ domain });
     this.onQueryChange({ queryString });
@@ -118,7 +133,7 @@ export default pagedGrid({
           results,
           nextPageToken,
         } = await this.workflowArchivalService.fetchArchivalRecords(
-          queryParams
+          queryParams,
         );
 
         this.results = this.results ? this.results.concat(results) : results;
