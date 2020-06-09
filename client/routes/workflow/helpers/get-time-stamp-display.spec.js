@@ -7,7 +7,7 @@ describe('getTimeStampDisplay', () => {
   describe('When passed an event with no timestamp', () => {
     it('should return "".', () => {
       const event = {};
-      const output = getTimeStampDisplay(event);
+      const output = getTimeStampDisplay({ event });
 
       expect(output).toEqual('');
     });
@@ -19,7 +19,7 @@ describe('getTimeStampDisplay', () => {
         timestamp: moment(DATE),
       };
       const index = -1;
-      const output = getTimeStampDisplay(event, index);
+      const output = getTimeStampDisplay({ event, index });
 
       expect(output).toEqual('');
     });
@@ -31,9 +31,9 @@ describe('getTimeStampDisplay', () => {
         timestamp: moment(DATE),
       };
       const index = 0;
-      const output = getTimeStampDisplay(event, index);
+      const output = getTimeStampDisplay({ event, index });
 
-      expect(output).toEqual('Jan 1st 12:00:00 am');
+      expect(output).toEqual('Jan 1, 2020 12:00:00 AM');
     });
   });
 });

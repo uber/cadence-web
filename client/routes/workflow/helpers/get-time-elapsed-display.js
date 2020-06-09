@@ -1,7 +1,7 @@
 import moment from 'moment';
 import { getDatetimeFormattedString } from '~helpers';
 
-const getTimeElapsedDisplay = ({ dateFormat, event: { timestamp }, eventList, index, timeFormat, timezone }) => {
+const getTimeElapsedDisplay = ({ dateFormat, event: { timestamp = null }, eventList, index, timeFormat, timezone }) => {
   if (!timestamp || index === -1) {
     return '';
   }
