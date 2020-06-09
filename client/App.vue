@@ -288,30 +288,6 @@ header.top-bar
   nav-label-color = uber-white-40
   nav-label-font-size = 11px
 
-  div.domain
-    flex 0 0 auto
-    &::before
-      content 'DOMAIN'
-      font-size nav-label-font-size
-      font-weight normal
-      vertical-align middle
-      color nav-label-color
-      margin-right spacing
-    a:hover
-      color lighten(uber-blue, 15%)
-    .router-link-active
-      pointer-events none
-    span
-      cursor pointer
-      transition smooth-transition
-      color uber-blue
-    & + div
-      icon('\ea5b')
-      one-liner-ellipsis()
-      &::before
-        display inline-block
-        transform scale(1.5)
-        margin-right spacing
   .detail-view span::before
     font-size nav-label-font-size
     color nav-label-color
