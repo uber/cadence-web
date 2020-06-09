@@ -1,4 +1,6 @@
-const getTimeStampDisplay = ({ timestamp }, index) =>
-  !timestamp || index === -1 ? '' : timestamp.format('MMM Do h:mm:ss a');
+import { getDatetimeFormattedString } from '~helpers';
+
+const getTimeStampDisplay = ({ dateFormat, event: { timestamp }, index, timeFormat, timezone }) =>
+  !timestamp || index === -1 ? '' : getDatetimeFormattedString({ date: timestamp, dateFormat, timeFormat, timezone });
 
 export default getTimeStampDisplay;
