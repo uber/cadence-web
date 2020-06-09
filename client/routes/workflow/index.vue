@@ -54,6 +54,9 @@
     <router-view
       name="stacktrace"
       :baseAPIURL="baseAPIURL"
+      :date-format="dateFormat"
+      :time-format="timeFormat"
+      :timezone="timezone"
       @onNotification="onNotification"
     />
     <router-view
