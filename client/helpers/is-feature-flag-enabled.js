@@ -12,6 +12,7 @@ export const mapFlagsToHash = (flagArray = []) => {
 };
 
 const featureFlagHash = mapFlagsToHash(featureFlags);
-const isFeatureFlagEnabled = (name) => isFlagEnabled({ flagHash: featureFlagHash, name });
+const isFeatureFlagEnabled = name =>
+  isFlagEnabled({ flagHash: featureFlagHash, name });
 
 export default isFeatureFlagEnabled;

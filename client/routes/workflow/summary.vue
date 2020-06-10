@@ -135,9 +135,8 @@
 import moment from 'moment';
 import { TERMINATE_DEFAULT_ERROR_MESSAGE } from './constants';
 import { NOTIFICATION_TYPE_ERROR, NOTIFICATION_TYPE_SUCCESS } from '~constants';
-import { getErrorMessage } from '~helpers';
+import { getErrorMessage, isFeatureFlagEnabled } from '~helpers';
 import { BarLoader, ButtonFill, DataViewer, DetailList } from '~components';
-import { isFeatureFlagEnabled } from '~helpers';
 
 export default {
   data() {
@@ -172,7 +171,9 @@ export default {
       return !this.isWorkflowRunning;
     },
     terminateDisabledLabel() {
-      return !this.isWorkflowRunning ? 'Workflow needs to be running to be able to terminate.' : '';
+      return !this.isWorkflowRunning
+        ? 'Workflow needs to be running to be able to terminate.'
+        : '';
     },
     workflowCloseTime() {
       return this.workflow.workflowExecutionInfo.closeTime
@@ -190,19 +191,24 @@ export default {
   methods: {
     async fetchDomainAuthorization() {
       const { domain } = this;
+
       try {
-        const response = await this.$http(`/api/domains/${domain}/authorization`);
+        const response = await this.$http(
+          `/api/domains/${domain}/authorization`
+        );
+
         return response.authorization;
       } catch (error) {
         this.$emit('onNotification', {
           message: getErrorMessage(error),
           type: NOTIFICATION_TYPE_ERROR,
         });
-      };
+      }
     },
     async initAuthorization() {
       if (isFeatureFlagEnabled('domain-authorization')) {
         const authorization = await this.fetchDomainAuthorization();
+
         this.isAuthorized = authorization;
       } else {
         this.isAuthorized = true;

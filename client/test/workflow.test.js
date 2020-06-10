@@ -336,7 +336,9 @@ describe('Workflow', () => {
         await Promise.delay(10);
 
         scenario.withWorkflowTermination('example termination');
-        confirmTerminateEl.querySelector('button[name="button-terminate"]').trigger('click');
+        confirmTerminateEl
+          .querySelector('button[name="button-terminate"]')
+          .trigger('click');
         await retry(() =>
           summaryEl.should.not.contain('[data-modal="confirm-termination"]')
         );
