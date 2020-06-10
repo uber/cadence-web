@@ -34,11 +34,15 @@ describe('WorkflowArchivalService', () => {
       results: [
         {
           closeStatus: 'closeStatusValue',
-          closeTime: 'Mar 29, 2020 5:00 PM',
-          runId: 'runIdValue',
-          startTime: 'Feb 29, 2020 4:00 PM',
-          workflowId: 'workflowIdValue',
-          workflowName: 'workflowNameValue',
+          closeTime: '2020-03-30T00:00:00Z',
+          execution: {
+            runId: 'runIdValue',
+            workflowId: 'workflowIdValue',
+          },
+          startTime: '2020-03-01T00:00:00Z',
+          type: {
+            name: 'workflowNameValue',
+          },
         },
       ],
     });

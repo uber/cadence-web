@@ -9,9 +9,9 @@
         <th>Activity Handler</th>
       </thead>
       <tbody>
-        <tr v-for="p in pollers" :key="p.identity">
+        <tr v-for="p in formattedPollers" :key="p.identity">
           <td>{{ p.identity }}</td>
-          <td>{{ p.lastAccessTime.format('ddd MMMM Do, h:mm:ss a') }}</td>
+          <td>{{ p.lastAccessTime }}</td>
           <td class="decision" :data-handled="p.handlesDecisions"></td>
           <td class="activity" :data-handled="p.handlesActivities"></td>
         </tr>
@@ -21,15 +21,34 @@
 </template>
 
 <script>
-import moment from 'moment';
+import { getDatetimeFormattedString } from '~helpers';
 
 export default {
+  props: ['dateFormat', 'timeFormat', 'timezone'],
   data() {
     return {
       pollers: undefined,
       error: undefined,
       loading: true,
     };
+  },
+  computed: {
+    formattedPollers() {
+      const { dateFormat, pollers, timeFormat, timezone } = this;
+
+      return (
+        pollers &&
+        pollers.map(poller => ({
+          ...poller,
+          lastAccessTime: getDatetimeFormattedString({
+            date: poller.lastAccessTime,
+            dateFormat,
+            timeFormat,
+            timezone,
+          }),
+        }))
+      );
+    },
   },
   created() {
     this.$http(
@@ -39,7 +58,7 @@ export default {
         p => {
           this.pollers = Object.keys(p).map(identity => ({
             identity,
-            lastAccessTime: moment(p[identity].lastAccessTime),
+            lastAccessTime: p[identity].lastAccessTime,
             handlesDecisions: p[identity].taskListTypes.includes('decision'),
             handlesActivities: p[identity].taskListTypes.includes('activity'),
           }));

@@ -1,12 +1,25 @@
 import moment from 'moment';
+import { getDatetimeFormattedString } from '~helpers';
 
-const getTimeElapsedDisplay = ({ timestamp }, index, eventList) => {
+const getTimeElapsedDisplay = ({
+  dateFormat,
+  event: { timestamp = null },
+  eventList,
+  index,
+  timeFormat,
+  timezone,
+}) => {
   if (!timestamp || index === -1) {
     return '';
   }
 
   if (index === 0) {
-    return timestamp.format('MMM Do h:mm:ss a');
+    return getDatetimeFormattedString({
+      date: timestamp,
+      dateFormat,
+      timeFormat,
+      timezone,
+    });
   }
 
   const deltaFromPrev = moment.duration(

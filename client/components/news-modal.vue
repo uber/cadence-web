@@ -3,7 +3,7 @@
     <div class="news-modal">
       <div class="header">
         <flex-grid align-items="center">
-          <flex-grid-item>
+          <flex-grid-item grow="1">
             <h2>What's new</h2>
           </flex-grid-item>
           <flex-grid-item width="40px">
@@ -31,7 +31,7 @@
       </div>
       <div class="footer">
         <flex-grid align-items="center">
-          <flex-grid-item>
+          <flex-grid-item grow="1">
             <router-link
               class="see-more"
               :to="{ name: 'news' }"

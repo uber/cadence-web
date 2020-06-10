@@ -1,9 +1,9 @@
-import moment from 'moment';
+import { getDatetimeFormattedString } from '~helpers';
 
-export default ({ executions, nextPageToken }) => ({
-  results: !executions
+export default ({ dateFormat, results, timeFormat, timezone }) =>
+  !results
     ? []
-    : executions.map(
+    : results.map(
         ({
           closeStatus,
           closeTime,
@@ -12,12 +12,20 @@ export default ({ executions, nextPageToken }) => ({
           type: { name },
         }) => ({
           closeStatus,
-          closeTime: moment(closeTime).format('lll'),
+          closeTime: getDatetimeFormattedString({
+            date: closeTime,
+            dateFormat,
+            timeFormat,
+            timezone,
+          }),
           runId,
-          startTime: moment(startTime).format('lll'),
+          startTime: getDatetimeFormattedString({
+            date: startTime,
+            dateFormat,
+            timeFormat,
+            timezone,
+          }),
           workflowId,
           workflowName: name,
         })
-      ),
-  nextPageToken,
-});
+      );

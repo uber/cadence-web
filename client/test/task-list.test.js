@@ -28,7 +28,7 @@ describe('Task List', () => {
         moment()
           .startOf('hour')
           .add(m, 'minutes')
-          .format('ddd MMMM Do, h:mm:ss a')
+          .format('MMM D, YYYY h:mm:ss A')
       )
     );
     taskListEl

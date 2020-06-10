@@ -1,7 +1,7 @@
 <template>
   <section :class="{ 'stack-trace': true, loading }">
     <header v-if="stackTraceTimestamp">
-      <span>Stack trace at {{ stackTraceTimestamp.format('h:mm:ss a') }}</span>
+      <span>Stack trace at {{ formattedStackTraceTimestamp }}</span>
       <a href="#" class="refresh" @click="getStackTrace">Refresh</a>
     </header>
 
@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import moment from 'moment';
+import { getDatetimeFormattedString } from '~helpers';
 
 export default {
   data() {
@@ -23,7 +23,21 @@ export default {
       stackTraceTimestamp: undefined,
     };
   },
-  props: ['baseAPIURL'],
+  props: ['baseAPIURL', 'dateFormat', 'timeFormat', 'timezone'],
+  computed: {
+    formattedStackTraceTimestamp() {
+      const { dateFormat, stackTraceTimestamp, timeFormat, timezone } = this;
+
+      return stackTraceTimestamp
+        ? getDatetimeFormattedString({
+            date: stackTraceTimestamp,
+            dateFormat,
+            timeFormat,
+            timezone,
+          })
+        : '';
+    },
+  },
   created() {
     this.getStackTrace();
   },
@@ -35,7 +49,7 @@ export default {
         .post(`${this.baseAPIURL}/query/__stack_trace`)
         .then(({ queryResult }) => {
           this.stackTrace = queryResult;
-          this.stackTraceTimestamp = moment();
+          this.stackTraceTimestamp = new Date();
         })
         .catch(e => {
           // eslint-disable-next-line no-console

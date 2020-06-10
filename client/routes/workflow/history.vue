@@ -386,7 +386,7 @@ export default {
       }
 
       return {
-        timestamp: this.selectedEvent.timestamp.format('MMM Do h:mm:ss a'),
+        timestamp: this.selectedEvent.timeStampDisplay,
         eventId: this.selectedEvent.eventId,
         ...this.selectedEvent.details,
       };

@@ -31,11 +31,14 @@
     <router-view
       name="summary"
       :baseAPIURL="baseAPIURL"
+      :date-format="dateFormat"
       :domain="domain"
       :input="summary.input"
       :isWorkflowRunning="summary.isWorkflowRunning"
       :parentWorkflowRoute="summary.parentWorkflowRoute"
       :result="summary.result"
+      :time-format="timeFormat"
+      :timezone="timezone"
       :wfStatus="summary.wfStatus"
       :workflow="summary.workflow"
       @onNotification="onNotification"
@@ -43,14 +46,17 @@
     <router-view
       name="history"
       :baseAPIURL="baseAPIURL"
-      :events="history.events"
+      :events="historyEvents"
       :loading="history.loading"
-      :timelineEvents="history.timelineEvents"
+      :timelineEvents="historyTimelineEvents"
       @onNotification="onNotification"
     />
     <router-view
       name="stacktrace"
       :baseAPIURL="baseAPIURL"
+      :date-format="dateFormat"
+      :time-format="timeFormat"
+      :timezone="timezone"
       @onNotification="onNotification"
     />
     <router-view
@@ -84,9 +90,7 @@ export default {
       workflow: undefined,
 
       history: {
-        events: [],
         loading: undefined,
-        timelineEvents: [],
       },
 
       summary: {
@@ -101,7 +105,14 @@ export default {
       unwatch: [],
     };
   },
-  props: ['domain', 'runId', 'workflowId'],
+  props: [
+    'dateFormat',
+    'domain',
+    'runId',
+    'timeFormat',
+    'timezone',
+    'workflowId',
+  ],
   created() {
     this.unwatch.push(
       this.$watch('baseAPIURL', this.onBaseApiUrlChange, { immediate: true })
@@ -121,6 +132,16 @@ export default {
       return `/api/domains/${domain}/workflows/${encodeURIComponent(
         workflowId
       )}/${encodeURIComponent(runId)}`;
+    },
+    historyEvents() {
+      const { dateFormat, events, timeFormat, timezone } = this;
+
+      return getHistoryEvents({ dateFormat, events, timeFormat, timezone });
+    },
+    historyTimelineEvents() {
+      const { historyEvents } = this;
+
+      return getHistoryTimelineEvents({ historyEvents });
     },
     queryUrl() {
       const queryUrl = `${this.baseAPIURL}/history?waitForNewEvent=true`;
@@ -143,9 +164,7 @@ export default {
       this.wfLoading = true;
       this.workflow = undefined;
 
-      this.history.events = [];
       this.history.loading = undefined;
-      this.history.timelineEvents = [];
 
       this.summary.input = undefined;
       this.summary.isWorkflowRunning = undefined;
@@ -206,11 +225,6 @@ export default {
           const { events } = res.history;
 
           this.events = this.events.concat(events);
-
-          this.history.events = getHistoryEvents(this.events);
-          this.history.timelineEvents = getHistoryTimelineEvents(
-            this.history.events
-          );
 
           this.summary = getSummary({
             events: this.events,

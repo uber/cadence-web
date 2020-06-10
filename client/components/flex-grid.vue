@@ -4,6 +4,7 @@
     :style="{
       'align-items': alignItems,
       'justify-content': justifyContent,
+      width: width,
     }"
   >
     <slot></slot>
@@ -12,7 +13,7 @@
 
 <script>
 export default {
-  props: ['alignItems', 'justifyContent'],
+  props: ['alignItems', 'justifyContent', 'width'],
 };
 </script>
 

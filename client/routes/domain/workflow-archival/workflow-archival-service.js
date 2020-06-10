@@ -1,4 +1,3 @@
-import { mapArchivedWorkflowResponse } from './helpers';
 import { http } from '~helpers';
 
 export default ({ domain }) => {
@@ -17,17 +16,15 @@ export default ({ domain }) => {
 
       requests.fetchArchivalRecords = controller;
 
-      const response = await http(
+      const { executions: results, nextPageToken } = await http(
         window.fetch,
         `/api/domains/${domain}/workflows/archived`,
         { query, signal }
       );
 
-      const mappedResponse = mapArchivedWorkflowResponse(response);
-
       requests.fetchArchivalRecords = null;
 
-      return mappedResponse;
+      return { results, nextPageToken };
     },
   };
 };
