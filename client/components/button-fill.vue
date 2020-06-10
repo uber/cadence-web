@@ -25,7 +25,7 @@ export default {
       type: String,
       default: 'primary',
       validator: value =>
-        ['primary', 'secondary', 'tertiary'].indexOf(value) !== -1,
+        ['primary', 'secondary', 'tertiary'].includes(value),
     },
     disabled: {
       type: Boolean,

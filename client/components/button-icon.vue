@@ -21,7 +21,7 @@ export default {
   props: {
     color: {
       type: String,
-      validator: value => ['primary', 'secondary'].indexOf(value) !== -1,
+      validator: value => ['primary', 'secondary'].includes(value),
     },
     href: {
       type: String,
