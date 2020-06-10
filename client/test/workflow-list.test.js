@@ -74,7 +74,9 @@ describe('Workflow list', () => {
     resultsEl
       .textNodes('tbody td:nth-child(5)')
       .should.deep.equal(
-        fixtures.workflows.open.map(wf => moment(wf.startTime).format('lll'))
+        fixtures.workflows.open.map(wf =>
+          moment(wf.startTime).format('MMM D, YYYY h:mm:ss A')
+        )
       );
 
     resultsEl.should.not

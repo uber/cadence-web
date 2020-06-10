@@ -73,7 +73,7 @@ describe('Workflow', () => {
           moment()
             .startOf('hour')
             .subtract(2, 'minutes')
-            .format('dddd MMMM Do, h:mm:ss a')
+            .format('MMM D, YYYY h:mm:ss A')
         );
         summaryEl.should.not.have.descendant('.close-time');
         summaryEl.should.not.have.descendant('.pending-activities');
@@ -336,7 +336,9 @@ describe('Workflow', () => {
         await Promise.delay(10);
 
         scenario.withWorkflowTermination('example termination');
-        confirmTerminateEl.querySelector('button[name="button-terminate"]').trigger('click');
+        confirmTerminateEl
+          .querySelector('button[name="button-terminate"]')
+          .trigger('click');
         await retry(() =>
           summaryEl.should.not.contain('[data-modal="confirm-termination"]')
         );
@@ -704,7 +706,7 @@ describe('Workflow', () => {
             .textNodes('.table .vue-recycle-scroller__item-view .td.col-time')
             .should.deep.equal([
               moment(fixtures.history.emailRun1[0].timestamp).format(
-                'MMM Do h:mm:ss a'
+                'MMM D, YYYY h:mm:ss A'
               ),
               '',
               '',
@@ -736,7 +738,7 @@ describe('Workflow', () => {
             .should.deep.equal(
               fixtures.history.emailRun1
                 .filter((_value, index) => index < 6)
-                .map(e => moment(e.timestamp).format('MMM Do h:mm:ss a'))
+                .map(e => moment(e.timestamp).format('MMM D, YYYY h:mm:ss A'))
             )
         );
         localStorage
@@ -754,7 +756,7 @@ describe('Workflow', () => {
             .should.deep.equal(
               fixtures.history.emailRun1
                 .filter((_value, index) => index < 6)
-                .map(e => moment(e.timestamp).format('MMM Do h:mm:ss a'))
+                .map(e => moment(e.timestamp).format('MMM D, YYYY h:mm:ss A'))
             )
         );
       });
@@ -1090,7 +1092,9 @@ describe('Workflow', () => {
       await retry(() =>
         stackTraceEl
           .querySelector('header span')
-          .should.contain.text(`Stack trace at ${moment().format('h:mm')}`)
+          .should.contain.text(
+            `Stack trace at ${moment().format('MMM D, YYYY h:mm:ss A')}`
+          )
       );
       stackTraceEl
         .querySelector('pre')

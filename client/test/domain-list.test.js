@@ -107,7 +107,7 @@ describe('Domain list', () => {
     const headerBar = testEl.querySelector('header.top-bar');
 
     headerBar.should.have
-      .descendant('div.domain')
+      .descendant('.workflows')
       .that.contains.text('ci-test');
     scenario.location.should.contain('/domains/ci-tests/workflows');
     localStorage.getItem('recent-domains').should.equal('["ci-tests"]');
@@ -146,7 +146,7 @@ describe('Domain list', () => {
     const headerBar = testEl.querySelector('header.top-bar');
 
     headerBar.should.have
-      .descendant('div.domain')
+      .descendant('.workflows')
       .that.contains.text('ci-test');
     scenario.location.should.contain('/domains/ci-tests/workflows');
     localStorage.getItem('recent-domains').should.equal('["ci-tests"]');

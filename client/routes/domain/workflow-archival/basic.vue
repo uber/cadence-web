@@ -2,7 +2,7 @@
   <section class="workflow-archival-basic">
     <header>
       <flex-grid>
-        <flex-grid-item>
+        <flex-grid-item grow="1">
           <text-input
             label="Workflow ID"
             name="workflowId"
@@ -11,7 +11,7 @@
             @input="onTextChange"
           />
         </flex-grid-item>
-        <flex-grid-item>
+        <flex-grid-item grow="1">
           <text-input
             label="Workflow Name"
             name="workflowName"
@@ -53,7 +53,7 @@
         infinite-scroll-immediate-check="false"
       >
         <archival-table-row
-          v-for="result in results"
+          v-for="result in formattedResults"
           :close-status="result.closeStatus"
           :close-time="result.closeTime"
           :key="result.runId"
@@ -84,6 +84,7 @@ import {
   getStatus,
   getStatusValue,
   updateQueryFromRange,
+  mapArchivedWorkflowResponse,
 } from './helpers';
 import WorkflowArchivalService from './workflow-archival-service';
 import pagedGrid from '~components/paged-grid';
@@ -106,7 +107,7 @@ import {
 
 export default pagedGrid({
   name: 'workflow-archival-basic',
-  props: ['domain'],
+  props: ['dateFormat', 'domain', 'timeFormat', 'timezone'],
   data() {
     return {
       error: undefined,
@@ -125,6 +126,16 @@ export default pagedGrid({
       const { endTime } = this.$route.query || {};
 
       return getEndTimeIsoString(range, endTime);
+    },
+    formattedResults() {
+      const { dateFormat, results, timeFormat, timezone } = this;
+
+      return mapArchivedWorkflowResponse({
+        dateFormat,
+        results,
+        timeFormat,
+        timezone,
+      });
     },
     queryParams() {
       const {

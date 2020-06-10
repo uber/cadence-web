@@ -2,7 +2,7 @@
   <section class="workflow-archival-basic">
     <header>
       <flex-grid>
-        <flex-grid-item>
+        <flex-grid-item grow="1">
           <text-input
             label="Query"
             name="queryString"
@@ -30,7 +30,7 @@
         infinite-scroll-immediate-check="false"
       >
         <archival-table-row
-          v-for="result in results"
+          v-for="result in formattedResults"
           :close-status="result.closeStatus"
           :close-time="result.closeTime"
           :key="result.runId"
@@ -56,6 +56,7 @@ import debounce from 'lodash-es/debounce';
 import { ArchivalTable, ArchivalTableRow } from './components';
 import { LOADING_MESSAGE_DELAY } from './constants';
 import WorkflowArchivalService from './workflow-archival-service';
+import { mapArchivedWorkflowResponse } from './helpers';
 import pagedGrid from '~components/paged-grid';
 import {
   ButtonFill,
@@ -71,7 +72,7 @@ import { getErrorMessage } from '~helpers';
 
 export default pagedGrid({
   name: 'workflow-archival-advanced',
-  props: ['domain'],
+  props: ['dateFormat', 'domain', 'timeFormat', 'timezone'],
   data() {
     return {
       error: undefined,
@@ -83,6 +84,16 @@ export default pagedGrid({
     };
   },
   computed: {
+    formattedResults() {
+      const { dateFormat, results, timeFormat, timezone } = this;
+
+      return mapArchivedWorkflowResponse({
+        dateFormat,
+        results,
+        timeFormat,
+        timezone,
+      });
+    },
     queryString() {
       const { queryString = '' } = this.$route.query || {};
 

@@ -85,7 +85,7 @@
           <th>End Time</th>
         </thead>
         <tbody>
-          <tr v-for="wf in results" :key="wf.runId">
+          <tr v-for="wf in formattedResults" :key="wf.runId">
             <td>{{ wf.workflowId }}</td>
             <td>
               <router-link
@@ -112,10 +112,14 @@ import moment from 'moment';
 import debounce from 'lodash-es/debounce';
 import pagedGrid from '~components/paged-grid';
 import { DateRangePicker } from '~components';
-import { getEndTimeIsoString, getStartTimeIsoString } from '~helpers';
+import {
+  getDatetimeFormattedString,
+  getEndTimeIsoString,
+  getStartTimeIsoString,
+} from '~helpers';
 
 export default pagedGrid({
-  props: ['domain'],
+  props: ['dateFormat', 'domain', 'timeFormat', 'timezone'],
   data() {
     return {
       loading: true,
@@ -184,6 +188,30 @@ export default pagedGrid({
     },
     filterBy() {
       return this.status.value === 'OPEN' ? 'StartTime' : 'CloseTime';
+    },
+    formattedResults() {
+      const { dateFormat, results, timeFormat, timezone } = this;
+
+      return results.map(result => ({
+        workflowId: result.execution.workflowId,
+        runId: result.execution.runId,
+        workflowName: result.type.name,
+        startTime: getDatetimeFormattedString({
+          date: result.startTime,
+          dateFormat,
+          timeFormat,
+          timezone,
+        }),
+        endTime: result.closeTime
+          ? getDatetimeFormattedString({
+              date: result.closeTime,
+              dateFormat,
+              timeFormat,
+              timezone,
+            })
+          : '',
+        status: (result.closeStatus || 'open').toLowerCase(),
+      }));
     },
     startTime() {
       const { range, startTime } = this.$route.query;
@@ -298,20 +326,9 @@ export default pagedGrid({
           .then(res => {
             this.npt = res.nextPageToken;
             this.loading = false;
-            const formattedResults = res.executions.map(data => ({
-              workflowId: data.execution.workflowId,
-              runId: data.execution.runId,
-              workflowName: data.type.name,
-              startTime: moment(data.startTime).format('lll'),
-              endTime: data.closeTime
-                ? moment(data.closeTime).format('lll')
-                : '',
-              status: (data.closeStatus || 'open').toLowerCase(),
-            }));
-
             this.results = query.nextPageToken
-              ? this.results.concat(formattedResults)
-              : formattedResults;
+              ? this.results.concat(res.executions)
+              : res.executions;
 
             return this.results;
           })

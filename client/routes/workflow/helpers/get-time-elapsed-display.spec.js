@@ -8,7 +8,7 @@ describe('getTimeElapsedDisplay', () => {
   describe('When passed an event with no timestamp', () => {
     it('should return "".', () => {
       const event = {};
-      const output = getTimeElapsedDisplay(event);
+      const output = getTimeElapsedDisplay({ event });
 
       expect(output).toEqual('');
     });
@@ -20,7 +20,7 @@ describe('getTimeElapsedDisplay', () => {
         timestamp: moment(DATE),
       };
       const index = -1;
-      const output = getTimeElapsedDisplay(event, index);
+      const output = getTimeElapsedDisplay({ event, index });
 
       expect(output).toEqual('');
     });
@@ -32,9 +32,9 @@ describe('getTimeElapsedDisplay', () => {
         timestamp: moment(DATE),
       };
       const index = 0;
-      const output = getTimeElapsedDisplay(event, index);
+      const output = getTimeElapsedDisplay({ event, index });
 
-      expect(output).toEqual('Jan 1st 12:00:00 am');
+      expect(output).toEqual('Jan 1, 2020 12:00:00 AM');
     });
   });
 
@@ -50,7 +50,7 @@ describe('getTimeElapsedDisplay', () => {
       ];
       const index = 1;
       const event = eventList[index];
-      const output = getTimeElapsedDisplay(event, index, eventList);
+      const output = getTimeElapsedDisplay({ event, eventList, index });
 
       expect(output).toEqual('1h (+1h)');
     });

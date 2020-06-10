@@ -1,3 +1,4 @@
+export { default as getDatetimeFormattedString } from './get-datetime-formatted-string';
 export { default as getEndTimeIsoString } from './get-end-time-iso-string';
 export { default as getEnvironment } from './get-environment';
 export { default as getEnvironmentList } from './get-environment-list';
