@@ -112,7 +112,11 @@ import moment from 'moment';
 import debounce from 'lodash-es/debounce';
 import pagedGrid from '~components/paged-grid';
 import { DateRangePicker } from '~components';
-import { getDatetimeFormattedString, getEndTimeIsoString, getStartTimeIsoString } from '~helpers';
+import {
+  getDatetimeFormattedString,
+  getEndTimeIsoString,
+  getStartTimeIsoString,
+} from '~helpers';
 
 export default pagedGrid({
   props: ['dateFormat', 'domain', 'timeFormat', 'timezone'],
@@ -192,9 +196,19 @@ export default pagedGrid({
         workflowId: result.execution.workflowId,
         runId: result.execution.runId,
         workflowName: result.type.name,
-        startTime: getDatetimeFormattedString({ date: result.startTime, dateFormat, timeFormat, timezone }),
+        startTime: getDatetimeFormattedString({
+          date: result.startTime,
+          dateFormat,
+          timeFormat,
+          timezone,
+        }),
         endTime: result.closeTime
-          ? getDatetimeFormattedString({ date: result.closeTime, dateFormat, timeFormat, timezone })
+          ? getDatetimeFormattedString({
+              date: result.closeTime,
+              dateFormat,
+              timeFormat,
+              timezone,
+            })
           : '',
         status: (result.closeStatus || 'open').toLowerCase(),
       }));

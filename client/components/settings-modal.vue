@@ -68,7 +68,11 @@
       <div class="footer">
         <flex-grid align-items="center" justify-content="flex-end">
           <flex-grid-item width="102px">
-            <button-fill color="tertiary" label="CANCEL" @click="onCloseClick" />
+            <button-fill
+              color="tertiary"
+              label="CANCEL"
+              @click="onCloseClick"
+            />
           </flex-grid-item>
           <flex-grid-item>
             <button-fill
@@ -133,9 +137,11 @@ export default {
       return this.modalDateFormat.value !== this.dateFormat;
     },
     isSettingsChanged() {
-      return this.isDateFormatChanged ||
+      return (
+        this.isDateFormatChanged ||
         this.isTimeFormatChanged ||
-        this.isTimezoneChanged;
+        this.isTimezoneChanged
+      );
     },
     isTimeFormatChanged() {
       return this.modalTimeFormat.value !== this.timeFormat;
@@ -174,8 +180,12 @@ export default {
     },
     onSubmitClick() {
       this.$emit('onChange', {
-        ...(this.isDateFormatChanged && { dateFormat: this.modalDateFormat.value }),
-        ...(this.isTimeFormatChanged && { timeFormat: this.modalTimeFormat.value }),
+        ...(this.isDateFormatChanged && {
+          dateFormat: this.modalDateFormat.value,
+        }),
+        ...(this.isTimeFormatChanged && {
+          timeFormat: this.modalTimeFormat.value,
+        }),
         ...(this.isTimezoneChanged && { timezone: this.modalTimezone.value }),
       });
       this.close();

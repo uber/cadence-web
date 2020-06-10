@@ -35,10 +35,19 @@ export default {
   computed: {
     formattedPollers() {
       const { dateFormat, pollers, timeFormat, timezone } = this;
-      return pollers && pollers.map((poller) => ({
-        ...poller,
-        lastAccessTime: getDatetimeFormattedString({ date: poller.lastAccessTime, dateFormat, timeFormat, timezone }),
-      }));
+
+      return (
+        pollers &&
+        pollers.map(poller => ({
+          ...poller,
+          lastAccessTime: getDatetimeFormattedString({
+            date: poller.lastAccessTime,
+            dateFormat,
+            timeFormat,
+            timezone,
+          }),
+        }))
+      );
     },
   },
   created() {

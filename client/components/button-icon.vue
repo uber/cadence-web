@@ -6,7 +6,11 @@
     :to="to"
     @click="onClick"
   >
-    <span class="icon" :class="{ [icon]: icon, [color]: color }" :style="{ 'font-size': size }" />
+    <span
+      class="icon"
+      :class="{ [icon]: icon, [color]: color }"
+      :style="{ 'font-size': size }"
+    />
     <span class="label" :class="{ [color]: color }">{{ label }}</span>
   </component>
 </template>
@@ -17,7 +21,7 @@ export default {
   props: {
     color: {
       type: String,
-      validator: (value) => ['primary', 'secondary'].indexOf(value) !== -1,
+      validator: value => ['primary', 'secondary'].indexOf(value) !== -1,
     },
     href: {
       type: String,

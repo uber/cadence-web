@@ -5,12 +5,7 @@ import getEventDetails from './get-event-details';
 import getEventFullDetails from './get-event-full-details';
 import getEventSummary from './get-event-summary';
 
-const getHistoryEvents = ({
-  dateFormat,
-  events,
-  timeFormat,
-  timezone,
-}) => {
+const getHistoryEvents = ({ dateFormat, events, timeFormat, timezone }) => {
   if (!events) {
     return [];
   }
@@ -25,8 +20,21 @@ const getHistoryEvents = ({
       };
     })
     .map((event, index, eventList) => {
-      const timeStampDisplay = getTimeStampDisplay({ dateFormat, event, index, timeFormat, timezone });
-      const timeElapsedDisplay = getTimeElapsedDisplay({ dateFormat, event, eventList, index, timeFormat, timezone });
+      const timeStampDisplay = getTimeStampDisplay({
+        dateFormat,
+        event,
+        index,
+        timeFormat,
+        timezone,
+      });
+      const timeElapsedDisplay = getTimeElapsedDisplay({
+        dateFormat,
+        event,
+        eventList,
+        index,
+        timeFormat,
+        timezone,
+      });
 
       return {
         ...event,

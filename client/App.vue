@@ -1,7 +1,15 @@
 <script>
 import { version } from '../package.json';
 import logo from './assets/logo.svg';
-import { ButtonIcon, FeatureFlag, FlexGrid, FlexGridItem, NewsModal, NotificationBar, SettingsModal } from '~components';
+import {
+  ButtonIcon,
+  FeatureFlag,
+  FlexGrid,
+  FlexGridItem,
+  NewsModal,
+  NotificationBar,
+  SettingsModal,
+} from '~components';
 import {
   DATE_FORMAT_MMM_D_YYYY,
   DATE_FORMAT_OPTIONS,
@@ -57,11 +65,17 @@ export default {
         timeout: undefined,
       },
       settings: {
-        dateFormat: localStorage.getItem(LOCAL_STORAGE_SETTINGS.dateFormat) || DATE_FORMAT_MMM_D_YYYY,
+        dateFormat:
+          localStorage.getItem(LOCAL_STORAGE_SETTINGS.dateFormat) ||
+          DATE_FORMAT_MMM_D_YYYY,
         dateFormatOptions: DATE_FORMAT_OPTIONS,
-        timeFormat: localStorage.getItem(LOCAL_STORAGE_SETTINGS.timeFormat) || TIME_FORMAT_12,
+        timeFormat:
+          localStorage.getItem(LOCAL_STORAGE_SETTINGS.timeFormat) ||
+          TIME_FORMAT_12,
         timeFormatOptions: TIME_FORMAT_OPTIONS,
-        timezone: localStorage.getItem(LOCAL_STORAGE_SETTINGS.timezone) || TIMEZONE_LOCAL,
+        timezone:
+          localStorage.getItem(LOCAL_STORAGE_SETTINGS.timezone) ||
+          TIMEZONE_LOCAL,
         timezoneOptions: TIMEZONE_OPTIONS,
       },
     };
@@ -128,8 +142,9 @@ export default {
       this.notification.show = false;
     },
     onSettingsChange(values) {
-      for(const key in values) {
+      for (const key in values) {
         const value = values[key];
+
         localStorage.setItem(LOCAL_STORAGE_SETTINGS[key], value);
         this.settings[key] = value;
       }

@@ -38,7 +38,7 @@ export const LOCAL_STORAGE_SETTINGS = {
   dateFormat: 'settings-date-format',
   timeFormat: 'settings-time-format',
   timezone: 'settings-timezone',
-}
+};
 
 export const MAXIMUM_JSON_CHARACTER_LIMIT = 5000;
 export const MAXIMUM_JSON_MESSAGE =

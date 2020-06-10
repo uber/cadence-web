@@ -9,7 +9,7 @@ import {
   TIMEZONE_UTC,
 } from '../constants';
 
-export const getDateFormat = (dateFormat) => {
+export const getDateFormat = dateFormat => {
   switch (dateFormat) {
     case DATE_FORMAT_YYYY_MM_DD:
       return 'YYYY-MM-DD';
@@ -21,7 +21,7 @@ export const getDateFormat = (dateFormat) => {
   }
 };
 
-export const getTimeFormat = (timeFormat) => {
+export const getTimeFormat = timeFormat => {
   switch (timeFormat) {
     case TIME_FORMAT_24:
       return 'HH:mm:ss';
@@ -31,17 +31,18 @@ export const getTimeFormat = (timeFormat) => {
   }
 };
 
-export const getDateTimeFormat = (dateFormat, timeFormat) => `${getDateFormat(dateFormat)} ${getTimeFormat(timeFormat)}`;
+export const getDateTimeFormat = (dateFormat, timeFormat) =>
+  `${getDateFormat(dateFormat)} ${getTimeFormat(timeFormat)}`;
 
-export const getMomentFn = (timezone) => {
+export const getMomentFn = timezone => {
   switch (timezone) {
     case TIMEZONE_UTC:
       return moment.utc;
     case TIMEZONE_LOCAL:
     default:
       return moment;
-  };
-}
+  }
+};
 
 export default ({ date, dateFormat, timeFormat, timezone }) => {
   const dateTimeFormat = getDateTimeFormat(dateFormat, timeFormat);

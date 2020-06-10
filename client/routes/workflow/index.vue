@@ -111,7 +111,7 @@ export default {
     'runId',
     'timeFormat',
     'timezone',
-    'workflowId'
+    'workflowId',
   ],
   created() {
     this.unwatch.push(

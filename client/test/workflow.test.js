@@ -336,7 +336,9 @@ describe('Workflow', () => {
         await Promise.delay(10);
 
         scenario.withWorkflowTermination('example termination');
-        confirmTerminateEl.querySelector('button[name="button-terminate"]').trigger('click');
+        confirmTerminateEl
+          .querySelector('button[name="button-terminate"]')
+          .trigger('click');
         await retry(() =>
           summaryEl.should.not.contain('[data-modal="confirm-termination"]')
         );
@@ -1090,7 +1092,9 @@ describe('Workflow', () => {
       await retry(() =>
         stackTraceEl
           .querySelector('header span')
-          .should.contain.text(`Stack trace at ${moment().format('MMM D, YYYY h:mm:ss A')}`)
+          .should.contain.text(
+            `Stack trace at ${moment().format('MMM D, YYYY h:mm:ss A')}`
+          )
       );
       stackTraceEl
         .querySelector('pre')

@@ -28,9 +28,14 @@ export default {
     formattedStackTraceTimestamp() {
       const { dateFormat, stackTraceTimestamp, timeFormat, timezone } = this;
 
-      return stackTraceTimestamp ?
-        getDatetimeFormattedString({ date: stackTraceTimestamp, dateFormat, timeFormat, timezone }) :
-        '';
+      return stackTraceTimestamp
+        ? getDatetimeFormattedString({
+            date: stackTraceTimestamp,
+            dateFormat,
+            timeFormat,
+            timezone,
+          })
+        : '';
     },
   },
   created() {

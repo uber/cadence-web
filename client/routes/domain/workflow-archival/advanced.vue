@@ -56,6 +56,7 @@ import debounce from 'lodash-es/debounce';
 import { ArchivalTable, ArchivalTableRow } from './components';
 import { LOADING_MESSAGE_DELAY } from './constants';
 import WorkflowArchivalService from './workflow-archival-service';
+import { mapArchivedWorkflowResponse } from './helpers';
 import pagedGrid from '~components/paged-grid';
 import {
   ButtonFill,
@@ -68,7 +69,6 @@ import {
   TextInput,
 } from '~components';
 import { getErrorMessage } from '~helpers';
-import { mapArchivedWorkflowResponse } from './helpers';
 
 export default pagedGrid({
   name: 'workflow-archival-advanced',
@@ -85,12 +85,7 @@ export default pagedGrid({
   },
   computed: {
     formattedResults() {
-      const {
-        dateFormat,
-        results,
-        timeFormat,
-        timezone,
-      } = this;
+      const { dateFormat, results, timeFormat, timezone } = this;
 
       return mapArchivedWorkflowResponse({
         dateFormat,
@@ -133,7 +128,7 @@ export default pagedGrid({
           results,
           nextPageToken,
         } = await this.workflowArchivalService.fetchArchivalRecords(
-          queryParams,
+          queryParams
         );
 
         this.results = this.results ? this.results.concat(results) : results;

@@ -134,9 +134,12 @@
 <script>
 import { TERMINATE_DEFAULT_ERROR_MESSAGE } from './constants';
 import { NOTIFICATION_TYPE_ERROR, NOTIFICATION_TYPE_SUCCESS } from '~constants';
-import { getErrorMessage } from '~helpers';
+import {
+  getErrorMessage,
+  getDatetimeFormattedString,
+  isFeatureFlagEnabled,
+} from '~helpers';
 import { BarLoader, ButtonFill, DataViewer, DetailList } from '~components';
-import { getDatetimeFormattedString, isFeatureFlagEnabled } from '~helpers';
 
 export default {
   data() {
@@ -174,37 +177,56 @@ export default {
       return !this.isWorkflowRunning;
     },
     terminateDisabledLabel() {
-      return !this.isWorkflowRunning ? 'Workflow needs to be running to be able to terminate.' : '';
+      return !this.isWorkflowRunning
+        ? 'Workflow needs to be running to be able to terminate.'
+        : '';
     },
     workflowCloseTime() {
       const { dateFormat, timeFormat, timezone } = this;
       const { closeTime } = this.workflow.workflowExecutionInfo;
+
       return closeTime
-        ? getDatetimeFormattedString({ date: closeTime, dateFormat, timeFormat, timezone })
+        ? getDatetimeFormattedString({
+            date: closeTime,
+            dateFormat,
+            timeFormat,
+            timezone,
+          })
         : '';
     },
     workflowStartTime() {
       const { dateFormat, timeFormat, timezone } = this;
       const { startTime } = this.workflow.workflowExecutionInfo;
-      return getDatetimeFormattedString({ date: startTime, dateFormat, timeFormat, timezone });
+
+      return getDatetimeFormattedString({
+        date: startTime,
+        dateFormat,
+        timeFormat,
+        timezone,
+      });
     },
   },
   methods: {
     async fetchDomainAuthorization() {
       const { domain } = this;
+
       try {
-        const response = await this.$http(`/api/domains/${domain}/authorization`);
+        const response = await this.$http(
+          `/api/domains/${domain}/authorization`
+        );
+
         return response.authorization;
       } catch (error) {
         this.$emit('onNotification', {
           message: getErrorMessage(error),
           type: NOTIFICATION_TYPE_ERROR,
         });
-      };
+      }
     },
     async initAuthorization() {
       if (isFeatureFlagEnabled('domain-authorization')) {
         const authorization = await this.fetchDomainAuthorization();
+
         this.isAuthorized = authorization;
       } else {
         this.isAuthorized = true;

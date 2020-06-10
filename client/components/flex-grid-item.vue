@@ -1,5 +1,8 @@
 <template>
-  <div class="flex-grid-item" :style="{ flexGrow: grow, marginRight: margin, maxWidth: width }">
+  <div
+    class="flex-grid-item"
+    :style="{ flexGrow: grow, marginRight: margin, maxWidth: width }"
+  >
     <slot></slot>
   </div>
 </template>

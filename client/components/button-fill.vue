@@ -24,13 +24,14 @@ export default {
     color: {
       type: String,
       default: 'primary',
-      validator: (value) => ['primary', 'secondary', 'tertiary'].indexOf(value) !== -1,
+      validator: value =>
+        ['primary', 'secondary', 'tertiary'].indexOf(value) !== -1,
     },
     disabled: {
       type: Boolean,
     },
     disabledLabel: {
-      type: String
+      type: String,
     },
     href: {
       type: String,
@@ -49,7 +50,7 @@ export default {
   computed: {
     disabledLabelText() {
       return this.disabled ? this.disabledLabel : '';
-    }
+    },
   },
   methods: {
     onClick(...args) {

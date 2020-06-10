@@ -84,6 +84,7 @@ import {
   getStatus,
   getStatusValue,
   updateQueryFromRange,
+  mapArchivedWorkflowResponse,
 } from './helpers';
 import WorkflowArchivalService from './workflow-archival-service';
 import pagedGrid from '~components/paged-grid';
@@ -103,7 +104,6 @@ import {
   getErrorMessage,
   getStartTimeIsoString,
 } from '~helpers';
-import { mapArchivedWorkflowResponse } from './helpers';
 
 export default pagedGrid({
   name: 'workflow-archival-basic',
@@ -128,12 +128,7 @@ export default pagedGrid({
       return getEndTimeIsoString(range, endTime);
     },
     formattedResults() {
-      const {
-        dateFormat,
-        results,
-        timeFormat,
-        timezone,
-      } = this;
+      const { dateFormat, results, timeFormat, timezone } = this;
 
       return mapArchivedWorkflowResponse({
         dateFormat,

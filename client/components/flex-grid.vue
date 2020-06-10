@@ -4,7 +4,7 @@
     :style="{
       'align-items': alignItems,
       'justify-content': justifyContent,
-      'width': width,
+      width: width,
     }"
   >
     <slot></slot>
