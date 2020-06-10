@@ -29,7 +29,7 @@ export default {
       type: Boolean,
     },
     disabledLabel: {
-      type: String
+      type: String,
     },
     href: {
       type: String,
@@ -48,7 +48,7 @@ export default {
   computed: {
     disabledLabelText() {
       return this.disabled ? this.disabledLabel : '';
-    }
+    },
   },
   methods: {
     onClick(...args) {
