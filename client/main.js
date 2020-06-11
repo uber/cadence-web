@@ -22,7 +22,9 @@ import News from './routes/news';
 import Query from './routes/workflow/query';
 import Root from './routes';
 import StackTrace from './routes/workflow/stack-trace';
-import TaskList from './routes/domain/task-list';
+import TaskList from './routes/task-list';
+import TaskListPartition from './routes/task-list/partition';
+import TaskListPollers from './routes/task-list/pollers';
 import WorkflowArchival from './routes/domain/workflow-archival';
 import WorkflowArchivalAdvanced from './routes/domain/workflow-archival/advanced';
 import WorkflowArchivalBasic from './routes/domain/workflow-archival/basic';
@@ -179,7 +181,24 @@ const routeOpts = {
     {
       name: 'task-list',
       path: '/domains/:domain/task-lists/:taskList',
+      redirect: '/domains/:domain/task-lists/:taskList/pollers',
       component: TaskList,
+      children: [
+        {
+          name: 'task-list/pollers',
+          path: '/domains/:domain/task-lists/:taskList/pollers',
+          components: {
+            pollers: TaskListPollers,
+          },
+        },
+        {
+          name: 'task-list/partition',
+          path: '/domains/:domain/task-lists/:taskList/partition',
+          components: {
+            partition: TaskListPartition,
+          },
+        },
+      ],
     },
 
     // redirects

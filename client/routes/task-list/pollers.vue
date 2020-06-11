@@ -1,6 +1,5 @@
 <template>
   <section :class="{ 'task-list': true, loading }">
-    <header><h3>Pollers</h3></header>
     <table v-if="pollers">
       <thead>
         <th>Identity</th>
