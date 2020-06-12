@@ -257,6 +257,24 @@ router.get('/api/domains/:domain/task-lists/:taskList/pollers', async function (
   ctx.body = activityL.reduce(r('activity'), decisionL.reduce(r('decision'), {}))
 })
 
+router.get('/api/domains/:domain/task-lists/:taskList/partitions', async function (ctx) {
+  const { domain, taskList } = ctx.params;
+  const listPartitions = await ctx.cadence.listTaskListPartitions({
+    domain,
+    taskList: { name: taskList },
+  });
+
+  // TODO - may need to do some formatting here for empty case?
+  /*
+  {
+    "activityTaskListPartitions":null,
+    "decisionTaskListPartitions":null
+  }
+  */
+
+  ctx.body = listPartitions;
+});
+
 router.get('/health', ctx => ctx.body = 'OK')
 
 module.exports = router
