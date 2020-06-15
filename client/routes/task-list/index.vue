@@ -6,11 +6,20 @@
         label="Pollers"
         :to="{ name: 'task-list/pollers' }"
       />
-      <navigation-link
-        icon="icon_fare-split"
-        label="Partition"
-        :to="{ name: 'task-list/partition' }"
-      />
+      <feature-flag display="inline" name="task-list-partition">
+        <navigation-link
+          icon="icon_fare-split"
+          label="Partition"
+          :to="{ name: 'task-list/partition' }"
+        />
+      </feature-flag>
+      <feature-flag display="inline" name="task-list-metrics">
+        <navigation-link
+          icon="icon_chart"
+          label="Metrics"
+          :to="{ name: 'task-list/metrics' }"
+        />
+      </feature-flag>
     </navigation-bar>
     <router-view
       name="pollers"
@@ -23,15 +32,20 @@
       name="partition"
       :domain="domain"
     />
+    <router-view
+      name="metrics"
+      :domain="domain"
+    />
   </section>
 </template>
 
 <script>
-import { NavigationBar, NavigationLink } from '~components';
+import { FeatureFlag, NavigationBar, NavigationLink } from '~components';
 
 export default {
   props: ['dateFormat', 'domain', 'timeFormat', 'timezone'],
   components: {
+    'feature-flag': FeatureFlag,
     'navigation-bar': NavigationBar,
     'navigation-link': NavigationLink,
   },

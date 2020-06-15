@@ -23,6 +23,7 @@ import Query from './routes/workflow/query';
 import Root from './routes';
 import StackTrace from './routes/workflow/stack-trace';
 import TaskList from './routes/task-list';
+import TaskListMetrics from './routes/task-list/metrics';
 import TaskListPartition from './routes/task-list/partition';
 import TaskListPollers from './routes/task-list/pollers';
 import WorkflowArchival from './routes/domain/workflow-archival';
@@ -196,6 +197,13 @@ const routeOpts = {
           path: '/domains/:domain/task-lists/:taskList/partition',
           components: {
             partition: TaskListPartition,
+          },
+        },
+        {
+          name: 'task-list/metrics',
+          path: '/domains/:domain/task-lists/:taskList/metrics',
+          components: {
+            partition: TaskListMetrics,
           },
         },
       ],
