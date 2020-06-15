@@ -1,18 +1,45 @@
 <template>
-  <div>
-    Partition tab content
-  </div>
+  <section class="task-list-partition">
+    <flex-grid width="100%">
+      <flex-grid-item grow="1" margin="10px">
+        <partition-table
+          title="Activity Partitions"
+          :partition-list="activityPartitionList"
+        />
+      </flex-grid-item>
+      <flex-grid-item grow="1">
+        <partition-table
+          title="Decision Partitions"
+          :partition-list="decisionPartitionList"
+        />
+      </flex-grid-item>
+    </flex-grid>
+  </section>
 </template>
 
 <script>
+import { FlexGrid, FlexGridItem } from '~components';
+import PartitionTable from './components/partition-table';
+
 export default {
   name: 'partition',
+  data() {
+    return {
+      activityPartitionList: undefined,
+      decisionPartitionList: undefined,
+    };
+  },
   async created() {
     const partitions = await this.$http(
       `/api/domains/${this.$route.params.domain}/task-lists/${this.$route.params.taskList}/partitions`
     );
-
-    console.log('partitions = ', partitions);
+    this.activityPartitionList = partitions.activityTaskListPartitions;
+    this.decisionPartitionList = partitions.decisionTaskListPartitions;
+  },
+  components: {
+    'flex-grid': FlexGrid,
+    'flex-grid-item': FlexGridItem,
+    'partition-table': PartitionTable,
   },
 };
 </script>
