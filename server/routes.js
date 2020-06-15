@@ -189,13 +189,15 @@ router.post('/api/domains/:domain/workflows/:workflowId/:runId/signal/:signal', 
 router.get('/api/domains/:domain/workflows/:workflowId/:runId', async function (ctx) {
   try {
     const describeResponse = await ctx.cadence.describeWorkflow();
-    describeResponse.workflowExecutionInfo.closeEvent = null;
 
-    if (describeResponse.workflowExecutionInfo.closeStatus) {
-      const lastEventResponse = await ctx.cadence.getHistory({
-        HistoryEventFilterType: 'CLOSE_EVENT',
-      });
-      describeResponse.workflowExecutionInfo.closeEvent = mapHistoryResponse(lastEventResponse.history)[0];
+    if (describeResponse.workflowExecutionInfo) {
+      describeResponse.workflowExecutionInfo.closeEvent = null;
+      if (describeResponse.workflowExecutionInfo.closeStatus) {
+        const lastEventResponse = await ctx.cadence.getHistory({
+          HistoryEventFilterType: 'CLOSE_EVENT',
+        });
+        describeResponse.workflowExecutionInfo.closeEvent = mapHistoryResponse(lastEventResponse.history)[0];
+      }
     }
 
     ctx.body = describeResponse;
