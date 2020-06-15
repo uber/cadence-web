@@ -193,10 +193,10 @@ router.get('/api/domains/:domain/workflows/:workflowId/:runId', async function (
     if (describeResponse.workflowExecutionInfo) {
       describeResponse.workflowExecutionInfo.closeEvent = null;
       if (describeResponse.workflowExecutionInfo.closeStatus) {
-        const lastEventResponse = await ctx.cadence.getHistory({
+        const closeEventResponse = await ctx.cadence.getHistory({
           HistoryEventFilterType: 'CLOSE_EVENT',
         });
-        describeResponse.workflowExecutionInfo.closeEvent = mapHistoryResponse(lastEventResponse.history)[0];
+        describeResponse.workflowExecutionInfo.closeEvent = mapHistoryResponse(closeEventResponse.history)[0];
       }
     }
 
