@@ -1,6 +1,5 @@
 <template>
-  <section :class="{ 'task-list': true, loading }">
-    <header><h3>Pollers</h3></header>
+  <section :class="{ 'task-list-pollers': true, loading }">
     <table v-if="pollers">
       <thead>
         <th>Identity</th>
@@ -78,7 +77,7 @@ export default {
 <style lang="stylus">
 @require "../../styles/definitions.styl"
 
-section.task-list
+section.task-list-pollers
   > header
     padding inline-spacing-medium
   table

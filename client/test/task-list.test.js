@@ -9,7 +9,7 @@ describe('Task List', () => {
       .withTaskListPollers('ci_task_list', pollers)
       .go();
 
-    const taskListEl = await testEl.waitUntilExists('section.task-list');
+    const taskListEl = await testEl.waitUntilExists('section.task-list-pollers');
 
     return [taskListEl, scenario];
   }

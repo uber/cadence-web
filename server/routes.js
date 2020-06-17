@@ -269,6 +269,14 @@ router.get('/api/domains/:domain/task-lists/:taskList/pollers', async function (
   ctx.body = activityL.reduce(r('activity'), decisionL.reduce(r('decision'), {}))
 })
 
+router.get('/api/domains/:domain/task-lists/:taskList/partitions', async function (ctx) {
+  const { domain, taskList } = ctx.params;
+  ctx.body = await ctx.cadence.listTaskListPartitions({
+    domain,
+    taskList: { name: taskList },
+  });
+});
+
 router.get('/health', ctx => ctx.body = 'OK')
 
 module.exports = router
