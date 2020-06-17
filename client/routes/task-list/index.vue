@@ -1,5 +1,5 @@
 <template>
-  <section class="tasklist">
+  <section class="task-list">
     <navigation-bar>
       <navigation-link
         icon="icon_eta"
@@ -53,7 +53,7 @@ export default {
 </script>
 
 <style lang="stylus">
-section.tasklist {
+section.task-list {
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;

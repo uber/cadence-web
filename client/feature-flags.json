@@ -9,11 +9,11 @@
   },
   {
     "key": "task-list-metrics",
-    "value": true
+    "value": false
   },
   {
     "key": "task-list-partition",
-    "value": true
+    "value": false
   },
   {
     "key": "workflow-terminate",
