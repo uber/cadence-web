@@ -1,6 +1,10 @@
 <template>
   <table v-if="partitionList">
-    <caption>{{ title }}</caption>
+    <caption>
+      {{
+        title
+      }}
+    </caption>
     <thead>
       <th>Host name</th>
       <th>Partition</th>

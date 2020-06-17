@@ -28,14 +28,8 @@
       :time-format="timeFormat"
       :timezone="timezone"
     />
-    <router-view
-      name="partition"
-      :domain="domain"
-    />
-    <router-view
-      name="metrics"
-      :domain="domain"
-    />
+    <router-view name="partition" :domain="domain" />
+    <router-view name="metrics" :domain="domain" />
   </section>
 </template>
 

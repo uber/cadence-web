@@ -24,8 +24,7 @@ export default {
     color: {
       type: String,
       default: 'primary',
-      validator: value =>
-        ['primary', 'secondary', 'tertiary'].includes(value),
+      validator: value => ['primary', 'secondary', 'tertiary'].includes(value),
     },
     disabled: {
       type: Boolean,

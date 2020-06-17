@@ -18,8 +18,8 @@
 </template>
 
 <script>
-import { FlexGrid, FlexGridItem } from '~components';
 import PartitionTable from './components/partition-table';
+import { FlexGrid, FlexGridItem } from '~components';
 
 export default {
   name: 'partition',
@@ -33,6 +33,7 @@ export default {
     const partitions = await this.$http(
       `/api/domains/${this.$route.params.domain}/task-lists/${this.$route.params.taskList}/partitions`
     );
+
     this.activityPartitionList = partitions.activityTaskListPartitions;
     this.decisionPartitionList = partitions.decisionTaskListPartitions;
   },

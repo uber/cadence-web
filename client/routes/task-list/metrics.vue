@@ -1,7 +1,5 @@
 <template>
-  <section class="task-list-metrics">
-
-  </section>
+  <section class="task-list-metrics"></section>
 </template>
 
 <script>
