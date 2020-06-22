@@ -168,7 +168,6 @@ export default function(historyEvents) {
         className: 'external-signal',
         eventIds: [e.eventId],
         start: moment(e.timestamp),
-        ongoing: true,
         content: 'External Workflow Signaled',
         details: summarizeEvents.SignalExternalWorkflowExecutionInitiated(
           e.details
