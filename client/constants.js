@@ -38,6 +38,8 @@ export const LOCAL_STORAGE_SETTINGS = {
   dateFormat: 'settings-date-format',
   timeFormat: 'settings-time-format',
   timezone: 'settings-timezone',
+  workflowHistoryEventHighlightList: 'settings-workflow-history-event-highlight-list',
+  workflowHistoryEventHighlightListEnabled: 'settings-workflow-history-event-highlight-list-enabled',
 };
 
 export const MAXIMUM_JSON_CHARACTER_LIMIT = 5000;
@@ -63,4 +65,60 @@ export const TIMEZONE_UTC = 'TIMEZONE_UTC';
 export const TIMEZONE_OPTIONS = [
   { label: 'Local', value: TIMEZONE_LOCAL },
   { label: 'UTC', value: TIMEZONE_UTC },
+];
+
+export const WORKFLOW_EVENT_TYPE = {
+  ActivityTaskCanceled: 'ActivityTaskCanceled',
+  ActivityTaskCancelRequested: 'ActivityTaskCancelRequested',
+  ActivityTaskCompleted: 'ActivityTaskCompleted',
+  ActivityTaskFailed: 'ActivityTaskFailed',
+  ActivityTaskScheduled: 'ActivityTaskScheduled',
+  ActivityTaskStarted: 'ActivityTaskStarted',
+  ActivityTaskTimedOut: 'ActivityTaskTimedOut',
+  CancelTimerFailed: 'CancelTimerFailed',
+  ChildWorkflowExecutionCanceled: 'ChildWorkflowExecutionCanceled',
+  ChildWorkflowExecutionCompleted: 'ChildWorkflowExecutionCompleted',
+  ChildWorkflowExecutionFailed: 'ChildWorkflowExecutionFailed',
+  ChildWorkflowExecutionStarted: 'ChildWorkflowExecutionStarted',
+  ChildWorkflowExecutionTerminated: 'ChildWorkflowExecutionTerminated',
+  ChildWorkflowExecutionTimedOut: 'ChildWorkflowExecutionTimedOut',
+  DecisionTaskCompleted: 'DecisionTaskCompleted',
+  DecisionTaskFailed: 'DecisionTaskFailed',
+  DecisionTaskScheduled: 'DecisionTaskScheduled',
+  DecisionTaskStarted: 'DecisionTaskStarted',
+  DecisionTaskTimedOut: 'DecisionTaskTimedOut',
+  ExternalWorkflowExecutionCancelRequested: 'ExternalWorkflowExecutionCancelRequested',
+  ExternalWorkflowExecutionSignaled: 'ExternalWorkflowExecutionSignaled',
+  MarkerRecorded: 'MarkerRecorded',
+  RequestCancelActivityTaskFailed: 'RequestCancelActivityTaskFailed',
+  RequestCancelExternalWorkflowExecutionFailed: 'RequestCancelExternalWorkflowExecutionFailed',
+  RequestCancelExternalWorkflowExecutionInitiated: 'RequestCancelExternalWorkflowExecutionInitiated',
+  SignalExternalWorkflowExecutionFailed: 'SignalExternalWorkflowExecutionFailed',
+  SignalExternalWorkflowExecutionInitiated: 'SignalExternalWorkflowExecutionInitiated',
+  StartChildWorkflowExecutionFailed: 'StartChildWorkflowExecutionFailed',
+  StartChildWorkflowExecutionInitiated: 'StartChildWorkflowExecutionInitiated',
+  TimerCanceled: 'TimerCanceled',
+  TimerFired: 'TimerFired',
+  TimerStarted: 'TimerStarted',
+  UpsertWorkflowSearchAttributes: 'UpsertWorkflowSearchAttributes',
+  WorkflowExecutionCanceled: 'WorkflowExecutionCanceled',
+  WorkflowExecutionCancelRequested: 'WorkflowExecutionCancelRequested',
+  WorkflowExecutionCompleted: 'WorkflowExecutionCompleted',
+  WorkflowExecutionContinuedAsNew: 'WorkflowExecutionContinuedAsNew',
+  WorkflowExecutionFailed: 'WorkflowExecutionFailed',
+  WorkflowExecutionSignaled: 'WorkflowExecutionSignaled',
+  WorkflowExecutionStarted: 'WorkflowExecutionStarted',
+  WorkflowExecutionTerminated: 'WorkflowExecutionTerminated',
+  WorkflowExecutionTimedOut: 'WorkflowExecutionTimedOut',
+};
+
+export const WORKFLOW_EVENT_TYPES = Object.values(WORKFLOW_EVENT_TYPE);
+
+export const WORKFLOW_HISTORY_EVENT_HIGHLIGHT_LIST_DEFAULT = [
+  {
+    deleteEnabled: false,
+    eventParam: 'attempt',
+    eventType: WORKFLOW_EVENT_TYPE.ActivityTaskStarted,
+    isEnabled: true,
+  },
 ];
