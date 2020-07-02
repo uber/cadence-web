@@ -1,5 +1,7 @@
+import { WORKFLOW_EVENT_TYPE } from '~constants';
+
 export const eventFullTransforms = {
-  MarkerRecorded: d => {
+  [WORKFLOW_EVENT_TYPE.MarkerRecorded]: d => {
     if (d.markerName === 'SideEffect') {
       return {
         sideEffectID: d.details[0],

@@ -1,5 +1,6 @@
 import moment from 'moment';
 import { summarizeEvents } from './summarize-events';
+import { WORKFLOW_EVENT_TYPE } from '~constants';
 import { shortName } from '~helpers';
 
 export default function(historyEvents) {
@@ -51,14 +52,14 @@ export default function(historyEvents) {
       } else {
         item.eventIds.push(e.eventId);
 
-        if (e.eventType !== 'ActivityTaskStarted') {
+        if (e.eventType !== WORKFLOW_EVENT_TYPE.ActivityTaskStarted) {
           Object.assign(item.details, summarizeEvents[e.eventType](e.details));
         }
       }
 
       if (
-        e.eventType !== 'ActivityTaskScheduled' &&
-        e.eventType !== 'ActivityTaskStarted'
+        e.eventType !== WORKFLOW_EVENT_TYPE.ActivityTaskScheduled &&
+        e.eventType !== WORKFLOW_EVENT_TYPE.ActivityTaskStarted
       ) {
         assignEnd(item, e.timestamp);
         item.className = `activity ${e.eventType
@@ -104,15 +105,15 @@ export default function(historyEvents) {
       }
 
       if (
-        e.eventType !== 'StartChildWorkflowExecutionInitiated' &&
-        e.eventType !== 'ChildWorkflowExecutionStarted'
+        e.eventType !== WORKFLOW_EVENT_TYPE.StartChildWorkflowExecutionInitiated &&
+        e.eventType !== WORKFLOW_EVENT_TYPE.ChildWorkflowExecutionStarted
       ) {
         assignEnd(item, e.timestamp);
         item.className = `child-workflow ${e.eventType
           .replace('ChildWorkflowExecution', '')
           .toLowerCase()}`;
       }
-    } else if (e.eventType === 'TimerStarted') {
+    } else if (e.eventType === WORKFLOW_EVENT_TYPE.TimerStarted) {
       add({
         id: `timer${e.details.timerId}`,
         className: 'timer',
@@ -126,13 +127,13 @@ export default function(historyEvents) {
           .duration(e.details.startToFireTimeoutSeconds, 'seconds')
           .format()})`,
       });
-    } else if (e.eventType === 'TimerFired') {
+    } else if (e.eventType === WORKFLOW_EVENT_TYPE.TimerFired) {
       const timerStartedEvent = hash[`timer${e.details.timerId}`];
 
       if (timerStartedEvent) {
         timerStartedEvent.eventIds.push(e.eventId);
       }
-    } else if (e.eventType === 'MarkerRecorded') {
+    } else if (e.eventType === WORKFLOW_EVENT_TYPE.MarkerRecorded) {
       const markerName =
         e.details.markerName !== undefined
           ? e.details.markerName.toLowerCase()
@@ -149,9 +150,9 @@ export default function(historyEvents) {
             SideEffect: 'Side Effect',
             LocalActivity: 'Local Activity',
           }[e.details.markerName] || `${e.details.markerName} Marker`,
-        details: summarizeEvents.MarkerRecorded(e.details),
+        details: summarizeEvents[WORKFLOW_EVENT_TYPE.MarkerRecorded](e.details),
       });
-    } else if (e.eventType === 'WorkflowExecutionSignaled') {
+    } else if (e.eventType === WORKFLOW_EVENT_TYPE.WorkflowExecutionSignaled) {
       add({
         id: `signal${e.eventId}`,
         className: 'signal',
@@ -162,18 +163,18 @@ export default function(historyEvents) {
           input: e.details.input,
         },
       });
-    } else if (e.eventType === 'SignalExternalWorkflowExecutionInitiated') {
+    } else if (e.eventType === WORKFLOW_EVENT_TYPE.SignalExternalWorkflowExecutionInitiated) {
       add({
         id: `extsignal${e.eventId}`,
         className: 'external-signal',
         eventIds: [e.eventId],
         start: moment(e.timestamp),
         content: 'External Workflow Signaled',
-        details: summarizeEvents.SignalExternalWorkflowExecutionInitiated(
+        details: summarizeEvents[WORKFLOW_EVENT_TYPE.SignalExternalWorkflowExecutionInitiated](
           e.details
         ),
       });
-    } else if (e.eventType === 'ExternalWorkflowExecutionSignaled') {
+    } else if (e.eventType === WORKFLOW_EVENT_TYPE.ExternalWorkflowExecutionSignaled) {
       const initiatedEvent = hash[`extsignal${e.eventId}`];
 
       if (initiatedEvent) {
@@ -182,8 +183,8 @@ export default function(historyEvents) {
         // assignEnd(item, e.timestamp);
       }
     } else if (
-      e.eventType === 'DecisionTaskFailed' ||
-      e.eventType === 'DecisionTaskTimedOut'
+      e.eventType === WORKFLOW_EVENT_TYPE.DecisionTaskFailed ||
+      e.eventType === WORKFLOW_EVENT_TYPE.DecisionTaskTimedOut
     ) {
       add({
         id: `decision${e.eventId}`,
