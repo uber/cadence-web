@@ -1,5 +1,6 @@
 <script>
-import { DataViewer } from '~components';
+import DataViewer from './data-viewer';
+import HighlightToggle from './highlight-toggle';
 import { preKeys } from '~constants';
 
 export default {
@@ -7,6 +8,7 @@ export default {
   props: ['compact', 'highlight', 'item', 'title'],
   components: {
     'data-viewer': DataViewer,
+    'highlight-toggle': HighlightToggle
   },
   data() {
     return {};
@@ -43,7 +45,12 @@ export default {
       { class: 'details' },
       this.item.kvps.map(kvp =>
         h('div', { attrs: { 'data-prop': kvp.key } }, [
-          h('dt', null, kvp.key),
+          h('highlight-toggle', {
+            props: {
+              label: kvp.key,
+              tag: 'dt',
+            },
+          }),
           h('dd', null, dd(kvp)),
         ])
       )

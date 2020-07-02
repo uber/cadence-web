@@ -11,7 +11,11 @@
       :class="{ [icon]: icon, [color]: color }"
       :style="{ 'font-size': size }"
     />
-    <span class="label" :class="{ [color]: color }">{{ label }}</span>
+    <span
+      class="label"
+      :class="{ [color]: color }"
+      v-if="label"
+    >{{ label }}</span>
   </component>
 </template>
 
