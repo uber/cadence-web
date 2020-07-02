@@ -113,12 +113,3 @@ export const WORKFLOW_EVENT_TYPE = {
 };
 
 export const WORKFLOW_EVENT_TYPES = Object.values(WORKFLOW_EVENT_TYPE);
-
-export const WORKFLOW_HISTORY_EVENT_HIGHLIGHT_LIST_DEFAULT = [
-  {
-    deleteEnabled: false,
-    eventParam: 'attempt',
-    eventType: WORKFLOW_EVENT_TYPE.ActivityTaskStarted,
-    isEnabled: true,
-  },
-];
