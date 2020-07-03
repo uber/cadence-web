@@ -47,6 +47,8 @@ export default {
         h('div', { attrs: { 'data-prop': kvp.key } }, [
           h('highlight-toggle', {
             props: {
+              isHighlighted: true,  // TODO - figure out when label is subscribed to...
+              isToggleEnabled: true,  // TODO - figure out when in state of summary or compact - disable it.
               label: kvp.key,
               tag: 'dt',
             },

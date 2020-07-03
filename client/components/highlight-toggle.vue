@@ -10,7 +10,10 @@
       {{label}}
     </span>
     <button-icon
-      :class="{ active: isHighlighted }"
+      :class="{
+        active: isHighlighted,
+        disabled: !isToggleEnabled,
+      }"
       icon="icon_search"
       @onClick={onClick}
     />
@@ -24,6 +27,10 @@ export default {
   name: 'highlight-toggle',
   props: {
     isHighlighted: {
+      type: Boolean,
+      default: false,
+    },
+    isToggleEnabled: {
       type: Boolean,
       default: false,
     },
@@ -63,6 +70,10 @@ export default {
 
     &.active {
       display: inline-block;
+    }
+
+    &.disabled {
+      display: none !important;
     }
   }
 

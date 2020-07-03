@@ -10,6 +10,7 @@ export { default as ErrorMessage } from './error-message';
 export { default as FeatureFlag } from './feature-flag';
 export { default as FlexGrid } from './flex-grid';
 export { default as FlexGridItem } from './flex-grid-item';
+export { default as HighlightToggle } from './highlight-toggle';
 export { default as LoadingMessage } from './loading-message';
 export { default as LoadingSpinner } from './loading-spinner';
 export { default as NavigationBar } from './navigation-bar';

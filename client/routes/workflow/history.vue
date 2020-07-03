@@ -147,7 +147,12 @@
                     "
                   >
                     <div class="td col-id">{{ item.eventId }}</div>
-                    <div class="td col-type">{{ item.eventType }}</div>
+                    <div class="td col-type">
+                      <highlight-toggle
+                        :is-highlighted="true"
+                        :label="item.eventType"
+                      />
+                    </div>
                     <div class="td col-time">
                       {{
                         tsFormat === 'elapsed'
@@ -270,7 +275,7 @@ import debounce from 'lodash-es/debounce';
 import omit from 'lodash-es/omit';
 import Timeline from './components/timeline.vue';
 import EventDetail from './components/event-detail.vue';
-import { DetailList } from '~components';
+import { DetailList, HighlightToggle } from '~components';
 
 export default {
   name: 'history',
@@ -524,6 +529,7 @@ export default {
     DynamicScroller,
     DynamicScrollerItem,
     'event-detail': EventDetail,
+    'highlight-toggle': HighlightToggle,
     prism: Prism,
     RecycleScroller,
     timeline: Timeline,
