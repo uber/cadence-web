@@ -49,6 +49,8 @@
       :events="historyEvents"
       :loading="history.loading"
       :timelineEvents="historyTimelineEvents"
+      :workflow-history-event-highlight-list="workflowHistoryEventHighlightList"
+      :workflow-history-event-highlight-list-enabled="workflowHistoryEventHighlightListEnabled"
       @onNotification="onNotification"
     />
     <router-view
@@ -111,6 +113,8 @@ export default {
     'runId',
     'timeFormat',
     'timezone',
+    'workflowHistoryEventHighlightList',
+    'workflowHistoryEventHighlightListEnabled',
     'workflowId',
   ],
   created() {

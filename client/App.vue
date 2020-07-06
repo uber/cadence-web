@@ -77,6 +77,10 @@ export default {
           localStorage.getItem(LOCAL_STORAGE_SETTINGS.timezone) ||
           TIMEZONE_LOCAL,
         timezoneOptions: TIMEZONE_OPTIONS,
+        workflowHistoryEventHighlightList:
+          localStorage.getItem(LOCAL_STORAGE_SETTINGS.workflowHistoryEventHighlightList) || [],
+        workflowHistoryEventHighlightListEnabled:
+          localStorage.getItem(LOCAL_STORAGE_SETTINGS.workflowHistoryEventHighlightListEnabled) || true,
       },
     };
   },
@@ -239,6 +243,8 @@ export default {
       :date-format="settings.dateFormat"
       :time-format="settings.timeFormat"
       :timezone="settings.timezone"
+      :workflow-history-event-highlight-list="settings.workflowHistoryEventHighlightList"
+      :workflow-history-event-highlight-list-enabled="settings.workflowHistoryEventHighlightListEnabled"
       @onNotification="onNotification"
     ></router-view>
     <modals-container />

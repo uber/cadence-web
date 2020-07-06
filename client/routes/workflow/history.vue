@@ -168,7 +168,6 @@
                             : item.eventFullDetails
                         "
                         :compact="compactDetails && !item.expanded"
-                        :highlight="events.length < 100"
                       />
                     </div>
                   </div>
@@ -206,6 +205,7 @@
                   <span class="event-title">{{ item.content }}</span>
                   <detail-list
                     :compact="true"
+                    :highlight-enabled="true"
                     :item="item.details"
                     :title="item.content"
                   />
@@ -314,6 +314,8 @@ export default {
     'runId',
     'showGraph',
     'timelineEvents',
+    'workflowHistoryEventHighlightList',
+    'workflowHistoryEventHighlightListEnabled',
     'workflowId',
   ],
   created() {

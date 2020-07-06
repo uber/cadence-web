@@ -5,7 +5,7 @@ import { preKeys } from '~constants';
 
 export default {
   name: 'detail-list',
-  props: ['compact', 'highlight', 'item', 'title'],
+  props: ['compact', 'item', 'title'],
   components: {
     'data-viewer': DataViewer,
     'highlight-toggle': HighlightToggle
@@ -19,7 +19,7 @@ export default {
     },
   },
   render(h) {
-    const { highlight, compact, title } = this;
+    const { compact, title } = this;
 
     function dd(kvp) {
       if (kvp.routeLink) {
@@ -32,7 +32,6 @@ export default {
               props: {
                 item: kvp.value,
                 compact,
-                highlight,
                 title: `${title} - ${kvp.key}`,
               },
             }),
@@ -47,8 +46,8 @@ export default {
         h('div', { attrs: { 'data-prop': kvp.key } }, [
           h('highlight-toggle', {
             props: {
-              isHighlighted: true,  // TODO - figure out when label is subscribed to...
-              isToggleEnabled: true,  // TODO - figure out when in state of summary or compact - disable it.
+              isHighlighted: false,  // TODO - figure out when label is subscribed to...
+              isToggleEnabled: !compact,
               label: kvp.key,
               tag: 'dt',
             },

@@ -5,12 +5,9 @@
       class="view-full-screen"
       @click.stop.prevent="viewFullScreen"
     ></a>
-    <prism v-if="highlight !== false" language="json" ref="codebox">{{
+    <prism language="json" ref="codebox">{{
       item.jsonStringDisplay
     }}</prism>
-    <pre v-if="highlight === false" ref="codebox">{{
-      item.jsonStringDisplay
-    }}</pre>
   </div>
 </template>
 
@@ -21,7 +18,7 @@ import Prism from 'vue-prism-component';
 
 export default {
   name: 'data-viewer',
-  props: ['compact', 'highlight', 'item', 'title'],
+  props: ['compact', 'item', 'title'],
   data() {
     return {};
   },
@@ -42,7 +39,7 @@ export default {
       this.$el.classList[action]('overflow');
     };
     window.addEventListener('resize', this.checkOverflow);
-    ['item', 'highlight', 'compact'].forEach(e =>
+    ['item', 'compact'].forEach(e =>
       this.$watch(e, this.checkOverflow)
     );
     this.$watch(() => this.$route, this.checkOverflow);
