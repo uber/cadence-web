@@ -149,7 +149,7 @@
                     <div class="td col-id">{{ item.eventId }}</div>
                     <div class="td col-type">
                       <highlight-toggle
-                        :is-highlighted="true"
+                        :is-highlighted="item.details.isHighlighted"
                         :label="item.eventType"
                       />
                     </div>
@@ -167,6 +167,7 @@
                             ? item.eventSummary
                             : item.eventFullDetails
                         "
+                        :is-highlight-enabled="compactDetails && !item.expanded ? false : workflowHistoryEventHighlightListEnabled"
                         :compact="compactDetails && !item.expanded"
                       />
                     </div>
@@ -205,7 +206,7 @@
                   <span class="event-title">{{ item.content }}</span>
                   <detail-list
                     :compact="true"
-                    :highlight-enabled="true"
+                    :is-highlight-enabled="false"
                     :item="item.details"
                     :title="item.content"
                   />
@@ -231,6 +232,7 @@
               >
               <detail-list
                 class="timeline-details"
+                :is-highlight-enabled="workflowHistoryEventHighlightListEnabled"
                 :item="selectedTimelineEvent.details"
                 :title="selectedTimelineEvent.content"
               />
@@ -244,11 +246,15 @@
                   @click.prevent="$router.replaceQueryParam('eventId', eid)"
                   :data-event-id="eid"
                 >
-                  {{ events.find(event => event.eventId === eid).eventType }}
+                  <highlight-toggle
+                    :is-highlighted="events.find(event => event.eventId === eid).details.isHighlighted"
+                    :label="events.find(event => event.eventId === eid).eventType"
+                  />
                 </a>
               </div>
               <detail-list
                 class="event-detail"
+                :is-highlight-enabled="workflowHistoryEventHighlightListEnabled"
                 :item="selectedEventDetails"
                 :title="
                   `${selectedTimelineEvent.content} - ${selectedEvent.eventType}`

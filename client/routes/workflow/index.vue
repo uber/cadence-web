@@ -138,9 +138,23 @@ export default {
       )}/${encodeURIComponent(runId)}`;
     },
     historyEvents() {
-      const { dateFormat, events, timeFormat, timezone } = this;
+      const {
+        dateFormat,
+        events,
+        timeFormat,
+        timezone,
+        workflowHistoryEventHighlightList,
+        workflowHistoryEventHighlightListEnabled,
+      } = this;
 
-      return getHistoryEvents({ dateFormat, events, timeFormat, timezone });
+      return getHistoryEvents({
+        dateFormat,
+        events,
+        timeFormat,
+        timezone,
+        workflowHistoryEventHighlightList,
+        workflowHistoryEventHighlightListEnabled,
+      });
     },
     historyTimelineEvents() {
       const { historyEvents } = this;

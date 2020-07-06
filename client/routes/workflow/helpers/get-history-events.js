@@ -5,7 +5,14 @@ import getEventDetails from './get-event-details';
 import getEventFullDetails from './get-event-full-details';
 import getEventSummary from './get-event-summary';
 
-const getHistoryEvents = ({ dateFormat, events, timeFormat, timezone }) => {
+const getHistoryEvents = ({
+  dateFormat,
+  events,
+  timeFormat,
+  timezone,
+  workflowHistoryEventHighlightList,
+  workflowHistoryEventHighlightListEnabled,
+}) => {
   if (!events) {
     return [];
   }
@@ -43,9 +50,17 @@ const getHistoryEvents = ({ dateFormat, events, timeFormat, timezone }) => {
       };
     })
     .map(event => {
-      const details = getEventDetails(event);
+      const details = getEventDetails({
+        event,
+        workflowHistoryEventHighlightList,
+        workflowHistoryEventHighlightListEnabled,
+      });
       const eventSummary = getEventSummary(event);
-      const eventFullDetails = getEventFullDetails(event);
+      const eventFullDetails = getEventFullDetails({
+        event,
+        workflowHistoryEventHighlightList,
+        workflowHistoryEventHighlightListEnabled,
+      });
 
       return {
         ...event,

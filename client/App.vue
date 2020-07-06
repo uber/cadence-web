@@ -77,9 +77,25 @@ export default {
           localStorage.getItem(LOCAL_STORAGE_SETTINGS.timezone) ||
           TIMEZONE_LOCAL,
         timezoneOptions: TIMEZONE_OPTIONS,
-        workflowHistoryEventHighlightList:
-          localStorage.getItem(LOCAL_STORAGE_SETTINGS.workflowHistoryEventHighlightList) || [],
-        workflowHistoryEventHighlightListEnabled:
+        workflowHistoryEventHighlightList:  // TODO - Need to parse to JSON...
+          localStorage.getItem(LOCAL_STORAGE_SETTINGS.workflowHistoryEventHighlightList) || [
+            {
+              eventType: 'ActivityTaskScheduled',
+              eventParamName: 'activityId',
+              isEnabled: true,
+            },
+            {
+              eventType: 'ActivityTaskScheduled',
+              eventParamName: 'taskList.name',
+              isEnabled: false,
+            },
+            {
+              eventType: 'ActivityTaskCompleted',
+              eventParamName: 'scheduledEventId',
+              isEnabled: true,
+            }
+          ],
+        workflowHistoryEventHighlightListEnabled: // TODO - Need to parse to Bool...
           localStorage.getItem(LOCAL_STORAGE_SETTINGS.workflowHistoryEventHighlightListEnabled) || true,
       },
     };

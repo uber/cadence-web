@@ -5,7 +5,12 @@ import { preKeys } from '~constants';
 
 export default {
   name: 'detail-list',
-  props: ['compact', 'item', 'title'],
+  props: [
+    'compact',
+    'isHighlightEnabled',
+    'item',
+    'title'
+  ],
   components: {
     'data-viewer': DataViewer,
     'highlight-toggle': HighlightToggle
@@ -46,8 +51,8 @@ export default {
         h('div', { attrs: { 'data-prop': kvp.key } }, [
           h('highlight-toggle', {
             props: {
-              isHighlighted: false,  // TODO - figure out when label is subscribed to...
-              isToggleEnabled: !compact,
+              isHighlighted: kvp.isHighlighted,  // TODO - figure out when label is subscribed to...
+              isToggleEnabled: this.isHighlightEnabled,
               label: kvp.key,
               tag: 'dt',
             },
