@@ -192,6 +192,10 @@ const routeOpts = {
       path: '/domains/:domain/task-lists/:taskList',
       redirect: '/domains/:domain/task-lists/:taskList/pollers',
       component: TaskList,
+      props: ({ params }) => ({
+        domain: params.domain,
+        taskList: params.taskList,
+      }),
       children: [
         {
           name: 'task-list/pollers',
