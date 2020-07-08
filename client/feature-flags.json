@@ -4,6 +4,10 @@
     "value": true
   },
   {
+    "key": "domain-metrics",
+    "value": false
+  },
+  {
     "key": "environment-select",
     "value": false
   },
