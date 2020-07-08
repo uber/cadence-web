@@ -15,6 +15,7 @@ import snapscroll from './directives/snapscroll';
 import App from './App';
 import Domain from './routes/domain';
 import DomainList from './routes/domain-list';
+import DomainMetrics from './routes/domain/domain-metrics';
 import DomainSettings from './routes/domain/domain-settings';
 import Help from './routes/help';
 import History from './routes/workflow/history';
@@ -88,6 +89,13 @@ const routeOpts = {
           path: '/domains/:domain/workflows',
           components: {
             'workflow-list': WorkflowList,
+          },
+        },
+        {
+          name: 'domain-metrics',
+          path: '/domains/:domain/metrics',
+          components: {
+            'domain-metrics': DomainMetrics,
           },
         },
         {
