@@ -23,7 +23,7 @@
 import { getDatetimeFormattedString } from '~helpers';
 
 export default {
-  props: ['dateFormat', 'timeFormat', 'timezone'],
+  props: ['dateFormat', 'domain', 'taskList', 'timeFormat', 'timezone'],
   data() {
     return {
       pollers: undefined,
@@ -51,7 +51,7 @@ export default {
   },
   created() {
     this.$http(
-      `/api/domains/${this.$route.params.domain}/task-lists/${this.$route.params.taskList}/pollers`
+      `/api/domains/${this.domain}/task-lists/${this.taskList}/pollers`
     )
       .then(
         p => {

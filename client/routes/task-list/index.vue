@@ -25,11 +25,12 @@
       name="pollers"
       :date-format="dateFormat"
       :domain="domain"
+      :task-list="taskList"
       :time-format="timeFormat"
       :timezone="timezone"
     />
-    <router-view name="partition" :domain="domain" />
-    <router-view name="metrics" :domain="domain" />
+    <router-view name="partition" :domain="domain" :task-list="taskList" />
+    <router-view name="metrics" :domain="domain" :task-list="taskList" />
   </section>
 </template>
 
@@ -37,7 +38,7 @@
 import { FeatureFlag, NavigationBar, NavigationLink } from '~components';
 
 export default {
-  props: ['dateFormat', 'domain', 'timeFormat', 'timezone'],
+  props: ['dateFormat', 'domain', 'taskList', 'timeFormat', 'timezone'],
   components: {
     'feature-flag': FeatureFlag,
     'navigation-bar': NavigationBar,
