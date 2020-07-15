@@ -11,7 +11,7 @@ export const DATE_FORMAT_OPTIONS = [
 ];
 
 export const ENVIRONMENT_LIST = [
-  // Make sure to enable "environment-select" in feature-flags.json to enable environment select.
+  // Make sure to enable "environmentSelect" in feature-flags.json to enable environment select.
   //
   // Examples:
   //

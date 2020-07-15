@@ -11,7 +11,6 @@ export { default as getStartTimeIsoString } from './get-start-time-iso-string';
 export { default as getStringElipsis } from './get-string-elipsis';
 export { default as http } from './http';
 export { default as injectMomentDurationFormat } from './inject-moment-duration-format';
-export { default as isFeatureFlagEnabled } from './is-feature-flag-enabled';
 export { default as jsonTryParse } from './json-try-parse';
 export { default as mapDomainDescription } from './map-domain-description';
 export { default as shortName } from './short-name';

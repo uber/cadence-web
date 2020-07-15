@@ -11,7 +11,7 @@
         icon="icon_settings"
         :to="{ name: 'domain-settings' }"
       />
-      <feature-flag display="inline" name="domain-metrics">
+      <feature-flag display="inline" name="domainMetrics">
         <navigation-link
           label="Metrics"
           icon="icon_chart"
