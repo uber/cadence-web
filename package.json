@@ -103,7 +103,7 @@
     "eslint-plugin-react": "^7.18.0",
     "eslint-plugin-react-hooks": "^2.3.0",
     "eslint-plugin-vue": "^6.1.2",
-    "fetch-mock": "^5.13.1",
+    "fetch-mock": "^9.10.3",
     "jest": "^24.9.0",
     "jest-fetch-mock": "^3.0.3",
     "mocha": "^4.0.1",

@@ -90,8 +90,7 @@ Scenario.prototype.tearDown = function tearDown() {
 
   delete window.Mocha.copiedText;
 
-  const { unmatched } = this.api.calls();
-
+  const unmatched = this.api.calls(false);
   return unmatched.length
     ? Promise.reject(
         new Error(`${unmatched.length} outstanding expected API calls:
@@ -158,7 +157,8 @@ Scenario.prototype.withDomainDescription = function withDomainDescription(
         isGlobalDomain: false,
       },
       domainDesc || {}
-    )
+    ),
+    { overwriteRoutes: false }
   );
 
   return this;
@@ -295,7 +295,7 @@ Scenario.prototype.withHistory = function withHistory(events, hasMorePages) {
     response.nextPageToken = makeToken();
   }
 
-  this.api.getOnce(url, response);
+  this.api.getOnce(url, response, { delay: 100 });
 
   return this;
 };
