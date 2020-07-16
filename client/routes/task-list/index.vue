@@ -6,14 +6,14 @@
         label="Pollers"
         :to="{ name: 'task-list/pollers' }"
       />
-      <feature-flag display="inline" name="task-list-partition">
+      <feature-flag display="inline" name="taskListPartition">
         <navigation-link
           icon="icon_fare-split"
           label="Partition"
           :to="{ name: 'task-list/partition' }"
         />
       </feature-flag>
-      <feature-flag display="inline" name="task-list-metrics">
+      <feature-flag display="inline" name="taskListMetrics">
         <navigation-link
           icon="icon_chart"
           label="Metrics"

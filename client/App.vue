@@ -190,7 +190,7 @@ export default {
           </a>
         </flex-grid-item>
 
-        <feature-flag name="environment-select">
+        <feature-flag name="environmentSelect">
           <flex-grid-item>
             <v-select
               class="environment-select"

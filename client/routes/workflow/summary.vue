@@ -137,14 +137,15 @@ import { NOTIFICATION_TYPE_ERROR, NOTIFICATION_TYPE_SUCCESS } from '~constants';
 import {
   getErrorMessage,
   getDatetimeFormattedString,
-  isFeatureFlagEnabled,
 } from '~helpers';
 import { BarLoader, ButtonFill, DataViewer, DetailList } from '~components';
+import { FeatureFlagService } from '~services';
 
 export default {
   data() {
     return {
       isAuthorized: false,
+      isWorkflowTerminateFeatureFlagEnabled: false,
       terminationReason: undefined,
     };
   },
@@ -169,9 +170,15 @@ export default {
     'data-viewer': DataViewer,
     'detail-list': DetailList,
   },
+  async mounted() {
+    const { name, params } = this;
+    this.featureFlagService = new FeatureFlagService();
+    this.isWorkflowTerminateFeatureFlagEnabled = await this.featureFlagService.isFeatureFlagEnabled({ name: 'workflowTerminate' });
+    this.initAuthorization();
+  },
   computed: {
     isTerminateShown() {
-      return isFeatureFlagEnabled('workflow-terminate') && this.isAuthorized;
+      return this.isWorkflowTerminateFeatureFlagEnabled && this.isAuthorized;
     },
     isTerminateDisabled() {
       return !this.isWorkflowRunning;
@@ -224,7 +231,8 @@ export default {
       }
     },
     async initAuthorization() {
-      if (isFeatureFlagEnabled('domain-authorization')) {
+      const isDomainAuthorizationFeatureFlagEnabled = await this.featureFlagService.isFeatureFlagEnabled({ name: 'domainAuthorization' });
+      if (isDomainAuthorizationFeatureFlagEnabled) {
         const authorization = await this.fetchDomainAuthorization();
 
         this.isAuthorized = authorization;
@@ -255,9 +263,6 @@ export default {
           }
         );
     },
-  },
-  mounted() {
-    this.initAuthorization();
   },
 };
 </script>
