@@ -278,7 +278,7 @@ router.get('/api/domains/:domain/task-lists/:taskList/partitions', async functio
   });
 });
 
-router.get('/api/feature-flags/:key', (ctx) => {
+router.get('/api/feature-flags/:key', (ctx, next) => {
   const { params: { key } } = ctx;
   const featureFlag = featureFlags.find((featureFlag) => featureFlag.key === key);
   const value = featureFlag && featureFlag.value || false;
@@ -287,6 +287,8 @@ router.get('/api/feature-flags/:key', (ctx) => {
     key,
     value,
   };
+
+  next();
 });
 
 router.get('/health', ctx => ctx.body = 'OK')
