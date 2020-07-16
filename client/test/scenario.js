@@ -164,6 +164,17 @@ Scenario.prototype.withDomainDescription = function withDomainDescription(
   return this;
 };
 
+Scenario.prototype.withFeatureFlags = function withFeatureFlags(featureFlags = []) {
+  featureFlags.forEach(({ key, value }) => {
+    this.api.getOnce(`/api/feature-flags/${key}`, {
+      key,
+      value,
+    });
+  });
+
+  return this;
+};
+
 Scenario.prototype.withNewsFeed = function withNewsFeed() {
   this.api.getOnce('/feed.json', {
     version: 'https://jsonfeed.org/version/1',
