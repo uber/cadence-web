@@ -298,7 +298,7 @@ export default {
         });
     },
     onQueryUrlChange(queryUrl) {
-      setTimeout(() => this.fetchHistoryPage(queryUrl), 100);
+      setTimeout(() => this.fetchHistoryPage(queryUrl), 30);
     },
     onNotification(event) {
       this.$emit('onNotification', event);
