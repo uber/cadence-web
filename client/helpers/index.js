@@ -7,6 +7,7 @@ export { default as getErrorMessage } from './get-error-message';
 export { default as getJsonStringObject } from './get-json-string-object';
 export { default as getKeyValuePairs } from './get-key-value-pairs';
 export { default as getLatestNewsItems } from './get-latest-news-items';
+export { default as getQueryStringFromObject } from './get-query-string-from-object';
 export { default as getStartTimeIsoString } from './get-start-time-iso-string';
 export { default as getStringElipsis } from './get-string-elipsis';
 export { default as http } from './http';
