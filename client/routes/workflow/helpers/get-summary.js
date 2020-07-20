@@ -25,7 +25,9 @@ const getSummary = ({ events, isWorkflowRunning, workflow }) => {
   }
 
   const firstEvent = events[0];
-  const lastEvent = workflow.workflowExecutionInfo.closeEvent || events.length > 1 && events[events.length - 1];
+  const lastEvent =
+    workflow.workflowExecutionInfo.closeEvent ||
+    (events.length > 1 && events[events.length - 1]);
 
   const input = getJsonStringObject(firstEvent.details.input);
 

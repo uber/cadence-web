@@ -14,6 +14,16 @@ describe('Workflow', () => {
       new Scenario(mochaTest)
         .withDomain('ci-test')
         .withDomainAuthorization('ci-test', true)
+        .withFeatureFlags([
+          {
+            "key": "domainAuthorization",
+            "value": false
+          },
+          {
+            "key": "workflowTerminate",
+            "value": true
+          },
+        ])
         .withNewsFeed()
         .withWorkflow(
           extendedOptions.workflowId,

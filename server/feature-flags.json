@@ -1,0 +1,26 @@
+[
+  {
+    "key": "domainAuthorization",
+    "value": true
+  },
+  {
+    "key": "domainMetrics",
+    "value": false
+  },
+  {
+    "key": "environmentSelect",
+    "value": false
+  },
+  {
+    "key": "taskListMetrics",
+    "value": false
+  },
+  {
+    "key": "taskListPartition",
+    "value": false
+  },
+  {
+    "key": "workflowTerminate",
+    "value": true
+  }
+]

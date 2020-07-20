@@ -1,6 +1,5 @@
 <template>
-  <section :class="{ 'task-list': true, loading }">
-    <header><h3>Pollers</h3></header>
+  <section :class="{ 'task-list-pollers': true, loading }">
     <table v-if="pollers">
       <thead>
         <th>Identity</th>
@@ -24,7 +23,7 @@
 import { getDatetimeFormattedString } from '~helpers';
 
 export default {
-  props: ['dateFormat', 'timeFormat', 'timezone'],
+  props: ['dateFormat', 'domain', 'taskList', 'timeFormat', 'timezone'],
   data() {
     return {
       pollers: undefined,
@@ -52,7 +51,7 @@ export default {
   },
   created() {
     this.$http(
-      `/api/domains/${this.$route.params.domain}/task-lists/${this.$route.params.taskList}/pollers`
+      `/api/domains/${this.domain}/task-lists/${this.taskList}/pollers`
     )
       .then(
         p => {
@@ -78,7 +77,7 @@ export default {
 <style lang="stylus">
 @require "../../styles/definitions.styl"
 
-section.task-list
+section.task-list-pollers
   > header
     padding inline-spacing-medium
   table

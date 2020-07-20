@@ -15,6 +15,7 @@ import snapscroll from './directives/snapscroll';
 import App from './App';
 import Domain from './routes/domain';
 import DomainList from './routes/domain-list';
+import DomainMetrics from './routes/domain/domain-metrics';
 import DomainSettings from './routes/domain/domain-settings';
 import Help from './routes/help';
 import History from './routes/workflow/history';
@@ -22,7 +23,10 @@ import News from './routes/news';
 import Query from './routes/workflow/query';
 import Root from './routes';
 import StackTrace from './routes/workflow/stack-trace';
-import TaskList from './routes/domain/task-list';
+import TaskList from './routes/task-list';
+import TaskListMetrics from './routes/task-list/metrics';
+import TaskListPartition from './routes/task-list/partition';
+import TaskListPollers from './routes/task-list/pollers';
 import WorkflowArchival from './routes/domain/workflow-archival';
 import WorkflowArchivalAdvanced from './routes/domain/workflow-archival/advanced';
 import WorkflowArchivalBasic from './routes/domain/workflow-archival/basic';
@@ -85,6 +89,13 @@ const routeOpts = {
           path: '/domains/:domain/workflows',
           components: {
             'workflow-list': WorkflowList,
+          },
+        },
+        {
+          name: 'domain-metrics',
+          path: '/domains/:domain/metrics',
+          components: {
+            'domain-metrics': DomainMetrics,
           },
         },
         {
@@ -179,7 +190,35 @@ const routeOpts = {
     {
       name: 'task-list',
       path: '/domains/:domain/task-lists/:taskList',
+      redirect: '/domains/:domain/task-lists/:taskList/pollers',
       component: TaskList,
+      props: ({ params }) => ({
+        domain: params.domain,
+        taskList: params.taskList,
+      }),
+      children: [
+        {
+          name: 'task-list/pollers',
+          path: '/domains/:domain/task-lists/:taskList/pollers',
+          components: {
+            pollers: TaskListPollers,
+          },
+        },
+        {
+          name: 'task-list/partition',
+          path: '/domains/:domain/task-lists/:taskList/partition',
+          components: {
+            partition: TaskListPartition,
+          },
+        },
+        {
+          name: 'task-list/metrics',
+          path: '/domains/:domain/task-lists/:taskList/metrics',
+          components: {
+            partition: TaskListMetrics,
+          },
+        },
+      ],
     },
 
     // redirects

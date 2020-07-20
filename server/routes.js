@@ -4,6 +4,7 @@ const
   moment = require('moment'),
   Long = require('long'),
   losslessJSON = require('lossless-json'),
+  featureFlags = require('./feature-flags.json');
   momentToLong = m => Long.fromValue(m.unix()).mul(1000000000)
 
 router.get('/api/domains', async function (ctx) {
@@ -268,6 +269,27 @@ router.get('/api/domains/:domain/task-lists/:taskList/pollers', async function (
 
   ctx.body = activityL.reduce(r('activity'), decisionL.reduce(r('decision'), {}))
 })
+
+router.get('/api/domains/:domain/task-lists/:taskList/partitions', async function (ctx) {
+  const { domain, taskList } = ctx.params;
+  ctx.body = await ctx.cadence.listTaskListPartitions({
+    domain,
+    taskList: { name: taskList },
+  });
+});
+
+router.get('/api/feature-flags/:key', (ctx, next) => {
+  const { params: { key } } = ctx;
+  const featureFlag = featureFlags.find((featureFlag) => featureFlag.key === key);
+  const value = featureFlag && featureFlag.value || false;
+
+  ctx.body = {
+    key,
+    value,
+  };
+
+  next();
+});
 
 router.get('/health', ctx => ctx.body = 'OK')
 

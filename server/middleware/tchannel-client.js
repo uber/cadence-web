@@ -168,20 +168,21 @@ module.exports = async function(ctx, next) {
   withDomainAndWorkflowExecution = b => Object.assign(withDomainPaging(b), withWorkflowExecution(b))
 
   ctx.cadence = {
-    openWorkflows: req('ListOpenWorkflowExecutions', 'list', withDomainPaging),
-    closedWorkflows: req('ListClosedWorkflowExecutions', 'list', withDomainPaging),
     archivedWorkflows: req('ListArchivedWorkflowExecutions', 'list', withDomainPaging),
-    listWorkflows: req('ListWorkflowExecutions', 'list', withDomainPaging),
-    getHistory: req('GetWorkflowExecutionHistory', 'get', withDomainAndWorkflowExecution),
-    exportHistory: req('GetWorkflowExecutionHistory', 'get', withDomainAndWorkflowExecution, cliTransform),
-    describeWorkflow: req('DescribeWorkflowExecution', 'describe', withWorkflowExecution),
-    queryWorkflow: req('QueryWorkflow', 'query', withWorkflowExecution),
-    terminateWorkflow: req('TerminateWorkflowExecution', 'terminate', withVerboseWorkflowExecution),
-    signalWorkflow: req('SignalWorkflowExecution', 'signal', withVerboseWorkflowExecution),
-    listDomains: req('ListDomains', 'list'),
+    closedWorkflows: req('ListClosedWorkflowExecutions', 'list', withDomainPaging),
     describeDomain: req('DescribeDomain', 'describe'),
     describeTaskList: req('DescribeTaskList'),
-  }
+    describeWorkflow: req('DescribeWorkflowExecution', 'describe', withWorkflowExecution),
+    exportHistory: req('GetWorkflowExecutionHistory', 'get', withDomainAndWorkflowExecution, cliTransform),
+    getHistory: req('GetWorkflowExecutionHistory', 'get', withDomainAndWorkflowExecution),
+    listDomains: req('ListDomains', 'list'),
+    listTaskListPartitions: req('ListTaskListPartitions'),
+    listWorkflows: req('ListWorkflowExecutions', 'list', withDomainPaging),
+    openWorkflows: req('ListOpenWorkflowExecutions', 'list', withDomainPaging),
+    queryWorkflow: req('QueryWorkflow', 'query', withWorkflowExecution),
+    signalWorkflow: req('SignalWorkflowExecution', 'signal', withVerboseWorkflowExecution),
+    terminateWorkflow: req('TerminateWorkflowExecution', 'terminate', withVerboseWorkflowExecution),
+  };
 
   try {
     await next()
