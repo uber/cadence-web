@@ -52,6 +52,7 @@
       :workflow-history-event-highlight-list="workflowHistoryEventHighlightList"
       :workflow-history-event-highlight-list-enabled="workflowHistoryEventHighlightListEnabled"
       @onNotification="onNotification"
+      @onWorkflowHistoryEventParamToggle="onWorkflowHistoryEventParamToggle"
     />
     <router-view
       name="stacktrace"
@@ -320,6 +321,9 @@ export default {
     },
     onNotification(event) {
       this.$emit('onNotification', event);
+    },
+    onWorkflowHistoryEventParamToggle(event) {
+      this.$emit('onWorkflowHistoryEventParamToggle', event);
     },
     setupQueryUrlWatch() {
       this.clearQueryUrlWatch();

@@ -28,6 +28,7 @@ import {
   getEnvironmentList,
   getEnvironmentLocation,
   getLatestNewsItems,
+  workflowHistoryEventHighlightListAddOrUpdate,
 } from '~helpers';
 
 export default {
@@ -77,8 +78,9 @@ export default {
           localStorage.getItem(LOCAL_STORAGE_SETTINGS.timezone) ||
           TIMEZONE_LOCAL,
         timezoneOptions: TIMEZONE_OPTIONS,
-        workflowHistoryEventHighlightList:  // TODO - Need to parse to JSON...
-          localStorage.getItem(LOCAL_STORAGE_SETTINGS.workflowHistoryEventHighlightList) || [
+        workflowHistoryEventHighlightList:
+          JSON.parse(localStorage.getItem(LOCAL_STORAGE_SETTINGS.workflowHistoryEventHighlightList)) || // [],
+          [
             {
               eventType: 'ActivityTaskScheduled',
               eventParamName: 'activityId',
@@ -95,8 +97,8 @@ export default {
               isEnabled: true,
             }
           ],
-        workflowHistoryEventHighlightListEnabled: // TODO - Need to parse to Bool...
-          localStorage.getItem(LOCAL_STORAGE_SETTINGS.workflowHistoryEventHighlightListEnabled) || true,
+        workflowHistoryEventHighlightListEnabled:
+          localStorage.getItem(LOCAL_STORAGE_SETTINGS.workflowHistoryEventHighlightListEnabled) === 'true' || true,
       },
     };
   },
@@ -171,6 +173,39 @@ export default {
     },
     onSettingsClick() {
       this.$modal.show('settings-modal');
+    },
+    onWorkflowHistoryEventParamToggle({
+      eventType,
+      eventParam: {
+        key: eventParamName,
+        isHighlighted,
+      },
+    }) {
+      const { settings: { workflowHistoryEventHighlightList } } = this;
+
+      this.settings.workflowHistoryEventHighlightList = workflowHistoryEventHighlightListAddOrUpdate({
+        eventType,
+        eventParamName,
+        isEnabled: !isHighlighted,
+        workflowHistoryEventHighlightList,
+      });
+
+      console.log('this.settings.workflowHistoryEventHighlightList = ', this.settings.workflowHistoryEventHighlightList);
+
+      localStorage.setItem(LOCAL_STORAGE_SETTINGS.workflowHistoryEventHighlightList, JSON.stringify(this.settings.workflowHistoryEventHighlightList));
+    },
+    onWorkflowHistoryEventParamDelete({
+      eventType,
+      eventParamName,
+    }) {
+      // TODO
+    },
+    onWorkflowHistoryEventHighlightListToggle() {
+      console.log('this.workflowHistoryEventHighlightListEnabled = ', this.workflowHistoryEventHighlightListEnabled);
+      const newValue = !this.workflowHistoryEventHighlightListEnabled;
+      console.log('newValue = ', newValue);
+      localStorage.setItem(LOCAL_STORAGE_SETTINGS.workflowHistoryEventHighlightListEnabled, newValue);
+      this.workflowHistoryEventHighlightListEnabled = newValue;
     },
   },
   watch: {
@@ -261,6 +296,7 @@ export default {
       :timezone="settings.timezone"
       :workflow-history-event-highlight-list="settings.workflowHistoryEventHighlightList"
       :workflow-history-event-highlight-list-enabled="settings.workflowHistoryEventHighlightListEnabled"
+      @onWorkflowHistoryEventParamToggle="onWorkflowHistoryEventParamToggle"
       @onNotification="onNotification"
     ></router-view>
     <modals-container />

@@ -50,6 +50,7 @@ export default {
   },
   methods: {
     onClick(...args) {
+      console.log('button-icon onClick called??');
       this.$emit('click', ...args);
     },
   },

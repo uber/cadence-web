@@ -15,7 +15,7 @@
         disabled: !isToggleEnabled,
       }"
       icon="icon_search"
-      @onClick={onClick}
+      @click="onClick"
     />
   </component>
 </template>
@@ -47,7 +47,10 @@ export default {
   },
   methods: {
     onClick(...args) {
-      this.$emit('click', ...args);
+      console.log('highlight-toggle onClick method called??');
+      if (this.isToggleEnabled) {
+        this.$emit('click', ...args);
+      }
     },
   }
 };

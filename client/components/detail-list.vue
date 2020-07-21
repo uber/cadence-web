@@ -56,6 +56,11 @@ export default {
               label: kvp.key,
               tag: 'dt',
             },
+            on: {
+              click: () => {
+                this.$emit('onWorkflowHistoryEventParamToggle', kvp);
+              },
+            },
           }),
           h('dd', null, dd(kvp)),
         ])

@@ -169,6 +169,7 @@
                         "
                         :is-highlight-enabled="compactDetails && !item.expanded ? false : workflowHistoryEventHighlightListEnabled"
                         :compact="compactDetails && !item.expanded"
+                        @onWorkflowHistoryEventParamToggle="(eventParam) => onWorkflowHistoryEventParamToggle({ eventParam, eventType: item.eventType })"
                       />
                     </div>
                   </div>
@@ -232,7 +233,7 @@
               >
               <detail-list
                 class="timeline-details"
-                :is-highlight-enabled="workflowHistoryEventHighlightListEnabled"
+                :is-highlight-enabled="false"
                 :item="selectedTimelineEvent.details"
                 :title="selectedTimelineEvent.content"
               />
@@ -259,6 +260,7 @@
                 :title="
                   `${selectedTimelineEvent.content} - ${selectedEvent.eventType}`
                 "
+                @onWorkflowHistoryEventParamToggle="(eventParam) => onWorkflowHistoryEventParamToggle({ eventParam, eventType: selectedEvent.eventType })"
               />
             </div>
           </div>
@@ -444,6 +446,9 @@ export default {
     onSplitResize: debounce(() => {
       window.dispatchEvent(new Event('resize'));
     }, 5),
+    onWorkflowHistoryEventParamToggle(event) {
+      this.$emit('onWorkflowHistoryEventParamToggle', event);
+    },
     setEventType(et) {
       this.eventType = et.value;
       setTimeout(() => this.scrollEventIntoView(this.eventId), 100);

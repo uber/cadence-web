@@ -19,6 +19,11 @@ export default {
         compact: this.compact,
         title: `Event #${this.event.eventId} ${this.event.eventType}`,
       },
+      on: {
+        onWorkflowHistoryEventParamToggle: (event) => {
+          this.$emit('onWorkflowHistoryEventParamToggle', event);
+        },
+      },
     });
   },
 };
