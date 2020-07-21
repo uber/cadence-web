@@ -97,10 +97,12 @@ describe('Domain list', () => {
     domainInput.input('ci-tests');
 
     await testEl.waitUntilExists('.domain-navigation.validation-valid');
+
     scenario
       .withDomain('ci-tests')
       .withWorkflows('open')
       .withDomainDescription('ci-tests');
+
     domainInput.trigger('keydown', { code: 13, keyCode: 13, key: 'Enter' });
 
     await testEl.waitUntilExists('section.workflow-list');

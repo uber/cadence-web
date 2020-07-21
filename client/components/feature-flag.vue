@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { isFeatureFlagEnabled } from '~helpers';
+import { FeatureFlagService } from '~services';
 
 export default {
   name: 'feature-flag',
@@ -22,13 +22,19 @@ export default {
       required: true,
       type: String,
     },
+    params: {
+      type: Object,
+    }
   },
-  computed: {
-    isFeatureFlagEnabled() {
-      const { name } = this;
-
-      return isFeatureFlagEnabled(name);
-    },
+  data() {
+    return {
+      isFeatureFlagEnabled: false,
+    }
+  },
+  async mounted() {
+    const { name, params } = this;
+    const featureFlagService = new FeatureFlagService();
+    this.isFeatureFlagEnabled = await featureFlagService.isFeatureFlagEnabled({ name, params });
   },
 };
 </script>

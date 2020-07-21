@@ -6,8 +6,9 @@ module.exports = {
         "alias": {
           "~constants": "./client/constants",
           "~components": "./client/components",
-          "~helpers": "./client/helpers"
-        }
+          "~helpers": "./client/helpers",
+          "~services": "./client/services",
+        },
       }
     ],
     ["@babel/plugin-transform-regenerator"]

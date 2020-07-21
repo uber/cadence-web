@@ -5,5 +5,6 @@
 <script>
 export default {
   name: 'metrics',
+  props: ['domain', 'taskList'],
 };
 </script>
