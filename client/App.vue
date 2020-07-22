@@ -79,24 +79,7 @@ export default {
           TIMEZONE_LOCAL,
         timezoneOptions: TIMEZONE_OPTIONS,
         workflowHistoryEventHighlightList:
-          JSON.parse(localStorage.getItem(LOCAL_STORAGE_SETTINGS.workflowHistoryEventHighlightList)) || // [],
-          [
-            {
-              eventType: 'ActivityTaskScheduled',
-              eventParamName: 'activityId',
-              isEnabled: true,
-            },
-            {
-              eventType: 'ActivityTaskScheduled',
-              eventParamName: 'taskList.name',
-              isEnabled: false,
-            },
-            {
-              eventType: 'ActivityTaskCompleted',
-              eventParamName: 'scheduledEventId',
-              isEnabled: true,
-            }
-          ],
+          JSON.parse(localStorage.getItem(LOCAL_STORAGE_SETTINGS.workflowHistoryEventHighlightList)) || [],
         workflowHistoryEventHighlightListEnabled:
           localStorage.getItem(LOCAL_STORAGE_SETTINGS.workflowHistoryEventHighlightListEnabled) === 'true' || true,
       },
@@ -175,28 +158,26 @@ export default {
       this.$modal.show('settings-modal');
     },
     onWorkflowHistoryEventParamToggle({
-      eventType,
       eventParam: {
         key: eventParamName,
         isHighlighted,
       },
+      eventType,
     }) {
       const { settings: { workflowHistoryEventHighlightList } } = this;
 
       this.settings.workflowHistoryEventHighlightList = workflowHistoryEventHighlightListAddOrUpdate({
-        eventType,
         eventParamName,
+        eventType,
         isEnabled: !isHighlighted,
         workflowHistoryEventHighlightList,
       });
 
-      console.log('this.settings.workflowHistoryEventHighlightList = ', this.settings.workflowHistoryEventHighlightList);
-
       localStorage.setItem(LOCAL_STORAGE_SETTINGS.workflowHistoryEventHighlightList, JSON.stringify(this.settings.workflowHistoryEventHighlightList));
     },
     onWorkflowHistoryEventParamDelete({
-      eventType,
       eventParamName,
+      eventType,
     }) {
       // TODO
     },

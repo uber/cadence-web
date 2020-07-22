@@ -1,13 +1,29 @@
 const workflowHistoryEventHighlightListAddOrUpdate = ({
-  eventType,
   eventParamName,
+  eventType,
   isEnabled,
   workflowHistoryEventHighlightList,
 }) => {
+  const newEventParam = {
+    eventParamName,
+    eventType,
+    isEnabled,
+  };
 
-  // TODO - add or update list...
+  const index = workflowHistoryEventHighlightList
+    .findIndex((eventParam) =>
+      eventParam.eventType === eventType && eventParam.eventParamName === eventParamName
+    );
 
-  return workflowHistoryEventHighlightList;
+  if (index === -1) {
+    return [...workflowHistoryEventHighlightList, newEventParam];
+  }
+
+  return [
+    ...workflowHistoryEventHighlightList.slice(0, index),
+    newEventParam,
+    ...workflowHistoryEventHighlightList.slice(index + 1)
+  ];
 };
 
 export default workflowHistoryEventHighlightListAddOrUpdate;
