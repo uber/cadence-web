@@ -18,4 +18,4 @@ const workflowHistoryEventHighlightListRemove = ({
   ];
 };
 
-export default workflowHistoryEventHighlightListAddOrUpdate;
+export default workflowHistoryEventHighlightListRemove;

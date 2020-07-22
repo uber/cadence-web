@@ -299,7 +299,7 @@ export default {
       :time-format-options="settings.timeFormatOptions"
       :timezone="settings.timezone"
       :timezone-options="settings.timezoneOptions"
-      @onChange="onSettingsChange"
+      @change="onSettingsChange"
     />
   </main>
 </template>
