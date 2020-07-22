@@ -16,3 +16,4 @@ export { default as jsonTryParse } from './json-try-parse';
 export { default as mapDomainDescription } from './map-domain-description';
 export { default as shortName } from './short-name';
 export { default as workflowHistoryEventHighlightListAddOrUpdate } from './workflow-history-event-highlight-list-add-or-update';
+export { default as workflowHistoryEventHighlightListRemove } from './workflow-history-event-highlight-list-remove';

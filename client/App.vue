@@ -29,6 +29,7 @@ import {
   getEnvironmentLocation,
   getLatestNewsItems,
   workflowHistoryEventHighlightListAddOrUpdate,
+  workflowHistoryEventHighlightListRemove,
 } from '~helpers';
 
 export default {
@@ -179,7 +180,15 @@ export default {
       eventParamName,
       eventType,
     }) {
-      // TODO
+      const { settings: { workflowHistoryEventHighlightList } } = this;
+
+      this.settings.workflowHistoryEventHighlightList = workflowHistoryEventHighlightListRemove({
+        eventParamName,
+        eventType,
+        workflowHistoryEventHighlightList,
+      });
+
+      localStorage.setItem(LOCAL_STORAGE_SETTINGS.workflowHistoryEventHighlightList, JSON.stringify(this.settings.workflowHistoryEventHighlightList));
     },
     onWorkflowHistoryEventHighlightListToggle() {
       console.log('this.workflowHistoryEventHighlightListEnabled = ', this.workflowHistoryEventHighlightListEnabled);
