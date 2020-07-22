@@ -1,6 +1,8 @@
 <template>
 <div class="settings-list">
   TODO - Add tab pane on left side...
+
+  see https://vuetifyjs.com/en/components/tabs/
 </div>
 </template>
 
