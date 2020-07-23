@@ -1,5 +1,5 @@
 <template>
-  <div class="settings-date-format">
+  <div>
     <settings-header
       title="Workflow History Settings"
       @close="onClose"
@@ -31,7 +31,31 @@ export default {
     return {
     };
   },
+  computed: {
+    isSettingsChanged() {
+      return (
+        false
+        // this.isDateFormatChanged ||
+        // this.isTimeFormatChanged ||
+        // this.isTimezoneChanged
+      );
+    },
+  },
   methods: {
+    onClose() {
+      this.$emit('close');
+    },
+    onSubmit() {
+      // this.$emit('change', {
+      //   ...(this.isDateFormatChanged && {
+      //     dateFormat: this.modalDateFormat.value,
+      //   }),
+      //   ...(this.isTimeFormatChanged && {
+      //     timeFormat: this.modalTimeFormat.value,
+      //   }),
+      //   ...(this.isTimezoneChanged && { timezone: this.modalTimezone.value }),
+      // });
+    },
   },
   components: {
     'button-fill': ButtonFill,
@@ -44,9 +68,3 @@ export default {
   },
 };
 </script>
-
-<style lang="stylus">
-.settings-workflow-history {
-
-}
-</style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="settings-date-format">
+  <div>
     <settings-header
       title="DateTime Settings"
       @close="onClose"
@@ -192,9 +192,3 @@ export default {
   },
 };
 </script>
-
-<style lang="stylus">
-.settings-date-format {
-
-}
-</style>

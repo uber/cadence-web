@@ -5,27 +5,33 @@
     @before-open="onBeforeOpen"
   >
     <div class="settings-modal">
-      <settings-list
-        :view-list="viewList"
-      />
-
-      <settings-date-format
-        :date-format="dateFormat"
-        :date-format-options="dateFormatOptions"
-        :time-format="timeFormat"
-        :time-format-options="timeFormatOptions"
-        :timezone="timezone"
-        :timezone-options="timezoneOptions"
-        v-if="settingsDateFormatViewActive"
-        @change="onChange"
-        @close="onClose"
-      />
-
-      <settings-workflow-history
-        v-if="settingsWorkflowHistoryViewActive"
-        @change="onChange"
-        @close="onClose"
-      />
+      <flex-grid>
+        <flex-grid-item margin="20px">
+          <settings-list
+            :active-view="activeView"
+            :view-list="viewList"
+            @change="onSettingsListChange"
+          />
+        </flex-grid-item>
+        <flex-grid-item>
+          <settings-date-format
+            :date-format="dateFormat"
+            :date-format-options="dateFormatOptions"
+            :time-format="timeFormat"
+            :time-format-options="timeFormatOptions"
+            :timezone="timezone"
+            :timezone-options="timezoneOptions"
+            v-if="settingsDateFormatViewActive"
+            @change="onSettingsChange"
+            @close="onClose"
+          />
+          <settings-workflow-history
+            v-if="settingsWorkflowHistoryViewActive"
+            @change="onSettingsChange"
+            @close="onClose"
+          />
+        </flex-grid-item>
+      </flex-grid>
     </div>
   </modal>
 </template>
@@ -86,11 +92,11 @@ export default {
     onBeforeOpen() {
       this.activeView = 'settings-date-format';
     },
-    onChange(event) {
+    onSettingsChange(event) {
       this.$emit('change', event);
       this.close();
     },
-    onViewChange(viewName) {
+    onSettingsListChange({ viewName }) {
       this.activeView = viewName;
     },
   },
@@ -108,7 +114,7 @@ export default {
 .settings-modal {
   .content {
     min-height: 320px;
-    min-width: 400px;
+    min-width: 440px;
     overflow-y: auto;
   }
 

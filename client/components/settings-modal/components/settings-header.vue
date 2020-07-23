@@ -1,18 +1,16 @@
 <template>
-<div class="settings-header">
-  <flex-grid align-items="center">
-    <flex-grid-item grow="1">
-      <h2>{{title}}</h2>
-    </flex-grid-item>
-    <flex-grid-item width="40px">
-      <button-icon
-        icon="icon_delete-thin"
-        size="30px"
-        @click="onCloseClick"
-      />
-    </flex-grid-item>
-  </flex-grid>
-</div>
+<flex-grid align-items="center">
+  <flex-grid-item grow="1">
+    <h2>{{title}}</h2>
+  </flex-grid-item>
+  <flex-grid-item width="40px">
+    <button-icon
+      icon="icon_delete-thin"
+      size="30px"
+      @click="onCloseClick"
+    />
+  </flex-grid-item>
+</flex-grid>
 </template>
 
 <script>
@@ -39,9 +37,3 @@ export default {
   },
 };
 </script>
-
-<style lang="stylus">
-.settings-header {
-  padding-bottom: 15px;
-}
-</style>

@@ -1,9 +1,21 @@
 <template>
-<div class="settings-list">
-  TODO - Add tab pane on left side...
-
-  see https://vuetifyjs.com/en/components/tabs/
-</div>
+<flex-grid
+  class="settings-list"
+  flex-direction="column"
+>
+  <flex-grid-item
+    v-for="view in viewList"
+    :key="view.viewName"
+    margin="0"
+  >
+    <button
+      :disabled="view.viewName === activeView"
+      @click="() => onClick(view.viewName)"
+    >
+      {{ view.displayName }}
+    </button>
+  </flex-grid-item>
+</flex-grid>
 </template>
 
 <script>
@@ -14,13 +26,16 @@ import FlexGridItem from '../../flex-grid-item';
 export default {
   name: 'settings-list',
   props: {
+    activeView: {
+      type: String,
+    },
     viewList: {
       type: Array,
     },
   },
   methods: {
-    onChange() {
-      this.$emit('change');
+    onClick(viewName) {
+      this.$emit('change', { viewName });
     },
   },
   components: {
@@ -33,6 +48,17 @@ export default {
 
 <style lang="stylus">
 .settings-list {
+  padding-top: 68px;
 
+  button {
+    padding: 10px 40px 10px 15px;;
+    text-align: left;
+    width: 100%;
+
+    &[disabled="disabled"] {
+      background-color: #DDD;
+      color: black;
+    }
+  }
 }
 </style>

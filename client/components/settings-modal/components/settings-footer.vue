@@ -1,22 +1,20 @@
 <template>
-<div class="settings-footer">
-  <flex-grid align-items="center" justify-content="flex-end">
-    <flex-grid-item width="102px">
-      <button-fill
-        color="tertiary"
-        label="CANCEL"
-        @click="onCloseClick"
-      />
-    </flex-grid-item>
-    <flex-grid-item>
-      <button-fill
-        :disabled="!applyEnabled"
-        label="APPLY"
-        @click="onSubmitClick"
-      />
-    </flex-grid-item>
-  </flex-grid>
-</div>
+<flex-grid align-items="center" justify-content="flex-end">
+  <flex-grid-item width="102px">
+    <button-fill
+      color="tertiary"
+      label="CANCEL"
+      @click="onCloseClick"
+    />
+  </flex-grid-item>
+  <flex-grid-item>
+    <button-fill
+      :disabled="!applyEnabled"
+      label="APPLY"
+      @click="onSubmitClick"
+    />
+  </flex-grid-item>
+</flex-grid>
 </template>
 
 <script>
@@ -46,9 +44,3 @@ export default {
   },
 };
 </script>
-
-<style lang="stylus">
-.settings-footer {
-  padding-top: 15px;
-}
-</style>
