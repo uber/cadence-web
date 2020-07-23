@@ -11,7 +11,10 @@
       </div>
 
       <div class="content-item">
-        <flex-grid justify-content="flex-end">
+        <flex-grid align-items="center">
+          <flex-grid-item grow="1">
+            <h4>History events</h4>
+          </flex-grid-item>
           <flex-grid-item>
             <button-fill
               label="NEW"
