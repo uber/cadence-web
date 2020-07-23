@@ -3,105 +3,109 @@
     <div class="content">
       <div class="content-item">
         <setting-toggle
-          label="Enable history event highlighting"
+          label="Enable history event param highlighting"
           name="workflowHistoryEventHighlightListEnabled"
           :value="workflowHistoryEventHighlightListEnabled"
           @change="onWorkflowHistoryEventHighlightListEnabledChange"
         />
       </div>
 
-      <div class="content-item">
-        <flex-grid align-items="center">
-          <flex-grid-item grow="1">
-            <h4>History events</h4>
-          </flex-grid-item>
-          <flex-grid-item>
-            <button-fill
-              label="NEW"
-            />
-          </flex-grid-item>
-        </flex-grid>
-      </div>
+      <div style="opacity: 0.3;">
 
-      <div class="content-item">
-        <flex-grid align-items="center">
-          <flex-grid-item grow="1">
-            <flex-grid align-items="center">
-              <flex-grid-item>
-                <v-select
-                  value="ActivityTaskScheduled"
-                  :options="[{ label: 'ActivityTaskScheduled', value: 'ActivityTaskScheduled' }]"
-                />
-              </flex-grid-item>
-              <flex-grid-item>
-                <text-input value="" />
-              </flex-grid-item>
-            </flex-grid>
-          </flex-grid-item>
-          <flex-grid-item>
-            <toggle-button :labels="true" />
-          </flex-grid-item>
-          <flex-grid-item>
-            <button-icon
-              icon="icon_trash"
-              size="20px"
-            />
-          </flex-grid-item>
-        </flex-grid>
-      </div>
+        <div class="content-item">
+          <flex-grid align-items="center">
+            <flex-grid-item grow="1">
+              <h4>History event params</h4>
+            </flex-grid-item>
+            <flex-grid-item>
+              <button-fill
+                label="NEW"
+              />
+            </flex-grid-item>
+          </flex-grid>
+        </div>
 
-      <div class="content-item">
-        <flex-grid align-items="center">
-          <flex-grid-item grow="1">
-            <flex-grid align-items="center">
-              <flex-grid-item>
-                <v-select
-                  value="ActivityTaskScheduled"
-                  :options="[{ label: 'ActivityTaskScheduled', value: 'ActivityTaskScheduled' }]"
-                />
-              </flex-grid-item>
-              <flex-grid-item>
-                <text-input value="activityId" />
-              </flex-grid-item>
-            </flex-grid>
-          </flex-grid-item>
-          <flex-grid-item>
-            <toggle-button :labels="true" />
-          </flex-grid-item>
-          <flex-grid-item>
-            <button-icon
-              icon="icon_trash"
-              size="17px"
-            />
-          </flex-grid-item>
-        </flex-grid>
-      </div>
+        <div class="content-item">
+          <flex-grid align-items="center">
+            <flex-grid-item grow="1">
+              <flex-grid align-items="center">
+                <flex-grid-item>
+                  <v-select
+                    value="ActivityTaskScheduled"
+                    :options="[{ label: 'ActivityTaskScheduled', value: 'ActivityTaskScheduled' }]"
+                  />
+                </flex-grid-item>
+                <flex-grid-item>
+                  <text-input value="" />
+                </flex-grid-item>
+              </flex-grid>
+            </flex-grid-item>
+            <flex-grid-item>
+              <toggle-button :labels="true" />
+            </flex-grid-item>
+            <flex-grid-item>
+              <button-icon
+                icon="icon_trash"
+                size="20px"
+              />
+            </flex-grid-item>
+          </flex-grid>
+        </div>
 
-      <div class="content-item">
-        <flex-grid align-items="center">
-          <flex-grid-item grow="1">
-            <flex-grid align-items="center">
-              <flex-grid-item>
-                <v-select
-                  value="ActivityTaskScheduled"
-                  :options="[{ label: 'ActivityTaskScheduled', value: 'ActivityTaskScheduled' }]"
-                />
-              </flex-grid-item>
-              <flex-grid-item>
-                <text-input value="activityId" />
-              </flex-grid-item>
-            </flex-grid>
-          </flex-grid-item>
-          <flex-grid-item>
-            <toggle-button :labels="true" />
-          </flex-grid-item>
-          <flex-grid-item>
-            <button-icon
-              icon="icon_trash"
-              size="17px"
-            />
-          </flex-grid-item>
-        </flex-grid>
+        <div class="content-item">
+          <flex-grid align-items="center">
+            <flex-grid-item grow="1">
+              <flex-grid align-items="center">
+                <flex-grid-item>
+                  <v-select
+                    value="ActivityTaskScheduled"
+                    :options="[{ label: 'ActivityTaskScheduled', value: 'ActivityTaskScheduled' }]"
+                  />
+                </flex-grid-item>
+                <flex-grid-item>
+                  <text-input value="activityId" />
+                </flex-grid-item>
+              </flex-grid>
+            </flex-grid-item>
+            <flex-grid-item>
+              <toggle-button :labels="true" />
+            </flex-grid-item>
+            <flex-grid-item>
+              <button-icon
+                icon="icon_trash"
+                size="17px"
+              />
+            </flex-grid-item>
+          </flex-grid>
+        </div>
+
+        <div class="content-item">
+          <flex-grid align-items="center">
+            <flex-grid-item grow="1">
+              <flex-grid align-items="center">
+                <flex-grid-item>
+                  <v-select
+                    value="ActivityTaskScheduled"
+                    :options="[{ label: 'ActivityTaskScheduled', value: 'ActivityTaskScheduled' }]"
+                  />
+                </flex-grid-item>
+                <flex-grid-item>
+                  <text-input value="activityId" />
+                </flex-grid-item>
+              </flex-grid>
+            </flex-grid-item>
+            <flex-grid-item>
+              <toggle-button :labels="true" />
+            </flex-grid-item>
+            <flex-grid-item>
+              <button-icon
+                icon="icon_trash"
+                size="17px"
+              />
+            </flex-grid-item>
+          </flex-grid>
+        </div>
+
       </div>
 
     </div>
