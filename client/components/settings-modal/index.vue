@@ -5,10 +5,15 @@
     @before-open="onBeforeOpen"
   >
     <div class="settings-modal">
+      <settings-header
+        :title="activeView.displayName"
+        title-suffix="Settings"
+        @close="onClose"
+      />
       <flex-grid>
         <flex-grid-item margin="20px">
           <settings-list
-            :active-view="activeView"
+            :active-view-name="activeView.name"
             :view-list="viewList"
             @change="onSettingsListChange"
           />
@@ -40,6 +45,7 @@
 import FlexGrid from '../flex-grid';
 import FlexGridItem from '../flex-grid-item';
 import SettingsDateFormat from './components/settings-date-format';
+import SettingsHeader from './components/settings-header';
 import SettingsList from './components/settings-list';
 import SettingsWorkflowHistory from './components/settings-workflow-history';
 import { SETTINGS_VIEW_LIST } from './constants';
@@ -47,7 +53,7 @@ import { SETTINGS_VIEW_LIST } from './constants';
 export default {
   data() {
     return {
-      activeView: null,
+      activeView: {},
       viewList: SETTINGS_VIEW_LIST,
     };
   },
@@ -73,10 +79,10 @@ export default {
   },
   computed: {
     settingsDateFormatViewActive() {
-      return this.activeView === 'settings-date-format';
+      return this.activeView.name === 'settings-date-format';
     },
     settingsWorkflowHistoryViewActive() {
-      return this.activeView === 'settings-workflow-history';
+      return this.activeView.name === 'settings-workflow-history';
     },
   },
   methods: {
@@ -87,17 +93,17 @@ export default {
       this.close();
     },
     onBeforeClose() {
-      this.activeView = null;
+      this.activeView = {};
     },
     onBeforeOpen() {
-      this.activeView = 'settings-date-format';
+      this.activeView = this.viewList[0];
     },
     onSettingsChange(event) {
       this.$emit('change', event);
       this.close();
     },
-    onSettingsListChange({ viewName }) {
-      this.activeView = viewName;
+    onSettingsListChange({ view }) {
+      this.activeView = view;
     },
   },
   components: {
@@ -106,6 +112,9 @@ export default {
     'settings-date-format': SettingsDateFormat,
     'settings-list': SettingsList,
     'settings-workflow-history': SettingsWorkflowHistory,
+
+
+    'settings-header': SettingsHeader,
   },
 };
 </script>
@@ -114,7 +123,7 @@ export default {
 .settings-modal {
   .content {
     min-height: 320px;
-    min-width: 440px;
+    min-width: 400px;
     overflow-y: auto;
   }
 

@@ -1,9 +1,5 @@
 <template>
   <div>
-    <settings-header
-      title="DateTime Settings"
-      @close="onClose"
-    />
     <div class="content">
       <div class="content-item">
         <label for="settingsExample">

@@ -1,9 +1,5 @@
 <template>
   <div>
-    <settings-header
-      title="Workflow History Settings"
-      @close="onClose"
-    />
     <div class="content">
       <div class="content-item">
         <setting-toggle

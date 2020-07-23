@@ -1,7 +1,10 @@
 <template>
-<flex-grid align-items="center">
+<flex-grid
+  align-items="center"
+  class="settings-header"
+>
   <flex-grid-item grow="1">
-    <h2>{{title}}</h2>
+    <h2>{{displayTitle}}</h2>
   </flex-grid-item>
   <flex-grid-item width="40px">
     <button-icon
@@ -24,6 +27,15 @@ export default {
     title: {
       type: String,
     },
+    titleSuffix: {
+      type: String,
+    },
+  },
+  computed: {
+    displayTitle() {
+      const { title, titleSuffix } = this;
+      return [title, titleSuffix].join(' ');
+    },
   },
   methods: {
     onCloseClick() {
@@ -37,3 +49,9 @@ export default {
   },
 };
 </script>
+
+<style lang="stylus">
+.settings-header {
+  margin-bottom: 15px;
+}
+</style>

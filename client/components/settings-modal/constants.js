@@ -1,10 +1,10 @@
 export const SETTINGS_VIEW_LIST = [
   {
     displayName: 'DateTime',
-    viewName: 'settings-date-format',
+    name: 'settings-date-format',
   },
   {
     displayName: 'Workflow History',
-    viewName: 'settings-workflow-history',
+    name: 'settings-workflow-history',
   },
 ];

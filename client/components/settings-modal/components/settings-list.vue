@@ -5,12 +5,12 @@
 >
   <flex-grid-item
     v-for="view in viewList"
-    :key="view.viewName"
+    :key="view.name"
     margin="0"
   >
     <button
-      :disabled="view.viewName === activeView"
-      @click="() => onClick(view.viewName)"
+      :disabled="view.name === activeViewName"
+      @click="() => onClick(view)"
     >
       {{ view.displayName }}
     </button>
@@ -26,7 +26,7 @@ import FlexGridItem from '../../flex-grid-item';
 export default {
   name: 'settings-list',
   props: {
-    activeView: {
+    activeViewName: {
       type: String,
     },
     viewList: {
@@ -34,8 +34,8 @@ export default {
     },
   },
   methods: {
-    onClick(viewName) {
-      this.$emit('change', { viewName });
+    onClick(view) {
+      this.$emit('change', { view });
     },
   },
   components: {
@@ -48,8 +48,6 @@ export default {
 
 <style lang="stylus">
 .settings-list {
-  padding-top: 68px;
-
   button {
     padding: 10px 40px 10px 15px;;
     text-align: left;
