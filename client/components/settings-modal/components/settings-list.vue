@@ -8,18 +8,18 @@
     :key="view.name"
     margin="0"
   >
-    <button
-      :disabled="view.name === activeViewName"
+    <button-fill
+      class="settings-list-item"
+      :color="view.name === activeViewName ? 'primary' : 'tertiary'"
+      :label="view.displayName"
       @click="() => onClick(view)"
-    >
-      {{ view.displayName }}
-    </button>
+    />
   </flex-grid-item>
 </flex-grid>
 </template>
 
 <script>
-import ButtonIcon from '../../button-icon';
+import ButtonFill from '../../button-fill';
 import FlexGrid from '../../flex-grid';
 import FlexGridItem from '../../flex-grid-item';
 
@@ -35,11 +35,13 @@ export default {
   },
   methods: {
     onClick(view) {
-      this.$emit('change', { view });
+      if (view.name !== this.activeViewName) {
+        this.$emit('change', { view });
+      }
     },
   },
   components: {
-    'button-icon': ButtonIcon,
+    'button-fill': ButtonFill,
     'flex-grid': FlexGrid,
     'flex-grid-item': FlexGridItem,
   },
@@ -48,15 +50,13 @@ export default {
 
 <style lang="stylus">
 .settings-list {
-  button {
+  background-color: #fafafa;
+  height: 100%;
+
+  .settings-list-item {
     padding: 10px 40px 10px 15px;;
     text-align: left;
     width: 100%;
-
-    &[disabled="disabled"] {
-      background-color: #DDD;
-      color: black;
-    }
   }
 }
 </style>

@@ -128,7 +128,7 @@ export default {
   }
 
   .content-item {
-    margin: 15px 0;
+    margin: 10px 0 15px;
   }
 
   .dropdown-menu {

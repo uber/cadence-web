@@ -9,6 +9,98 @@
           @change="onWorkflowHistoryEventHighlightListEnabledChange"
         />
       </div>
+
+      <div class="content-item">
+        <flex-grid justify-content="flex-end">
+          <flex-grid-item>
+            <button-fill
+              label="NEW"
+            />
+          </flex-grid-item>
+        </flex-grid>
+      </div>
+
+      <div class="content-item">
+        <flex-grid align-items="center">
+          <flex-grid-item grow="1">
+            <flex-grid align-items="center">
+              <flex-grid-item>
+                <v-select
+                  value="ActivityTaskScheduled"
+                  :options="[{ label: 'ActivityTaskScheduled', value: 'ActivityTaskScheduled' }]"
+                />
+              </flex-grid-item>
+              <flex-grid-item>
+                <text-input value="" />
+              </flex-grid-item>
+            </flex-grid>
+          </flex-grid-item>
+          <flex-grid-item>
+            <toggle-button :labels="true" />
+          </flex-grid-item>
+          <flex-grid-item>
+            <button-icon
+              icon="icon_trash"
+              size="20px"
+            />
+          </flex-grid-item>
+        </flex-grid>
+      </div>
+
+      <div class="content-item">
+        <flex-grid align-items="center">
+          <flex-grid-item grow="1">
+            <flex-grid align-items="center">
+              <flex-grid-item>
+                <v-select
+                  value="ActivityTaskScheduled"
+                  :options="[{ label: 'ActivityTaskScheduled', value: 'ActivityTaskScheduled' }]"
+                />
+              </flex-grid-item>
+              <flex-grid-item>
+                <text-input value="activityId" />
+              </flex-grid-item>
+            </flex-grid>
+          </flex-grid-item>
+          <flex-grid-item>
+            <toggle-button :labels="true" />
+          </flex-grid-item>
+          <flex-grid-item>
+            <button-icon
+              icon="icon_trash"
+              size="17px"
+            />
+          </flex-grid-item>
+        </flex-grid>
+      </div>
+
+      <div class="content-item">
+        <flex-grid align-items="center">
+          <flex-grid-item grow="1">
+            <flex-grid align-items="center">
+              <flex-grid-item>
+                <v-select
+                  value="ActivityTaskScheduled"
+                  :options="[{ label: 'ActivityTaskScheduled', value: 'ActivityTaskScheduled' }]"
+                />
+              </flex-grid-item>
+              <flex-grid-item>
+                <text-input value="activityId" />
+              </flex-grid-item>
+            </flex-grid>
+          </flex-grid-item>
+          <flex-grid-item>
+            <toggle-button :labels="true" />
+          </flex-grid-item>
+          <flex-grid-item>
+            <button-icon
+              icon="icon_trash"
+              size="17px"
+            />
+          </flex-grid-item>
+        </flex-grid>
+      </div>
+
     </div>
     <settings-footer
       :apply-enabled="isSettingsChanged"
@@ -27,6 +119,7 @@ import SettingsFooter from './settings-footer';
 import SettingsHeader from './settings-header';
 import SettingToggle from '../../setting-toggle';
 import TextInput from '../../text-input';
+import { ToggleButton } from 'vue-js-toggle-button';
 
 export default {
   name: 'settings-workflow-history',
@@ -35,6 +128,10 @@ export default {
   data() {
     return {
       workflowHistoryEventHighlightListEnabled: true,
+      workflowHistoryEventHighlightList: [
+        {"eventParamName":"activityId","eventType":"ActivityTaskScheduled","isEnabled":true},
+        {"eventParamName":"activityType.name","eventType":"ActivityTaskScheduled","isEnabled":false}
+      ],
     };
   },
   computed: {
@@ -75,6 +172,7 @@ export default {
     'settings-header': SettingsHeader,
     'setting-toggle': SettingToggle,
     'text-input': TextInput,
+    'toggle-button': ToggleButton,
   },
 };
 </script>

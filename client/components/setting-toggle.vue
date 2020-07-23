@@ -1,7 +1,6 @@
 <template>
-  <flex-grid>
+  <flex-grid class="setting-toggle" align-items="center">
     <flex-grid-item
-      align-items="center"
       grow="1"
     >
       <label :for="name">
@@ -49,3 +48,9 @@ export default {
   },
 };
 </script>
+
+<style lang="stylus">
+.setting-toggle {
+  height: 22px;
+}
+</style>
