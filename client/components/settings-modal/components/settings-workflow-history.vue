@@ -5,6 +5,14 @@
       @close="onClose"
     />
     <div class="content">
+      <div class="content-item">
+        <setting-toggle
+          label="Enable history event highlighting"
+          name="workflowHistoryEventHighlightListEnabled"
+          :value="workflowHistoryEventHighlightListEnabled"
+          @change="onWorkflowHistoryEventHighlightListEnabledChange"
+        />
+      </div>
     </div>
     <settings-footer
       :apply-enabled="isSettingsChanged"
@@ -21,6 +29,7 @@ import FlexGrid from '../../flex-grid';
 import FlexGridItem from '../../flex-grid-item';
 import SettingsFooter from './settings-footer';
 import SettingsHeader from './settings-header';
+import SettingToggle from '../../setting-toggle';
 import TextInput from '../../text-input';
 
 export default {
@@ -29,6 +38,7 @@ export default {
   },
   data() {
     return {
+      workflowHistoryEventHighlightListEnabled: true,
     };
   },
   computed: {
@@ -44,6 +54,9 @@ export default {
   methods: {
     onClose() {
       this.$emit('close');
+    },
+    onWorkflowHistoryEventHighlightListEnabledChange({ value }) {
+      this.workflowHistoryEventHighlightListEnabled = value;
     },
     onSubmit() {
       // this.$emit('change', {
@@ -64,6 +77,7 @@ export default {
     'flex-grid-item': FlexGridItem,
     'settings-footer': SettingsFooter,
     'settings-header': SettingsHeader,
+    'setting-toggle': SettingToggle,
     'text-input': TextInput,
   },
 };
