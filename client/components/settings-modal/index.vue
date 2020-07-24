@@ -121,7 +121,7 @@ export default {
 .settings-modal {
   .content {
     min-height: 320px;
-    min-width: 470px;
+    min-width: 630px;
     overflow-y: auto;
   }
 

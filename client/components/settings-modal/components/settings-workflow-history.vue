@@ -35,17 +35,20 @@
             <flex-grid align-items="center">
               <flex-grid-item grow="1">
                 <flex-grid align-items="center">
-                  <flex-grid-item>
+                  <flex-grid-item grow="1" width="345px">
                     <v-select
                       :disabled="!modalWorkflowHistoryEventHighlightListEnabled || !event.isEnabled"
                       :value="event.eventType"
-                      :options="[{ label: 'ActivityTaskScheduled', value: 'ActivityTaskScheduled' }]"
+                      :options="workflowEventTypes"
+                      :on-change="(value) => onWorkflowHistoryEventHighlightListChange({ event, key: 'eventType', value })"
                     />
                   </flex-grid-item>
                   <flex-grid-item>
                     <text-input
+                      label="Event param name"
                       :disabled="!modalWorkflowHistoryEventHighlightListEnabled || !event.isEnabled"
                       :value="event.eventParamName"
+                      @input="({ target: { value } }) => onWorkflowHistoryEventHighlightListChange({ event, key: 'eventParamName', value })"
                     />
                   </flex-grid-item>
                 </flex-grid>
@@ -55,7 +58,7 @@
                   :disabled="!modalWorkflowHistoryEventHighlightListEnabled"
                   :labels="true"
                   :value="event.isEnabled"
-                  @change="({ value }) => onWorkflowHistoryEventHighlightListChange({ ...event, isEnabled: value })"
+                  @change="({ value }) => onWorkflowHistoryEventHighlightListChange({ event, key: 'isEnabled', value })"
                 />
               </flex-grid-item>
               <flex-grid-item>
@@ -93,6 +96,9 @@ import {
   workflowHistoryEventHighlightListAddOrUpdate,
   workflowHistoryEventHighlightListRemove,
 } from '~helpers';
+import {
+  WORKFLOW_EVENT_TYPES,
+} from '~constants';
 
 export default {
   name: 'settings-workflow-history',
@@ -111,23 +117,14 @@ export default {
         {"id": "1595610044312", "eventParamName":"activityType.name","eventType":"ActivityTaskScheduled","isEnabled":false},
         {"id": "1595610057394", "eventParamName":"activityType","eventType":"ActivityTaskScheduled","isEnabled":false}
       ],
+      workflowEventTypes: WORKFLOW_EVENT_TYPES,
     };
   },
   computed: {
     isWorkflowHistoryEventHighlightListEnabledChanged() {
-      console.log('isWorkflowHistoryEventHighlightListEnabledChanged = ',
-        this.modalWorkflowHistoryEventHighlightListEnabled !== this.workflowHistoryEventHighlightListEnabled,
-        this.modalWorkflowHistoryEventHighlightListEnabled,
-        this.workflowHistoryEventHighlightListEnabled,
-      );
       return this.modalWorkflowHistoryEventHighlightListEnabled !== this.workflowHistoryEventHighlightListEnabled;
     },
     isSettingsChanged() {
-      console.log('isSettingsChanged = ', this.isWorkflowHistoryEventHighlightListChanged ||
-        this.isWorkflowHistoryEventHighlightListEnabledChanged,
-        this.isWorkflowHistoryEventHighlightListChanged,
-        this.isWorkflowHistoryEventHighlightListEnabledChanged);
-
       return (
         this.isWorkflowHistoryEventHighlightListChanged ||
         this.isWorkflowHistoryEventHighlightListEnabledChanged
@@ -138,12 +135,14 @@ export default {
     onClose() {
       this.$emit('close');
     },
-    onWorkflowHistoryEventHighlightListChange({ eventParamName, eventType, id, isEnabled }) {
+    onWorkflowHistoryEventHighlightListChange({ event, key, value }) {
+      if (event[key] === value) {
+        return;
+      }
+
       this.modalWorkflowHistoryEventHighlightList = workflowHistoryEventHighlightListAddOrUpdate({
-        eventParamName,
-        eventType,
-        id,
-        isEnabled,
+        ...event,
+        [key]: value,
         workflowHistoryEventHighlightList: this.modalWorkflowHistoryEventHighlightList,
       });
       this.isWorkflowHistoryEventHighlightListChanged = true;
@@ -158,7 +157,7 @@ export default {
     onWorkflowHistoryEventHighlightListAdd() {
       this.modalWorkflowHistoryEventHighlightList = workflowHistoryEventHighlightListAddOrUpdate({
         eventParamName: '',
-        eventType: 'ActivityTaskScheduled', // TODO - have defaults here...
+        eventType: WORKFLOW_EVENT_TYPES[0],
         id: new Date().getTime(),
         isEnabled: true,
         workflowHistoryEventHighlightList: this.modalWorkflowHistoryEventHighlightList,
@@ -204,7 +203,7 @@ export default {
 
   .scrollable {
     overflow-y: auto;
-    max-height: 200px;
+    height: 200px;
   }
 }
 </style>
