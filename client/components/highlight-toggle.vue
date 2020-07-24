@@ -12,7 +12,7 @@
     <button-icon
       :class="{
         active: isHighlighted,
-        disabled: !isToggleEnabled,
+        disabled: !isEnabled,
       }"
       icon="icon_search"
       @click="onClick"
@@ -30,7 +30,7 @@ export default {
       type: Boolean,
       default: false,
     },
-    isToggleEnabled: {
+    isEnabled: {
       type: Boolean,
       default: false,
     },
@@ -47,7 +47,7 @@ export default {
   },
   methods: {
     onClick(...args) {
-      if (this.isToggleEnabled) {
+      if (this.isEnabled) {
         this.$emit('click', ...args);
       }
     },

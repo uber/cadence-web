@@ -52,7 +52,7 @@ export default {
           h('highlight-toggle', {
             props: {
               isHighlighted: kvp.isHighlighted,  // TODO - figure out when label is subscribed to...
-              isToggleEnabled: this.isHighlightEnabled,
+              isEnabled: this.isHighlightEnabled,
               label: kvp.key,
               tag: 'dt',
             },
