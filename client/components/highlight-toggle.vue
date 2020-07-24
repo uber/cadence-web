@@ -1,13 +1,7 @@
 <template>
-  <component
-    class="highlight-toggle"
-    :is="tag"
-  >
-    <span
-      class="label"
-      :class="{ highlight: isHighlighted }"
-    >
-      {{label}}
+  <component class="highlight-toggle" :is="tag">
+    <span class="label" :class="{ highlight: isHighlighted }">
+      {{ label }}
     </span>
     <button-icon
       :class="{
@@ -51,7 +45,7 @@ export default {
         this.$emit('click', ...args);
       }
     },
-  }
+  },
 };
 </script>
 

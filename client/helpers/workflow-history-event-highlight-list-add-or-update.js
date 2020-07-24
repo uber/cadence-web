@@ -1,6 +1,9 @@
 import findIndexById from './workflow-history-event-highlight-list-find-index-by-id';
 
-const findIndexByTypeAndParamName = ({ eventType, eventParamName }) => (eventParam) =>
+const findIndexByTypeAndParamName = ({
+  eventType,
+  eventParamName,
+}) => eventParam =>
   eventParam.eventType === eventType &&
   eventParam.eventParamName === eventParamName;
 
@@ -11,12 +14,11 @@ const workflowHistoryEventHighlightListAddOrUpdate = ({
   isEnabled,
   workflowHistoryEventHighlightList,
 }) => {
-  const findIndexHandler = id ?
-    findIndexById({ id }) :
-    findIndexByTypeAndParamName({ eventParamName, eventType });
+  const findIndexHandler = id
+    ? findIndexById({ id })
+    : findIndexByTypeAndParamName({ eventParamName, eventType });
 
-  const index = workflowHistoryEventHighlightList
-    .findIndex(findIndexHandler);
+  const index = workflowHistoryEventHighlightList.findIndex(findIndexHandler);
 
   if (index === -1) {
     return [
@@ -26,7 +28,7 @@ const workflowHistoryEventHighlightListAddOrUpdate = ({
         id: new Date().getTime(),
         isEnabled,
       },
-      ...workflowHistoryEventHighlightList
+      ...workflowHistoryEventHighlightList,
     ];
   }
 
@@ -40,7 +42,7 @@ const workflowHistoryEventHighlightListAddOrUpdate = ({
       eventType,
       isEnabled,
     },
-    ...workflowHistoryEventHighlightList.slice(index + 1)
+    ...workflowHistoryEventHighlightList.slice(index + 1),
   ];
 };
 

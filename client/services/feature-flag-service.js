@@ -6,8 +6,9 @@ class FeatureFlagService {
   async isFeatureFlagEnabled({ name = '', params = {} }) {
     const queryParams = getQueryStringFromObject(params);
     const url = [URL_BASE, name, queryParams].join('');
+
     return (await http(window.fetch, url)).value;
   }
-};
+}
 
 export default FeatureFlagService;

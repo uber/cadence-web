@@ -38,8 +38,10 @@ export const LOCAL_STORAGE_SETTINGS = {
   dateFormat: 'settings-date-format',
   timeFormat: 'settings-time-format',
   timezone: 'settings-timezone',
-  workflowHistoryEventHighlightList: 'settings-workflow-history-event-highlight-list',
-  workflowHistoryEventHighlightListEnabled: 'settings-workflow-history-event-highlight-list-enabled',
+  workflowHistoryEventHighlightList:
+    'settings-workflow-history-event-highlight-list',
+  workflowHistoryEventHighlightListEnabled:
+    'settings-workflow-history-event-highlight-list-enabled',
 };
 
 export const MAXIMUM_JSON_CHARACTER_LIMIT = 5000;
@@ -87,14 +89,19 @@ export const WORKFLOW_EVENT_TYPE = {
   DecisionTaskScheduled: 'DecisionTaskScheduled',
   DecisionTaskStarted: 'DecisionTaskStarted',
   DecisionTaskTimedOut: 'DecisionTaskTimedOut',
-  ExternalWorkflowExecutionCancelRequested: 'ExternalWorkflowExecutionCancelRequested',
+  ExternalWorkflowExecutionCancelRequested:
+    'ExternalWorkflowExecutionCancelRequested',
   ExternalWorkflowExecutionSignaled: 'ExternalWorkflowExecutionSignaled',
   MarkerRecorded: 'MarkerRecorded',
   RequestCancelActivityTaskFailed: 'RequestCancelActivityTaskFailed',
-  RequestCancelExternalWorkflowExecutionFailed: 'RequestCancelExternalWorkflowExecutionFailed',
-  RequestCancelExternalWorkflowExecutionInitiated: 'RequestCancelExternalWorkflowExecutionInitiated',
-  SignalExternalWorkflowExecutionFailed: 'SignalExternalWorkflowExecutionFailed',
-  SignalExternalWorkflowExecutionInitiated: 'SignalExternalWorkflowExecutionInitiated',
+  RequestCancelExternalWorkflowExecutionFailed:
+    'RequestCancelExternalWorkflowExecutionFailed',
+  RequestCancelExternalWorkflowExecutionInitiated:
+    'RequestCancelExternalWorkflowExecutionInitiated',
+  SignalExternalWorkflowExecutionFailed:
+    'SignalExternalWorkflowExecutionFailed',
+  SignalExternalWorkflowExecutionInitiated:
+    'SignalExternalWorkflowExecutionInitiated',
   StartChildWorkflowExecutionFailed: 'StartChildWorkflowExecutionFailed',
   StartChildWorkflowExecutionInitiated: 'StartChildWorkflowExecutionInitiated',
   TimerCanceled: 'TimerCanceled',

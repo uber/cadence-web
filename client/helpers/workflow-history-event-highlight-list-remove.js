@@ -4,8 +4,9 @@ const workflowHistoryEventHighlightListRemove = ({
   id,
   workflowHistoryEventHighlightList,
 }) => {
-  const index = workflowHistoryEventHighlightList
-    .findIndex(findIndexById({ id }));
+  const index = workflowHistoryEventHighlightList.findIndex(
+    findIndexById({ id })
+  );
 
   if (index === -1) {
     return workflowHistoryEventHighlightList;
@@ -13,7 +14,7 @@ const workflowHistoryEventHighlightListRemove = ({
 
   return [
     ...workflowHistoryEventHighlightList.slice(0, index),
-    ...workflowHistoryEventHighlightList.slice(index + 1)
+    ...workflowHistoryEventHighlightList.slice(index + 1),
   ];
 };
 

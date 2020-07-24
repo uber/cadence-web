@@ -50,7 +50,9 @@
       :loading="history.loading"
       :timelineEvents="historyTimelineEvents"
       :workflow-history-event-highlight-list="workflowHistoryEventHighlightList"
-      :workflow-history-event-highlight-list-enabled="workflowHistoryEventHighlightListEnabled"
+      :workflow-history-event-highlight-list-enabled="
+        workflowHistoryEventHighlightListEnabled
+      "
       @onNotification="onNotification"
       @onWorkflowHistoryEventParamToggle="onWorkflowHistoryEventParamToggle"
     />

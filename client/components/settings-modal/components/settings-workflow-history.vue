@@ -10,8 +10,10 @@
         />
       </div>
 
-      <div class="history-event-param-content" :class="{ 'disabled': !modalWorkflowHistoryEventHighlightListEnabled }">
-
+      <div
+        class="history-event-param-content"
+        :class="{ disabled: !modalWorkflowHistoryEventHighlightListEnabled }"
+      >
         <div class="content-item">
           <flex-grid align-items="center">
             <flex-grid-item grow="1">
@@ -28,7 +30,8 @@
         </div>
 
         <div class="scrollable">
-          <div class="content-item"
+          <div
+            class="content-item"
             v-for="event in modalWorkflowHistoryEventHighlightList"
             :key="event.id"
           >
@@ -37,18 +40,38 @@
                 <flex-grid align-items="center">
                   <flex-grid-item grow="1" width="345px">
                     <v-select
-                      :disabled="!modalWorkflowHistoryEventHighlightListEnabled || !event.isEnabled"
+                      :disabled="
+                        !modalWorkflowHistoryEventHighlightListEnabled ||
+                          !event.isEnabled
+                      "
                       :value="event.eventType"
                       :options="workflowEventTypes"
-                      :on-change="(value) => onWorkflowHistoryEventHighlightListChange({ event, key: 'eventType', value })"
+                      :on-change="
+                        value =>
+                          onWorkflowHistoryEventHighlightListChange({
+                            event,
+                            key: 'eventType',
+                            value,
+                          })
+                      "
                     />
                   </flex-grid-item>
                   <flex-grid-item>
                     <text-input
                       label="Event param name"
-                      :disabled="!modalWorkflowHistoryEventHighlightListEnabled || !event.isEnabled"
+                      :disabled="
+                        !modalWorkflowHistoryEventHighlightListEnabled ||
+                          !event.isEnabled
+                      "
                       :value="event.eventParamName"
-                      @input="({ target: { value } }) => onWorkflowHistoryEventHighlightListChange({ event, key: 'eventParamName', value })"
+                      @input="
+                        ({ target: { value } }) =>
+                          onWorkflowHistoryEventHighlightListChange({
+                            event,
+                            key: 'eventParamName',
+                            value,
+                          })
+                      "
                     />
                   </flex-grid-item>
                 </flex-grid>
@@ -58,7 +81,14 @@
                   :disabled="!modalWorkflowHistoryEventHighlightListEnabled"
                   :labels="true"
                   :value="event.isEnabled"
-                  @change="({ value }) => onWorkflowHistoryEventHighlightListChange({ event, key: 'isEnabled', value })"
+                  @change="
+                    ({ value }) =>
+                      onWorkflowHistoryEventHighlightListChange({
+                        event,
+                        key: 'isEnabled',
+                        value,
+                      })
+                  "
                 />
               </flex-grid-item>
               <flex-grid-item>
@@ -83,22 +113,19 @@
 </template>
 
 <script>
+import { ToggleButton } from 'vue-js-toggle-button';
 import ButtonFill from '../../button-fill';
 import ButtonIcon from '../../button-icon';
 import FlexGrid from '../../flex-grid';
 import FlexGridItem from '../../flex-grid-item';
-import SettingsFooter from './settings-footer';
-import SettingsHeader from './settings-header';
-import SettingsToggle from './settings-toggle';
 import TextInput from '../../text-input';
-import { ToggleButton } from 'vue-js-toggle-button';
+import SettingsFooter from './settings-footer';
+import SettingsToggle from './settings-toggle';
 import {
   workflowHistoryEventHighlightListAddOrUpdate,
   workflowHistoryEventHighlightListRemove,
 } from '~helpers';
-import {
-  WORKFLOW_EVENT_TYPES,
-} from '~constants';
+import { WORKFLOW_EVENT_TYPES } from '~constants';
 
 export default {
   name: 'settings-workflow-history',
@@ -113,14 +140,19 @@ export default {
   data() {
     return {
       isWorkflowHistoryEventHighlightListChanged: false,
-      modalWorkflowHistoryEventHighlightListEnabled: this.workflowHistoryEventHighlightListEnabled,
-      modalWorkflowHistoryEventHighlightList: this.workflowHistoryEventHighlightList,
+      modalWorkflowHistoryEventHighlightListEnabled: this
+        .workflowHistoryEventHighlightListEnabled,
+      modalWorkflowHistoryEventHighlightList: this
+        .workflowHistoryEventHighlightList,
       workflowEventTypes: WORKFLOW_EVENT_TYPES,
     };
   },
   computed: {
     isWorkflowHistoryEventHighlightListEnabledChanged() {
-      return this.modalWorkflowHistoryEventHighlightListEnabled !== this.workflowHistoryEventHighlightListEnabled;
+      return (
+        this.modalWorkflowHistoryEventHighlightListEnabled !==
+        this.workflowHistoryEventHighlightListEnabled
+      );
     },
     isSettingsChanged() {
       return (
@@ -138,28 +170,37 @@ export default {
         return;
       }
 
-      this.modalWorkflowHistoryEventHighlightList = workflowHistoryEventHighlightListAddOrUpdate({
-        ...event,
-        [key]: value,
-        workflowHistoryEventHighlightList: this.modalWorkflowHistoryEventHighlightList,
-      });
+      this.modalWorkflowHistoryEventHighlightList = workflowHistoryEventHighlightListAddOrUpdate(
+        {
+          ...event,
+          [key]: value,
+          workflowHistoryEventHighlightList: this
+            .modalWorkflowHistoryEventHighlightList,
+        }
+      );
       this.isWorkflowHistoryEventHighlightListChanged = true;
     },
     onWorkflowHistoryEventHighlightListRemove({ id }) {
-      this.modalWorkflowHistoryEventHighlightList = workflowHistoryEventHighlightListRemove({
-        id,
-        workflowHistoryEventHighlightList: this.modalWorkflowHistoryEventHighlightList,
-      });
+      this.modalWorkflowHistoryEventHighlightList = workflowHistoryEventHighlightListRemove(
+        {
+          id,
+          workflowHistoryEventHighlightList: this
+            .modalWorkflowHistoryEventHighlightList,
+        }
+      );
       this.isWorkflowHistoryEventHighlightListChanged = true;
     },
     onWorkflowHistoryEventHighlightListAdd() {
-      this.modalWorkflowHistoryEventHighlightList = workflowHistoryEventHighlightListAddOrUpdate({
-        eventParamName: '',
-        eventType: WORKFLOW_EVENT_TYPES[0],
-        id: new Date().getTime(),
-        isEnabled: true,
-        workflowHistoryEventHighlightList: this.modalWorkflowHistoryEventHighlightList,
-      });
+      this.modalWorkflowHistoryEventHighlightList = workflowHistoryEventHighlightListAddOrUpdate(
+        {
+          eventParamName: '',
+          eventType: WORKFLOW_EVENT_TYPES[0],
+          id: new Date().getTime(),
+          isEnabled: true,
+          workflowHistoryEventHighlightList: this
+            .modalWorkflowHistoryEventHighlightList,
+        }
+      );
       this.isWorkflowHistoryEventHighlightListChanged = true;
     },
     onWorkflowHistoryEventHighlightListEnabledChange({ value }) {
@@ -168,10 +209,12 @@ export default {
     onSubmit() {
       this.$emit('change', {
         ...(this.isWorkflowHistoryEventHighlightListEnabledChanged && {
-          workflowHistoryEventHighlightListEnabled: this.modalWorkflowHistoryEventHighlightListEnabled,
+          workflowHistoryEventHighlightListEnabled: this
+            .modalWorkflowHistoryEventHighlightListEnabled,
         }),
         ...(this.isWorkflowHistoryEventHighlightListChanged && {
-          workflowHistoryEventHighlightList: this.modalWorkflowHistoryEventHighlightList,
+          workflowHistoryEventHighlightList: this
+            .modalWorkflowHistoryEventHighlightList,
         }),
       });
     },
@@ -182,7 +225,6 @@ export default {
     'flex-grid': FlexGrid,
     'flex-grid-item': FlexGridItem,
     'settings-footer': SettingsFooter,
-    'settings-header': SettingsHeader,
     'settings-toggle': SettingsToggle,
     'text-input': TextInput,
     'toggle-button': ToggleButton,

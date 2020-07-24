@@ -13,10 +13,9 @@ const getEventKvpsHighlight = ({
     };
   }
 
-  const filteredWorkflowHistoryEventHighlightList = workflowHistoryEventHighlightList
-    .filter(
-      highlight => highlight.isEnabled && highlight.eventType === eventType
-    );
+  const filteredWorkflowHistoryEventHighlightList = workflowHistoryEventHighlightList.filter(
+    highlight => highlight.isEnabled && highlight.eventType === eventType
+  );
 
   if (!filteredWorkflowHistoryEventHighlightList.length) {
     return {
@@ -26,8 +25,11 @@ const getEventKvpsHighlight = ({
   }
 
   return {
-    kvps: kvps.map((kvp) => {
-      const isHighlighted = filteredWorkflowHistoryEventHighlightList.find(({ eventParamName }) => eventParamName === kvp.key) !== undefined;
+    kvps: kvps.map(kvp => {
+      const isHighlighted =
+        filteredWorkflowHistoryEventHighlightList.find(
+          ({ eventParamName }) => eventParamName === kvp.key
+        ) !== undefined;
 
       if (isHighlighted) {
         eventIsHighlighted = true;
@@ -36,7 +38,7 @@ const getEventKvpsHighlight = ({
       return {
         ...kvp,
         isHighlighted,
-      }
+      };
     }),
     isHighlighted: eventIsHighlighted,
   };

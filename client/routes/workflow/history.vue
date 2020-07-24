@@ -167,9 +167,19 @@
                             ? item.eventSummary
                             : item.eventFullDetails
                         "
-                        :is-highlight-enabled="compactDetails && !item.expanded ? false : workflowHistoryEventHighlightListEnabled"
+                        :is-highlight-enabled="
+                          compactDetails && !item.expanded
+                            ? false
+                            : workflowHistoryEventHighlightListEnabled
+                        "
                         :compact="compactDetails && !item.expanded"
-                        @onWorkflowHistoryEventParamToggle="(eventParam) => onWorkflowHistoryEventParamToggle({ eventParam, eventType: item.eventType })"
+                        @onWorkflowHistoryEventParamToggle="
+                          eventParam =>
+                            onWorkflowHistoryEventParamToggle({
+                              eventParam,
+                              eventType: item.eventType,
+                            })
+                        "
                       />
                     </div>
                   </div>
@@ -248,8 +258,13 @@
                   :data-event-id="eid"
                 >
                   <highlight-toggle
-                    :is-highlighted="events.find(event => event.eventId === eid).details.isHighlighted"
-                    :label="events.find(event => event.eventId === eid).eventType"
+                    :is-highlighted="
+                      events.find(event => event.eventId === eid).details
+                        .isHighlighted
+                    "
+                    :label="
+                      events.find(event => event.eventId === eid).eventType
+                    "
                   />
                 </a>
               </div>
@@ -260,7 +275,13 @@
                 :title="
                   `${selectedTimelineEvent.content} - ${selectedEvent.eventType}`
                 "
-                @onWorkflowHistoryEventParamToggle="(eventParam) => onWorkflowHistoryEventParamToggle({ eventParam, eventType: selectedEvent.eventType })"
+                @onWorkflowHistoryEventParamToggle="
+                  eventParam =>
+                    onWorkflowHistoryEventParamToggle({
+                      eventParam,
+                      eventType: selectedEvent.eventType,
+                    })
+                "
               />
             </div>
           </div>

@@ -16,7 +16,10 @@ const getSummaryWorkflowStatus = ({
     ).toLowerCase();
   }
 
-  if (workflowCompletedEvent.eventType === WORKFLOW_EVENT_TYPE.WorkflowExecutionContinuedAsNew) {
+  if (
+    workflowCompletedEvent.eventType ===
+    WORKFLOW_EVENT_TYPE.WorkflowExecutionContinuedAsNew
+  ) {
     return {
       to: {
         name: 'workflow/summary',

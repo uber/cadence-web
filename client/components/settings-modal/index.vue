@@ -31,8 +31,12 @@
             @close="onClose"
           />
           <settings-workflow-history
-            :workflow-history-event-highlight-list="workflowHistoryEventHighlightList"
-            :workflow-history-event-highlight-list-enabled="workflowHistoryEventHighlightListEnabled"
+            :workflow-history-event-highlight-list="
+              workflowHistoryEventHighlightList
+            "
+            :workflow-history-event-highlight-list-enabled="
+              workflowHistoryEventHighlightListEnabled
+            "
             v-if="settingsWorkflowHistoryViewActive"
             @change="onSettingsChange"
             @close="onClose"

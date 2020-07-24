@@ -20,7 +20,7 @@ export default {
         title: `Event #${this.event.eventId} ${this.event.eventType}`,
       },
       on: {
-        onWorkflowHistoryEventParamToggle: (event) => {
+        onWorkflowHistoryEventParamToggle: event => {
           this.$emit('onWorkflowHistoryEventParamToggle', event);
         },
       },

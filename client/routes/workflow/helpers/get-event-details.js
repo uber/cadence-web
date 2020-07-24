@@ -1,5 +1,5 @@
-import { getKeyValuePairs } from '~helpers';
 import getEventKvpsHighlight from './get-event-kvps-highlight';
+import { getKeyValuePairs } from '~helpers';
 
 const getEventDetails = ({
   event,

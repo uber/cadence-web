@@ -1,19 +1,12 @@
 <template>
-<flex-grid
-  align-items="center"
-  class="settings-header"
->
-  <flex-grid-item grow="1">
-    <h2>{{displayTitle}}</h2>
-  </flex-grid-item>
-  <flex-grid-item width="40px">
-    <button-icon
-      icon="icon_delete-thin"
-      size="30px"
-      @click="onCloseClick"
-    />
-  </flex-grid-item>
-</flex-grid>
+  <flex-grid align-items="center" class="settings-header">
+    <flex-grid-item grow="1">
+      <h2>{{ displayTitle }}</h2>
+    </flex-grid-item>
+    <flex-grid-item width="40px">
+      <button-icon icon="icon_delete-thin" size="30px" @click="onCloseClick" />
+    </flex-grid-item>
+  </flex-grid>
 </template>
 
 <script>
@@ -34,6 +27,7 @@ export default {
   computed: {
     displayTitle() {
       const { title, titleSuffix } = this;
+
       return [title, titleSuffix].join(' ');
     },
   },

@@ -30,7 +30,6 @@ import {
   getLatestNewsItems,
   parseStringToBoolean,
   workflowHistoryEventHighlightListAddOrUpdate,
-  workflowHistoryEventHighlightListRemove,
 } from '~helpers';
 
 export default {
@@ -81,9 +80,17 @@ export default {
           TIMEZONE_LOCAL,
         timezoneOptions: TIMEZONE_OPTIONS,
         workflowHistoryEventHighlightList:
-          JSON.parse(localStorage.getItem(LOCAL_STORAGE_SETTINGS.workflowHistoryEventHighlightList)) || [],
-        workflowHistoryEventHighlightListEnabled:
-          parseStringToBoolean(localStorage.getItem(LOCAL_STORAGE_SETTINGS.workflowHistoryEventHighlightListEnabled), true),
+          JSON.parse(
+            localStorage.getItem(
+              LOCAL_STORAGE_SETTINGS.workflowHistoryEventHighlightList
+            )
+          ) || [],
+        workflowHistoryEventHighlightListEnabled: parseStringToBoolean(
+          localStorage.getItem(
+            LOCAL_STORAGE_SETTINGS.workflowHistoryEventHighlightListEnabled
+          ),
+          true
+        ),
       },
     };
   },
@@ -151,9 +158,8 @@ export default {
     onSettingsChange(values) {
       for (const key in values) {
         const value = values[key];
-        const storeValue = typeof value === 'object' ?
-          JSON.stringify(value) :
-          value;
+        const storeValue =
+          typeof value === 'object' ? JSON.stringify(value) : value;
 
         localStorage.setItem(LOCAL_STORAGE_SETTINGS[key], storeValue);
 
@@ -164,22 +170,26 @@ export default {
       this.$modal.show('settings-modal');
     },
     onWorkflowHistoryEventParamToggle({
-      eventParam: {
-        key: eventParamName,
-        isHighlighted,
-      },
+      eventParam: { key: eventParamName, isHighlighted },
       eventType,
     }) {
-      const { settings: { workflowHistoryEventHighlightList } } = this;
+      const {
+        settings: { workflowHistoryEventHighlightList },
+      } = this;
 
-      this.settings.workflowHistoryEventHighlightList = workflowHistoryEventHighlightListAddOrUpdate({
-        eventParamName,
-        eventType,
-        isEnabled: !isHighlighted,
-        workflowHistoryEventHighlightList,
-      });
+      this.settings.workflowHistoryEventHighlightList = workflowHistoryEventHighlightListAddOrUpdate(
+        {
+          eventParamName,
+          eventType,
+          isEnabled: !isHighlighted,
+          workflowHistoryEventHighlightList,
+        }
+      );
 
-      localStorage.setItem(LOCAL_STORAGE_SETTINGS.workflowHistoryEventHighlightList, JSON.stringify(this.settings.workflowHistoryEventHighlightList));
+      localStorage.setItem(
+        LOCAL_STORAGE_SETTINGS.workflowHistoryEventHighlightList,
+        JSON.stringify(this.settings.workflowHistoryEventHighlightList)
+      );
     },
   },
   watch: {
@@ -268,8 +278,12 @@ export default {
       :date-format="settings.dateFormat"
       :time-format="settings.timeFormat"
       :timezone="settings.timezone"
-      :workflow-history-event-highlight-list="settings.workflowHistoryEventHighlightList"
-      :workflow-history-event-highlight-list-enabled="settings.workflowHistoryEventHighlightListEnabled"
+      :workflow-history-event-highlight-list="
+        settings.workflowHistoryEventHighlightList
+      "
+      :workflow-history-event-highlight-list-enabled="
+        settings.workflowHistoryEventHighlightListEnabled
+      "
       @onWorkflowHistoryEventParamToggle="onWorkflowHistoryEventParamToggle"
       @onNotification="onNotification"
     ></router-view>
@@ -283,8 +297,12 @@ export default {
       :time-format-options="settings.timeFormatOptions"
       :timezone="settings.timezone"
       :timezone-options="settings.timezoneOptions"
-      :workflow-history-event-highlight-list="settings.workflowHistoryEventHighlightList"
-      :workflow-history-event-highlight-list-enabled="settings.workflowHistoryEventHighlightListEnabled"
+      :workflow-history-event-highlight-list="
+        settings.workflowHistoryEventHighlightList
+      "
+      :workflow-history-event-highlight-list-enabled="
+        settings.workflowHistoryEventHighlightListEnabled
+      "
       @change="onSettingsChange"
     />
   </main>

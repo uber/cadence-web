@@ -105,7 +105,8 @@ export default function(historyEvents) {
       }
 
       if (
-        e.eventType !== WORKFLOW_EVENT_TYPE.StartChildWorkflowExecutionInitiated &&
+        e.eventType !==
+          WORKFLOW_EVENT_TYPE.StartChildWorkflowExecutionInitiated &&
         e.eventType !== WORKFLOW_EVENT_TYPE.ChildWorkflowExecutionStarted
       ) {
         assignEnd(item, e.timestamp);
@@ -163,18 +164,23 @@ export default function(historyEvents) {
           input: e.details.input,
         },
       });
-    } else if (e.eventType === WORKFLOW_EVENT_TYPE.SignalExternalWorkflowExecutionInitiated) {
+    } else if (
+      e.eventType ===
+      WORKFLOW_EVENT_TYPE.SignalExternalWorkflowExecutionInitiated
+    ) {
       add({
         id: `extsignal${e.eventId}`,
         className: 'external-signal',
         eventIds: [e.eventId],
         start: moment(e.timestamp),
         content: 'External Workflow Signaled',
-        details: summarizeEvents[WORKFLOW_EVENT_TYPE.SignalExternalWorkflowExecutionInitiated](
-          e.details
-        ),
+        details: summarizeEvents[
+          WORKFLOW_EVENT_TYPE.SignalExternalWorkflowExecutionInitiated
+        ](e.details),
       });
-    } else if (e.eventType === WORKFLOW_EVENT_TYPE.ExternalWorkflowExecutionSignaled) {
+    } else if (
+      e.eventType === WORKFLOW_EVENT_TYPE.ExternalWorkflowExecutionSignaled
+    ) {
       const initiatedEvent = hash[`extsignal${e.eventId}`];
 
       if (initiatedEvent) {

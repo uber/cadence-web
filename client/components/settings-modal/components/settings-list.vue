@@ -1,21 +1,14 @@
 <template>
-<flex-grid
-  class="settings-list"
-  flex-direction="column"
->
-  <flex-grid-item
-    v-for="view in viewList"
-    :key="view.name"
-    margin="0"
-  >
-    <button-fill
-      class="settings-list-item"
-      :color="view.name === activeViewName ? 'primary' : 'tertiary'"
-      :label="view.displayName"
-      @click="() => onClick(view)"
-    />
-  </flex-grid-item>
-</flex-grid>
+  <flex-grid class="settings-list" flex-direction="column">
+    <flex-grid-item v-for="view in viewList" :key="view.name" margin="0">
+      <button-fill
+        class="settings-list-item"
+        :color="view.name === activeViewName ? 'primary' : 'tertiary'"
+        :label="view.displayName"
+        @click="() => onClick(view)"
+      />
+    </flex-grid-item>
+  </flex-grid>
 </template>
 
 <script>
