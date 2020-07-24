@@ -1,12 +1,11 @@
+import findIndexById from './workflow-history-event-highlight-list-find-index-by-id';
+
 const workflowHistoryEventHighlightListRemove = ({
-  eventParamName,
-  eventType,
+  id,
   workflowHistoryEventHighlightList,
 }) => {
   const index = workflowHistoryEventHighlightList
-    .findIndex((eventParam) =>
-      eventParam.eventType === eventType && eventParam.eventParamName === eventParamName
-    );
+    .findIndex(findIndexById({ id }));
 
   if (index === -1) {
     return workflowHistoryEventHighlightList;
