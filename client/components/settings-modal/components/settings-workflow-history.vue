@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="settings-workflow-history">
     <div class="content">
       <div class="content-item">
         <setting-toggle
@@ -10,7 +10,7 @@
         />
       </div>
 
-      <div style="opacity: 0.3;">
+      <div class="history-event-param-content" :class="{ 'disabled': !workflowHistoryEventHighlightListEnabled }">
 
         <div class="content-item">
           <flex-grid align-items="center">
@@ -19,6 +19,7 @@
             </flex-grid-item>
             <flex-grid-item>
               <button-fill
+                :disabled="!workflowHistoryEventHighlightListEnabled"
                 label="NEW"
               />
             </flex-grid-item>
@@ -31,20 +32,28 @@
               <flex-grid align-items="center">
                 <flex-grid-item>
                   <v-select
+                    :disabled="!workflowHistoryEventHighlightListEnabled"
                     value="ActivityTaskScheduled"
                     :options="[{ label: 'ActivityTaskScheduled', value: 'ActivityTaskScheduled' }]"
                   />
                 </flex-grid-item>
                 <flex-grid-item>
-                  <text-input value="" />
+                  <text-input
+                    :disabled="!workflowHistoryEventHighlightListEnabled"
+                    value=""
+                  />
                 </flex-grid-item>
               </flex-grid>
             </flex-grid-item>
             <flex-grid-item>
-              <toggle-button :labels="true" />
+              <toggle-button
+                :disabled="!workflowHistoryEventHighlightListEnabled"
+                :labels="true"
+              />
             </flex-grid-item>
             <flex-grid-item>
               <button-icon
+                :disabled="!workflowHistoryEventHighlightListEnabled"
                 icon="icon_trash"
                 size="20px"
               />
@@ -183,3 +192,13 @@ export default {
   },
 };
 </script>
+
+<style lang="stylus">
+.settings-workflow-history {
+  .history-event-param-content {
+    &.disabled {
+      opacity: 0.3;
+    }
+  }
+}
+</style>

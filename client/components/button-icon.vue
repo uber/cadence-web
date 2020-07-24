@@ -1,6 +1,9 @@
 <template>
   <component
+    :aria-disabled="disabled"
     class="button-icon"
+    :class="{ disabled: disabled }"
+    :disabled="disabled"
     :href="href"
     :is="tag"
     :to="to"
@@ -27,6 +30,9 @@ export default {
       type: String,
       validator: value => ['primary', 'secondary'].includes(value),
     },
+    disabled: {
+      type: Boolean,
+    },
     href: {
       type: String,
     },
@@ -50,7 +56,9 @@ export default {
   },
   methods: {
     onClick(...args) {
-      this.$emit('click', ...args);
+      if (!this.disabled) {
+        this.$emit('click', ...args);
+      }
     },
   },
 };
@@ -67,6 +75,11 @@ export default {
   padding: 10px;
   transition: all 400ms ease;
   white-space: nowrap;
+
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 
   .icon {
     vertical-align: middle;
