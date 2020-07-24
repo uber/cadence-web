@@ -91,6 +91,7 @@ Scenario.prototype.tearDown = function tearDown() {
   delete window.Mocha.copiedText;
 
   const unmatched = this.api.calls(false);
+
   return unmatched.length
     ? Promise.reject(
         new Error(`${unmatched.length} outstanding expected API calls:
@@ -164,7 +165,9 @@ Scenario.prototype.withDomainDescription = function withDomainDescription(
   return this;
 };
 
-Scenario.prototype.withFeatureFlags = function withFeatureFlags(featureFlags = []) {
+Scenario.prototype.withFeatureFlags = function withFeatureFlags(
+  featureFlags = []
+) {
   featureFlags.forEach(({ key, value }) => {
     this.api.getOnce(`/api/feature-flags/${key}`, {
       key,
