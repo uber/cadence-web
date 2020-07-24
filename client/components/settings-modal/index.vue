@@ -112,8 +112,6 @@ export default {
     'settings-date-format': SettingsDateFormat,
     'settings-list': SettingsList,
     'settings-workflow-history': SettingsWorkflowHistory,
-
-
     'settings-header': SettingsHeader,
   },
 };

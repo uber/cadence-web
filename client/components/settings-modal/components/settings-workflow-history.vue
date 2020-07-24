@@ -55,6 +55,7 @@
                   :disabled="!modalWorkflowHistoryEventHighlightListEnabled"
                   :labels="true"
                   :value="event.isEnabled"
+                  @change="({ value }) => onWorkflowHistoryEventHighlightListChange({ ...event, isEnabled: value })"
                 />
               </flex-grid-item>
               <flex-grid-item>
@@ -62,6 +63,7 @@
                   :disabled="!modalWorkflowHistoryEventHighlightListEnabled"
                   icon="icon_trash"
                   size="20px"
+                  @click="onWorkflowHistoryEventHighlightListRemove(event)"
                 />
               </flex-grid-item>
             </flex-grid>
