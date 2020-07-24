@@ -75,8 +75,8 @@
       </div>
     </div>
     <settings-footer
-      :apply-enabled="isSettingsChanged"
-      @close="onClose"
+      :submit-enabled="isSettingsChanged"
+      @cancel="onClose"
       @submit="onSubmit"
     />
   </div>
@@ -103,20 +103,18 @@ import {
 export default {
   name: 'settings-workflow-history',
   props: {
+    workflowHistoryEventHighlightList: {
+      type: Array,
+    },
     workflowHistoryEventHighlightListEnabled: {
       type: Boolean,
-      default: true, // TODO - Remove once hooked up.
-    }
+    },
   },
   data() {
     return {
       isWorkflowHistoryEventHighlightListChanged: false,
-      modalWorkflowHistoryEventHighlightListEnabled: true,
-      modalWorkflowHistoryEventHighlightList: [
-        {"id": "1595610041952", "eventParamName":"activityId","eventType":"ActivityTaskScheduled","isEnabled":true},
-        {"id": "1595610044312", "eventParamName":"activityType.name","eventType":"ActivityTaskScheduled","isEnabled":false},
-        {"id": "1595610057394", "eventParamName":"activityType","eventType":"ActivityTaskScheduled","isEnabled":false}
-      ],
+      modalWorkflowHistoryEventHighlightListEnabled: this.workflowHistoryEventHighlightListEnabled,
+      modalWorkflowHistoryEventHighlightList: this.workflowHistoryEventHighlightList,
       workflowEventTypes: WORKFLOW_EVENT_TYPES,
     };
   },
@@ -168,15 +166,14 @@ export default {
       this.modalWorkflowHistoryEventHighlightListEnabled = value;
     },
     onSubmit() {
-      // this.$emit('change', {
-      //   ...(this.isDateFormatChanged && {
-      //     dateFormat: this.modalDateFormat.value,
-      //   }),
-      //   ...(this.isTimeFormatChanged && {
-      //     timeFormat: this.modalTimeFormat.value,
-      //   }),
-      //   ...(this.isTimezoneChanged && { timezone: this.modalTimezone.value }),
-      // });
+      this.$emit('change', {
+        ...(this.isWorkflowHistoryEventHighlightListEnabledChanged && {
+          workflowHistoryEventHighlightListEnabled: this.modalWorkflowHistoryEventHighlightListEnabled,
+        }),
+        ...(this.isWorkflowHistoryEventHighlightListChanged && {
+          workflowHistoryEventHighlightList: this.modalWorkflowHistoryEventHighlightList,
+        }),
+      });
     },
   },
   components: {

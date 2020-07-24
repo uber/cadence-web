@@ -47,7 +47,6 @@ export default {
   },
   methods: {
     onClick(...args) {
-      console.log('highlight-toggle onClick method called??');
       if (this.isToggleEnabled) {
         this.$emit('click', ...args);
       }

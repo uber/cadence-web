@@ -4,12 +4,12 @@
     <button-fill
       color="tertiary"
       label="CANCEL"
-      @click="onCloseClick"
+      @click="onCancelClick"
     />
   </flex-grid-item>
   <flex-grid-item>
     <button-fill
-      :disabled="!applyEnabled"
+      :disabled="!submitEnabled"
       label="APPLY"
       @click="onSubmitClick"
     />
@@ -25,13 +25,13 @@ import FlexGridItem from '../../flex-grid-item';
 export default {
   name: 'settings-footer',
   props: {
-    applyEnabled: {
+    submitEnabled: {
       type: Boolean,
     },
   },
   methods: {
-    onCloseClick() {
-      this.$emit('close');
+    onCancelClick() {
+      this.$emit('cancel');
     },
     onSubmitClick() {
       this.$emit('submit');

@@ -50,8 +50,8 @@
       </div>
     </div>
     <settings-footer
-      :apply-enabled="isSettingsChanged"
-      @close="onClose"
+      :submit-enabled="isSettingsChanged"
+      @cancel="onClose"
       @submit="onSubmit"
     />
   </div>
