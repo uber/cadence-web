@@ -27,43 +27,45 @@
           </flex-grid>
         </div>
 
-        <div class="content-item"
-          v-for="event in modalWorkflowHistoryEventHighlightList"
-          :key="event.id"
-        >
-          <flex-grid align-items="center">
-            <flex-grid-item grow="1">
-              <flex-grid align-items="center">
-                <flex-grid-item>
-                  <v-select
-                    :disabled="!modalWorkflowHistoryEventHighlightListEnabled || !event.isEnabled"
-                    :value="event.eventType"
-                    :options="[{ label: 'ActivityTaskScheduled', value: 'ActivityTaskScheduled' }]"
-                  />
-                </flex-grid-item>
-                <flex-grid-item>
-                  <text-input
-                    :disabled="!modalWorkflowHistoryEventHighlightListEnabled || !event.isEnabled"
-                    :value="event.eventParamName"
-                  />
-                </flex-grid-item>
-              </flex-grid>
-            </flex-grid-item>
-            <flex-grid-item>
-              <toggle-button
-                :disabled="!modalWorkflowHistoryEventHighlightListEnabled"
-                :labels="true"
-                :value="event.isEnabled"
-              />
-            </flex-grid-item>
-            <flex-grid-item>
-              <button-icon
-                :disabled="!modalWorkflowHistoryEventHighlightListEnabled"
-                icon="icon_trash"
-                size="20px"
-              />
-            </flex-grid-item>
-          </flex-grid>
+        <div class="scrollable">
+          <div class="content-item"
+            v-for="event in modalWorkflowHistoryEventHighlightList"
+            :key="event.id"
+          >
+            <flex-grid align-items="center">
+              <flex-grid-item grow="1">
+                <flex-grid align-items="center">
+                  <flex-grid-item>
+                    <v-select
+                      :disabled="!modalWorkflowHistoryEventHighlightListEnabled || !event.isEnabled"
+                      :value="event.eventType"
+                      :options="[{ label: 'ActivityTaskScheduled', value: 'ActivityTaskScheduled' }]"
+                    />
+                  </flex-grid-item>
+                  <flex-grid-item>
+                    <text-input
+                      :disabled="!modalWorkflowHistoryEventHighlightListEnabled || !event.isEnabled"
+                      :value="event.eventParamName"
+                    />
+                  </flex-grid-item>
+                </flex-grid>
+              </flex-grid-item>
+              <flex-grid-item>
+                <toggle-button
+                  :disabled="!modalWorkflowHistoryEventHighlightListEnabled"
+                  :labels="true"
+                  :value="event.isEnabled"
+                />
+              </flex-grid-item>
+              <flex-grid-item>
+                <button-icon
+                  :disabled="!modalWorkflowHistoryEventHighlightListEnabled"
+                  icon="icon_trash"
+                  size="20px"
+                />
+              </flex-grid-item>
+            </flex-grid>
+          </div>
         </div>
       </div>
     </div>
@@ -196,6 +198,11 @@ export default {
     &.disabled {
       opacity: 0.3;
     }
+  }
+
+  .scrollable {
+    overflow-y: auto;
+    max-height: 200px;
   }
 }
 </style>
