@@ -19,8 +19,8 @@
 </template>
 
 <script>
-import FlexGrid from './flex-grid';
-import FlexGridItem from './flex-grid-item';
+import FlexGrid from '../../flex-grid';
+import FlexGridItem from '../../flex-grid-item';
 import { ToggleButton } from 'vue-js-toggle-button';
 
 export default {
