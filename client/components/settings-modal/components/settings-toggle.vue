@@ -1,5 +1,5 @@
 <template>
-  <flex-grid class="setting-toggle" align-items="center">
+  <flex-grid class="settings-toggle" align-items="center">
     <flex-grid-item
       grow="1"
     >
@@ -24,7 +24,7 @@ import FlexGridItem from './flex-grid-item';
 import { ToggleButton } from 'vue-js-toggle-button';
 
 export default {
-  name: 'setting-toggle',
+  name: 'settings-toggle',
   props: {
     label: {
       type: String,
@@ -50,7 +50,7 @@ export default {
 </script>
 
 <style lang="stylus">
-.setting-toggle {
+.settings-toggle {
   height: 22px;
 }
 </style>

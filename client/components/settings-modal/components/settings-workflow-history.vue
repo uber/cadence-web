@@ -2,7 +2,7 @@
   <div class="settings-workflow-history">
     <div class="content">
       <div class="content-item">
-        <setting-toggle
+        <settings-toggle
           label="Enable history event param highlighting"
           name="workflowHistoryEventHighlightListEnabled"
           :value="modalWorkflowHistoryEventHighlightListEnabled"
@@ -89,7 +89,7 @@ import FlexGrid from '../../flex-grid';
 import FlexGridItem from '../../flex-grid-item';
 import SettingsFooter from './settings-footer';
 import SettingsHeader from './settings-header';
-import SettingToggle from '../../setting-toggle';
+import SettingsToggle from './settings-toggle';
 import TextInput from '../../text-input';
 import { ToggleButton } from 'vue-js-toggle-button';
 import {
@@ -183,7 +183,7 @@ export default {
     'flex-grid-item': FlexGridItem,
     'settings-footer': SettingsFooter,
     'settings-header': SettingsHeader,
-    'setting-toggle': SettingToggle,
+    'settings-toggle': SettingsToggle,
     'text-input': TextInput,
     'toggle-button': ToggleButton,
   },
