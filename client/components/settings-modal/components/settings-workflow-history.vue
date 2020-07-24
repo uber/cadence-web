@@ -26,21 +26,24 @@
           </flex-grid>
         </div>
 
-        <div class="content-item">
+        <div class="content-item"
+          v-for="event in workflowHistoryEventHighlightList"
+          :key="event.eventType + '_' + event.eventParamName"
+        >
           <flex-grid align-items="center">
             <flex-grid-item grow="1">
               <flex-grid align-items="center">
                 <flex-grid-item>
                   <v-select
-                    :disabled="!workflowHistoryEventHighlightListEnabled"
-                    value="ActivityTaskScheduled"
+                    :disabled="!workflowHistoryEventHighlightListEnabled || !event.isEnabled"
+                    :value="event.eventType"
                     :options="[{ label: 'ActivityTaskScheduled', value: 'ActivityTaskScheduled' }]"
                   />
                 </flex-grid-item>
                 <flex-grid-item>
                   <text-input
-                    :disabled="!workflowHistoryEventHighlightListEnabled"
-                    value=""
+                    :disabled="!workflowHistoryEventHighlightListEnabled || !event.isEnabled"
+                    :value="event.eventParamName"
                   />
                 </flex-grid-item>
               </flex-grid>
@@ -49,6 +52,7 @@
               <toggle-button
                 :disabled="!workflowHistoryEventHighlightListEnabled"
                 :labels="true"
+                :value="event.isEnabled"
               />
             </flex-grid-item>
             <flex-grid-item>
@@ -60,63 +64,7 @@
             </flex-grid-item>
           </flex-grid>
         </div>
-
-        <div class="content-item">
-          <flex-grid align-items="center">
-            <flex-grid-item grow="1">
-              <flex-grid align-items="center">
-                <flex-grid-item>
-                  <v-select
-                    value="ActivityTaskScheduled"
-                    :options="[{ label: 'ActivityTaskScheduled', value: 'ActivityTaskScheduled' }]"
-                  />
-                </flex-grid-item>
-                <flex-grid-item>
-                  <text-input value="activityId" />
-                </flex-grid-item>
-              </flex-grid>
-            </flex-grid-item>
-            <flex-grid-item>
-              <toggle-button :labels="true" />
-            </flex-grid-item>
-            <flex-grid-item>
-              <button-icon
-                icon="icon_trash"
-                size="17px"
-              />
-            </flex-grid-item>
-          </flex-grid>
-        </div>
-
-        <div class="content-item">
-          <flex-grid align-items="center">
-            <flex-grid-item grow="1">
-              <flex-grid align-items="center">
-                <flex-grid-item>
-                  <v-select
-                    value="ActivityTaskScheduled"
-                    :options="[{ label: 'ActivityTaskScheduled', value: 'ActivityTaskScheduled' }]"
-                  />
-                </flex-grid-item>
-                <flex-grid-item>
-                  <text-input value="activityId" />
-                </flex-grid-item>
-              </flex-grid>
-            </flex-grid-item>
-            <flex-grid-item>
-              <toggle-button :labels="true" />
-            </flex-grid-item>
-            <flex-grid-item>
-              <button-icon
-                icon="icon_trash"
-                size="17px"
-              />
-            </flex-grid-item>
-          </flex-grid>
-        </div>
-
       </div>
-
     </div>
     <settings-footer
       :apply-enabled="isSettingsChanged"
@@ -146,7 +94,8 @@ export default {
       workflowHistoryEventHighlightListEnabled: true,
       workflowHistoryEventHighlightList: [
         {"eventParamName":"activityId","eventType":"ActivityTaskScheduled","isEnabled":true},
-        {"eventParamName":"activityType.name","eventType":"ActivityTaskScheduled","isEnabled":false}
+        {"eventParamName":"activityType.name","eventType":"ActivityTaskScheduled","isEnabled":false},
+        {"eventParamName":"activityType","eventType":"ActivityTaskScheduled","isEnabled":false}
       ],
     };
   },
