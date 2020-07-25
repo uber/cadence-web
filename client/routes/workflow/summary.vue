@@ -134,10 +134,7 @@
 <script>
 import { TERMINATE_DEFAULT_ERROR_MESSAGE } from './constants';
 import { NOTIFICATION_TYPE_ERROR, NOTIFICATION_TYPE_SUCCESS } from '~constants';
-import {
-  getErrorMessage,
-  getDatetimeFormattedString,
-} from '~helpers';
+import { getErrorMessage, getDatetimeFormattedString } from '~helpers';
 import { BarLoader, ButtonFill, DataViewer, DetailList } from '~components';
 import { FeatureFlagService } from '~services';
 
@@ -171,9 +168,10 @@ export default {
     'detail-list': DetailList,
   },
   async mounted() {
-    const { name, params } = this;
     this.featureFlagService = new FeatureFlagService();
-    this.isWorkflowTerminateFeatureFlagEnabled = await this.featureFlagService.isFeatureFlagEnabled({ name: 'workflowTerminate' });
+    this.isWorkflowTerminateFeatureFlagEnabled = await this.featureFlagService.isFeatureFlagEnabled(
+      { name: 'workflowTerminate' }
+    );
     this.initAuthorization();
   },
   computed: {
@@ -231,7 +229,10 @@ export default {
       }
     },
     async initAuthorization() {
-      const isDomainAuthorizationFeatureFlagEnabled = await this.featureFlagService.isFeatureFlagEnabled({ name: 'domainAuthorization' });
+      const isDomainAuthorizationFeatureFlagEnabled = await this.featureFlagService.isFeatureFlagEnabled(
+        { name: 'domainAuthorization' }
+      );
+
       if (isDomainAuthorizationFeatureFlagEnabled) {
         const authorization = await this.fetchDomainAuthorization();
 
