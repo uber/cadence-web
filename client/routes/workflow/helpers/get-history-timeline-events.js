@@ -3,7 +3,7 @@ import mapTimelineEvents from './map-timeline-events';
 
 const getHistoryTimelineEvents = ({ historyEvents }) =>
   mapTimelineEvents(historyEvents).map(event => {
-    const details = getEventDetails(event);
+    const details = getEventDetails({ event });
 
     return { ...event, details };
   });
