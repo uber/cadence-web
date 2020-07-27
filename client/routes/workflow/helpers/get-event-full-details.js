@@ -6,7 +6,7 @@ const getEventFullDetails = ({
   event,
   workflowHistoryEventHighlightList,
   workflowHistoryEventHighlightListEnabled,
-}) => {
+} = {}) => {
   if (!event) {
     return event;
   }
