@@ -1,10 +1,10 @@
 <script>
-import { DataViewer } from '~components';
+import DataViewer from './data-viewer';
 import { preKeys } from '~constants';
 
 export default {
   name: 'detail-list',
-  props: ['compact', 'highlight', 'item', 'title'],
+  props: ['compact', 'item', 'title'],
   components: {
     'data-viewer': DataViewer,
   },
@@ -17,7 +17,7 @@ export default {
     },
   },
   render(h) {
-    const { highlight, compact, title } = this;
+    const { compact, title } = this;
 
     function dd(kvp) {
       if (kvp.routeLink) {
@@ -30,7 +30,6 @@ export default {
               props: {
                 item: kvp.value,
                 compact,
-                highlight,
                 title: `${title} - ${kvp.key}`,
               },
             }),

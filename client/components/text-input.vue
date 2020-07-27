@@ -1,6 +1,7 @@
 <template>
   <div class="text-input field">
     <input
+      :disabled="disabled"
       :name="name"
       placeholder=" "
       :readonly="readonly"
@@ -15,7 +16,7 @@
 <script>
 export default {
   name: 'text-input',
-  props: ['label', 'name', 'readonly', 'type', 'value'],
+  props: ['disabled', 'label', 'name', 'readonly', 'type', 'value'],
   methods: {
     onInputChange(...args) {
       this.$emit('input', ...args);
