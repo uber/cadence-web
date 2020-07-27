@@ -163,7 +163,6 @@
                             : item.eventFullDetails
                         "
                         :compact="compactDetails && !item.expanded"
-                        :highlight="events.length < 100"
                       />
                     </div>
                   </div>
