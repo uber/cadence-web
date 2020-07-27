@@ -147,7 +147,12 @@
                     "
                   >
                     <div class="td col-id">{{ item.eventId }}</div>
-                    <div class="td col-type">{{ item.eventType }}</div>
+                    <div class="td col-type">
+                      <highlight-toggle
+                        :is-highlighted="item.details.isHighlighted"
+                        :label="item.eventType"
+                      />
+                    </div>
                     <div class="td col-time">
                       {{
                         tsFormat === 'elapsed'
@@ -162,7 +167,19 @@
                             ? item.eventSummary
                             : item.eventFullDetails
                         "
+                        :is-highlight-enabled="
+                          compactDetails && !item.expanded
+                            ? false
+                            : workflowHistoryEventHighlightListEnabled
+                        "
                         :compact="compactDetails && !item.expanded"
+                        @onWorkflowHistoryEventParamToggle="
+                          eventParam =>
+                            onWorkflowHistoryEventParamToggle({
+                              eventParam,
+                              eventType: item.eventType,
+                            })
+                        "
                       />
                     </div>
                   </div>
@@ -200,6 +217,7 @@
                   <span class="event-title">{{ item.content }}</span>
                   <detail-list
                     :compact="true"
+                    :is-highlight-enabled="false"
                     :item="item.details"
                     :title="item.content"
                   />
@@ -225,6 +243,7 @@
               >
               <detail-list
                 class="timeline-details"
+                :is-highlight-enabled="false"
                 :item="selectedTimelineEvent.details"
                 :title="selectedTimelineEvent.content"
               />
@@ -238,14 +257,30 @@
                   @click.prevent="$router.replaceQueryParam('eventId', eid)"
                   :data-event-id="eid"
                 >
-                  {{ events.find(event => event.eventId === eid).eventType }}
+                  <highlight-toggle
+                    :is-highlighted="
+                      events.find(event => event.eventId === eid).details
+                        .isHighlighted
+                    "
+                    :label="
+                      events.find(event => event.eventId === eid).eventType
+                    "
+                  />
                 </a>
               </div>
               <detail-list
                 class="event-detail"
+                :is-highlight-enabled="workflowHistoryEventHighlightListEnabled"
                 :item="selectedEventDetails"
                 :title="
                   `${selectedTimelineEvent.content} - ${selectedEvent.eventType}`
+                "
+                @onWorkflowHistoryEventParamToggle="
+                  eventParam =>
+                    onWorkflowHistoryEventParamToggle({
+                      eventParam,
+                      eventType: selectedEvent.eventType,
+                    })
                 "
               />
             </div>
@@ -269,7 +304,7 @@ import debounce from 'lodash-es/debounce';
 import omit from 'lodash-es/omit';
 import Timeline from './components/timeline.vue';
 import EventDetail from './components/event-detail.vue';
-import { DetailList } from '~components';
+import { DetailList, HighlightToggle } from '~components';
 
 export default {
   name: 'history',
@@ -308,6 +343,8 @@ export default {
     'runId',
     'showGraph',
     'timelineEvents',
+    'workflowHistoryEventHighlightList',
+    'workflowHistoryEventHighlightListEnabled',
     'workflowId',
   ],
   created() {
@@ -430,6 +467,9 @@ export default {
     onSplitResize: debounce(() => {
       window.dispatchEvent(new Event('resize'));
     }, 5),
+    onWorkflowHistoryEventParamToggle(event) {
+      this.$emit('onWorkflowHistoryEventParamToggle', event);
+    },
     setEventType(et) {
       this.eventType = et.value;
       setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
@@ -523,6 +563,7 @@ export default {
     DynamicScroller,
     DynamicScrollerItem,
     'event-detail': EventDetail,
+    'highlight-toggle': HighlightToggle,
     prism: Prism,
     RecycleScroller,
     timeline: Timeline,

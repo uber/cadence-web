@@ -49,7 +49,12 @@
       :events="historyEvents"
       :loading="history.loading"
       :timelineEvents="historyTimelineEvents"
+      :workflow-history-event-highlight-list="workflowHistoryEventHighlightList"
+      :workflow-history-event-highlight-list-enabled="
+        workflowHistoryEventHighlightListEnabled
+      "
       @onNotification="onNotification"
+      @onWorkflowHistoryEventParamToggle="onWorkflowHistoryEventParamToggle"
     />
     <router-view
       name="stacktrace"
@@ -111,6 +116,8 @@ export default {
     'runId',
     'timeFormat',
     'timezone',
+    'workflowHistoryEventHighlightList',
+    'workflowHistoryEventHighlightListEnabled',
     'workflowId',
   ],
   created() {
@@ -134,9 +141,23 @@ export default {
       )}/${encodeURIComponent(runId)}`;
     },
     historyEvents() {
-      const { dateFormat, events, timeFormat, timezone } = this;
+      const {
+        dateFormat,
+        events,
+        timeFormat,
+        timezone,
+        workflowHistoryEventHighlightList,
+        workflowHistoryEventHighlightListEnabled,
+      } = this;
 
-      return getHistoryEvents({ dateFormat, events, timeFormat, timezone });
+      return getHistoryEvents({
+        dateFormat,
+        events,
+        timeFormat,
+        timezone,
+        workflowHistoryEventHighlightList,
+        workflowHistoryEventHighlightListEnabled,
+      });
     },
     historyTimelineEvents() {
       const { historyEvents } = this;
@@ -302,6 +323,9 @@ export default {
     },
     onNotification(event) {
       this.$emit('onNotification', event);
+    },
+    onWorkflowHistoryEventParamToggle(event) {
+      this.$emit('onWorkflowHistoryEventParamToggle', event);
     },
     setupQueryUrlWatch() {
       this.clearQueryUrlWatch();

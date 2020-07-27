@@ -1,12 +1,14 @@
 <script>
 import DataViewer from './data-viewer';
+import HighlightToggle from './highlight-toggle';
 import { preKeys } from '~constants';
 
 export default {
   name: 'detail-list',
-  props: ['compact', 'item', 'title'],
+  props: ['compact', 'isHighlightEnabled', 'item', 'title'],
   components: {
     'data-viewer': DataViewer,
+    'highlight-toggle': HighlightToggle,
   },
   data() {
     return {};
@@ -42,7 +44,19 @@ export default {
       { class: 'details' },
       this.item.kvps.map(kvp =>
         h('div', { attrs: { 'data-prop': kvp.key } }, [
-          h('dt', null, kvp.key),
+          h('highlight-toggle', {
+            props: {
+              isHighlighted: kvp.isHighlighted,
+              isEnabled: this.isHighlightEnabled,
+              label: kvp.key,
+              tag: 'dt',
+            },
+            on: {
+              click: () => {
+                this.$emit('onWorkflowHistoryEventParamToggle', kvp);
+              },
+            },
+          }),
           h('dd', null, dd(kvp)),
         ])
       )

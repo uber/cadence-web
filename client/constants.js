@@ -38,6 +38,10 @@ export const LOCAL_STORAGE_SETTINGS = {
   dateFormat: 'settings-date-format',
   timeFormat: 'settings-time-format',
   timezone: 'settings-timezone',
+  workflowHistoryEventHighlightList:
+    'settings-workflow-history-event-highlight-list',
+  workflowHistoryEventHighlightListEnabled:
+    'settings-workflow-history-event-highlight-list-enabled',
 };
 
 export const MAXIMUM_JSON_CHARACTER_LIMIT = 5000;
