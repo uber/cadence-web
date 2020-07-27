@@ -1,6 +1,9 @@
 <template>
   <component
+    :aria-disabled="disabled"
     class="button-icon"
+    :class="{ disabled: disabled }"
+    :disabled="disabled"
     :href="href"
     :is="tag"
     :to="to"
@@ -11,7 +14,9 @@
       :class="{ [icon]: icon, [color]: color }"
       :style="{ 'font-size': size }"
     />
-    <span class="label" :class="{ [color]: color }">{{ label }}</span>
+    <span class="label" :class="{ [color]: color }" v-if="label">{{
+      label
+    }}</span>
   </component>
 </template>
 
@@ -22,6 +27,9 @@ export default {
     color: {
       type: String,
       validator: value => ['primary', 'secondary'].includes(value),
+    },
+    disabled: {
+      type: Boolean,
     },
     href: {
       type: String,
@@ -46,7 +54,9 @@ export default {
   },
   methods: {
     onClick(...args) {
-      this.$emit('click', ...args);
+      if (!this.disabled) {
+        this.$emit('click', ...args);
+      }
     },
   },
 };
@@ -63,6 +73,11 @@ export default {
   padding: 10px;
   transition: all 400ms ease;
   white-space: nowrap;
+
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 
   .icon {
     vertical-align: middle;

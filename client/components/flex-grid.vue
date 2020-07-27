@@ -3,6 +3,7 @@
     class="flex-grid"
     :style="{
       'align-items': alignItems,
+      'flex-direction': flexDirection,
       'justify-content': justifyContent,
       width: width,
     }"
@@ -13,14 +14,27 @@
 
 <script>
 export default {
-  props: ['alignItems', 'justifyContent', 'width'],
+  props: {
+    alignItems: {
+      type: String,
+    },
+    flexDirection: {
+      type: String,
+      default: 'row',
+    },
+    justifyContent: {
+      type: String,
+    },
+    width: {
+      type: String,
+    },
+  },
 };
 </script>
 
 <style lang="stylus">
 .flex-grid {
   display: flex;
-  flex-direction: row;
   flex-wrap: wrap;
 }
 </style>

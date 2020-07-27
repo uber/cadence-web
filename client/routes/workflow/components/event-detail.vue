@@ -3,7 +3,7 @@ import { DetailList } from '~components';
 
 export default {
   name: 'event-detail',
-  props: ['event', 'compact', 'highlight'],
+  props: ['event', 'compact'],
   components: {
     'detail-list': DetailList,
   },
@@ -15,7 +15,6 @@ export default {
     return h('detail-list', {
       props: {
         item: this.event,
-        highlight: this.highlight,
         compact: this.compact,
         title: `Event #${this.event.eventId} ${this.event.eventType}`,
       },
