@@ -70,6 +70,7 @@
     "vue": "^2.5.13",
     "vue-infinite-scroll": "^2.0.2",
     "vue-js-modal": "^1.3.18",
+    "vue-js-toggle-button": "^1.3.3",
     "vue-loader": "^13.0.1",
     "vue-prism-component": "^1.0.1",
     "vue-router": "^3.0.1",
