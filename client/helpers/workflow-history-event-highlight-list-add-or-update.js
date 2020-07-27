@@ -25,7 +25,7 @@ const workflowHistoryEventHighlightListAddOrUpdate = ({
       {
         eventParamName,
         eventType,
-        id: new Date().getTime(),
+        id: Date.now(),
         isEnabled,
       },
       ...workflowHistoryEventHighlightList,
