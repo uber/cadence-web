@@ -228,6 +228,8 @@ Scenario.prototype.withWorkflows = function withWorkflows(
     ...query,
   })}`;
 
+  console.log('expected API = ', url);
+
   const response = Array.isArray(workflows)
     ? { executions: workflows }
     : workflows;

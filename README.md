@@ -70,4 +70,3 @@ The [webpack](https://webpack.js.org/) configuration is also exported as `webpac
 MIT License, please see [LICENSE](https://github.com/uber/cadence-web/blob/master/LICENSE) for details.
 
 [cadence]: https://github.com/uber/cadence
-
