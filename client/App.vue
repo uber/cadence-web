@@ -28,6 +28,8 @@ import {
   getEnvironmentList,
   getEnvironmentLocation,
   getLatestNewsItems,
+  parseStringToBoolean,
+  workflowHistoryEventHighlightListAddOrUpdate,
 } from '~helpers';
 
 export default {
@@ -77,6 +79,18 @@ export default {
           localStorage.getItem(LOCAL_STORAGE_SETTINGS.timezone) ||
           TIMEZONE_LOCAL,
         timezoneOptions: TIMEZONE_OPTIONS,
+        workflowHistoryEventHighlightList:
+          JSON.parse(
+            localStorage.getItem(
+              LOCAL_STORAGE_SETTINGS.workflowHistoryEventHighlightList
+            )
+          ) || [],
+        workflowHistoryEventHighlightListEnabled: parseStringToBoolean(
+          localStorage.getItem(
+            LOCAL_STORAGE_SETTINGS.workflowHistoryEventHighlightListEnabled
+          ),
+          true
+        ),
       },
     };
   },
@@ -144,13 +158,38 @@ export default {
     onSettingsChange(values) {
       for (const key in values) {
         const value = values[key];
+        const storeValue =
+          typeof value === 'object' ? JSON.stringify(value) : value;
 
-        localStorage.setItem(LOCAL_STORAGE_SETTINGS[key], value);
+        localStorage.setItem(LOCAL_STORAGE_SETTINGS[key], storeValue);
+
         this.settings[key] = value;
       }
     },
     onSettingsClick() {
       this.$modal.show('settings-modal');
+    },
+    onWorkflowHistoryEventParamToggle({
+      eventParam: { key: eventParamName, isHighlighted },
+      eventType,
+    }) {
+      const {
+        settings: { workflowHistoryEventHighlightList },
+      } = this;
+
+      this.settings.workflowHistoryEventHighlightList = workflowHistoryEventHighlightListAddOrUpdate(
+        {
+          eventParamName,
+          eventType,
+          isEnabled: !isHighlighted,
+          workflowHistoryEventHighlightList,
+        }
+      );
+
+      localStorage.setItem(
+        LOCAL_STORAGE_SETTINGS.workflowHistoryEventHighlightList,
+        JSON.stringify(this.settings.workflowHistoryEventHighlightList)
+      );
     },
   },
   watch: {
@@ -239,6 +278,13 @@ export default {
       :date-format="settings.dateFormat"
       :time-format="settings.timeFormat"
       :timezone="settings.timezone"
+      :workflow-history-event-highlight-list="
+        settings.workflowHistoryEventHighlightList
+      "
+      :workflow-history-event-highlight-list-enabled="
+        settings.workflowHistoryEventHighlightListEnabled
+      "
+      @onWorkflowHistoryEventParamToggle="onWorkflowHistoryEventParamToggle"
       @onNotification="onNotification"
     ></router-view>
     <modals-container />

@@ -14,7 +14,11 @@
       />
       <navigation-link label="Help" icon="icon_help" :to="{ name: 'help' }" />
     </navigation-bar>
-    <router-view name="domain-list" @onNotification="onNotification" />
+    <router-view
+      name="domain-list"
+      @onNotification="onNotification"
+      @onWorkflowHistoryEventParamToggle="onWorkflowHistoryEventParamToggle"
+    />
     <router-view name="help" @onNotification="onNotification" />
     <router-view name="news" @onNotification="onNotification" />
   </section>
@@ -31,6 +35,9 @@ export default {
   methods: {
     onNotification(event) {
       this.$emit('onNotification', event);
+    },
+    onWorkflowHistoryEventParamToggle(event) {
+      this.$emit('onWorkflowHistoryEventParamToggle', event);
     },
   },
 };
