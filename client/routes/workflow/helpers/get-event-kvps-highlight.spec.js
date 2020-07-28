@@ -8,6 +8,7 @@ describe('getEventKvpsHighlight', () => {
       workflowHistoryEventHighlightList: [],
       workflowHistoryEventHighlightListEnabled: false,
     });
+
     expect(output).toEqual({
       kvps: [],
       isHighlighted: false,
@@ -20,7 +21,7 @@ describe('getEventKvpsHighlight', () => {
         eventType: 'ActivityTaskScheduled',
         eventParamName: 'eventId',
         isEnabled: false,
-      }
+      },
     ];
 
     const output = getEventKvpsHighlight({
@@ -29,6 +30,7 @@ describe('getEventKvpsHighlight', () => {
       workflowHistoryEventHighlightList,
       workflowHistoryEventHighlightListEnabled: true,
     });
+
     expect(output).toEqual({
       kvps: [],
       isHighlighted: false,
@@ -41,7 +43,7 @@ describe('getEventKvpsHighlight', () => {
         eventType: 'ActivityTaskScheduled',
         eventParamName: 'eventId',
         isEnabled: true,
-      }
+      },
     ];
     const kvps = [
       {
@@ -51,7 +53,7 @@ describe('getEventKvpsHighlight', () => {
       {
         key: 'scheduledEventId',
         value: 0,
-      }
+      },
     ];
 
     const output = getEventKvpsHighlight({
@@ -60,6 +62,7 @@ describe('getEventKvpsHighlight', () => {
       workflowHistoryEventHighlightList,
       workflowHistoryEventHighlightListEnabled: true,
     });
+
     expect(output).toEqual({
       kvps: [
         {
@@ -71,7 +74,7 @@ describe('getEventKvpsHighlight', () => {
           isHighlighted: false,
           key: 'scheduledEventId',
           value: 0,
-        }
+        },
       ],
       isHighlighted: true,
     });
@@ -83,13 +86,13 @@ describe('getEventKvpsHighlight', () => {
         eventType: 'ActivityTaskScheduled',
         eventParamName: 'eventId',
         isEnabled: true,
-      }
+      },
     ];
     const kvps = [
       {
         key: 'scheduledEventId',
         value: 0,
-      }
+      },
     ];
 
     const output = getEventKvpsHighlight({
@@ -98,13 +101,14 @@ describe('getEventKvpsHighlight', () => {
       workflowHistoryEventHighlightList,
       workflowHistoryEventHighlightListEnabled: true,
     });
+
     expect(output).toEqual({
       kvps: [
         {
           isHighlighted: false,
           key: 'scheduledEventId',
           value: 0,
-        }
+        },
       ],
       isHighlighted: false,
     });

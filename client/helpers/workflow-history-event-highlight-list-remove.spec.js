@@ -13,6 +13,7 @@ describe('workflowHistoryEventHighlightListRemove', () => {
       id: 1,
       workflowHistoryEventHighlightList,
     });
+
     expect(output).toEqual(workflowHistoryEventHighlightList);
   });
 
@@ -29,11 +30,7 @@ describe('workflowHistoryEventHighlightListRemove', () => {
       id: 1,
       workflowHistoryEventHighlightList,
     });
-    expect(output).toEqual([
-      { id: 0 },
-      { id: 2 },
-      { id: 3 },
-      { id: 4 },
-    ]);
+
+    expect(output).toEqual([{ id: 0 }, { id: 2 }, { id: 3 }, { id: 4 }]);
   });
 });

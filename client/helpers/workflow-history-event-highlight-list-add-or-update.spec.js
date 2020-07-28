@@ -2,9 +2,7 @@ import addOrUpdate from './workflow-history-event-highlight-list-add-or-update';
 
 describe('workflowHistoryEventHighlightListAddOrUpdate', () => {
   it('should add an item to start of list if not found with id = 1.', () => {
-    jest
-      .spyOn(Date, 'now')
-      .mockImplementationOnce(() => 1);
+    jest.spyOn(Date, 'now').mockImplementationOnce(() => 1);
 
     const workflowHistoryEventHighlightList = [
       {
@@ -40,6 +38,7 @@ describe('workflowHistoryEventHighlightListAddOrUpdate', () => {
       isEnabled: true,
       workflowHistoryEventHighlightList,
     });
+
     expect(output.length).toEqual(5);
     expect(output[0]).toEqual({
       eventParamName: 'eventId',
@@ -90,6 +89,7 @@ describe('workflowHistoryEventHighlightListAddOrUpdate', () => {
       isEnabled: true,
       workflowHistoryEventHighlightList,
     });
+
     expect(output.length).toEqual(5);
     expect(output[1]).toEqual({
       eventParamName: 'eventId',
@@ -139,6 +139,7 @@ describe('workflowHistoryEventHighlightListAddOrUpdate', () => {
       isEnabled: true,
       workflowHistoryEventHighlightList,
     });
+
     expect(output.length).toEqual(5);
     expect(output[1]).toEqual({
       eventParamName: 'eventId',
