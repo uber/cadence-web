@@ -297,6 +297,12 @@ export default {
       :time-format-options="settings.timeFormatOptions"
       :timezone="settings.timezone"
       :timezone-options="settings.timezoneOptions"
+      :workflow-history-event-highlight-list="
+        settings.workflowHistoryEventHighlightList
+      "
+      :workflow-history-event-highlight-list-enabled="
+        settings.workflowHistoryEventHighlightListEnabled
+      "
       @change="onSettingsChange"
     />
   </main>
