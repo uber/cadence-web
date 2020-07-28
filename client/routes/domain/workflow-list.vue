@@ -144,6 +144,7 @@ export default pagedGrid({
     this.$http(`/api/domains/${this.domain}`).then(r => {
       this.maxRetentionDays =
         Number(r.configuration.workflowExecutionRetentionPeriodInDays) || 30;
+      console.log('maxRetentionDays = ', this.maxRetentionDays);
 
       if (!this.isRouteRangeValid(this.minStartDate)) {
         const prevRange = localStorage.getItem(
@@ -183,6 +184,7 @@ export default pagedGrid({
     },
     endTime() {
       const { endTime, range } = this.$route.query;
+      console.log('endTime = ', getEndTimeIsoString(range, endTime));
 
       return getEndTimeIsoString(range, endTime);
     },
@@ -215,6 +217,7 @@ export default pagedGrid({
     },
     startTime() {
       const { range, startTime } = this.$route.query;
+      console.log('startTime = ', getStartTimeIsoString(range, startTime));
 
       return getStartTimeIsoString(range, startTime);
     },
@@ -280,6 +283,7 @@ export default pagedGrid({
         ...(workflowName && { workflowName }),
       };
 
+      console.log('criteria = ', criteria);
       return criteria;
     },
     queryOnChange() {
@@ -319,6 +323,8 @@ export default pagedGrid({
   methods: {
     fetch: debounce(
       function fetch(url, query) {
+        console.log('fetch:', url, query);
+
         this.loading = true;
         this.error = undefined;
 
