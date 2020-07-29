@@ -235,6 +235,9 @@ export default pagedGrid({
       return !statusName || statusName === 'OPEN' ? 'open' : 'closed';
     },
     status() {
+      console.log('status = ', !this.$route.query || !this.$route.query.status
+        ? this.statuses[0]
+        : this.statuses.find(s => s.value === this.$route.query.status));
       return !this.$route.query || !this.$route.query.status
         ? this.statuses[0]
         : this.statuses.find(s => s.value === this.$route.query.status);
