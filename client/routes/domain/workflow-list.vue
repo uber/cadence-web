@@ -136,7 +136,7 @@ export default pagedGrid({
         { value: 'CONTINUED_AS_NEW', label: 'Continued As New' },
         { value: 'TIMED_OUT', label: 'Timed Out' },
       ],
-      maxRetentionDays: 30,
+      maxRetentionDays: undefined,
       filterMode: 'basic',
     };
   },
@@ -238,11 +238,17 @@ export default pagedGrid({
       return this.status.value;
     },
     range() {
+      const { state } = this;
       const query = this.$route.query || {};
 
+      if (state === 'closed' && this.maxRetentionDays === undefined) {
+        return null;
+      }
+
       if (!this.isRouteRangeValid(this.minStartDate)) {
+        const defaultRange = state === 'open' ? 30 : this.maxRetentionDays;
         const updatedQuery = this.setRange(
-          `last-${Math.min(30, this.maxRetentionDays)}-days`
+          `last-${defaultRange}-days`
         );
 
         query.startTime = getStartTimeIsoString(
