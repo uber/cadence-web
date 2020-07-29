@@ -154,7 +154,8 @@ export default pagedGrid({
         if (prevRange && this.isRangeValid(prevRange, this.minStartDate)) {
           this.setRange(prevRange);
         } else {
-          this.setRange(`last-${Math.min(30, this.maxRetentionDays)}-days`);
+          const defaultRange = state === 'open' ? 30 : this.maxRetentionDays;
+          this.setRange(`last-${defaultRange}-days`);
         }
       }
     });
