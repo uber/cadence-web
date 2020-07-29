@@ -223,8 +223,8 @@ export default pagedGrid({
     startTime() {
       console.log('calc startTime:', this.range, this.$route.query.range, this.$route.query.startTime);
 
-      if (this.range) {
-        return getStartTimeIsoString(this.range, this.range.startTime);
+      if (this.range && this.range.startTime) {
+        return getStartTimeIsoString(null, this.range.startTime.toISOString());
       }
 
       const { range, startTime } = this.$route.query;
