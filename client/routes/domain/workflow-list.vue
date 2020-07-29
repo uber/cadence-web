@@ -144,15 +144,18 @@ export default pagedGrid({
     this.$http(`/api/domains/${this.domain}`).then(r => {
       this.maxRetentionDays =
         Number(r.configuration.workflowExecutionRetentionPeriodInDays) || 30;
-      console.log('maxRetentionDays = ', this.maxRetentionDays);
-      console.log('isRouteRangeValid?', this.isRouteRangeValid(this.minStartDate));
 
-      if (!this.isRouteRangeValid(this.minStartDate)) {
+      const minStartDate = this.getMinStartDate();
+      console.log('maxRetentionDays = ', this.maxRetentionDays);
+      console.log('minStartDate = ', minStartDate, this.minStartDate);
+      console.log('isRouteRangeValid?', this.isRouteRangeValid(minStartDate));
+
+      if (!this.isRouteRangeValid(minStartDate)) {
         const prevRange = localStorage.getItem(
           `${this.domain}:workflows-time-range`
         );
 
-        if (prevRange && this.isRangeValid(prevRange, this.minStartDate)) {
+        if (prevRange && this.isRangeValid(prevRange, minStartDate)) {
           this.setRange(prevRange);
         } else {
           const defaultRange = state === 'open' ? 30 : this.maxRetentionDays;
@@ -311,18 +314,7 @@ export default pagedGrid({
       return this.$route.query.queryString;
     },
     minStartDate() {
-      const {
-        maxRetentionDays,
-        status: { value: status },
-      } = this;
-
-      if (status === 'OPEN') {
-        return null;
-      }
-
-      return moment(this.now)
-        .subtract(maxRetentionDays, 'days')
-        .startOf('days');
+      return this.getMinStartDate();
     },
     workflowId() {
       return this.$route.query.workflowId;
@@ -360,6 +352,20 @@ export default pagedGrid({
       typeof Mocha === 'undefined' ? 200 : 60,
       { maxWait: 1000 }
     ),
+    getMinStartDate() {
+      const {
+        maxRetentionDays,
+        status: { value: status },
+      } = this;
+
+      if (status === 'OPEN') {
+        return null;
+      }
+
+      return moment(this.now)
+        .subtract(maxRetentionDays, 'days')
+        .startOf('days');
+    },
     setWorkflowFilter(e) {
       const target = e.target || e.testTarget; // test hook since Event.target is readOnly and unsettable
 
