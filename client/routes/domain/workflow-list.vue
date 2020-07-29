@@ -145,6 +145,7 @@ export default pagedGrid({
       this.maxRetentionDays =
         Number(r.configuration.workflowExecutionRetentionPeriodInDays) || 30;
       console.log('maxRetentionDays = ', this.maxRetentionDays);
+      console.log('isRouteRangeValid?', this.isRouteRangeValid(this.minStartDate));
 
       if (!this.isRouteRangeValid(this.minStartDate)) {
         const prevRange = localStorage.getItem(
