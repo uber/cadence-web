@@ -1,7 +1,12 @@
 import { eventFullTransforms } from './event-full-transforms';
+import getEventKvpsHighlight from './get-event-kvps-highlight';
 import { getKeyValuePairs } from '~helpers';
 
-const getEventFullDetails = event => {
+const getEventFullDetails = ({
+  event,
+  workflowHistoryEventHighlightList,
+  workflowHistoryEventHighlightListEnabled,
+} = {}) => {
   if (!event) {
     return event;
   }
@@ -15,12 +20,18 @@ const getEventFullDetails = event => {
       ? maps[event.eventType](event.details)
       : event.details;
 
-  const kvps = getKeyValuePairs(item);
+  const { kvps, isHighlighted } = getEventKvpsHighlight({
+    eventType,
+    kvps: getKeyValuePairs(item),
+    workflowHistoryEventHighlightList,
+    workflowHistoryEventHighlightListEnabled,
+  });
 
   return {
     ...item,
     eventId,
     eventType,
+    isHighlighted,
     kvps,
   };
 };

@@ -16,12 +16,12 @@ describe('Workflow', () => {
         .withDomainAuthorization('ci-test', true)
         .withFeatureFlags([
           {
-            "key": "domainAuthorization",
-            "value": false
+            key: 'domainAuthorization',
+            value: false,
           },
           {
-            "key": "workflowTerminate",
-            "value": true
+            key: 'workflowTerminate',
+            value: true,
           },
         ])
         .withNewsFeed()

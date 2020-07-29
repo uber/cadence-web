@@ -24,17 +24,21 @@ export default {
     },
     params: {
       type: Object,
-    }
+    },
   },
   data() {
     return {
       isFeatureFlagEnabled: false,
-    }
+    };
   },
   async mounted() {
     const { name, params } = this;
     const featureFlagService = new FeatureFlagService();
-    this.isFeatureFlagEnabled = await featureFlagService.isFeatureFlagEnabled({ name, params });
+
+    this.isFeatureFlagEnabled = await featureFlagService.isFeatureFlagEnabled({
+      name,
+      params,
+    });
   },
 };
 </script>
