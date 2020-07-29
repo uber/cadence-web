@@ -221,7 +221,14 @@ export default pagedGrid({
       }));
     },
     startTime() {
+      console.log('calc startTime:', this.range, this.$route.query.range, this.$route.query.startTime);
+
+      if (this.range) {
+        return getStartTimeIsoString(this.range, this.range.startTime);
+      }
+
       const { range, startTime } = this.$route.query;
+
       console.log('query = ', this.$route.query);
       console.log('range = ', range);
       console.log('query startTime = ', startTime);
@@ -255,6 +262,7 @@ export default pagedGrid({
         return null;
       }
 
+      console.log('isRouteRangeValid: ', this.minStartDate, this.isRouteRangeValid(this.minStartDate));
       if (!this.isRouteRangeValid(this.minStartDate)) {
         const defaultRange = state === 'open' ? 30 : this.maxRetentionDays;
         const updatedQuery = this.setRange(
