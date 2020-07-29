@@ -9,7 +9,10 @@ describe('workflowHistoryEventHighlightListFindIndexById', () => {
       { id: 4 },
     ];
 
-    const output = workflowHistoryEventHighlightList.findIndex(findIndexById({ id: 1 }));
+    const output = workflowHistoryEventHighlightList.findIndex(
+      findIndexById({ id: 1 })
+    );
+
     expect(output).toEqual(-1);
   });
 
@@ -22,7 +25,10 @@ describe('workflowHistoryEventHighlightListFindIndexById', () => {
       { id: 4 },
     ];
 
-    const output = workflowHistoryEventHighlightList.findIndex(findIndexById({ id: 1 }));
+    const output = workflowHistoryEventHighlightList.findIndex(
+      findIndexById({ id: 1 })
+    );
+
     expect(output).toEqual(1);
   });
 });
