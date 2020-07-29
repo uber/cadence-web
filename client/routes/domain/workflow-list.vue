@@ -249,6 +249,8 @@ export default pagedGrid({
       const { state } = this;
       const query = this.$route.query || {};
 
+      console.log('calc range', state);
+
       if (state === 'closed' && this.maxRetentionDays === undefined) {
         return null;
       }
@@ -436,6 +438,8 @@ export default pagedGrid({
     },
     setRange(range) {
       const query = { ...this.$route.query };
+
+      console.log('setRange:', range);
 
       if (range) {
         if (typeof range === 'string') {
