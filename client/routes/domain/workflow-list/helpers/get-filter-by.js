@@ -1,2 +1,2 @@
-const getFilterBy = (status) => status === 'OPEN' ? 'StartTime' : 'CloseTime';
+const getFilterBy = ({ status }) => status === 'OPEN' ? 'StartTime' : 'CloseTime';
 export default getFilterBy;

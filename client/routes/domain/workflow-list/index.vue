@@ -41,7 +41,7 @@
         <v-select
           class="status"
           :value="status"
-          :options="statuses"
+          :options="statusList"
           :on-change="setStatus"
           :searchable="false"
         />
@@ -122,7 +122,11 @@ import {
   getFilterBy,
   getFormattedResults,
   getStartTime,
+  getState,
+  getStatus,
+  getStatusName,
 } from './helpers';
+import { STATUS_LIST } from './constants';
 
 export default pagedGrid({
   props: ['dateFormat', 'domain', 'timeFormat', 'timezone'],
@@ -132,16 +136,7 @@ export default pagedGrid({
       results: [],
       error: undefined,
       nextPageToken: undefined,
-      statuses: [
-        { value: 'OPEN', label: 'Open' },
-        { value: 'CLOSED', label: 'Closed' },
-        { value: 'COMPLETED', label: 'Completed' },
-        { value: 'FAILED', label: 'Failed' },
-        { value: 'CANCELED', label: 'Cancelled' },
-        { value: 'TERMINATED', label: 'Terminated' },
-        { value: 'CONTINUED_AS_NEW', label: 'Continued As New' },
-        { value: 'TIMED_OUT', label: 'Timed Out' },
-      ],
+      statusList: STATUS_LIST,
       maxRetentionDays: undefined,
       filterMode: 'basic',
     };
@@ -198,7 +193,7 @@ export default pagedGrid({
     },
     filterBy() {
       const { status: { value: status } } = this;
-      return getFilterBy(status);
+      return getFilterBy({ status });
     },
     formattedResults() {
       const { dateFormat, results, timeFormat, timezone } = this;
@@ -211,16 +206,15 @@ export default pagedGrid({
     },
     state() {
       const { statusName } = this;
-
-      return !statusName || statusName === 'OPEN' ? 'open' : 'closed';
+      return getState({ statusName });
     },
     status() {
-      return !this.$route.query || !this.$route.query.status
-        ? this.statuses[0]
-        : this.statuses.find(s => s.value === this.$route.query.status);
+      const { status: queryStatus } = this.$route.query;  // TODO - maybe change to get from props?
+      return getStatus({ queryStatus });
     },
     statusName() {
-      return this.status.value;
+      const { status } = this;
+      return getStatusName({ status });
     },
     range() {
       const { state } = this;
