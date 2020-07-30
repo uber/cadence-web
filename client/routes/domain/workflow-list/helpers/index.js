@@ -1,3 +1,4 @@
+export { default as getCriteria } from './get-criteria';
 export { default as getFetchUrl } from './get-fetch-url';
 export { default as getFilterBy } from './get-filter-by';
 export { default as getFormattedResults } from './get-formatted-results';

@@ -118,6 +118,7 @@ import {
   getStartTimeIsoString,
 } from '~helpers';
 import {
+  getCriteria,
   getFetchUrl,
   getFilterBy,
   getFormattedResults,
@@ -183,6 +184,27 @@ export default pagedGrid({
     'date-range-picker': DateRangePicker,
   },
   computed: {
+    criteria() {
+      const {
+        endTime,
+        queryString,
+        startTime,
+        statusName,
+        workflowId,
+        workflowName,
+      } = this;
+
+      this.nextPageToken = undefined;
+
+      return getCriteria({
+        endTime,
+        queryString,
+        startTime,
+        statusName,
+        workflowId,
+        workflowName,
+      });
+    },
     fetchUrl() {
       const { domain, queryString, state } = this;
       return getFetchUrl({ domain, queryString, state });
@@ -209,7 +231,7 @@ export default pagedGrid({
       return getState({ statusName });
     },
     status() {
-      const { status: queryStatus } = this.$route.query;  // TODO - maybe change to get from props?
+      const { status: queryStatus } = this.$route.query;
       return getStatus({ queryStatus });
     },
     statusName() {
@@ -241,35 +263,6 @@ export default pagedGrid({
             endTime: moment(query.endTime),
           }
         : query.range;
-    },
-    criteria() {
-      const {
-        endTime,
-        queryString,
-        startTime,
-        statusName: status,
-        workflowId,
-        workflowName,
-      } = this;
-
-      this.nextPageToken = undefined;
-
-      if (!startTime || !endTime) {
-        return null;
-      }
-
-      const includeStatus = !['OPEN', 'CLOSED'].includes(status);
-
-      const criteria = {
-        startTime,
-        endTime,
-        ...(queryString && { queryString }),
-        ...(includeStatus && { status }),
-        ...(workflowId && { workflowId }),
-        ...(workflowName && { workflowName }),
-      };
-
-      return criteria;
     },
     queryOnChange() {
       if (!this.criteria) {
