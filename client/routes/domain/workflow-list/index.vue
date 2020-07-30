@@ -430,7 +430,7 @@ export default pagedGrid({
 </script>
 
 <style lang="stylus">
-@require "../../styles/definitions.styl"
+@require "../../../styles/definitions.styl"
 
 section.workflow-list
   display: flex;

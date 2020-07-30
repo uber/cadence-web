@@ -6,15 +6,6 @@ const getCriteria = ({
   workflowId,
   workflowName,
 }) => {
-  const {
-    endTime,
-    queryString,
-    startTime,
-    statusName: status,
-    workflowId,
-    workflowName,
-  } = this;
-
   if (!startTime || !endTime) {
     return null;
   }
