@@ -142,13 +142,12 @@ export default pagedGrid({
   },
   created() {
     this.$http(`/api/domains/${this.domain}`).then(r => {
+      const { state } = this;
+
       this.maxRetentionDays =
         Number(r.configuration.workflowExecutionRetentionPeriodInDays) || 30;
 
       const minStartDate = this.getMinStartDate();
-      console.log('maxRetentionDays = ', this.maxRetentionDays);
-      console.log('minStartDate = ', minStartDate, this.minStartDate);
-      console.log('isRouteRangeValid?', this.isRouteRangeValid(minStartDate));
 
       if (!this.isRouteRangeValid(minStartDate)) {
         const prevRange = localStorage.getItem(
@@ -159,6 +158,7 @@ export default pagedGrid({
           this.setRange(prevRange);
         } else {
           const defaultRange = state === 'open' ? 30 : this.maxRetentionDays;
+
           this.setRange(`last-${defaultRange}-days`);
         }
       }
@@ -189,7 +189,6 @@ export default pagedGrid({
     },
     endTime() {
       const { endTime, range } = this.$route.query;
-      console.log('endTime = ', getEndTimeIsoString(range, endTime));
 
       return getEndTimeIsoString(range, endTime);
     },
@@ -221,18 +220,11 @@ export default pagedGrid({
       }));
     },
     startTime() {
-      console.log('calc startTime:', this.range, this.$route.query.range, this.$route.query.startTime);
-
       if (this.range && this.range.startTime) {
         return getStartTimeIsoString(null, this.range.startTime.toISOString());
       }
 
       const { range, startTime } = this.$route.query;
-
-      console.log('query = ', this.$route.query);
-      console.log('range = ', range);
-      console.log('query startTime = ', startTime);
-      console.log('calc startTime = ', getStartTimeIsoString(range, startTime));
 
       return getStartTimeIsoString(range, startTime);
     },
@@ -242,9 +234,6 @@ export default pagedGrid({
       return !statusName || statusName === 'OPEN' ? 'open' : 'closed';
     },
     status() {
-      console.log('status = ', !this.$route.query || !this.$route.query.status
-        ? this.statuses[0]
-        : this.statuses.find(s => s.value === this.$route.query.status));
       return !this.$route.query || !this.$route.query.status
         ? this.statuses[0]
         : this.statuses.find(s => s.value === this.$route.query.status);
@@ -256,18 +245,13 @@ export default pagedGrid({
       const { state } = this;
       const query = this.$route.query || {};
 
-      console.log('calc range', state);
-
       if (state === 'closed' && this.maxRetentionDays === undefined) {
         return null;
       }
 
-      console.log('isRouteRangeValid: ', this.minStartDate, this.isRouteRangeValid(this.minStartDate));
       if (!this.isRouteRangeValid(this.minStartDate)) {
         const defaultRange = state === 'open' ? 30 : this.maxRetentionDays;
-        const updatedQuery = this.setRange(
-          `last-${defaultRange}-days`
-        );
+        const updatedQuery = this.setRange(`last-${defaultRange}-days`);
 
         query.startTime = getStartTimeIsoString(
           updatedQuery.range,
@@ -310,7 +294,6 @@ export default pagedGrid({
         ...(workflowName && { workflowName }),
       };
 
-      console.log('criteria = ', criteria);
       return criteria;
     },
     queryOnChange() {
@@ -339,8 +322,6 @@ export default pagedGrid({
   methods: {
     fetch: debounce(
       function fetch(url, query) {
-        console.log('fetch:', url, query);
-
         this.loading = true;
         this.error = undefined;
 
@@ -446,8 +427,6 @@ export default pagedGrid({
     },
     setRange(range) {
       const query = { ...this.$route.query };
-
-      console.log('setRange:', range);
 
       if (range) {
         if (typeof range === 'string') {
