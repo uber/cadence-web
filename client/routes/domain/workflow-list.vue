@@ -136,24 +136,30 @@ export default pagedGrid({
         { value: 'CONTINUED_AS_NEW', label: 'Continued As New' },
         { value: 'TIMED_OUT', label: 'Timed Out' },
       ],
-      maxRetentionDays: 30,
+      maxRetentionDays: undefined,
       filterMode: 'basic',
     };
   },
   created() {
     this.$http(`/api/domains/${this.domain}`).then(r => {
+      const { domain, state } = this;
+
       this.maxRetentionDays =
         Number(r.configuration.workflowExecutionRetentionPeriodInDays) || 30;
 
-      if (!this.isRouteRangeValid(this.minStartDate)) {
+      const minStartDate = this.getMinStartDate();
+
+      if (!this.isRouteRangeValid(minStartDate)) {
         const prevRange = localStorage.getItem(
-          `${this.domain}:workflows-time-range`
+          `${domain}:workflows-time-range`
         );
 
-        if (prevRange && this.isRangeValid(prevRange, this.minStartDate)) {
+        if (prevRange && this.isRangeValid(prevRange, minStartDate)) {
           this.setRange(prevRange);
         } else {
-          this.setRange(`last-${Math.min(30, this.maxRetentionDays)}-days`);
+          const defaultRange = state === 'open' ? 30 : this.maxRetentionDays;
+
+          this.setRange(`last-${defaultRange}-days`);
         }
       }
     });
@@ -216,6 +222,10 @@ export default pagedGrid({
     startTime() {
       const { range, startTime } = this.$route.query;
 
+      if (this.range && this.range.startTime) {
+        return getStartTimeIsoString(null, this.range.startTime.toISOString());
+      }
+
       return getStartTimeIsoString(range, startTime);
     },
     state() {
@@ -232,12 +242,16 @@ export default pagedGrid({
       return this.status.value;
     },
     range() {
+      const { state } = this;
       const query = this.$route.query || {};
 
+      if (state === 'closed' && this.maxRetentionDays === undefined) {
+        return null;
+      }
+
       if (!this.isRouteRangeValid(this.minStartDate)) {
-        const updatedQuery = this.setRange(
-          `last-${Math.min(30, this.maxRetentionDays)}-days`
-        );
+        const defaultRange = state === 'open' ? 30 : this.maxRetentionDays;
+        const updatedQuery = this.setRange(`last-${defaultRange}-days`);
 
         query.startTime = getStartTimeIsoString(
           updatedQuery.range,
@@ -296,18 +310,7 @@ export default pagedGrid({
       return this.$route.query.queryString;
     },
     minStartDate() {
-      const {
-        maxRetentionDays,
-        status: { value: status },
-      } = this;
-
-      if (status === 'OPEN') {
-        return null;
-      }
-
-      return moment(this.now)
-        .subtract(maxRetentionDays, 'days')
-        .startOf('days');
+      return this.getMinStartDate();
     },
     workflowId() {
       return this.$route.query.workflowId;
@@ -340,9 +343,20 @@ export default pagedGrid({
             return [];
           });
       },
-      typeof Mocha === 'undefined' ? 200 : 60,
+      typeof Mocha === 'undefined' ? 350 : 60,
       { maxWait: 1000 }
     ),
+    getMinStartDate() {
+      const { maxRetentionDays, statusName } = this;
+
+      if (statusName === 'OPEN') {
+        return null;
+      }
+
+      return moment(this.now)
+        .subtract(maxRetentionDays, 'days')
+        .startOf('days');
+    },
     setWorkflowFilter(e) {
       const target = e.target || e.testTarget; // test hook since Event.target is readOnly and unsettable
 
