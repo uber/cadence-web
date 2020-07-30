@@ -1,9 +1,11 @@
-const getMinStartDate = ({ maxRetentionDays, statusName }) => {
+import moment from 'moment';
+
+const getMinStartDate = ({ maxRetentionDays, now, statusName }) => {
   if (statusName === 'OPEN' || maxRetentionDays === undefined) {
     return null;
   }
 
-  return moment(this.now)
+  return moment(now)
     .subtract(maxRetentionDays, 'days')
     .startOf('days');
 };

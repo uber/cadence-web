@@ -90,6 +90,12 @@ const routeOpts = {
           components: {
             'workflow-list': WorkflowList,
           },
+          props: {
+            'workflow-list': ({ params, query }) => ({
+              domain: params.domain,
+              // workflowId: query.workflowId,
+            }),
+          },
         },
         {
           name: 'domain-metrics',

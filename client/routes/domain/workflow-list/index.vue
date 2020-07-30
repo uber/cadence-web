@@ -131,13 +131,20 @@ import {
 import { STATUS_LIST } from './constants';
 
 export default pagedGrid({
-  props: ['dateFormat', 'domain', 'timeFormat', 'timezone'],
+  props: [
+    'dateFormat',
+    'domain',
+    'timeFormat',
+    'timezone',
+    // 'workflowId'
+  ],
   data() {
     return {
       loading: true,
       results: [],
       error: undefined,
       nextPageToken: undefined,
+      now: undefined,
       statusList: STATUS_LIST,
       maxRetentionDays: undefined,
       filterMode: 'basic',
@@ -146,9 +153,11 @@ export default pagedGrid({
 
   // TODO - code could be cleaned up
   created() {
+    console.log('created called??');
     this.$http(`/api/domains/${this.domain}`).then(r => {
       const {
         maxRetentionDays,
+        now,
         state,
         statusName,
       } = this;
@@ -156,7 +165,7 @@ export default pagedGrid({
       this.maxRetentionDays =
         Number(r.configuration.workflowExecutionRetentionPeriodInDays) || 30;
 
-      const minStartDate = getMinStartDate({ maxRetentionDays, statusName });
+      const minStartDate = getMinStartDate({ maxRetentionDays, now, statusName });
 
       if (!this.isRouteRangeValid(minStartDate)) {
         const prevRange = localStorage.getItem(
@@ -287,6 +296,7 @@ export default pagedGrid({
 
       const query = { ...criteria, nextPageToken };
 
+      console.log('queryOnChange called?', fetchUrl, query);
       this.fetch(fetchUrl, query);
     },
     queryString() {
@@ -296,23 +306,28 @@ export default pagedGrid({
     minStartDate() {
       const {
         maxRetentionDays,
+        now,
         statusName,
       } = this;
 
-      return getMinStartDate({ maxRetentionDays, statusName });
+      return getMinStartDate({ maxRetentionDays, now, statusName });
     },
+
+    // TODO - consider moving this to a prop?
     workflowId() {
-      // TODO - consider moving this to a prop?
       return this.$route.query.workflowId;
     },
+
+    // TODO - consider moving this to a prop?
     workflowName() {
-      // TODO - consider moving this to a prop?
+
       return this.$route.query.workflowName;
     },
   },
   methods: {
     fetch: debounce(
       function fetch(url, query) {
+        console.log('fetch called???');
         this.loading = true;
         this.error = undefined;
 
