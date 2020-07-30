@@ -142,12 +142,16 @@ export default pagedGrid({
   },
   created() {
     this.$http(`/api/domains/${this.domain}`).then(r => {
-      const { state } = this;
+      const {
+        maxRetentionDays,
+        state,
+        status: { value: status },
+      } = this;
 
       this.maxRetentionDays =
         Number(r.configuration.workflowExecutionRetentionPeriodInDays) || 30;
 
-      const minStartDate = this.getMinStartDate();
+      const minStartDate = this.getMinStartDate({ maxRetentionDays, status });
 
       if (!this.isRouteRangeValid(minStartDate)) {
         const prevRange = localStorage.getItem(
@@ -310,7 +314,12 @@ export default pagedGrid({
       return this.$route.query.queryString;
     },
     minStartDate() {
-      return this.getMinStartDate();
+      const {
+        maxRetentionDays,
+        status: { value: status },
+      } = this;
+
+      return this.getMinStartDate({ maxRetentionDays, status });
     },
     workflowId() {
       return this.$route.query.workflowId;
@@ -346,13 +355,8 @@ export default pagedGrid({
       typeof Mocha === 'undefined' ? 200 : 60,
       { maxWait: 1000 }
     ),
-    getMinStartDate() {
-      const {
-        maxRetentionDays,
-        status: { value: status },
-      } = this;
-
-      if (status === 'OPEN') {
+    getMinStartDate({ maxRetentionDays, status }) {
+      if (status === 'OPEN' || maxRetentionDays === undefined) {
         return null;
       }
 
