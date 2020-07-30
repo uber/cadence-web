@@ -117,6 +117,12 @@ import {
   getEndTimeIsoString,
   getStartTimeIsoString,
 } from '~helpers';
+import {
+  getFetchUrl,
+  getFilterBy,
+  getFormattedResults,
+  getStartTime,
+} from './helpers';
 
 export default pagedGrid({
   props: ['dateFormat', 'domain', 'timeFormat', 'timezone'],
@@ -184,53 +190,24 @@ export default pagedGrid({
   computed: {
     fetchUrl() {
       const { domain, queryString, state } = this;
-
-      if (queryString) {
-        return `/api/domains/${domain}/workflows/list`;
-      }
-
-      return `/api/domains/${domain}/workflows/${state}`;
+      return getFetchUrl({ domain, queryString, state });
     },
     endTime() {
       const { endTime, range } = this.$route.query;
-
       return getEndTimeIsoString(range, endTime);
     },
     filterBy() {
-      return this.status.value === 'OPEN' ? 'StartTime' : 'CloseTime';
+      const { status: { value: status } } = this;
+      return getFilterBy(status);
     },
     formattedResults() {
       const { dateFormat, results, timeFormat, timezone } = this;
-
-      return results.map(result => ({
-        workflowId: result.execution.workflowId,
-        runId: result.execution.runId,
-        workflowName: result.type.name,
-        startTime: getDatetimeFormattedString({
-          date: result.startTime,
-          dateFormat,
-          timeFormat,
-          timezone,
-        }),
-        endTime: result.closeTime
-          ? getDatetimeFormattedString({
-              date: result.closeTime,
-              dateFormat,
-              timeFormat,
-              timezone,
-            })
-          : '',
-        status: (result.closeStatus || 'open').toLowerCase(),
-      }));
+      return getFormattedResults({ dateFormat, results, timeFormat, timezone });
     },
     startTime() {
-      if (this.range && this.range.startTime) {
-        return getStartTimeIsoString(null, this.range.startTime.toISOString());
-      }
-
-      const { range, startTime } = this.$route.query;
-
-      return getStartTimeIsoString(range, startTime);
+      const { range } = this;
+      const { range: queryRange, startTime: queryStartTime } = this.$route.query;
+      return getStartTime({ range, queryRange, queryStartTime });
     },
     state() {
       const { statusName } = this;
