@@ -9,7 +9,7 @@
             placeholder=" "
             key="sql-query"
             name="queryString"
-            v-bind:value="$route.query.queryString"
+            v-bind:value="queryString"
             @input="setWorkflowFilter"
           />
           <label for="queryString">Query</label>
@@ -22,7 +22,7 @@
             class="workflow-id"
             placeholder=" "
             name="workflowId"
-            v-bind:value="$route.query.workflowId"
+            v-bind:value="workflowId"
             @input="setWorkflowFilter"
           />
           <label for="workflowId">Workflow ID</label>
@@ -33,7 +33,7 @@
             class="workflow-name"
             placeholder=" "
             name="workflowName"
-            v-bind:value="$route.query.workflowName"
+            v-bind:value="workflowName"
             @input="setWorkflowFilter"
           />
           <label for="workflowName">Workflow Name</label>
@@ -122,6 +122,7 @@ import {
   getFetchUrl,
   getFilterBy,
   getFormattedResults,
+  getMinStartDate,
   getStartTime,
   getState,
   getStatus,
@@ -142,18 +143,20 @@ export default pagedGrid({
       filterMode: 'basic',
     };
   },
+
+  // TODO - code could be cleaned up
   created() {
     this.$http(`/api/domains/${this.domain}`).then(r => {
       const {
         maxRetentionDays,
         state,
-        status: { value: status },
+        statusName,
       } = this;
 
       this.maxRetentionDays =
         Number(r.configuration.workflowExecutionRetentionPeriodInDays) || 30;
 
-      const minStartDate = this.getMinStartDate({ maxRetentionDays, status });
+      const minStartDate = getMinStartDate({ maxRetentionDays, statusName });
 
       if (!this.isRouteRangeValid(minStartDate)) {
         const prevRange = localStorage.getItem(
@@ -205,39 +208,49 @@ export default pagedGrid({
         workflowName,
       });
     },
+
     fetchUrl() {
       const { domain, queryString, state } = this;
       return getFetchUrl({ domain, queryString, state });
     },
+
     endTime() {
-      const { endTime, range } = this.$route.query;
+      const { endTime, range } = this.$route.query; // consider using props?
       return getEndTimeIsoString(range, endTime);
     },
+
     filterBy() {
       const { status: { value: status } } = this;
       return getFilterBy({ status });
     },
+
     formattedResults() {
       const { dateFormat, results, timeFormat, timezone } = this;
       return getFormattedResults({ dateFormat, results, timeFormat, timezone });
     },
+
     startTime() {
       const { range } = this;
-      const { range: queryRange, startTime: queryStartTime } = this.$route.query;
+      const { range: queryRange, startTime: queryStartTime } = this.$route.query; // consider using props?
       return getStartTime({ range, queryRange, queryStartTime });
     },
+
     state() {
       const { statusName } = this;
       return getState({ statusName });
     },
+
     status() {
-      const { status: queryStatus } = this.$route.query;
+      const { status: queryStatus } = this.$route.query; // consider using props?
       return getStatus({ queryStatus });
     },
+
     statusName() {
       const { status } = this;
       return getStatusName({ status });
     },
+
+    // TODO - clean code up
     range() {
       const { state } = this;
       const query = this.$route.query || {};
@@ -250,6 +263,7 @@ export default pagedGrid({
         const defaultRange = state === 'open' ? 30 : this.maxRetentionDays;
         const updatedQuery = this.setRange(`last-${defaultRange}-days`);
 
+        // TODO - use this.$router.replaceQueryParam()
         query.startTime = getStartTimeIsoString(
           updatedQuery.range,
           query.startTime
@@ -265,30 +279,34 @@ export default pagedGrid({
         : query.range;
     },
     queryOnChange() {
-      if (!this.criteria) {
+      const { criteria, fetchUrl, nextPageToken } = this;
+
+      if (!criteria) {
         return;
       }
 
-      const { fetchUrl, nextPageToken } = this;
-      const query = { ...this.criteria, nextPageToken };
+      const query = { ...criteria, nextPageToken };
 
       this.fetch(fetchUrl, query);
     },
     queryString() {
+      // TODO - consider moving this to a prop?
       return this.$route.query.queryString;
     },
     minStartDate() {
       const {
         maxRetentionDays,
-        status: { value: status },
+        statusName,
       } = this;
 
-      return this.getMinStartDate({ maxRetentionDays, status });
+      return getMinStartDate({ maxRetentionDays, statusName });
     },
     workflowId() {
+      // TODO - consider moving this to a prop?
       return this.$route.query.workflowId;
     },
     workflowName() {
+      // TODO - consider moving this to a prop?
       return this.$route.query.workflowName;
     },
   },
@@ -319,15 +337,7 @@ export default pagedGrid({
       typeof Mocha === 'undefined' ? 200 : 60,
       { maxWait: 1000 }
     ),
-    getMinStartDate({ maxRetentionDays, status }) {
-      if (status === 'OPEN' || maxRetentionDays === undefined) {
-        return null;
-      }
 
-      return moment(this.now)
-        .subtract(maxRetentionDays, 'days')
-        .startOf('days');
-    },
     setWorkflowFilter(e) {
       const target = e.target || e.testTarget; // test hook since Event.target is readOnly and unsettable
 
@@ -336,6 +346,7 @@ export default pagedGrid({
         target.value.trim()
       );
     },
+
     setStatus(status) {
       if (status) {
         this.$router.replace({
@@ -343,6 +354,8 @@ export default pagedGrid({
         });
       }
     },
+
+    // TODO - Convert to a helper
     isRangeValid(range, minStartDate) {
       if (typeof range === 'string') {
         const [, count, unit] = range.split('-');
@@ -380,8 +393,10 @@ export default pagedGrid({
 
       return false;
     },
+
+    // TODO - Convert to a helper
     isRouteRangeValid(minStartDate) {
-      const { endTime, range, startTime } = this.$route.query || {};
+      const { endTime, range, startTime } = this.$route.query || {};  // consider using props?
 
       if (range) {
         return this.isRangeValid(range, minStartDate);
@@ -393,6 +408,8 @@ export default pagedGrid({
 
       return false;
     },
+
+    // TODO - code could be cleaned up
     setRange(range) {
       const query = { ...this.$route.query };
 
@@ -417,10 +434,12 @@ export default pagedGrid({
 
       return query;
     },
+
+    // TODO - Convert to a helper + method
     toggleFilter() {
       if (this.filterMode === 'advanced') {
         this.filterMode = 'basic';
-        this.$route.query.queryString = '';
+        this.$route.query.queryString = ''; // TODO - use this.$router.replaceQueryParam()
       } else {
         this.filterMode = 'advanced';
       }
