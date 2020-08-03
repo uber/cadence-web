@@ -32,6 +32,13 @@
             :class="format === 'json' ? 'active' : ''"
             >JSON</a
           >
+          <a
+            href="#"
+            class="tree-graph"
+            @click.prevent="setFormat('tree-graph')"
+            :class="format === 'tree-graph' ? 'active' : ''"
+            >Tree Graph</a
+          >
         </div>
       </div>
       <div class="actions">
@@ -196,6 +203,7 @@
           <pre class="json" v-if="format === 'json' && events.length >= 90">{{
             JSON.stringify(events, null, 2)
           }}</pre>
+          <div class="tree-view" v-if="format === 'tree-graph'">hej</div>
           <div class="compact-view" v-if="format === 'compact'">
             <RecycleScroller
               class="scroller-compact"
