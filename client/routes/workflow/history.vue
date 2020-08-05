@@ -203,7 +203,7 @@
           <pre class="json" v-if="format === 'json' && events.length >= 90">{{
             JSON.stringify(events, null, 2)
           }}</pre>
-          <div class="tree-view" v-if="format === 'tree-graph'">hej</div>
+          <WorkflowGraph v-if="format === 'tree-graph'"></WorkflowGraph>
           <div class="compact-view" v-if="format === 'compact'">
             <RecycleScroller
               class="scroller-compact"
@@ -311,6 +311,7 @@ import {
 import debounce from 'lodash-es/debounce';
 import omit from 'lodash-es/omit';
 import Timeline from './components/timeline.vue';
+import WorkflowGraph from './components/workflow-graph.vue';
 import EventDetail from './components/event-detail.vue';
 import { DetailList, HighlightToggle } from '~components';
 
@@ -574,6 +575,7 @@ export default {
     'highlight-toggle': HighlightToggle,
     prism: Prism,
     RecycleScroller,
+    WorkflowGraph,
     timeline: Timeline,
   },
 };
@@ -748,6 +750,9 @@ section.history
       padding layout-spacing-small
 
   wide-title-width = 400px
+
+  .tree-view
+    font-size 5.6em
 
   .compact-view
     line-height 1.5em
