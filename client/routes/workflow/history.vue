@@ -203,7 +203,7 @@
           <pre class="json" v-if="format === 'json' && events.length >= 90">{{
             JSON.stringify(events, null, 2)
           }}</pre>
-          <WorkflowGraph v-if="format === 'tree-graph'"></WorkflowGraph>
+          <WorkflowGraph class="tree-view" v-if="format === 'tree-graph'"></WorkflowGraph>
           <div class="compact-view" v-if="format === 'compact'">
             <RecycleScroller
               class="scroller-compact"
@@ -752,7 +752,7 @@ section.history
   wide-title-width = 400px
 
   .tree-view
-    font-size 5.6em
+    height 100%
 
   .compact-view
     line-height 1.5em
