@@ -753,6 +753,7 @@ section.history
 
   .tree-view
     height 100%
+    width: 100%
 
   .compact-view
     line-height 1.5em

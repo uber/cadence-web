@@ -1,44 +1,51 @@
 <template>
 <div class="tree">
-<svg height="100" width="100">
-  <circle cx="50" cy="50" r="40" fill="#666600"/>
+  <input type="text" v-model="curve">
+ <svg width="500px" height="500px">
+   <path fill="none"
+          stroke="yellow"
+          stroke-width="5"
+          :d="d"/>
+    <circle
+      r="10"
+      v-for="(item, index) in dataset"
+      :cx="item[0]"
+      :cy="item[1]"
+      :key="index"
+      fill="#666600"
+      @click="onClick(item)"
+    />
   </svg>
-  </div>
+    </div>
 </template>
 
 <script>
 import * as d3 from "d3";
+import dataset from './data.json'
   export default {
     data() {
       return {
-        a: 0,
-        b: 0,
-        reduced: 0
-      }
-    },
-    computed: {
-      c() {
-        return this.a + this.b;
-      }
-    },
-    watch: {
-      c(val) {
-        this.reduced = val
-        this.subtract()
+          dataset,
+          curve: 'curveNatural',
+
       }
     },
     methods: {
-subtract(){
-  this.reduced -= .1
-  if(this.reduced > .001) {
-    requestAnimationFrame(this.subtract)
-  }
-  else {
-    this.reduced = 0;
-  }
-}
+      onClick(item) {
+        alert(item.id)
+      }
+    },
+    computed: {
+      lineGenerator() {
+        return d3.line()
+        .curve(d3[this.curve])
+        .x(v => v[0])
+        .y(v => v[1])
+      },
+      d() {
+        return this.lineGenerator(this.dataset)
+      }
     }
-
   }
 </script>
 
