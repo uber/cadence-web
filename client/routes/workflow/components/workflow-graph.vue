@@ -1,9 +1,8 @@
 <template>
   <div class="tree">
-    <svg id="canvas" width="800" height="600" style="border: 1px solid black;">
+    <svg id="canvas" width="100%" height="100%" style="border: 1px solid black;">
       <g />
     </svg>
-
     <div id="tooltip" class="hidden">
       <p>
         <strong>Event information</strong>
@@ -54,6 +53,7 @@ export default {
             label: node.eventType,
             shape: "rect",
             class: [node.type],
+            dataId: node.eventId,
             hovertext: node.eventId
           });
           setParent(node);
@@ -119,7 +119,6 @@ export default {
       var svg = d3.select("#canvas"),
         inner = svg.select("g");
 
-      console.log("svg" + svg);
       // Create the renderer
       var render = new dagreD3.render();
 
@@ -145,11 +144,11 @@ export default {
           //Show tooltip
           d3.select("#tooltip").classed("hidden", false);
         })
-        .on("mousemove", function(d) {
+        .on("mousemove", function() {
           //Update coordinates for the tooltip
           d3.select("#tooltip")
-            .style("left", event.pageX - 10 + "px")
-            .style("top", event.pageY + 10 + "px")
+            .style("left", event.pageX + "px")
+            .style("top", event.pageY - 200 + "px")
             .select("#info")
             .text(this.dataset.hovertext);
         })
