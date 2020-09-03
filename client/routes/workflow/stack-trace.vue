@@ -87,7 +87,7 @@ export default {
 </script>
 
 <template>
-  <section :class="{ 'stack-trace': true, loading }">
+  <section :class="{ 'stack-trace': true, loading }" data-cy="stack-trace">
     <header v-if="stackTraceTimestamp">
       <span>Stack trace at {{ formattedStackTraceTimestamp }}</span>
       <a href="#" class="refresh" @click="getStackTrace">Refresh</a>
