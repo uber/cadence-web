@@ -54,6 +54,8 @@ export default {
         workflow: undefined,
       },
 
+      taskQueue: {},
+
       unwatch: [],
     };
   },
@@ -109,16 +111,19 @@ export default {
 
       return getHistoryTimelineEvents({ historyEvents });
     },
-    queryUrl() {
-      const queryUrl = `${this.baseAPIURL}/history?waitForNewEvent=true`;
+    historyUrl() {
+      const historyUrl = `${this.baseAPIURL}/history?waitForNewEvent=true`;
 
       if (!this.nextPageToken) {
-        return queryUrl;
+        return historyUrl;
       }
 
-      return `${queryUrl}&nextPageToken=${encodeURIComponent(
+      return `${historyUrl}&nextPageToken=${encodeURIComponent(
         this.nextPageToken
       )}`;
+    },
+    isWorkerRunning() {
+      return this.taskQueue.pollers && this.taskQueue.pollers.length > 0;
     },
   },
   methods: {
@@ -144,33 +149,33 @@ export default {
         this.unwatch.pop()();
       }
     },
-    clearQueryUrlWatch() {
+    clearHistoryUrlWatch() {
       while (this.unwatch.length > 1) {
         this.unwatch.pop()();
       }
     },
-    fetchHistoryPage(pagedQueryUrl) {
+    fetchHistoryPage(pagedHistoryUrl) {
       if (
-        !pagedQueryUrl ||
+        !pagedHistoryUrl ||
         this.fetchHistoryPageRetryCount >= RETRY_COUNT_MAX
       ) {
         this.history.loading = false;
 
-        return;
+        return Promise.resolve();
       }
 
       this.history.loading = true;
-      this.pqu = pagedQueryUrl;
-      this.$http(pagedQueryUrl)
+      this.pqu = pagedHistoryUrl;
+      return this.$http(pagedHistoryUrl)
         .then(res => {
           // eslint-disable-next-line no-underscore-dangle
-          if (this._isDestroyed || this.pqu !== pagedQueryUrl) {
+          if (this._isDestroyed || this.pqu !== pagedHistoryUrl) {
             return null;
           }
 
           if (res.nextPageToken && this.npt === res.nextPageToken) {
             // nothing happened, and same query is still valid, so let's long pool again
-            return this.fetch(pagedQueryUrl);
+            return this.fetch(pagedHistoryUrl);
           }
 
           if (res.nextPageToken) {
@@ -211,7 +216,7 @@ export default {
           console.error(error);
 
           // eslint-disable-next-line no-underscore-dangle
-          if (this._isDestroyed || this.pqu !== pagedQueryUrl) {
+          if (this._isDestroyed || this.pqu !== pagedHistoryUrl) {
             return;
           }
 
@@ -221,11 +226,14 @@ export default {
           });
 
           this.fetchHistoryPageRetryCount += 1;
-          setTimeout(() => this.fetchHistoryPage(pagedQueryUrl), RETRY_TIMEOUT);
+          setTimeout(
+            () => this.fetchHistoryPage(pagedHistoryUrl),
+            RETRY_TIMEOUT
+          );
         })
         .finally(() => {
           // eslint-disable-next-line no-underscore-dangle
-          if (this._isDestroyed || this.pqu !== pagedQueryUrl) {
+          if (this._isDestroyed || this.pqu !== pagedHistoryUrl) {
             this.history.loading = false;
           }
         });
@@ -235,7 +243,7 @@ export default {
         return;
       }
 
-      this.clearQueryUrlWatch();
+      this.clearHistoryUrlWatch();
       this.clearState();
       this.wfLoading = true;
 
@@ -244,7 +252,7 @@ export default {
           wf => {
             this.workflow = wf;
             this.isWorkflowRunning = !wf.workflowExecutionInfo.closeTime;
-            this.setupQueryUrlWatch();
+            this.setupHistoryUrlWatch();
             this.baseApiUrlRetryCount = 0;
           },
           error => {
@@ -263,8 +271,8 @@ export default {
           this.wfLoading = false;
         });
     },
-    onQueryUrlChange(queryUrl) {
-      this.fetchHistoryPage(queryUrl);
+    onHistoryUrlChange(historyUrl) {
+      this.fetchHistoryPage(historyUrl).then(this.fetchTaskQueue);
     },
     onNotification(event) {
       this.$emit('onNotification', event);
@@ -272,11 +280,33 @@ export default {
     onWorkflowHistoryEventParamToggle(event) {
       this.$emit('onWorkflowHistoryEventParamToggle', event);
     },
-    setupQueryUrlWatch() {
-      this.clearQueryUrlWatch();
+    setupHistoryUrlWatch() {
+      this.clearHistoryUrlWatch();
       this.unwatch.push(
-        this.$watch('queryUrl', this.onQueryUrlChange, { immediate: true })
+        this.$watch('historyUrl', this.onHistoryUrlChange, { immediate: true })
       );
+    },
+    fetchTaskQueue() {
+      if (!this.workflow || !this.workflow.executionConfig) {
+        return Promise.reject('task queue name is required');
+      }
+
+      const tqName = this.workflow.executionConfig.taskQueue.name;
+
+      this.$http(
+        `/api/namespaces/${this.$route.params.namespace}/task-queues/${tqName}`
+      )
+        .then(
+          (tq) => {
+            this.taskQueue = { name: tqName, ...tq };
+          },
+          (e) => {
+            this.error = (e.json && e.json.message) || e.status || e.message;
+          }
+        )
+        .finally(() => {
+          this.loading = false;
+        });
     },
   },
 };
@@ -342,6 +372,8 @@ export default {
       name="stacktrace"
       :baseAPIURL="baseAPIURL"
       :date-format="dateFormat"
+      :isWorkerRunning="isWorkerRunning"
+      :taskQueueName="taskQueue.name"
       :time-format="timeFormat"
       :timezone="timezone"
       @onNotification="onNotification"
@@ -349,6 +381,8 @@ export default {
     <router-view
       name="query"
       :baseAPIURL="baseAPIURL"
+      :isWorkerRunning="isWorkerRunning"
+      :taskQueueName="taskQueue.name"
       @onNotification="onNotification"
     />
   </section>

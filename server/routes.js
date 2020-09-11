@@ -380,6 +380,7 @@ router.get(
   }
 );
 
+<<<<<<< HEAD
 router.get('/api/feature-flags/:key', (ctx, next) => {
   const {
     params: { key },
@@ -387,6 +388,28 @@ router.get('/api/feature-flags/:key', (ctx, next) => {
   const featureFlag = featureFlags.find(featureFlag => featureFlag.key === key);
   const value = (featureFlag && featureFlag.value) || false;
 
+=======
+router.get('/api/namespaces/:namespace/task-queues/:taskQueue/', async function(
+  ctx
+) {
+  const { namespace, taskQueue } = ctx.params;
+  const descTaskQueue = async (taskQueueType) =>
+    await wfClient.describeTaskQueue({
+      namespace,
+      taskQueue: { name: taskQueue },
+      taskQueueType,
+    });
+
+  const activityQ = await descTaskQueue('TASK_QUEUE_TYPE_ACTIVITY');
+  const workflowQ = await descTaskQueue('TASK_QUEUE_TYPE_WORKFLOW');
+
+  const tq = { pollers: [...activityQ.pollers, ...workflowQ.pollers] };
+
+  ctx.body = tq;
+});
+
+router.get('/api/web-settings', (ctx) => {
+>>>>>>> e09f17a... Handle no worker running for Query and Stack Trace pages (#131)
   ctx.body = {
     key,
     value,

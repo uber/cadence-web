@@ -1,6 +1,6 @@
 <script>
 // Copyright (c) 2017-2020 Uber Technologies Inc.
-//
+// Portions of the Software are attributed to Copyright (c) 2020 Temporal Technologies Inc.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+import { getQueryResult } from './helpers/get-query-result';
+
 export default {
   data() {
     return {
@@ -27,30 +29,17 @@ export default {
       loading: false,
       queryName: undefined,
       queryInput: undefined,
-      queries: undefined,
+      queries: [],
       queryResult: undefined,
       running: false,
     };
   },
-  props: ['baseAPIURL'],
+  props: ['baseAPIURL', 'taskQueueName', 'isWorkerRunning'],
   created() {
-    this.loading = true;
-    this.$http(`${this.baseAPIURL}/query`)
-      .then(
-        queries => {
-          this.queries = queries.filter(query => query !== '__stack_trace');
-
-          if (!this.queryName) {
-            [this.queryName] = this.queries;
-          }
-        },
-        e => {
-          this.error = (e.json && e.json.message) || e.status || e.message;
-        }
-      )
-      .finally(() => {
-        this.loading = false;
-      });
+    if (!this.isWorkerRunning) {
+      return;
+    }
+    this.fetchQueries();
   },
   methods: {
     setQuery(queryName) {
@@ -63,8 +52,8 @@ export default {
       this.$http
         .post(`${this.baseAPIURL}/query/${this.queryName}`)
         .then(
-          r => {
-            this.queryResult = r.queryResult;
+          ({ queryResult }) => {
+            this.queryResult = getQueryResult(queryResult);
           },
           e => {
             this.error = (e.json && e.json.message) || e.status || e.message;
@@ -73,6 +62,34 @@ export default {
         .finally(() => {
           this.running = false;
         });
+    },
+    fetchQueries() {
+      this.loading = true;
+      return this.$http(`${this.baseAPIURL}/query`)
+        .then(
+          (queries) => {
+            this.queries = queries.filter((query) => query !== '__stack_trace');
+
+            if (!this.queryName) {
+              [this.queryName] = this.queries;
+            }
+          },
+          (e) => {
+            this.error = (e.json && e.json.message) || e.status || e.message;
+          }
+        )
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+  },
+  watch: {
+    isWorkerRunning: function(newVal, oldVal) {
+      if (newVal == false) {
+        this.queries = [];
+        return;
+      }
+      this.fetchQueries();
     },
   },
 };
@@ -98,9 +115,23 @@ export default {
         Run
       </a>
     </header>
-    <pre v-if="queryResult">{{ queryResult }}</pre>
+    <pre v-if="queryResult && queryResult.payloads">{{
+      queryResult.payloads
+    }}</pre>
     <span class="error" v-if="error">{{ error }}</span>
-    <span class="no-queries" v-if="queries && queries.length === 0">
+    <span v-if="!isWorkerRunning" class="no-queries">
+      There are no Workers currently listening to the Task Queue:
+      <router-link
+        :to="{
+          name: 'task-queue',
+          params: {
+            taskQueue: taskQueueName,
+          },
+        }"
+        >{{ taskQueueName }}
+      </router-link>
+    </span>
+    <span class="no-queries" v-else-if="queries && queries.length === 0">
       No queries registered
     </span>
   </section>
@@ -149,7 +180,7 @@ section.query {
     display: block;
     width: 100%;
     text-align: center;
-    font-size: 16px;
+    font-size: 20px;
     color: uber-black-60;
   }
 }
