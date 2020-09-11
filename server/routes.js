@@ -380,42 +380,45 @@ router.get(
   }
 );
 
-<<<<<<< HEAD
 router.get('/api/feature-flags/:key', (ctx, next) => {
-  const {
-    params: { key },
-  } = ctx;
-  const featureFlag = featureFlags.find(featureFlag => featureFlag.key === key);
-  const value = (featureFlag && featureFlag.value) || false;
+    const {
+        params: { key },
+    } = ctx;
+    const featureFlag = featureFlags.find(featureFlag => featureFlag.key === key);
+    const value = (featureFlag && featureFlag.value) || false;
 
-=======
-router.get('/api/namespaces/:namespace/task-queues/:taskQueue/', async function(
+    ctx.body = {
+        key,
+        value,
+    };
+
+    next();
+});
+
+router.get('/api/domains/:domain/task-lists/:taskList/', async function(
   ctx
 ) {
-  const { namespace, taskQueue } = ctx.params;
-  const descTaskQueue = async (taskQueueType) =>
-    await wfClient.describeTaskQueue({
-      namespace,
-      taskQueue: { name: taskQueue },
-      taskQueueType,
-    });
+  const { domain, taskList } = ctx.params;
+  const descTaskList = async (taskListType) =>
+      await ctx.cadence.describeTaskList({
+          domain,
+          taskList: { name: taskList },
+          taskListType,
+      })
 
-  const activityQ = await descTaskQueue('TASK_QUEUE_TYPE_ACTIVITY');
-  const workflowQ = await descTaskQueue('TASK_QUEUE_TYPE_WORKFLOW');
+  const activityL = await descTaskList('Activity'),
+        decisionL = await descTaskList('Decision');
 
-  const tq = { pollers: [...activityQ.pollers, ...workflowQ.pollers] };
+  const tl = { pollers: [...activityL.pollers, ...decisionL.pollers] };
 
-  ctx.body = tq;
+  ctx.body = tl;
 });
 
 router.get('/api/web-settings', (ctx) => {
->>>>>>> e09f17a... Handle no worker running for Query and Stack Trace pages (#131)
   ctx.body = {
-    key,
-    value,
+    health: 'OK',
+    permitWriteApi: utils.isWriteApiPermitted(),
   };
-
-  next();
 });
 
 router.get('/health', ctx => (ctx.body = 'OK'));
