@@ -65,7 +65,7 @@
     "promise.prototype.finally": "^3.1.0",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.1",
-    "tchannel": "3.9.11",
+    "tchannel": "^4.0.1",
     "vis": "nathanboktae/vis#4.21.0a",
     "vue": "^2.5.13",
     "vue-infinite-scroll": "^2.0.2",
