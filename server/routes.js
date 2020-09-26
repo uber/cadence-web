@@ -164,7 +164,7 @@ router.get('/api/domains/:domain/workflows/:workflowId/:runId/query', async func
   } catch(e) {
     ctx.body = ((e.message || '')
       .match(/(KnownQueryTypes|knownTypes)=\[(.*)\]/) || [null, null, ''])[2]
-      .split(' ')
+      .split(/, | /)
       .filter(q => q)
   }
 })
