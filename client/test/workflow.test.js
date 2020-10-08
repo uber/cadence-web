@@ -603,6 +603,10 @@ describe('Workflow', () => {
           timelineEl
             .querySelector('.vis-range.activity.failed')
             .should.have.class('vis-selected');
+          timelineEl
+            .querySelector('.vis-range.activity.completed')
+            .style
+            .should.not.be.null;
           Number(
             timelineEl
               .querySelector('.vis-range.activity.completed')
