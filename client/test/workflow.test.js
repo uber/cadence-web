@@ -571,52 +571,84 @@ describe('Workflow', () => {
         const [timelineEl, compactViewEl, scenario] = await compactViewTest(
           this.test
         );
+        console.log('1');
 
         await Promise.delay(50);
 
+        console.log('2');
+
         timelineEl.timeline.fit();
+
+        console.log('3');
+
         scenario.location.should.equal(
           '/domains/ci-test/workflows/email-daily-summaries/emailRun1/history?format=compact&showGraph=true'
         );
+
+        console.log('4');
+
         await retry(() => {
           timelineEl
             .querySelectorAll('.vis-range.activity.failed')
             .should.have.length(1);
+          console.log('5');
           timelineEl
             .querySelectorAll('.vis-range.activity.completed')
             .should.have.length(1);
+          console.log('6');
         });
 
         timelineEl
           .querySelector('.vis-range.activity.failed')
           .should.not.have.class('vis-selected');
+
+        console.log('7');
+
         const failedActivity = await compactViewEl.waitUntilExists(
           '.timeline-event.activity.failed'
         );
 
+        console.log('8');
+
         failedActivity.trigger('click');
+
+        console.log('9');
 
         await retry(() => {
           scenario.location.should.equal(
             '/domains/ci-test/workflows/email-daily-summaries/emailRun1/history?format=compact&showGraph=true&eventId=16'
           );
+
+          console.log('10');
+
           timelineEl
             .querySelector('.vis-range.activity.failed')
             .should.have.class('vis-selected');
+
+          console.log('11');
+
           timelineEl
             .querySelector('.vis-range.activity.completed')
             .style
             .should.not.be.null;
+
+          console.log('12');
+
           timelineEl
             .querySelector('.vis-range.activity.completed')
             .style
             .left
             .should.not.be.null;
+
+          console.log('13');
+
           Number(
             timelineEl
               .querySelector('.vis-range.activity.completed')
               .style.left.match(/[-0-9]+/)[0]
           ).should.be.below(0);
+
+          console.log('14');
         });
       });
 
