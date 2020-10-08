@@ -616,14 +616,13 @@ describe('Workflow', () => {
 
         await retry(() => {
           console.log('scenario.location = ', scenario.location);
+          console.log('.vis-range.activity.failed classList = ', timelineEl.querySelector('.vis-range.activity.failed').classList);
 
           scenario.location.should.equal(
             '/domains/ci-test/workflows/email-daily-summaries/emailRun1/history?format=compact&showGraph=true&eventId=16'
           );
 
           console.log('10');
-
-          console.log('.vis-range.activity.failed = ', timelineEl.querySelector('.vis-range.activity.failed').classList);
 
           timelineEl
             .querySelector('.vis-range.activity.failed')
