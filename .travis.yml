@@ -1,7 +1,7 @@
 sudo: required # https://github.com/travis-ci/travis-ci/issues/8836
 language: node_js
 node_js:
-  - 10
+  - 8
 
 services:
   - docker
