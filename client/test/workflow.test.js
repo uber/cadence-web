@@ -692,15 +692,26 @@ describe('Workflow', () => {
         childWf.trigger('click');
 
         await retry(() => {
+          console.log('.selected-event-detail = ', compactViewEl.querySelector('.selected-event-detail'));
+
           compactViewEl
             .querySelector('.selected-event-detail')
             .should.have.class('active');
+
+          console.log('scenario.location = ', scenario.location);
+
           scenario.location.should.equal(
             '/domains/ci-test/workflows/email-daily-summaries/emailRun1/history?format=compact&showGraph=true&eventId=18'
           );
+
+          console.log('.vis-range.child-workflow.completed = ', timelineEl.querySelector('.vis-range.child-workflow.completed'));
+
           timelineEl
             .querySelector('.vis-range.child-workflow.completed')
             .should.have.class('vis-selected');
+
+          console.log('.timeline-event.child-workflow.completed = ', compactViewEl.querySelector('.timeline-event.child-workflow.completed'));
+
           compactViewEl
             .querySelector('.timeline-event.child-workflow.completed')
             .should.have.class('vis-selected');
