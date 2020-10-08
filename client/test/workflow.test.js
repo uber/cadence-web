@@ -607,6 +607,11 @@ describe('Workflow', () => {
             .querySelector('.vis-range.activity.completed')
             .style
             .should.not.be.null;
+          timelineEl
+            .querySelector('.vis-range.activity.completed')
+            .style
+            .left
+            .should.not.be.null;
           Number(
             timelineEl
               .querySelector('.vis-range.activity.completed')
