@@ -578,11 +578,14 @@ describe('Workflow', () => {
         scenario.location.should.equal(
           '/domains/ci-test/workflows/email-daily-summaries/emailRun1/history?format=compact&showGraph=true'
         );
-        await retry(() =>
+        await retry(() => {
           timelineEl
             .querySelectorAll('.vis-range.activity.failed')
-            .should.have.length(1)
-        );
+            .should.have.length(1);
+          timelineEl
+            .querySelectorAll('.vis-range.activity.completed')
+            .should.have.length(1);
+        });
 
         timelineEl
           .querySelector('.vis-range.activity.failed')
