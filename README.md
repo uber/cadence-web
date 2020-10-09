@@ -23,7 +23,8 @@ Set these environment variables if you need to change their defaults
 
 ### Running locally
 
-`cadence-web` uses all the standard [npm scripts](https://docs.npmjs.com/misc/scripts) to install dependencies, run the server, and run tests. Additionally to run locally with webpack hot reloading and other conveniences, use
+`cadence-web` requires node `v10.22.1` or greater to be able to run correctly. `cadence-web` uses all the standard [npm scripts](https://docs.npmjs.com/misc/scripts) to install dependencies, run the
+server, and run tests. Additionally to run locally with webpack hot reloading and other conveniences, use
 
 ```
 npm run dev
