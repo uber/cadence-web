@@ -20,6 +20,7 @@ describe('Listing Workflows', function() {
   },
   demoExecJson = Object.assign({}, demoExecThrift, {
     startTime: '2017-11-10T21:30:00.000Z',
+    taskList: null,
   })
 
   it('should list open workflows', function() {
