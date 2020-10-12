@@ -4,7 +4,6 @@ describe('Listing Workflows', function() {
       workflowId: 'demo',
       runId: 'd92bb92c-5f49-487f-80a8-f8f375ba55a8'
     },
-    // taskList: ['helloworld'],
     type: {
       name: 'github.com/uber/cadence/demo.cronWorkflow'
     },
