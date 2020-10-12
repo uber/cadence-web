@@ -4,7 +4,7 @@
       history: true,
       loading,
       'has-results': !!events.length,
-      'split-enabled': true,
+      'split-enabled': true
     }"
   >
     <header class="controls">
@@ -16,30 +16,41 @@
             class="compact"
             @click.prevent="setFormat('compact')"
             :class="format === 'compact' ? 'active' : ''"
-          >Compact</a>
+            >Compact</a
+          >
           <a
             href="#"
             class="grid"
             @click.prevent="setFormat('grid')"
             :class="format === 'grid' ? 'active' : ''"
-          >Grid</a>
+            >Grid</a
+          >
           <a
             href="#"
             class="json"
             @click.prevent="setFormat('json')"
             :class="format === 'json' ? 'active' : ''"
-          >JSON</a>
+            >JSON</a
+          >
           <a
             href="#"
             class="tree-graph"
             @click.prevent="setFormat('tree-graph')"
             :class="format === 'tree-graph' ? 'active' : ''"
-          >Tree Graph</a>
+            >Tree Graph</a
+          >
         </div>
       </div>
       <div class="actions">
-        <a href="#" @click.prevent="toggleShowGraph()">{{ showGraph ? 'hide' : 'show' }} graph</a>
-        <a class="export" :href="baseAPIURL + '/export'" :download="exportFilename">Export</a>
+        <a href="#" @click.prevent="toggleShowGraph()"
+          >{{ showGraph ? "hide" : "show" }} graph</a
+        >
+        <a
+          class="export"
+          :href="baseAPIURL + '/export'"
+          :download="exportFilename"
+          >Export</a
+        >
       </div>
     </header>
 
@@ -51,8 +62,16 @@
       v-if="!showNoResults"
       ref="splitPanel"
     >
-      <SplitArea class="timeline-split" :min-size="splitSizeMinSet[0]" :size="splitSizeSet[0]">
-        <timeline :events="timelineEvents" :selected-event-id="eventId" v-if="showGraph" />
+      <SplitArea
+        class="timeline-split"
+        :min-size="splitSizeMinSet[0]"
+        :size="splitSizeSet[0]"
+      >
+        <timeline
+          :events="timelineEvents"
+          :selected-event-id="eventId"
+          v-if="showGraph"
+        />
       </SplitArea>
       <SplitArea
         class="view-split"
@@ -83,26 +102,30 @@
                   class="elapsed"
                   :href="tsFormat === 'elapsed' ? null : '#'"
                   @click.prevent="setTsFormat('elapsed')"
-                >Elapsed</a>
+                  >Elapsed</a
+                >
                 /
                 <a
                   class="ts"
                   :href="tsFormat === 'elapsed' ? '#' : null"
                   @click.prevent="setTsFormat('ts')"
-                >Time</a>
+                  >Time</a
+                >
               </div>
               <div class="th col-summary">
                 <a
                   class="summary"
                   :href="compactDetails ? null : '#'"
                   @click.prevent="setCompactDetails(true)"
-                >Summary</a>
+                  >Summary</a
+                >
                 /
                 <a
                   class="details"
                   :href="compactDetails ? '#' : null"
                   @click.prevent="setCompactDetails(false)"
-                >Full Details</a>
+                  >Full Details</a
+                >
               </div>
             </div>
             <div class="spacer" />
@@ -139,9 +162,9 @@
                     </div>
                     <div class="td col-time">
                       {{
-                      tsFormat === 'elapsed'
-                      ? item.timeElapsedDisplay
-                      : item.timeStampDisplay
+                        tsFormat === "elapsed"
+                          ? item.timeElapsedDisplay
+                          : item.timeStampDisplay
                       }}
                     </div>
                     <div class="td col-summary">
@@ -161,7 +184,7 @@
                           eventParam =>
                             onWorkflowHistoryEventParamToggle({
                               eventParam,
-                              eventType: item.eventType,
+                              eventType: item.eventType
                             })
                         "
                       />
@@ -175,11 +198,15 @@
             class="json"
             language="json"
             v-if="format === 'json' && events.length < 90"
-          >{{ JSON.stringify(events, null, 2) }}</prism>
+            >{{ JSON.stringify(events, null, 2) }}</prism
+          >
           <pre class="json" v-if="format === 'json' && events.length >= 90">{{
             JSON.stringify(events, null, 2)
           }}</pre>
-          <WorkflowGraph class="tree-view" v-if="format === 'tree-graph'"></WorkflowGraph>
+          <CytoscapeGraph
+            class="tree-view"
+            v-if="format === 'tree-graph'"
+          ></CytoscapeGraph>
           <div class="compact-view" v-if="format === 'compact'">
             <RecycleScroller
               class="scroller-compact"
@@ -217,12 +244,14 @@
               <span
                 class="event-title"
                 v-if="!selectedTimelineEvent.titleLink"
-              >{{ selectedTimelineEvent.content }}</span>
+                >{{ selectedTimelineEvent.content }}</span
+              >
               <router-link
                 class="event-title"
                 v-if="selectedTimelineEvent.titleLink"
                 :to="selectedTimelineEvent.titleLink"
-              >{{ selectedTimelineEvent.content }}</router-link>
+                >{{ selectedTimelineEvent.content }}</router-link
+              >
               <detail-list
                 class="timeline-details"
                 :is-highlight-enabled="false"
@@ -261,7 +290,7 @@
                   eventParam =>
                     onWorkflowHistoryEventParamToggle({
                       eventParam,
-                      eventType: selectedEvent.eventType,
+                      eventType: selectedEvent.eventType
                     })
                 "
               />
@@ -285,7 +314,7 @@ import {
 import debounce from "lodash-es/debounce";
 import omit from "lodash-es/omit";
 import Timeline from "./components/timeline.vue";
-import WorkflowGraph from "./components/workflow-graph.vue";
+import CytoscapeGraph from "./components/cytoscape-graph.vue";
 import EventDetail from "./components/event-detail.vue";
 import { DetailList, HighlightToggle } from "~components";
 
@@ -549,7 +578,7 @@ export default {
     "highlight-toggle": HighlightToggle,
     prism: Prism,
     RecycleScroller,
-    WorkflowGraph,
+    CytoscapeGraph,
     timeline: Timeline
   }
 };
