@@ -203,11 +203,12 @@
           <pre class="json" v-if="format === 'json' && events.length >= 90">{{
             JSON.stringify(events, null, 2)
           }}</pre>
-          <CytoscapeGraph
+          <DagGraphContainer
             :workflow="workflow"
+            :events="events"
             class="tree-view"
             v-if="format === 'tree-graph' && workflowLoading"
-          ></CytoscapeGraph>
+          ></DagGraphContainer>
           <div class="compact-view" v-if="format === 'compact'">
             <RecycleScroller
               class="scroller-compact"
@@ -315,7 +316,7 @@ import {
 import debounce from "lodash-es/debounce";
 import omit from "lodash-es/omit";
 import Timeline from "./components/timeline.vue";
-import CytoscapeGraph from "./components/cytoscape-graph.vue";
+import DagGraphContainer from "./components/graph-container.vue";
 import EventDetail from "./components/event-detail.vue";
 import { DetailList, HighlightToggle } from "~components";
 
@@ -602,7 +603,7 @@ export default {
     "highlight-toggle": HighlightToggle,
     prism: Prism,
     RecycleScroller,
-    CytoscapeGraph,
+    DagGraphContainer,
     timeline: Timeline
   }
 };
