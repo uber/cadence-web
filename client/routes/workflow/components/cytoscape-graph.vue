@@ -24,12 +24,7 @@ export default {
   components: {
     /*     Legend */
   },
-  props: {
-    workflow: {
-      type: Array,
-      required: true
-    }
-  },
+  props: ["workflow", "events"],
   data() {
     return {
       nodes: [],
@@ -278,6 +273,9 @@ export default {
     }
   },
   mounted() {
+    this.events.forEach(event => {
+      console.log(event);
+    });
     //this.chunkWorkflow();
     this.buildTree().then(() => {
       //Set the current nodes which are rendered of the graph in the store
