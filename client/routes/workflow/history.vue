@@ -204,8 +204,9 @@
             JSON.stringify(events, null, 2)
           }}</pre>
           <CytoscapeGraph
+            :workflow="workflow"
             class="tree-view"
-            v-if="format === 'tree-graph'"
+            v-if="format === 'tree-graph' && workflowLoading"
           ></CytoscapeGraph>
           <div class="compact-view" v-if="format === 'compact'">
             <RecycleScroller
@@ -342,7 +343,9 @@ export default {
       ],
       splitSizeSet: [1, 99],
       splitSizeMinSet: [0, 0],
-      unwatch: []
+      unwatch: [],
+      workflow: null,
+      workflowLoading: false
     };
   },
   props: [
@@ -376,6 +379,7 @@ export default {
     }, 5);
   },
   mounted() {
+    this.setWorkFlow();
     this.splitSizeSet = this.showGraph ? [20, 80] : [1, 99];
     this.unwatch.push(
       this.$watch(
@@ -462,6 +466,26 @@ export default {
     }
   },
   methods: {
+    setWorkFlow() {
+      this.loadWorkflow().then(workflow => {
+        this.workflow = workflow;
+        this.workflowName =
+          workflow[0].workflowExecutionStartedEventAttributes.workflowType.name;
+        this.delayedShow();
+      });
+    },
+    delayedShow() {
+      let delay = 500;
+      setTimeout(() => {
+        this.workflowLoading = true;
+      }, delay);
+    },
+    async loadWorkflow() {
+      let workflow = require("./demo-data/" +
+        "1f229f6c-aa12-44e7-8846-a62878691977" +
+        ".js");
+      return workflow;
+    },
     deselectEvent() {
       this.$router.replace({ query: omit(this.$route.query, "eventId") });
     },
