@@ -24,8 +24,12 @@
         <div class="section-header-text">{{ workflowName }}</div>
       </div>
       <hr class="divider" />
-      <div v-if="!workflowLoading" id="loading"></div>
-      <WorkflowGraph v-if="workflowLoading" :workflow="workflow" />
+      <div v-if="workflowLoading" id="loading"></div>
+      <WorkflowGraph
+        v-if="!workflowLoading"
+        :workflow="workflow"
+        :events="events"
+      />
     </div>
     <div class="event-info">
       <div class="section-header">
@@ -52,29 +56,19 @@
 </template>
 
 <script>
-import router from "../../router";
 import store from "../../../store/index";
-import WorkflowGraph from "@/components/cytoscape-graph.vue";
+import WorkflowGraph from "./cytoscape-graph.vue";
 export default {
-  props: {
-    runId: {
-      type: String,
-      required: true
-    }
-  },
+  props: ["workflow", "events"],
   components: {
     WorkflowGraph
   },
   data() {
     return {
-      workflow: null,
-      workflowLoading: false,
+      workflowLoading: true,
       clickedId: null,
       workflowName: null
     };
-  },
-  components: {
-    WorkflowGraph
   },
   watch: {
     //We want to load a new workflow everytime we get a new runId
@@ -83,40 +77,29 @@ export default {
       this.setWorkFlow();
     }
   },
-  mounted() {
-    store.commit("resetState");
-    this.setWorkFlow();
-  },
   methods: {
+    delayedShow() {
+      let delay = 500;
+      setTimeout(() => {
+        this.workflowLoading = false;
+      }, delay);
+    },
     selectNode(node) {
       store.commit("setSelectedNode", node.data.id);
     },
     route(runId) {
-      router.push({ name: "tree", params: { runId: runId } });
+      this.$router.push({ name: "tree", params: { runId: runId } });
     },
     resetData() {
       store.commit("resetState"); //We reset the state every time we load a new workflow
       this.workflowLoading = false;
-    },
-    setWorkFlow() {
-      this.loadWorkflow().then(workflow => {
-        this.workflow = workflow;
-        this.workflowName =
-          workflow[0].workflowExecutionStartedEventAttributes.workflowType.name;
-        this.delayedShow();
-      });
-    },
-    delayedShow() {
-      let delay = 500;
-      setTimeout(() => {
-        this.workflowLoading = true;
-      }, delay);
-    },
-    async loadWorkflow() {
-      let workflow = require("../demo-data/" + this.runId + ".js");
-      return workflow;
     }
   },
+  mounted() {
+    this.delayedShow();
+    store.commit("resetState");
+  },
+
   computed: {
     parentRoute() {
       return this.$store.getters.parentRoute;
@@ -140,7 +123,7 @@ export default {
 };
 </script>
 
-<style lang="stylus">
+<style scoped lang="stylus">
 .tree-graph {
   width: 100%;
   height: 100%;
