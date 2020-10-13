@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 
 const getDefaultState = () => {
   return {
-    childRouteId: null,
+    childRoute: null,
     newExecutionId: null,
     parentRouteId: null,
     childBtn: false,
@@ -22,7 +22,7 @@ const store = new Vuex.Store({
   state: state,
   mutations: {
     childRoute(state, param) {
-      state.childRouteId = param.routeId;
+      state.childRoute = param.route;
       state.childBtn = true;
       state.btnText = param.btnText;
     },
@@ -50,7 +50,7 @@ const store = new Vuex.Store({
     }
   },
   getters: {
-    childRouteId: state => state.childRouteId,
+    childRoute: state => state.childRoute,
     newExecutionId: state => state.newExecutionId,
     childBtn: state => state.childBtn,
     btnText: state => state.btnText,
