@@ -296,11 +296,11 @@ button {
   height: 20px;
 }
 #cytoscape {
-  width: 1000px;
-  height: 800px;
+  width: 100%;
+  height: 100%;
 }
 #cyt {
-  width: 1000px;
-  height: 800px;
+  width: 100%;
+  height: 100%;
 }
 </style>
