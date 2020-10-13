@@ -61,7 +61,7 @@ export default {
 
       //Mark current node as selected - display its informatiom
       node.select();
-      store.commit("displayNodeInformation", node.data().nodeInfo);
+      store.commit("displayNodeInformation", node.data().clickInfo);
 
       //Pan the graph to view node
       cy.animate({
@@ -90,24 +90,29 @@ export default {
     },
     async buildTree() {
       this.events.forEach(event => {
-        let { clickInfo, childRunId, parentWorkflow, status } = getEventInfo2(
-          event,
-          this.events
-        );
+        let {
+          clickInfo,
+          childRunId,
+          parentWorkflow,
+          status,
+          childRoute
+        } = getEventInfo2(event, this.events);
 
         if (!clickInfo) {
           clickInfo = { todo: "Todo" };
         }
 
-        //We have a child workflow, show parent btn
+        //We are viewing a child workflow, show parent btn
         if (parentWorkflow) {
           store.commit("parentRoute", parentWorkflow.runId);
         }
+
         this.nodes.push({
           data: {
             id: event.eventId,
             name: event.eventType,
-            nodeInfo: clickInfo,
+            childRoute: childRoute,
+            clickInfo: clickInfo,
             status: status
           }
         });
@@ -214,21 +219,22 @@ export default {
           //Tap on a node
         } else if (evtTarget.isNode()) {
           //Access the node information to display on click
-          let nodeInfo = evt.target.data().nodeInfo;
+          let nodeData = evt.target.data();
+          let clickInfo = nodeData.clickInfo;
 
-          store.commit("displayNodeInformation", nodeInfo);
+          store.commit("displayNodeInformation", clickInfo);
 
-          if (nodeInfo.childRunId) {
+          if (nodeData.childRoute) {
             store.commit("childRoute", {
-              routeId: nodeInfo.childRunId,
+              route: nodeData.childRoute,
               btnText: "Show child workflow"
             });
-          } else if (nodeInfo.newExecutionRunId) {
+          } /* else if (clickInfo.newExecutionRunId) {
             store.commit("childRoute", {
-              routeId: nodeInfo.newExecutionRunId,
+              routeId: clickInfo.newExecutionRunId,
               btnText: "Show next execution"
             });
-          } else {
+          } */ else {
             store.commit("toggleChildBtn");
           }
         }
@@ -274,9 +280,6 @@ export default {
     }
   },
   mounted() {
-    this.events.forEach(event => {
-      console.log(getEventInfo2(event, this.events));
-    });
     //this.chunkWorkflow();
     this.buildTree().then(() => {
       //Set the current nodes which are rendered of the graph in the store
