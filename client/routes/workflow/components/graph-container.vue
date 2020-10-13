@@ -18,7 +18,11 @@
     <div id="canvas">
       <div class="section-header">
         <router-link class="btn" :to="{ name: 'home' }">Home</router-link>
-        <div class="btn" v-on:click="route(parentRoute)" v-if="parentRoute">
+        <div
+          class="btn"
+          v-on:click="updateRoute(parentRoute)"
+          v-if="parentRoute"
+        >
           Go to parent
         </div>
         <div class="section-header-text">{{ workflowName }}</div>
@@ -97,11 +101,6 @@ export default {
     },
     selectNode(node) {
       store.commit("setSelectedNode", node.data.id);
-    },
-    route(param) {
-      this.updatePathParams(param);
-      console.log("ROUTE", param.runId);
-      //this.$router.push({ name: "tree", params: { runId: runId } });
     },
     resetData() {
       store.commit("resetState"); //We reset the state every time we load a new workflow
