@@ -8,11 +8,10 @@ let eventTypeMap = {
   'WorkflowExecutionStarted': function (event, workflow) {
     let eventDetails = event.eventFullDetails,
       taskList = JSON.stringify(eventDetails.taskList),
-      //parentWorkflowExecution = JSON.stringify(eventDetails.parentWorkflowExecution);
 
       eventInfo = {
         inferredChild: event.eventId + 1,
-        parentWorkflow: eventDetails.parentWorkflowExecution,
+        parentWorkflowExecution: eventDetails.parentWorkflowExecution,
         clickInfo: {
           id: event.eventId,
           eventType: event.eventType,
@@ -20,7 +19,6 @@ let eventTypeMap = {
           input: eventDetails.input,
           parentWorkflowDomain: eventDetails.parentWorkflowDomain,
           parentInitiatedEventId: eventDetails.parentInitiatedEventId,
-          parentWorkflowExecution: eventDetails.parentWorkflowExecution,
           taskList: taskList,
         }
       }
