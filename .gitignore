@@ -5,3 +5,4 @@ dist/
 .DS_Store
 .idea
 server/idl
+package-lock.json
