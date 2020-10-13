@@ -12,6 +12,7 @@
 <script>
 import dagre from "cytoscape-dagre";
 import { getEventInfo } from "../helpers/event-function-map";
+import { getEventInfo2 } from "../helpers/get-event-info";
 import graphStyles from "../helpers/graph-styles";
 import store from "../../../store/index";
 import cytoscape from "cytoscape";
@@ -88,10 +89,10 @@ export default {
       ].eventId;
     },
     async buildTree() {
-      this.workflow.forEach(event => {
-        let { clickInfo, childRunId, parentWorkflow, status } = getEventInfo(
+      this.events.forEach(event => {
+        let { clickInfo, childRunId, parentWorkflow, status } = getEventInfo2(
           event,
-          this.workflow
+          this.events
         );
 
         if (!clickInfo) {
@@ -112,13 +113,13 @@ export default {
         });
       });
       //Set the direct and inferred relationships
-      this.workflow.forEach(node => {
+      this.events.forEach(node => {
         this.setDirectAndInferred(node);
       });
 
       //Set the chronological relationships.
       //If the node is not referred to as a parent it should be connected back to the graph with a chron child
-      this.workflow.forEach(node => {
+      this.events.forEach(node => {
         if (!this.parentArray.includes(node.eventId)) {
           this.setChron(node);
         }
@@ -126,7 +127,7 @@ export default {
     },
     setDirectAndInferred(node) {
       let nodeId = node.eventId,
-        { parent, inferredChild } = getEventInfo(node, this.workflow);
+        { parent, inferredChild } = getEventInfo2(node, this.events);
       if (parent) {
         this.parentArray.push(parent);
         this.edges.push({
@@ -142,7 +143,7 @@ export default {
     },
     setChron(node) {
       let nodeId = node.eventId,
-        { chronologicalChild } = getEventInfo(node, this.workflow);
+        { chronologicalChild } = getEventInfo2(node, this.events);
       if (chronologicalChild) {
         this.edges.push({
           data: {
@@ -274,7 +275,7 @@ export default {
   },
   mounted() {
     this.events.forEach(event => {
-      console.log(event);
+      console.log(getEventInfo2(event, this.events));
     });
     //this.chunkWorkflow();
     this.buildTree().then(() => {
