@@ -92,8 +92,7 @@ export default {
       this.events.forEach(event => {
         let {
           clickInfo,
-          childRunId,
-          parentWorkflow,
+          parentWorkflowExecution,
           status,
           childRoute
         } = getEventInfo2(event, this.events);
@@ -103,8 +102,8 @@ export default {
         }
 
         //We are viewing a child workflow, show parent btn
-        if (parentWorkflow) {
-          store.commit("parentRoute", parentWorkflow.runId);
+        if (parentWorkflowExecution) {
+          store.commit("parentRoute", parentWorkflowExecution);
         }
 
         this.nodes.push({
