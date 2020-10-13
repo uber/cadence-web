@@ -52,36 +52,36 @@
 </template>
 
 <script>
-import router from "../router";
-import store from "../store";
-import WorkflowGraph from "@/components/Cytoscape.vue";
+import router from "../../router";
+import store from "../../../store/index";
+import WorkflowGraph from "@/components/cytoscape-graph.vue";
 export default {
   props: {
     runId: {
       type: String,
-      required: true,
-    },
+      required: true
+    }
   },
   components: {
-    WorkflowGraph,
+    WorkflowGraph
   },
   data() {
     return {
       workflow: null,
       workflowLoading: false,
       clickedId: null,
-      workflowName: null,
+      workflowName: null
     };
   },
   components: {
-    WorkflowGraph,
+    WorkflowGraph
   },
   watch: {
     //We want to load a new workflow everytime we get a new runId
-    runId: function () {
+    runId: function() {
       this.resetData();
       this.setWorkFlow();
-    },
+    }
   },
   mounted() {
     store.commit("resetState");
@@ -99,7 +99,7 @@ export default {
       this.workflowLoading = false;
     },
     setWorkFlow() {
-      this.loadWorkflow().then((workflow) => {
+      this.loadWorkflow().then(workflow => {
         this.workflow = workflow;
         this.workflowName =
           workflow[0].workflowExecutionStartedEventAttributes.workflowType.name;
@@ -115,7 +115,7 @@ export default {
     async loadWorkflow() {
       let workflow = require("../demo-data/" + this.runId + ".js");
       return workflow;
-    },
+    }
   },
   computed: {
     parentRoute() {
@@ -135,8 +135,8 @@ export default {
     },
     childRouteId() {
       return this.$store.getters.childRouteId;
-    },
-  },
+    }
+  }
 };
 </script>
 
