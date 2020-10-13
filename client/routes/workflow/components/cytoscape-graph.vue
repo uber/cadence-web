@@ -1,37 +1,35 @@
 <template>
   <div id="cytoscape">
     <!--     <Legend /> -->
-    {{ selectedNode }}
     <!--   Last node in view: {{lastNodeInView }},
     Last node rendered: {{ lastNodeRendered}}-->
     <br />
     <!--   <button v-on:click="addNode">Add node test</button> -->
-    <div ref="cy" id="cy"></div>
+    <div ref="cyt" id="cyt"></div>
   </div>
 </template>
 
 <script>
 import dagre from "cytoscape-dagre";
-import { getEventInfo } from "../helpers/event-function-map.ts";
+import { getEventInfo } from "../helpers/event-function-map";
 import graphStyles from "../helpers/graph-styles";
-import store from "../store/store";
+import store from "../../../store/index";
 import cytoscape from "cytoscape";
 /* import Legend from "@/components/Legend.vue"; */
-import workflow from "./data.json";
 
 cytoscape.use(dagre);
 
 export default {
-  name: "Cytoscape",
+  name: "cytoscape-graph",
   components: {
-    Legend
+    /*     Legend */
   },
-  /*  props: {
+  props: {
     workflow: {
       type: Array,
       required: true
     }
-  }, */
+  },
   data() {
     return {
       nodes: [],
@@ -95,10 +93,10 @@ export default {
       ].eventId;
     },
     async buildTree() {
-      workflow.forEach(event => {
+      this.workflow.forEach(event => {
         let { clickInfo, childRunId, parentWorkflow, status } = getEventInfo(
           event,
-          workflow
+          this.workflow
         );
 
         if (!clickInfo) {
@@ -119,13 +117,13 @@ export default {
         });
       });
       //Set the direct and inferred relationships
-      workflow.forEach(node => {
+      this.workflow.forEach(node => {
         this.setDirectAndInferred(node);
       });
 
       //Set the chronological relationships.
       //If the node is not referred to as a parent it should be connected back to the graph with a chron child
-      workflow.forEach(node => {
+      this.workflow.forEach(node => {
         if (!this.parentArray.includes(node.eventId)) {
           this.setChron(node);
         }
@@ -133,7 +131,7 @@ export default {
     },
     setDirectAndInferred(node) {
       let nodeId = node.eventId,
-        { parent, inferredChild } = getEventInfo(node, workflow);
+        { parent, inferredChild } = getEventInfo(node, this.workflow);
       if (parent) {
         this.parentArray.push(parent);
         this.edges.push({
@@ -149,7 +147,7 @@ export default {
     },
     setChron(node) {
       let nodeId = node.eventId,
-        { chronologicalChild } = getEventInfo(node, workflow);
+        { chronologicalChild } = getEventInfo(node, this.workflow);
       if (chronologicalChild) {
         this.edges.push({
           data: {
@@ -176,17 +174,18 @@ export default {
       window.cy.layout(dagreLayout).run();
     },
     async viewInit() {
-      let self = this;
+      let container = this.$refs.cyt;
+      //let self = this;
       let cy = (window.cy = cytoscape({
         autoungrabify: true,
         styleEnabled: true,
-        container: document.getElementById("cy"),
+        container: container,
         headless: true,
         hideEdgesOnViewport: true,
         //Uncomment the two lines below for better performance
         //textureOnViewport: true,
         //pixelRatio: 1,
-        style: this.styles,
+        style: graphStyles,
         elements: {
           nodes: this.nodes,
           edges: this.edges
@@ -200,7 +199,6 @@ export default {
           rankSep: 70
         }
       }));
-      let container = this.$refs.cy;
       cy.on("mouseover", "node", function(e) {
         container.style.cursor = "pointer";
       });
@@ -268,7 +266,7 @@ export default {
       });
 
       const t2 = performance.now();
-      let container = document.getElementById("cy");
+      let container = document.getElementById("cyt");
       cy.mount(container);
       const t3 = performance.now();
       console.log(`Call to graph mount took ${t3 - t2} milliseconds.`);
@@ -280,7 +278,7 @@ export default {
     }
   },
   mounted() {
-    // this.chunkWorkflow();
+    //this.chunkWorkflow();
     this.buildTree().then(() => {
       //Set the current nodes which are rendered of the graph in the store
       store.commit("setRenderedNodes", this.nodes);
@@ -300,12 +298,11 @@ button {
   height: 20px;
 }
 #cytoscape {
-  width: 100%;
-  height: 100%;
+  width: 1000px;
+  height: 800px;
 }
-#cy {
-  width: 100%;
-  height: 100%;
-  text-align: left;
+#cyt {
+  width: 1000px;
+  height: 800px;
 }
 </style>
