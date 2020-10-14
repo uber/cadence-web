@@ -34,6 +34,8 @@ import WorkflowList from './routes/domain/workflow-list';
 import WorkflowSummary from './routes/workflow/summary';
 import WorkflowTabs from './routes/workflow';
 
+import store from './store/index.js'
+
 import { http, injectMomentDurationFormat, jsonTryParse } from '~helpers';
 
 const routeOpts = {
@@ -324,6 +326,7 @@ if (typeof mocha === 'undefined') {
   new Vue({
     el: 'main',
     router,
+    store,
     template: '<App/>',
     components: { App },
   });

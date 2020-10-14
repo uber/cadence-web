@@ -4,7 +4,7 @@
       history: true,
       loading,
       'has-results': !!events.length,
-      'split-enabled': true,
+      'split-enabled': true
     }"
   >
     <header class="controls">
@@ -32,11 +32,18 @@
             :class="format === 'json' ? 'active' : ''"
             >JSON</a
           >
+          <a
+            href="#"
+            class="tree-graph"
+            @click.prevent="setFormat('tree-graph')"
+            :class="format === 'tree-graph' ? 'active' : ''"
+            >Tree Graph</a
+          >
         </div>
       </div>
       <div class="actions">
         <a href="#" @click.prevent="toggleShowGraph()"
-          >{{ showGraph ? 'hide' : 'show' }} graph</a
+          >{{ showGraph ? "hide" : "show" }} graph</a
         >
         <a
           class="export"
@@ -155,7 +162,7 @@
                     </div>
                     <div class="td col-time">
                       {{
-                        tsFormat === 'elapsed'
+                        tsFormat === "elapsed"
                           ? item.timeElapsedDisplay
                           : item.timeStampDisplay
                       }}
@@ -177,7 +184,7 @@
                           eventParam =>
                             onWorkflowHistoryEventParamToggle({
                               eventParam,
-                              eventType: item.eventType,
+                              eventType: item.eventType
                             })
                         "
                       />
@@ -196,6 +203,12 @@
           <pre class="json" v-if="format === 'json' && events.length >= 90">{{
             JSON.stringify(events, null, 2)
           }}</pre>
+          <DagGraphContainer
+            :workflow="workflow"
+            :events="events"
+            class="tree-view"
+            v-if="format === 'tree-graph' && workflowLoading"
+          ></DagGraphContainer>
           <div class="compact-view" v-if="format === 'compact'">
             <RecycleScroller
               class="scroller-compact"
@@ -279,7 +292,7 @@
                   eventParam =>
                     onWorkflowHistoryEventParamToggle({
                       eventParam,
-                      eventType: selectedEvent.eventType,
+                      eventType: selectedEvent.eventType
                     })
                 "
               />
@@ -294,58 +307,61 @@
 </template>
 
 <script>
-import Prism from 'vue-prism-component';
+import Prism from "vue-prism-component";
 import {
   DynamicScroller,
   DynamicScrollerItem,
-  RecycleScroller,
-} from 'vue-virtual-scroller';
-import debounce from 'lodash-es/debounce';
-import omit from 'lodash-es/omit';
-import Timeline from './components/timeline.vue';
-import EventDetail from './components/event-detail.vue';
-import { DetailList, HighlightToggle } from '~components';
+  RecycleScroller
+} from "vue-virtual-scroller";
+import debounce from "lodash-es/debounce";
+import omit from "lodash-es/omit";
+import Timeline from "./components/timeline.vue";
+import DagGraphContainer from "./components/graph-container.vue";
+import EventDetail from "./components/event-detail.vue";
+import { DetailList, HighlightToggle } from "~components";
 
 export default {
-  name: 'history',
+  name: "history",
   data() {
     return {
       tsFormat:
         localStorage.getItem(`${this.domain}:history-ts-col-format`) ||
-        'elapsed',
+        "elapsed",
       compactDetails:
         localStorage.getItem(`${this.domain}:history-compact-details`) ===
-        'true',
+        "true",
       scrolledToEventOnInit: false,
       splitEnabled: false,
-      eventType: '',
+      eventType: "",
       eventTypes: [
-        { value: 'All', label: 'All' },
-        { value: 'Decision', label: 'Decision' },
-        { value: 'Activity', label: 'Activity' },
-        { value: 'Signal', label: 'Signal' },
-        { value: 'Timer', label: 'Timer' },
-        { value: 'ChildWorkflow', label: 'ChildWorkflow' },
-        { value: 'Workflow', label: 'Workflow' },
+        { value: "All", label: "All" },
+        { value: "Decision", label: "Decision" },
+        { value: "Activity", label: "Activity" },
+        { value: "Signal", label: "Signal" },
+        { value: "Timer", label: "Timer" },
+        { value: "ChildWorkflow", label: "ChildWorkflow" },
+        { value: "Workflow", label: "Workflow" }
       ],
       splitSizeSet: [1, 99],
       splitSizeMinSet: [0, 0],
       unwatch: [],
+      workflow: null,
+      workflowLoading: false
     };
   },
   props: [
-    'baseAPIURL',
-    'domain',
-    'eventId',
-    'events',
-    'format',
-    'loading',
-    'runId',
-    'showGraph',
-    'timelineEvents',
-    'workflowHistoryEventHighlightList',
-    'workflowHistoryEventHighlightListEnabled',
-    'workflowId',
+    "baseAPIURL",
+    "domain",
+    "eventId",
+    "events",
+    "format",
+    "loading",
+    "runId",
+    "showGraph",
+    "timelineEvents",
+    "workflowHistoryEventHighlightList",
+    "workflowHistoryEventHighlightListEnabled",
+    "workflowId"
   ],
   created() {
     this.onResizeWindow = debounce(() => {
@@ -364,6 +380,7 @@ export default {
     }, 5);
   },
   mounted() {
+    this.setWorkFlow();
     this.splitSizeSet = this.showGraph ? [20, 80] : [1, 99];
     this.unwatch.push(
       this.$watch(
@@ -373,17 +390,17 @@ export default {
         { immediate: true }
       )
     );
-    window.addEventListener('resize', this.onResizeWindow);
+    window.addEventListener("resize", this.onResizeWindow);
   },
   beforeDestroy() {
-    window.removeEventListener('resize', this.onResizeWindow);
+    window.removeEventListener("resize", this.onResizeWindow);
     while (this.unwatch.length) {
       this.unwatch.pop()();
     }
   },
   computed: {
     exportFilename() {
-      return `${this.workflowId.replace(/[\\~#%&*{}/:<>?|"-]/g, ' ')} - ${
+      return `${this.workflowId.replace(/[\\~#%&*{}/:<>?|"-]/g, " ")} - ${
         this.runId
       }.json`;
     },
@@ -391,10 +408,10 @@ export default {
       const { eventId, eventType } = this;
       const formattedEvents = this.events.map(event => ({
         ...event,
-        expanded: event.eventId === eventId,
+        expanded: event.eventId === eventId
       }));
 
-      return eventType && eventType !== 'All'
+      return eventType && eventType !== "All"
         ? formattedEvents.filter(result => result.eventType.includes(eventType))
         : formattedEvents;
     },
@@ -408,7 +425,7 @@ export default {
         }, {});
     },
     isGrid() {
-      return this.format === 'grid';
+      return this.format === "grid";
     },
     selectedTimelineEvent() {
       return this.timelineEvents.find(te => te.eventIds.includes(this.eventId));
@@ -424,7 +441,7 @@ export default {
       return {
         timestamp: this.selectedEvent.timeStampDisplay,
         eventId: this.selectedEvent.eventId,
-        ...this.selectedEvent.details,
+        ...this.selectedEvent.details
       };
     },
     showTable() {
@@ -443,15 +460,35 @@ export default {
               acc[eventId] = index;
 
               return acc;
-            }, {}),
+            }, {})
           }),
           {}
         );
-    },
+    }
   },
   methods: {
+    setWorkFlow() {
+      this.loadWorkflow().then(workflow => {
+        this.workflow = workflow;
+        this.workflowName =
+          workflow[0].workflowExecutionStartedEventAttributes.workflowType.name;
+        this.delayedShow();
+      });
+    },
+    delayedShow() {
+      let delay = 500;
+      setTimeout(() => {
+        this.workflowLoading = true;
+      }, delay);
+    },
+    async loadWorkflow() {
+      let workflow = require("./demo-data/" +
+        "1f229f6c-aa12-44e7-8846-a62878691977" +
+        ".js");
+      return workflow;
+    },
     deselectEvent() {
-      this.$router.replace({ query: omit(this.$route.query, 'eventId') });
+      this.$router.replace({ query: omit(this.$route.query, "eventId") });
     },
     enableSplitting() {
       if (!this.splitEnabled) {
@@ -465,10 +502,10 @@ export default {
       }
     },
     onSplitResize: debounce(() => {
-      window.dispatchEvent(new Event('resize'));
+      window.dispatchEvent(new Event("resize"));
     }, 5),
     onWorkflowHistoryEventParamToggle(event) {
-      this.$emit('onWorkflowHistoryEventParamToggle', event);
+      this.$emit("onWorkflowHistoryEventParamToggle", event);
     },
     setEventType(et) {
       this.eventType = et.value;
@@ -476,7 +513,7 @@ export default {
     },
     setFormat(format) {
       this.$router.replace({
-        query: { ...this.$route.query, format },
+        query: { ...this.$route.query, format }
       });
       setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
     },
@@ -523,24 +560,24 @@ export default {
         }
       } catch (error) {
         // eslint-disable-next-line no-console
-        console.warn('vue-virtual-scroller: Could not scrollToItem:', error);
+        console.warn("vue-virtual-scroller: Could not scrollToItem:", error);
       }
     },
     selectTimelineEvent(i) {
       this.$router.replaceQueryParam(
-        'eventId',
+        "eventId",
         i.eventIds[i.eventIds.length - 1]
       );
     },
     toggleShowGraph() {
       if (this.showGraph) {
-        this.$router.replace({ query: omit(this.$route.query, 'showGraph') });
+        this.$router.replace({ query: omit(this.$route.query, "showGraph") });
       } else {
         this.$router.replace({
-          query: { ...this.$route.query, showGraph: true },
+          query: { ...this.$route.query, showGraph: true }
         });
       }
-    },
+    }
   },
   watch: {
     filteredEvents() {
@@ -556,261 +593,398 @@ export default {
     showGraph() {
       this.splitSizeSet = this.showGraph ? [20, 80] : [1, 99];
       this.onSplitResize();
-    },
+    }
   },
   components: {
-    'detail-list': DetailList,
+    "detail-list": DetailList,
     DynamicScroller,
     DynamicScrollerItem,
-    'event-detail': EventDetail,
-    'highlight-toggle': HighlightToggle,
+    "event-detail": EventDetail,
+    "highlight-toggle": HighlightToggle,
     prism: Prism,
     RecycleScroller,
-    timeline: Timeline,
-  },
+    DagGraphContainer,
+    timeline: Timeline
+  }
 };
 </script>
 
 <style lang="stylus">
-@require "../../styles/definitions.styl"
+@require '../../styles/definitions.styl';
 
-section.history
-  brdr = 1px solid uber-black-60
-  display flex
-  flex-direction column
-  flex 1 1 auto
+section.history {
+  brdr = 1px solid uber-black-60;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
 
-  header.controls
-    display flex
-    flex-wrap wrap
-    justify-content space-between
-    padding inline-spacing-large
-    flex 0 0 auto
-    .field
-      flex 1 1 auto
-    & > div
-      display flex
-      align-items center
-      & > *
-        margin inline-spacing-small
-    a
-      action-button()
-  .view-formats
-    display flex
-    a
-      flex 0 0 auto
-      margin 0
-      text-transform none
-      &.active
-        background-color darken(uber-blue, 20%)
+  header.controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: inline-spacing-large;
+    flex: 0 0 auto;
 
-  paged-grid()
+    .field {
+      flex: 1 1 auto;
+    }
 
-  &:not(.has-results) header .actions
-    display none
-  &.loading.has-results
-    &::after
-      content none
+    & > div {
+      display: flex;
+      align-items: center;
 
-  a.export
-    icon-download()
+      & > * {
+        margin: inline-spacing-small;
+      }
+    }
 
-  .gutter.gutter-vertical
-    border-top 1px solid uber-white-80
-    border-bottom 1px solid uber-white-80
-    background-color uber-white-20
-  div.split-panel
-    .timeline-split
-      overflow hidden
-    .view-split
-      flex 1
-      overflow hidden
-      display flex
-      position relative
-      flex-direction column
-  &:not(.split-enabled) div.split-panel
-    display flex
-    flex-direction column
-    flex 1
-    .gutter
-      flex 0 0 auto
-    .timeline-split
-      flex 0 0 auto
-      max-height 350px
-  &.split-enabled div.split-panel
-    height calc(100vh - 188px)
+    a {
+      action-button();
+    }
+  }
 
-  section pre
-    border brdr
-    overflow auto
+  .view-formats {
+    display: flex;
 
-  .table
-    .vue-recycle-scroller__slot,
-    .vue-recycle-scroller__item-view,
-    .scroller-item
+    a {
+      flex: 0 0 auto;
+      margin: 0;
+      text-transform: none;
+
+      &.active {
+        background-color: darken(uber-blue, 20%);
+      }
+    }
+  }
+
+  paged-grid();
+
+  &:not(.has-results) header .actions {
+    display: none;
+  }
+
+  &.loading.has-results {
+    &::after {
+      content: none;
+    }
+  }
+
+  a.export {
+    icon-download();
+  }
+
+  .gutter.gutter-vertical {
+    border-top: 1px solid uber-white-80;
+    border-bottom: 1px solid uber-white-80;
+    background-color: uber-white-20;
+  }
+
+  div.split-panel {
+    .timeline-split {
+      overflow: hidden;
+    }
+
+    .view-split {
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      position: relative;
+      flex-direction: column;
+    }
+  }
+
+  &:not(.split-enabled) div.split-panel {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+
+    .gutter {
+      flex: 0 0 auto;
+    }
+
+    .timeline-split {
+      flex: 0 0 auto;
+      max-height: 350px;
+    }
+  }
+
+  &.split-enabled div.split-panel {
+    height: calc(100vh - 188px);
+  }
+
+  section pre {
+    border: brdr;
+    overflow: auto;
+  }
+
+  .table {
+    .vue-recycle-scroller__slot, .vue-recycle-scroller__item-view, .scroller-item {
       display: flex;
       width: 100%;
-    .col-id
+    }
+
+    .col-id {
       min-width: 50px;
-    .col-summary
+    }
+
+    .col-summary {
       flex: 1;
-    .col-time
+    }
+
+    .col-time {
       min-width: 150px;
-    .col-type
+    }
+
+    .col-type {
       min-width: 212px;
-    .thead
-      background-color uber-white-10
-      box-shadow 2px 2px 2px rgba(0,0,0,0.2)
+    }
+
+    .thead {
+      background-color: uber-white-10;
+      box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
       position: absolute;
       display: flex;
       top: 0;
       left: 0;
       z-index: 2;
       width: calc(100% - 10px);
-      .th
+
+      .th {
         color: rgb(0, 0, 0);
         display: inline-block;
         font-weight: 500;
         text-transform: uppercase;
-        & > .v-select.eventType
+
+        & > .v-select.eventType {
           margin-left: 10px;
           display: inline-block;
           width: 150px;
-      & + .spacer
+        }
+      }
+
+      & + .spacer {
         width: 100%;
         height: 58px;
-    .tr
+      }
+    }
+
+    .tr {
       display: flex;
       flex: 1;
       border: 1px solid transparent;
-      &.odd
+
+      &.odd {
         background-color: #f8f8f9;
-    .td, .th
+      }
+    }
+
+    .td, .th {
       flex-basis: auto;
       padding: 8px;
-    .th a:not([href])
-      border-bottom 1px solid black
-    .td:nth-child(3), .td:nth-child(2)
-      one-liner-ellipsis()
-    .tr[data-event-type*="Started"] .td:nth-child(2)
-      color uber-blue-120
-    .tr[data-event-type*="Failed"], .tr[data-event-type*="TimedOut"]
-      .td:nth-child(2), [data-prop="reason"], [data-prop="details"]
-        color uber-orange
-    .tr[data-event-type*="Completed"]
-      .td:nth-child(2), [data-prop="result"] dt
-        color uber-green
-    .tr.active
-      border-top brdr
-      border-bottom brdr
-      background-color alpha(uber-blue, 5%)
-    pre
-      max-height 15vh
-    &.compact .tr:not(.active)
-      .td:nth-child(4)
-        overflow hidden
-      dl.details
-        max-width 50vw
+    }
 
-  .table.compact .tr:not(.active), .compact-view .timeline-event
-    dl.details
-      white-space nowrap
-      & > div
-        display inline-block
-        padding 0
-        &:nth-child(2n)
-          background none
-      dt, dd
-        display inline-block
-        vertical-align middle
-        margin 0 0.5em
-      dt
-        font-family primary-font-family
-        font-weight 200
-        text-transform uppercase
-      pre
-        display inline-block
-        max-width 40vw
-        one-liner-ellipsis()
+    .th a:not([href]) {
+      border-bottom: 1px solid black;
+    }
 
-  section.results
-    flex 1
-    & > pre
-      margin layout-spacing-small
-      padding layout-spacing-small
+    .td:nth-child(3), .td:nth-child(2) {
+      one-liner-ellipsis();
+    }
 
-  wide-title-width = 400px
+    .tr[data-event-type*='Started'] .td:nth-child(2) {
+      color: uber-blue-120;
+    }
 
-  .compact-view
-    line-height 1.5em
-    overflow-y auto
-    .scroller-compact
+    .tr[data-event-type*='Failed'], .tr[data-event-type*='TimedOut'] {
+      .td:nth-child(2), [data-prop='reason'], [data-prop='details'] {
+        color: uber-orange;
+      }
+    }
+
+    .tr[data-event-type*='Completed'] {
+      .td:nth-child(2), [data-prop='result'] dt {
+        color: uber-green;
+      }
+    }
+
+    .tr.active {
+      border-top: brdr;
+      border-bottom: brdr;
+      background-color: alpha(uber-blue, 5%);
+    }
+
+    pre {
+      max-height: 15vh;
+    }
+
+    &.compact .tr:not(.active) {
+      .td:nth-child(4) {
+        overflow: hidden;
+      }
+
+      dl.details {
+        max-width: 50vw;
+      }
+    }
+  }
+
+  .table.compact .tr:not(.active), .compact-view .timeline-event {
+    dl.details {
+      white-space: nowrap;
+
+      & > div {
+        display: inline-block;
+        padding: 0;
+
+        &:nth-child(2n) {
+          background: none;
+        }
+      }
+
+      dt, dd {
+        display: inline-block;
+        vertical-align: middle;
+        margin: 0 0.5em;
+      }
+
+      dt {
+        font-family: primary-font-family;
+        font-weight: 200;
+        text-transform: uppercase;
+      }
+
+      pre {
+        display: inline-block;
+        max-width: 40vw;
+        one-liner-ellipsis();
+      }
+    }
+  }
+
+  section.results {
+    flex: 1;
+
+    & > pre {
+      margin: layout-spacing-small;
+      padding: layout-spacing-small;
+    }
+  }
+
+  wide-title-width = 400px;
+
+  .tree-view {
+    height: 100%;
+    width: 100%;
+  }
+
+  .compact-view {
+    line-height: 1.5em;
+    overflow-y: auto;
+
+    .scroller-compact {
       padding: layout-spacing-small;
       padding-bottom: 0;
-    .event-title
-      padding 4px
-      font-size 16px
-    pre
-      max-height 15vh
+    }
 
-    .timeline-event
-      border 2px solid primary-color
+    .event-title {
+      padding: 4px;
+      font-size: 16px;
+    }
+
+    pre {
+      max-height: 15vh;
+    }
+
+    .timeline-event {
+      border: 2px solid primary-color;
       cursor: pointer;
-      padding 6px
-      margin-bottom layout-spacing-small
-      history-item-state-color(3%)
-      dl.details dd
-        max-width none
+      padding: 6px;
+      margin-bottom: layout-spacing-small;
+      history-item-state-color(3%);
 
-      @media (max-width: 1400px)
-        dl.details
-          display none
-      @media (min-width: 1400px)
-        display flex
-        align-items center
-        .event-title
-          flex 0 0 wide-title-width
-        dl.details
-          flex 1
-          align-items center
-          overflow hidden
-          pre
-            max-width none
+      dl.details dd {
+        max-width: none;
+      }
 
-    .selected-event-detail
-      position absolute
-      width "calc(100vw - %s)" % (wide-title-width + 30px)
-      height 100%
-      top 0
-      left wide-title-width + 15px
-      overflow auto
-      background-color white
-      padding layout-spacing-small
-      border-left 1px solid uber-black-80
-      box-shadow -5px 0 5px rgba(0,0,0,0.25)
-      .event-title
-        display block
-        font-size 1.4em
-        margin-bottom 0.5em
-      .event-tabs
-        //border-bottom 1px solid uber-black-60
-        margin-bottom layout-spacing-small
-        margin-top layout-spacing-small
-        a
-          display inline-block
-          padding inline-spacing-medium
-          font-family monospace-font-family
-          border-bottom 2px solid transparent
-          &.active
-            border-bottom-color primary-color
-        & > span
-          font-weight 200
-          text-transform uppercase
-          font-size 11px
-      dl.details
-        background-color alpha(uber-white-80, 0.2)
-        &.timeline-details dt, dd
-          padding 4px
-      a.close
-        top layout-spacing-small
+      @media (max-width: 1400px) {
+        dl.details {
+          display: none;
+        }
+      }
+
+      @media (min-width: 1400px) {
+        display: flex;
+        align-items: center;
+
+        .event-title {
+          flex: 0 0 wide-title-width;
+        }
+
+        dl.details {
+          flex: 1;
+          align-items: center;
+          overflow: hidden;
+
+          pre {
+            max-width: none;
+          }
+        }
+      }
+    }
+
+    .selected-event-detail {
+      position: absolute;
+      width: 'calc(100vw - %s)' % (wide-title-width + 30px);
+      height: 100%;
+      top: 0;
+      left: wide-title-width + 15px;
+      overflow: auto;
+      background-color: white;
+      padding: layout-spacing-small;
+      border-left: 1px solid uber-black-80;
+      box-shadow: -5px 0 5px rgba(0, 0, 0, 0.25);
+
+      .event-title {
+        display: block;
+        font-size: 1.4em;
+        margin-bottom: 0.5em;
+      }
+
+      .event-tabs {
+        // border-bottom 1px solid uber-black-60
+        margin-bottom: layout-spacing-small;
+        margin-top: layout-spacing-small;
+
+        a {
+          display: inline-block;
+          padding: inline-spacing-medium;
+          font-family: monospace-font-family;
+          border-bottom: 2px solid transparent;
+
+          &.active {
+            border-bottom-color: primary-color;
+          }
+        }
+
+        & > span {
+          font-weight: 200;
+          text-transform: uppercase;
+          font-size: 11px;
+        }
+      }
+
+      dl.details {
+        background-color: alpha(uber-white-80, 0.2);
+
+        &.timeline-details dt, dd {
+          padding: 4px;
+        }
+      }
+
+      a.close {
+        top: layout-spacing-small;
+      }
+    }
+  }
+}
 </style>
