@@ -42,8 +42,8 @@
         </div>
       </div>
       <div class="actions">
-        <a href="#" @click.prevent="toggleShowGraph()"
-          >{{ showGraph ? "hide" : "show" }} graph</a
+        <a href="#" @click.prevent="toggleShowTimeline()"
+          >{{ showTimeline ? "hide" : "show" }} timeline</a
         >
         <a
           class="export"
@@ -53,7 +53,6 @@
         >
       </div>
     </header>
-
     <Split
       class="split-panel"
       direction="vertical"
@@ -70,7 +69,7 @@
         <timeline
           :events="timelineEvents"
           :selected-event-id="eventId"
-          v-if="showGraph"
+          v-if="showTimeline"
         />
       </SplitArea>
       <SplitArea
@@ -357,7 +356,7 @@ export default {
     "format",
     "loading",
     "runId",
-    "showGraph",
+    "showTimeline",
     "timelineEvents",
     "workflowHistoryEventHighlightList",
     "workflowHistoryEventHighlightListEnabled",
@@ -381,7 +380,7 @@ export default {
   },
   mounted() {
     this.setWorkFlow();
-    this.splitSizeSet = this.showGraph ? [20, 80] : [1, 99];
+    this.splitSizeSet = this.showTimeline ? [20, 80] : [1, 99];
     this.unwatch.push(
       this.$watch(
         () =>
@@ -569,12 +568,14 @@ export default {
         i.eventIds[i.eventIds.length - 1]
       );
     },
-    toggleShowGraph() {
-      if (this.showGraph) {
-        this.$router.replace({ query: omit(this.$route.query, "showGraph") });
+    toggleShowTimeline() {
+      if (this.showTimeline) {
+        this.$router.replace({
+          query: omit(this.$route.query, "showTimeline")
+        });
       } else {
         this.$router.replace({
-          query: { ...this.$route.query, showGraph: true }
+          query: { ...this.$route.query, showTimeline: true }
         });
       }
     }
@@ -590,8 +591,8 @@ export default {
         setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
       }
     },
-    showGraph() {
-      this.splitSizeSet = this.showGraph ? [20, 80] : [1, 99];
+    showTimeline() {
+      this.splitSizeSet = this.showTimeline ? [20, 80] : [1, 99];
       this.onSplitResize();
     }
   },

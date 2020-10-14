@@ -88,8 +88,10 @@ export default {
       }, delay);
     },
     updateRoute(route) {
+      console.log(this.$route.query);
       this.$router.push({
-        params: { workflowId: route.workflowId, runId: route.runId }
+        params: { workflowId: route.workflowId, runId: route.runId },
+        query: this.$route.query
       });
     },
     selectNode(node) {
