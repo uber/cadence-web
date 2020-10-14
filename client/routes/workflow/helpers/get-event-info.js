@@ -8,11 +8,10 @@ let eventTypeMap = {
   'WorkflowExecutionStarted': function (event, workflow) {
     let eventDetails = event.eventFullDetails,
       taskList = JSON.stringify(eventDetails.taskList),
-      //parentWorkflowExecution = JSON.stringify(eventDetails.parentWorkflowExecution);
 
       eventInfo = {
         inferredChild: event.eventId + 1,
-        parentWorkflow: eventDetails.parentWorkflowExecution,
+        parentWorkflowExecution: eventDetails.parentWorkflowExecution,
         clickInfo: {
           id: event.eventId,
           eventType: event.eventType,
@@ -20,7 +19,6 @@ let eventTypeMap = {
           input: eventDetails.input,
           parentWorkflowDomain: eventDetails.parentWorkflowDomain,
           parentInitiatedEventId: eventDetails.parentInitiatedEventId,
-          parentWorkflowExecution: eventDetails.parentWorkflowExecution,
           taskList: taskList,
         }
       }
@@ -136,12 +134,14 @@ let eventTypeMap = {
       status: 'completed',
       inferredChild: inferredChild,
       chronologicalChild: chronologicalChild,
+      childRoute: eventDetails.workflowExecution,
       clickInfo: {
         id: event.eventId,
         name: eventDetails.workflowType.name,
         timestamp: event.timestamp,
         result: eventDetails.result,
         childRunId: eventDetails.workflowExecution.runId,
+        childWorkflowId: eventDetails.workflowExecution.workflowId,
       },
     }
     return eventInfo
@@ -153,6 +153,7 @@ let eventTypeMap = {
       parent: eventDetails.startedEventId,
       inferredChild: inferredChild,
       chronologicalChild: chronologicalChild,
+      childRoute: eventDetails.workflowExecution,
       status: 'failed',
       clickInfo: {
         id: event.eventId,
@@ -163,7 +164,7 @@ let eventTypeMap = {
         initiatedEventId: eventDetails.initiatedEventId,
         startedEventId: eventDetails.startedEventId,
         childRunId: eventDetails.workflowExecution.runId,
-        childWorkflowId: eventDetails.workflowExecution.workflowId
+        childWorkflowId: eventDetails.workflowExecution.workflowId,
       },
 
     }
@@ -176,6 +177,7 @@ let eventTypeMap = {
       parent: eventDetails.initiatedEventId,
       inferredChild: inferredChild,
       chronologicalChild: chronologicalChild,
+      childRoute: eventDetails.workflowExecution,
       clickInfo: {
         id: event.eventId,
         name: eventDetails.workflowType.name,
@@ -183,7 +185,8 @@ let eventTypeMap = {
         domain: eventDetails.domain,
         initiatedEventId: eventDetails.initiatedEventId,
         workflowId: eventDetails.workflowExecution.workflowId,
-        childRunId: eventDetails.workflowExecution.runId
+        childRunId: eventDetails.workflowExecution.runId,
+        childWorkflowId: eventDetails.workflowExecution.workflowId,
       }
     }
     return eventInfo

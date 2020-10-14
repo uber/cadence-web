@@ -9,7 +9,7 @@
         <div class="list-item" v-on:click="selectNode(node)">
           <div class="list-item-header">{{ node.data.name }}</div>
           <div class="list-item-content">
-            {{ node.data.nodeInfo.timestamp }}
+            {{ node.data.clickInfo.timestamp }}
           </div>
         </div>
         <hr class="divider" />
@@ -17,8 +17,11 @@
     </div>
     <div id="canvas">
       <div class="section-header">
-        <router-link class="btn" :to="{ name: 'home' }">Home</router-link>
-        <div class="btn" v-on:click="route(parentRoute)" v-if="parentRoute">
+        <div
+          class="btn"
+          v-on:click="updateRoute(parentRoute)"
+          v-if="parentRoute"
+        >
           Go to parent
         </div>
         <div class="section-header-text">{{ workflowName }}</div>
@@ -39,7 +42,7 @@
       <div
         v-if="hasChildBtn"
         class="event-info-btn"
-        v-on:click="route(childRouteId)"
+        v-on:click="updateRoute(childRoute)"
       >
         {{ btnText }}
       </div>
@@ -84,11 +87,19 @@ export default {
         this.workflowLoading = false;
       }, delay);
     },
+    updateRoute(route) {
+      // Retrieve current domain
+      const currentDomain = this.$router.currentRoute.params.domain;
+
+      const newParams = {
+        domain: currentDomain,
+        workflowId: route.workflowId,
+        runId: route.runId
+      };
+      this.$router.push({ params: newParams });
+    },
     selectNode(node) {
       store.commit("setSelectedNode", node.data.id);
-    },
-    route(runId) {
-      this.$router.push({ name: "tree", params: { runId: runId } });
     },
     resetData() {
       store.commit("resetState"); //We reset the state every time we load a new workflow
@@ -116,8 +127,8 @@ export default {
     btnText() {
       return this.$store.getters.btnText;
     },
-    childRouteId() {
-      return this.$store.getters.childRouteId;
+    childRoute() {
+      return this.$store.getters.childRoute;
     }
   }
 };
