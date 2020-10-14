@@ -43,7 +43,7 @@
       </div>
       <div class="actions">
         <a href="#" @click.prevent="toggleShowTimeline()"
-          >{{ showTimeline ? "hide" : "show" }} timeline</a
+          >{{ this.graphView === "timeLine" ? "hide" : "show" }} timeline</a
         >
         <a
           class="export"
@@ -69,7 +69,7 @@
         <timeline
           :events="timelineEvents"
           :selected-event-id="eventId"
-          v-if="showTimeline"
+          v-if="this.graphView === 'timeLine'"
         />
       </SplitArea>
       <SplitArea
@@ -356,7 +356,7 @@ export default {
     "format",
     "loading",
     "runId",
-    "showTimeline",
+    "graphView",
     "timelineEvents",
     "workflowHistoryEventHighlightList",
     "workflowHistoryEventHighlightListEnabled",
@@ -380,7 +380,7 @@ export default {
   },
   mounted() {
     this.setWorkFlow();
-    this.splitSizeSet = this.showTimeline ? [20, 80] : [1, 99];
+    this.splitSizeSet = this.graphView === "timeLine" ? [20, 80] : [1, 99];
     this.unwatch.push(
       this.$watch(
         () =>
@@ -569,13 +569,13 @@ export default {
       );
     },
     toggleShowTimeline() {
-      if (this.showTimeline) {
+      if (this.graphView === "timeLine") {
         this.$router.replace({
-          query: omit(this.$route.query, "showTimeline")
+          query: omit(this.$route.query, "graphView")
         });
       } else {
         this.$router.replace({
-          query: { ...this.$route.query, showTimeline: true }
+          query: { ...this.$route.query, graphView: "timeLine" }
         });
       }
     }
@@ -591,8 +591,8 @@ export default {
         setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
       }
     },
-    showTimeline() {
-      this.splitSizeSet = this.showTimeline ? [20, 80] : [1, 99];
+    graphView() {
+      this.splitSizeSet = this.graphView === "timeLine" ? [20, 80] : [1, 99];
       this.onSplitResize();
     }
   },

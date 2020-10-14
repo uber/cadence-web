@@ -37,6 +37,7 @@ import WorkflowTabs from './routes/workflow';
 import store from './store/index.js'
 
 import { http, injectMomentDurationFormat, jsonTryParse } from '~helpers';
+import querystring from 'friendly-querystring';
 
 const routeOpts = {
   mode: 'history',
@@ -168,7 +169,8 @@ const routeOpts = {
               eventId: Number(query.eventId) || undefined,
               format: query.format || 'grid',
               runId: params.runId,
-              showTimeline: query.showTimeline === true,
+              //showTimeline: query.showTimeline === true,
+              graphView: query.graphView,
               workflowId: params.workflowId,
             }),
           },
