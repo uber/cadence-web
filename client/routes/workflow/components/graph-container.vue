@@ -88,15 +88,9 @@ export default {
       }, delay);
     },
     updateRoute(route) {
-      // Retrieve current domain
-      const currentDomain = this.$router.currentRoute.params.domain;
-
-      const newParams = {
-        domain: currentDomain,
-        workflowId: route.workflowId,
-        runId: route.runId
-      };
-      this.$router.push({ params: newParams });
+      this.$router.push({
+        params: { workflowId: route.workflowId, runId: route.runId }
+      });
     },
     selectNode(node) {
       store.commit("setSelectedNode", node.data.id);
