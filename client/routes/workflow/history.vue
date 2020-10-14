@@ -42,6 +42,9 @@
         </div>
       </div>
       <div class="actions">
+        <a href="#" @click.prevent="toggleShowDagGraph()"
+          >{{ this.graphView === "dagGraph" ? "hide" : "show" }} graph</a
+        >
         <a href="#" @click.prevent="toggleShowTimeline()"
           >{{ this.graphView === "timeLine" ? "hide" : "show" }} timeline</a
         >
@@ -66,6 +69,12 @@
         :min-size="splitSizeMinSet[0]"
         :size="splitSizeSet[0]"
       >
+        <DagGraphContainer
+          :workflow="workflow"
+          :events="events"
+          class="tree-view"
+          v-if="this.graphView === 'dagGraph'"
+        ></DagGraphContainer>
         <timeline
           :events="timelineEvents"
           :selected-event-id="eventId"
@@ -379,8 +388,8 @@ export default {
     }, 5);
   },
   mounted() {
-    this.setWorkFlow();
-    this.splitSizeSet = this.graphView === "timeLine" ? [20, 80] : [1, 99];
+    this.setWorkFlow(); //TODO: remove this, this is purely for testing
+    this.setSplitSize();
     this.unwatch.push(
       this.$watch(
         () =>
@@ -486,6 +495,12 @@ export default {
         ".js");
       return workflow;
     },
+    setSplitSize() {
+      if (this.graphView === "timeLine") this.splitSizeSet = [20, 80];
+      else if (this.graphView === "dagGraph") this.splitSizeSet = [80, 150];
+      else this.splitSizeSet = [1, 99];
+      this.onSplitResize();
+    },
     deselectEvent() {
       this.$router.replace({ query: omit(this.$route.query, "eventId") });
     },
@@ -568,6 +583,17 @@ export default {
         i.eventIds[i.eventIds.length - 1]
       );
     },
+    toggleShowDagGraph() {
+      if (this.graphView === "dagGraph") {
+        this.$router.replace({
+          query: omit(this.$route.query, "graphView")
+        });
+      } else {
+        this.$router.replace({
+          query: { ...this.$route.query, graphView: "dagGraph" }
+        });
+      }
+    },
     toggleShowTimeline() {
       if (this.graphView === "timeLine") {
         this.$router.replace({
@@ -592,8 +618,7 @@ export default {
       }
     },
     graphView() {
-      this.splitSizeSet = this.graphView === "timeLine" ? [20, 80] : [1, 99];
-      this.onSplitResize();
+      this.setSplitSize();
     }
   },
   components: {
