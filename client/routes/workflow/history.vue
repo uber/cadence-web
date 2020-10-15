@@ -32,18 +32,14 @@
             :class="format === 'json' ? 'active' : ''"
             >JSON</a
           >
-          <a
-            href="#"
-            class="tree-graph"
-            @click.prevent="setFormat('tree-graph')"
-            :class="format === 'tree-graph' ? 'active' : ''"
-            >Tree Graph</a
-          >
         </div>
       </div>
       <div class="actions">
+        <a href="#" @click.prevent="toggleShowDagGraph()"
+          >{{ this.graphView === "dagGraph" ? "hide" : "show" }} graph</a
+        >
         <a href="#" @click.prevent="toggleShowTimeline()"
-          >{{ showTimeline ? "hide" : "show" }} timeline</a
+          >{{ this.graphView === "timeLine" ? "hide" : "show" }} timeline</a
         >
         <a
           class="export"
@@ -66,10 +62,16 @@
         :min-size="splitSizeMinSet[0]"
         :size="splitSizeSet[0]"
       >
+        <DagGraphContainer
+          :workflow="workflow"
+          :events="events"
+          class="tree-view"
+          v-if="this.graphView === 'dagGraph'"
+        ></DagGraphContainer>
         <timeline
           :events="timelineEvents"
           :selected-event-id="eventId"
-          v-if="showTimeline"
+          v-if="this.graphView === 'timeLine'"
         />
       </SplitArea>
       <SplitArea
@@ -202,12 +204,6 @@
           <pre class="json" v-if="format === 'json' && events.length >= 90">{{
             JSON.stringify(events, null, 2)
           }}</pre>
-          <DagGraphContainer
-            :workflow="workflow"
-            :events="events"
-            class="tree-view"
-            v-if="format === 'tree-graph' && workflowLoading"
-          ></DagGraphContainer>
           <div class="compact-view" v-if="format === 'compact'">
             <RecycleScroller
               class="scroller-compact"
@@ -356,7 +352,7 @@ export default {
     "format",
     "loading",
     "runId",
-    "showTimeline",
+    "graphView",
     "timelineEvents",
     "workflowHistoryEventHighlightList",
     "workflowHistoryEventHighlightListEnabled",
@@ -379,8 +375,8 @@ export default {
     }, 5);
   },
   mounted() {
-    this.setWorkFlow();
-    this.splitSizeSet = this.showTimeline ? [20, 80] : [1, 99];
+    this.setWorkFlow(); //TODO: remove this, this is purely for testing
+    this.setSplitSize();
     this.unwatch.push(
       this.$watch(
         () =>
@@ -486,6 +482,12 @@ export default {
         ".js");
       return workflow;
     },
+    setSplitSize() {
+      if (this.graphView === "timeLine") this.splitSizeSet = [20, 80];
+      else if (this.graphView === "dagGraph") this.splitSizeSet = [80, 150];
+      else this.splitSizeSet = [1, 99];
+      this.onSplitResize();
+    },
     deselectEvent() {
       this.$router.replace({ query: omit(this.$route.query, "eventId") });
     },
@@ -568,14 +570,25 @@ export default {
         i.eventIds[i.eventIds.length - 1]
       );
     },
-    toggleShowTimeline() {
-      if (this.showTimeline) {
+    toggleShowDagGraph() {
+      if (this.graphView === "dagGraph") {
         this.$router.replace({
-          query: omit(this.$route.query, "showTimeline")
+          query: omit(this.$route.query, "graphView")
         });
       } else {
         this.$router.replace({
-          query: { ...this.$route.query, showTimeline: true }
+          query: { ...this.$route.query, graphView: "dagGraph" }
+        });
+      }
+    },
+    toggleShowTimeline() {
+      if (this.graphView === "timeLine") {
+        this.$router.replace({
+          query: omit(this.$route.query, "graphView")
+        });
+      } else {
+        this.$router.replace({
+          query: { ...this.$route.query, graphView: "timeLine" }
         });
       }
     }
@@ -591,9 +604,8 @@ export default {
         setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
       }
     },
-    showTimeline() {
-      this.splitSizeSet = this.showTimeline ? [20, 80] : [1, 99];
-      this.onSplitResize();
+    graphView() {
+      this.setSplitSize();
     }
   },
   components: {
