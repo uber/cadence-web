@@ -28,7 +28,15 @@
       </div>
       <hr class="divider" />
       <div v-if="workflowLoading" id="loading"></div>
+      <button
+        v-if="!isWorkflowLoading"
+        id="refresh-btn"
+        v-on:click="reloadWorkflow()"
+      >
+        Refresh
+      </button>
       <WorkflowGraph
+        :key="componentKey"
         v-if="!workflowLoading"
         :workflow="workflow"
         :events="events"
@@ -62,7 +70,7 @@
 import store from "../../../store/index";
 import WorkflowGraph from "./cytoscape-graph.vue";
 export default {
-  props: ["workflow", "events"],
+  props: ["workflow", "events", "isWorkflowLoading"],
   components: {
     WorkflowGraph
   },
@@ -70,7 +78,8 @@ export default {
     return {
       workflowLoading: true,
       clickedId: null,
-      workflowName: null
+      workflowName: null,
+      componentKey: 0
     };
   },
   watch: {
@@ -93,6 +102,11 @@ export default {
         params: { workflowId: route.workflowId, runId: route.runId },
         query: this.$route.query
       });
+    },
+    reloadWorkflow() {
+      this.workflowLoading = true;
+      this.componentKey += 1;
+      this.delayedShow();
     },
     selectNode(node) {
       store.commit("setSelectedNode", node.data.id);
@@ -235,6 +249,17 @@ hr.divider {
       display: none;
     }
   }
+}
+
+#refresh-btn {
+  display: inline-block;
+  padding: 13px 21px;
+  transition: all 400ms ease;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: #fff;
+  background-color: #11939a;
+  white-space: nowrap;
 }
 
 /* ---- Loadig icon  ---- */
