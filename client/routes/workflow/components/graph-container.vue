@@ -27,18 +27,18 @@
         <div class="section-header-text">{{ workflowName }}</div>
       </div>
       <hr class="divider" />
-      <div v-if="workflowLoading" id="loading"></div>
-      isloading: {{ isWorkflowRunning }} isfullyloaded: {{ isFullyLoaded }}
+      <div v-if="isGraphLoading" id="loading"></div>
+      isloading: {{ isWorkflowRunning }} hasAllEvents: {{ hasAllEvents }}
       <button
-        v-if="!isFullyLoaded"
+        v-if="!hasAllEvents"
         id="refresh-btn"
         v-on:click="reloadWorkflow()"
       >
         Refresh
       </button>
       <WorkflowGraph
-        :key="componentKey"
-        v-if="!workflowLoading"
+        :key="forceRefresh"
+        v-if="!isGraphLoading"
         :workflow="workflow"
         :events="events"
       />
@@ -77,30 +77,25 @@ export default {
   },
   data() {
     return {
-      workflowLoading: true,
+      isGraphLoading: true,
       clickedId: null,
       workflowName: null,
-      componentKey: 0,
+      forceRefresh: true,
       eventsSnapShot: [],
-      isFullyLoaded: false
+      hasAllEvents: true
     };
   },
   watch: {
-    //We want to load a new workflow everytime we get a new runId
-    runId: function() {
-      this.resetData();
-      this.setWorkFlow();
-    },
     events: function() {
-      //We have more events than we have currently rendered
-      this.isFullyLoaded = false;
+      //We have more events coming in
+      this.hasAllEvents = false;
     }
   },
   methods: {
     delayedShow() {
       let delay = 500;
       setTimeout(() => {
-        this.workflowLoading = false;
+        this.isGraphLoading = false;
       }, delay);
     },
     updateRoute(route) {
@@ -112,22 +107,14 @@ export default {
     },
     reloadWorkflow() {
       this.eventsSnapShot = this.events;
-      this.isFullyLoaded =
-        this.eventsSnapShot.length === this.events.length &&
-        !this.isWorkflowRunning
-          ? true
-          : false;
-      this.workflowLoading = true;
-      this.componentKey += 1;
+      this.isGraphLoading = true;
+      this.forceRefresh = !this.forceRefresh;
       this.delayedShow();
-      this.isFullyLoaded = true;
+      //We currently show all available events, refresh btn should be hidden
+      this.hasAllEvents = true;
     },
     selectNode(node) {
       store.commit("setSelectedNode", node.data.id);
-    },
-    resetData() {
-      store.commit("resetState"); //We reset the state every time we load a new workflow
-      this.workflowLoading = false;
     }
   },
   mounted() {
