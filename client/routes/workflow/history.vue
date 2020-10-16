@@ -9,9 +9,7 @@
   >
     <header class="controls">
       <div class="view-format">
-        <label for="format"
-          >View Format + {{ isWorkflowRunning }} {{ loading }}
-        </label>
+        <label for="format">View Format </label>
         <div class="view-formats">
           <a
             href="#"
