@@ -51,7 +51,8 @@
     </header>
     <Split
       class="split-panel"
-      direction="vertical"
+      :class="this.graphView === 'dagGraph' ? 'dagGraph' : ''"
+      :direction="direction"
       @onDrag="onSplitResize"
       @onDragStart="enableSplitting"
       v-if="!showNoResults"
@@ -59,15 +60,10 @@
     >
       <SplitArea
         class="timeline-split"
+        :class="this.graphView === 'dagGraph' ? 'hidden' : 'visible'"
         :min-size="splitSizeMinSet[0]"
         :size="splitSizeSet[0]"
       >
-        <DagGraphContainer
-          :workflow="workflow"
-          :events="events"
-          class="tree-view"
-          v-if="this.graphView === 'dagGraph'"
-        ></DagGraphContainer>
         <timeline
           :events="timelineEvents"
           :selected-event-id="eventId"
@@ -295,6 +291,18 @@
           </div>
         </section>
       </SplitArea>
+      <SplitArea
+        class="timeline-split"
+        :min-size="splitSizeMinSet[0]"
+        :size="splitSizeSet[0]"
+      >
+        <DagGraphContainer
+          :workflow="workflow"
+          :events="events"
+          class="tree-view"
+          v-if="this.graphView === 'dagGraph'"
+        ></DagGraphContainer>
+      </SplitArea>
     </Split>
 
     <span class="no-results" v-if="showNoResults">No Results</span>
@@ -341,7 +349,8 @@ export default {
       splitSizeMinSet: [0, 0],
       unwatch: [],
       workflow: null,
-      workflowLoading: false
+      workflowLoading: false,
+      direction: "vertical"
     };
   },
   props: [
@@ -484,7 +493,7 @@ export default {
     },
     setSplitSize() {
       if (this.graphView === "timeLine") this.splitSizeSet = [20, 80];
-      else if (this.graphView === "dagGraph") this.splitSizeSet = [80, 150];
+      else if (this.graphView === "dagGraph") this.splitSizeSet = [40, 60];
       else this.splitSizeSet = [1, 99];
       this.onSplitResize();
     },
@@ -606,6 +615,11 @@ export default {
     },
     graphView() {
       this.setSplitSize();
+      if (this.graphView === "timeLine") {
+        this.direction = "vertical";
+      } else {
+        this.direction = "horizontal";
+      }
     }
   },
   components: {
@@ -692,7 +706,15 @@ section.history {
     background-color: uber-white-20;
   }
 
+  div.split-panel div.split div.dagGraph {
+    display: flex;
+    flex-direction: row;
+  }
+
   div.split-panel {
+    display: flex;
+    flex-direction: row;
+
     .timeline-split {
       overflow: hidden;
     }
@@ -884,6 +906,10 @@ section.history {
   }
 
   wide-title-width = 400px;
+
+  .hidden {
+    display: none;
+  }
 
   .tree-view {
     height: 100%;
