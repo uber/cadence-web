@@ -92,17 +92,8 @@ export default {
       this.setWorkFlow();
     },
     events: function() {
-      console.log(
-        "more events!",
-        this.eventsSnapShot.length,
-        this.events.length,
-        this.eventsSnapShot.length === this.events.length
-      );
-      this.isFullyLoaded =
-        this.eventsSnapShot.length === this.events.length &&
-        !this.isWorkflowRunning
-          ? true
-          : false;
+      //We have more events than we have currently rendered
+      this.isFullyLoaded = false;
     }
   },
   methods: {
@@ -129,6 +120,7 @@ export default {
       this.workflowLoading = true;
       this.componentKey += 1;
       this.delayedShow();
+      this.isFullyLoaded = true;
     },
     selectNode(node) {
       store.commit("setSelectedNode", node.data.id);
