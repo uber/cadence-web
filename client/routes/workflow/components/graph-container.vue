@@ -28,8 +28,9 @@
       </div>
       <hr class="divider" />
       <div v-if="workflowLoading" id="loading"></div>
+      isloading: {{ isWorkflowRunning }} isfullyloaded: {{ isFullyLoaded }}
       <button
-        v-if="!isWorkflowLoading"
+        v-if="!isFullyLoaded"
         id="refresh-btn"
         v-on:click="reloadWorkflow()"
       >
@@ -70,7 +71,7 @@
 import store from "../../../store/index";
 import WorkflowGraph from "./cytoscape-graph.vue";
 export default {
-  props: ["workflow", "events", "isWorkflowLoading"],
+  props: ["workflow", "events", "isWorkflowRunning"],
   components: {
     WorkflowGraph
   },
@@ -79,7 +80,9 @@ export default {
       workflowLoading: true,
       clickedId: null,
       workflowName: null,
-      componentKey: 0
+      componentKey: 0,
+      eventsSnapShot: [],
+      isFullyLoaded: false
     };
   },
   watch: {
@@ -87,6 +90,19 @@ export default {
     runId: function() {
       this.resetData();
       this.setWorkFlow();
+    },
+    events: function() {
+      console.log(
+        "more events!",
+        this.eventsSnapShot.length,
+        this.events.length,
+        this.eventsSnapShot.length === this.events.length
+      );
+      this.isFullyLoaded =
+        this.eventsSnapShot.length === this.events.length &&
+        !this.isWorkflowRunning
+          ? true
+          : false;
     }
   },
   methods: {
@@ -104,6 +120,12 @@ export default {
       });
     },
     reloadWorkflow() {
+      this.eventsSnapShot = this.events;
+      this.isFullyLoaded =
+        this.eventsSnapShot.length === this.events.length &&
+        !this.isWorkflowRunning
+          ? true
+          : false;
       this.workflowLoading = true;
       this.componentKey += 1;
       this.delayedShow();
@@ -118,6 +140,7 @@ export default {
   },
   mounted() {
     this.delayedShow();
+    this.eventsSnapShot = this.events;
     store.commit("resetState");
   },
 
