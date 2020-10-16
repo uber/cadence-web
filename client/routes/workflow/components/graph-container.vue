@@ -28,7 +28,6 @@
       </div>
       <hr class="divider" />
       <div v-if="isGraphLoading" id="loading"></div>
-      isloading: {{ isWorkflowRunning }} hasAllEvents: {{ hasAllEvents }}
       <button
         v-if="!hasAllEvents"
         id="refresh-btn"
@@ -93,7 +92,7 @@ export default {
   },
   methods: {
     delayedShow() {
-      let delay = 500;
+      let delay = 400;
       setTimeout(() => {
         this.isGraphLoading = false;
       }, delay);
