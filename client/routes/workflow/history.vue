@@ -67,7 +67,7 @@
           :events="events"
           :isWorkflowRunning="isWorkflowRunning"
           class="tree-view"
-          v-if="this.graphView === 'dagGraph'"
+          v-if="this.graphView === 'dagGraph' && events.length"
         ></DagGraphContainer>
         <timeline
           :events="timelineEvents"
