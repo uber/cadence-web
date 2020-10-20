@@ -279,7 +279,8 @@ export default {
       this.mountGraph(cy);
     });
 
-    if (this.$route.query.eventId) this.zoomToNode(this.$route.query.eventId);
+    if (this.$route.query.eventId !== undefined)
+      this.zoomToNode(this.$route.query.eventId);
   }
 };
 </script>
