@@ -296,18 +296,6 @@
           </div>
         </section>
       </SplitArea>
-      <!--   <SplitArea
-        class="timeline-split"
-        :min-size="splitSizeMinSet[0]"
-        :size="splitSizeSet[0]"
-      >
-        <DagGraphContainer
-          :workflow="workflow"
-          :events="events"
-          class="tree-view"
-          v-if="this.graphView === 'dagGraph'"
-        ></DagGraphContainer>
-      </SplitArea> -->
     </Split>
 
     <span class="no-results" v-if="showNoResults">No Results</span>
@@ -506,7 +494,6 @@ export default {
     setSplitDirection() {
       this.splitDirection =
         this.$route.query.graphView === "dagGraph" ? "horizontal" : "vertical";
-      console.log(this.$route.query, this.splitDirection);
     },
     deselectEvent() {
       this.$router.replace({ query: omit(this.$route.query, "eventId") });
