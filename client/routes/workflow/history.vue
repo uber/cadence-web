@@ -60,10 +60,15 @@
     >
       <SplitArea
         class="timeline-split"
-        :class="this.graphView === 'dagGraph' ? 'hidden' : 'visible'"
         :min-size="splitSizeMinSet[0]"
         :size="splitSizeSet[0]"
       >
+        <DagGraphContainer
+          :workflow="workflow"
+          :events="events"
+          class="tree-view"
+          v-if="this.graphView === 'dagGraph'"
+        ></DagGraphContainer>
         <timeline
           :events="timelineEvents"
           :selected-event-id="eventId"
@@ -291,7 +296,7 @@
           </div>
         </section>
       </SplitArea>
-      <SplitArea
+      <!--   <SplitArea
         class="timeline-split"
         :min-size="splitSizeMinSet[0]"
         :size="splitSizeSet[0]"
@@ -302,7 +307,7 @@
           class="tree-view"
           v-if="this.graphView === 'dagGraph'"
         ></DagGraphContainer>
-      </SplitArea>
+      </SplitArea> -->
     </Split>
 
     <span class="no-results" v-if="showNoResults">No Results</span>
@@ -706,15 +711,12 @@ section.history {
     background-color: uber-white-20;
   }
 
-  div.split-panel div.split div.dagGraph {
+  .split-panel.split.dagGraph {
     display: flex;
-    flex-direction: row;
+    flex-direction: row-reverse;
   }
 
   div.split-panel {
-    display: flex;
-    flex-direction: row;
-
     .timeline-split {
       overflow: hidden;
     }
@@ -909,11 +911,6 @@ section.history {
 
   .hidden {
     display: none;
-  }
-
-  .tree-view {
-    height: 100%;
-    width: 100%;
   }
 
   .compact-view {
