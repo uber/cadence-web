@@ -52,7 +52,7 @@
     <Split
       class="split-panel"
       :class="this.graphView === 'dagGraph' ? 'dagGraph' : ''"
-      :direction="direction"
+      :direction="splitDirection"
       @onDrag="onSplitResize"
       @onDragStart="enableSplitting"
       v-if="!showNoResults"
@@ -355,7 +355,7 @@ export default {
       unwatch: [],
       workflow: null,
       workflowLoading: false,
-      direction: "vertical"
+      splitDirection: "vertical"
     };
   },
   props: [
@@ -391,6 +391,7 @@ export default {
   mounted() {
     this.setWorkFlow(); //TODO: remove this, this is purely for testing
     this.setSplitSize();
+    this.setSplitDirection();
     this.unwatch.push(
       this.$watch(
         () =>
@@ -501,6 +502,11 @@ export default {
       else if (this.graphView === "dagGraph") this.splitSizeSet = [40, 60];
       else this.splitSizeSet = [1, 99];
       this.onSplitResize();
+    },
+    setSplitDirection() {
+      this.splitDirection =
+        this.$route.query.graphView === "dagGraph" ? "horizontal" : "vertical";
+      console.log(this.$route.query, this.splitDirection);
     },
     deselectEvent() {
       this.$router.replace({ query: omit(this.$route.query, "eventId") });
@@ -620,11 +626,7 @@ export default {
     },
     graphView() {
       this.setSplitSize();
-      if (this.graphView === "timeLine") {
-        this.direction = "vertical";
-      } else {
-        this.direction = "horizontal";
-      }
+      this.setSplitDirection();
     }
   },
   components: {
