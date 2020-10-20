@@ -51,7 +51,8 @@
     </header>
     <Split
       class="split-panel"
-      direction="vertical"
+      :class="this.graphView === 'dagGraph' ? 'dag-graph' : ''"
+      :direction="splitDirection"
       @onDrag="onSplitResize"
       @onDragStart="enableSplitting"
       v-if="!showNoResults"
@@ -342,7 +343,8 @@ export default {
       splitSizeMinSet: [0, 0],
       unwatch: [],
       workflow: null,
-      workflowLoading: false
+      workflowLoading: false,
+      splitDirection: "vertical"
     };
   },
   props: [
@@ -379,6 +381,7 @@ export default {
   mounted() {
     this.setWorkFlow(); //TODO: remove this, this is purely for testing
     this.setSplitSize();
+    this.setSplitDirection();
     this.unwatch.push(
       this.$watch(
         () =>
@@ -486,9 +489,13 @@ export default {
     },
     setSplitSize() {
       if (this.graphView === "timeLine") this.splitSizeSet = [20, 80];
-      else if (this.graphView === "dagGraph") this.splitSizeSet = [80, 150];
+      else if (this.graphView === "dagGraph") this.splitSizeSet = [40, 60];
       else this.splitSizeSet = [1, 99];
       this.onSplitResize();
+    },
+    setSplitDirection() {
+      this.splitDirection =
+        this.$route.query.graphView === "dagGraph" ? "horizontal" : "vertical";
     },
     deselectEvent() {
       this.$router.replace({ query: omit(this.$route.query, "eventId") });
@@ -608,6 +615,7 @@ export default {
     },
     graphView() {
       this.setSplitSize();
+      this.setSplitDirection();
     }
   },
   components: {
@@ -692,6 +700,11 @@ section.history {
     border-top: 1px solid uber-white-80;
     border-bottom: 1px solid uber-white-80;
     background-color: uber-white-20;
+  }
+
+  .split-panel.split.dag-graph {
+    display: flex;
+    flex-direction: row-reverse;
   }
 
   div.split-panel {
@@ -887,9 +900,8 @@ section.history {
 
   wide-title-width = 400px;
 
-  .tree-view {
-    height: 100%;
-    width: 100%;
+  .hidden {
+    display: none;
   }
 
   .compact-view {
