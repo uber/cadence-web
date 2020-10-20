@@ -110,9 +110,6 @@ export default {
     selectedNodeInfo() {
       return this.$store.getters.selectedNodeInfo;
     },
-    renderedNodes() {
-      return this.$store.getters.renderedNodes;
-    },
     hasChildBtn() {
       return this.$store.getters.childBtn;
     },

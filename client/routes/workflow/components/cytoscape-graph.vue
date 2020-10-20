@@ -279,10 +279,7 @@ export default {
   },
   mounted() {
     //this.chunkWorkflow();
-    this.buildTree().then(() => {
-      //Set the current nodes which are rendered of the graph in the store
-      store.commit("setRenderedNodes", this.nodes);
-    });
+    this.buildTree();
     const t0 = performance.now();
     this.viewInit().then(cy => {
       const t1 = performance.now();
