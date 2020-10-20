@@ -38,7 +38,6 @@ export default {
     lastNodeInView() {
       //Function for enabling rendering on panning - TODO
       if (this.lastNodeRendered - 100 < this.lastNodeInView) {
-        console.log("close to edge");
       }
     },
     selectedEvent(id) {
