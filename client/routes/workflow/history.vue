@@ -51,7 +51,7 @@
     </header>
     <Split
       class="split-panel"
-      :class="this.graphView === 'dagGraph' ? 'dagGraph' : ''"
+      :class="this.graphView === 'dagGraph' ? 'dag-graph' : ''"
       :direction="splitDirection"
       @onDrag="onSplitResize"
       @onDragStart="enableSplitting"
@@ -713,7 +713,7 @@ section.history {
     background-color: uber-white-20;
   }
 
-  .split-panel.split.dagGraph {
+  .split-panel.split.dag-graph {
     display: flex;
     flex-direction: row-reverse;
   }
