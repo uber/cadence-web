@@ -264,12 +264,8 @@ export default {
           self.lastNodeInView = nodesInView[amountNodesInView - 1].id();
         }
       });
-
-      const t2 = performance.now();
       let container = document.getElementById("cyt");
       cy.mount(container);
-      const t3 = performance.now();
-      console.log(`Call to graph mount took ${t3 - t2} milliseconds.`);
     }
   },
   computed: {
@@ -280,10 +276,7 @@ export default {
   mounted() {
     //this.chunkWorkflow();
     this.buildTree();
-    const t0 = performance.now();
     this.viewInit().then(cy => {
-      const t1 = performance.now();
-      console.log(`Call to view_init took ${t1 - t0} milliseconds.`);
       this.mountGraph(cy);
     });
 
