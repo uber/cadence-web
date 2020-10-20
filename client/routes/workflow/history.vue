@@ -9,7 +9,7 @@
   >
     <header class="controls">
       <div class="view-format">
-        <label for="format">View Format</label>
+        <label for="format">View Format </label>
         <div class="view-formats">
           <a
             href="#"
@@ -65,8 +65,9 @@
         <DagGraphContainer
           :workflow="workflow"
           :events="events"
+          :isWorkflowRunning="isWorkflowRunning"
           class="tree-view"
-          v-if="this.graphView === 'dagGraph'"
+          v-if="this.graphView === 'dagGraph' && events.length"
         ></DagGraphContainer>
         <timeline
           :events="timelineEvents"
@@ -354,6 +355,7 @@ export default {
     "runId",
     "graphView",
     "timelineEvents",
+    "isWorkflowRunning",
     "workflowHistoryEventHighlightList",
     "workflowHistoryEventHighlightListEnabled",
     "workflowId"

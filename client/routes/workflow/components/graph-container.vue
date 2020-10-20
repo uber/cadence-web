@@ -27,9 +27,17 @@
         <div class="section-header-text">{{ workflowName }}</div>
       </div>
       <hr class="divider" />
-      <div v-if="workflowLoading" id="loading"></div>
+      <div v-if="isGraphLoading" id="loading"></div>
+      <button
+        v-if="!hasAllEvents"
+        id="refresh-btn"
+        v-on:click="reloadWorkflow()"
+      >
+        Refresh
+      </button>
       <WorkflowGraph
-        v-if="!workflowLoading"
+        :key="forceRefresh"
+        v-if="!isGraphLoading"
         :workflow="workflow"
         :events="events"
       />
@@ -62,29 +70,31 @@
 import store from "../../../store/index";
 import WorkflowGraph from "./cytoscape-graph.vue";
 export default {
-  props: ["workflow", "events"],
+  props: ["workflow", "events", "isWorkflowRunning"],
   components: {
     WorkflowGraph
   },
   data() {
     return {
-      workflowLoading: true,
+      isGraphLoading: true,
       clickedId: null,
-      workflowName: null
+      workflowName: null,
+      forceRefresh: true,
+      eventsSnapShot: [],
+      hasAllEvents: true
     };
   },
   watch: {
-    //We want to load a new workflow everytime we get a new runId
-    runId: function() {
-      this.resetData();
-      this.setWorkFlow();
+    events: function() {
+      //We have more events coming in
+      this.hasAllEvents = false;
     }
   },
   methods: {
     delayedShow() {
-      let delay = 500;
+      let delay = 400;
       setTimeout(() => {
-        this.workflowLoading = false;
+        this.isGraphLoading = false;
       }, delay);
     },
     updateRoute(route) {
@@ -94,16 +104,21 @@ export default {
         query: this.$route.query
       });
     },
+    reloadWorkflow() {
+      this.eventsSnapShot = this.events;
+      this.isGraphLoading = true;
+      this.forceRefresh = !this.forceRefresh;
+      this.delayedShow();
+      //We currently show all available events, refresh btn should be hidden
+      this.hasAllEvents = true;
+    },
     selectNode(node) {
       store.commit("setSelectedNode", node.data.id);
-    },
-    resetData() {
-      store.commit("resetState"); //We reset the state every time we load a new workflow
-      this.workflowLoading = false;
     }
   },
   mounted() {
     this.delayedShow();
+    this.eventsSnapShot = this.events;
     store.commit("resetState");
   },
 
@@ -235,6 +250,17 @@ hr.divider {
       display: none;
     }
   }
+}
+
+#refresh-btn {
+  display: inline-block;
+  padding: 13px 21px;
+  transition: all 400ms ease;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: #fff;
+  background-color: #11939a;
+  white-space: nowrap;
 }
 
 /* ---- Loadig icon  ---- */
