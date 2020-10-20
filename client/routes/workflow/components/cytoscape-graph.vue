@@ -41,7 +41,29 @@ export default {
         console.log("close to edge");
       }
     },
-    selectedNode(id) {
+    selectedEvent(id) {
+      this.zoomToNode(id);
+    }
+  },
+  methods: {
+    //  TODO: Function which will be used to divide the workflow in chunks to be rendered
+    chunkWorkflow() {
+      let chunkSize = 300;
+      let groups = this.workflow
+        .map((e, i) => {
+          return i % chunkSize === 0
+            ? this.workflow.slice(i, i + chunkSize)
+            : null;
+        })
+        .filter(e => {
+          return e;
+        });
+      this.slicedWorkflow = groups[this.workflowChunk];
+      this.lastNodeRendered = this.slicedWorkflow[
+        this.slicedWorkflow.length - 1
+      ].eventId;
+    },
+    zoomToNode(id) {
       //Deselect all previously selected nodes
       cy.$(":selected").deselect();
 
@@ -64,25 +86,6 @@ export default {
         zoom: 1.1,
         pan: pan
       });
-    }
-  },
-  methods: {
-    //  TODO: Function which will be used to divide the workflow in chunks to be rendered
-    chunkWorkflow() {
-      let chunkSize = 300;
-      let groups = this.workflow
-        .map((e, i) => {
-          return i % chunkSize === 0
-            ? this.workflow.slice(i, i + chunkSize)
-            : null;
-        })
-        .filter(e => {
-          return e;
-        });
-      this.slicedWorkflow = groups[this.workflowChunk];
-      this.lastNodeRendered = this.slicedWorkflow[
-        this.slicedWorkflow.length - 1
-      ].eventId;
     },
     async buildTree() {
       this.events.forEach(event => {
@@ -270,7 +273,7 @@ export default {
     }
   },
   computed: {
-    selectedNode() {
+    selectedEvent() {
       return this.$route.query.eventId;
     }
   },
@@ -286,6 +289,8 @@ export default {
       console.log(`Call to view_init took ${t1 - t0} milliseconds.`);
       this.mountGraph(cy);
     });
+
+    if (this.$route.query.eventId) this.zoomToNode(this.$route.query.eventId);
   }
 };
 </script>
