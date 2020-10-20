@@ -203,7 +203,7 @@ export default {
       cy.on("mouseout", "node", function(e) {
         container.style.cursor = "default";
       });
-
+      let self = this;
       //Register click event
       cy.on("tap", function(evt) {
         // target holds a reference to the originator
@@ -215,6 +215,10 @@ export default {
           store.commit("displayNodeInformation", {});
           //Tap on a node
         } else if (evtTarget.isNode()) {
+          self.$router.replace({
+            query: { ...self.$route.query, eventId: evt.target.data().id }
+          });
+
           //Access the node information to display on click
           let nodeData = evt.target.data();
           let clickInfo = nodeData.clickInfo;
