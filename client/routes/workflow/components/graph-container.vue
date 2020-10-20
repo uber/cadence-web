@@ -54,6 +54,7 @@
 <script>
 import store from "../../../store/index";
 import WorkflowGraph from "./cytoscape-graph.vue";
+import omit from "lodash-es/omit";
 export default {
   props: ["workflow", "events", "isWorkflowRunning"],
   components: {
@@ -83,9 +84,9 @@ export default {
       }, delay);
     },
     updateRoute(route) {
-      this.$router.push({
+      this.$router.replace({
         params: { workflowId: route.workflowId, runId: route.runId },
-        query: this.$route.query
+        query: omit(this.$route.query, "eventId")
       });
     },
     reloadWorkflow() {
