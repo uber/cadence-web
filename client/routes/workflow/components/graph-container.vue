@@ -1,20 +1,5 @@
 <template>
   <div class="tree-graph">
-    <div class="node-list">
-      <div class="section-header">
-        <div class="section-header-text">Node list</div>
-      </div>
-      <hr class="divider" />
-      <div class="list-container" v-for="node in renderedNodes" :key="node.id">
-        <div class="list-item" v-on:click="selectNode(node)">
-          <div class="list-item-header">{{ node.data.name }}</div>
-          <div class="list-item-content">
-            {{ node.data.clickInfo.timestamp }}
-          </div>
-        </div>
-        <hr class="divider" />
-      </div>
-    </div>
     <div id="canvas">
       <div class="section-header">
         <div
@@ -98,7 +83,6 @@ export default {
       }, delay);
     },
     updateRoute(route) {
-      console.log(this.$route.query);
       this.$router.push({
         params: { workflowId: route.workflowId, runId: route.runId },
         query: this.$route.query
@@ -111,9 +95,6 @@ export default {
       this.delayedShow();
       //We currently show all available events, refresh btn should be hidden
       this.hasAllEvents = true;
-    },
-    selectNode(node) {
-      store.commit("setSelectedNode", node.data.id);
     }
   },
   mounted() {
@@ -128,9 +109,6 @@ export default {
     },
     selectedNodeInfo() {
       return this.$store.getters.selectedNodeInfo;
-    },
-    renderedNodes() {
-      return this.$store.getters.renderedNodes;
     },
     hasChildBtn() {
       return this.$store.getters.childBtn;

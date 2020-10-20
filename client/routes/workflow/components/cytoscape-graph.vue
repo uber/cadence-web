@@ -1,10 +1,6 @@
 <template>
   <div id="cytoscape">
     <!--     <Legend /> -->
-    <!--   Last node in view: {{lastNodeInView }},
-    Last node rendered: {{ lastNodeRendered}}-->
-    <br />
-    <!--   <button v-on:click="addNode">Add node test</button> -->
     <div ref="cyt" id="cyt"></div>
   </div>
 </template>
@@ -42,10 +38,31 @@ export default {
     lastNodeInView() {
       //Function for enabling rendering on panning - TODO
       if (this.lastNodeRendered - 100 < this.lastNodeInView) {
-        console.log("close to edge");
       }
     },
-    selectedNode(id) {
+    selectedEvent(id) {
+      this.zoomToNode(id);
+    }
+  },
+  methods: {
+    //  TODO: Function which will be used to divide the workflow in chunks to be rendered
+    chunkWorkflow() {
+      let chunkSize = 300;
+      let groups = this.workflow
+        .map((e, i) => {
+          return i % chunkSize === 0
+            ? this.workflow.slice(i, i + chunkSize)
+            : null;
+        })
+        .filter(e => {
+          return e;
+        });
+      this.slicedWorkflow = groups[this.workflowChunk];
+      this.lastNodeRendered = this.slicedWorkflow[
+        this.slicedWorkflow.length - 1
+      ].eventId;
+    },
+    zoomToNode(id) {
       //Deselect all previously selected nodes
       cy.$(":selected").deselect();
 
@@ -68,25 +85,6 @@ export default {
         zoom: 1.1,
         pan: pan
       });
-    }
-  },
-  methods: {
-    //  TODO: Function which will be used to divide the workflow in chunks to be rendered
-    chunkWorkflow() {
-      let chunkSize = 300;
-      let groups = this.workflow
-        .map((e, i) => {
-          return i % chunkSize === 0
-            ? this.workflow.slice(i, i + chunkSize)
-            : null;
-        })
-        .filter(e => {
-          return e;
-        });
-      this.slicedWorkflow = groups[this.workflowChunk];
-      this.lastNodeRendered = this.slicedWorkflow[
-        this.slicedWorkflow.length - 1
-      ].eventId;
     },
     async buildTree() {
       this.events.forEach(event => {
@@ -265,31 +263,23 @@ export default {
           self.lastNodeInView = nodesInView[amountNodesInView - 1].id();
         }
       });
-
-      const t2 = performance.now();
       let container = document.getElementById("cyt");
       cy.mount(container);
-      const t3 = performance.now();
-      console.log(`Call to graph mount took ${t3 - t2} milliseconds.`);
     }
   },
   computed: {
-    selectedNode() {
-      return this.$store.getters.selectedNode;
+    selectedEvent() {
+      return this.$route.query.eventId;
     }
   },
   mounted() {
     //this.chunkWorkflow();
-    this.buildTree().then(() => {
-      //Set the current nodes which are rendered of the graph in the store
-      store.commit("setRenderedNodes", this.nodes);
-    });
-    const t0 = performance.now();
+    this.buildTree();
     this.viewInit().then(cy => {
-      const t1 = performance.now();
-      console.log(`Call to view_init took ${t1 - t0} milliseconds.`);
       this.mountGraph(cy);
     });
+
+    if (this.$route.query.eventId) this.zoomToNode(this.$route.query.eventId);
   }
 };
 </script>
