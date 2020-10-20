@@ -275,7 +275,7 @@ export default {
   },
   computed: {
     selectedNode() {
-      return this.$store.getters.selectedNode;
+      return this.$route.query.eventId;
     }
   },
   mounted() {
