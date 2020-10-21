@@ -12,6 +12,7 @@ import { getEventInfo2 } from "../helpers/get-event-info";
 import graphStyles from "../helpers/graph-styles";
 import store from "../../../store/index";
 import cytoscape from "cytoscape";
+import omit from "lodash-es/omit";
 /* import Legend from "@/components/Legend.vue"; */
 
 cytoscape.use(dagre);
@@ -41,7 +42,7 @@ export default {
       }
     },
     selectedEvent(id) {
-      this.zoomToNode(id);
+      if (id) this.zoomToNode(id);
     }
   },
   methods: {
@@ -78,7 +79,7 @@ export default {
 
       //Mark current node as selected - display its informatiom
       node.select();
-      store.commit("displayNodeInformation", node.data().clickInfo);
+      //store.commit("displayNodeInformation", node.data().clickInfo);
 
       //Pan the graph to view node
       cy.animate({
@@ -206,13 +207,13 @@ export default {
       let self = this;
       //Register click event
       cy.on("tap", function(evt) {
-        // target holds a reference to the originator
-        // of the event (core or element)
+        // target holds a reference to the originator of the event (core or element)
         let evtTarget = evt.target;
 
         //Tap on background
-        if (evtTarget === cy) {
-          store.commit("displayNodeInformation", {});
+        if (evtTarget === cy && self.$route.query.eventId) {
+          self.$router.replace({ query: omit(self.$route.query, "eventId") });
+
           //Tap on a node
         } else if (evtTarget.isNode()) {
           self.$router.replace({
@@ -221,9 +222,6 @@ export default {
 
           //Access the node information to display on click
           let nodeData = evt.target.data();
-          let clickInfo = nodeData.clickInfo;
-
-          store.commit("displayNodeInformation", clickInfo);
 
           if (nodeData.childRoute) {
             store.commit("childRoute", {
