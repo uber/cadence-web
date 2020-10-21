@@ -212,16 +212,17 @@ export default {
 
         //Tap on background
         if (evtTarget === cy) {
-          if (self.$route.query.eventId)
+          if (self.$route.query.eventId) {
             self.$router.replace({ query: omit(self.$route.query, "eventId") });
+            store.commit("toggleChildBtn");
+          }
           //Tap on a node
-        } else if (evtTarget.isNode()) {
-          self.$router.replace({
-            query: { ...self.$route.query, eventId: evt.target.data().id }
-          });
+        } else if (evtTarget.isNode() && !evtTarget.selected()) {
+          let nodeData = evtTarget.data();
 
-          //Access the node information to display on click
-          let nodeData = evt.target.data();
+          self.$router.replace({
+            query: { ...self.$route.query, eventId: nodeData.id }
+          });
 
           if (nodeData.childRoute) {
             store.commit("childRoute", {
