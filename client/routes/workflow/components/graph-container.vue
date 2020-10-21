@@ -1,7 +1,8 @@
 <template>
   <div class="tree-graph">
     <div id="canvas">
-      <div class="section-header">
+      <div class="thead" ref="thead">
+        <!--   <div class="section-header">
         <div
           class="btn"
           v-on:click="updateRoute(parentRoute)"
@@ -17,6 +18,7 @@
           {{ btnText }}
         </div>
         <div class="section-header-text">{{ workflowName }}</div>
+      </div> -->
       </div>
       <hr class="divider" />
       <div v-if="isGraphLoading" id="loading"></div>
@@ -108,6 +110,8 @@ export default {
 </script>
 
 <style scoped lang="stylus">
+@require '../../../styles/definitions.styl';
+
 .tree-graph {
   width: 100%;
   height: 100%;
@@ -116,6 +120,36 @@ export default {
 
 #graph {
   height: 100%;
+}
+
+.thead {
+  background-color: uber-white-10;
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  display: flex;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  width: 100%;
+  height: 60px;
+
+  .th {
+    color: rgb(0, 0, 0);
+    display: inline-block;
+    font-weight: 500;
+    text-transform: uppercase;
+
+    & > .v-select.eventType {
+      margin-left: 10px;
+      display: inline-block;
+      width: 150px;
+    }
+  }
+
+  & + .spacer {
+    width: 100%;
+    height: 58px;
+  }
 }
 
 #canvas {
@@ -169,7 +203,7 @@ hr.divider {
 }
 
 /* ---- Loadig icon  ---- */
-#loading {
+#loading { /* ---- Loadig icon  ---- */
   display: inline-block;
   width: 50px;
   height: 50px;
