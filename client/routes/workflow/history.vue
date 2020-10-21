@@ -404,6 +404,9 @@ export default {
         this.runId
       }.json`;
     },
+    selectedEventId() {
+      return this.$route.query.eventId;
+    },
     filteredEvents() {
       const { eventId, eventType } = this;
       const formattedEvents = this.events.map(event => ({
@@ -603,6 +606,9 @@ export default {
     }
   },
   watch: {
+    selectedEventId(id) {
+      this.scrollEventIntoView(id);
+    },
     filteredEvents() {
       if (
         !this.scrolledToEventOnInit &&
