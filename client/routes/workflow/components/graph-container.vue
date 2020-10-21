@@ -3,33 +3,22 @@
     <div id="canvas">
       <div class="thead" ref="thead">
         <!--   <div class="section-header">-->
-        <div class="actions">
-          <a
-            href="#"
-            class="compact"
-            @click.prevent="setFormat('compact')"
-            :class="format === 'compact' ? 'active' : ''"
-            >Compact</a
-          >
-        </div>
-        <!-- <div
-          class="btn"
+        <div
+          class="aside-left"
           v-on:click="updateRoute(parentRoute)"
           v-if="parentRoute"
         >
-          Go to parent
+          To parent
         </div>
+        <div class="aside-center">{{ workflowName }}</div>
         <div
+          class="aside-right"
           v-if="hasChildBtn"
-          class="event-info-btn"
           v-on:click="updateRoute(childRoute)"
         >
           {{ btnText }}
         </div>
-        <div class="section-header-text">{{ workflowName }}</div> -->
-        <!-- </div>  -->
       </div>
-      <hr class="divider" />
       <div v-if="isGraphLoading" id="loading"></div>
       <button
         v-if="!hasAllEvents"
@@ -98,6 +87,7 @@ export default {
   mounted() {
     this.delayedShow();
     this.eventsSnapShot = this.events;
+    this.workflowName = this.events[0].details.workflowType.name;
     store.commit("resetState");
   },
 
@@ -131,11 +121,21 @@ export default {
   height: 100%;
 }
 
-div.actions {
-  margin-left: auto;
+div.thead {
+  .aside-right {
+    margin: inline-spacing-small inline-spacing-small inline-spacing-small auto;
+    action-button();
+  }
 
-  a {
-    margin: inline-spacing-small;
+  .aside-center {
+    flex: 1;
+    font-weight: 500;
+    text-align: center;
+    margin: auto;
+  }
+
+  .aside-left {
+    margin: inline-spacing-small auto inline-spacing-small inline-spacing-small;
     action-button();
   }
 }
@@ -147,6 +147,7 @@ div.actions {
   position: absolute;
   display: flex;
   align-items: center;
+  justify-content: center;
   top: 0;
   left: 0;
   z-index: 2;
@@ -177,20 +178,6 @@ hr.divider {
   text-decoration: none;
   border-radius: 2px;
   padding: 6px;
-}
-
-.section-header {
-  height: 62px;
-  display: flex;
-  align-items: center;
-  position: relative;
-
-  &-text {
-    font-weight: bold;
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%);
-  }
 }
 
 #refresh-btn {
