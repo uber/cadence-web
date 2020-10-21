@@ -2,8 +2,17 @@
   <div class="tree-graph">
     <div id="canvas">
       <div class="thead" ref="thead">
-        <!--   <div class="section-header">
-        <div
+        <!--   <div class="section-header">-->
+        <div class="actions">
+          <a
+            href="#"
+            class="compact"
+            @click.prevent="setFormat('compact')"
+            :class="format === 'compact' ? 'active' : ''"
+            >Compact</a
+          >
+        </div>
+        <!-- <div
           class="btn"
           v-on:click="updateRoute(parentRoute)"
           v-if="parentRoute"
@@ -17,8 +26,8 @@
         >
           {{ btnText }}
         </div>
-        <div class="section-header-text">{{ workflowName }}</div>
-      </div> -->
+        <div class="section-header-text">{{ workflowName }}</div> -->
+        <!-- </div>  -->
       </div>
       <hr class="divider" />
       <div v-if="isGraphLoading" id="loading"></div>
@@ -122,34 +131,27 @@ export default {
   height: 100%;
 }
 
+div.actions {
+  margin-left: auto;
+
+  a {
+    margin: inline-spacing-small;
+    action-button();
+  }
+}
+
 .thead {
   background-color: uber-white-10;
   box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+  padding: 0 inline-spacing-large;
   position: absolute;
   display: flex;
+  align-items: center;
   top: 0;
   left: 0;
   z-index: 2;
   width: 100%;
   height: 60px;
-
-  .th {
-    color: rgb(0, 0, 0);
-    display: inline-block;
-    font-weight: 500;
-    text-transform: uppercase;
-
-    & > .v-select.eventType {
-      margin-left: 10px;
-      display: inline-block;
-      width: 150px;
-    }
-  }
-
-  & + .spacer {
-    width: 100%;
-    height: 58px;
-  }
 }
 
 #canvas {
