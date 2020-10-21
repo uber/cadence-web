@@ -211,9 +211,9 @@ export default {
         let evtTarget = evt.target;
 
         //Tap on background
-        if (evtTarget === cy && self.$route.query.eventId) {
-          self.$router.replace({ query: omit(self.$route.query, "eventId") });
-
+        if (evtTarget === cy) {
+          if (self.$route.query.eventId)
+            self.$router.replace({ query: omit(self.$route.query, "eventId") });
           //Tap on a node
         } else if (evtTarget.isNode()) {
           self.$router.replace({
