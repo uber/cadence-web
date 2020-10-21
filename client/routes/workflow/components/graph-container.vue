@@ -9,6 +9,13 @@
         >
           Go to parent
         </div>
+        <div
+          v-if="hasChildBtn"
+          class="event-info-btn"
+          v-on:click="updateRoute(childRoute)"
+        >
+          {{ btnText }}
+        </div>
         <div class="section-header-text">{{ workflowName }}</div>
       </div>
       <hr class="divider" />
@@ -27,18 +34,11 @@
         :events="events"
       />
     </div>
-    <div class="event-info">
+    <!--     <div class="event-info">
       <div class="section-header">
         <div class="section-header-text">Event information</div>
       </div>
       <hr class="divider" />
-      <div
-        v-if="hasChildBtn"
-        class="event-info-btn"
-        v-on:click="updateRoute(childRoute)"
-      >
-        {{ btnText }}
-      </div>
       <hr v-if="hasChildBtn" class="divider" />
       <div class="list-container" v-for="(key, value) in selectedNodeInfo">
         <div class="list-item">
@@ -47,7 +47,7 @@
         </div>
         <hr class="divider" />
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -108,9 +108,9 @@ export default {
     parentRoute() {
       return this.$store.getters.parentRoute;
     },
-    selectedNodeInfo() {
+    /*    selectedNodeInfo() {
       return this.$store.getters.selectedNodeInfo;
-    },
+    }, */
     hasChildBtn() {
       return this.$store.getters.childBtn;
     },
