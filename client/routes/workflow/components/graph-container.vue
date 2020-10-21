@@ -20,13 +20,10 @@
         </div>
       </div>
       <div v-if="isGraphLoading" id="loading"></div>
-      <button
-        v-if="!hasAllEvents"
-        id="refresh-btn"
-        v-on:click="reloadWorkflow()"
-      >
+
+      <div class="refresh" v-if="!hasAllEvents" v-on:click="reloadWorkflow()">
         Refresh
-      </button>
+      </div>
       <WorkflowGraph
         :key="forceRefresh"
         v-if="!isGraphLoading"
@@ -161,15 +158,13 @@ div.thead {
   position: relative;
 }
 
-#refresh-btn {
-  display: inline-block;
-  padding: 13px 21px;
-  transition: all 400ms ease;
-  text-transform: uppercase;
-  font-weight: 600;
-  color: #fff;
-  background-color: #11939a;
-  white-space: nowrap;
+.refresh {
+  action-button();
+  icon-refresh();
+  position: absolute;
+  top: 'calc(%s + %s)' % (60px inline-spacing-large);
+  right: inline-spacing-large;
+  z-index: 3;
 }
 
 /* ---- Loadig icon  ---- */
