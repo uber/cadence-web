@@ -9,6 +9,13 @@
         >
           Go to parent
         </div>
+        <div
+          v-if="hasChildBtn"
+          class="event-info-btn"
+          v-on:click="updateRoute(childRoute)"
+        >
+          {{ btnText }}
+        </div>
         <div class="section-header-text">{{ workflowName }}</div>
       </div>
       <hr class="divider" />
@@ -26,27 +33,6 @@
         :workflow="workflow"
         :events="events"
       />
-    </div>
-    <div class="event-info">
-      <div class="section-header">
-        <div class="section-header-text">Event information</div>
-      </div>
-      <hr class="divider" />
-      <div
-        v-if="hasChildBtn"
-        class="event-info-btn"
-        v-on:click="updateRoute(childRoute)"
-      >
-        {{ btnText }}
-      </div>
-      <hr v-if="hasChildBtn" class="divider" />
-      <div class="list-container" v-for="(key, value) in selectedNodeInfo">
-        <div class="list-item">
-          <div class="list-item-header">{{ value }}</div>
-          <div class="list-item-content">{{ key }}</div>
-        </div>
-        <hr class="divider" />
-      </div>
     </div>
   </div>
 </template>
@@ -108,9 +94,6 @@ export default {
     parentRoute() {
       return this.$store.getters.parentRoute;
     },
-    selectedNodeInfo() {
-      return this.$store.getters.selectedNodeInfo;
-    },
     hasChildBtn() {
       return this.$store.getters.childBtn;
     },
@@ -129,18 +112,6 @@ export default {
   width: 100%;
   height: 100%;
   display: flex;
-  padding: 24px;
-}
-
-.node-list {
-  flex: 1;
-  background-color: white;
-  box-shadow: 0px 0px 9px 0px rgba(232, 232, 232, 1);
-  border-radius: 2px;
-  border: 1px solid #eaeaea;
-  overflow-wrap: break-word;
-  overflow-y: scroll;
-  margin-right: 24px;
 }
 
 #graph {
@@ -183,51 +154,6 @@ hr.divider {
     position: absolute;
     left: 50%;
     transform: translate(-50%);
-  }
-}
-
-.event-info {
-  flex: 1;
-  background-color: white;
-  box-shadow: 0px 0px 9px 0px rgba(232, 232, 232, 1);
-  border-radius: 2px;
-  border: 1px solid #eaeaea;
-  overflow-wrap: break-word;
-  overflow-y: scroll;
-  margin-left: 24px;
-
-  &-btn {
-    margin: 16px 20px;
-    color: white;
-    background-color: #11939A;
-    font-weight: 600;
-    border-radius: 2px;
-    padding: 6px 0;
-    cursor: pointer;
-  }
-}
-
-.list-item {
-  margin: 16px 24px;
-
-  &-header {
-    font-weight: 600;
-    padding-bottom: 2px;
-  }
-
-  &-content {
-    color: #7b7b7b;
-    font-weight: 500;
-  }
-}
-
-.list-container {
-  text-align: left;
-
-  &:last-child {
-    hr {
-      display: none;
-    }
   }
 }
 

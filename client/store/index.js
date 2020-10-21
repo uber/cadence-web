@@ -8,8 +8,6 @@ const getDefaultState = () => {
     parentRouteId: null,
     childBtn: false,
     btnText: null,
-    selectedNode: null,
-    selectedNodeInfo: {}
   }
 }
 // initial state
@@ -35,12 +33,6 @@ const store = new Vuex.Store({
     parentRoute(state, route) {
       state.parentRouteId = route
     },
-    displayNodeInformation(state, info) {
-      state.selectedNodeInfo = info
-    },
-    setSelectedNode(state, node) {
-      state.selectedNode = node
-    },
     resetState(state) {
       Object.assign(state, getDefaultState())
     }
@@ -50,9 +42,7 @@ const store = new Vuex.Store({
     newExecutionId: state => state.newExecutionId,
     childBtn: state => state.childBtn,
     btnText: state => state.btnText,
-    parentRoute: state => state.parentRouteId,
-    selectedNodeInfo: state => state.selectedNodeInfo,
-    selectedNode: state => state.selectedNode,
+    parentRoute: state => state.parentRouteId
   }
 })
 
