@@ -114,11 +114,6 @@ export default {
 .tree-graph {
   width: 100%;
   height: 100%;
-  display: flex;
-}
-
-#graph {
-  height: 100%;
 }
 
 div.thead {
@@ -132,6 +127,7 @@ div.thead {
     font-weight: 500;
     text-align: center;
     margin: auto;
+    padding: 0 inline-spacing-small;
   }
 
   .aside-left {
@@ -156,28 +152,13 @@ div.thead {
 }
 
 #canvas {
-  flex: 3;
+  width: 100%;
+  height: 100%;
   background-color: white;
   box-shadow: 0px 0px 9px 0px rgba(232, 232, 232, 1);
   border: 1px solid #eaeaea;
   overflow: hidden;
   position: relative;
-}
-
-hr.divider {
-  border: 0;
-  border-top: 1px solid #eaeaea;
-  padding: 0;
-}
-
-.btn {
-  margin-left: 20px;
-  color: white;
-  background-color: #11939A;
-  font-weight: 600;
-  text-decoration: none;
-  border-radius: 2px;
-  padding: 6px;
 }
 
 #refresh-btn {
@@ -192,7 +173,7 @@ hr.divider {
 }
 
 /* ---- Loadig icon  ---- */
-#loading { /* ---- Loadig icon  ---- */
+#loading {
   display: inline-block;
   width: 50px;
   height: 50px;
