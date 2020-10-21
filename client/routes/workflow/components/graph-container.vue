@@ -1,32 +1,29 @@
 <template>
   <div class="tree-graph">
     <div id="canvas">
-      <div class="section-header">
+      <div class="thead" ref="thead">
+        <!--   <div class="section-header">-->
         <div
-          class="btn"
+          class="aside-left"
           v-on:click="updateRoute(parentRoute)"
           v-if="parentRoute"
         >
-          Go to parent
+          To parent
         </div>
+        <div class="aside-center">{{ workflowName }}</div>
         <div
+          class="aside-right"
           v-if="hasChildBtn"
-          class="event-info-btn"
           v-on:click="updateRoute(childRoute)"
         >
           {{ btnText }}
         </div>
-        <div class="section-header-text">{{ workflowName }}</div>
       </div>
-      <hr class="divider" />
       <div v-if="isGraphLoading" id="loading"></div>
-      <button
-        v-if="!hasAllEvents"
-        id="refresh-btn"
-        v-on:click="reloadWorkflow()"
-      >
+
+      <div class="refresh" v-if="!hasAllEvents" v-on:click="reloadWorkflow()">
         Refresh
-      </button>
+      </div>
       <WorkflowGraph
         :key="forceRefresh"
         v-if="!isGraphLoading"
@@ -87,6 +84,7 @@ export default {
   mounted() {
     this.delayedShow();
     this.eventsSnapShot = this.events;
+    this.workflowName = this.events[0].details.workflowType.name;
     store.commit("resetState");
   },
 
@@ -108,18 +106,51 @@ export default {
 </script>
 
 <style scoped lang="stylus">
+@require '../../../styles/definitions.styl';
+
 .tree-graph {
   width: 100%;
   height: 100%;
-  display: flex;
 }
 
-#graph {
-  height: 100%;
+div.thead {
+  .aside-right {
+    margin: inline-spacing-small inline-spacing-small inline-spacing-small auto;
+    action-button();
+  }
+
+  .aside-center {
+    flex: 1;
+    font-weight: 500;
+    text-align: center;
+    margin: auto;
+    padding: 0 inline-spacing-small;
+  }
+
+  .aside-left {
+    margin: inline-spacing-small auto inline-spacing-small inline-spacing-small;
+    action-button();
+  }
+}
+
+.thead {
+  background-color: uber-white-10;
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+  padding: 0 inline-spacing-large;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  width: 100%;
+  height: 60px;
 }
 
 #canvas {
-  flex: 3;
+  width: 100%;
+  height: 100%;
   background-color: white;
   box-shadow: 0px 0px 9px 0px rgba(232, 232, 232, 1);
   border: 1px solid #eaeaea;
@@ -127,45 +158,13 @@ export default {
   position: relative;
 }
 
-hr.divider {
-  border: 0;
-  border-top: 1px solid #eaeaea;
-  padding: 0;
-}
-
-.btn {
-  margin-left: 20px;
-  color: white;
-  background-color: #11939A;
-  font-weight: 600;
-  text-decoration: none;
-  border-radius: 2px;
-  padding: 6px;
-}
-
-.section-header {
-  height: 62px;
-  display: flex;
-  align-items: center;
-  position: relative;
-
-  &-text {
-    font-weight: bold;
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%);
-  }
-}
-
-#refresh-btn {
-  display: inline-block;
-  padding: 13px 21px;
-  transition: all 400ms ease;
-  text-transform: uppercase;
-  font-weight: 600;
-  color: #fff;
-  background-color: #11939a;
-  white-space: nowrap;
+.refresh {
+  action-button();
+  icon-refresh();
+  position: absolute;
+  top: 'calc(%s + %s)' % (60px inline-spacing-large);
+  right: inline-spacing-large;
+  z-index: 3;
 }
 
 /* ---- Loadig icon  ---- */
