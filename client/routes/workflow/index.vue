@@ -136,7 +136,7 @@ export default {
     baseAPIURL() {
       const { domain, workflowId, runId } = this;
 
-      return `/api/domains/${domain}/workflows/${workflowId}/${runId}`;
+      return `/api/domains/${domain}/workflows/${workflowId.replace(/\//g, '%2F')}/${runId.replace(/\//g, '%2F')}`;
     },
     historyEvents() {
       const {
