@@ -7,8 +7,8 @@
 
 <script>
 import dagre from "cytoscape-dagre";
-import { getEventInfo } from "../helpers/event-function-map";
-import { getEventInfo2 } from "../helpers/get-event-info";
+/* import { getEventInfo } from "../helpers/event-function-map"; */
+import { getEventConnections } from "../helpers/get-event-info";
 import graphStyles from "../helpers/graph-styles";
 import store from "../../../store/index";
 import cytoscape from "cytoscape";
@@ -94,7 +94,7 @@ export default {
           parentWorkflowExecution,
           status,
           childRoute
-        } = getEventInfo2(event, this.events);
+        } = getEventConnections(event, this.events);
 
         if (!clickInfo) {
           clickInfo = { todo: "Todo" };
@@ -130,7 +130,7 @@ export default {
     },
     setDirectAndInferred(node) {
       let nodeId = node.eventId,
-        { parent, inferredChild } = getEventInfo2(node, this.events);
+        { parent, inferredChild } = getEventConnections(node, this.events);
       if (parent) {
         this.parentArray.push(parent);
         this.edges.push({
@@ -146,7 +146,7 @@ export default {
     },
     setChron(node) {
       let nodeId = node.eventId,
-        { chronologicalChild } = getEventInfo2(node, this.events);
+        { chronologicalChild } = getEventConnections(node, this.events);
       if (chronologicalChild) {
         this.edges.push({
           data: {

@@ -1,6 +1,6 @@
 /* import { eventInfo, event, workflow, eventTypeMap } from "./eventInterface"; */
 
-function getEventInfo2(event, workflow) {
+function getEventConnections(event, workflow) {
   return eventTypeMap[event.eventType](event, workflow)
 }
 
@@ -387,4 +387,4 @@ function findChild(event, workflow) {
 }
 
 // Exporting variables and functions
-export { getEventInfo2 };
+export { getEventConnections };
