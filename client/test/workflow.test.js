@@ -603,7 +603,7 @@ describe('Workflow', () => {
           Number(
             timelineEl
               .querySelector('.vis-range.activity.completed')
-              .style.left.match(/[-0-9]+/)[0]
+              .style.transform.match(/[-0-9]+/)[0]
           ).should.be.below(0);
         });
       });
