@@ -504,12 +504,11 @@ export default {
       this.$router.replace({ query: omit(this.$route.query, "eventId") });
     },
     enableSplitting() {
-      if (!this.splitEnabled) {
+      if (!this.splitEnabled && this.graphView === "timeLine") {
         const timelineHeightPct =
           (this.$refs.splitPanel.$el.firstElementChild.offsetHeight /
             this.$refs.splitPanel.$el.offsetHeight) *
           100;
-
         this.splitSizeSet = [timelineHeightPct, 100 - timelineHeightPct];
         this.splitEnabled = true;
       }
