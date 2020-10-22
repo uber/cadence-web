@@ -4,7 +4,8 @@
 
 <script>
 import moment from 'moment';
-import { DataSet, Timeline, timeline } from 'vis/index-timeline-graph2d';
+import { Timeline, timeline } from 'vis-timeline';
+import { DataSet } from 'vis-data';
 
 if (navigator.language === 'en-US') {
   timeline.TimeStep.FORMAT.minorLabels.minute = 'h:mm a';
