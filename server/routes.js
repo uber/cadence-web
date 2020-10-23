@@ -4,16 +4,17 @@ const
   moment = require('moment'),
   Long = require('long'),
   losslessJSON = require('lossless-json'),
+  featureFlags = require('./feature-flags.json');
   momentToLong = m => Long.fromValue(m.unix()).mul(1000000000)
 
-router.get('/api/domain', async function (ctx) {
+router.get('/api/domains', async function (ctx) {
   ctx.body = await ctx.cadence.listDomains({
     pageSize: 50,
     nextPageToken: ctx.query.nextPageToken ? Buffer.from(ctx.query.nextPageToken, 'base64') : undefined
   })
 })
 
-router.get('/api/domain/:domain', async function (ctx) {
+router.get('/api/domains/:domain', async function (ctx) {
   ctx.body = await ctx.cadence.describeDomain({ name: ctx.params.domain })
 })
 
@@ -36,10 +37,61 @@ async function listWorkflows(state, ctx) {
   })
 }
 
-router.get('/api/domain/:domain/workflows/open', listWorkflows.bind(null, 'open'))
-router.get('/api/domain/:domain/workflows/closed', listWorkflows.bind(null, 'closed'))
+/**
+ * Override this route to perform authorization check
+ * on current user & domain they are accessing.
+ *
+ * Example:
+ *
+ * router.get('/api/domains/:domain/authorization', () => {
+ *  const { domain } = ctx.params;
+ *
+ *  ctx.body = {
+ *    // use whatever system authorization checks needed here.
+ *    authorization: db.isUserAuthorizedForDomain(domain),
+ *  };
+ * })
+ */
+router.get('/api/domains/:domain/authorization', async function (ctx, next) {
+  ctx.body = {
+    authorization: true,
+  };
 
-router.get('/api/domain/:domain/workflows/list', async function (ctx) {
+  next();
+});
+
+router.get('/api/domains/:domain/workflows/open', listWorkflows.bind(null, 'open'))
+router.get('/api/domains/:domain/workflows/closed', listWorkflows.bind(null, 'closed'))
+
+const buildQueryString = (startTime, endTime, { status, workflowId, workflowName }) => ([
+  `CloseTime >= "${startTime.toISOString()}"`,
+  `CloseTime <= "${endTime.toISOString()}"`,
+  status && `CloseStatus = "${status}"`,
+  workflowId && `WorkflowID = "${workflowId}"`,
+  workflowName && `WorkflowType = "${workflowName}"`,
+].filter((subQuery) => !!subQuery).join(' and '));
+
+router.get('/api/domains/:domain/workflows/archived', async function (ctx) {
+  const { nextPageToken, ...query } = ctx.query || {};
+  let queryString;
+
+  if (query.queryString) {
+    queryString = query.queryString;
+  } else {
+    const startTime = moment(query.startTime || NaN);
+    const endTime = moment(query.endTime || NaN);
+
+    ctx.assert(startTime.isValid() && endTime.isValid(), 400);
+    queryString = buildQueryString(startTime, endTime, query);
+  }
+
+  ctx.body = await ctx.cadence['archivedWorkflows']({
+    query: queryString,
+    nextPageToken: nextPageToken ? Buffer.from(nextPageToken, 'base64') : undefined
+  });
+});
+
+router.get('/api/domains/:domain/workflows/list', async function (ctx) {
   var q = ctx.query || {}
   ctx.body = await ctx.cadence['listWorkflows']({
     query: q.queryString || undefined,
@@ -47,16 +99,9 @@ router.get('/api/domain/:domain/workflows/list', async function (ctx) {
   })
 })
 
-router.get('/api/domain/:domain/workflows/:workflowId/:runId/history', async function (ctx) {
-  var q = ctx.query || {}
-
-  ctx.body = await ctx.cadence.getHistory({
-    nextPageToken: q.nextPageToken ? Buffer.from(q.nextPageToken, 'base64') : undefined,
-    waitForNewEvent: 'waitForNewEvent' in q ? true : undefined
-  })
-
-  if (Array.isArray(ctx.body.history && ctx.body.history.events)) {
-    ctx.body.history.events = ctx.body.history.events.map(e => {
+const mapHistoryResponse = (history) => {
+  if (Array.isArray(history && history.events)) {
+    return history.events.map(e => {
       var attr = e.eventType ?
         e.eventType.charAt(0).toLowerCase() + e.eventType.slice(1) + 'EventAttributes' : '';
       if (e[attr]) {
@@ -78,9 +123,19 @@ router.get('/api/domain/:domain/workflows/:workflowId/:runId/history', async fun
       }
     })
   }
+}
+
+router.get('/api/domains/:domain/workflows/:workflowId/:runId/history', async function (ctx) {
+  var q = ctx.query || {}
+  ctx.body = await ctx.cadence.getHistory({
+    nextPageToken: q.nextPageToken ? Buffer.from(q.nextPageToken, 'base64') : undefined,
+    waitForNewEvent: 'waitForNewEvent' in q ? true : undefined
+  })
+
+  ctx.body.history.events = mapHistoryResponse(ctx.body.history);
 })
 
-router.get('/api/domain/:domain/workflows/:workflowId/:runId/export', async function (ctx) {
+router.get('/api/domains/:domain/workflows/:workflowId/:runId/export', async function (ctx) {
   var nextPageToken
 
   do {
@@ -96,7 +151,7 @@ router.get('/api/domain/:domain/workflows/:workflowId/:runId/export', async func
   ctx.body = ''
 })
 
-router.get('/api/domain/:domain/workflows/:workflowId/:runId/queries', async function (ctx) {
+router.get('/api/domains/:domain/workflows/:workflowId/:runId/query', async function (ctx) {
   // workaround implementation until https://github.com/uber/cadence/issues/382 is resolved
   try {
     await ctx.cadence.queryWorkflow({
@@ -114,7 +169,7 @@ router.get('/api/domain/:domain/workflows/:workflowId/:runId/queries', async fun
   }
 })
 
-router.post('/api/domain/:domain/workflows/:workflowId/:runId/queries/:queryType', async function (ctx) {
+router.post('/api/domains/:domain/workflows/:workflowId/:runId/query/:queryType', async function (ctx) {
   ctx.body = await ctx.cadence.queryWorkflow({
     query: {
       queryType: ctx.params.queryType
@@ -122,26 +177,82 @@ router.post('/api/domain/:domain/workflows/:workflowId/:runId/queries/:queryType
   })
 })
 
-router.post('/api/domain/:domain/workflows/:workflowId/:runId/terminate', async function (ctx) {
+router.post('/api/domains/:domain/workflows/:workflowId/:runId/terminate', async function (ctx) {
   ctx.body = await ctx.cadence.terminateWorkflow({
     reason: ctx.request.body && ctx.request.body.reason
   })
 })
 
-router.post('/api/domain/:domain/workflows/:workflowId/:runId/signal/:signal', async function (ctx) {
+router.post('/api/domains/:domain/workflows/:workflowId/:runId/signal/:signal', async function (ctx) {
   ctx.body = await ctx.cadence.signalWorkflow({ signalName: ctx.params.signal })
 })
 
-router.get('/api/domain/:domain/workflows/:workflowId/:runId', async function (ctx) {
-  ctx.body = await ctx.cadence.describeWorkflow()
-})
+router.get('/api/domains/:domain/workflows/:workflowId/:runId', async function (ctx) {
+  try {
+    const describeResponse = await ctx.cadence.describeWorkflow();
 
-router.get('/api/domain/:domain/task-lists/:taskList/pollers', async function (ctx) {
+    if (describeResponse.workflowExecutionInfo) {
+      describeResponse.workflowExecutionInfo.closeEvent = null;
+      if (describeResponse.workflowExecutionInfo.closeStatus) {
+        const closeEventResponse = await ctx.cadence.getHistory({
+          HistoryEventFilterType: 'CLOSE_EVENT',
+        });
+        describeResponse.workflowExecutionInfo.closeEvent = mapHistoryResponse(closeEventResponse.history)[0];
+      }
+    }
+
+    ctx.body = describeResponse;
+  } catch (error) {
+    if (error.name !== 'NotFoundError') {
+      throw error;
+    }
+
+    const archivedHistoryResponse = await ctx.cadence.getHistory();
+    const archivedHistoryEvents = mapHistoryResponse(archivedHistoryResponse.history);
+
+    if (!archivedHistoryEvents.length) {
+      throw error;
+    }
+
+    const { runId, workflowId } = ctx.params;
+
+    const {
+      timestamp: startTime,
+      details: {
+        taskList,
+        executionStartToCloseTimeoutSeconds,
+        taskStartToCloseTimeoutSeconds,
+        workflowType: type,
+      },
+    } = archivedHistoryEvents[0];
+
+    ctx.body = {
+      executionConfiguration: {
+        taskList,
+        executionStartToCloseTimeoutSeconds,
+        taskStartToCloseTimeoutSeconds,
+      },
+      workflowExecutionInfo: {
+        execution: {
+          runId,
+          workflowId,
+        },
+        isArchived: true,
+        startTime,
+        type,
+      },
+      pendingActivities: null,
+      pendingChildren: null
+    };
+  };
+});
+
+router.get('/api/domains/:domain/task-lists/:taskList/pollers', async function (ctx) {
   const descTaskList = async (taskListType) => (await ctx.cadence.describeTaskList({
     domain: ctx.params.domain,
     taskList: { name: ctx.params.taskList },
     taskListType
-  })).pollers
+  })).pollers || [];
 
   const r = type => (o, poller) => {
     let i = o[poller.identity] || {}
@@ -154,10 +265,31 @@ router.get('/api/domain/:domain/task-lists/:taskList/pollers', async function (c
   }
 
   const activityL = await descTaskList('Activity'),
-  decisionL = await descTaskList('Decision')
+    decisionL = await descTaskList('Decision');
 
   ctx.body = activityL.reduce(r('activity'), decisionL.reduce(r('decision'), {}))
 })
+
+router.get('/api/domains/:domain/task-lists/:taskList/partitions', async function (ctx) {
+  const { domain, taskList } = ctx.params;
+  ctx.body = await ctx.cadence.listTaskListPartitions({
+    domain,
+    taskList: { name: taskList },
+  });
+});
+
+router.get('/api/feature-flags/:key', (ctx, next) => {
+  const { params: { key } } = ctx;
+  const featureFlag = featureFlags.find((featureFlag) => featureFlag.key === key);
+  const value = featureFlag && featureFlag.value || false;
+
+  ctx.body = {
+    key,
+    value,
+  };
+
+  next();
+});
 
 router.get('/health', ctx => ctx.body = 'OK')
 

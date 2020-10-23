@@ -1,51 +1,315 @@
 <script>
-import logo from './assets/logo.svg'
+import { version } from '../package.json';
+import logo from './assets/logo.svg';
+import {
+  ButtonIcon,
+  FeatureFlag,
+  FlexGrid,
+  FlexGridItem,
+  NewsModal,
+  NotificationBar,
+  SettingsModal,
+} from '~components';
+import {
+  DATE_FORMAT_MMM_D_YYYY,
+  DATE_FORMAT_OPTIONS,
+  ENVIRONMENT_LIST,
+  LOCAL_STORAGE_NEWS_LAST_VIEWED_AT,
+  LOCAL_STORAGE_SETTINGS,
+  NOTIFICATION_TIMEOUT,
+  NOTIFICATION_TYPE_SUCCESS,
+  TIME_FORMAT_12,
+  TIME_FORMAT_OPTIONS,
+  TIMEZONE_LOCAL,
+  TIMEZONE_OPTIONS,
+} from '~constants';
+import {
+  getEnvironment,
+  getEnvironmentList,
+  getEnvironmentLocation,
+  getLatestNewsItems,
+  parseStringToBoolean,
+  workflowHistoryEventHighlightListAddOrUpdate,
+} from '~helpers';
 
 export default {
-  data () {
-    return { logo }
+  components: {
+    'button-icon': ButtonIcon,
+    'feature-flag': FeatureFlag,
+    'flex-grid': FlexGrid,
+    'flex-grid-item': FlexGridItem,
+    'news-modal': NewsModal,
+    'notification-bar': NotificationBar,
+    'settings-modal': SettingsModal,
+  },
+  data() {
+    const { origin } = window.location;
+    const environmentList = ENVIRONMENT_LIST;
+
+    return {
+      environment: {
+        list: getEnvironmentList({
+          environmentList,
+          origin,
+        }),
+        value: getEnvironment({
+          environmentList,
+          origin,
+        }),
+      },
+      newsLastUpdated: localStorage.getItem(LOCAL_STORAGE_NEWS_LAST_VIEWED_AT),
+      newsItems: [],
+      logo,
+      notification: {
+        message: '',
+        show: false,
+        type: '',
+        timeout: undefined,
+      },
+      settings: {
+        dateFormat:
+          localStorage.getItem(LOCAL_STORAGE_SETTINGS.dateFormat) ||
+          DATE_FORMAT_MMM_D_YYYY,
+        dateFormatOptions: DATE_FORMAT_OPTIONS,
+        timeFormat:
+          localStorage.getItem(LOCAL_STORAGE_SETTINGS.timeFormat) ||
+          TIME_FORMAT_12,
+        timeFormatOptions: TIME_FORMAT_OPTIONS,
+        timezone:
+          localStorage.getItem(LOCAL_STORAGE_SETTINGS.timezone) ||
+          TIMEZONE_LOCAL,
+        timezoneOptions: TIMEZONE_OPTIONS,
+        workflowHistoryEventHighlightList:
+          JSON.parse(
+            localStorage.getItem(
+              LOCAL_STORAGE_SETTINGS.workflowHistoryEventHighlightList
+            )
+          ) || [],
+        workflowHistoryEventHighlightListEnabled: parseStringToBoolean(
+          localStorage.getItem(
+            LOCAL_STORAGE_SETTINGS.workflowHistoryEventHighlightListEnabled
+          ),
+          true
+        ),
+      },
+    };
+  },
+  beforeDestroy() {
+    clearTimeout(this.notification.timeout);
+  },
+  async mounted() {
+    await this.fetchLatestNewsItems();
+
+    if (this.newsItems.length) {
+      this.$modal.show('news-modal');
+    }
   },
   methods: {
-    globalClick(e) {
-      if (this.editing && !this.$refs.domain.contains(e.target)) {
-        this.clearEdit()
-      }
+    async fetchLatestNewsItems() {
+      const { newsLastUpdated } = this;
+      const response = await this.$http('/feed.json');
 
-      if (e.target.tagName === 'A') {
-        var href = e.target.getAttribute('href')
-        if (href && href.startsWith('/') && !e.target.getAttribute('download') && !e.target.getAttribute('target')) {
-          e.preventDefault()
-          e.stopPropagation()
-          this.$router.push(href)
+      this.newsItems = getLatestNewsItems({ newsLastUpdated, response });
+    },
+    globalClick(e) {
+      // Code required for mocha tests to run correctly without infinite looping.
+      if (window.mocha !== undefined && e.target.tagName === 'A') {
+        const href = e.target.getAttribute('href');
+
+        if (
+          href &&
+          href.startsWith('/') &&
+          !e.target.getAttribute('download') &&
+          !e.target.getAttribute('target')
+        ) {
+          e.preventDefault();
+          e.stopPropagation();
+          this.$router.push(href);
         }
       }
-    }
-  }
-}
+    },
+    onEnvironmentSelectChange(environment) {
+      if (environment === this.environment.value) {
+        return;
+      }
+
+      const { pathname, search } = window.location;
+
+      window.location = getEnvironmentLocation({
+        environment,
+        pathname,
+        search,
+      });
+    },
+    onNewsDismiss() {
+      localStorage.setItem(
+        LOCAL_STORAGE_NEWS_LAST_VIEWED_AT,
+        this.newsItems[0].date_modified
+      );
+    },
+    onNotification({ message, type = NOTIFICATION_TYPE_SUCCESS }) {
+      this.notification.message = message;
+      this.notification.type = type;
+      this.notification.show = true;
+    },
+    onNotificationClose() {
+      this.notification.show = false;
+    },
+    onSettingsChange(values) {
+      for (const key in values) {
+        const value = values[key];
+        const storeValue =
+          typeof value === 'object' ? JSON.stringify(value) : value;
+
+        localStorage.setItem(LOCAL_STORAGE_SETTINGS[key], storeValue);
+
+        this.settings[key] = value;
+      }
+    },
+    onSettingsClick() {
+      this.$modal.show('settings-modal');
+    },
+    onWorkflowHistoryEventParamToggle({
+      eventParam: { key: eventParamName, isHighlighted },
+      eventType,
+    }) {
+      const {
+        settings: { workflowHistoryEventHighlightList },
+      } = this;
+
+      this.settings.workflowHistoryEventHighlightList = workflowHistoryEventHighlightListAddOrUpdate(
+        {
+          eventParamName,
+          eventType,
+          isEnabled: !isHighlighted,
+          workflowHistoryEventHighlightList,
+        }
+      );
+
+      localStorage.setItem(
+        LOCAL_STORAGE_SETTINGS.workflowHistoryEventHighlightList,
+        JSON.stringify(this.settings.workflowHistoryEventHighlightList)
+      );
+    },
+  },
+  watch: {
+    'notification.show'(value) {
+      clearTimeout(this.notification.timeout);
+
+      if (value) {
+        this.notification.timeout = setTimeout(
+          this.onNotificationClose,
+          NOTIFICATION_TIMEOUT
+        );
+      }
+    },
+  },
+  computed: {
+    version() {
+      return `v${version}`;
+    },
+  },
+};
 </script>
 
 <template>
   <main @click="globalClick">
+    <notification-bar
+      :message="notification.message"
+      :onClose="onNotificationClose"
+      :show="notification.show"
+      :type="notification.type"
+    />
     <header class="top-bar">
-      <a href="/" class="logo" v-html="logo"></a>
-      <div class="domain" v-if="$route.params.domain">
-        <a :href="`/domain/${$route.params.domain}/workflows`" :class="{'router-link-active': $route.path === `/domain/${$route.params.domain}/workflows`, workflows: true }">{{$route.params.domain}}</a>
-        <a :href="`/domain/${$route.params.domain}/config`" :class="{'router-link-active': $route.path === `/domain/${$route.params.domain}/config`, config: true }"></a>
-      </div>
-      <div class="list-workflows" v-if="$route.name === 'workflows'">Workflows</div>
-      <div class="detail-view workflow-id" v-if="$route.params.workflowId">
-        <span>{{$route.params.workflowId}}</span>
-      </div>
-      <div class="detail-view task-list" v-if="$route.params.taskList">
-        <span>{{$route.params.taskList}}</span>
-      </div>
+      <flex-grid align-items="center" width="100%">
+        <flex-grid-item>
+          <a href="/domains" class="logo">
+            <div v-html="logo"></div>
+            <span class="version">{{ version }}</span>
+          </a>
+        </flex-grid-item>
+
+        <feature-flag name="environmentSelect">
+          <flex-grid-item>
+            <v-select
+              class="environment-select"
+              :on-change="onEnvironmentSelectChange"
+              :options="environment.list"
+              :searchable="false"
+              :value="environment.value"
+            />
+          </flex-grid-item>
+        </feature-flag>
+
+        <flex-grid-item v-if="$route.params.domain" margin="15px">
+          <a
+            class="workflows"
+            :class="{
+              'router-link-active':
+                $route.path === `/domains/${$route.params.domain}/workflows`,
+            }"
+            :href="`/domains/${$route.params.domain}/workflows`"
+          >
+            {{ $route.params.domain }}
+          </a>
+        </flex-grid-item>
+
+        <flex-grid-item v-if="$route.params.workflowId">
+          <span>{{ $route.params.workflowId }}</span>
+        </flex-grid-item>
+
+        <flex-grid-item v-if="$route.params.taskList">
+          <span>{{ $route.params.taskList }}</span>
+        </flex-grid-item>
+
+        <flex-grid-item grow="1">
+          <button-icon
+            color="primary"
+            icon="icon_settings"
+            label="SETTINGS"
+            size="30px"
+            style="float: right"
+            @click="onSettingsClick"
+          />
+        </flex-grid-item>
+      </flex-grid>
     </header>
-    <router-view></router-view>
+    <router-view
+      :date-format="settings.dateFormat"
+      :time-format="settings.timeFormat"
+      :timezone="settings.timezone"
+      :workflow-history-event-highlight-list="
+        settings.workflowHistoryEventHighlightList
+      "
+      :workflow-history-event-highlight-list-enabled="
+        settings.workflowHistoryEventHighlightListEnabled
+      "
+      @onWorkflowHistoryEventParamToggle="onWorkflowHistoryEventParamToggle"
+      @onNotification="onNotification"
+    ></router-view>
     <modals-container />
     <v-dialog />
+    <news-modal :news-items="newsItems" @before-close="onNewsDismiss" />
+    <settings-modal
+      :date-format="settings.dateFormat"
+      :date-format-options="settings.dateFormatOptions"
+      :time-format="settings.timeFormat"
+      :time-format-options="settings.timeFormatOptions"
+      :timezone="settings.timezone"
+      :timezone-options="settings.timezoneOptions"
+      :workflow-history-event-highlight-list="
+        settings.workflowHistoryEventHighlightList
+      "
+      :workflow-history-event-highlight-list-enabled="
+        settings.workflowHistoryEventHighlightListEnabled
+      "
+      @change="onSettingsChange"
+    />
   </main>
 </template>
 
+<style src="vue-virtual-scroller/dist/vue-virtual-scroller.css"></style>
+<style src="vue2-datepicker/index.css"></style>
 <style lang="stylus">
 @import "https://d1a3f4spazzrp4.cloudfront.net/uber-fonts/4.0.0/superfine.css"
 @import "https://d1a3f4spazzrp4.cloudfront.net/uber-icons/3.14.0/uber-icons.css"
@@ -78,8 +342,11 @@ header.top-bar
     &.config
       margin-left inline-spacing-medium
       icon('\ea5f')
-    &.logo
-      margin-right layout-spacing-medium
+    &.logo {
+      margin-right: layout-spacing-medium;
+      position: relative;
+    }
+
   svg
     display inline-block
     height top-nav-height - 20px
@@ -87,32 +354,7 @@ header.top-bar
   spacing = 1.3em
   nav-label-color = uber-white-40
   nav-label-font-size = 11px
-  & > div
-    margin-right spacing
-  div.domain
-    flex 0 0 auto
-    &::before
-      content 'DOMAIN'
-      font-size nav-label-font-size
-      font-weight normal
-      vertical-align middle
-      color nav-label-color
-      margin-right spacing
-    a:hover
-      color lighten(uber-blue, 15%)
-    .router-link-active
-      pointer-events none
-    span
-      cursor pointer
-      transition smooth-transition
-      color uber-blue
-    & + div
-      icon('\ea5b')
-      one-liner-ellipsis()
-      &::before
-        display inline-block
-        transform scale(1.5)
-        margin-right spacing
+
   .detail-view span::before
     font-size nav-label-font-size
     color nav-label-color
@@ -121,6 +363,28 @@ header.top-bar
       content 'WORKFLOW ID'
   div.task-list span::before
       content 'TASK LIST'
+  .version {
+    color: #c6c6c6;
+    font-size: 10px;
+    position: absolute;
+    right: 4px;
+    bottom: 0;
+  }
+
+  .environment-select {
+    .dropdown-toggle {
+      border-color: transparent;
+    }
+
+    .open-indicator:before {
+      border-color: uber-blue;
+    }
+
+    .selected-tag {
+      color: white;
+      font-weight: bold;
+    }
+  }
 
 body, main
   height 100%
@@ -139,7 +403,7 @@ main
       margin-bottom layout-spacing-small
     > header
       display flex
-      align-items center
+      align-items: start;
       flex 0 0 auto
       > *
         margin inline-spacing-small
@@ -154,7 +418,7 @@ area-loader, section.loading
     height size
     border-radius size
     left "calc(50% - %s)" % (size/2)
-    top "calc(25% - %s)" % (size/2)
+    top 300px;
     border 3px solid uber-blue
     border-bottom-color transparent
     animation spin 800ms linear infinite

@@ -8,7 +8,7 @@ const
   losslessJSON = require('lossless-json'),
   moment = require('moment'),
   dns = require('dns'),
-  isIPv4 = require('is-ipv4-node')
+  isIPv4 = require('is-ipv4-node');
 
 function uiTransform(item) {
   if (!item || typeof item !== 'object') return item
@@ -58,7 +58,7 @@ function cliTransform(item) {
       subvalue.forEach(cliTransform)
     } else if (subvalue && typeof subvalue === 'object') {
       cliTransform(subvalue)
-    } else if (subvalue == null) {
+    } else if (subvalue === null || subvalue === undefined) {
       delete item[subkey]
     }
   })
@@ -87,50 +87,60 @@ async function makeChannel(client) {
     } else {
       return peer
     }
-  }))
+  }));
 
-  return client.makeSubChannel({
+  const cadenceChannel = client.makeSubChannel({
     serviceName: 'cadence-frontend',
-    peers: ipPeers
-  })
+    peers: ipPeers,
+    requestDefaults: {
+      hasNoParent: true,
+      headers: { 'as': 'raw', 'cn': 'cadence-web' },
+    }
+  });
+
+  const tchannelAsThrift = TChannelAsThrift({
+    channel: cadenceChannel,
+    entryPoint: path.join(__dirname, '../idl/cadence.thrift')
+  });
+
+  return tchannelAsThrift;
 }
 
 module.exports = async function(ctx, next) {
-  const
-    client = TChannel(),
-    cadenceChannel = await makeChannel(client),
-    tchannelAsThrift = TChannelAsThrift({
-      channel: cadenceChannel,
-      entryPoint: path.join(__dirname, '../idl/cadence.thrift')
-    })
+  const client = TChannel();
+  const channel = await makeChannel(client, ctx);
+  const { authTokenHeaders = {} } = ctx;
 
   function req(method, reqName, bodyTransform, resTransform) {
     return (body) => new Promise(function(resolve, reject) {
       try {
-        tchannelAsThrift.request({
+        channel.request({
           serviceName: process.env.CADENCE_TCHANNEL_SERVICE || 'cadence-frontend',
-          headers: {
-            cn: 'cadence-web'
-          },
-          hasNoParent: true,
           timeout: 1000 * 60 * 5,
           retryFlags: { onConnectionError: true },
           retryLimit: Number(process.env.CADENCE_TCHANNEL_RETRY_LIMIT || 3)
-        }).send(`WorkflowService::${method}`, {}, {
-          [`${reqName ? reqName + 'R' : 'r'}equest`]: typeof bodyTransform === 'function' ? bodyTransform(body) : body
-        }, function (err, res) {
-          try {
-            if (err) {
-              reject(err)
-            } else if (res.ok) {
-              resolve((resTransform || uiTransform)(res.body))
-            } else {
-              ctx.throw(res.typeName === 'entityNotExistError' ? 404 : 400, null, res.body || res)
+        }).send(
+          `WorkflowService::${method}`,
+          {
+            ...authTokenHeaders,
+          },
+          {
+            [`${reqName ? reqName + 'R' : 'r'}equest`]: typeof bodyTransform === 'function' ? bodyTransform(body) : body
+          },
+          function (err, res) {
+            try {
+              if (err) {
+                reject(err)
+              } else if (res.ok) {
+                resolve((resTransform || uiTransform)(res.body))
+              } else {
+                ctx.throw(res.typeName === 'entityNotExistError' ? 404 : 400, null, res.body || res)
+              }
+            } catch (e) {
+              reject(e)
             }
-          } catch (e) {
-            reject(e)
           }
-        })
+        )
       } catch(e) {
         reject(e)
       }
@@ -158,19 +168,21 @@ module.exports = async function(ctx, next) {
   withDomainAndWorkflowExecution = b => Object.assign(withDomainPaging(b), withWorkflowExecution(b))
 
   ctx.cadence = {
-    openWorkflows: req('ListOpenWorkflowExecutions', 'list', withDomainPaging),
+    archivedWorkflows: req('ListArchivedWorkflowExecutions', 'list', withDomainPaging),
     closedWorkflows: req('ListClosedWorkflowExecutions', 'list', withDomainPaging),
-    listWorkflows: req('ListWorkflowExecutions', 'list', withDomainPaging),
-    getHistory: req('GetWorkflowExecutionHistory', 'get', withDomainAndWorkflowExecution),
-    exportHistory: req('GetWorkflowExecutionHistory', 'get', withDomainAndWorkflowExecution, cliTransform),
-    describeWorkflow: req('DescribeWorkflowExecution', 'describe', withWorkflowExecution),
-    queryWorkflow: req('QueryWorkflow', 'query', withWorkflowExecution),
-    terminateWorkflow: req('TerminateWorkflowExecution', 'terminate', withVerboseWorkflowExecution),
-    signalWorkflow: req('SignalWorkflowExecution', 'signal', withVerboseWorkflowExecution),
-    listDomains: req('ListDomains', 'list'),
     describeDomain: req('DescribeDomain', 'describe'),
     describeTaskList: req('DescribeTaskList'),
-  }
+    describeWorkflow: req('DescribeWorkflowExecution', 'describe', withWorkflowExecution),
+    exportHistory: req('GetWorkflowExecutionHistory', 'get', withDomainAndWorkflowExecution, cliTransform),
+    getHistory: req('GetWorkflowExecutionHistory', 'get', withDomainAndWorkflowExecution),
+    listDomains: req('ListDomains', 'list'),
+    listTaskListPartitions: req('ListTaskListPartitions'),
+    listWorkflows: req('ListWorkflowExecutions', 'list', withDomainPaging),
+    openWorkflows: req('ListOpenWorkflowExecutions', 'list', withDomainPaging),
+    queryWorkflow: req('QueryWorkflow', 'query', withWorkflowExecution),
+    signalWorkflow: req('SignalWorkflowExecution', 'signal', withVerboseWorkflowExecution),
+    terminateWorkflow: req('TerminateWorkflowExecution', 'terminate', withVerboseWorkflowExecution),
+  };
 
   try {
     await next()

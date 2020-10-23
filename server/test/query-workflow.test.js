@@ -12,7 +12,7 @@ describe('Query Workflow', function() {
     }
 
     return request(global.app)
-      .get('/api/domain/canary/workflows/ci%2Fdemo/run1/queries')
+      .get('/api/domains/canary/workflows/ci%2Fdemo/run1/query')
       .expect(200)
       .expect('Content-Type', /json/)
       .expect(['foo', 'bar'])
@@ -29,17 +29,20 @@ describe('Query Workflow', function() {
         query: {
           queryType: 'state',
           queryArgs: null
-        }
+        },
+        queryConsistencyLevel: null,
+        queryRejectCondition: null,
       })
 
       return { queryResult: Buffer.from('foobar') }
     }
 
     return request(global.app)
-      .post('/api/domain/canary/workflows/ci%2Fdemo/run1/queries/state')
+      .post('/api/domains/canary/workflows/ci%2Fdemo/run1/query/state')
       .expect(200)
       .expect('Content-Type', /json/)
       .expect({
+        queryRejected: null,
         queryResult: 'foobar',
         queryResult_base64: Buffer.from('foobar').toString('base64')
       })
@@ -55,7 +58,7 @@ describe('Query Workflow', function() {
     })
 
     return request(global.app)
-      .post('/api/domain/canary/workflows/ci%2Fdemo/run1/queries/state')
+      .post('/api/domains/canary/workflows/ci%2Fdemo/run1/query/state')
       .expect(400)
       .expect('Content-Type', /json/)
       .expect({

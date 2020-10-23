@@ -2,5 +2,7 @@ node_modules/
 npm-debug.log
 dist/
 .vscode
+.DS_Store
 .idea
+server/idl
 package-lock.json

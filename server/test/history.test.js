@@ -18,7 +18,6 @@ wfHistoryThrift = [{
       emails: ['jane@example.com', 'bob@example.com'],
       includeFooter: true
     })),
-    childPolicy: 'TERMINATE',
     expirationTimestamp: null,
     continuedExecutionRunId: null,
     continuedFailureDetails: null,
@@ -101,6 +100,7 @@ describe('Workflow History', function() {
         },
         maximumPageSize: 100,
         nextPageToken: null,
+        skipArchival: null,
         waitForNewEvent: null
       })
 
@@ -111,7 +111,7 @@ describe('Workflow History', function() {
     }
 
     return request()
-      .get('/api/domain/canary/workflows/ci%2Fdemo/run1/history')
+      .get('/api/domains/canary/workflows/ci%2Fdemo/run1/history')
       .expect(200)
       .expect('Content-Type', /json/)
   })
@@ -122,18 +122,19 @@ describe('Workflow History', function() {
 
       return {
         history: { events: [] },
-        nextPageToken: new Buffer('page3')
+        nextPageToken: new Buffer('page3'),
       }
     }
 
     return request()
-      .get('/api/domain/canary/workflows/ci%2Fdemo/run1/history?nextPageToken=cGFnZTI%3D')
+      .get('/api/domains/canary/workflows/ci%2Fdemo/run1/history?nextPageToken=cGFnZTI%3D')
       .expect(200)
       .expect('Content-Type', /json/)
       .expect({
         archived: null,
         history: { events: [] },
-        nextPageToken: 'cGFnZTM='
+        nextPageToken: 'cGFnZTM=',
+        rawHistory: null,
       })
   })
 
@@ -144,11 +145,11 @@ describe('Workflow History', function() {
     }
 
     return request()
-      .get('/api/domain/canary/workflows/ci%2Fdemo/run1/history?waitForNewEvent=true')
+      .get('/api/domains/canary/workflows/ci%2Fdemo/run1/history?waitForNewEvent=true')
       .expect(200)
       .expect('Content-Type', /json/)
       .then(() =>  request()
-        .get('/api/domain/canary/workflows/ci%2Fdemo/run1/history?waitForNewEvent')
+        .get('/api/domains/canary/workflows/ci%2Fdemo/run1/history?waitForNewEvent')
         .expect(200)
       )
   })
@@ -156,21 +157,22 @@ describe('Workflow History', function() {
   it('should transform Long numbers to JavaScript numbers, Long dates to ISO date strings, and line-delimited JSON buffers to JSON', function() {
     this.test.GetWorkflowExecutionHistory = ({ getRequest }) => ({
       history: { events: wfHistoryThrift },
-      nextPageToken: new Buffer('page2')
+      nextPageToken: new Buffer('page2'),
     })
 
     return request()
-      .get('/api/domain/canary/workflows/ci%2Fdemo/run1/history')
+      .get('/api/domains/canary/workflows/ci%2Fdemo/run1/history')
       .expect(200)
       .expect({
         archived: null,
         history: { events: wfHistoryJson },
-        nextPageToken: 'cGFnZTI='
+        nextPageToken: 'cGFnZTI=',
+        rawHistory: null,
       })
   })
 
   describe('Export', function() {
-    const wfHistoryCliJson = `[{"eventId":1,"timestamp":1510701850351393089,"eventType":"WorkflowExecutionStarted","workflowExecutionStartedEventAttributes":{"workflowType":{"name":"github.com/uber/cadence/demo"},"taskList":{"name":"ci-task-queue"},"input":"eyJlbWFpbHMiOlsiamFuZUBleGFtcGxlLmNvbSIsImJvYkBleGFtcGxlLmNvbSJdLCJpbmNsdWRlRm9vdGVyIjp0cnVlfQ==","executionStartToCloseTimeoutSeconds":1080,"taskStartToCloseTimeoutSeconds":30,"childPolicy":"TERMINATE"}},{"eventId":2,"timestamp":1510701850351393089,"eventType":"DecisionTaskScheduled","decisionTaskScheduledEventAttributes":{"taskList":{"name":"canary-task-queue"},"startToCloseTimeoutSeconds":180,"attempt":1}},{"eventId":3,"timestamp":1510701867531262273,"eventType":"DecisionTaskStarted","decisionTaskStartedEventAttributes":{"scheduledEventId":2,"identity":"box1@ci-task-queue","requestId":"fafa095d-b4ca-423a-a812-223e62b5ccf8"}}]`
+    const wfHistoryCliJson = `[{"eventId":1,"timestamp":1510701850351393089,"eventType":"WorkflowExecutionStarted","workflowExecutionStartedEventAttributes":{"workflowType":{"name":"github.com/uber/cadence/demo"},"taskList":{"name":"ci-task-queue"},"input":"eyJlbWFpbHMiOlsiamFuZUBleGFtcGxlLmNvbSIsImJvYkBleGFtcGxlLmNvbSJdLCJpbmNsdWRlRm9vdGVyIjp0cnVlfQ==","executionStartToCloseTimeoutSeconds":1080,"taskStartToCloseTimeoutSeconds":30}},{"eventId":2,"timestamp":1510701850351393089,"eventType":"DecisionTaskScheduled","decisionTaskScheduledEventAttributes":{"taskList":{"name":"canary-task-queue"},"startToCloseTimeoutSeconds":180,"attempt":1}},{"eventId":3,"timestamp":1510701867531262273,"eventType":"DecisionTaskStarted","decisionTaskStartedEventAttributes":{"scheduledEventId":2,"identity":"box1@ci-task-queue","requestId":"fafa095d-b4ca-423a-a812-223e62b5ccf8"}}]`
 
     it('should be able to export history in a format compatible with the CLI', function() {
       this.test.GetWorkflowExecutionHistory = ({ getRequest }) => ({
@@ -178,7 +180,7 @@ describe('Workflow History', function() {
       })
 
       return request()
-        .get('/api/domain/canary/workflows/ci%2Fdemo/run1/export')
+        .get('/api/domains/canary/workflows/ci%2Fdemo/run1/export')
         .expect(200)
         .expect(wfHistoryCliJson)
     })
@@ -201,7 +203,7 @@ describe('Workflow History', function() {
       }
 
       return request()
-        .get('/api/domain/canary/workflows/ci%2Fdemo/run1/export')
+        .get('/api/domains/canary/workflows/ci%2Fdemo/run1/export')
         .expect(200)
         .expect(wfHistoryCliJson)
     })

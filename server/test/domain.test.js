@@ -12,12 +12,12 @@ describe('Describe Domain', function() {
       isGlobalDomain: false,
       failoverVersion: 0,
       configuration: {
-        archivalBucketName: null,
-        archivalBucketOwner: null,
-        archivalRetentionPeriodInDays: null,
-        archivalStatus: null,
         badBinaries: null,
         emitMetric: false,
+        historyArchivalStatus: null,
+        historyArchivalURI: null,
+        visibilityArchivalStatus: null,
+        visibilityArchivalURI: null,
         workflowExecutionRetentionPeriodInDays: 14
       },
       replicationConfiguration: {
@@ -32,7 +32,7 @@ describe('Describe Domain', function() {
     }
 
     return request()
-      .get('/api/domain')
+      .get('/api/domains')
       .expect(200)
       .expect('Content-Type', /json/)
       .expect({ domains, nextPageToken: null })
@@ -51,13 +51,13 @@ describe('Describe Domain', function() {
       failoverVersion: 0,
       isGlobalDomain: true,
       configuration: {
-        archivalBucketName: null,
-        archivalBucketOwner: null,
-        archivalRetentionPeriodInDays: null,
-        archivalStatus: null,
         badBinaries: null,
         workflowExecutionRetentionPeriodInDays: 14,
-        emitMetric: true
+        emitMetric: true,
+        historyArchivalStatus: null,
+        historyArchivalURI: null,
+        visibilityArchivalStatus: null,
+        visibilityArchivalURI: null
       },
       replicationConfiguration: {
         activeClusterName: 'ci-cluster',
@@ -71,7 +71,7 @@ describe('Describe Domain', function() {
     }
 
     return request()
-      .get('/api/domain/test-domain')
+      .get('/api/domains/test-domain')
       .expect(200)
       .expect('Content-Type', /json/)
       .expect(domainDesc)
@@ -85,7 +85,7 @@ describe('Describe Domain', function() {
     })
 
     return request()
-      .get('/api/domain/nonexistant')
+      .get('/api/domains/nonexistant')
       .expect(404)
       .expect('Content-Type', /json/)
       .expect({
