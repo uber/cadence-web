@@ -64,7 +64,6 @@
         :size="splitSizeSet[0]"
       >
         <DagGraphContainer
-          :workflow="workflow"
           :events="events"
           :isWorkflowRunning="isWorkflowRunning"
           class="tree-view"
@@ -342,8 +341,6 @@ export default {
       splitSizeSet: [1, 99],
       splitSizeMinSet: [0, 0],
       unwatch: [],
-      workflow: null,
-      workflowLoading: false,
       splitDirection: "vertical"
     };
   },
@@ -379,7 +376,6 @@ export default {
     }, 5);
   },
   mounted() {
-    this.setWorkFlow(); //TODO: remove this, this is purely for testing
     this.setSplitSize();
     this.setSplitDirection();
     this.unwatch.push(
@@ -470,26 +466,6 @@ export default {
     }
   },
   methods: {
-    setWorkFlow() {
-      this.loadWorkflow().then(workflow => {
-        this.workflow = workflow;
-        this.workflowName =
-          workflow[0].workflowExecutionStartedEventAttributes.workflowType.name;
-        this.delayedShow();
-      });
-    },
-    delayedShow() {
-      let delay = 500;
-      setTimeout(() => {
-        this.workflowLoading = true;
-      }, delay);
-    },
-    async loadWorkflow() {
-      let workflow = require("./demo-data/" +
-        "1f229f6c-aa12-44e7-8846-a62878691977" +
-        ".js");
-      return workflow;
-    },
     setSplitSize() {
       if (this.graphView === "timeLine") this.splitSizeSet = [20, 80];
       else if (this.graphView === "dagGraph") this.splitSizeSet = [40, 60];
