@@ -1,14 +1,13 @@
 <template>
   <div id="cytoscape">
     <!--     <Legend /> -->
-    <div ref="cyt" id="cyt"></div>
+    <div ref="cy" id="cy"></div>
   </div>
 </template>
 
 <script>
 import dagre from "cytoscape-dagre";
-/* import { getEventInfo } from "../helpers/event-function-map"; */
-import { getEventConnections } from "../helpers/get-event-info";
+import { getEventConnections } from "../helpers/get-event-connections";
 import graphStyles from "../helpers/graph-styles";
 import store from "../../../store/index";
 import cytoscape from "cytoscape";
@@ -22,7 +21,7 @@ export default {
   components: {
     /*     Legend */
   },
-  props: ["workflow", "events"],
+  props: ["events"],
   data() {
     return {
       nodes: [],
@@ -36,11 +35,6 @@ export default {
     };
   },
   watch: {
-    lastNodeInView() {
-      //Function for enabling rendering on panning - TODO
-      if (this.lastNodeRendered - 100 < this.lastNodeInView) {
-      }
-    },
     selectedEvent(id) {
       if (id) this.zoomToNode(id);
     }
@@ -79,7 +73,6 @@ export default {
 
       //Mark current node as selected - display its informatiom
       node.select();
-      //store.commit("displayNodeInformation", node.data().clickInfo);
 
       //Pan the graph to view node
       cy.animate({
@@ -157,24 +150,8 @@ export default {
         });
       }
     },
-    //Function to test adding node
-    addNode() {
-      let dagreLayout = {
-        name: "dagre"
-      };
-      window.cy.add({
-        group: "nodes",
-        data: { id: 4670, name: "test" }
-      });
-      window.cy.add({
-        group: "edges",
-        data: { id: "y", source: 4669, target: 4670 }
-      });
-      window.cy.layout(dagreLayout).run();
-    },
     async viewInit() {
-      let container = this.$refs.cyt;
-      //let self = this;
+      let container = this.$refs.cy;
       let cy = (window.cy = cytoscape({
         autoungrabify: true,
         styleEnabled: true,
@@ -204,10 +181,11 @@ export default {
       cy.on("mouseout", "node", function(e) {
         container.style.cursor = "default";
       });
+
       let self = this;
+
       //Register click event
       cy.on("tap", function(evt) {
-        // target holds a reference to the originator of the event (core or element)
         let evtTarget = evt.target;
 
         //Tap on background
@@ -253,6 +231,8 @@ export default {
       });
 
       let self = this;
+
+      //Function to calculate which nodes are in view
       cy.on("pan", function(evt) {
         let ext = cy.extent();
         let nodesInView = cy.nodes().filter(n => {
@@ -266,7 +246,7 @@ export default {
           self.lastNodeInView = nodesInView[amountNodesInView - 1].id();
         }
       });
-      let container = document.getElementById("cyt");
+      let container = this.$refs.cy;
       cy.mount(container);
     }
   },
@@ -288,15 +268,11 @@ export default {
 };
 </script>
 <style scoped>
-button {
-  width: 100px;
-  height: 20px;
-}
 #cytoscape {
   width: 100%;
   height: 100%;
 }
-#cyt {
+#cy {
   width: 100%;
   height: 100%;
 }
