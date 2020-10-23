@@ -233,7 +233,7 @@ let eventTypeMap = {
     return eventInfo
   },
   'StartChildWorkflowExecutionInitiated': function (event) {
-    eventInfo = {
+    let eventInfo = {
       parent: event.eventFullDetails.decisionTaskCompletedEventId
     }
     return eventInfo
