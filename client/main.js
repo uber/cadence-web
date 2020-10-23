@@ -137,7 +137,7 @@ const routeOpts = {
       component: WorkflowTabs,
       props: ({ params }) => ({
         domain: params.domain,
-        runId: getEscapedForwardSlash(params.runId),
+        runId: params.runId,
         workflowId: getEscapedForwardSlash(params.workflowId),
       }),
       children: [
@@ -149,7 +149,7 @@ const routeOpts = {
           },
           props: {
             summary: ({ params }) => ({
-              runId: getEscapedForwardSlash(params.runId),
+              runId: params.runId,
               workflowId: getEscapedForwardSlash(params.workflowId),
             }),
           },
@@ -165,7 +165,7 @@ const routeOpts = {
               domain: params.domain,
               eventId: Number(query.eventId) || undefined,
               format: query.format || 'grid',
-              runId: getEscapedForwardSlash(params.runId),
+              runId: params.runId,
               showGraph: Boolean(query.showGraph) === true,
               workflowId: getEscapedForwardSlash(params.workflowId),
             }),
