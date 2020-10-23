@@ -135,11 +135,7 @@ export default {
   computed: {
     baseAPIURL() {
       const { domain, workflowId, runId } = this;
-
-      console.log('workflowId = ', workflowId);
-      console.log('runId = ', runId);
-
-      return `/api/domains/${domain}/workflows/${workflowId.replace(/\//g, '%2F')}/${runId.replace(/\//g, '%2F')}`;
+      return `/api/domains/${domain}/workflows/${workflowId}/${runId}`;
     },
     historyEvents() {
       const {

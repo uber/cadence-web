@@ -34,7 +34,7 @@ import WorkflowList from './routes/domain/workflow-list';
 import WorkflowSummary from './routes/workflow/summary';
 import WorkflowTabs from './routes/workflow';
 
-import { http, injectMomentDurationFormat, jsonTryParse } from '~helpers';
+import { getEscapedForwardSlash, http, injectMomentDurationFormat, jsonTryParse } from '~helpers';
 
 const routeOpts = {
   mode: 'history',
@@ -137,8 +137,8 @@ const routeOpts = {
       component: WorkflowTabs,
       props: ({ params }) => ({
         domain: params.domain,
-        runId: params.runId,
-        workflowId: params.workflowId,
+        runId: getEscapedForwardSlash(params.runId),
+        workflowId: getEscapedForwardSlash(params.workflowId),
       }),
       children: [
         {
@@ -149,8 +149,8 @@ const routeOpts = {
           },
           props: {
             summary: ({ params }) => ({
-              runId: params.runId,
-              workflowId: params.workflowId,
+              runId: getEscapedForwardSlash(params.runId),
+              workflowId: getEscapedForwardSlash(params.workflowId),
             }),
           },
         },
@@ -165,9 +165,9 @@ const routeOpts = {
               domain: params.domain,
               eventId: Number(query.eventId) || undefined,
               format: query.format || 'grid',
-              runId: params.runId,
+              runId: getEscapedForwardSlash(params.runId),
               showGraph: Boolean(query.showGraph) === true,
-              workflowId: params.workflowId,
+              workflowId: getEscapedForwardSlash(params.workflowId),
             }),
           },
         },
