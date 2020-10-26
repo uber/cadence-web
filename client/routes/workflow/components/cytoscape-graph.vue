@@ -36,7 +36,12 @@ export default {
   },
   watch: {
     selectedEvent(id) {
-      if (id) this.zoomToNode(id);
+      if (id) {
+        let stringId = id.toString();
+        this.zoomToNode(id);
+        let node = cy.nodes("[id = '" + stringId + "']");
+        this.onNodeClick(node.data());
+      }
     }
   },
   methods: {
@@ -149,6 +154,21 @@ export default {
         });
       }
     },
+    onNodeClick(nodeData) {
+      if (nodeData.childRoute) {
+        store.commit("childRoute", {
+          route: nodeData.childRoute,
+          btnText: "To child"
+        });
+      } else if (nodeData.newExecutionRunId) {
+        store.commit("childRoute", {
+          route: nodeData.newExecutionRunId,
+          btnText: "Next execution"
+        });
+      } else {
+        store.commit("toggleChildBtn");
+      }
+    },
     async viewInit() {
       let container = this.$refs.cy;
       let cy = (window.cy = cytoscape({
@@ -193,30 +213,15 @@ export default {
             self.$router.replace({ query: omit(self.$route.query, "eventId") });
             store.commit("toggleChildBtn");
           }
-          //Tap on a node
+          //Tap on a node that is not already selected
         } else if (evtTarget.isNode() && !evtTarget.selected()) {
           let nodeData = evtTarget.data();
-
           self.$router.replace({
             query: { ...self.$route.query, eventId: nodeData.id }
           });
-
-          if (nodeData.childRoute) {
-            store.commit("childRoute", {
-              route: nodeData.childRoute,
-              btnText: "To child"
-            });
-          } else if (nodeData.newExecutionRunId) {
-            store.commit("childRoute", {
-              route: nodeData.newExecutionRunId,
-              btnText: "Next execution"
-            });
-          } else {
-            store.commit("toggleChildBtn");
-          }
+          self.onNodeClick(nodeData);
         }
       });
-
       return cy;
     },
     mountGraph(cy) {
@@ -261,8 +266,7 @@ export default {
       this.mountGraph(cy);
     });
 
-    if (this.$route.query.eventId !== undefined)
-      this.zoomToNode(this.$route.query.eventId);
+    if (this.$route.query.eventId) this.zoomToNode(this.$route.query.eventId);
   }
 };
 </script>
