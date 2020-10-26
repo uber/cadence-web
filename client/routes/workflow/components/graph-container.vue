@@ -8,7 +8,7 @@
           v-if="parentRoute"
           v-on:click="updateRoute(parentRoute)"
         >
-          To parent
+          {{ parentBtnText }}
         </div>
         <div class="aside-center">
           {{ workflowName }}
@@ -69,10 +69,19 @@ export default {
       }, delay);
     },
     updateRoute(route) {
-      this.$router.replace({
-        params: { workflowId: route.workflowId, runId: route.runId },
-        query: omit(this.$route.query, "eventId")
-      });
+      if (route.workflowId) {
+        this.$router.replace({
+          params: { workflowId: route.workflowId, runId: route.runId },
+          query: omit(this.$route.query, "eventId")
+        });
+
+        //We only have run Id as route params
+      } else {
+        this.$router.replace({
+          params: { runId: route },
+          query: omit(this.$route.query, "eventId")
+        });
+      }
     },
     reloadWorkflow() {
       this.eventsSnapShot = this.events;
@@ -93,6 +102,9 @@ export default {
   computed: {
     parentRoute() {
       return this.$store.getters.parentRoute;
+    },
+    parentBtnText() {
+      return this.$store.getters.parentBtnText;
     },
     hasChildBtn() {
       return this.$store.getters.hasChildBtn;
