@@ -136,10 +136,7 @@ export default {
   computed: {
     baseAPIURL() {
       const { domain, workflowId, runId } = this;
-
-      return `/api/domains/${domain}/workflows/${encodeURIComponent(
-        workflowId
-      )}/${encodeURIComponent(runId)}`;
+      return `/api/domains/${domain}/workflows/${workflowId}/${runId}`;
     },
     historyEvents() {
       const {
