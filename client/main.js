@@ -170,6 +170,7 @@ const routeOpts = {
               format: query.format || 'grid',
               runId: params.runId,
               showGraph: Boolean(query.showGraph) === true,
+              graphView: query.graphView,
               workflowId: getEscapedForwardSlash(params.workflowId),
             }),
           },
