@@ -205,7 +205,7 @@ export default {
           if (nodeData.childRoute) {
             store.commit("childRoute", {
               route: nodeData.childRoute,
-              btnText: "Show child workflow"
+              btnText: "To child"
             });
           } /* else if (clickInfo.newExecutionRunId) {
             store.commit("childRoute", {
