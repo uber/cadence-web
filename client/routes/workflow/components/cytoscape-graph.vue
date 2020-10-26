@@ -169,21 +169,6 @@ export default {
         });
       }
     },
-    onNodeClick(nodeData) {
-      if (nodeData.childRoute) {
-        store.commit("childRoute", {
-          route: nodeData.childRoute,
-          btnText: "To child"
-        });
-      } else if (nodeData.newExecutionRunId) {
-        store.commit("childRoute", {
-          route: nodeData.newExecutionRunId,
-          btnText: "Next execution"
-        });
-      } else {
-        store.commit("toggleChildBtn");
-      }
-    },
     async viewInit() {
       let container = this.$refs.cy;
       let cy = (window.cy = cytoscape({
@@ -234,7 +219,6 @@ export default {
           self.$router.replace({
             query: { ...self.$route.query, eventId: nodeData.id }
           });
-          self.onNodeClick(nodeData);
         }
       });
       return cy;
