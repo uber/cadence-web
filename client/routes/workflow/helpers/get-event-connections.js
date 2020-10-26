@@ -12,6 +12,7 @@ let eventTypeMap = {
       eventInfo = {
         inferredChild: event.eventId + 1,
         parentWorkflowExecution: eventDetails.parentWorkflowExecution,
+        previousExecutionRunId: eventDetails.continuedExecutionRunId
       }
 
     return eventInfo
@@ -295,6 +296,8 @@ let eventTypeMap = {
     let eventDetails = event.eventFullDetails,
       eventInfo = {
         parent: eventDetails.decisionTaskCompletedEventId,
+        newExecutionRunId: eventDetails.newExecutionRunId,
+        status: 'completed',
       }
     return eventInfo
   },

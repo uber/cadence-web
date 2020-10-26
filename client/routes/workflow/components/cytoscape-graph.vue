@@ -83,18 +83,17 @@ export default {
     async buildTree() {
       this.events.forEach(event => {
         let {
-          clickInfo,
           parentWorkflowExecution,
+          previousExecutionRunId,
+          newExecutionRunId,
           status,
           childRoute
         } = getEventConnections(event, this.events);
 
-        if (!clickInfo) {
-          clickInfo = { todo: "Todo" };
-        }
-
         //We are viewing a child workflow, show parent btn
-        if (parentWorkflowExecution) {
+        if (previousExecutionRunId) {
+          store.commit("previousExecutionRoute", previousExecutionRunId);
+        } else if (parentWorkflowExecution) {
           store.commit("parentRoute", parentWorkflowExecution);
         }
 
@@ -103,7 +102,7 @@ export default {
             id: event.eventId,
             name: event.eventType,
             childRoute: childRoute,
-            clickInfo: clickInfo,
+            newExecutionRunId: newExecutionRunId,
             status: status
           }
         });
@@ -207,12 +206,12 @@ export default {
               route: nodeData.childRoute,
               btnText: "To child"
             });
-          } /* else if (clickInfo.newExecutionRunId) {
+          } else if (nodeData.newExecutionRunId) {
             store.commit("childRoute", {
-              routeId: clickInfo.newExecutionRunId,
-              btnText: "Show next execution"
+              route: nodeData.newExecutionRunId,
+              btnText: "Next execution"
             });
-          } */ else {
+          } else {
             store.commit("toggleChildBtn");
           }
         }

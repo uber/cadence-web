@@ -7,7 +7,8 @@ const getDefaultState = () => {
     newExecutionId: null,
     parentRoute: null,
     hasChildBtn: false,
-    hasChildBtnText: null,
+    childBtnText: null,
+    parentBtnText: "to parent",
   }
 }
 // initial state
@@ -27,6 +28,10 @@ const store = new Vuex.Store({
       state.newExecutionId = route,
         state.hasChildBtn = !state.hasChildBtn
     },
+    previousExecutionRoute(state, route) {
+      state.parentRoute = route,
+        state.parentBtnText = "previous execution"
+    },
     toggleChildBtn(state) {
       state.hasChildBtn = false
     },
@@ -42,6 +47,7 @@ const store = new Vuex.Store({
     newExecutionId: state => state.newExecutionId,
     hasChildBtn: state => state.hasChildBtn,
     childBtnText: state => state.childBtnText,
+    parentBtnText: state => state.parentBtnText,
     parentRoute: state => state.parentRoute
   }
 })
