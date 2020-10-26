@@ -5,18 +5,20 @@
         <!--   <div class="section-header">-->
         <div
           class="aside-left"
-          v-on:click="updateRoute(parentRoute)"
           v-if="parentRoute"
+          v-on:click="updateRoute(parentRoute)"
         >
           To parent
         </div>
-        <div class="aside-center">{{ workflowName }}</div>
+        <div class="aside-center">
+          {{ workflowName }}
+        </div>
         <div
           class="aside-right"
           v-if="hasChildBtn"
           v-on:click="updateRoute(childRoute)"
         >
-          {{ btnText }}
+          {{ childBtnText }}
         </div>
       </div>
       <div v-if="isGraphLoading" id="loading"></div>
@@ -93,10 +95,10 @@ export default {
       return this.$store.getters.parentRoute;
     },
     hasChildBtn() {
-      return this.$store.getters.childBtn;
+      return this.$store.getters.hasChildBtn;
     },
-    btnText() {
-      return this.$store.getters.btnText;
+    childBtnText() {
+      return this.$store.getters.childBtnText;
     },
     childRoute() {
       return this.$store.getters.childRoute;
@@ -125,6 +127,8 @@ div.thead {
     text-align: center;
     margin: auto;
     padding: 0 inline-spacing-small;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
 
   .aside-left {

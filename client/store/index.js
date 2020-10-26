@@ -5,9 +5,9 @@ const getDefaultState = () => {
   return {
     childRoute: null,
     newExecutionId: null,
-    parentRouteId: null,
-    childBtn: false,
-    btnText: null,
+    parentRoute: null,
+    hasChildBtn: false,
+    hasChildBtnText: null,
   }
 }
 // initial state
@@ -20,18 +20,18 @@ const store = new Vuex.Store({
   mutations: {
     childRoute(state, param) {
       state.childRoute = param.route;
-      state.childBtn = true;
-      state.btnText = param.btnText;
+      state.hasChildBtn = true;
+      state.childBtnText = param.btnText;
     },
     newExecutionRoute(state, route) {
       state.newExecutionId = route,
-        state.childBtn = !state.childBtn
+        state.hasChildBtn = !state.hasChildBtn
     },
     toggleChildBtn(state) {
-      state.childBtn = false
+      state.hasChildBtn = false
     },
     parentRoute(state, route) {
-      state.parentRouteId = route
+      state.parentRoute = route
     },
     resetState(state) {
       Object.assign(state, getDefaultState())
@@ -40,9 +40,9 @@ const store = new Vuex.Store({
   getters: {
     childRoute: state => state.childRoute,
     newExecutionId: state => state.newExecutionId,
-    childBtn: state => state.childBtn,
-    btnText: state => state.btnText,
-    parentRoute: state => state.parentRouteId
+    hasChildBtn: state => state.hasChildBtn,
+    childBtnText: state => state.childBtnText,
+    parentRoute: state => state.parentRoute
   }
 })
 
