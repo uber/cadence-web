@@ -55,8 +55,8 @@ export default {
   width: fit-content;
    max-width: 200px;
   position: absolute;
-  right: 20px;
-  top: 80px;
+  right: inline-spacing-large;
+  bottom: inline-spacing-large;
   cursor: pointer;
   z-index: 10;
 
