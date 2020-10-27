@@ -22,7 +22,6 @@
         </div>
       </div>
       <div v-if="isGraphLoading" id="loading"></div>
-
       <div class="refresh" v-if="!hasAllEvents" v-on:click="reloadWorkflow()">
         Refresh
       </div>
