@@ -311,7 +311,7 @@ let eventTypeMap = {
   },
   'WorkflowExecutionSignaled': function (event, workflow) {
     let eventDetails = event.eventFullDetails,
-      { inferredChild } = findInferredChild(event, workflow),
+      { inferredChild } = findChild(event, workflow),
       eventInfo = {
         inferredChild: inferredChild,
       }
@@ -333,28 +333,6 @@ let eventTypeMap = {
   },
 }
 
-function findInferredChild(event, workflow) {
-  let
-    slicedWorkflow = workflow.slice(event.eventId),
-    eventInfo = {},
-    targetevent;
-
-  for (targetevent of slicedWorkflow) {
-    switch (targetevent.eventType) {
-      case 'WorkflowExecutionSignaled':
-      case 'WorkflowExecutionCancelRequested':
-        break
-      case 'DecisionTaskScheduled':
-        eventInfo = {
-          inferredChild: targetevent.eventId
-        }
-        return eventInfo
-    }
-  }
-  return eventInfo
-}
-
-
 //Looks for a chronological or inferred child
 //It is inferred if a DecisionTaskScheduled, otherwise its chronological
 //External signals are not children and therefore they are skipped
@@ -364,11 +342,29 @@ function findChild(event, workflow) {
     eventInfo = {},
     targetevent;
 
+  //We are at the end of the workflow, no children!
+  if (!slicedWorkflow.length) return eventInfo
+
   if (slicedWorkflow[0].eventType === 'DecisionTaskScheduled') {
     eventInfo = {
       inferredChild: slicedWorkflow[0].eventId
     }
     return eventInfo
+  }
+
+  else if (event.eventType === 'WorkflowExecutionSignaled') {
+    for (targetevent of slicedWorkflow) {
+      switch (targetevent.eventType) {
+        case 'WorkflowExecutionSignaled':
+        case 'WorkflowExecutionCancelRequested':
+          break
+        case 'DecisionTaskScheduled':
+          eventInfo = {
+            inferredChild: targetevent.eventId
+          }
+          return eventInfo
+      }
+    }
   }
 
   else {
