@@ -3,12 +3,11 @@ FROM node:dubnium-stretch AS BUILD_IMAGE
 ### Build step ###
 WORKDIR /usr/build
 
-# Install app dependencies
-COPY package*.json ./
-RUN npm install --production
-
 # Bundle app source
 COPY . .
+
+# Install app dependencies
+RUN npm install --production --unsafe-perm
 
 # Bundle the client code
 RUN npm run build-production

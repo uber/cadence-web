@@ -1,10 +1,11 @@
 {
   "name": "cadence-web",
-  "version": "3.19.2",
+  "version": "3.19.3",
   "description": "Cadence Web UI",
   "main": "server/index.js",
   "licence": "MIT",
   "scripts": {
+    "clean": "rm -rf dist",
     "dev": "NODE_ENV=development node server.js",
     "eslint": "eslint --ext .js,.vue client --fix",
     "install": "npm run install:idl && npm run install:news",
@@ -16,7 +17,7 @@
     "test-server": "CADENCE_WEB_PORT=8090 TEST_RUN=ci node server.js",
     "build": "webpack",
     "build:news": "cd news && npm run build && cp -R blog/.vuepress/dist ../",
-    "build-production": "NODE_ENV=production npm run build && npm run build:news"
+    "build-production": "NODE_ENV=production npm run clean && npm run build && npm run build:news"
   },
   "keywords": [
     "uber",
