@@ -337,7 +337,6 @@ let eventTypeMap = {
 //It is inferred if a DecisionTaskScheduled, otherwise its chronological
 //External signals are not children and therefore they are skipped
 function findChild(event, workflow) {
-  // console.log('eventMap', event.eventId, event.eventType)
   let
     slicedWorkflow = workflow.slice(event.eventId),
     eventInfo = {},
