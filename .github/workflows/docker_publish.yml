@@ -17,6 +17,7 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v2
       - name: Push to Docker Hub
+        if: "!github.event.release.prerelease"
         uses: docker/build-push-action@v1
         with:
           username: ${{ secrets.CADENCE_WEB_DOCKERHUB_USERNAME }}
