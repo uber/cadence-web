@@ -57,8 +57,8 @@ export default {
   },
   watch: {
     events: function() {
-      //We have more events coming in
-      this.hasAllEvents = false;
+      if (this.eventsSnapShot.length < this.events.length)
+        this.hasAllEvents = false;
     }
   },
   methods: {
