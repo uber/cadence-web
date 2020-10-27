@@ -26,6 +26,7 @@
       <div class="refresh" v-if="!hasAllEvents" v-on:click="reloadWorkflow()">
         Refresh
       </div>
+      <Legend />
       <WorkflowGraph
         :key="forceRefresh"
         v-if="!isGraphLoading"
@@ -40,10 +41,12 @@
 import store from "../../../store/index";
 import WorkflowGraph from "./cytoscape-graph.vue";
 import omit from "lodash-es/omit";
+import Legend from "./graph-legend.vue";
 export default {
   props: ["workflow", "events", "isWorkflowRunning"],
   components: {
-    WorkflowGraph
+    WorkflowGraph,
+    Legend
   },
   data() {
     return {

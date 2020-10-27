@@ -1,6 +1,5 @@
 <template>
   <div id="cytoscape">
-    <!--     <Legend /> -->
     <div ref="cy" id="cy"></div>
   </div>
 </template>
@@ -12,15 +11,11 @@ import graphStyles from "../helpers/graph-styles";
 import store from "../../../store/index";
 import cytoscape from "cytoscape";
 import omit from "lodash-es/omit";
-/* import Legend from "@/components/Legend.vue"; */
 
 cytoscape.use(dagre);
 
 export default {
   name: "cytoscape-graph",
-  components: {
-    /*     Legend */
-  },
   props: ["events"],
   data() {
     return {
