@@ -22,10 +22,6 @@ export default {
       nodes: [],
       edges: [],
       styles: graphStyles,
-      lastNodeInView: "",
-      lastNodeRendered: "",
-      slicedWorkflow: null,
-      workflowChunk: 0,
       parentArray: []
     };
   },
@@ -35,23 +31,6 @@ export default {
     }
   },
   methods: {
-    //  TODO: Function which will be used to divide the workflow in chunks to be rendered
-    chunkWorkflow() {
-      let chunkSize = 300;
-      let groups = this.workflow
-        .map((e, i) => {
-          return i % chunkSize === 0
-            ? this.workflow.slice(i, i + chunkSize)
-            : null;
-        })
-        .filter(e => {
-          return e;
-        });
-      this.slicedWorkflow = groups[this.workflowChunk];
-      this.lastNodeRendered = this.slicedWorkflow[
-        this.slicedWorkflow.length - 1
-      ].eventId;
-    },
     zoomToNode(node) {
       let zoom = 1.1,
         bb = node.boundingBox(),
@@ -219,30 +198,13 @@ export default {
       return cy;
     },
     mountGraph(cy) {
-      //Get root node
+      //TODO: this is not finished
       var pos = cy.nodes("[id = " + 1 + "]").position();
       cy.center();
       cy.zoom({
         // Zoom to the specified position of root node
         level: 1,
         position: pos
-      });
-
-      let self = this;
-
-      //Function to calculate which nodes are in view
-      cy.on("pan", function(evt) {
-        let ext = cy.extent();
-        let nodesInView = cy.nodes().filter(n => {
-          let bb = n.position();
-          return (
-            bb.x > ext.x1 && bb.x < ext.x2 && bb.y > ext.y1 && bb.y < ext.y2
-          );
-        });
-        if (nodesInView.length != 0) {
-          let amountNodesInView = nodesInView.length;
-          self.lastNodeInView = nodesInView[amountNodesInView - 1].id();
-        }
       });
       let container = this.$refs.cy;
       cy.mount(container);
@@ -254,7 +216,6 @@ export default {
     }
   },
   mounted() {
-    //this.chunkWorkflow();
     this.buildTree();
     this.viewInit().then(cy => {
       this.mountGraph(cy);
