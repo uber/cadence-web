@@ -19,8 +19,8 @@ jobs:
       - name: Push to Docker Hub
         uses: docker/build-push-action@v1
         with:
-          username: ${{ secrets.CADENCE_DOCKERHUB_USERNAME }}
-          password: ${{ secrets.CADENCE_DOCKERHUB_TOKEN }}
+          username: ${{ secrets.CADENCE_WEB_DOCKERHUB_USERNAME }}
+          password: ${{ secrets.CADENCE_WEB_DOCKERHUB_TOKEN }}
           repository: ubercadence/web
           tag_with_ref: true
           tags: latest
