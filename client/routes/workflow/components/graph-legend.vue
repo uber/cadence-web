@@ -1,6 +1,6 @@
 <template>
   <div v-on:click="showLegend = !showLegend" class="legend">
-    <div v-if="!showLegend" class="legend-example">
+    <div v-if="!showLegend" class="legend-preview">
       <div class="arrow-container">
         <span class="arrow direct"></span>
         <hr class="direct" />
@@ -62,9 +62,12 @@ export default {
 
   &-example {
     display: flex;
-    margin: 18px 20px;
     flex-direction: column;
     text-align: left;
+    margin: inline-spacing-large;
+  }
+  &-preview {
+    margin: inline-spacing-small inline-spacing-large;
   }
 }
 
@@ -90,6 +93,10 @@ hr.divider {
   border-top: 1px solid #eaeaea;
   width: 100%;
   padding: 0;
+
+  &:last-child {
+    display:none;
+  }
 }
 
 .fade-enter-active, .fade-leave-active {
