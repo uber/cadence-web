@@ -20,7 +20,7 @@
             @input="onTextChange"
           />
         </flex-grid-item>
-        <flex-grid-item width="160px">
+        <flex-grid-item width="160px" v-if="isCloseStatusFilterSupported">
           <v-select
             :on-change="onSelectChange"
             :options="statusList"
@@ -28,10 +28,10 @@
             :value="status"
           />
         </flex-grid-item>
-        <flex-grid-item width="165px">
+        <flex-grid-item width="165px" v-if="isDateRangeFilterSupported">
           <text-input label="Filter by" readonly :value="filterBy" />
         </flex-grid-item>
-        <flex-grid-item width="325px">
+        <flex-grid-item width="325px" v-if="isDateRangeFilterSupported">
           <date-range-picker :date-range="range" @change="onDateRangeChange" />
         </flex-grid-item>
         <flex-grid-item width="120px">
@@ -85,6 +85,8 @@ import {
   getStatusValue,
   updateQueryFromRange,
   mapArchivedWorkflowResponse,
+  isArchivalFileStore,
+  isArchivalGcloud,
 } from './helpers';
 import WorkflowArchivalService from './workflow-archival-service';
 import pagedGrid from '~components/paged-grid';
@@ -107,7 +109,7 @@ import {
 
 export default pagedGrid({
   name: 'workflow-archival-basic',
-  props: ['dateFormat', 'domain', 'timeFormat', 'timezone'],
+  props: ['dateFormat', 'domain', 'timeFormat', 'timezone', 'domainSettings'],
   data() {
     return {
       error: undefined,
@@ -121,6 +123,15 @@ export default pagedGrid({
     };
   },
   computed: {
+    isDateRangeFilterSupported() {
+      return isArchivalFileStore(this.domainSettings);
+    },
+    isCloseStatusFilterSupported() {
+      return (
+        isArchivalFileStore(this.domainSettings) ||
+        isArchivalGcloud(this.domainSettings)
+      );
+    },
     endTime() {
       const { range } = this;
       const { endTime } = this.$route.query || {};
@@ -144,6 +155,8 @@ export default pagedGrid({
         statusValue,
         startTime,
         workflowId,
+        isDateRangeFilterSupported,
+        isCloseStatusFilterSupported,
       } = this;
 
       return getQueryParams({
@@ -152,6 +165,8 @@ export default pagedGrid({
         statusValue,
         startTime,
         workflowId,
+        isDateRangeFilterSupported,
+        isCloseStatusFilterSupported,
       });
     },
     range() {
@@ -191,7 +206,10 @@ export default pagedGrid({
     const { domain, queryParams } = this;
 
     this.workflowArchivalService = WorkflowArchivalService({ domain });
-    this.onQueryChange({ ...queryParams, nextPageToken: undefined });
+
+    if (queryParams) {
+      this.onQueryChange({ ...queryParams, nextPageToken: undefined });
+    }
   },
   methods: {
     resetState() {
@@ -204,7 +222,7 @@ export default pagedGrid({
     fetchArchivalRecord: debounce(async function fetchArchivalRecord(
       queryParams
     ) {
-      if (!queryParams || !queryParams.startTime || !queryParams.endTime) {
+      if (!queryParams || queryParams.startTime !== queryParams.endTime) {
         return;
       }
 

@@ -63,9 +63,15 @@ router.get('/api/domains/:domain/authorization', async function (ctx, next) {
 router.get('/api/domains/:domain/workflows/open', listWorkflows.bind(null, 'open'))
 router.get('/api/domains/:domain/workflows/closed', listWorkflows.bind(null, 'closed'))
 
-const buildQueryString = (startTime, endTime, { status, workflowId, workflowName }) => ([
+const buildDateRangeQueryString = (startTime, endTime, { status, workflowId, workflowName }) => ([
   `CloseTime >= "${startTime.toISOString()}"`,
   `CloseTime <= "${endTime.toISOString()}"`,
+  status && `CloseStatus = "${status}"`,
+  workflowId && `WorkflowID = "${workflowId}"`,
+  workflowName && `WorkflowType = "${workflowName}"`,
+].filter((subQuery) => !!subQuery).join(' and '));
+
+const buildSimpleQueryString = ({ status, workflowId, workflowName }) => ([
   status && `CloseStatus = "${status}"`,
   workflowId && `WorkflowID = "${workflowId}"`,
   workflowName && `WorkflowType = "${workflowName}"`,
@@ -81,8 +87,12 @@ router.get('/api/domains/:domain/workflows/archived', async function (ctx) {
     const startTime = moment(query.startTime || NaN);
     const endTime = moment(query.endTime || NaN);
 
-    ctx.assert(startTime.isValid() && endTime.isValid(), 400);
-    queryString = buildQueryString(startTime, endTime, query);
+    if (!startTime.isValid() && !endTime.isValid()) {
+      queryString = buildSimpleQueryString(query);
+    } else {
+      ctx.assert(startTime.isValid() && endTime.isValid(), 400);
+      queryString = buildDateRangeQueryString(startTime, endTime, query);
+    }
   }
 
   ctx.body = await ctx.cadence['archivedWorkflows']({
