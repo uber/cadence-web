@@ -24,10 +24,6 @@ export default ({
     ...(workflowName && { workflowName }),
   };
 
-  console.log('get-query-param');
-  console.log(queryParams);
-  console.log(Object.keys(queryParams).length);
-
   // Represent empty query param with null
   return Object.keys(queryParams).length > 0 ? queryParams : null;
 };
