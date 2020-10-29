@@ -10,7 +10,7 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  push_to_registry:
+  push_to_dockerhub:
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
     steps:
@@ -22,6 +22,22 @@ jobs:
         with:
           username: ${{ secrets.CADENCE_WEB_DOCKERHUB_USERNAME }}
           password: ${{ secrets.CADENCE_WEB_DOCKERHUB_TOKEN }}
-          repository: ubercadence/web
+          repository: justatuber/web
+          tag_with_ref: true
+          tags: latest
+  push_to_ghcr:
+    name: Push Docker image to GitHub Container Registry
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+      - name: Push to GitHub Container Registry
+        if: "!github.event.release.prerelease"
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ github.actor }}
+          password: ${{ secrets.CADENCE_WEB_GHCR_PAT }}
+          registry: ghcr.io
+          repository: just-at-uber/cadence-web/web
           tag_with_ref: true
           tags: latest
