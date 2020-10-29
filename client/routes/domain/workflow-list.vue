@@ -1,6 +1,6 @@
 <script>
 // Copyright (c) 2017-2021 Uber Technologies Inc.
-//
+// Portions of the Software are attributed to Copyright (c) 2020-2021 Temporal Technologies Inc.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,19 +22,21 @@
 
 import moment from 'moment';
 import debounce from 'lodash-es/debounce';
+import orderBy from 'lodash-es/orderBy';
 import pagedGrid from '~components/paged-grid';
-import { DateRangePicker } from '~components';
+import { DateRangePicker, WorkflowsGrid } from '~components';
 import {
   getDatetimeFormattedString,
   getEndTimeIsoString,
   getStartTimeIsoString,
+  timestampToDate,
 } from '~helpers';
 
 export default pagedGrid({
   props: ['dateFormat', 'domain', 'timeFormat', 'timezone'],
   data() {
     return {
-      loading: true,
+      loading: false,
       results: [],
       error: undefined,
       nextPageToken: undefined,
@@ -53,30 +55,8 @@ export default pagedGrid({
     };
   },
   created() {
-    this.$http(`/api/domains/${this.domain}`).then(r => {
-      const { domain, state } = this;
-
-      this.maxRetentionDays =
-        Number(r.configuration.workflowExecutionRetentionPeriodInDays) || 30;
-
-      const minStartDate = this.getMinStartDate();
-
-      if (!this.isRouteRangeValid(minStartDate)) {
-        const prevRange = localStorage.getItem(
-          `${domain}:workflows-time-range`
-        );
-
-        if (prevRange && this.isRangeValid(prevRange, minStartDate)) {
-          this.setRange(prevRange);
-        } else {
-          const defaultRange = state === 'open' ? 30 : this.maxRetentionDays;
-
-          this.setRange(`last-${defaultRange}-days`);
-        }
-      }
-    });
-
-    this.$watch('queryOnChange', () => {}, { immediate: true });
+    this.fetchNamespace();
+    this.fetchWorkflows();
   },
   mounted() {
     this.interval = setInterval(() => {
@@ -88,6 +68,7 @@ export default pagedGrid({
   },
   components: {
     'date-range-picker': DateRangePicker,
+    'workflows-grid': WorkflowsGrid,
   },
   computed: {
     fetchUrl() {
@@ -189,8 +170,6 @@ export default pagedGrid({
         workflowName,
       } = this;
 
-      this.nextPageToken = undefined;
-
       if (!startTime || !endTime) {
         return null;
       }
@@ -208,21 +187,22 @@ export default pagedGrid({
 
       return criteria;
     },
-    queryOnChange() {
-      if (!this.criteria) {
-        return;
-      }
-
-      const { fetchUrl, nextPageToken } = this;
-      const query = { ...this.criteria, nextPageToken };
-
-      this.fetch(fetchUrl, query);
-    },
     queryString() {
       return this.$route.query.queryString;
     },
     minStartDate() {
-      return this.getMinStartDate();
+      const {
+        maxRetentionDays,
+        status: { value: status },
+      } = this;
+
+      if (status === 'OPEN') {
+        return null;
+      }
+
+      return moment(this.now)
+        .subtract(maxRetentionDays, 'days')
+        .startOf('days');
     },
     workflowId() {
       return this.$route.query.workflowId;
@@ -232,13 +212,41 @@ export default pagedGrid({
     },
   },
   methods: {
-    fetch: debounce(
+    refreshWorkflows: debounce(
+      function refreshWorkflows() {
+        this.results = [];
+        this.npt = undefined;
+        this.fetchWorkflows();
+      },
+      typeof Mocha === 'undefined' ? 200 : 60,
+      { maxWait: 1000 }
+    ),
+    async fetch(url, query) {
+      this.loading = true;
+      this.error = undefined;
+
+      let workflows = [];
+      let nextPageToken;
+
+      try {
+        let res = await this.$http(url, { query });
+        workflows = res.executions;
+
+        nextPageToken = res.nextPageToken;
+      } catch (e) {
+        this.error = (e.json && e.json.message) || e.status || e.message;
+      }
+
+      this.loading = false;
+      return { workflows, nextPageToken };
+    },
+    fetch2: debounce(
       function fetch(url, query) {
         this.loading = true;
         this.error = undefined;
 
         return this.$http(url, { query })
-          .then(res => {
+          .then((res) => {
             this.npt = res.nextPageToken;
             this.loading = false;
             this.results = query.nextPageToken
@@ -258,16 +266,42 @@ export default pagedGrid({
       typeof Mocha === 'undefined' ? 350 : 60,
       { maxWait: 1000 }
     ),
-    getMinStartDate() {
-      const { maxRetentionDays, statusName } = this;
+    fetchNamespace() {
+      const { domain } = this;
+      return this.$http(`/api/domains/${domain}`).then((r) => {
+        const { minStartDate } = this;
 
-      if (statusName === 'OPEN') {
-        return null;
+        this.maxRetentionDays = Number(r.configuration.workflowExecutionRetentionPeriodInDays) || 30;
+        if (!this.isRouteRangeValid(minStartDate)) {
+          const prevRange = localStorage.getItem(
+            `${domain}:workflows-time-range`
+          );
+          if (prevRange && this.isRangeValid(prevRange, minStartDate)) {
+            this.setRange(prevRange);
+          } else {
+            this.setRange(`last-${Math.min(30, this.maxRetentionDays)}-days`);
+          }
+        }
+      });
+    },
+    async fetchWorkflows() {
+      if (!this.criteria || this.loading) {
+        return;
+      }
+      const query = { ...this.criteria, nextPageToken: this.npt };
+      if (query.queryString) {
+        query.queryString = decodeURI(query.queryString);
       }
 
-      return moment(this.now)
-        .subtract(maxRetentionDays, 'days')
-        .startOf('days');
+      const { workflows, nextPageToken } = await this.fetch(
+        this.fetchUrl,
+        query
+      );
+
+      this.results = query.nextPageToken
+        ? this.results.concat(workflows)
+        : workflows;
+      this.npt = nextPageToken;
     },
     setWorkflowFilter(e) {
       const target = e.target || e.testTarget; // test hook since Event.target is readOnly and unsettable
@@ -366,6 +400,18 @@ export default pagedGrid({
         this.filterMode = 'advanced';
       }
     },
+    onWorkflowsScroll(startIndex, endIndex) {
+      if (this.loading || !this.npt) {
+        return;
+      }
+
+      return this.fetchWorkflows();
+    },
+  },
+  watch: {
+    criteria(newCriteria) {
+      this.refreshWorkflows();
+    },
   },
 });
 </script>
@@ -416,6 +462,7 @@ export default pagedGrid({
           :options="statuses"
           :on-change="setStatus"
           :searchable="false"
+          data-cy="status-filter"
         />
         <div class="field workflow-filter-by">
           <input
@@ -439,43 +486,12 @@ export default pagedGrid({
       }}</a>
     </header>
     <span class="error" v-if="error">{{ error }}</span>
-    <span class="no-results" v-if="showNoResults">No Results</span>
-    <section
-      class="results"
-      v-infinite-scroll="nextPage"
-      infinite-scroll-disabled="disableInfiniteScroll"
-      infinite-scroll-distance="20"
-      infinite-scroll-immediate-check="false"
-    >
-      <table v-show="showTable">
-        <thead>
-          <th>Workflow ID</th>
-          <th>Run ID</th>
-          <th>Name</th>
-          <th>Status</th>
-          <th>Start Time</th>
-          <th>End Time</th>
-        </thead>
-        <tbody>
-          <tr v-for="wf in formattedResults" :key="wf.runId">
-            <td>{{ wf.workflowId }}</td>
-            <td>
-              <router-link
-                :to="{
-                  name: 'workflow/summary',
-                  params: { runId: wf.runId, workflowId: wf.workflowId },
-                }"
-                >{{ wf.runId }}</router-link
-              >
-            </td>
-            <td>{{ wf.workflowName }}</td>
-            <td :class="wf.status">{{ wf.status }}</td>
-            <td>{{ wf.startTime }}</td>
-            <td>{{ wf.endTime }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
+    <workflows-grid
+      :workflows="results"
+      :loading="loading"
+      @onWorkflowsScroll="onWorkflowsScroll"
+      v-if="!error"
+    />
   </section>
 </template>
 
@@ -513,24 +529,6 @@ section.workflow-list
     a.toggle-filter
       action-button()
 
-  paged-grid()
-
-  section.results {
-    flex: auto;
-  }
-
   &.loading section.results table
     opacity 0.7
-
-  table
-    td:nth-child(4)
-      text-transform capitalize
-      &.completed
-        color uber-green
-      &.failed
-        color uber-orange
-      &.open
-        color uber-blue-120
-    td:nth-child(5), td:nth-child(6)
-      one-liner-ellipsis()
 </style>
