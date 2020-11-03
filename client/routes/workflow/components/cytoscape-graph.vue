@@ -32,7 +32,7 @@ export default {
   },
   methods: {
     zoomToNode(node) {
-      let zoom = 1.1,
+      const zoom = 1.1,
         bb = node.boundingBox(),
         w = cy.width(),
         h = cy.height(),
