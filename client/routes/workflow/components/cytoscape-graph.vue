@@ -43,8 +43,8 @@ export default {
 
       //Pan the graph to view node
       cy.animate({
-        zoom: 1.1,
-        pan: pan
+        zoom,
+        pan
       });
     },
     updateChildBtn(node) {
@@ -175,23 +175,21 @@ export default {
         container.style.cursor = "default";
       });
 
-      let self = this;
-
       //Register click event
-      cy.on("tap", function(evt) {
+      cy.on("tap", evt => {
         let evtTarget = evt.target;
 
         //Tap on background
         if (evtTarget === cy) {
-          if (self.$route.query.eventId) {
-            self.$router.replace({ query: omit(self.$route.query, "eventId") });
+          if (this.$route.query.eventId) {
+            this.$router.replace({ query: omit(this.$route.query, "eventId") });
             store.commit("toggleChildBtn");
           }
           //Tap on a node that is not already selected
         } else if (evtTarget.isNode() && !evtTarget.selected()) {
           let nodeData = evtTarget.data();
-          self.$router.replace({
-            query: { ...self.$route.query, eventId: nodeData.id }
+          this.$router.replace({
+            query: { ...this.$route.query, eventId: nodeData.id }
           });
         }
       });
