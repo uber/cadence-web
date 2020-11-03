@@ -11,6 +11,7 @@ import graphStyles from "../helpers/graph-styles";
 import store from "../../../store/index";
 import cytoscape from "cytoscape";
 import omit from "lodash-es/omit";
+import { mapMutations } from "vuex";
 
 cytoscape.use(dagre);
 
@@ -31,6 +32,7 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(["childRoute", "toggleChildBt"]),
     zoomToNode(node) {
       const zoom = 1.1,
         bb = node.boundingBox(),
@@ -47,20 +49,18 @@ export default {
         pan
       });
     },
+    updateParentBtn(node) {},
     updateChildBtn(node) {
       let nodeData = node.data();
       if (nodeData.childRoute) {
-        store.commit("childRoute", {
-          route: nodeData.childRoute,
-          btnText: "To child"
-        });
+        this.childRoute({ route: nodeData.childRoute, btnText: "To child" });
       } else if (nodeData.newExecutionRunId) {
-        store.commit("childRoute", {
+        this.childRoute({
           route: nodeData.newExecutionRunId,
           btnText: "Next execution"
         });
       } else {
-        store.commit("toggleChildBtn");
+        this.toggleChildBtn;
       }
     },
     selectNode(id) {
@@ -198,6 +198,7 @@ export default {
       return cy;
     },
     mountGraph(cy) {
+      console.log("events", this.events);
       //TODO: this is not finished
       var pos = cy.nodes("[id = " + 1 + "]").position();
       cy.center();
@@ -211,6 +212,7 @@ export default {
     }
   },
   mounted() {
+    this.updateParentBtn();
     this.buildTree();
     const cy = this.viewInit();
     this.mountGraph(cy);
