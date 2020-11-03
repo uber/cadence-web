@@ -37,7 +37,6 @@ import WorkflowTabs from './routes/workflow';
 import store from './store/index.js'
 
 import { getEscapedForwardSlash, http, injectMomentDurationFormat, jsonTryParse } from '~helpers';
-import querystring from 'friendly-querystring';
 
 const routeOpts = {
   mode: 'history',
