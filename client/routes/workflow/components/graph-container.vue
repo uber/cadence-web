@@ -31,6 +31,7 @@
         v-if="!isGraphLoading"
         :workflow="workflow"
         :events="events"
+        :selected-event-id="selectedEventId"
       />
     </div>
   </div>
@@ -42,7 +43,7 @@ import WorkflowGraph from "./cytoscape-graph.vue";
 import omit from "lodash-es/omit";
 import Legend from "./graph-legend.vue";
 export default {
-  props: ["workflow", "events", "isWorkflowRunning"],
+  props: ["workflow", "events", "isWorkflowRunning", "selectedEventId"],
   components: {
     WorkflowGraph,
     Legend
@@ -50,7 +51,6 @@ export default {
   data() {
     return {
       isGraphLoading: true,
-      clickedId: null,
       workflowName: null,
       forceRefresh: true,
       eventsSnapShot: [],

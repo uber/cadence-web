@@ -66,6 +66,7 @@
         <DagGraphContainer
           :events="events"
           :isWorkflowRunning="isWorkflowRunning"
+          :selected-event-id="eventId"
           class="tree-view"
           v-if="this.graphView === 'dagGraph' && events.length"
         ></DagGraphContainer>

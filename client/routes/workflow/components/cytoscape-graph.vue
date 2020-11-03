@@ -16,7 +16,7 @@ cytoscape.use(dagre);
 
 export default {
   name: "cytoscape-graph",
-  props: ["events"],
+  props: ["events", "selectedEventId"],
   data() {
     return {
       nodes: [],
@@ -26,7 +26,7 @@ export default {
     };
   },
   watch: {
-    selectedEvent(id) {
+    selectedEventId(id) {
       if (id) this.selectNode(id);
     }
   },
@@ -64,15 +64,17 @@ export default {
       }
     },
     selectNode(id) {
-      //Deselect all previously selected nodes
-      cy.$(":selected").deselect();
+      if (id) {
+        //Deselect all previously selected nodes
+        cy.$(":selected").deselect();
 
-      //Mark current node as selected
-      let node = cy.elements("node#" + id);
-      node.select();
+        //Mark current node as selected
+        let node = cy.elements("node#" + id);
+        node.select();
 
-      this.updateChildBtn(node);
-      this.zoomToNode(node);
+        this.updateChildBtn(node);
+        this.zoomToNode(node);
+      }
     },
     async buildTree() {
       this.events.forEach(event => {
@@ -208,18 +210,13 @@ export default {
       cy.mount(container);
     }
   },
-  computed: {
-    selectedEvent() {
-      return this.$route.query.eventId;
-    }
-  },
   mounted() {
     this.buildTree();
     this.viewInit().then(cy => {
       this.mountGraph(cy);
     });
 
-    if (this.$route.query.eventId) this.selectNode(this.$route.query.eventId);
+    this.selectNode(this.selectedEventId);
   }
 };
 </script>
