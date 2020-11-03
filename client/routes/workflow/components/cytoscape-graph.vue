@@ -145,7 +145,7 @@ export default {
         });
       }
     },
-    async viewInit() {
+    viewInit() {
       let container = this.$refs.cy;
       let cy = (window.cy = cytoscape({
         autoungrabify: true,
@@ -212,10 +212,8 @@ export default {
   },
   mounted() {
     this.buildTree();
-    this.viewInit().then(cy => {
-      this.mountGraph(cy);
-    });
-
+    const cy = this.viewInit();
+    this.mountGraph(cy);
     this.selectNode(this.selectedEventId);
   }
 };
