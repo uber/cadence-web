@@ -183,7 +183,7 @@ export default {
 
         //Tap on background
         if (evtTarget === cy) {
-          if (this.$route.query.eventId) {
+          if (this.selectedEventId) {
             this.$router.replace({ query: omit(this.$route.query, "eventId") });
             store.commit("toggleChildBtn");
           }
