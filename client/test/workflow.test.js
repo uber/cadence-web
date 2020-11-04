@@ -498,6 +498,12 @@ describe('Workflow', () => {
           attach: true,
         });
 
+        const showTimelineBtn = await summaryEl.waitUntilExists(
+          '.show-timeline-btn'
+        );
+
+        showTimelineBtn.trigger('click');
+
         const timelineEl = await summaryEl.waitUntilExists(
           '.timeline-split div.timeline'
         );

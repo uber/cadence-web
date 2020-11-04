@@ -38,7 +38,10 @@
         <a href="#" @click.prevent="toggleShowDagGraph()"
           >{{ this.graphView === 'dagGraph' ? 'hide' : 'show' }} graph</a
         >
-        <a href="#" @click.prevent="toggleShowTimeline()"
+        <a
+          href="#"
+          @click.prevent="toggleShowTimeline()"
+          class="show-timeline-btn"
           >{{ this.graphView === 'timeLine' ? 'hide' : 'show' }} timeline</a
         >
         <a
