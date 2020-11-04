@@ -1,9 +1,9 @@
 import { orderBy } from 'lodash-es';
 
 const defaults = {
-  levelStep: 200, // Horizontal `x` offset between same level nodes
+  levelStep: 300, // Horizontal `x` offset between same level nodes
   timeStep: 90, // Offset between primary chronological layers
-  secondaryTimeStemp: 65, // Offset between primary and secondary chronological layers (having the same timestamps)
+  secondaryTimeStep: 65, // Offset between primary and secondary chronological layers (having the same timestamps)
 };
 
 export const LAYOUT_NAME = 'cadence';
@@ -69,23 +69,19 @@ const arrangeGraph = ({ nodes, edges }, options) => {
       const children = idToChildren[n.id()];
       const nScratch = n.scratch(LAYOUT_NAME);
 
-      if (nScratch.level === undefined) {
-        nScratch.level = l;
-        nScratch.timeIndexSecondary =
-          parentTimeIndex === nScratch.timeIndex
-            ? parentTimeIndexOffset + 1
-            : 0;
+      nScratch.level = l;
+      nScratch.timeIndexSecondary =
+        parentTimeIndex === nScratch.timeIndex ? parentTimeIndexOffset + 1 : 0;
 
-        if (children.length) {
-          const { level: newLevel } = arrange(
-            children,
-            l,
-            nScratch.timeIndex,
-            nScratch.timeIndexSecondary
-          );
+      if (children.length) {
+        const { level: newLevel } = arrange(
+          children,
+          l,
+          nScratch.timeIndex,
+          nScratch.timeIndexSecondary
+        );
 
-          l = newLevel;
-        }
+        l = newLevel;
       }
     });
 
@@ -116,7 +112,7 @@ const arrangeGraph = ({ nodes, edges }, options) => {
     const key = makeKey(t1, t2);
 
     if (t1 === prevT1) {
-      t += (t2 - prevT2) * options.secondaryTimeStemp;
+      t += (t2 - prevT2) * options.secondaryTimeStep;
     }
 
     t += (t1 - prevT1) * options.timeStep;
