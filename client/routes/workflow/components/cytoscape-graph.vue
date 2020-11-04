@@ -5,15 +5,15 @@
 </template>
 
 <script>
-import dagre from "cytoscape-dagre";
-import { getEventConnections } from "../helpers/get-event-connections";
-import graphStyles from "../helpers/graph-styles";
-import store from "../../../store/index";
 import cytoscape from "cytoscape";
 import omit from "lodash-es/omit";
+import Graph from "../helpers/graph";
+import cytoscapeLayout, { LAYOUT_NAME } from "../helpers/cytoscape-layout";
+import graphStyles from "../helpers/graph-styles";
+import store from "../../../store/index";
 import { mapMutations } from "vuex";
 
-cytoscape.use(dagre);
+cytoscape.use(cytoscapeLayout);
 
 export default {
   name: "cytoscape-graph",
@@ -22,36 +22,39 @@ export default {
     return {
       nodes: [],
       edges: [],
-      styles: graphStyles,
-      parentArray: []
+      styles: graphStyles
     };
   },
   watch: {
     selectedEventId(id) {
-      if (id) this.selectNode(id);
+      this.selectNode(id);
+    },
+    events(events) {
+      this.graph.setEvents(events);
     }
   },
   methods: {
-    ...mapMutations(["childRoute", "toggleChildBt"]),
+    ...mapMutations(["childRoute", "toggleChildBtn"]),
     zoomToNode(node) {
       const zoom = 1.1,
         bb = node.boundingBox(),
-        w = cy.width(),
-        h = cy.height(),
+        w = this.cy.width(),
+        h = this.cy.height(),
         pan = {
           x: (w - zoom * (bb.x1 + bb.x2)) / 2,
           y: (h - zoom * (bb.y1 + bb.y2)) / 2
         };
 
       //Pan the graph to view node
-      cy.animate({
+      this.cy.animate({
         zoom,
         pan
       });
     },
     updateParentBtn(node) {},
     updateChildBtn(node) {
-      let nodeData = node.data();
+      const nodeData = node.data();
+
       if (nodeData.childRoute) {
         this.childRoute({ route: nodeData.childRoute, btnText: "To child" });
       } else if (nodeData.newExecutionRunId) {
@@ -60,94 +63,37 @@ export default {
           btnText: "Next execution"
         });
       } else {
-        this.toggleChildBtn;
+        this.toggleChildBtn();
       }
     },
     selectNode(id) {
-      if (id) {
-        //Deselect all previously selected nodes
-        cy.$(":selected").deselect();
+      // Update graph to render nodes around the select one
+      this.updateView(id);
 
-        //Mark current node as selected
-        let node = cy.elements("node#" + id);
+      // Deselect all previously selected nodes
+      this.cy.$(":selected").deselect();
+
+      // Mark current node as selected
+      const node =
+        id !== null && id !== undefined ? this.cy.nodes("node#" + id) : null;
+
+      if (node && node.length) {
+        // Zoom to the selected node
         node.select();
-
         this.updateChildBtn(node);
         this.zoomToNode(node);
       }
     },
-    async buildTree() {
-      this.events.forEach(event => {
-        let {
-          parentWorkflowExecution,
-          previousExecutionRunId,
-          newExecutionRunId,
-          status,
-          childRoute
-        } = getEventConnections(event, this.events);
-
-        //We are viewing a child workflow, show parent btn
-        if (previousExecutionRunId) {
-          store.commit("previousExecutionRoute", previousExecutionRunId);
-        } else if (parentWorkflowExecution) {
-          store.commit("parentRoute", parentWorkflowExecution);
-        }
-
-        this.nodes.push({
-          data: {
-            id: event.eventId,
-            name: event.eventType,
-            childRoute: childRoute,
-            newExecutionRunId: newExecutionRunId,
-            status: status
-          }
-        });
-      });
-      //Set the direct and inferred relationships
-      this.events.forEach(node => {
-        this.setDirectAndInferred(node);
-      });
-
-      //Set the chronological relationships.
-      //If the node is not referred to as a parent it should be connected back to the graph with a chron child
-      this.events.forEach(node => {
-        if (!this.parentArray.includes(node.eventId)) {
-          this.setChron(node);
-        }
-      });
-    },
-    setDirectAndInferred(node) {
-      let nodeId = node.eventId,
-        { parent, inferredChild } = getEventConnections(node, this.events);
-      if (parent) {
-        this.parentArray.push(parent);
-        this.edges.push({
-          data: { source: parent, target: nodeId, type: "direct" }
-        });
+    initView(elements) {
+      if (this.cy) {
+        this.cy.unmount();
+        this.cy.destroy();
+        this.cy = null;
       }
-      if (inferredChild) {
-        this.parentArray.push(nodeId);
-        this.edges.push({
-          data: { source: nodeId, target: inferredChild, type: "inferred" }
-        });
-      }
-    },
-    setChron(node) {
-      let nodeId = node.eventId,
-        { chronologicalChild } = getEventConnections(node, this.events);
-      if (chronologicalChild) {
-        this.edges.push({
-          data: {
-            source: nodeId,
-            target: chronologicalChild,
-            type: "chronological"
-          }
-        });
-      }
-    },
-    viewInit() {
-      let container = this.$refs.cy;
-      let cy = (window.cy = cytoscape({
+
+      // Create cy instance
+      const container = this.$refs.cy;
+      const cy = cytoscape({
         autoungrabify: true,
         styleEnabled: true,
         container: container,
@@ -157,19 +103,15 @@ export default {
         //textureOnViewport: true,
         //pixelRatio: 1,
         style: graphStyles,
-        elements: {
-          nodes: this.nodes,
-          edges: this.edges
-        },
+        elements,
         layout: {
-          name: "dagre",
-          nodeDimensionsIncludeLabels: true,
-          spacingFactor: 1.2, // to avoid node collision
-          nodeSep: 230,
-          edgeSep: 100,
-          rankSep: 70
+          name: LAYOUT_NAME
         }
-      }));
+      });
+
+      cy.minZoom(0.1);
+      cy.maxZoom(10);
+
       cy.on("mouseover", "node", function(e) {
         container.style.cursor = "pointer";
       });
@@ -181,41 +123,54 @@ export default {
       cy.on("tap", evt => {
         let evtTarget = evt.target;
 
-        //Tap on background
+        // Tap on background
         if (evtTarget === cy) {
           if (this.selectedEventId) {
             this.$router.replace({ query: omit(this.$route.query, "eventId") });
             store.commit("toggleChildBtn");
           }
-          //Tap on a node that is not already selected
+          // Tap on a node that is not already selected
         } else if (evtTarget.isNode() && !evtTarget.selected()) {
-          let nodeData = evtTarget.data();
+          const nodeData = evtTarget.data();
+
           this.$router.replace({
             query: { ...this.$route.query, eventId: nodeData.id }
           });
         }
       });
-      return cy;
-    },
-    mountGraph(cy) {
-      console.log("events", this.events);
-      //TODO: this is not finished
-      var pos = cy.nodes("[id = " + 1 + "]").position();
-      cy.center();
-      cy.zoom({
-        // Zoom to the specified position of root node
-        level: 1,
-        position: pos
-      });
-      let container = this.$refs.cy;
       cy.mount(container);
+      this.cy = cy;
+      this.cy.fit();
+    },
+    updateView(id = null) {
+      if (this.cy && id === null) {
+        // Do nothing if graph is rendered and user clicks somewhere between nodes
+        return;
+      }
+
+      const {
+        shouldRedraw,
+        elements,
+        previousExecutionRunId,
+        parentWorkflowExecution
+      } = this.graph.selectNode(id);
+
+      if (!shouldRedraw) {
+        return;
+      }
+
+      // We are viewing a child workflow, show parent btn
+      if (previousExecutionRunId) {
+        store.commit("previousExecutionRoute", previousExecutionRunId);
+      } else if (parentWorkflowExecution) {
+        store.commit("parentRoute", parentWorkflowExecution);
+      }
+
+      this.initView(elements);
     }
   },
   mounted() {
-    this.updateParentBtn();
-    this.buildTree();
-    const cy = this.viewInit();
-    this.mountGraph(cy);
+    this.graph = new Graph(this.events);
     this.selectNode(this.selectedEventId);
   }
 };
