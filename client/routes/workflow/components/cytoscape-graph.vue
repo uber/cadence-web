@@ -51,7 +51,6 @@ export default {
         pan
       });
     },
-    updateParentBtn(node) {},
     updateChildBtn(node) {
       const nodeData = node.data();
 
