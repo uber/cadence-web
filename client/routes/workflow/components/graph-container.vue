@@ -38,15 +38,16 @@
 </template>
 
 <script>
-import store from "../../../store/index";
-import WorkflowGraph from "./cytoscape-graph.vue";
-import omit from "lodash-es/omit";
-import Legend from "./graph-legend.vue";
+import omit from 'lodash-es/omit';
+import store from '../../../store/index';
+import WorkflowGraph from './cytoscape-graph.vue';
+import Legend from './graph-legend.vue';
+
 export default {
-  props: ["workflow", "events", "isWorkflowRunning", "selectedEventId"],
+  props: ['workflow', 'events', 'isWorkflowRunning', 'selectedEventId'],
   components: {
     WorkflowGraph,
-    Legend
+    Legend,
   },
   data() {
     return {
@@ -54,18 +55,20 @@ export default {
       workflowName: null,
       forceRefresh: true,
       eventsSnapShot: [],
-      hasAllEvents: true
+      hasAllEvents: true,
     };
   },
   watch: {
     events: function() {
-      if (this.eventsSnapShot.length < this.events.length)
+      if (this.eventsSnapShot.length < this.events.length) {
         this.hasAllEvents = false;
-    }
+      }
+    },
   },
   methods: {
     delayedShow() {
-      let delay = 400;
+      const delay = 400;
+
       setTimeout(() => {
         this.isGraphLoading = false;
       }, delay);
@@ -74,14 +77,14 @@ export default {
       if (route.workflowId) {
         this.$router.replace({
           params: { workflowId: route.workflowId, runId: route.runId },
-          query: omit(this.$route.query, "eventId")
+          query: omit(this.$route.query, 'eventId'),
         });
 
         //We only have run Id as route params
       } else {
         this.$router.replace({
           params: { runId: route },
-          query: omit(this.$route.query, "eventId")
+          query: omit(this.$route.query, 'eventId'),
         });
       }
     },
@@ -92,13 +95,13 @@ export default {
       this.delayedShow();
       //We currently show all available events, refresh btn should be hidden
       this.hasAllEvents = true;
-    }
+    },
   },
   mounted() {
     this.delayedShow();
     this.eventsSnapShot = this.events;
     this.workflowName = this.events[0].details.workflowType.name;
-    store.commit("resetState");
+    store.commit('resetState');
   },
 
   computed: {
@@ -116,8 +119,8 @@ export default {
     },
     childRoute() {
       return this.$store.getters.childRoute;
-    }
-  }
+    },
+  },
 };
 </script>
 

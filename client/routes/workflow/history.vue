@@ -4,7 +4,7 @@
       history: true,
       loading,
       'has-results': !!events.length,
-      'split-enabled': true
+      'split-enabled': true,
     }"
   >
     <header class="controls">
@@ -36,10 +36,10 @@
       </div>
       <div class="actions">
         <a href="#" @click.prevent="toggleShowDagGraph()"
-          >{{ this.graphView === "dagGraph" ? "hide" : "show" }} graph</a
+          >{{ this.graphView === 'dagGraph' ? 'hide' : 'show' }} graph</a
         >
         <a href="#" @click.prevent="toggleShowTimeline()"
-          >{{ this.graphView === "timeLine" ? "hide" : "show" }} timeline</a
+          >{{ this.graphView === 'timeLine' ? 'hide' : 'show' }} timeline</a
         >
         <a
           class="export"
@@ -165,7 +165,7 @@
                     </div>
                     <div class="td col-time">
                       {{
-                        tsFormat === "elapsed"
+                        tsFormat === 'elapsed'
                           ? item.timeElapsedDisplay
                           : item.timeStampDisplay
                       }}
@@ -187,7 +187,7 @@
                           eventParam =>
                             onWorkflowHistoryEventParamToggle({
                               eventParam,
-                              eventType: item.eventType
+                              eventType: item.eventType,
                             })
                         "
                       />
@@ -289,7 +289,7 @@
                   eventParam =>
                     onWorkflowHistoryEventParamToggle({
                       eventParam,
-                      eventType: selectedEvent.eventType
+                      eventType: selectedEvent.eventType,
                     })
                 "
               />
@@ -304,61 +304,61 @@
 </template>
 
 <script>
-import Prism from "vue-prism-component";
+import Prism from 'vue-prism-component';
 import {
   DynamicScroller,
   DynamicScrollerItem,
-  RecycleScroller
-} from "vue-virtual-scroller";
-import debounce from "lodash-es/debounce";
-import omit from "lodash-es/omit";
-import Timeline from "./components/timeline.vue";
-import DagGraphContainer from "./components/graph-container.vue";
-import EventDetail from "./components/event-detail.vue";
-import { DetailList, HighlightToggle } from "~components";
+  RecycleScroller,
+} from 'vue-virtual-scroller';
+import debounce from 'lodash-es/debounce';
+import omit from 'lodash-es/omit';
+import Timeline from './components/timeline.vue';
+import DagGraphContainer from './components/graph-container.vue';
+import EventDetail from './components/event-detail.vue';
+import { DetailList, HighlightToggle } from '~components';
 
 export default {
-  name: "history",
+  name: 'history',
   data() {
     return {
       tsFormat:
         localStorage.getItem(`${this.domain}:history-ts-col-format`) ||
-        "elapsed",
+        'elapsed',
       compactDetails:
         localStorage.getItem(`${this.domain}:history-compact-details`) ===
-        "true",
+        'true',
       scrolledToEventOnInit: false,
       splitEnabled: false,
-      eventType: "",
+      eventType: '',
       eventTypes: [
-        { value: "All", label: "All" },
-        { value: "Decision", label: "Decision" },
-        { value: "Activity", label: "Activity" },
-        { value: "Signal", label: "Signal" },
-        { value: "Timer", label: "Timer" },
-        { value: "ChildWorkflow", label: "ChildWorkflow" },
-        { value: "Workflow", label: "Workflow" }
+        { value: 'All', label: 'All' },
+        { value: 'Decision', label: 'Decision' },
+        { value: 'Activity', label: 'Activity' },
+        { value: 'Signal', label: 'Signal' },
+        { value: 'Timer', label: 'Timer' },
+        { value: 'ChildWorkflow', label: 'ChildWorkflow' },
+        { value: 'Workflow', label: 'Workflow' },
       ],
       splitSizeSet: [1, 99],
       splitSizeMinSet: [0, 0],
       unwatch: [],
-      splitDirection: "vertical"
+      splitDirection: 'vertical',
     };
   },
   props: [
-    "baseAPIURL",
-    "domain",
-    "eventId",
-    "events",
-    "format",
-    "loading",
-    "runId",
-    "graphView",
-    "timelineEvents",
-    "isWorkflowRunning",
-    "workflowHistoryEventHighlightList",
-    "workflowHistoryEventHighlightListEnabled",
-    "workflowId"
+    'baseAPIURL',
+    'domain',
+    'eventId',
+    'events',
+    'format',
+    'loading',
+    'runId',
+    'graphView',
+    'timelineEvents',
+    'isWorkflowRunning',
+    'workflowHistoryEventHighlightList',
+    'workflowHistoryEventHighlightListEnabled',
+    'workflowId',
   ],
   created() {
     this.onResizeWindow = debounce(() => {
@@ -387,17 +387,17 @@ export default {
         { immediate: true }
       )
     );
-    window.addEventListener("resize", this.onResizeWindow);
+    window.addEventListener('resize', this.onResizeWindow);
   },
   beforeDestroy() {
-    window.removeEventListener("resize", this.onResizeWindow);
+    window.removeEventListener('resize', this.onResizeWindow);
     while (this.unwatch.length) {
       this.unwatch.pop()();
     }
   },
   computed: {
     exportFilename() {
-      return `${this.workflowId.replace(/[\\~#%&*{}/:<>?|"-]/g, " ")} - ${
+      return `${this.workflowId.replace(/[\\~#%&*{}/:<>?|"-]/g, ' ')} - ${
         this.runId
       }.json`;
     },
@@ -408,10 +408,10 @@ export default {
       const { eventId, eventType } = this;
       const formattedEvents = this.events.map(event => ({
         ...event,
-        expanded: event.eventId === eventId
+        expanded: event.eventId === eventId,
       }));
 
-      return eventType && eventType !== "All"
+      return eventType && eventType !== 'All'
         ? formattedEvents.filter(result => result.eventType.includes(eventType))
         : formattedEvents;
     },
@@ -425,7 +425,7 @@ export default {
         }, {});
     },
     isGrid() {
-      return this.format === "grid";
+      return this.format === 'grid';
     },
     selectedTimelineEvent() {
       return this.timelineEvents.find(te => te.eventIds.includes(this.eventId));
@@ -441,7 +441,7 @@ export default {
       return {
         timestamp: this.selectedEvent.timeStampDisplay,
         eventId: this.selectedEvent.eventId,
-        ...this.selectedEvent.details
+        ...this.selectedEvent.details,
       };
     },
     showTable() {
@@ -460,41 +460,47 @@ export default {
               acc[eventId] = index;
 
               return acc;
-            }, {})
+            }, {}),
           }),
           {}
         );
-    }
+    },
   },
   methods: {
     setSplitSize() {
-      if (this.graphView === "timeLine") this.splitSizeSet = [20, 80];
-      else if (this.graphView === "dagGraph") this.splitSizeSet = [40, 60];
-      else this.splitSizeSet = [1, 99];
+      if (this.graphView === 'timeLine') {
+        this.splitSizeSet = [20, 80];
+      } else if (this.graphView === 'dagGraph') {
+        this.splitSizeSet = [40, 60];
+      } else {
+        this.splitSizeSet = [1, 99];
+      }
+
       this.onSplitResize();
     },
     setSplitDirection() {
       this.splitDirection =
-        this.$route.query.graphView === "dagGraph" ? "horizontal" : "vertical";
+        this.$route.query.graphView === 'dagGraph' ? 'horizontal' : 'vertical';
     },
     deselectEvent() {
-      this.$router.replace({ query: omit(this.$route.query, "eventId") });
+      this.$router.replace({ query: omit(this.$route.query, 'eventId') });
     },
     enableSplitting() {
-      if (!this.splitEnabled && this.graphView === "timeLine") {
+      if (!this.splitEnabled && this.graphView === 'timeLine') {
         const timelineHeightPct =
           (this.$refs.splitPanel.$el.firstElementChild.offsetHeight /
             this.$refs.splitPanel.$el.offsetHeight) *
           100;
+
         this.splitSizeSet = [timelineHeightPct, 100 - timelineHeightPct];
         this.splitEnabled = true;
       }
     },
     onSplitResize: debounce(() => {
-      window.dispatchEvent(new Event("resize"));
+      window.dispatchEvent(new Event('resize'));
     }, 5),
     onWorkflowHistoryEventParamToggle(event) {
-      this.$emit("onWorkflowHistoryEventParamToggle", event);
+      this.$emit('onWorkflowHistoryEventParamToggle', event);
     },
     setEventType(et) {
       this.eventType = et.value;
@@ -502,7 +508,7 @@ export default {
     },
     setFormat(format) {
       this.$router.replace({
-        query: { ...this.$route.query, format }
+        query: { ...this.$route.query, format },
       });
       setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
     },
@@ -549,37 +555,37 @@ export default {
         }
       } catch (error) {
         // eslint-disable-next-line no-console
-        console.warn("vue-virtual-scroller: Could not scrollToItem:", error);
+        console.warn('vue-virtual-scroller: Could not scrollToItem:', error);
       }
     },
     selectTimelineEvent(i) {
       this.$router.replaceQueryParam(
-        "eventId",
+        'eventId',
         i.eventIds[i.eventIds.length - 1]
       );
     },
     toggleShowDagGraph() {
-      if (this.graphView === "dagGraph") {
+      if (this.graphView === 'dagGraph') {
         this.$router.replace({
-          query: omit(this.$route.query, "graphView")
+          query: omit(this.$route.query, 'graphView'),
         });
       } else {
         this.$router.replace({
-          query: { ...this.$route.query, graphView: "dagGraph" }
+          query: { ...this.$route.query, graphView: 'dagGraph' },
         });
       }
     },
     toggleShowTimeline() {
-      if (this.graphView === "timeLine") {
+      if (this.graphView === 'timeLine') {
         this.$router.replace({
-          query: omit(this.$route.query, "graphView")
+          query: omit(this.$route.query, 'graphView'),
         });
       } else {
         this.$router.replace({
-          query: { ...this.$route.query, graphView: "timeLine" }
+          query: { ...this.$route.query, graphView: 'timeLine' },
         });
       }
-    }
+    },
   },
   watch: {
     selectedEventId(id) {
@@ -598,19 +604,19 @@ export default {
     graphView() {
       this.setSplitSize();
       this.setSplitDirection();
-    }
+    },
   },
   components: {
-    "detail-list": DetailList,
+    'detail-list': DetailList,
     DynamicScroller,
     DynamicScrollerItem,
-    "event-detail": EventDetail,
-    "highlight-toggle": HighlightToggle,
+    'event-detail': EventDetail,
+    'highlight-toggle': HighlightToggle,
     prism: Prism,
     RecycleScroller,
     DagGraphContainer,
-    timeline: Timeline
-  }
+    timeline: Timeline,
+  },
 };
 </script>
 

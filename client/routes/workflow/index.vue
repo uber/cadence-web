@@ -74,15 +74,15 @@
 </template>
 
 <script>
-import { RETRY_COUNT_MAX, RETRY_TIMEOUT } from "./constants";
+import { RETRY_COUNT_MAX, RETRY_TIMEOUT } from './constants';
 import {
   getHistoryEvents,
   getHistoryTimelineEvents,
-  getSummary
-} from "./helpers";
-import { NOTIFICATION_TYPE_ERROR } from "~constants";
-import { getErrorMessage } from "~helpers";
-import { NavigationBar, NavigationLink } from "~components";
+  getSummary,
+} from './helpers';
+import { NOTIFICATION_TYPE_ERROR } from '~constants';
+import { getErrorMessage } from '~helpers';
+import { NavigationBar, NavigationLink } from '~components';
 
 export default {
   data() {
@@ -96,7 +96,7 @@ export default {
       workflow: undefined,
 
       history: {
-        loading: undefined
+        loading: undefined,
       },
 
       summary: {
@@ -105,37 +105,38 @@ export default {
         parentWorkflowRoute: undefined,
         result: undefined,
         wfStatus: undefined,
-        workflow: undefined
+        workflow: undefined,
       },
 
-      unwatch: []
+      unwatch: [],
     };
   },
   props: [
-    "dateFormat",
-    "domain",
-    "runId",
-    "timeFormat",
-    "timezone",
-    "workflowHistoryEventHighlightList",
-    "workflowHistoryEventHighlightListEnabled",
-    "workflowId"
+    'dateFormat',
+    'domain',
+    'runId',
+    'timeFormat',
+    'timezone',
+    'workflowHistoryEventHighlightList',
+    'workflowHistoryEventHighlightListEnabled',
+    'workflowId',
   ],
   created() {
     this.unwatch.push(
-      this.$watch("baseAPIURL", this.onBaseApiUrlChange, { immediate: true })
+      this.$watch('baseAPIURL', this.onBaseApiUrlChange, { immediate: true })
     );
   },
   beforeDestroy() {
     this.clearWatches();
   },
   components: {
-    "navigation-bar": NavigationBar,
-    "navigation-link": NavigationLink
+    'navigation-bar': NavigationBar,
+    'navigation-link': NavigationLink,
   },
   computed: {
     baseAPIURL() {
       const { domain, workflowId, runId } = this;
+
       return `/api/domains/${domain}/workflows/${workflowId}/${runId}`;
     },
     historyEvents() {
@@ -145,7 +146,7 @@ export default {
         timeFormat,
         timezone,
         workflowHistoryEventHighlightList,
-        workflowHistoryEventHighlightListEnabled
+        workflowHistoryEventHighlightListEnabled,
       } = this;
 
       return getHistoryEvents({
@@ -154,7 +155,7 @@ export default {
         timeFormat,
         timezone,
         workflowHistoryEventHighlightList,
-        workflowHistoryEventHighlightListEnabled
+        workflowHistoryEventHighlightListEnabled,
       });
     },
     historyTimelineEvents() {
@@ -172,7 +173,7 @@ export default {
       return `${queryUrl}&nextPageToken=${encodeURIComponent(
         this.nextPageToken
       )}`;
-    }
+    },
   },
   methods: {
     clearState() {
@@ -250,11 +251,11 @@ export default {
           this.summary = getSummary({
             events: this.events,
             isWorkflowRunning: this.isWorkflowRunning,
-            workflow: this.workflow
+            workflow: this.workflow,
           });
 
           if (shouldHighlightEventId) {
-            this.$emit("highlight-event-id", this.$route.query.eventId);
+            this.$emit('highlight-event-id', this.$route.query.eventId);
           }
 
           this.fetchHistoryPageRetryCount = 0;
@@ -270,9 +271,9 @@ export default {
             return;
           }
 
-          this.$emit("onNotification", {
+          this.$emit('onNotification', {
             message: getErrorMessage(error),
-            type: NOTIFICATION_TYPE_ERROR
+            type: NOTIFICATION_TYPE_ERROR,
           });
 
           this.fetchHistoryPageRetryCount += 1;
@@ -303,9 +304,9 @@ export default {
             this.baseApiUrlRetryCount = 0;
           },
           error => {
-            this.$emit("onNotification", {
+            this.$emit('onNotification', {
               message: getErrorMessage(error),
-              type: NOTIFICATION_TYPE_ERROR
+              type: NOTIFICATION_TYPE_ERROR,
             });
             this.baseApiUrlRetryCount += 1;
             setTimeout(
@@ -322,17 +323,17 @@ export default {
       this.fetchHistoryPage(queryUrl);
     },
     onNotification(event) {
-      this.$emit("onNotification", event);
+      this.$emit('onNotification', event);
     },
     onWorkflowHistoryEventParamToggle(event) {
-      this.$emit("onWorkflowHistoryEventParamToggle", event);
+      this.$emit('onWorkflowHistoryEventParamToggle', event);
     },
     setupQueryUrlWatch() {
       this.clearQueryUrlWatch();
       this.unwatch.push(
-        this.$watch("queryUrl", this.onQueryUrlChange, { immediate: true })
+        this.$watch('queryUrl', this.onQueryUrlChange, { immediate: true })
       );
-    }
-  }
+    },
+  },
 };
 </script>

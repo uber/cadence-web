@@ -30,23 +30,23 @@ export default {
       showLegend: false,
       connections: [
         {
-          name: "direct",
+          name: 'direct',
           text:
-            "Represents direct connections, when a child has the id of the parent"
+            'Represents direct connections, when a child has the id of the parent',
         },
-        { name: "chron", text: "Represents chronological connections" },
+        { name: 'chron', text: 'Represents chronological connections' },
         {
-          name: "inferred",
+          name: 'inferred',
           text:
-            "Represents connections between a signal and its triggered child "
-        }
-      ]
+            'Represents connections between a signal and its triggered child ',
+        },
+      ],
     };
-  }
+  },
 };
 </script>
 
-<style  scoped lang="stylus">
+<style scoped lang="stylus">
 @require '../../../styles/definitions.styl';
 .legend {
   background-color: white;

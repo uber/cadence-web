@@ -1,94 +1,149 @@
 /* import { eventInfo, event, workflow, eventTypeMap } from "./eventInterface"; */
 
-function getEventConnections(event, workflow) {
-  return eventTypeMap[event.eventType](event, workflow)
+//Looks for a chronological or inferred child
+//It is inferred if a DecisionTaskScheduled, otherwise its chronological
+//External signals are not children and therefore they are skipped
+function findChild(event, workflow) {
+  const slicedWorkflow = workflow.slice(event.eventId);
+  let eventInfo = {};
+  let targetevent;
+
+  //We are at the end of the workflow, no children!
+  if (!slicedWorkflow.length) {
+    return eventInfo;
+  }
+
+  if (slicedWorkflow[0].eventType === 'DecisionTaskScheduled') {
+    eventInfo = {
+      inferredChild: slicedWorkflow[0].eventId,
+    };
+
+    return eventInfo;
+  } else if (event.eventType === 'WorkflowExecutionSignaled') {
+    for (targetevent of slicedWorkflow) {
+      switch (targetevent.eventType) {
+        case 'WorkflowExecutionSignaled':
+        case 'WorkflowExecutionCancelRequested':
+          break;
+        case 'DecisionTaskScheduled':
+          eventInfo = {
+            inferredChild: targetevent.eventId,
+          };
+
+          return eventInfo;
+      }
+    }
+  } else {
+    for (targetevent of slicedWorkflow) {
+      switch (targetevent.eventType) {
+        case 'WorkflowExecutionSignaled':
+        case 'WorkflowExecutionCancelRequested':
+          break;
+        default:
+          eventInfo = {
+            chronologicalChild: targetevent.eventId,
+          };
+
+          return eventInfo;
+      }
+    }
+  }
+
+  return eventInfo;
 }
 
-let eventTypeMap = {
-  'WorkflowExecutionStarted': function (event, workflow) {
-    let eventDetails = event.eventFullDetails,
-      taskList = JSON.stringify(eventDetails.taskList),
-
+const eventTypeMap = {
+  WorkflowExecutionStarted: function(event, workflow) {
+    const eventDetails = event.eventFullDetails,
       eventInfo = {
         inferredChild: event.eventId + 1,
         parentWorkflowExecution: eventDetails.parentWorkflowExecution,
-        previousExecutionRunId: eventDetails.continuedExecutionRunId
-      }
+        previousExecutionRunId: eventDetails.continuedExecutionRunId,
+      };
 
-    return eventInfo
+    return eventInfo;
   },
-  'ActivityTaskCanceled': function (event) {
+  ActivityTaskCanceled: function(event) {
     const eventInfo = {
       parent: event.eventFullDetails.startedEventId,
-    }
-    return eventInfo
+    };
+
+    return eventInfo;
   },
-  'ActivityTaskCancelRequested': function (event) {
+  ActivityTaskCancelRequested: function(event) {
     const eventInfo = {
       parent: event.eventFullDetails.decisionTaskCompletedEventId,
-    }
-    return eventInfo
+    };
+
+    return eventInfo;
   },
-  'ActivityTaskCompleted': function (event, workflow) {
-    let eventDetails = event.eventFullDetails,
+  ActivityTaskCompleted: function(event, workflow) {
+    const eventDetails = event.eventFullDetails,
       { inferredChild, chronologicalChild } = findChild(event, workflow),
       eventInfo = {
         parent: eventDetails.startedEventId,
         chronologicalChild: chronologicalChild,
         inferredChild: inferredChild,
-      }
-    return eventInfo
+      };
+
+    return eventInfo;
   },
 
-  'ActivityTaskFailed': function (event, workflow) {
-    let eventDetails = event.eventFullDetails,
+  ActivityTaskFailed: function(event, workflow) {
+    const eventDetails = event.eventFullDetails,
       { inferredChild, chronologicalChild } = findChild(event, workflow);
     const eventInfo = {
       parent: eventDetails.startedEventId,
       chronologicalChild: chronologicalChild,
       inferredChild: inferredChild,
       status: 'failed',
-    }
-    return eventInfo
+    };
+
+    return eventInfo;
   },
-  'ActivityTaskScheduled': function (event) {
-    let eventDetails = event.eventFullDetails,
+  ActivityTaskScheduled: function(event) {
+    const eventDetails = event.eventFullDetails,
       eventInfo = {
         parent: eventDetails.decisionTaskCompletedEventId,
-      }
-    return eventInfo
+      };
+
+    return eventInfo;
   },
-  'ActivityTaskStarted': function (event) {
-    let eventDetails = event.eventFullDetails,
+  ActivityTaskStarted: function(event) {
+    const eventDetails = event.eventFullDetails,
       eventInfo = {
-        parent: eventDetails.scheduledEventId
-      }
-    return eventInfo
+        parent: eventDetails.scheduledEventId,
+      };
+
+    return eventInfo;
   },
-  'ActivityTaskTimedOut': function (event, workflow) {
-    let { inferredChild, chronologicalChild } = findChild(event, workflow);
+  ActivityTaskTimedOut: function(event, workflow) {
+    const { inferredChild, chronologicalChild } = findChild(event, workflow);
     const eventInfo = {
       parent: event.eventFullDetails.startedEventId,
       chronologicalChild: chronologicalChild,
-      inferredChild: inferredChild
-    }
-    return eventInfo
+      inferredChild: inferredChild,
+    };
+
+    return eventInfo;
   },
-  'CancelTimerFailed': function (event) {
+  CancelTimerFailed: function(event) {
     const eventInfo = {
       parent: event.eventFullDetails.decisionTaskCompletedEventId,
       status: 'failed',
-    }
-    return eventInfo
+    };
+
+    return eventInfo;
   },
-  'ChildWorkflowExecutionCanceled': function (event) {
+  ChildWorkflowExecutionCanceled: function(event) {
     const eventInfo = {
-      parent: event.eventFullDetails.startedEventId
-    }
-    return eventInfo
+      parent: event.eventFullDetails.startedEventId,
+    };
+
+    return eventInfo;
   },
-  'ChildWorkflowExecutionCompleted': function (event, workflow) {
-    let eventDetails = event.eventFullDetails,
+  ChildWorkflowExecutionCompleted: function(event, workflow) {
+    const eventDetails = event.eventFullDetails,
       { inferredChild, chronologicalChild } = findChild(event, workflow);
     const eventInfo = {
       parent: eventDetails.startedEventId,
@@ -96,11 +151,12 @@ let eventTypeMap = {
       inferredChild: inferredChild,
       chronologicalChild: chronologicalChild,
       childRoute: eventDetails.workflowExecution,
-    }
-    return eventInfo
+    };
+
+    return eventInfo;
   },
-  'ChildWorkflowExecutionFailed': function (event, workflow) {
-    let eventDetails = event.eventFullDetails,
+  ChildWorkflowExecutionFailed: function(event, workflow) {
+    const eventDetails = event.eventFullDetails,
       { inferredChild, chronologicalChild } = findChild(event, workflow);
     const eventInfo = {
       parent: eventDetails.startedEventId,
@@ -108,281 +164,261 @@ let eventTypeMap = {
       chronologicalChild: chronologicalChild,
       childRoute: eventDetails.workflowExecution,
       status: 'failed',
+    };
 
-    }
-    return eventInfo
+    return eventInfo;
   },
-  'ChildWorkflowExecutionStarted': function (event, workflow) {
-    let eventDetails = event.eventFullDetails,
+  ChildWorkflowExecutionStarted: function(event, workflow) {
+    const eventDetails = event.eventFullDetails,
       { inferredChild, chronologicalChild } = findChild(event, workflow);
     const eventInfo = {
       parent: eventDetails.initiatedEventId,
       inferredChild: inferredChild,
       chronologicalChild: chronologicalChild,
       childRoute: eventDetails.workflowExecution,
-    }
-    return eventInfo
+    };
+
+    return eventInfo;
   },
-  'ChildWorkflowExecutionTerminated': function (event) {
+  ChildWorkflowExecutionTerminated: function(event) {
     const eventInfo = {
-      parent: event.eventFullDetails.startedEventId
-    }
-    return eventInfo
+      parent: event.eventFullDetails.startedEventId,
+    };
+
+    return eventInfo;
   },
-  'ChildWorkflowExecutionTimedOut': function (event) {
+  ChildWorkflowExecutionTimedOut: function(event) {
     const eventInfo = {
-      parent: event.eventFullDetails.startedEventId
-    }
-    return eventInfo
+      parent: event.eventFullDetails.startedEventId,
+    };
+
+    return eventInfo;
   },
-  'DecisionTaskCompleted': function (event, workflow) {
-    let eventInfo = event.eventFullDetails,
+  DecisionTaskCompleted: function(event, workflow) {
+    const eventInfo = event.eventFullDetails,
       { chronologicalChild } = findChild(event, workflow);
+
     return {
       parent: eventInfo.startedEventId,
-      chronologicalChild: chronologicalChild
-    }
+      chronologicalChild: chronologicalChild,
+    };
   },
-  'DecisionTaskFailed': function (event) {
+  DecisionTaskFailed: function(event) {
     const eventInfo = {
       status: 'failed',
       parent: event.eventFullDetails.startedEventId,
-    }
-    return eventInfo
+    };
+
+    return eventInfo;
   },
-  'DecisionTaskScheduled': function (event, workflow) {
-    const eventInfo = {}
-    return eventInfo
+  DecisionTaskScheduled: function(event, workflow) {
+    const eventInfo = {};
+
+    return eventInfo;
   },
-  'DecisionTaskStarted': function (event) {
-    let eventInfo = event.eventFullDetails
+  DecisionTaskStarted: function(event) {
+    const eventInfo = event.eventFullDetails;
+
     return {
-      parent: eventInfo.scheduledEventId
-    }
+      parent: eventInfo.scheduledEventId,
+    };
   },
-  'DecisionTaskTimedOut': function (event) {
+  DecisionTaskTimedOut: function(event) {
     const eventInfo = {
-      parent: event.eventFullDetails.scheduledEventId
-    }
-    return eventInfo
+      parent: event.eventFullDetails.scheduledEventId,
+    };
+
+    return eventInfo;
   },
-  'ExternalWorkflowExecutionCancelRequested': function (event, workflow) {
-    let { inferredChild, chronologicalChild } = findChild(event, workflow);
+  ExternalWorkflowExecutionCancelRequested: function(event, workflow) {
+    const { inferredChild, chronologicalChild } = findChild(event, workflow);
     const eventInfo = {
       parent: event.eventFullDetails.initiatedEventId,
       inferredChild: inferredChild,
-      chronologicalChild: chronologicalChild
-    }
-    return eventInfo
+      chronologicalChild: chronologicalChild,
+    };
+
+    return eventInfo;
   },
-  'ExternalWorkflowExecutionSignaled': function (event, workflow) {
-    let eventDetails = event.eventFullDetails,
+  ExternalWorkflowExecutionSignaled: function(event, workflow) {
+    const eventDetails = event.eventFullDetails,
       { inferredChild } = findChild(event, workflow);
     const eventInfo = {
       parent: eventDetails.initiatedEventId,
       inferredChild: inferredChild,
-    }
-    return eventInfo
+    };
+
+    return eventInfo;
   },
-  'MarkerRecorded': function (event) {
-    let eventDetails = event.eventFullDetails
+  MarkerRecorded: function(event) {
+    const eventDetails = event.eventFullDetails;
     const eventInfo = {
-      parent: eventDetails.decisionTaskCompletedEventId
-    }
-    return eventInfo
+      parent: eventDetails.decisionTaskCompletedEventId,
+    };
+
+    return eventInfo;
   },
-  'RequestCancelActivityTaskFailed': function (event) {
-    const eventInfo = {
-      status: 'failed',
-      parent: event.eventFullDetails.decisionTaskCompletedEventId
-    }
-    return eventInfo
-  },
-  'RequestCancelExternalWorkflowExecutionFailed': function (event) {
+  RequestCancelActivityTaskFailed: function(event) {
     const eventInfo = {
       status: 'failed',
-      parent: event.eventFullDetails.decisionTaskCompletedEventId
-    }
-    return eventInfo
+      parent: event.eventFullDetails.decisionTaskCompletedEventId,
+    };
+
+    return eventInfo;
   },
-  'RequestCancelExternalWorkflowExecutionInitiated': function (event) {
-    const eventInfo = {
-      parent: event.eventFullDetails.decisionTaskCompletedEventId
-    }
-    return eventInfo
-  },
-  'SignalExternalWorkflowExecutionFailed': function (event) {
+  RequestCancelExternalWorkflowExecutionFailed: function(event) {
     const eventInfo = {
       status: 'failed',
-      parent: event.eventFullDetails.decisionTaskCompletedEventId
-    }
-    return eventInfo
+      parent: event.eventFullDetails.decisionTaskCompletedEventId,
+    };
+
+    return eventInfo;
   },
-  'SignalExternalWorkflowExecutionInitiated': function (event) {
-    let eventDetails = event.eventFullDetails,
+  RequestCancelExternalWorkflowExecutionInitiated: function(event) {
+    const eventInfo = {
+      parent: event.eventFullDetails.decisionTaskCompletedEventId,
+    };
+
+    return eventInfo;
+  },
+  SignalExternalWorkflowExecutionFailed: function(event) {
+    const eventInfo = {
+      status: 'failed',
+      parent: event.eventFullDetails.decisionTaskCompletedEventId,
+    };
+
+    return eventInfo;
+  },
+  SignalExternalWorkflowExecutionInitiated: function(event) {
+    const eventDetails = event.eventFullDetails,
       eventInfo = {
-        parent: eventDetails.decisionTaskCompletedEventId
-      }
-    return eventInfo
+        parent: eventDetails.decisionTaskCompletedEventId,
+      };
+
+    return eventInfo;
   },
-  'StartChildWorkflowExecutionFailed': function (event) {
-    let eventDetails = event.eventFullDetails,
+  StartChildWorkflowExecutionFailed: function(event) {
+    const eventDetails = event.eventFullDetails,
       eventInfo = {
         status: 'failed',
         parent: eventDetails.decisionTaskCompletedEventId,
-      }
-    return eventInfo
+      };
+
+    return eventInfo;
   },
-  'StartChildWorkflowExecutionInitiated': function (event) {
-    let eventInfo = {
-      parent: event.eventFullDetails.decisionTaskCompletedEventId
-    }
-    return eventInfo
+  StartChildWorkflowExecutionInitiated: function(event) {
+    const eventInfo = {
+      parent: event.eventFullDetails.decisionTaskCompletedEventId,
+    };
+
+    return eventInfo;
   },
-  'TimerCanceled': function (event) {
+  TimerCanceled: function(event) {
     //TODO
     const eventInfo = {
-      parent: event.eventFullDetails.startedEventId
-    }
-    return eventInfo
+      parent: event.eventFullDetails.startedEventId,
+    };
+
+    return eventInfo;
   },
-  'TimerFired': function (event, workflow) {
-    let eventDetails = event.eventFullDetails,
+  TimerFired: function(event, workflow) {
+    const eventDetails = event.eventFullDetails,
       { inferredChild } = findChild(event, workflow),
       eventInfo = {
         parent: eventDetails.startedEventId,
         inferredChild: inferredChild,
-      }
-    return eventInfo
+      };
+
+    return eventInfo;
   },
-  'TimerStarted': function (event) {
-    let eventDetails = event.eventFullDetails,
+  TimerStarted: function(event) {
+    const eventDetails = event.eventFullDetails,
       eventInfo = {
-        parent: eventDetails.decisionTaskCompletedEventId
-      }
-    return eventInfo
+        parent: eventDetails.decisionTaskCompletedEventId,
+      };
+
+    return eventInfo;
   },
-  'UpsertWorkflowSearchAttributes': function (event) {
+  UpsertWorkflowSearchAttributes: function(event) {
     //TODO: not sure about what is important to display here
-    let eventDetails = event.eventFullDetails,
+    const eventDetails = event.eventFullDetails,
       eventInfo = {
-        parent: eventDetails.decisionTaskCompletedEventId
-      }
-    return eventInfo
+        parent: eventDetails.decisionTaskCompletedEventId,
+      };
+
+    return eventInfo;
   },
-  'WorkflowExecutionCanceled': function (event) {
+  WorkflowExecutionCanceled: function(event) {
     const eventInfo = {
       parent: event.eventFullDetails.decisionTaskCompletedEventId,
-    }
-    return eventInfo
+    };
+
+    return eventInfo;
   },
-  'WorkflowExecutionCancelRequested': function (event, workflow) {
-    let { inferredChild } = findChild(event, workflow),
+  WorkflowExecutionCancelRequested: function(event, workflow) {
+    const { inferredChild } = findChild(event, workflow),
       //This event has no parent nor child
       eventInfo = {
-        inferredChild: inferredChild
-      }
-    return eventInfo
+        inferredChild: inferredChild,
+      };
+
+    return eventInfo;
   },
-  'WorkflowExecutionCompleted': function (event) {
-    let eventDetails = event.eventFullDetails,
+  WorkflowExecutionCompleted: function(event) {
+    const eventDetails = event.eventFullDetails,
       eventInfo = {
         parent: eventDetails.decisionTaskCompletedEventId,
         status: 'completed',
-      }
-    return eventInfo
+      };
+
+    return eventInfo;
   },
-  'WorkflowExecutionContinuedAsNew': function (event) {
-    let eventDetails = event.eventFullDetails,
+  WorkflowExecutionContinuedAsNew: function(event) {
+    const eventDetails = event.eventFullDetails,
       eventInfo = {
         parent: eventDetails.decisionTaskCompletedEventId,
         newExecutionRunId: eventDetails.newExecutionRunId,
         status: 'completed',
-      }
-    return eventInfo
+      };
+
+    return eventInfo;
   },
-  'WorkflowExecutionFailed': function (event) {
-    let eventDetails = event.eventFullDetails,
+  WorkflowExecutionFailed: function(event) {
+    const eventDetails = event.eventFullDetails,
       eventInfo = {
         parent: eventDetails.decisionTaskCompletedEventId,
         status: 'failed',
-      }
-    return eventInfo
+      };
+
+    return eventInfo;
   },
-  'WorkflowExecutionSignaled': function (event, workflow) {
-    let eventDetails = event.eventFullDetails,
-      { inferredChild } = findChild(event, workflow),
+  WorkflowExecutionSignaled: function(event, workflow) {
+    const { inferredChild } = findChild(event, workflow),
       eventInfo = {
         inferredChild: inferredChild,
-      }
-    return eventInfo
+      };
+
+    return eventInfo;
   },
-  'WorkflowExecutionTerminated': function (event) {
-    let eventDetails = event.eventFullDetails,
-      eventInfo = {
-        //TODO: parent: event.eventId - 1,
-      }
-    return eventInfo
+  WorkflowExecutionTerminated: function(event) {
+    const eventInfo = {
+      //TODO: parent: event.eventId - 1,
+    };
+
+    return eventInfo;
   },
-  'WorkflowExecutionTimedOut': function (event) {
+  WorkflowExecutionTimedOut: function(event) {
     //TODO - not sure how to implement.
     const eventInfo = {
-      parent: event.eventId - 1
-    }
-    return eventInfo
+      parent: event.eventId - 1,
+    };
+
+    return eventInfo;
   },
-}
+};
 
-//Looks for a chronological or inferred child
-//It is inferred if a DecisionTaskScheduled, otherwise its chronological
-//External signals are not children and therefore they are skipped
-function findChild(event, workflow) {
-  let
-    slicedWorkflow = workflow.slice(event.eventId),
-    eventInfo = {},
-    targetevent;
-
-  //We are at the end of the workflow, no children!
-  if (!slicedWorkflow.length) return eventInfo
-
-  if (slicedWorkflow[0].eventType === 'DecisionTaskScheduled') {
-    eventInfo = {
-      inferredChild: slicedWorkflow[0].eventId
-    }
-    return eventInfo
-  }
-
-  else if (event.eventType === 'WorkflowExecutionSignaled') {
-    for (targetevent of slicedWorkflow) {
-      switch (targetevent.eventType) {
-        case 'WorkflowExecutionSignaled':
-        case 'WorkflowExecutionCancelRequested':
-          break
-        case 'DecisionTaskScheduled':
-          eventInfo = {
-            inferredChild: targetevent.eventId
-          }
-          return eventInfo
-      }
-    }
-  }
-
-  else {
-    for (targetevent of slicedWorkflow) {
-      switch (targetevent.eventType) {
-        case 'WorkflowExecutionSignaled':
-        case 'WorkflowExecutionCancelRequested':
-          break
-        default:
-          eventInfo = {
-            chronologicalChild: targetevent.eventId
-          }
-          return eventInfo
-      }
-    }
-
-  }
-  return eventInfo
+function getEventConnections(event, workflow) {
+  return eventTypeMap[event.eventType](event, workflow);
 }
 
 // Exporting variables and functions

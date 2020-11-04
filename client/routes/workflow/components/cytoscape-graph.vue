@@ -5,24 +5,24 @@
 </template>
 
 <script>
-import cytoscape from "cytoscape";
-import omit from "lodash-es/omit";
-import Graph from "../helpers/graph";
-import cytoscapeLayout, { LAYOUT_NAME } from "../helpers/cytoscape-layout";
-import graphStyles from "../helpers/graph-styles";
-import store from "../../../store/index";
-import { mapMutations } from "vuex";
+import cytoscape from 'cytoscape';
+import omit from 'lodash-es/omit';
+import { mapMutations } from 'vuex';
+import Graph from '../helpers/graph';
+import cytoscapeLayout, { LAYOUT_NAME } from '../helpers/cytoscape-layout';
+import graphStyles from '../helpers/graph-styles';
+import store from '../../../store/index';
 
 cytoscape.use(cytoscapeLayout);
 
 export default {
-  name: "cytoscape-graph",
-  props: ["events", "selectedEventId"],
+  name: 'cytoscape-graph',
+  props: ['events', 'selectedEventId'],
   data() {
     return {
       nodes: [],
       edges: [],
-      styles: graphStyles
+      styles: graphStyles,
     };
   },
   watch: {
@@ -31,10 +31,10 @@ export default {
     },
     events(events) {
       this.graph.setEvents(events);
-    }
+    },
   },
   methods: {
-    ...mapMutations(["childRoute", "toggleChildBtn"]),
+    ...mapMutations(['childRoute', 'toggleChildBtn']),
     zoomToNode(node) {
       const zoom = 1.1,
         bb = node.boundingBox(),
@@ -42,24 +42,24 @@ export default {
         h = this.cy.height(),
         pan = {
           x: (w - zoom * (bb.x1 + bb.x2)) / 2,
-          y: (h - zoom * (bb.y1 + bb.y2)) / 2
+          y: (h - zoom * (bb.y1 + bb.y2)) / 2,
         };
 
       //Pan the graph to view node
       this.cy.animate({
         zoom,
-        pan
+        pan,
       });
     },
     updateChildBtn(node) {
       const nodeData = node.data();
 
       if (nodeData.childRoute) {
-        this.childRoute({ route: nodeData.childRoute, btnText: "To child" });
+        this.childRoute({ route: nodeData.childRoute, btnText: 'To child' });
       } else if (nodeData.newExecutionRunId) {
         this.childRoute({
           route: nodeData.newExecutionRunId,
-          btnText: "Next execution"
+          btnText: 'Next execution',
         });
       } else {
         this.toggleChildBtn();
@@ -70,11 +70,11 @@ export default {
       this.updateView(id);
 
       // Deselect all previously selected nodes
-      this.cy.$(":selected").deselect();
+      this.cy.$(':selected').deselect();
 
       // Mark current node as selected
       const node =
-        id !== null && id !== undefined ? this.cy.nodes("node#" + id) : null;
+        id !== null && id !== undefined ? this.cy.nodes('node#' + id) : null;
 
       if (node && node.length) {
         // Zoom to the selected node
@@ -104,36 +104,36 @@ export default {
         style: graphStyles,
         elements,
         layout: {
-          name: LAYOUT_NAME
-        }
+          name: LAYOUT_NAME,
+        },
       });
 
       cy.minZoom(0.1);
       cy.maxZoom(10);
 
-      cy.on("mouseover", "node", function(e) {
-        container.style.cursor = "pointer";
+      cy.on('mouseover', 'node', function(e) {
+        container.style.cursor = 'pointer';
       });
-      cy.on("mouseout", "node", function(e) {
-        container.style.cursor = "default";
+      cy.on('mouseout', 'node', function(e) {
+        container.style.cursor = 'default';
       });
 
       //Register click event
-      cy.on("tap", evt => {
-        let evtTarget = evt.target;
+      cy.on('tap', evt => {
+        const evtTarget = evt.target;
 
         // Tap on background
         if (evtTarget === cy) {
           if (this.selectedEventId) {
-            this.$router.replace({ query: omit(this.$route.query, "eventId") });
-            store.commit("toggleChildBtn");
+            this.$router.replace({ query: omit(this.$route.query, 'eventId') });
+            store.commit('toggleChildBtn');
           }
           // Tap on a node that is not already selected
         } else if (evtTarget.isNode() && !evtTarget.selected()) {
           const nodeData = evtTarget.data();
 
           this.$router.replace({
-            query: { ...this.$route.query, eventId: nodeData.id }
+            query: { ...this.$route.query, eventId: nodeData.id },
           });
         }
       });
@@ -151,7 +151,7 @@ export default {
         shouldRedraw,
         elements,
         previousExecutionRunId,
-        parentWorkflowExecution
+        parentWorkflowExecution,
       } = this.graph.selectNode(id);
 
       if (!shouldRedraw) {
@@ -160,18 +160,18 @@ export default {
 
       // We are viewing a child workflow, show parent btn
       if (previousExecutionRunId) {
-        store.commit("previousExecutionRoute", previousExecutionRunId);
+        store.commit('previousExecutionRoute', previousExecutionRunId);
       } else if (parentWorkflowExecution) {
-        store.commit("parentRoute", parentWorkflowExecution);
+        store.commit('parentRoute', parentWorkflowExecution);
       }
 
       this.initView(elements);
-    }
+    },
   },
   mounted() {
     this.graph = new Graph(this.events);
     this.selectNode(this.selectedEventId);
-  }
+  },
 };
 </script>
 <style scoped>

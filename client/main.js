@@ -34,9 +34,14 @@ import WorkflowList from './routes/domain/workflow-list';
 import WorkflowSummary from './routes/workflow/summary';
 import WorkflowTabs from './routes/workflow';
 
-import store from './store/index.js'
+import store from './store/index.js';
 
-import { getEscapedForwardSlash, http, injectMomentDurationFormat, jsonTryParse } from '~helpers';
+import {
+  getEscapedForwardSlash,
+  http,
+  injectMomentDurationFormat,
+  jsonTryParse,
+} from '~helpers';
 
 const routeOpts = {
   mode: 'history',

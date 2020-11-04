@@ -1,5 +1,5 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from 'vue';
+import Vuex from 'vuex';
 
 const getDefaultState = () => {
   return {
@@ -8,13 +8,13 @@ const getDefaultState = () => {
     parentRoute: null,
     hasChildBtn: false,
     childBtnText: null,
-    parentBtnText: "to parent",
-  }
-}
+    parentBtnText: 'to parent',
+  };
+};
 // initial state
-const state = getDefaultState()
+const state = getDefaultState();
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 const store = new Vuex.Store({
   state: state,
@@ -25,22 +25,20 @@ const store = new Vuex.Store({
       state.childBtnText = param.btnText;
     },
     newExecutionRoute(state, route) {
-      state.newExecutionId = route,
-        state.hasChildBtn = !state.hasChildBtn
+      (state.newExecutionId = route), (state.hasChildBtn = !state.hasChildBtn);
     },
     previousExecutionRoute(state, route) {
-      state.parentRoute = route,
-        state.parentBtnText = "previous execution"
+      (state.parentRoute = route), (state.parentBtnText = 'previous execution');
     },
     toggleChildBtn(state) {
-      state.hasChildBtn = false
+      state.hasChildBtn = false;
     },
     parentRoute(state, route) {
-      state.parentRoute = route
+      state.parentRoute = route;
     },
     resetState(state) {
-      Object.assign(state, getDefaultState())
-    }
+      Object.assign(state, getDefaultState());
+    },
   },
   getters: {
     childRoute: state => state.childRoute,
@@ -48,8 +46,8 @@ const store = new Vuex.Store({
     hasChildBtn: state => state.hasChildBtn,
     childBtnText: state => state.childBtnText,
     parentBtnText: state => state.parentBtnText,
-    parentRoute: state => state.parentRoute
-  }
-})
+    parentRoute: state => state.parentRoute,
+  },
+});
 
-export default store
+export default store;
