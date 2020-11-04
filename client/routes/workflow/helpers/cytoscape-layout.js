@@ -145,7 +145,9 @@ function CadenceLayout(options) {
 CadenceLayout.prototype.run = function() {
   const options = this.options;
   const eles = options.eles;
-  const nodes = eles.nodes();
+  const nodes = eles
+    .nodes()
+    .sort((n1, n2) => n1.data().timestamp - n2.data().timestamp);
   const edges = eles.edges();
 
   arrangeGraph({ nodes, edges }, options);
