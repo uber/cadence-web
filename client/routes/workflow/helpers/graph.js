@@ -16,7 +16,7 @@ class Graph {
    */
   selectNode(selectedEventId = null) {
     const N = 300;
-    const enableChronologicalEdges = false;
+    const enableChronologicalEdges = true;
 
     // If the selected node index is within (S * 100)% of the middle of rendered slice,
     // we do not need to redraw the graph, just scroll to the node.
