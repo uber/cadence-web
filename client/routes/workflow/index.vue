@@ -1,6 +1,6 @@
 <script>
 // Copyright (c) 2017-2020 Uber Technologies Inc.
-//
+// Portions of the Software are attributed to Copyright (c) 2020 Temporal Technologies Inc.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -302,14 +302,12 @@ export default {
         icon="icon_trips"
         label="Stack Trace"
         :to="{ name: 'workflow/stack-trace' }"
-        v-show="isWorkflowRunning"
       />
       <navigation-link
         id="nav-link-query"
         icon="icon_lost"
         label="Query"
         :to="{ name: 'workflow/query' }"
-        v-show="isWorkflowRunning"
       />
     </navigation-bar>
     <router-view
