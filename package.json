@@ -39,6 +39,8 @@
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "css-loader": "^0.28.7",
+    "cytoscape": "3.16.0",
+    "d3": "^6.2.0",
     "deepmerge": "^2.0.0",
     "extract-text-webpack-plugin": "^3.0.1",
     "file-loader": "^1.1.5",
@@ -81,6 +83,7 @@
     "vue-template-compiler": "^2.5.2",
     "vue-virtual-scroller": "^1.0.0-rc.2",
     "vue2-datepicker": "^3.4.1",
+    "vuex": "^3.5.1",
     "webpack": "^3.12.0"
   },
   "devDependencies": {
@@ -106,8 +109,10 @@
     "eslint-plugin-react-hooks": "^2.3.0",
     "eslint-plugin-vue": "^6.1.2",
     "fetch-mock": "^7.7.0",
+    "handlebars": "^4.7.6",
     "jest": "^24.9.0",
     "jest-fetch-mock": "^3.0.3",
+    "jquery": "^3.5.1",
     "mocha": "^4.0.1",
     "mocha-chrome": "^1.1.0",
     "nathanboktae-browser-test-utils": "^0.1.0",

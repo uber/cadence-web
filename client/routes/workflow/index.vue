@@ -47,6 +47,7 @@
       name="history"
       :baseAPIURL="baseAPIURL"
       :events="historyEvents"
+      :isWorkflowRunning="isWorkflowRunning"
       :loading="history.loading"
       :timelineEvents="historyTimelineEvents"
       :workflow-history-event-highlight-list="workflowHistoryEventHighlightList"
@@ -135,6 +136,7 @@ export default {
   computed: {
     baseAPIURL() {
       const { domain, workflowId, runId } = this;
+
       return `/api/domains/${domain}/workflows/${workflowId}/${runId}`;
     },
     historyEvents() {
@@ -215,6 +217,8 @@ export default {
       this.pqu = pagedQueryUrl;
       this.$http(pagedQueryUrl)
         .then(res => {
+          // const res = require('./demo-data/10k-raw.xjson');
+
           // eslint-disable-next-line no-underscore-dangle
           if (this._isDestroyed || this.pqu !== pagedQueryUrl) {
             return null;

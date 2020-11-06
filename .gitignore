@@ -6,3 +6,4 @@ dist/
 .idea
 server/idl
 package-lock.json
+client/routes/workflow/demo-data/
