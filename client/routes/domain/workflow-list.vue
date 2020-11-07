@@ -22,8 +22,8 @@
 
 import moment from 'moment';
 import debounce from 'lodash-es/debounce';
+import { maxBy } from 'lodash-es';
 import orderBy from 'lodash-es/orderBy';
-import pagedGrid from '~components/paged-grid';
 import { DateRangePicker, WorkflowsGrid } from '~components';
 import {
   getDatetimeFormattedString,
@@ -32,7 +32,7 @@ import {
   timestampToDate,
 } from '~helpers';
 
-export default pagedGrid({
+export default {
   props: ['dateFormat', 'domain', 'timeFormat', 'timezone'],
   data() {
     return {
@@ -40,7 +40,10 @@ export default pagedGrid({
       results: [],
       error: undefined,
       nextPageToken: undefined,
+      npt: undefined,
+      nptAlt: undefined,
       statuses: [
+        { value: 'ALL', label: 'All' },
         { value: 'OPEN', label: 'Open' },
         { value: 'CLOSED', label: 'Closed' },
         { value: 'COMPLETED', label: 'Completed' },
@@ -86,7 +89,9 @@ export default pagedGrid({
       return getEndTimeIsoString(range, endTime);
     },
     filterBy() {
-      return this.status.value === 'OPEN' ? 'StartTime' : 'CloseTime';
+      return ['ALL', 'OPEN'].includes(this.status.value)
+        ? 'StartTime'
+        : 'CloseTime';
     },
     formattedResults() {
       const { dateFormat, results, timeFormat, timezone } = this;
@@ -124,7 +129,10 @@ export default pagedGrid({
     state() {
       const { statusName } = this;
 
-      return !statusName || statusName === 'OPEN' ? 'open' : 'closed';
+      if (!this.statusName || statusName == 'ALL') {
+        return 'all';
+      }
+      return statusName === 'OPEN' ? 'open' : 'closed';
     },
     status() {
       return !this.$route.query || !this.$route.query.status
@@ -143,8 +151,9 @@ export default pagedGrid({
       }
 
       if (!this.isRouteRangeValid(this.minStartDate)) {
-        const defaultRange = state === 'open' ? 30 : this.maxRetentionDays;
-        const updatedQuery = this.setRange(`last-${defaultRange}-days`);
+        const updatedQuery = this.setRange(
+          `last-${Math.min(30, this.maxRetentionDays)}-days`
+        );
 
         query.startTime = getStartTimeIsoString(
           updatedQuery.range,
@@ -174,7 +183,7 @@ export default pagedGrid({
         return null;
       }
 
-      const includeStatus = !['OPEN', 'CLOSED'].includes(status);
+      const includeStatus = !['ALL', 'OPEN', 'CLOSED'].includes(status);
 
       const criteria = {
         startTime,
@@ -216,6 +225,7 @@ export default pagedGrid({
       function refreshWorkflows() {
         this.results = [];
         this.npt = undefined;
+        this.nptAlt = undefined;
         this.fetchWorkflows();
       },
       typeof Mocha === 'undefined' ? 200 : 60,
@@ -240,32 +250,6 @@ export default pagedGrid({
       this.loading = false;
       return { workflows, nextPageToken };
     },
-    fetch2: debounce(
-      function fetch(url, query) {
-        this.loading = true;
-        this.error = undefined;
-
-        return this.$http(url, { query })
-          .then((res) => {
-            this.npt = res.nextPageToken;
-            this.loading = false;
-            this.results = query.nextPageToken
-              ? this.results.concat(res.executions)
-              : res.executions;
-
-            return this.results;
-          })
-          .catch(e => {
-            this.npt = undefined;
-            this.loading = false;
-            this.error = (e.json && e.json.message) || e.status || e.message;
-
-            return [];
-          });
-      },
-      typeof Mocha === 'undefined' ? 350 : 60,
-      { maxWait: 1000 }
-    ),
     fetchNamespace() {
       const { domain } = this;
       return this.$http(`/api/domains/${domain}`).then((r) => {
@@ -288,20 +272,65 @@ export default pagedGrid({
       if (!this.criteria || this.loading) {
         return;
       }
-      const query = { ...this.criteria, nextPageToken: this.npt };
-      if (query.queryString) {
-        query.queryString = decodeURI(query.queryString);
+
+      let workflows = [];
+      if (this.state !== 'all') {
+        const query = { ...this.criteria, nextPageToken: this.npt };
+        if (query.queryString) {
+          query.queryString = decodeURI(query.queryString);
+        }
+
+        const { workflows: wfs, nextPageToken } = await this.fetch(
+          this.fetchUrl,
+          query
+        );
+
+        workflows = wfs;
+        this.npt = nextPageToken;
+      } else {
+        const { domain } = this;
+        const queryOpen = { ...this.criteria, nextPageToken: this.npt };
+        const queryClosed = { ...this.criteria, nextPageToken: this.nptAlt };
+
+        const { workflows: wfsOpen, nextPageToken: nptOpen } = await this.fetch(
+          `/api/namespaces/${domain}/workflows/open`,
+          queryOpen
+        );
+
+        const {
+          workflows: wfsClosed,
+          nextPageToken: nptClosed,
+        } = await this.fetch(
+          `/api/namespaces/${domain}/workflows/closed`,
+          queryClosed
+        );
+
+        // saturate diff in workflows between the max dates
+        // so both open and closed workflows are fetched until the same date
+        const maxOpen = maxBy(wfsOpen, (w) => w.startTime);
+        const maxClosed = maxBy(wfsClosed, (w) => w.startTime);
+        const saturateOpen = wfsOpen.startTime < wfsClosed.startTime;
+        const [startDate, endDate] = saturateOpen
+          ? [maxOpen.startTime, maxClosed.startTime]
+          : [maxClosed.startTime, maxOpen.startTime];
+        const queryDiff = { ...this.criteria, startDate, endDate };
+        const { workflows: wfsDiff, nextPageToken: nptDiff } = await this.fetch(
+          `/api/namespaces/${domain}/workflows/${
+            saturateOpen ? 'open' : 'closed'
+          }`,
+          queryDiff
+        );
+
+        workflows = orderBy(
+          [...wfsOpen, ...wfsClosed, ...wfsDiff],
+          'startTime',
+          ['desc']
+        );
+        this.npt = saturateOpen ? nptDiff : nptOpen;
+        this.nptAlt = saturateOpen ? nptClosed : nptDiff;
       }
 
-      const { workflows, nextPageToken } = await this.fetch(
-        this.fetchUrl,
-        query
-      );
-
-      this.results = query.nextPageToken
-        ? this.results.concat(workflows)
-        : workflows;
-      this.npt = nextPageToken;
+      this.results = [...this.results, ...workflows];
     },
     setWorkflowFilter(e) {
       const target = e.target || e.testTarget; // test hook since Event.target is readOnly and unsettable
@@ -413,7 +442,7 @@ export default pagedGrid({
       this.refreshWorkflows();
     },
   },
-});
+};
 </script>
 
 <template>

@@ -94,6 +94,7 @@ paged-grid()
   .row-header
     display: flex;
     position: relative;
+    padding: 0 1rem;
     flex-direction: row;
     justify-content: start;
     align-items: stretch;
@@ -107,6 +108,7 @@ paged-grid()
 
   .row
     height: 38px;
+    padding: 0 1rem;
     display: flex;
     flex-direction: row;
     justify-content: start;
@@ -128,7 +130,7 @@ paged-grid()
     &.col-name
       flex-basis: 300px;
     &.col-status
-      flex-basis: 100px;
+      flex-basis: 150px;
       &.completed
         color uber-green
       &.failed
