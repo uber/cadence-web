@@ -293,41 +293,60 @@ export default {
         const queryClosed = { ...this.criteria, nextPageToken: this.nptAlt };
 
         const { workflows: wfsOpen, nextPageToken: nptOpen } = await this.fetch(
-          `/api/namespaces/${domain}/workflows/open`,
+          `/api/domains/${domain}/workflows/open`,
           queryOpen
         );
+        this.npt = nptOpen;
 
         const {
           workflows: wfsClosed,
           nextPageToken: nptClosed,
         } = await this.fetch(
-          `/api/namespaces/${domain}/workflows/closed`,
+          `/api/domains/${domain}/workflows/closed`,
           queryClosed
         );
+        this.nptAlt = nptClosed;
 
         // saturate diff in workflows between the max dates
         // so both open and closed workflows are fetched until the same date
-        const maxOpen = maxBy(wfsOpen, (w) => w.startTime);
-        const maxClosed = maxBy(wfsClosed, (w) => w.startTime);
-        const saturateOpen = wfsOpen.startTime < wfsClosed.startTime;
-        const [startDate, endDate] = saturateOpen
-          ? [maxOpen.startTime, maxClosed.startTime]
-          : [maxClosed.startTime, maxOpen.startTime];
-        const queryDiff = { ...this.criteria, startDate, endDate };
-        const { workflows: wfsDiff, nextPageToken: nptDiff } = await this.fetch(
-          `/api/namespaces/${domain}/workflows/${
-            saturateOpen ? 'open' : 'closed'
-          }`,
-          queryDiff
-        );
+        let maxOpen = maxBy(wfsOpen, (w) => moment(w.startTime));
+        let maxClosed = maxBy(wfsClosed, (w) => moment(w.startTime));
+
+        let nptDiff;
+        let wfsDiff = [];
+        let saturateOpen;
+
+        if (maxOpen && maxClosed && maxOpen.startTime !== maxClosed.startTime) {
+          maxOpen = moment(maxOpen.startTime);
+          maxClosed = moment(maxClosed.startTime);
+          saturateOpen = maxOpen < maxClosed;
+          const [startDate, endDate] = saturateOpen
+            ? [maxOpen.startTime, maxClosed.startTime]
+            : [maxClosed.startTime, maxOpen.startTime];
+          const queryDiff = { ...this.criteria, startDate, endDate };
+
+          let diff = await this.fetch(
+            `/api/domains/${domain}/workflows/${
+              saturateOpen ? 'open' : 'closed'
+            }`,
+            queryDiff
+          );
+
+          wfsDiff = diff.workflows;
+          nptDiff = diff.nextPageToken;
+
+          if (saturateOpen === true) {
+            this.npt = nptDiff;
+          } else if (saturateOpen === false) {
+            this.nptAlt = nptDiff;
+          }
+        }
 
         workflows = orderBy(
           [...wfsOpen, ...wfsClosed, ...wfsDiff],
           'startTime',
           ['desc']
         );
-        this.npt = saturateOpen ? nptDiff : nptOpen;
-        this.nptAlt = saturateOpen ? nptClosed : nptDiff;
       }
 
       this.results = [...this.results, ...workflows];
