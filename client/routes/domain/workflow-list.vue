@@ -320,10 +320,13 @@ export default {
           maxOpen = moment(maxOpen.startTime);
           maxClosed = moment(maxClosed.startTime);
           saturateOpen = maxOpen < maxClosed;
-          const [startDate, endDate] = saturateOpen
-            ? [maxOpen.startTime, maxClosed.startTime]
-            : [maxClosed.startTime, maxOpen.startTime];
-          const queryDiff = { ...this.criteria, startDate, endDate };
+
+          let [startTime, endTime] = saturateOpen
+            ? [maxOpen, maxClosed]
+            : [maxClosed, maxOpen];
+          startTime = startTime.add(1, 'milliseconds').toISOString();
+          endTime = startTime.add(1, 'milliseconds').toISOString();
+          const queryDiff = { ...this.criteria, startTime, endTime };
 
           let diff = await this.fetch(
             `/api/domains/${domain}/workflows/${
