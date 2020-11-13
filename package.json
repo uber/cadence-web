@@ -75,5 +75,9 @@
     "nathanboktae-browser-test-utils": "^0.1.0",
     "supertest": "^3.0.0",
     "webpack-hot-client": "^1.3.0"
+  },
+  "optionalDependencies": {
+    "hammerjs": "2.0.8",
+    "propagating-hammerjs": "1.4.6"
   }
 }
