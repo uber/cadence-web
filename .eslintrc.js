@@ -12,7 +12,7 @@ module.exports = {
     module: true,   // hot reloading
     scenario: true, // mocha
   },
-  plugins: ['jest', 'import'],
+  plugins: ['jest', 'import', 'license-header'],
   rules: {
     curly: ['error', 'all'],
     'dot-notation': 'error',
@@ -31,6 +31,7 @@ module.exports = {
         'ignore': ['describe', 'test']
       }
     ],
+    'license-header/header': ['error', './LICENSE'],
     'no-var': 'error',
     'no-use-before-define': 'error',
     'no-useless-constructor': 'error',
