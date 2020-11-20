@@ -27,13 +27,13 @@ describe('DateRangePicker helpers', () => {
       beforeEach(() => {
         jest
           .spyOn(Date, 'now')
-          .mockImplementation(() => new Date(2020, 2, 10).getTime());
+          .mockImplementation(() => new Date(Date.UTC(2020, 2, 10)).getTime());
       });
 
       it('should return date = the end of March 10th 2020.', () => {
         const output = getMaxEndDate();
 
-        expect(output.toISOString()).toEqual('2020-03-11T06:59:59.999Z');
+        expect(output.toISOString()).toEqual('2020-03-10T06:59:59.999Z');
       });
     });
   });
