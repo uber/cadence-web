@@ -12,7 +12,7 @@ module.exports = {
     module: true,   // hot reloading
     scenario: true, // mocha
   },
-  plugins: ['jest', 'import', 'license-header'],
+  plugins: ['jest', 'import', 'eslint-plugin-header'],
   rules: {
     curly: ['error', 'all'],
     'dot-notation': 'error',
