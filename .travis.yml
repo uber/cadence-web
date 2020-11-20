@@ -14,5 +14,6 @@ env:
 
 before_script:
   - npm run lint:check
+  - npm run test:unit
   - npm run test-server &
   - sleep 5
