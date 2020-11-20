@@ -17,6 +17,14 @@ module.exports = {
     curly: ['error', 'all'],
     'dot-notation': 'error',
     'flowtype/require-valid-file-annotation': [2, 'never'],
+    'header/header': [
+      'error',
+      'line',
+      [
+        'Copyright (c) 2017-2020 Uber Technologies Inc.'
+      ],
+      2
+    ],
     'import/order': [
       'error',
       { 'groups': ['builtin', 'external', 'parent', 'sibling', 'index'] }
@@ -31,7 +39,6 @@ module.exports = {
         'ignore': ['describe', 'test']
       }
     ],
-    'license-header/header': ['error', './LICENSE'],
     'no-var': 'error',
     'no-use-before-define': 'error',
     'no-useless-constructor': 'error',
