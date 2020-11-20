@@ -72,7 +72,7 @@ describe('getDateTimeFormattedString', () => {
   });
 
   describe('getDateTimeFormattedString', () => {
-    it('should return "" when date = Date("2020-01-01T00:00:00.000Z"), dateFormat = DATE_FORMAT_YYYY_MM_DD, timeFormat = TIME_FORMAT_24, timezone = TIMEZONE_UTC.', () => {
+    it('should return "2020-01-01 00:00:00" when date = Date("2020-01-01T00:00:00.000Z"), dateFormat = DATE_FORMAT_YYYY_MM_DD, timeFormat = TIME_FORMAT_24, timezone = TIMEZONE_UTC.', () => {
       const date = new Date('2020-01-01T00:00:00.000Z');
       const dateFormat = DATE_FORMAT_YYYY_MM_DD;
       const timeFormat = TIME_FORMAT_24;
@@ -87,7 +87,7 @@ describe('getDateTimeFormattedString', () => {
       expect(output).toEqual('2020-01-01 00:00:00');
     });
 
-    it('should return "" when date = Date("2020-01-01T00:00:00.000Z"), dateFormat = DATE_FORMAT_D_MMM_YYYY, timeFormat = TIME_FORMAT_12, timezone = TIMEZONE_LOCAL.', () => {
+    it('should return "1 Jan, 2020 12:00:00 AM" when date = Date("2020-01-01T00:00:00.000Z"), dateFormat = DATE_FORMAT_D_MMM_YYYY, timeFormat = TIME_FORMAT_12, timezone = TIMEZONE_LOCAL.', () => {
       const date = new Date('2020-01-01T00:00:00.000Z');
       const dateFormat = DATE_FORMAT_D_MMM_YYYY;
       const timeFormat = TIME_FORMAT_12;
@@ -99,7 +99,7 @@ describe('getDateTimeFormattedString', () => {
         timezone,
       });
 
-      expect(output).toEqual('31 Dec, 2019 4:00:00 PM');
+      expect(output).toEqual('1 Jan, 2020 12:00:00 AM');
     });
   });
 });

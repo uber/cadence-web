@@ -19,9 +19,9 @@ describe('mapArchivedWorkflowResponse', () => {
     const output = mapArchivedWorkflowResponse({ results });
 
     expect(output[0].closeStatus).toEqual('closeStatusValue');
-    expect(output[0].closeTime).toEqual('Mar 29, 2020 5:00:00 PM');
+    expect(output[0].closeTime).toEqual('Mar 30, 2020 12:00:00 AM');
     expect(output[0].runId).toEqual('runIdValue');
-    expect(output[0].startTime).toEqual('Feb 29, 2020 4:00:00 PM');
+    expect(output[0].startTime).toEqual('Mar 1, 2020 12:00:00 AM');
     expect(output[0].workflowId).toEqual('workflowIdValue');
     expect(output[0].workflowName).toEqual('workflowNameValue');
   });
