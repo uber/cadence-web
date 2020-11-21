@@ -1,3 +1,6 @@
+<script>
+</script>
+
 <template>
   <table class="archival-table">
     <thead>
