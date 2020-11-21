@@ -8,7 +8,7 @@
     "clean": "rm -rf dist",
     "dev": "NODE_ENV=development node server.js",
     "lint": "npm run lint:check -- --fix",
-    "lint:check": "eslint --ext .js,.vue client",
+    "lint:check": "eslint --ext .js,.vue lint-test",
     "install": "npm run install:idl && npm run install:news",
     "install:idl": "napa && rm -rf server/idl && cp -R node_modules/cadence-idl/thrift server/idl",
     "install:news": "cd news && npm install",
