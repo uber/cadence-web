@@ -17,6 +17,7 @@
       v-if="!loading && isArchivalEnabled"
       :date-format="dateFormat"
       :domain="domain"
+      :domain-settings="domainSettings"
       :timeFormat="timeFormat"
       :timezone="timezone"
     />
