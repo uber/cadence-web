@@ -21,7 +21,40 @@ module.exports = {
       'error',
       'line',
       [
-        ' Copyright (c) 2017-2020 Uber Technologies Inc.',
+        /*
+        {
+          pattern: ' Copyright (c) 2020 Uber Technologies Inc.\nhello world',
+          template: ' Copyright (c) 2020 Uber Technologies Inc.\nhello world',
+        },
+        */
+        /**/
+        {
+          /**
+           * Examples which match pattern:
+           *
+           * 1. multi-year span
+           * // Copyright (c) 2017-2020 Uber Technologies Inc.
+           *
+           * 2. single year span
+           * // Copyright (c) 2020 Uber Technologies Inc.
+           *
+           * TODO
+           * 3. new file from another company referenced
+           * // Modifications Copyright (c) 2020 Uber Technologies Inc.
+           * // Copyright (c) 2020 Temporal Technologies, Inc.
+           *
+           * TODO
+           * 4. new file from another company referenced with modifications
+           * // Copyright (c) 2017-2020 Uber Technologies Inc.
+           * // Portions of the Software are attributed to Copyright (c) 2020 Temporal Technologies Inc.
+           *
+           * See client/test/lint/license for passing examples.
+           */
+          pattern: ' (Modifications )?Copyright \\(c\\) 20\\d{2}(\\-20\\d{2})? Uber Technologies Inc\.(\\n\\\/\\\/ Copyright \\(c\\) 20\\d{2}(\\-20\\d{2})? [\\w\\s,.]+)?',
+
+          // NOTE: make sure to update year in template when new year comes.
+          template: ' Copyright (c) 2020 Uber Technologies Inc.',
+        },
         '',
         ' Permission is hereby granted, free of charge, to any person obtaining a copy',
         ' of this software and associated documentation files (the "Software"), to deal',
@@ -40,6 +73,7 @@ module.exports = {
         ' LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,',
         ' OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN',
         ' THE SOFTWARE.'
+        /**/
       ],
       2
     ],
