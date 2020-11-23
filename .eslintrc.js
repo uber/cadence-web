@@ -21,7 +21,7 @@ module.exports = {
       'error',
       'line',
       [
-        'Copyright (c) 2017-2020 Uber Technologies Inc.'
+        ' Copyright (c) 2017-2020 Uber Technologies Inc.'
       ],
       2
     ],
