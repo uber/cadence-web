@@ -1,33 +1,17 @@
 <script>
+//Copyright (c) 2017-2020 Uber Technologies Inc.
+
 export default {
   name: 'bar-loader',
 };
 </script>
 
 <template>
-  <table class="archival-table">
-    <thead>
-      <th>Workflow ID</th>
-      <th>Run ID</th>
-      <th>Name</th>
-      <th>Status</th>
-      <th>Start time</th>
-      <th>End time</th>
-    </thead>
-    <tbody>
-      <slot></slot>
-    </tbody>
-  </table>
+  <div></div>
 </template>
 
-<style lang="stylus">
-table.archival-table {
+<style>
+div {
   position: relative;
-
-  th {
-    position: sticky;
-    top: 0;
-    background-color: white;
-  }
 }
 </style>
