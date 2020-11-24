@@ -21,13 +21,6 @@ module.exports = {
       'error',
       'line',
       [
-        /*
-        {
-          pattern: ' Copyright (c) 2020 Uber Technologies Inc.\nhello world',
-          template: ' Copyright (c) 2020 Uber Technologies Inc.\nhello world',
-        },
-        */
-        /**/
         {
           /**
            * Examples which match pattern:
@@ -85,7 +78,6 @@ module.exports = {
         ' LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,',
         ' OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN',
         ' THE SOFTWARE.'
-        /**/
       ],
       2
     ],
