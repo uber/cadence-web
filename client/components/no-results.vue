@@ -1,3 +1,10 @@
+<script>
+export default {
+  name: 'no-results',
+  props: ['results'],
+};
+</script>
+
 <template>
   <div class="no-results-container" v-if="results && !results.length">
     <div class="no-results">
@@ -5,13 +12,6 @@
     </div>
   </div>
 </template>
-
-<script>
-export default {
-  name: 'no-results',
-  props: ['results'],
-};
-</script>
 
 <style lang="stylus">
 .no-results-container {

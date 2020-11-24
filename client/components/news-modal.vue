@@ -1,3 +1,28 @@
+<script>
+import { ButtonFill, ButtonIcon, FlexGrid, FlexGridItem } from '~components';
+
+export default {
+  props: ['newsItems'],
+  methods: {
+    onLinkClick() {
+      this.$modal.hide('news-modal');
+    },
+    onDismissClick() {
+      this.$modal.hide('news-modal');
+    },
+    onBeforeClose() {
+      this.$emit('before-close');
+    },
+  },
+  components: {
+    'button-fill': ButtonFill,
+    'button-icon': ButtonIcon,
+    'flex-grid': FlexGrid,
+    'flex-grid-item': FlexGridItem,
+  },
+};
+</script>
+
 <template>
   <modal name="news-modal" @before-close="onBeforeClose">
     <div class="news-modal">
@@ -48,31 +73,6 @@
     </div>
   </modal>
 </template>
-
-<script>
-import { ButtonFill, ButtonIcon, FlexGrid, FlexGridItem } from '~components';
-
-export default {
-  props: ['newsItems'],
-  methods: {
-    onLinkClick() {
-      this.$modal.hide('news-modal');
-    },
-    onDismissClick() {
-      this.$modal.hide('news-modal');
-    },
-    onBeforeClose() {
-      this.$emit('before-close');
-    },
-  },
-  components: {
-    'button-fill': ButtonFill,
-    'button-icon': ButtonIcon,
-    'flex-grid': FlexGrid,
-    'flex-grid-item': FlexGridItem,
-  },
-};
-</script>
 
 <style lang="stylus">
 .news-modal {

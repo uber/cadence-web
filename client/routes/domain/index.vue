@@ -1,3 +1,16 @@
+<script>
+import { FeatureFlag, NavigationBar, NavigationLink } from '~components';
+
+export default {
+  props: ['dateFormat', 'domain', 'timeFormat', 'timezone'],
+  components: {
+    'feature-flag': FeatureFlag,
+    'navigation-bar': NavigationBar,
+    'navigation-link': NavigationLink,
+  },
+};
+</script>
+
 <template>
   <section class="domain">
     <navigation-bar>
@@ -42,19 +55,6 @@
     />
   </section>
 </template>
-
-<script>
-import { FeatureFlag, NavigationBar, NavigationLink } from '~components';
-
-export default {
-  props: ['dateFormat', 'domain', 'timeFormat', 'timezone'],
-  components: {
-    'feature-flag': FeatureFlag,
-    'navigation-bar': NavigationBar,
-    'navigation-link': NavigationLink,
-  },
-};
-</script>
 
 <style lang="stylus">
 section.domain {

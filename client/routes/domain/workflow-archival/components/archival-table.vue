@@ -1,4 +1,7 @@
 <script>
+export default {
+  name: 'archival-table',
+};
 </script>
 
 <template>
