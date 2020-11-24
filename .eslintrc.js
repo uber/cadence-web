@@ -1,3 +1,5 @@
+const currentYear = (new Date()).getFullYear();
+
 module.exports = {
   extends: [
     'plugin:prettier/recommended',
@@ -35,11 +37,12 @@ module.exports = {
            * // Modifications Copyright (c) 2020 Uber Technologies Inc.
            *
            * See `client/test/lint/license` for passing examples.
+           *
+           * NOTE: This will update each year so when new year's day comes,
+           *       the build will fail and will need the headers to be updated.
            */
-          pattern: ' (Modifications )?Copyright \\(c\\) 20\\d{2}(\\-20\\d{2})? Uber Technologies Inc\.',
-
-          // NOTE: make sure to update year in template when new year comes.
-          template: ' Copyright (c) 2017-2020 Uber Technologies Inc.',
+          pattern: ` (Modifications )?Copyright \\(c\\) (20\\d{2}\\-)?${currentYear} Uber Technologies Inc\.`,
+          template: ` Copyright (c) ${currentYear} Uber Technologies Inc.`,
         },
         {
           /**
