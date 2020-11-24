@@ -52,7 +52,7 @@ module.exports = {
            * 2. new file from another company referenced
            * // Copyright (c) 2020 Temporal Technologies, Inc.
            *
-           * 3. new file from another company referenced with modifications from Uber
+           * 3. existing file but updated from another company and merged back
            * // Portions of the Software are attributed to Copyright (c) 2020 Temporal Technologies Inc.
            *
            * See `client/test/lint/license` for passing examples.
