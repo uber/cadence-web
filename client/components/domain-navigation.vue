@@ -1,51 +1,3 @@
-<template>
-  <div class="domain-navigation" :class="'validation-' + validation">
-    <div class="input-and-validation">
-      <div class="input-wrapper">
-        <input
-          type="text"
-          name="domain"
-          spellcheck="false"
-          autocorrect="off"
-          ref="input"
-          v-bind:value="d"
-          :placeholder="$props.placeholder"
-          @input="onInput"
-          @keydown.enter="changeDomain"
-          @keydown.esc="onEsc"
-        />
-        <a
-          :href="validation === 'valid' ? '#' : ''"
-          class="change-domain"
-          @click="changeDomain"
-        ></a>
-      </div>
-      <p :class="'validation validation-' + validation">
-        {{ validationMessage }}
-      </p>
-    </div>
-    <ul class="recent-domains" v-if="recentDomains.length">
-      <h3>Recent Domains</h3>
-      <li v-for="domain in recentDomains" :key="domain">
-        <a
-          :href="domainLink(domain)"
-          :data-domain="domain"
-          @click="recordDomainFromClick"
-          @mouseover="showDomainDesc(domain)"
-          >{{ domain }}</a
-        >
-      </li>
-    </ul>
-    <div
-      :class="{ 'domain-description': true, pending: !!domainDescRequest }"
-      v-if="domainDesc"
-    >
-      <span class="domain-name">{{ domainDescName }}</span>
-      <detail-list :item="domainDesc" :title="domainDescName" />
-    </div>
-  </div>
-</template>
-
 <script>
 import debounce from 'lodash-es/debounce';
 import omit from 'lodash-es/omit';
@@ -193,6 +145,54 @@ export default {
   },
 };
 </script>
+
+<template>
+  <div class="domain-navigation" :class="'validation-' + validation">
+    <div class="input-and-validation">
+      <div class="input-wrapper">
+        <input
+          type="text"
+          name="domain"
+          spellcheck="false"
+          autocorrect="off"
+          ref="input"
+          v-bind:value="d"
+          :placeholder="$props.placeholder"
+          @input="onInput"
+          @keydown.enter="changeDomain"
+          @keydown.esc="onEsc"
+        />
+        <a
+          :href="validation === 'valid' ? '#' : ''"
+          class="change-domain"
+          @click="changeDomain"
+        ></a>
+      </div>
+      <p :class="'validation validation-' + validation">
+        {{ validationMessage }}
+      </p>
+    </div>
+    <ul class="recent-domains" v-if="recentDomains.length">
+      <h3>Recent Domains</h3>
+      <li v-for="domain in recentDomains" :key="domain">
+        <a
+          :href="domainLink(domain)"
+          :data-domain="domain"
+          @click="recordDomainFromClick"
+          @mouseover="showDomainDesc(domain)"
+          >{{ domain }}</a
+        >
+      </li>
+    </ul>
+    <div
+      :class="{ 'domain-description': true, pending: !!domainDescRequest }"
+      v-if="domainDesc"
+    >
+      <span class="domain-name">{{ domainDescName }}</span>
+      <detail-list :item="domainDesc" :title="domainDescName" />
+    </div>
+  </div>
+</template>
 
 <style lang="stylus">
 @require "../styles/definitions.styl"

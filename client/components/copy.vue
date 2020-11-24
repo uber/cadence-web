@@ -1,6 +1,3 @@
-<template>
-  <a href="#" class="copy" @click.prevent="copy"></a>
-</template>
 
 <script>
 export default {
@@ -33,6 +30,10 @@ export default {
   },
 };
 </script>
+
+<template>
+  <a href="#" class="copy" @click.prevent="copy"></a>
+</template>
 
 <style lang="stylus">
 @require "../styles/definitions.styl"

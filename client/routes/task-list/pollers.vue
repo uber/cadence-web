@@ -1,24 +1,3 @@
-<template>
-  <section :class="{ 'task-list-pollers': true, loading }">
-    <table v-if="pollers">
-      <thead>
-        <th>Identity</th>
-        <th>Last Access Time</th>
-        <th>Decision Handler</th>
-        <th>Activity Handler</th>
-      </thead>
-      <tbody>
-        <tr v-for="p in formattedPollers" :key="p.identity">
-          <td>{{ p.identity }}</td>
-          <td>{{ p.lastAccessTime }}</td>
-          <td class="decision" :data-handled="p.handlesDecisions"></td>
-          <td class="activity" :data-handled="p.handlesActivities"></td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
-</template>
-
 <script>
 import { getDatetimeFormattedString } from '~helpers';
 
@@ -73,6 +52,27 @@ export default {
   methods: {},
 };
 </script>
+
+<template>
+  <section :class="{ 'task-list-pollers': true, loading }">
+    <table v-if="pollers">
+      <thead>
+        <th>Identity</th>
+        <th>Last Access Time</th>
+        <th>Decision Handler</th>
+        <th>Activity Handler</th>
+      </thead>
+      <tbody>
+        <tr v-for="p in formattedPollers" :key="p.identity">
+          <td>{{ p.identity }}</td>
+          <td>{{ p.lastAccessTime }}</td>
+          <td class="decision" :data-handled="p.handlesDecisions"></td>
+          <td class="activity" :data-handled="p.handlesActivities"></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</template>
 
 <style lang="stylus">
 @require "../../styles/definitions.styl"

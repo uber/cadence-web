@@ -1,7 +1,3 @@
-<template>
-  <div class="timeline"></div>
-</template>
-
 <script>
 import moment from 'moment';
 import { Timeline, timeline } from 'vis-timeline';
@@ -147,6 +143,10 @@ export default {
   },
 };
 </script>
+
+<template>
+  <div class="timeline"></div>
+</template>
 
 <style lang="stylus">
 @require "../../../styles/definitions.styl"

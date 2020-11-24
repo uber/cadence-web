@@ -1,3 +1,17 @@
+<script>
+export default {
+  name: 'archival-table-row',
+  props: [
+    'closeStatus',
+    'closeTime',
+    'runId',
+    'startTime',
+    'workflowId',
+    'workflowName',
+  ],
+};
+</script>
+
 <template>
   <tr>
     <td>
@@ -30,17 +44,3 @@
     </td>
   </tr>
 </template>
-
-<script>
-export default {
-  name: 'archival-table-row',
-  props: [
-    'closeStatus',
-    'closeTime',
-    'runId',
-    'startTime',
-    'workflowId',
-    'workflowName',
-  ],
-};
-</script>

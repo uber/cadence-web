@@ -1,19 +1,3 @@
-<template>
-  <component class="highlight-toggle" :is="tag">
-    <span class="label" :class="{ highlight: isHighlighted }">
-      {{ label }}
-    </span>
-    <button-icon
-      :class="{
-        active: isHighlighted,
-        disabled: !isEnabled,
-      }"
-      icon="icon_search"
-      @click="onClick"
-    />
-  </component>
-</template>
-
 <script>
 import ButtonIcon from './button-icon';
 
@@ -48,6 +32,22 @@ export default {
   },
 };
 </script>
+
+<template>
+  <component class="highlight-toggle" :is="tag">
+    <span class="label" :class="{ highlight: isHighlighted }">
+      {{ label }}
+    </span>
+    <button-icon
+      :class="{
+        active: isHighlighted,
+        disabled: !isEnabled,
+      }"
+      icon="icon_search"
+      @click="onClick"
+    />
+  </component>
+</template>
 
 <style lang="stylus">
 .highlight-toggle {

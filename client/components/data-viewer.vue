@@ -1,14 +1,3 @@
-<template>
-  <div class="data-viewer">
-    <a
-      href="#"
-      class="view-full-screen"
-      @click.stop.prevent="viewFullScreen"
-    ></a>
-    <prism language="json" ref="codebox">{{ item.jsonStringDisplay }}</prism>
-  </div>
-</template>
-
 <script>
 import 'prismjs';
 import 'prismjs/components/prism-json';
@@ -78,6 +67,17 @@ export default {
   },
 };
 </script>
+
+<template>
+  <div class="data-viewer">
+    <a
+      href="#"
+      class="view-full-screen"
+      @click.stop.prevent="viewFullScreen"
+    ></a>
+    <prism language="json" ref="codebox">{{ item.jsonStringDisplay }}</prism>
+  </div>
+</template>
 
 <style lang="stylus">
 @require "../styles/definitions.styl"

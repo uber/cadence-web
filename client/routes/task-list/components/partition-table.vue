@@ -1,3 +1,10 @@
+<script>
+export default {
+  name: 'partition-table',
+  props: ['title', 'partitionList'],
+};
+</script>
+
 <template>
   <table v-if="partitionList">
     <caption>
@@ -17,10 +24,3 @@
     </tbody>
   </table>
 </template>
-
-<script>
-export default {
-  name: 'partition-table',
-  props: ['title', 'partitionList'],
-};
-</script>

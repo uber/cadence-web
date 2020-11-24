@@ -1,56 +1,3 @@
-<template>
-  <section class="workflow-archival-basic">
-    <header>
-      <flex-grid>
-        <flex-grid-item grow="1">
-          <text-input
-            label="Query"
-            name="queryString"
-            type="search"
-            :value="queryString"
-            @input="onTextChange"
-          />
-        </flex-grid-item>
-        <flex-grid-item width="85px">
-          <button-fill
-            label="BASIC"
-            tag="router-link"
-            :to="{
-              name: 'workflow-archival-basic',
-            }"
-          />
-        </flex-grid-item>
-      </flex-grid>
-    </header>
-    <section class="results">
-      <archival-table
-        v-infinite-scroll="nextPage"
-        infinite-scroll-disabled="disableInfiniteScroll"
-        infinite-scroll-distance="20"
-        infinite-scroll-immediate-check="false"
-      >
-        <archival-table-row
-          v-for="result in formattedResults"
-          :close-status="result.closeStatus"
-          :close-time="result.closeTime"
-          :key="result.runId"
-          :run-id="result.runId"
-          :start-time="result.startTime"
-          :workflow-id="result.workflowId"
-          :workflow-name="result.workflowName"
-        />
-      </archival-table>
-      <error-message :error="error" />
-      <no-results :results="results" />
-      <loading-spinner v-if="loading" />
-      <loading-message :delay="loadingMessageDelay" :loading="loading">
-        <p>It looks like this request is taking some time to process.</p>
-        <p>Try reducing CloseTime range to improve search time.</p>
-      </loading-message>
-    </section>
-  </section>
-</template>
-
 <script>
 import debounce from 'lodash-es/debounce';
 import { ArchivalTable, ArchivalTableRow } from './components';
@@ -185,6 +132,59 @@ export default pagedGrid({
   },
 });
 </script>
+
+<template>
+  <section class="workflow-archival-basic">
+    <header>
+      <flex-grid>
+        <flex-grid-item grow="1">
+          <text-input
+            label="Query"
+            name="queryString"
+            type="search"
+            :value="queryString"
+            @input="onTextChange"
+          />
+        </flex-grid-item>
+        <flex-grid-item width="85px">
+          <button-fill
+            label="BASIC"
+            tag="router-link"
+            :to="{
+              name: 'workflow-archival-basic',
+            }"
+          />
+        </flex-grid-item>
+      </flex-grid>
+    </header>
+    <section class="results">
+      <archival-table
+        v-infinite-scroll="nextPage"
+        infinite-scroll-disabled="disableInfiniteScroll"
+        infinite-scroll-distance="20"
+        infinite-scroll-immediate-check="false"
+      >
+        <archival-table-row
+          v-for="result in formattedResults"
+          :close-status="result.closeStatus"
+          :close-time="result.closeTime"
+          :key="result.runId"
+          :run-id="result.runId"
+          :start-time="result.startTime"
+          :workflow-id="result.workflowId"
+          :workflow-name="result.workflowName"
+        />
+      </archival-table>
+      <error-message :error="error" />
+      <no-results :results="results" />
+      <loading-spinner v-if="loading" />
+      <loading-message :delay="loadingMessageDelay" :loading="loading">
+        <p>It looks like this request is taking some time to process.</p>
+        <p>Try reducing CloseTime range to improve search time.</p>
+      </loading-message>
+    </section>
+  </section>
+</template>
 
 <style lang="stylus">
 section.workflow-archival-basic {

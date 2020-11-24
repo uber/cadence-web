@@ -1,9 +1,3 @@
-<template>
-  <section class="domain-search">
-    <domain-navigation type="text" placeholder="cadence-canary" />
-  </section>
-</template>
-
 <script>
 import { DomainNavigation } from '~components';
 
@@ -16,6 +10,12 @@ export default {
   },
 };
 </script>
+
+<template>
+  <section class="domain-search">
+    <domain-navigation type="text" placeholder="cadence-canary" />
+  </section>
+</template>
 
 <style lang="stylus">
 @require "../styles/definitions"

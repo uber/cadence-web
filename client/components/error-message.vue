@@ -1,3 +1,10 @@
+<script>
+export default {
+  name: 'error-message',
+  props: ['error'],
+};
+</script>
+
 <template>
   <div class="error-message-container" v-if="error">
     <span class="error">
@@ -5,13 +12,6 @@
     </span>
   </div>
 </template>
-
-<script>
-export default {
-  name: 'error-message',
-  props: ['error'],
-};
-</script>
 
 <style lang="stylus">
 .error-message-container {

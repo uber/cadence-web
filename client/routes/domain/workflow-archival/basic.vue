@@ -1,79 +1,3 @@
-<template>
-  <section class="workflow-archival-basic">
-    <header>
-      <flex-grid>
-        <flex-grid-item grow="1">
-          <text-input
-            label="Workflow ID"
-            name="workflowId"
-            type="search"
-            :value="workflowId"
-            @input="onTextChange"
-          />
-        </flex-grid-item>
-        <flex-grid-item grow="1">
-          <text-input
-            label="Workflow Name"
-            name="workflowName"
-            type="search"
-            :value="workflowName"
-            @input="onTextChange"
-          />
-        </flex-grid-item>
-        <flex-grid-item width="160px">
-          <v-select
-            :on-change="onSelectChange"
-            :options="statusList"
-            :searchable="false"
-            :value="status"
-          />
-        </flex-grid-item>
-        <flex-grid-item width="165px">
-          <text-input label="Filter by" readonly :value="filterBy" />
-        </flex-grid-item>
-        <flex-grid-item width="325px">
-          <date-range-picker :date-range="range" @change="onDateRangeChange" />
-        </flex-grid-item>
-        <flex-grid-item width="120px">
-          <button-fill
-            label="ADVANCED"
-            tag="router-link"
-            :to="{
-              name: 'workflow-archival-advanced',
-            }"
-          />
-        </flex-grid-item>
-      </flex-grid>
-    </header>
-    <section class="results">
-      <archival-table
-        v-infinite-scroll="nextPage"
-        infinite-scroll-disabled="disableInfiniteScroll"
-        infinite-scroll-distance="20"
-        infinite-scroll-immediate-check="false"
-      >
-        <archival-table-row
-          v-for="result in formattedResults"
-          :close-status="result.closeStatus"
-          :close-time="result.closeTime"
-          :key="result.runId"
-          :run-id="result.runId"
-          :start-time="result.startTime"
-          :workflow-id="result.workflowId"
-          :workflow-name="result.workflowName"
-        />
-      </archival-table>
-      <error-message :error="error" />
-      <no-results :results="results" />
-      <loading-spinner v-if="loading" />
-      <loading-message :delay="loadingMessageDelay" :loading="loading">
-        <p>It looks like this request is taking some time to process.</p>
-        <p>Try narrowing the time range to improve search time.</p>
-      </loading-message>
-    </section>
-  </section>
-</template>
-
 <script>
 import debounce from 'lodash-es/debounce';
 import { ArchivalTable, ArchivalTableRow } from './components';
@@ -286,6 +210,82 @@ export default pagedGrid({
   },
 });
 </script>
+
+<template>
+  <section class="workflow-archival-basic">
+    <header>
+      <flex-grid>
+        <flex-grid-item grow="1">
+          <text-input
+            label="Workflow ID"
+            name="workflowId"
+            type="search"
+            :value="workflowId"
+            @input="onTextChange"
+          />
+        </flex-grid-item>
+        <flex-grid-item grow="1">
+          <text-input
+            label="Workflow Name"
+            name="workflowName"
+            type="search"
+            :value="workflowName"
+            @input="onTextChange"
+          />
+        </flex-grid-item>
+        <flex-grid-item width="160px">
+          <v-select
+            :on-change="onSelectChange"
+            :options="statusList"
+            :searchable="false"
+            :value="status"
+          />
+        </flex-grid-item>
+        <flex-grid-item width="165px">
+          <text-input label="Filter by" readonly :value="filterBy" />
+        </flex-grid-item>
+        <flex-grid-item width="325px">
+          <date-range-picker :date-range="range" @change="onDateRangeChange" />
+        </flex-grid-item>
+        <flex-grid-item width="120px">
+          <button-fill
+            label="ADVANCED"
+            tag="router-link"
+            :to="{
+              name: 'workflow-archival-advanced',
+            }"
+          />
+        </flex-grid-item>
+      </flex-grid>
+    </header>
+    <section class="results">
+      <archival-table
+        v-infinite-scroll="nextPage"
+        infinite-scroll-disabled="disableInfiniteScroll"
+        infinite-scroll-distance="20"
+        infinite-scroll-immediate-check="false"
+      >
+        <archival-table-row
+          v-for="result in formattedResults"
+          :close-status="result.closeStatus"
+          :close-time="result.closeTime"
+          :key="result.runId"
+          :run-id="result.runId"
+          :start-time="result.startTime"
+          :workflow-id="result.workflowId"
+          :workflow-name="result.workflowName"
+        />
+      </archival-table>
+      <error-message :error="error" />
+      <no-results :results="results" />
+      <loading-spinner v-if="loading" />
+      <loading-message :delay="loadingMessageDelay" :loading="loading">
+        <p>It looks like this request is taking some time to process.</p>
+        <p>Try narrowing the time range to improve search time.</p>
+      </loading-message>
+    </section>
+  </section>
+</template>
 
 <style lang="stylus">
 section.workflow-archival-basic {

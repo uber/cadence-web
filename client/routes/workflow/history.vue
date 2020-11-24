@@ -1,3 +1,281 @@
+<script>
+import Prism from 'vue-prism-component';
+import {
+  DynamicScroller,
+  DynamicScrollerItem,
+  RecycleScroller,
+} from 'vue-virtual-scroller';
+import debounce from 'lodash-es/debounce';
+import omit from 'lodash-es/omit';
+import Timeline from './components/timeline.vue';
+import EventDetail from './components/event-detail.vue';
+import { DetailList, HighlightToggle } from '~components';
+
+export default {
+  name: 'history',
+  data() {
+    return {
+      tsFormat:
+        localStorage.getItem(`${this.domain}:history-ts-col-format`) ||
+        'elapsed',
+      compactDetails:
+        localStorage.getItem(`${this.domain}:history-compact-details`) ===
+        'true',
+      scrolledToEventOnInit: false,
+      splitEnabled: false,
+      eventType: '',
+      eventTypes: [
+        { value: 'All', label: 'All' },
+        { value: 'Decision', label: 'Decision' },
+        { value: 'Activity', label: 'Activity' },
+        { value: 'Signal', label: 'Signal' },
+        { value: 'Timer', label: 'Timer' },
+        { value: 'ChildWorkflow', label: 'ChildWorkflow' },
+        { value: 'Workflow', label: 'Workflow' },
+      ],
+      splitSizeSet: [1, 99],
+      splitSizeMinSet: [0, 0],
+      unwatch: [],
+    };
+  },
+  props: [
+    'baseAPIURL',
+    'domain',
+    'eventId',
+    'events',
+    'format',
+    'loading',
+    'runId',
+    'showGraph',
+    'timelineEvents',
+    'workflowHistoryEventHighlightList',
+    'workflowHistoryEventHighlightListEnabled',
+    'workflowId',
+  ],
+  created() {
+    this.onResizeWindow = debounce(() => {
+      const { scrollerCompact, scrollerGrid, thead, viewSplit } = this.$refs;
+      const scroller = this.isGrid ? scrollerGrid : scrollerCompact;
+
+      if (!scroller) {
+        return;
+      }
+
+      const offsetHeight = this.isGrid ? thead.offsetHeight : 0;
+      const viewSplitHeight = viewSplit.$el.offsetHeight;
+      const scrollerHeight = viewSplitHeight - offsetHeight;
+
+      scroller.$el.style.height = `${scrollerHeight}px`;
+    }, 5);
+  },
+  mounted() {
+    this.splitSizeSet = this.showGraph ? [20, 80] : [1, 99];
+    this.unwatch.push(
+      this.$watch(
+        () =>
+          `${this.events.length}${this.tsFormat.length}${this.$route.query.format}${this.compactDetails}`,
+        this.onResizeWindow,
+        { immediate: true }
+      )
+    );
+    window.addEventListener('resize', this.onResizeWindow);
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.onResizeWindow);
+    while (this.unwatch.length) {
+      this.unwatch.pop()();
+    }
+  },
+  computed: {
+    exportFilename() {
+      return `${this.workflowId.replace(/[\\~#%&*{}/:<>?|"-]/g, ' ')} - ${
+        this.runId
+      }.json`;
+    },
+    filteredEvents() {
+      const { eventId, eventType } = this;
+      const formattedEvents = this.events.map(event => ({
+        ...event,
+        expanded: event.eventId === eventId,
+      }));
+
+      return eventType && eventType !== 'All'
+        ? formattedEvents.filter(result => result.eventType.includes(eventType))
+        : formattedEvents;
+    },
+    filteredEventIdToIndex() {
+      return this.filteredEvents
+        .map(({ eventId }) => eventId)
+        .reduce((accumulator, eventId, index) => {
+          accumulator[eventId] = index;
+
+          return accumulator;
+        }, {});
+    },
+    isGrid() {
+      return this.format === 'grid';
+    },
+    selectedTimelineEvent() {
+      return this.timelineEvents.find(te => te.eventIds.includes(this.eventId));
+    },
+    selectedEvent() {
+      return this.events.find(e => e.eventId === this.eventId);
+    },
+    selectedEventDetails() {
+      if (!this.selectedEvent) {
+        return {};
+      }
+
+      return {
+        timestamp: this.selectedEvent.timeStampDisplay,
+        eventId: this.selectedEvent.eventId,
+        ...this.selectedEvent.details,
+      };
+    },
+    showTable() {
+      return this.loading || this.events.length;
+    },
+    showNoResults() {
+      return !this.loading && this.events.length === 0;
+    },
+    timelineEventIdToIndex() {
+      return this.timelineEvents
+        .map(({ eventIds }) => eventIds)
+        .reduce(
+          (accumulator, eventIds, index) => ({
+            ...accumulator,
+            ...eventIds.reduce((acc, eventId) => {
+              acc[eventId] = index;
+
+              return acc;
+            }, {}),
+          }),
+          {}
+        );
+    },
+  },
+  methods: {
+    deselectEvent() {
+      this.$router.replace({ query: omit(this.$route.query, 'eventId') });
+    },
+    enableSplitting() {
+      if (!this.splitEnabled) {
+        const timelineHeightPct =
+          (this.$refs.splitPanel.$el.firstElementChild.offsetHeight /
+            this.$refs.splitPanel.$el.offsetHeight) *
+          100;
+
+        this.splitSizeSet = [timelineHeightPct, 100 - timelineHeightPct];
+        this.splitEnabled = true;
+      }
+    },
+    onSplitResize: debounce(() => {
+      window.dispatchEvent(new Event('resize'));
+    }, 5),
+    onWorkflowHistoryEventParamToggle(event) {
+      this.$emit('onWorkflowHistoryEventParamToggle', event);
+    },
+    setEventType(et) {
+      this.eventType = et.value;
+      setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
+    },
+    setFormat(format) {
+      this.$router.replace({
+        query: { ...this.$route.query, format },
+      });
+      setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
+    },
+    setTsFormat(tsFormat) {
+      this.tsFormat = tsFormat;
+      localStorage.setItem(`${this.domain}:history-ts-col-format`, tsFormat);
+    },
+    setCompactDetails(compact) {
+      const { scrollerGrid } = this.$refs;
+
+      this.compactDetails = compact;
+      localStorage.setItem(
+        `${this.domain}:history-compact-details`,
+        JSON.stringify(compact)
+      );
+      scrollerGrid.forceUpdate();
+      setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
+    },
+    scrollEventIntoView(eventId) {
+      const index = this.isGrid
+        ? this.filteredEventIdToIndex[eventId]
+        : this.timelineEventIdToIndex[eventId];
+
+      this.scrollToItem(index);
+
+      if (this.isGrid) {
+        // Need to fire twice as the scroller items can have dynamic height which causes the scrolling position to not be accurate.
+        setTimeout(() => this.scrollToItem(index, true), 100);
+      }
+    },
+    scrollToItem(index, forceUpdate) {
+      const { scrollerCompact, scrollerGrid } = this.$refs;
+      const scroller = this.isGrid ? scrollerGrid : scrollerCompact;
+
+      if (index === undefined || !scroller) {
+        return;
+      }
+
+      try {
+        scroller.scrollToItem(index);
+
+        if (forceUpdate) {
+          scroller.forceUpdate();
+        }
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.warn('vue-virtual-scroller: Could not scrollToItem:', error);
+      }
+    },
+    selectTimelineEvent(i) {
+      this.$router.replaceQueryParam(
+        'eventId',
+        i.eventIds[i.eventIds.length - 1]
+      );
+    },
+    toggleShowGraph() {
+      if (this.showGraph) {
+        this.$router.replace({ query: omit(this.$route.query, 'showGraph') });
+      } else {
+        this.$router.replace({
+          query: { ...this.$route.query, showGraph: true },
+        });
+      }
+    },
+  },
+  watch: {
+    filteredEvents() {
+      if (
+        !this.scrolledToEventOnInit &&
+        this.eventId !== undefined &&
+        this.filteredEventIdToIndex[this.eventId] !== undefined
+      ) {
+        this.scrolledToEventOnInit = true;
+        setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
+      }
+    },
+    showGraph() {
+      this.splitSizeSet = this.showGraph ? [20, 80] : [1, 99];
+      this.onSplitResize();
+    },
+  },
+  components: {
+    'detail-list': DetailList,
+    DynamicScroller,
+    DynamicScrollerItem,
+    'event-detail': EventDetail,
+    'highlight-toggle': HighlightToggle,
+    prism: Prism,
+    RecycleScroller,
+    timeline: Timeline,
+  },
+};
+</script>
+
 <template>
   <section
     :class="{
@@ -292,284 +570,6 @@
     <span class="no-results" v-if="showNoResults">No Results</span>
   </section>
 </template>
-
-<script>
-import Prism from 'vue-prism-component';
-import {
-  DynamicScroller,
-  DynamicScrollerItem,
-  RecycleScroller,
-} from 'vue-virtual-scroller';
-import debounce from 'lodash-es/debounce';
-import omit from 'lodash-es/omit';
-import Timeline from './components/timeline.vue';
-import EventDetail from './components/event-detail.vue';
-import { DetailList, HighlightToggle } from '~components';
-
-export default {
-  name: 'history',
-  data() {
-    return {
-      tsFormat:
-        localStorage.getItem(`${this.domain}:history-ts-col-format`) ||
-        'elapsed',
-      compactDetails:
-        localStorage.getItem(`${this.domain}:history-compact-details`) ===
-        'true',
-      scrolledToEventOnInit: false,
-      splitEnabled: false,
-      eventType: '',
-      eventTypes: [
-        { value: 'All', label: 'All' },
-        { value: 'Decision', label: 'Decision' },
-        { value: 'Activity', label: 'Activity' },
-        { value: 'Signal', label: 'Signal' },
-        { value: 'Timer', label: 'Timer' },
-        { value: 'ChildWorkflow', label: 'ChildWorkflow' },
-        { value: 'Workflow', label: 'Workflow' },
-      ],
-      splitSizeSet: [1, 99],
-      splitSizeMinSet: [0, 0],
-      unwatch: [],
-    };
-  },
-  props: [
-    'baseAPIURL',
-    'domain',
-    'eventId',
-    'events',
-    'format',
-    'loading',
-    'runId',
-    'showGraph',
-    'timelineEvents',
-    'workflowHistoryEventHighlightList',
-    'workflowHistoryEventHighlightListEnabled',
-    'workflowId',
-  ],
-  created() {
-    this.onResizeWindow = debounce(() => {
-      const { scrollerCompact, scrollerGrid, thead, viewSplit } = this.$refs;
-      const scroller = this.isGrid ? scrollerGrid : scrollerCompact;
-
-      if (!scroller) {
-        return;
-      }
-
-      const offsetHeight = this.isGrid ? thead.offsetHeight : 0;
-      const viewSplitHeight = viewSplit.$el.offsetHeight;
-      const scrollerHeight = viewSplitHeight - offsetHeight;
-
-      scroller.$el.style.height = `${scrollerHeight}px`;
-    }, 5);
-  },
-  mounted() {
-    this.splitSizeSet = this.showGraph ? [20, 80] : [1, 99];
-    this.unwatch.push(
-      this.$watch(
-        () =>
-          `${this.events.length}${this.tsFormat.length}${this.$route.query.format}${this.compactDetails}`,
-        this.onResizeWindow,
-        { immediate: true }
-      )
-    );
-    window.addEventListener('resize', this.onResizeWindow);
-  },
-  beforeDestroy() {
-    window.removeEventListener('resize', this.onResizeWindow);
-    while (this.unwatch.length) {
-      this.unwatch.pop()();
-    }
-  },
-  computed: {
-    exportFilename() {
-      return `${this.workflowId.replace(/[\\~#%&*{}/:<>?|"-]/g, ' ')} - ${
-        this.runId
-      }.json`;
-    },
-    filteredEvents() {
-      const { eventId, eventType } = this;
-      const formattedEvents = this.events.map(event => ({
-        ...event,
-        expanded: event.eventId === eventId,
-      }));
-
-      return eventType && eventType !== 'All'
-        ? formattedEvents.filter(result => result.eventType.includes(eventType))
-        : formattedEvents;
-    },
-    filteredEventIdToIndex() {
-      return this.filteredEvents
-        .map(({ eventId }) => eventId)
-        .reduce((accumulator, eventId, index) => {
-          accumulator[eventId] = index;
-
-          return accumulator;
-        }, {});
-    },
-    isGrid() {
-      return this.format === 'grid';
-    },
-    selectedTimelineEvent() {
-      return this.timelineEvents.find(te => te.eventIds.includes(this.eventId));
-    },
-    selectedEvent() {
-      return this.events.find(e => e.eventId === this.eventId);
-    },
-    selectedEventDetails() {
-      if (!this.selectedEvent) {
-        return {};
-      }
-
-      return {
-        timestamp: this.selectedEvent.timeStampDisplay,
-        eventId: this.selectedEvent.eventId,
-        ...this.selectedEvent.details,
-      };
-    },
-    showTable() {
-      return this.loading || this.events.length;
-    },
-    showNoResults() {
-      return !this.loading && this.events.length === 0;
-    },
-    timelineEventIdToIndex() {
-      return this.timelineEvents
-        .map(({ eventIds }) => eventIds)
-        .reduce(
-          (accumulator, eventIds, index) => ({
-            ...accumulator,
-            ...eventIds.reduce((acc, eventId) => {
-              acc[eventId] = index;
-
-              return acc;
-            }, {}),
-          }),
-          {}
-        );
-    },
-  },
-  methods: {
-    deselectEvent() {
-      this.$router.replace({ query: omit(this.$route.query, 'eventId') });
-    },
-    enableSplitting() {
-      if (!this.splitEnabled) {
-        const timelineHeightPct =
-          (this.$refs.splitPanel.$el.firstElementChild.offsetHeight /
-            this.$refs.splitPanel.$el.offsetHeight) *
-          100;
-
-        this.splitSizeSet = [timelineHeightPct, 100 - timelineHeightPct];
-        this.splitEnabled = true;
-      }
-    },
-    onSplitResize: debounce(() => {
-      window.dispatchEvent(new Event('resize'));
-    }, 5),
-    onWorkflowHistoryEventParamToggle(event) {
-      this.$emit('onWorkflowHistoryEventParamToggle', event);
-    },
-    setEventType(et) {
-      this.eventType = et.value;
-      setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
-    },
-    setFormat(format) {
-      this.$router.replace({
-        query: { ...this.$route.query, format },
-      });
-      setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
-    },
-    setTsFormat(tsFormat) {
-      this.tsFormat = tsFormat;
-      localStorage.setItem(`${this.domain}:history-ts-col-format`, tsFormat);
-    },
-    setCompactDetails(compact) {
-      const { scrollerGrid } = this.$refs;
-
-      this.compactDetails = compact;
-      localStorage.setItem(
-        `${this.domain}:history-compact-details`,
-        JSON.stringify(compact)
-      );
-      scrollerGrid.forceUpdate();
-      setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
-    },
-    scrollEventIntoView(eventId) {
-      const index = this.isGrid
-        ? this.filteredEventIdToIndex[eventId]
-        : this.timelineEventIdToIndex[eventId];
-
-      this.scrollToItem(index);
-
-      if (this.isGrid) {
-        // Need to fire twice as the scroller items can have dynamic height which causes the scrolling position to not be accurate.
-        setTimeout(() => this.scrollToItem(index, true), 100);
-      }
-    },
-    scrollToItem(index, forceUpdate) {
-      const { scrollerCompact, scrollerGrid } = this.$refs;
-      const scroller = this.isGrid ? scrollerGrid : scrollerCompact;
-
-      if (index === undefined || !scroller) {
-        return;
-      }
-
-      try {
-        scroller.scrollToItem(index);
-
-        if (forceUpdate) {
-          scroller.forceUpdate();
-        }
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.warn('vue-virtual-scroller: Could not scrollToItem:', error);
-      }
-    },
-    selectTimelineEvent(i) {
-      this.$router.replaceQueryParam(
-        'eventId',
-        i.eventIds[i.eventIds.length - 1]
-      );
-    },
-    toggleShowGraph() {
-      if (this.showGraph) {
-        this.$router.replace({ query: omit(this.$route.query, 'showGraph') });
-      } else {
-        this.$router.replace({
-          query: { ...this.$route.query, showGraph: true },
-        });
-      }
-    },
-  },
-  watch: {
-    filteredEvents() {
-      if (
-        !this.scrolledToEventOnInit &&
-        this.eventId !== undefined &&
-        this.filteredEventIdToIndex[this.eventId] !== undefined
-      ) {
-        this.scrolledToEventOnInit = true;
-        setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
-      }
-    },
-    showGraph() {
-      this.splitSizeSet = this.showGraph ? [20, 80] : [1, 99];
-      this.onSplitResize();
-    },
-  },
-  components: {
-    'detail-list': DetailList,
-    DynamicScroller,
-    DynamicScrollerItem,
-    'event-detail': EventDetail,
-    'highlight-toggle': HighlightToggle,
-    prism: Prism,
-    RecycleScroller,
-    timeline: Timeline,
-  },
-};
-</script>
 
 <style lang="stylus">
 @require "../../styles/definitions.styl"

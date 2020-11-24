@@ -1,9 +1,3 @@
-<template>
-  <section class="news">
-    <iframe ref="iframe" :src="src" />
-  </section>
-</template>
-
 <script>
 import { getIFrameSrc, getUpdatedIFrameLocation } from './helpers';
 import {
@@ -137,6 +131,12 @@ export default {
   },
 };
 </script>
+
+<template>
+  <section class="news">
+    <iframe ref="iframe" :src="src" />
+  </section>
+</template>
 
 <style lang="stylus">
 section.news {

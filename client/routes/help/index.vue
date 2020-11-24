@@ -1,3 +1,16 @@
+<script>
+import { cliCommands } from './constants';
+
+export default {
+  props: ['hideDocs', 'hideSlack', 'hideStackOverflow'],
+  data() {
+    return {
+      cliCommands,
+    };
+  },
+};
+</script>
+
 <template>
   <section class="help">
     <section id="getting-started">
@@ -176,19 +189,6 @@
     </section>
   </section>
 </template>
-
-<script>
-import { cliCommands } from './constants';
-
-export default {
-  props: ['hideDocs', 'hideSlack', 'hideStackOverflow'],
-  data() {
-    return {
-      cliCommands,
-    };
-  },
-};
-</script>
 
 <style lang="stylus">
 @require "../../styles/definitions"
