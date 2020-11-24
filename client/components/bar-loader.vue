@@ -1,3 +1,9 @@
+<script>
+export default {
+  name: 'bar-loader',
+};
+</script>
+
 <template>
   <loader class="bar"
     ><div></div>
@@ -5,12 +11,6 @@
     <div></div
   ></loader>
 </template>
-
-<script>
-export default {
-  name: 'bar-loader',
-};
-</script>
 
 <style lang="stylus">
 @require "../styles/definitions.styl"
