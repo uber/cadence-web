@@ -25,11 +25,11 @@ module.exports = {
           /**
            * Examples which match pattern:
            *
-           * 1. multi-year span
-           * // Copyright (c) 2017-2020 Uber Technologies Inc.
-           *
-           * 2. single year span
+           * 1. single year span (by default for new files)
            * // Copyright (c) 2020 Uber Technologies Inc.
+           *
+           * 2. multi-year span
+           * // Copyright (c) 2017-2020 Uber Technologies Inc.
            *
            * 3. new file from another company referenced
            * // Modifications Copyright (c) 2020 Uber Technologies Inc.
@@ -39,7 +39,7 @@ module.exports = {
           pattern: ' (Modifications )?Copyright \\(c\\) 20\\d{2}(\\-20\\d{2})? Uber Technologies Inc\.',
 
           // NOTE: make sure to update year in template when new year comes.
-          template: ' Copyright (c) 2020 Uber Technologies Inc.',
+          template: ' Copyright (c) 2017-2020 Uber Technologies Inc.',
         },
         {
           /**
