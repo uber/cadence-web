@@ -38,22 +38,34 @@ module.exports = {
            * 2. single year span
            * // Copyright (c) 2020 Uber Technologies Inc.
            *
-           * TODO
            * 3. new file from another company referenced
            * // Modifications Copyright (c) 2020 Uber Technologies Inc.
-           * // Copyright (c) 2020 Temporal Technologies, Inc.
            *
-           * TODO
-           * 4. new file from another company referenced with modifications
-           * // Copyright (c) 2017-2020 Uber Technologies Inc.
-           * // Portions of the Software are attributed to Copyright (c) 2020 Temporal Technologies Inc.
-           *
-           * See client/test/lint/license for passing examples.
+           * See `client/test/lint/license` for passing examples.
            */
-          pattern: ' (Modifications )?Copyright \\(c\\) 20\\d{2}(\\-20\\d{2})? Uber Technologies Inc\.(\\n\\\/\\\/ Copyright \\(c\\) 20\\d{2}(\\-20\\d{2})? [\\w\\s,.]+)?',
+          pattern: ' (Modifications )?Copyright \\(c\\) 20\\d{2}(\\-20\\d{2})? Uber Technologies Inc\.',
 
           // NOTE: make sure to update year in template when new year comes.
           template: ' Copyright (c) 2020 Uber Technologies Inc.',
+        },
+        {
+          /**
+           * This pattern can match anything as we don't know who we are referencing.
+           * By default if no comment is specified this line will be ignored (inserts blank line).
+           *
+           * 1. Empty space
+           * //
+           *
+           * 2. new file from another company referenced
+           * // Copyright (c) 2020 Temporal Technologies, Inc.
+           *
+           * 3. new file from another company referenced with modifications from Uber
+           * // Portions of the Software are attributed to Copyright (c) 2020 Temporal Technologies Inc.
+           *
+           * See `client/test/lint/license` for passing examples.
+           */
+          pattern: '',
+          template: ' ',
         },
         '',
         ' Permission is hereby granted, free of charge, to any person obtaining a copy',
