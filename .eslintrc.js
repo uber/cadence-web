@@ -40,8 +40,24 @@ module.exports = {
            *
            * NOTE: This will update each year so when new year's day comes,
            *       the build will fail and will need the headers to be updated.
+           *       Just be aware of running auto-fix as it will use what is in
+           *       the template and not update the offending part of the header.
+           *
+           *       In this case it will change header:
+           *         from:
+           *           Copyright (c) 2017-2020 Uber Technologies Inc.
+           *           Copyright (c) 2020 Uber Technologies Inc.
+           *         to:
+           *           Copyright (c) 2021 Uber Technologies Inc.
+           *         but should be (respectively):
+           *           Copyright (c) 2017-2021 Uber Technologies Inc.
+           *           Copyright (c) 2020-2021 Uber Technologies Inc.
+           *
+           *       I have requested for a new feature which allows templates to
+           *       use named capture groups in the template. See open issue:
+           *       https://github.com/Stuk/eslint-plugin-header/issues/33
            */
-          pattern: ` (Modifications )?Copyright \\(c\\) (20\\d{2}\\-)?${currentYear} Uber Technologies Inc\.`,
+          pattern: ` (Modifications )?Copyright \\(c\\) (?<firstYear>20\\d{2}\\-)?${currentYear} Uber Technologies Inc\.`,
           template: ` Copyright (c) ${currentYear} Uber Technologies Inc.`,
         },
         {
