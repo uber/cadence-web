@@ -1,8 +1,7 @@
-const
+const path = require('path'),
   Koa = require('koa'),
   bodyparser = require('koa-bodyparser'),
   send = require('koa-send'),
-  path = require('path'),
   staticRoot = path.join(__dirname, '../dist'),
   app = new Koa(),
   router = require('./routes')
@@ -13,10 +12,15 @@ app.init = function(options) {
   options = options || {}
 
   const useWebpack = 'useWebpack' in options ? options.useWebpack : process.env.NODE_ENV !== 'production'
+
+  let koaWebpack;
+  let compiler;
+
   if (useWebpack) {
-    var Webpack = require('webpack'),
-        koaWebpack = require('koa-webpack'),
-        compiler = Webpack(app.webpackConfig)
+    const Webpack = require('webpack');
+
+    koaWebpack = require('koa-webpack');
+    compiler = Webpack(app.webpackConfig);
   }
 
   app.use(async (ctx, next) => {
@@ -56,7 +60,7 @@ app.init = function(options) {
           ctx.set('content-type', 'text/html')
           ctx.body = compiler.outputFileSystem.readFileSync(filename)
         } else {
-          done = await send(ctx, 'index.html', { root: staticRoot })
+          await send(ctx, 'index.html', { root: staticRoot })
         }
       } catch (err) {
         if (err.status !== 404) {

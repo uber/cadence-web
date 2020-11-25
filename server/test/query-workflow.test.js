@@ -48,8 +48,6 @@ describe('Query Workflow', function() {
       })
   })
 
-  it('should forward the body as the query input')
-
   it('should turn bad requests into 400s', async function () {
     this.test.QueryWorkflow = () => ({
       ok: false,
