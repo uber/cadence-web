@@ -325,7 +325,7 @@ export default {
             ? [maxOpen, maxClosed]
             : [maxClosed, maxOpen];
           startTime = startTime.add(1, 'milliseconds').toISOString();
-          endTime = startTime.add(1, 'milliseconds').toISOString();
+          endTime = endTime.add(1, 'milliseconds').toISOString();
           const queryDiff = { ...this.criteria, startTime, endTime };
 
           let diff = await this.fetch(
