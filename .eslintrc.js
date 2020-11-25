@@ -13,6 +13,7 @@ module.exports = {
   globals: {
     module: true,   // hot reloading
     scenario: true, // mocha
+    should: true,   // mocha
   },
   plugins: ['jest', 'import', 'eslint-plugin-header'],
   rules: {
