@@ -1,8 +1,8 @@
-const supertest = require('supertest'),
+const path = require('path'),
+  supertest = require('supertest'),
   TChannel = require('tchannel'),
   TChannelAsThrift = require('tchannel/as/thrift'),
-  Long = require('long'),
-  path = require('path');
+  Long = require('long');
 
 let tchanServer, currTest, client, app;
 
@@ -29,14 +29,14 @@ before(function(done) {
       throw new Error(`unexpected request to ${req.endpoint}`);
     }
 
-    var body = currTest[mockName](body, req);
+    const bodyMock = currTest[mockName](body, req);
 
-    if (body instanceof Error) {
-      cb(body);
-    } else if (body && body.ok === false) {
-      cb(null, body);
+    if (bodyMock instanceof Error) {
+      cb(bodyMock);
+    } else if (bodyMock && bodyMock.ok === false) {
+      cb(null, bodyMock);
     } else {
-      cb(null, { ok: true, head, body });
+      cb(null, { ok: true, head, body: bodyMock });
     }
   };
 

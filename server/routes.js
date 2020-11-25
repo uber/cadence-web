@@ -5,7 +5,7 @@ const Router = require('koa-router'),
   losslessJSON = require('lossless-json'),
   featureFlags = require('./feature-flags.json');
 
-momentToLong = m => Long.fromValue(m.unix()).mul(1000000000);
+const momentToLong = m => Long.fromValue(m.unix()).mul(1000000000);
 
 router.get('/api/domains', async function(ctx) {
   ctx.body = await ctx.cadence.listDomains({
@@ -121,6 +121,17 @@ router.get('/api/domains/:domain/workflows/list', async function(ctx) {
   });
 });
 
+function replacer(key, value) {
+  if (value && value.type && value.type === 'Buffer') {
+    return Buffer.from(value)
+      .toString()
+      .replace(/["]/g, '')
+      .trim();
+  }
+
+  return value;
+}
+
 const mapHistoryResponse = history => {
   if (Array.isArray(history && history.events)) {
     return history.events.map(e => {
@@ -130,21 +141,7 @@ const mapHistoryResponse = history => {
           'EventAttributes'
         : '';
 
-      if (e[attr]) {
-        var details = JSON.parse(JSON.stringify(e[attr]), function replacer(
-          key,
-          value
-        ) {
-          if (value && value.type && value.type === 'Buffer') {
-            return Buffer.from(value)
-              .toString()
-              .replace(/["]/g, '')
-              .trim();
-          }
-
-          return value;
-        });
-      }
+      const details = e[attr] && JSON.parse(JSON.stringify(e[attr]), replacer);
 
       return {
         timestamp: e.timestamp,

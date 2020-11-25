@@ -1,12 +1,12 @@
 'use strict';
 
-const TChannelAsThrift = require('tchannel/as/thrift'),
+const path = require('path'),
+  dns = require('dns'),
+  TChannelAsThrift = require('tchannel/as/thrift'),
   TChannel = require('tchannel'),
-  path = require('path'),
   Long = require('long'),
   losslessJSON = require('lossless-json'),
   moment = require('moment'),
-  dns = require('dns'),
   isIPv4 = require('is-ipv4-node');
 
 function uiTransform(item) {
