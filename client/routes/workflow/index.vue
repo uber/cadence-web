@@ -1,77 +1,3 @@
-<template>
-  <section class="execution" :class="{ loading: wfLoading }">
-    <navigation-bar>
-      <navigation-link
-        id="nav-link-summary"
-        icon="icon_receipt"
-        label="Summary"
-        :to="{ name: 'workflow/summary' }"
-      />
-      <navigation-link
-        id="nav-link-history"
-        icon="icon_trip-history"
-        label="History"
-        :to="{ name: 'workflow/history' }"
-      />
-      <navigation-link
-        id="nav-link-stack-trace"
-        icon="icon_trips"
-        label="Stack Trace"
-        :to="{ name: 'workflow/stack-trace' }"
-        v-show="isWorkflowRunning"
-      />
-      <navigation-link
-        id="nav-link-query"
-        icon="icon_lost"
-        label="Query"
-        :to="{ name: 'workflow/query' }"
-        v-show="isWorkflowRunning"
-      />
-    </navigation-bar>
-    <router-view
-      name="summary"
-      :baseAPIURL="baseAPIURL"
-      :date-format="dateFormat"
-      :domain="domain"
-      :input="summary.input"
-      :isWorkflowRunning="summary.isWorkflowRunning"
-      :parentWorkflowRoute="summary.parentWorkflowRoute"
-      :result="summary.result"
-      :time-format="timeFormat"
-      :timezone="timezone"
-      :wfStatus="summary.wfStatus"
-      :workflow="summary.workflow"
-      @onNotification="onNotification"
-    />
-    <router-view
-      name="history"
-      :baseAPIURL="baseAPIURL"
-      :events="historyEvents"
-      :loading="history.loading"
-      :timelineEvents="historyTimelineEvents"
-      :workflow-history-event-highlight-list="workflowHistoryEventHighlightList"
-      :workflow-history-event-highlight-list-enabled="
-        workflowHistoryEventHighlightListEnabled
-      "
-      @onNotification="onNotification"
-      @onWorkflowHistoryEventParamToggle="onWorkflowHistoryEventParamToggle"
-    />
-    <router-view
-      name="stacktrace"
-      :baseAPIURL="baseAPIURL"
-      :date-format="dateFormat"
-      :time-format="timeFormat"
-      :timezone="timezone"
-      @onNotification="onNotification"
-    />
-    <router-view
-      name="query"
-      :baseAPIURL="baseAPIURL"
-      @onNotification="onNotification"
-    />
-  </section>
-</template>
-
 <script>
 import { RETRY_COUNT_MAX, RETRY_TIMEOUT } from './constants';
 import {
@@ -334,3 +260,77 @@ export default {
   },
 };
 </script>
+
+<template>
+  <section class="execution" :class="{ loading: wfLoading }">
+    <navigation-bar>
+      <navigation-link
+        id="nav-link-summary"
+        icon="icon_receipt"
+        label="Summary"
+        :to="{ name: 'workflow/summary' }"
+      />
+      <navigation-link
+        id="nav-link-history"
+        icon="icon_trip-history"
+        label="History"
+        :to="{ name: 'workflow/history' }"
+      />
+      <navigation-link
+        id="nav-link-stack-trace"
+        icon="icon_trips"
+        label="Stack Trace"
+        :to="{ name: 'workflow/stack-trace' }"
+        v-show="isWorkflowRunning"
+      />
+      <navigation-link
+        id="nav-link-query"
+        icon="icon_lost"
+        label="Query"
+        :to="{ name: 'workflow/query' }"
+        v-show="isWorkflowRunning"
+      />
+    </navigation-bar>
+    <router-view
+      name="summary"
+      :baseAPIURL="baseAPIURL"
+      :date-format="dateFormat"
+      :domain="domain"
+      :input="summary.input"
+      :isWorkflowRunning="summary.isWorkflowRunning"
+      :parentWorkflowRoute="summary.parentWorkflowRoute"
+      :result="summary.result"
+      :time-format="timeFormat"
+      :timezone="timezone"
+      :wfStatus="summary.wfStatus"
+      :workflow="summary.workflow"
+      @onNotification="onNotification"
+    />
+    <router-view
+      name="history"
+      :baseAPIURL="baseAPIURL"
+      :events="historyEvents"
+      :loading="history.loading"
+      :timelineEvents="historyTimelineEvents"
+      :workflow-history-event-highlight-list="workflowHistoryEventHighlightList"
+      :workflow-history-event-highlight-list-enabled="
+        workflowHistoryEventHighlightListEnabled
+      "
+      @onNotification="onNotification"
+      @onWorkflowHistoryEventParamToggle="onWorkflowHistoryEventParamToggle"
+    />
+    <router-view
+      name="stacktrace"
+      :baseAPIURL="baseAPIURL"
+      :date-format="dateFormat"
+      :time-format="timeFormat"
+      :timezone="timezone"
+      @onNotification="onNotification"
+    />
+    <router-view
+      name="query"
+      :baseAPIURL="baseAPIURL"
+      @onNotification="onNotification"
+    />
+  </section>
+</template>

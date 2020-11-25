@@ -3,9 +3,8 @@ const Router = require('koa-router'),
   moment = require('moment'),
   Long = require('long'),
   losslessJSON = require('lossless-json'),
-  featureFlags = require('./feature-flags.json');
-
-const momentToLong = m => Long.fromValue(m.unix()).mul(1000000000);
+  featureFlags = require('./feature-flags.json'),
+  momentToLong = m => Long.fromValue(m.unix()).mul(1000000000);
 
 router.get('/api/domains', async function(ctx) {
   ctx.body = await ctx.cadence.listDomains({

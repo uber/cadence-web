@@ -1,3 +1,22 @@
+<script>
+import { NavigationBar, NavigationLink } from '~components';
+
+export default {
+  components: {
+    'navigation-bar': NavigationBar,
+    'navigation-link': NavigationLink,
+  },
+  methods: {
+    onNotification(event) {
+      this.$emit('onNotification', event);
+    },
+    onWorkflowHistoryEventParamToggle(event) {
+      this.$emit('onWorkflowHistoryEventParamToggle', event);
+    },
+  },
+};
+</script>
+
 <template>
   <section>
     <navigation-bar>
@@ -23,24 +42,5 @@
     <router-view name="news" @onNotification="onNotification" />
   </section>
 </template>
-
-<script>
-import { NavigationBar, NavigationLink } from '~components';
-
-export default {
-  components: {
-    'navigation-bar': NavigationBar,
-    'navigation-link': NavigationLink,
-  },
-  methods: {
-    onNotification(event) {
-      this.$emit('onNotification', event);
-    },
-    onWorkflowHistoryEventParamToggle(event) {
-      this.$emit('onWorkflowHistoryEventParamToggle', event);
-    },
-  },
-};
-</script>
 
 <style lang="stylus"></style>

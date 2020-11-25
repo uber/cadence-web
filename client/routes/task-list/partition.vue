@@ -1,22 +1,3 @@
-<template>
-  <section class="task-list-partition">
-    <flex-grid width="100%">
-      <flex-grid-item grow="1" margin="10px">
-        <partition-table
-          title="Activity Partitions"
-          :partition-list="activityPartitionList"
-        />
-      </flex-grid-item>
-      <flex-grid-item grow="1">
-        <partition-table
-          title="Decision Partitions"
-          :partition-list="decisionPartitionList"
-        />
-      </flex-grid-item>
-    </flex-grid>
-  </section>
-</template>
-
 <script>
 import PartitionTable from './components/partition-table';
 import { FlexGrid, FlexGridItem } from '~components';
@@ -45,3 +26,22 @@ export default {
   },
 };
 </script>
+
+<template>
+  <section class="task-list-partition">
+    <flex-grid width="100%">
+      <flex-grid-item grow="1" margin="10px">
+        <partition-table
+          title="Activity Partitions"
+          :partition-list="activityPartitionList"
+        />
+      </flex-grid-item>
+      <flex-grid-item grow="1">
+        <partition-table
+          title="Decision Partitions"
+          :partition-list="decisionPartitionList"
+        />
+      </flex-grid-item>
+    </flex-grid>
+  </section>
+</template>

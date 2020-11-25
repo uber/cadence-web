@@ -1,62 +1,3 @@
-<template>
-  <div>
-    <div class="content">
-      <div class="content-item">
-        <label for="settingsExample">
-          Example
-        </label>
-        <text-input
-          name="settingsExample"
-          :readonly="true"
-          :value="exampleFormattedDateTime"
-        />
-      </div>
-      <div class="content-item">
-        <flex-grid>
-          <flex-grid-item grow="1">
-            <label for="settingsDateFormat">
-              Date format
-            </label>
-            <v-select
-              input-id="settingsDateFormat"
-              :on-change="onDateFormatChange"
-              :options="dateFormatOptions"
-              :value="modalDateFormat"
-            />
-          </flex-grid-item>
-          <flex-grid-item grow="1">
-            <label for="settingsTimeFormat">
-              Time format
-            </label>
-            <v-select
-              input-id="settingsTimeFormat"
-              :on-change="onTimeFormatChange"
-              :options="timeFormatOptions"
-              :value="modalTimeFormat"
-            />
-          </flex-grid-item>
-          <flex-grid-item grow="1">
-            <label for="settingsTimezone">
-              Timezone
-            </label>
-            <v-select
-              input-id="settingsTimezone"
-              :on-change="onTimezoneChange"
-              :options="timezoneOptions"
-              :value="modalTimezone"
-            />
-          </flex-grid-item>
-        </flex-grid>
-      </div>
-    </div>
-    <settings-footer
-      :submit-enabled="isSettingsChanged"
-      @cancel="onClose"
-      @submit="onSubmit"
-    />
-  </div>
-</template>
-
 <script>
 import FlexGrid from '../../flex-grid';
 import FlexGridItem from '../../flex-grid-item';
@@ -182,3 +123,62 @@ export default {
   },
 };
 </script>
+
+<template>
+  <div>
+    <div class="content">
+      <div class="content-item">
+        <label for="settingsExample">
+          Example
+        </label>
+        <text-input
+          name="settingsExample"
+          :readonly="true"
+          :value="exampleFormattedDateTime"
+        />
+      </div>
+      <div class="content-item">
+        <flex-grid>
+          <flex-grid-item grow="1">
+            <label for="settingsDateFormat">
+              Date format
+            </label>
+            <v-select
+              input-id="settingsDateFormat"
+              :on-change="onDateFormatChange"
+              :options="dateFormatOptions"
+              :value="modalDateFormat"
+            />
+          </flex-grid-item>
+          <flex-grid-item grow="1">
+            <label for="settingsTimeFormat">
+              Time format
+            </label>
+            <v-select
+              input-id="settingsTimeFormat"
+              :on-change="onTimeFormatChange"
+              :options="timeFormatOptions"
+              :value="modalTimeFormat"
+            />
+          </flex-grid-item>
+          <flex-grid-item grow="1">
+            <label for="settingsTimezone">
+              Timezone
+            </label>
+            <v-select
+              input-id="settingsTimezone"
+              :on-change="onTimezoneChange"
+              :options="timezoneOptions"
+              :value="modalTimezone"
+            />
+          </flex-grid-item>
+        </flex-grid>
+      </div>
+    </div>
+    <settings-footer
+      :submit-enabled="isSettingsChanged"
+      @cancel="onClose"
+      @submit="onSubmit"
+    />
+  </div>
+</template>

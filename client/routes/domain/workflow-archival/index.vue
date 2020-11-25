@@ -1,28 +1,3 @@
-<template>
-  <section class="workflow-archival" :class="{ loading }">
-    <archival-disabled-messaging
-      v-if="!loading && !isArchivalEnabled"
-      :domain-settings="domainSettings"
-    />
-    <router-view
-      name="workflow-archival-advanced"
-      v-if="!loading && isArchivalEnabled"
-      :date-format="dateFormat"
-      :domain="domain"
-      :timeFormat="timeFormat"
-      :timezone="timezone"
-    />
-    <router-view
-      name="workflow-archival-basic"
-      v-if="!loading && isArchivalEnabled"
-      :date-format="dateFormat"
-      :domain="domain"
-      :timeFormat="timeFormat"
-      :timezone="timezone"
-    />
-  </section>
-</template>
-
 <script>
 import DomainService from '../domain-service';
 import { isArchivalEnabled } from './helpers';
@@ -53,6 +28,31 @@ export default {
   },
 };
 </script>
+
+<template>
+  <section class="workflow-archival" :class="{ loading }">
+    <archival-disabled-messaging
+      v-if="!loading && !isArchivalEnabled"
+      :domain-settings="domainSettings"
+    />
+    <router-view
+      name="workflow-archival-advanced"
+      v-if="!loading && isArchivalEnabled"
+      :date-format="dateFormat"
+      :domain="domain"
+      :timeFormat="timeFormat"
+      :timezone="timezone"
+    />
+    <router-view
+      name="workflow-archival-basic"
+      v-if="!loading && isArchivalEnabled"
+      :date-format="dateFormat"
+      :domain="domain"
+      :timeFormat="timeFormat"
+      :timezone="timezone"
+    />
+  </section>
+</template>
 
 <style lang="stylus">
 section.workflow-archival {

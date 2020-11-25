@@ -1,9 +1,3 @@
-<template>
-  <div class="loading-message" v-if="showMessage">
-    <slot></slot>
-  </div>
-</template>
-
 <script>
 export default {
   name: 'loading-message',
@@ -42,6 +36,12 @@ export default {
   },
 };
 </script>
+
+<template>
+  <div class="loading-message" v-if="showMessage">
+    <slot></slot>
+  </div>
+</template>
 
 <style lang="stylus">
 @keyframes loadingMessageFadeIn {

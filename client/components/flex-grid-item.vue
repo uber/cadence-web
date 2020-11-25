@@ -1,3 +1,10 @@
+<script>
+export default {
+  name: 'flex-grid-item',
+  props: ['grow', 'margin', 'width'],
+};
+</script>
+
 <template>
   <div
     class="flex-grid-item"
@@ -6,13 +13,6 @@
     <slot></slot>
   </div>
 </template>
-
-<script>
-export default {
-  name: 'flex-grid-item',
-  props: ['grow', 'margin', 'width'],
-};
-</script>
 
 <style lang="stylus">
 .flex-grid-item {

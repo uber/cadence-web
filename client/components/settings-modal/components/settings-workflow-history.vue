@@ -1,117 +1,3 @@
-<template>
-  <div class="settings-workflow-history">
-    <div class="content">
-      <div class="content-item">
-        <settings-toggle
-          label="Enable history event param highlighting"
-          name="workflowHistoryEventHighlightListEnabled"
-          :value="modalWorkflowHistoryEventHighlightListEnabled"
-          @change="onWorkflowHistoryEventHighlightListEnabledChange"
-        />
-      </div>
-
-      <div
-        class="history-event-param-content"
-        :class="{ disabled: !modalWorkflowHistoryEventHighlightListEnabled }"
-      >
-        <div class="content-item">
-          <flex-grid align-items="center">
-            <flex-grid-item grow="1">
-              <h4>History event params</h4>
-            </flex-grid-item>
-            <flex-grid-item>
-              <button-fill
-                :disabled="!modalWorkflowHistoryEventHighlightListEnabled"
-                label="NEW"
-                @click="onWorkflowHistoryEventHighlightListAdd"
-              />
-            </flex-grid-item>
-          </flex-grid>
-        </div>
-
-        <div class="scrollable">
-          <div
-            class="content-item"
-            v-for="event in modalWorkflowHistoryEventHighlightList"
-            :key="event.id"
-          >
-            <flex-grid align-items="center">
-              <flex-grid-item grow="1">
-                <flex-grid align-items="center">
-                  <flex-grid-item grow="1" width="345px">
-                    <v-select
-                      :disabled="
-                        !modalWorkflowHistoryEventHighlightListEnabled ||
-                          !event.isEnabled
-                      "
-                      :value="event.eventType"
-                      :options="workflowEventTypes"
-                      :on-change="
-                        value =>
-                          onWorkflowHistoryEventHighlightListChange({
-                            event,
-                            key: 'eventType',
-                            value,
-                          })
-                      "
-                    />
-                  </flex-grid-item>
-                  <flex-grid-item>
-                    <text-input
-                      label="Event param name"
-                      :disabled="
-                        !modalWorkflowHistoryEventHighlightListEnabled ||
-                          !event.isEnabled
-                      "
-                      :value="event.eventParamName"
-                      @input="
-                        ({ target: { value } }) =>
-                          onWorkflowHistoryEventHighlightListChange({
-                            event,
-                            key: 'eventParamName',
-                            value,
-                          })
-                      "
-                    />
-                  </flex-grid-item>
-                </flex-grid>
-              </flex-grid-item>
-              <flex-grid-item>
-                <toggle-button
-                  :disabled="!modalWorkflowHistoryEventHighlightListEnabled"
-                  :labels="true"
-                  :value="event.isEnabled"
-                  @change="
-                    ({ value }) =>
-                      onWorkflowHistoryEventHighlightListChange({
-                        event,
-                        key: 'isEnabled',
-                        value,
-                      })
-                  "
-                />
-              </flex-grid-item>
-              <flex-grid-item>
-                <button-icon
-                  :disabled="!modalWorkflowHistoryEventHighlightListEnabled"
-                  icon="icon_trash"
-                  size="20px"
-                  @click="onWorkflowHistoryEventHighlightListRemove(event)"
-                />
-              </flex-grid-item>
-            </flex-grid>
-          </div>
-        </div>
-      </div>
-    </div>
-    <settings-footer
-      :submit-enabled="isSettingsChanged"
-      @cancel="onClose"
-      @submit="onSubmit"
-    />
-  </div>
-</template>
-
 <script>
 import { ToggleButton } from 'vue-js-toggle-button';
 import ButtonFill from '../../button-fill';
@@ -231,6 +117,120 @@ export default {
   },
 };
 </script>
+
+<template>
+  <div class="settings-workflow-history">
+    <div class="content">
+      <div class="content-item">
+        <settings-toggle
+          label="Enable history event param highlighting"
+          name="workflowHistoryEventHighlightListEnabled"
+          :value="modalWorkflowHistoryEventHighlightListEnabled"
+          @change="onWorkflowHistoryEventHighlightListEnabledChange"
+        />
+      </div>
+
+      <div
+        class="history-event-param-content"
+        :class="{ disabled: !modalWorkflowHistoryEventHighlightListEnabled }"
+      >
+        <div class="content-item">
+          <flex-grid align-items="center">
+            <flex-grid-item grow="1">
+              <h4>History event params</h4>
+            </flex-grid-item>
+            <flex-grid-item>
+              <button-fill
+                :disabled="!modalWorkflowHistoryEventHighlightListEnabled"
+                label="NEW"
+                @click="onWorkflowHistoryEventHighlightListAdd"
+              />
+            </flex-grid-item>
+          </flex-grid>
+        </div>
+
+        <div class="scrollable">
+          <div
+            class="content-item"
+            v-for="event in modalWorkflowHistoryEventHighlightList"
+            :key="event.id"
+          >
+            <flex-grid align-items="center">
+              <flex-grid-item grow="1">
+                <flex-grid align-items="center">
+                  <flex-grid-item grow="1" width="345px">
+                    <v-select
+                      :disabled="
+                        !modalWorkflowHistoryEventHighlightListEnabled ||
+                          !event.isEnabled
+                      "
+                      :value="event.eventType"
+                      :options="workflowEventTypes"
+                      :on-change="
+                        value =>
+                          onWorkflowHistoryEventHighlightListChange({
+                            event,
+                            key: 'eventType',
+                            value,
+                          })
+                      "
+                    />
+                  </flex-grid-item>
+                  <flex-grid-item>
+                    <text-input
+                      label="Event param name"
+                      :disabled="
+                        !modalWorkflowHistoryEventHighlightListEnabled ||
+                          !event.isEnabled
+                      "
+                      :value="event.eventParamName"
+                      @input="
+                        ({ target: { value } }) =>
+                          onWorkflowHistoryEventHighlightListChange({
+                            event,
+                            key: 'eventParamName',
+                            value,
+                          })
+                      "
+                    />
+                  </flex-grid-item>
+                </flex-grid>
+              </flex-grid-item>
+              <flex-grid-item>
+                <toggle-button
+                  :disabled="!modalWorkflowHistoryEventHighlightListEnabled"
+                  :labels="true"
+                  :value="event.isEnabled"
+                  @change="
+                    ({ value }) =>
+                      onWorkflowHistoryEventHighlightListChange({
+                        event,
+                        key: 'isEnabled',
+                        value,
+                      })
+                  "
+                />
+              </flex-grid-item>
+              <flex-grid-item>
+                <button-icon
+                  :disabled="!modalWorkflowHistoryEventHighlightListEnabled"
+                  icon="icon_trash"
+                  size="20px"
+                  @click="onWorkflowHistoryEventHighlightListRemove(event)"
+                />
+              </flex-grid-item>
+            </flex-grid>
+          </div>
+        </div>
+      </div>
+    </div>
+    <settings-footer
+      :submit-enabled="isSettingsChanged"
+      @cancel="onClose"
+      @submit="onSubmit"
+    />
+  </div>
+</template>
 
 <style lang="stylus">
 .settings-workflow-history {

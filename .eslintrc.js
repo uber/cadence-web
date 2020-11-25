@@ -62,6 +62,12 @@ module.exports = {
       },
     ],
     'space-before-blocks': 'error',
+    'vue/component-tags-order': [
+      'error',
+      {
+        'order': ['script', 'template', 'style'],
+      }
+    ],
   },
   settings: {
     'import/resolver': {

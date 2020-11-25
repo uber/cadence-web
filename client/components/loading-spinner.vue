@@ -1,3 +1,9 @@
+<script>
+export default {
+  name: 'loading-spinner',
+};
+</script>
+
 <template>
   <div class="loading-spinner">
     <div class="spinner"></div>
