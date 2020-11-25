@@ -1,14 +1,3 @@
-<template>
-  <flex-grid align-items="center" class="settings-header">
-    <flex-grid-item grow="1">
-      <h2>{{ displayTitle }}</h2>
-    </flex-grid-item>
-    <flex-grid-item width="40px">
-      <button-icon icon="icon_delete-thin" size="30px" @click="onCloseClick" />
-    </flex-grid-item>
-  </flex-grid>
-</template>
-
 <script>
 import ButtonIcon from '../../button-icon';
 import FlexGrid from '../../flex-grid';
@@ -43,6 +32,17 @@ export default {
   },
 };
 </script>
+
+<template>
+  <flex-grid align-items="center" class="settings-header">
+    <flex-grid-item grow="1">
+      <h2>{{ displayTitle }}</h2>
+    </flex-grid-item>
+    <flex-grid-item width="40px">
+      <button-icon icon="icon_delete-thin" size="30px" @click="onCloseClick" />
+    </flex-grid-item>
+  </flex-grid>
+</template>
 
 <style lang="stylus">
 .settings-header {

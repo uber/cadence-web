@@ -1,3 +1,10 @@
+<script>
+export default {
+  name: 'navigation-link',
+  props: ['exact', 'icon', 'id', 'label', 'to'],
+};
+</script>
+
 <template>
   <router-link
     class="navigation-link"
@@ -9,13 +16,6 @@
     {{ label }}
   </router-link>
 </template>
-
-<script>
-export default {
-  name: 'navigation-link',
-  props: ['exact', 'icon', 'id', 'label', 'to'],
-};
-</script>
 
 <style lang="stylus">
 a.navigation-link {

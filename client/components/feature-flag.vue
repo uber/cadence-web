@@ -1,13 +1,3 @@
-<template>
-  <div
-    class="feature-flag"
-    :class="{ [display]: display }"
-    v-if="isFeatureFlagEnabled"
-  >
-    <slot></slot>
-  </div>
-</template>
-
 <script>
 import { FeatureFlagService } from '~services';
 
@@ -42,6 +32,17 @@ export default {
   },
 };
 </script>
+
+<template>
+  <div
+    class="feature-flag"
+    :class="{ [display]: display }"
+    v-if="isFeatureFlagEnabled"
+  >
+    <slot></slot>
+  </div>
+</template>
+
 <style lang="stylus">
 .feature-flag {
   &.inline {

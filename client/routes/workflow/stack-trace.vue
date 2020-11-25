@@ -1,17 +1,3 @@
-<template>
-  <section :class="{ 'stack-trace': true, loading }">
-    <header v-if="stackTraceTimestamp">
-      <span>Stack trace at {{ formattedStackTraceTimestamp }}</span>
-      <a href="#" class="refresh" @click="getStackTrace">Refresh</a>
-    </header>
-
-    <pre v-if="typeof stackTrace === 'string'">{{ stackTrace }}</pre>
-    <span class="error" v-if="stackTrace && stackTrace.error">{{
-      stackTrace.error
-    }}</span>
-  </section>
-</template>
-
 <script>
 import { getDatetimeFormattedString } from '~helpers';
 
@@ -65,6 +51,20 @@ export default {
   },
 };
 </script>
+
+<template>
+  <section :class="{ 'stack-trace': true, loading }">
+    <header v-if="stackTraceTimestamp">
+      <span>Stack trace at {{ formattedStackTraceTimestamp }}</span>
+      <a href="#" class="refresh" @click="getStackTrace">Refresh</a>
+    </header>
+
+    <pre v-if="typeof stackTrace === 'string'">{{ stackTrace }}</pre>
+    <span class="error" v-if="stackTrace && stackTrace.error">{{
+      stackTrace.error
+    }}</span>
+  </section>
+</template>
 
 <style lang="stylus">
 @require "../../styles/definitions.styl"

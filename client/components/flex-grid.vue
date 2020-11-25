@@ -1,17 +1,3 @@
-<template>
-  <div
-    class="flex-grid"
-    :style="{
-      'align-items': alignItems,
-      'flex-direction': flexDirection,
-      'justify-content': justifyContent,
-      width: width,
-    }"
-  >
-    <slot></slot>
-  </div>
-</template>
-
 <script>
 export default {
   props: {
@@ -31,6 +17,20 @@ export default {
   },
 };
 </script>
+
+<template>
+  <div
+    class="flex-grid"
+    :style="{
+      'align-items': alignItems,
+      'flex-direction': flexDirection,
+      'justify-content': justifyContent,
+      width: width,
+    }"
+  >
+    <slot></slot>
+  </div>
+</template>
 
 <style lang="stylus">
 .flex-grid {

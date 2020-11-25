@@ -1,31 +1,3 @@
-<template>
-  <section class="query" :class="{ loading }">
-    <header v-if="queries && queries.length">
-      <div class="query-name">
-        <v-select
-          placeholder="Choose a Query"
-          :value="queryName"
-          :options="queries"
-          :on-change="setQuery"
-          :searchable="false"
-        />
-      </div>
-      <a
-        :href="queryName && !running ? '#' : undefined"
-        :class="{ run: true, running }"
-        @click.prevent="run"
-      >
-        Run
-      </a>
-    </header>
-    <pre v-if="queryResult">{{ queryResult }}</pre>
-    <span class="error" v-if="error">{{ error }}</span>
-    <span class="no-queries" v-if="queries && queries.length === 0">
-      No queries registered
-    </span>
-  </section>
-</template>
-
 <script>
 export default {
   data() {
@@ -84,6 +56,34 @@ export default {
   },
 };
 </script>
+
+<template>
+  <section class="query" :class="{ loading }">
+    <header v-if="queries && queries.length">
+      <div class="query-name">
+        <v-select
+          placeholder="Choose a Query"
+          :value="queryName"
+          :options="queries"
+          :on-change="setQuery"
+          :searchable="false"
+        />
+      </div>
+      <a
+        :href="queryName && !running ? '#' : undefined"
+        :class="{ run: true, running }"
+        @click.prevent="run"
+      >
+        Run
+      </a>
+    </header>
+    <pre v-if="queryResult">{{ queryResult }}</pre>
+    <span class="error" v-if="error">{{ error }}</span>
+    <span class="no-queries" v-if="queries && queries.length === 0">
+      No queries registered
+    </span>
+  </section>
+</template>
 
 <style lang="stylus">
 @require "../../styles/definitions.styl"

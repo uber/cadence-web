@@ -1,17 +1,3 @@
-<template>
-  <section class="domain-settings domain-description" :class="{ loading }">
-    <header>
-      <h3>{{ domain }}</h3>
-    </header>
-    <detail-list
-      v-if="domainConfig"
-      :item="domainConfig"
-      :title="`Domain ${domain} Configuration`"
-    />
-    <span class="error" v-if="error">{{ error }}</span>
-  </section>
-</template>
-
 <script>
 import { getKeyValuePairs, mapDomainDescription } from '~helpers';
 import { DetailList } from '~components';
@@ -48,6 +34,20 @@ export default {
   methods: {},
 };
 </script>
+
+<template>
+  <section class="domain-settings domain-description" :class="{ loading }">
+    <header>
+      <h3>{{ domain }}</h3>
+    </header>
+    <detail-list
+      v-if="domainConfig"
+      :item="domainConfig"
+      :title="`Domain ${domain} Configuration`"
+    />
+    <span class="error" v-if="error">{{ error }}</span>
+  </section>
+</template>
 
 <style lang="stylus">
 @require "../../styles/definitions.styl"

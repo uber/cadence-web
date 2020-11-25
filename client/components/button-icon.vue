@@ -1,25 +1,3 @@
-<template>
-  <component
-    :aria-disabled="disabled"
-    class="button-icon"
-    :class="{ disabled: disabled }"
-    :disabled="disabled"
-    :href="href"
-    :is="tag"
-    :to="to"
-    @click="onClick"
-  >
-    <span
-      class="icon"
-      :class="{ [icon]: icon, [color]: color }"
-      :style="{ 'font-size': size }"
-    />
-    <span class="label" :class="{ [color]: color }" v-if="label">{{
-      label
-    }}</span>
-  </component>
-</template>
-
 <script>
 export default {
   name: 'button-icon',
@@ -61,6 +39,28 @@ export default {
   },
 };
 </script>
+
+<template>
+  <component
+    :aria-disabled="disabled"
+    class="button-icon"
+    :class="{ disabled: disabled }"
+    :disabled="disabled"
+    :href="href"
+    :is="tag"
+    :to="to"
+    @click="onClick"
+  >
+    <span
+      class="icon"
+      :class="{ [icon]: icon, [color]: color }"
+      :style="{ 'font-size': size }"
+    />
+    <span class="label" :class="{ [color]: color }" v-if="label">{{
+      label
+    }}</span>
+  </component>
+</template>
 
 <style lang="stylus">
 .button-icon {

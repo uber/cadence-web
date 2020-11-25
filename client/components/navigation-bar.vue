@@ -1,14 +1,14 @@
-<template>
-  <nav class="navigation-bar">
-    <slot></slot>
-  </nav>
-</template>
-
 <script>
 export default {
   name: 'navigation-bar',
 };
 </script>
+
+<template>
+  <nav class="navigation-bar">
+    <slot></slot>
+  </nav>
+</template>
 
 <style lang="stylus">
 .navigation-bar {

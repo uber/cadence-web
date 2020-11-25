@@ -1,3 +1,16 @@
+<script>
+import { FeatureFlag, NavigationBar, NavigationLink } from '~components';
+
+export default {
+  props: ['dateFormat', 'domain', 'taskList', 'timeFormat', 'timezone'],
+  components: {
+    'feature-flag': FeatureFlag,
+    'navigation-bar': NavigationBar,
+    'navigation-link': NavigationLink,
+  },
+};
+</script>
+
 <template>
   <section class="task-list">
     <navigation-bar>
@@ -33,19 +46,6 @@
     <router-view name="metrics" :domain="domain" :task-list="taskList" />
   </section>
 </template>
-
-<script>
-import { FeatureFlag, NavigationBar, NavigationLink } from '~components';
-
-export default {
-  props: ['dateFormat', 'domain', 'taskList', 'timeFormat', 'timezone'],
-  components: {
-    'feature-flag': FeatureFlag,
-    'navigation-bar': NavigationBar,
-    'navigation-link': NavigationLink,
-  },
-};
-</script>
 
 <style lang="stylus">
 section.task-list {

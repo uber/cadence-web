@@ -1,22 +1,3 @@
-<template>
-  <component
-    :aria-disabled="disabled"
-    class="button-fill"
-    :class="{
-      disabled: disabled,
-      [color]: color,
-    }"
-    :disabled="disabled"
-    :href="href"
-    :is="tag"
-    :to="to"
-    :title="disabledLabelText"
-    @click="onClick"
-  >
-    {{ label }}
-  </component>
-</template>
-
 <script>
 export default {
   name: 'button-fill',
@@ -60,6 +41,25 @@ export default {
   },
 };
 </script>
+
+<template>
+  <component
+    :aria-disabled="disabled"
+    class="button-fill"
+    :class="{
+      disabled: disabled,
+      [color]: color,
+    }"
+    :disabled="disabled"
+    :href="href"
+    :is="tag"
+    :to="to"
+    :title="disabledLabelText"
+    @click="onClick"
+  >
+    {{ label }}
+  </component>
+</template>
 
 <style lang="stylus">
 .button-fill {

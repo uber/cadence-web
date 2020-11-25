@@ -1,14 +1,3 @@
-<template>
-  <transition name="fade">
-    <div class="notification-bar" :class="type" v-if="show">
-      <div class="message">
-        {{ message }}
-      </div>
-      <span class="close icon icon_delete" @click="onClose" />
-    </div>
-  </transition>
-</template>
-
 <script>
 export default {
   name: 'notification-bar',
@@ -20,6 +9,17 @@ export default {
   ],
 };
 </script>
+
+<template>
+  <transition name="fade">
+    <div class="notification-bar" :class="type" v-if="show">
+      <div class="message">
+        {{ message }}
+      </div>
+      <span class="close icon icon_delete" @click="onClose" />
+    </div>
+  </transition>
+</template>
 
 <style scoped lang="stylus">
 UberGreen = #3AA76D;

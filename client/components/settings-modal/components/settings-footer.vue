@@ -1,18 +1,3 @@
-<template>
-  <flex-grid align-items="center" justify-content="flex-end">
-    <flex-grid-item width="102px">
-      <button-fill color="tertiary" label="CANCEL" @click="onCancelClick" />
-    </flex-grid-item>
-    <flex-grid-item>
-      <button-fill
-        :disabled="!submitEnabled"
-        label="APPLY"
-        @click="onSubmitClick"
-      />
-    </flex-grid-item>
-  </flex-grid>
-</template>
-
 <script>
 import ButtonFill from '../../button-fill';
 import FlexGrid from '../../flex-grid';
@@ -40,3 +25,18 @@ export default {
   },
 };
 </script>
+
+<template>
+  <flex-grid align-items="center" justify-content="flex-end">
+    <flex-grid-item width="102px">
+      <button-fill color="tertiary" label="CANCEL" @click="onCancelClick" />
+    </flex-grid-item>
+    <flex-grid-item>
+      <button-fill
+        :disabled="!submitEnabled"
+        label="APPLY"
+        @click="onSubmitClick"
+      />
+    </flex-grid-item>
+  </flex-grid>
+</template>
