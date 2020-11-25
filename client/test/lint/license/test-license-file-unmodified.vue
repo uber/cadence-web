@@ -21,6 +21,6 @@
 // THE SOFTWARE.
 
 export default {
-  name: 'test-file-unmodified',
+  name: 'test-license-file-unmodified',
 };
 </script>

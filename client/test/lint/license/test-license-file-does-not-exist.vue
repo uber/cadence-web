@@ -21,6 +21,6 @@
 // THE SOFTWARE.
 
 export default {
-  name: 'test-file-does-not-exist',
+  name: 'test-license-file-does-not-exist',
 };
 </script>
