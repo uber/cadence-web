@@ -75,7 +75,7 @@ export default {
       <slot name="getting-started" />
       <div v-if="!hideDocs">
         <a
-          href="https://cadenceworkflow.io/docs"
+          href="https://cadenceworkflow.io/docs/cadence"
           target="_blank"
           rel="noopener noreferrer"
         >
