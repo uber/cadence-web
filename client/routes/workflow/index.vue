@@ -294,7 +294,7 @@ export default {
       const taskListName = this.workflow.executionConfiguration.taskList.name;
 
       this.$http(
-        `/api/domain/${this.$route.params.domain}/task-lists/${taskListName}`
+        `/api/domains/${this.$route.params.domain}/task-lists/${taskListName}`
       )
         .then(
           (taskList) => {

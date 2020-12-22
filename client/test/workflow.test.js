@@ -51,6 +51,7 @@ describe('Workflow', () => {
           extendedOptions.runId,
           extendedOptions.execution
         )
+        .withTaskList('ci_task_list')
         .startingAt(
           `/domains/ci-test/workflows/${extendedOptions.workflowId}/${
             extendedOptions.runId

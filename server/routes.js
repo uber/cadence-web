@@ -395,7 +395,7 @@ router.get('/api/feature-flags/:key', (ctx, next) => {
     next();
 });
 
-router.get('/api/domain/:domain/task-lists/:taskListName', async function(
+router.get('/api/domains/:domain/task-lists/:taskListName', async function(
   ctx
 ) {
   const { domain, taskListName } = ctx.params;

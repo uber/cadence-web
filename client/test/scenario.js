@@ -394,4 +394,34 @@ Scenario.prototype.withTaskListPollers = function withTaskListPollers(
   return this;
 };
 
+Scenario.prototype.withTaskList = function withTaskList(
+  taskList,
+  pollers
+) {
+  console.log('withTaskList called:', `/api/domains/${this.domain}/task-lists/${taskList}`);
+  this.api.getOnce(
+    `/api/domains/${this.domain}/task-lists/${taskList}`,
+    {
+      pollers: pollers || [
+        {
+          identity: 'identity1',
+          lastAccessTime: moment()
+            .startOf('hour')
+            .add(5, 'minutes'),
+          ratePerSecond: 100000,
+        },
+        {
+          identity: 'identity2',
+          lastAccessTime: moment()
+            .startOf('hour')
+            .add(3, 'minutes'),
+          ratePerSecond: 100000,
+        }
+      ],
+    }
+  );
+
+  return this;
+};
+
 window.Scenario = Scenario;
