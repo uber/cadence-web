@@ -291,18 +291,18 @@ export default {
         return Promise.reject('task list name is required');
       }
 
-      const tlName = this.workflow.executionConfiguration.taskList.name;
+      const taskListName = this.workflow.executionConfiguration.taskList.name;
 
       this.$http(
-        `/api/domain/${this.$route.params.domain}/task-lists/${tlName}`
+        `/api/domain/${this.$route.params.domain}/task-lists/${taskListName}`
       )
         .then(
-          (tl) => {
-            this.taskList = { name: tlName, ...tl };
+          (taskList) => {
+            this.taskList = { name: taskListName, ...taskList };
           },
-          (e) => {
-            this.taskList = { name: tlName };
-            this.error = (e.json && e.json.message) || e.status || e.message;
+          (error) => {
+            this.taskList = { name: taskListName };
+            this.error = (error.json && error.json.message) || error.status || error.message;
           }
         )
         .finally(() => {
