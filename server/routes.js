@@ -415,13 +415,6 @@ router.get('/api/domain/:domain/task-lists/:taskListName', async function(
   ctx.body = taskList;
 });
 
-router.get('/api/web-settings', (ctx) => {
-  ctx.body = {
-    health: 'OK',
-    permitWriteApi: utils.isWriteApiPermitted(),
-  };
-});
-
 router.get('/health', ctx => (ctx.body = 'OK'));
 
 module.exports = router;
