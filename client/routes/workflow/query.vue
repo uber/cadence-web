@@ -74,8 +74,8 @@ export default {
               [this.queryName] = this.queries;
             }
           },
-          (e) => {
-            this.error = (e.json && e.json.message) || e.status || e.message;
+          (error) => {
+            this.error = (error.json && error.json.message) || error.status || error.message;
           }
         )
         .finally(() => {
