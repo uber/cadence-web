@@ -34,7 +34,7 @@ export default {
       running: false,
     };
   },
-  props: ['baseAPIURL', 'taskQueueName', 'isWorkerRunning'],
+  props: ['baseAPIURL', 'taskListName', 'isWorkerRunning'],
   created() {
     if (!this.isWorkerRunning) {
       return;
@@ -115,20 +115,20 @@ export default {
         Run
       </a>
     </header>
-    <pre v-if="queryResult && queryResult.payloads">{{
+    <pre v-if="queryResult && queryResult.payloads !== undefined">{{
       queryResult.payloads
     }}</pre>
     <span class="error" v-if="error">{{ error }}</span>
     <span v-if="!isWorkerRunning" class="no-queries">
-      There are no Workers currently listening to the Task Queue:
+      There are no Workers currently listening to the Task List:
       <router-link
         :to="{
-          name: 'task-queue',
+          name: 'task-list',
           params: {
-            taskQueue: taskQueueName,
+            taskList: taskListName,
           },
         }"
-        >{{ taskQueueName }}
+        >{{ taskListName }}
       </router-link>
     </span>
     <span class="no-queries" v-else-if="queries && queries.length === 0">

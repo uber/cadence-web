@@ -54,7 +54,7 @@ export default {
         workflow: undefined,
       },
 
-      taskQueue: {},
+      taskList: {},
 
       unwatch: [],
     };
@@ -123,7 +123,7 @@ export default {
       )}`;
     },
     isWorkerRunning() {
-      return this.taskQueue.pollers && this.taskQueue.pollers.length > 0;
+      return this.taskList.pollers && this.taskList.pollers.length > 0;
     },
   },
   methods: {
@@ -272,7 +272,7 @@ export default {
         });
     },
     onHistoryUrlChange(historyUrl) {
-      this.fetchHistoryPage(historyUrl).then(this.fetchTaskQueue);
+      this.fetchHistoryPage(historyUrl).then(this.fetchTaskList);
     },
     onNotification(event) {
       this.$emit('onNotification', event);
@@ -286,21 +286,22 @@ export default {
         this.$watch('historyUrl', this.onHistoryUrlChange, { immediate: true })
       );
     },
-    fetchTaskQueue() {
-      if (!this.workflow || !this.workflow.executionConfig) {
-        return Promise.reject('task queue name is required');
+    fetchTaskList() {
+      if (!this.workflow || !this.workflow.executionConfiguration) {
+        return Promise.reject('task list name is required');
       }
 
-      const tqName = this.workflow.executionConfig.taskQueue.name;
+      const tlName = this.workflow.executionConfiguration.taskList.name;
 
       this.$http(
-        `/api/namespaces/${this.$route.params.namespace}/task-queues/${tqName}`
+        `/api/domain/${this.$route.params.domain}/task-lists/${tlName}`
       )
         .then(
-          (tq) => {
-            this.taskQueue = { name: tqName, ...tq };
+          (tl) => {
+            this.taskList = { name: tlName, ...tl };
           },
           (e) => {
+            this.taskList = { name: tlName };
             this.error = (e.json && e.json.message) || e.status || e.message;
           }
         )
@@ -334,7 +335,6 @@ export default {
         icon="icon_trips"
         label="Stack Trace"
         :to="{ name: 'workflow/stack-trace' }"
-        v-show="isWorkflowRunning"
         data-cy="stack-trace-link"
       />
       <navigation-link
@@ -342,7 +342,6 @@ export default {
         icon="icon_lost"
         label="Query"
         :to="{ name: 'workflow/query' }"
-        v-show="isWorkflowRunning"
         data-cy="query-link"
       />
     </navigation-bar>
@@ -379,7 +378,7 @@ export default {
       :baseAPIURL="baseAPIURL"
       :date-format="dateFormat"
       :isWorkerRunning="isWorkerRunning"
-      :taskQueueName="taskQueue.name"
+      :taskListName="taskList.name"
       :time-format="timeFormat"
       :timezone="timezone"
       @onNotification="onNotification"
@@ -388,7 +387,7 @@ export default {
       name="query"
       :baseAPIURL="baseAPIURL"
       :isWorkerRunning="isWorkerRunning"
-      :taskQueueName="taskQueue.name"
+      :taskListName="taskList.name"
       @onNotification="onNotification"
     />
   </section>

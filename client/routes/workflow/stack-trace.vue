@@ -31,7 +31,7 @@ export default {
       stackTraceTimestamp: undefined,
     };
   },
-  props: ['baseAPIURL', 'dateFormat', 'isWorkerRunning', 'taskQueueName', 'timeFormat', 'timezone'],
+  props: ['baseAPIURL', 'dateFormat', 'isWorkerRunning', 'taskListName', 'timeFormat', 'timezone'],
   computed: {
     formattedStackTraceTimestamp() {
       const { dateFormat, stackTraceTimestamp, timeFormat, timezone } = this;
@@ -93,7 +93,7 @@ export default {
       <a href="#" class="refresh" @click="getStackTrace">Refresh</a>
     </header>
 
-    <pre v-if="stackTrace && stackTrace.payloads" class="stack-trace-view">{{
+    <pre v-if="stackTrace && stackTrace.payloads !== undefined" class="stack-trace-view">{{
       stackTrace.payloads
     }}</pre>
 
@@ -101,15 +101,15 @@ export default {
       {{ stackTrace.error }}
     </span>
     <span v-if="!isWorkerRunning" class="no-queries">
-      There are no Workers currently listening to the Task Queue:
+      There are no Workers currently listening to the Task List:
       <router-link
         :to="{
-          name: 'task-queue',
+          name: 'task-list',
           params: {
-            taskQueue: taskQueueName,
+            taskList: taskListName,
           },
         }"
-        >{{ taskQueueName }}
+        >{{ taskListName }}
       </router-link>
     </span>
   </section>
