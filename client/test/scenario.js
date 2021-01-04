@@ -398,8 +398,7 @@ Scenario.prototype.withTaskList = function withTaskList(
   taskList,
   pollers
 ) {
-  console.log('withTaskList called:', `/api/domains/${this.domain}/task-lists/${taskList}`);
-  this.api.getOnce(
+  this.api.get(
     `/api/domains/${this.domain}/task-lists/${taskList}`,
     {
       pollers: pollers || [
