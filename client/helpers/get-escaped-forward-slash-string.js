@@ -19,6 +19,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const getEscapedForwardSlash = str => str.replace(/\//g, '%2F');
+const getEscapedForwardSlashString = str => str.replace(/\//g, '%2F');
 
-export default getEscapedForwardSlash;
+export default getEscapedForwardSlashString;

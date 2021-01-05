@@ -56,7 +56,7 @@ import WorkflowSummary from './routes/workflow/summary';
 import WorkflowTabs from './routes/workflow';
 
 import {
-  getEscapedForwardSlash,
+  getEscapedCharacterString,
   http,
   injectMomentDurationFormat,
   jsonTryParse,
@@ -164,7 +164,7 @@ const routeOpts = {
       props: ({ params }) => ({
         domain: params.domain,
         runId: params.runId,
-        workflowId: getEscapedForwardSlash(params.workflowId),
+        workflowId: getEscapedCharacterString(params.workflowId),
       }),
       children: [
         {
@@ -176,7 +176,7 @@ const routeOpts = {
           props: {
             summary: ({ params }) => ({
               runId: params.runId,
-              workflowId: getEscapedForwardSlash(params.workflowId),
+              workflowId: getEscapedCharacterString(params.workflowId),
             }),
           },
         },
@@ -193,7 +193,7 @@ const routeOpts = {
               format: query.format || 'grid',
               runId: params.runId,
               showGraph: Boolean(query.showGraph) === true,
-              workflowId: getEscapedForwardSlash(params.workflowId),
+              workflowId: getEscapedCharacterString(params.workflowId),
             }),
           },
         },
