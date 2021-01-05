@@ -39,6 +39,7 @@ export default {
     if (!this.isWorkerRunning) {
       return;
     }
+
     this.fetchQueries();
   },
   methods: {
@@ -65,17 +66,21 @@ export default {
     },
     fetchQueries() {
       this.loading = true;
+
       return this.$http(`${this.baseAPIURL}/query`)
         .then(
-          (queries) => {
-            this.queries = queries.filter((query) => query !== '__stack_trace');
+          queries => {
+            this.queries = queries.filter(query => query !== '__stack_trace');
 
             if (!this.queryName) {
               [this.queryName] = this.queries;
             }
           },
-          (error) => {
-            this.error = (error.json && error.json.message) || error.status || error.message;
+          error => {
+            this.error =
+              (error.json && error.json.message) ||
+              error.status ||
+              error.message;
           }
         )
         .finally(() => {
@@ -87,8 +92,10 @@ export default {
     isWorkerRunning: function(newVal, oldVal) {
       if (newVal == false) {
         this.queries = [];
+
         return;
       }
+
       this.fetchQueries();
     },
   },

@@ -166,6 +166,7 @@ export default {
 
       this.history.loading = true;
       this.pqu = pagedHistoryUrl;
+
       return this.$http(pagedHistoryUrl)
         .then(res => {
           // eslint-disable-next-line no-underscore-dangle
@@ -297,12 +298,15 @@ export default {
         `/api/domains/${this.$route.params.domain}/task-lists/${taskListName}`
       )
         .then(
-          (taskList) => {
+          taskList => {
             this.taskList = { name: taskListName, ...taskList };
           },
-          (error) => {
+          error => {
             this.taskList = { name: taskListName };
-            this.error = (error.json && error.json.message) || error.status || error.message;
+            this.error =
+              (error.json && error.json.message) ||
+              error.status ||
+              error.message;
           }
         )
         .finally(() => {

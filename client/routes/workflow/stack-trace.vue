@@ -20,8 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { getDatetimeFormattedString } from '~helpers';
 import { getQueryResult } from './helpers/get-query-result';
+import { getDatetimeFormattedString } from '~helpers';
 
 export default {
   data() {
@@ -31,7 +31,14 @@ export default {
       stackTraceTimestamp: undefined,
     };
   },
-  props: ['baseAPIURL', 'dateFormat', 'isWorkerRunning', 'taskListName', 'timeFormat', 'timezone'],
+  props: [
+    'baseAPIURL',
+    'dateFormat',
+    'isWorkerRunning',
+    'taskListName',
+    'timeFormat',
+    'timezone',
+  ],
   computed: {
     formattedStackTraceTimestamp() {
       const { dateFormat, stackTraceTimestamp, timeFormat, timezone } = this;
@@ -50,6 +57,7 @@ export default {
     if (!this.isWorkerRunning) {
       return;
     }
+
     this.getStackTrace();
   },
   methods: {
@@ -78,8 +86,10 @@ export default {
     isWorkerRunning: function(newVal, oldVal) {
       if (newVal == false) {
         this.queries = [];
+
         return;
       }
+
       this.getStackTrace();
     },
   },
@@ -93,9 +103,11 @@ export default {
       <a href="#" class="refresh" @click="getStackTrace">Refresh</a>
     </header>
 
-    <pre v-if="stackTrace && stackTrace.payloads !== undefined" class="stack-trace-view">{{
-      stackTrace.payloads
-    }}</pre>
+    <pre
+      v-if="stackTrace && stackTrace.payloads !== undefined"
+      class="stack-trace-view"
+      >{{ stackTrace.payloads }}</pre
+    >
 
     <span class="error" v-if="stackTrace && stackTrace.error">
       {{ stackTrace.error }}

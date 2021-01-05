@@ -381,25 +381,25 @@ router.get(
 );
 
 router.get('/api/feature-flags/:key', (ctx, next) => {
-    const {
-        params: { key },
-    } = ctx;
-    const featureFlag = featureFlags.find(featureFlag => featureFlag.key === key);
-    const value = (featureFlag && featureFlag.value) || false;
+  const {
+    params: { key },
+  } = ctx;
+  const featureFlag = featureFlags.find(featureFlag => featureFlag.key === key);
+  const value = (featureFlag && featureFlag.value) || false;
 
-    ctx.body = {
-        key,
-        value,
-    };
+  ctx.body = {
+    key,
+    value,
+  };
 
-    next();
+  next();
 });
 
 router.get('/api/domains/:domain/task-lists/:taskListName', async function(
   ctx
 ) {
   const { domain, taskListName } = ctx.params;
-  const descTaskList = async (taskListType) =>
+  const descTaskList = async taskListType =>
     await ctx.cadence.describeTaskList({
       domain,
       taskList: { name: taskListName },
@@ -412,6 +412,7 @@ router.get('/api/domains/:domain/task-lists/:taskListName', async function(
   const decisionPollerList = decisionList.pollers || [];
 
   const taskList = { pollers: [...activityPollerList, ...decisionPollerList] };
+
   ctx.body = taskList;
 });
 
