@@ -32,7 +32,7 @@ module.exports = {
            * // Copyright (c) 2020 Uber Technologies Inc.
            *
            * 2. multi-year span
-           * // Copyright (c) 2017-2020 Uber Technologies Inc.
+           * // Copyright (c) 2017-2021 Uber Technologies Inc.
            *
            * 3. new file from another company referenced
            * // Modifications Copyright (c) 2020 Uber Technologies Inc.
@@ -46,7 +46,7 @@ module.exports = {
            *
            *       In this case it will change header:
            *         from:
-           *           Copyright (c) 2017-2020 Uber Technologies Inc.
+           *           Copyright (c) 2017-2021 Uber Technologies Inc.
            *           Copyright (c) 2020 Uber Technologies Inc.
            *         to:
            *           Copyright (c) 2021 Uber Technologies Inc.
