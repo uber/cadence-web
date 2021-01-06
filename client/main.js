@@ -55,11 +55,7 @@ import WorkflowList from './routes/domain/workflow-list';
 import WorkflowSummary from './routes/workflow/summary';
 import WorkflowTabs from './routes/workflow';
 
-import {
-  http,
-  injectMomentDurationFormat,
-  jsonTryParse,
-} from '~helpers';
+import { http, injectMomentDurationFormat, jsonTryParse } from '~helpers';
 
 const routeOpts = {
   mode: 'history',
