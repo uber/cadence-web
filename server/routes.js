@@ -1,5 +1,5 @@
 // Copyright (c) 2017-2021 Uber Technologies Inc.
-//
+// Portions of the Software are attributed to Copyright (c) 2020 Temporal Technologies Inc.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -393,6 +393,27 @@ router.get('/api/feature-flags/:key', (ctx, next) => {
   };
 
   next();
+});
+
+router.get('/api/domains/:domain/task-lists/:taskListName', async function(
+  ctx
+) {
+  const { domain, taskListName } = ctx.params;
+  const descTaskList = async taskListType =>
+    await ctx.cadence.describeTaskList({
+      domain,
+      taskList: { name: taskListName },
+      taskListType,
+    });
+
+  const activityList = await descTaskList('Activity');
+  const decisionList = await descTaskList('Decision');
+  const activityPollerList = activityList.pollers || [];
+  const decisionPollerList = decisionList.pollers || [];
+
+  const taskList = { pollers: [...activityPollerList, ...decisionPollerList] };
+
+  ctx.body = taskList;
 });
 
 router.get('/health', ctx => (ctx.body = 'OK'));

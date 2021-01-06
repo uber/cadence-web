@@ -51,6 +51,7 @@ describe('Workflow', () => {
           extendedOptions.runId,
           extendedOptions.execution
         )
+        .withTaskList('ci_task_list')
         .startingAt(
           `/domains/ci-test/workflows/${extendedOptions.workflowId}/${
             extendedOptions.runId
@@ -1257,50 +1258,5 @@ describe('Workflow', () => {
       );
       queryEl.should.not.have.descendant('pre');
     });
-  });
-
-  describe('Completed workflows', () => {
-    it('should show summary and history tabs for completed workflows', async function test() {
-      const [, scenario] = await summaryTest(this.test, {
-        execution: closedWorkflowExecution,
-      });
-
-      scenario.vm.$el
-        .attrValues('section.execution > nav a', 'href')
-        .should.deep.equal([
-          '/domains/ci-test/workflows/email-daily-summaries/emailRun1/summary',
-          '/domains/ci-test/workflows/email-daily-summaries/emailRun1/history',
-          '/domains/ci-test/workflows/email-daily-summaries/emailRun1/stack-trace',
-          '/domains/ci-test/workflows/email-daily-summaries/emailRun1/query',
-        ]);
-      scenario.vm.$el
-        .querySelector('section.execution > nav a#nav-link-summary')
-        .should.have.class('router-link-active');
-      await retry(() => {
-        scenario.vm.$el.querySelector(
-          'section.execution > nav a#nav-link-stack-trace'
-        ).should.not.be.displayed;
-        scenario.vm.$el.querySelector(
-          'section.execution > nav a#nav-link-query'
-        ).should.not.be.displayed;
-      });
-    });
-
-    // eslint-disable-next-line jest/no-commented-out-tests
-    /*
-    it.skip('should update the status of the workflow when it completes', async function test() {
-      return summaryTest(this.test).then(async ([summaryEl]) => {
-        const wfStatus = summaryEl.querySelector('.workflow-status');
-
-        wfStatus.should.have.attr('data-status', 'running');
-
-        await summaryEl.waitUntilExists('.workflow-status[data-status="completed"]');
-
-        await retry(() =>
-          wfStatus.should.have.attr('data-status', 'completed')
-        );
-      });
-    });
-    */
   });
 });

@@ -1,6 +1,6 @@
 <script>
 // Copyright (c) 2017-2021 Uber Technologies Inc.
-//
+// Portions of the Software are attributed to Copyright (c) 2020 Temporal Technologies Inc.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -53,6 +53,8 @@ export default {
         wfStatus: undefined,
         workflow: undefined,
       },
+
+      taskList: {},
 
       unwatch: [],
     };
@@ -109,16 +111,19 @@ export default {
 
       return getHistoryTimelineEvents({ historyEvents });
     },
-    queryUrl() {
-      const queryUrl = `${this.baseAPIURL}/history?waitForNewEvent=true`;
+    historyUrl() {
+      const historyUrl = `${this.baseAPIURL}/history?waitForNewEvent=true`;
 
       if (!this.nextPageToken) {
-        return queryUrl;
+        return historyUrl;
       }
 
-      return `${queryUrl}&nextPageToken=${encodeURIComponent(
+      return `${historyUrl}&nextPageToken=${encodeURIComponent(
         this.nextPageToken
       )}`;
+    },
+    isWorkerRunning() {
+      return this.taskList.pollers && this.taskList.pollers.length > 0;
     },
   },
   methods: {
@@ -144,33 +149,34 @@ export default {
         this.unwatch.pop()();
       }
     },
-    clearQueryUrlWatch() {
+    clearHistoryUrlWatch() {
       while (this.unwatch.length > 1) {
         this.unwatch.pop()();
       }
     },
-    fetchHistoryPage(pagedQueryUrl) {
+    fetchHistoryPage(pagedHistoryUrl) {
       if (
-        !pagedQueryUrl ||
+        !pagedHistoryUrl ||
         this.fetchHistoryPageRetryCount >= RETRY_COUNT_MAX
       ) {
         this.history.loading = false;
 
-        return;
+        return Promise.resolve();
       }
 
       this.history.loading = true;
-      this.pqu = pagedQueryUrl;
-      this.$http(pagedQueryUrl)
+      this.pqu = pagedHistoryUrl;
+
+      return this.$http(pagedHistoryUrl)
         .then(res => {
           // eslint-disable-next-line no-underscore-dangle
-          if (this._isDestroyed || this.pqu !== pagedQueryUrl) {
+          if (this._isDestroyed || this.pqu !== pagedHistoryUrl) {
             return null;
           }
 
           if (res.nextPageToken && this.npt === res.nextPageToken) {
             // nothing happened, and same query is still valid, so let's long pool again
-            return this.fetch(pagedQueryUrl);
+            return this.fetch(pagedHistoryUrl);
           }
 
           if (res.nextPageToken) {
@@ -211,7 +217,7 @@ export default {
           console.error(error);
 
           // eslint-disable-next-line no-underscore-dangle
-          if (this._isDestroyed || this.pqu !== pagedQueryUrl) {
+          if (this._isDestroyed || this.pqu !== pagedHistoryUrl) {
             return;
           }
 
@@ -221,11 +227,14 @@ export default {
           });
 
           this.fetchHistoryPageRetryCount += 1;
-          setTimeout(() => this.fetchHistoryPage(pagedQueryUrl), RETRY_TIMEOUT);
+          setTimeout(
+            () => this.fetchHistoryPage(pagedHistoryUrl),
+            RETRY_TIMEOUT
+          );
         })
         .finally(() => {
           // eslint-disable-next-line no-underscore-dangle
-          if (this._isDestroyed || this.pqu !== pagedQueryUrl) {
+          if (this._isDestroyed || this.pqu !== pagedHistoryUrl) {
             this.history.loading = false;
           }
         });
@@ -235,7 +244,7 @@ export default {
         return;
       }
 
-      this.clearQueryUrlWatch();
+      this.clearHistoryUrlWatch();
       this.clearState();
       this.wfLoading = true;
 
@@ -244,7 +253,7 @@ export default {
           wf => {
             this.workflow = wf;
             this.isWorkflowRunning = !wf.workflowExecutionInfo.closeTime;
-            this.setupQueryUrlWatch();
+            this.setupHistoryUrlWatch();
             this.baseApiUrlRetryCount = 0;
           },
           error => {
@@ -263,8 +272,8 @@ export default {
           this.wfLoading = false;
         });
     },
-    onQueryUrlChange(queryUrl) {
-      this.fetchHistoryPage(queryUrl);
+    onHistoryUrlChange(historyUrl) {
+      this.fetchHistoryPage(historyUrl).then(this.fetchTaskList);
     },
     onNotification(event) {
       this.$emit('onNotification', event);
@@ -272,11 +281,37 @@ export default {
     onWorkflowHistoryEventParamToggle(event) {
       this.$emit('onWorkflowHistoryEventParamToggle', event);
     },
-    setupQueryUrlWatch() {
-      this.clearQueryUrlWatch();
+    setupHistoryUrlWatch() {
+      this.clearHistoryUrlWatch();
       this.unwatch.push(
-        this.$watch('queryUrl', this.onQueryUrlChange, { immediate: true })
+        this.$watch('historyUrl', this.onHistoryUrlChange, { immediate: true })
       );
+    },
+    fetchTaskList() {
+      if (!this.workflow || !this.workflow.executionConfiguration) {
+        return Promise.reject('task list name is required');
+      }
+
+      const taskListName = this.workflow.executionConfiguration.taskList.name;
+
+      this.$http(
+        `/api/domains/${this.$route.params.domain}/task-lists/${taskListName}`
+      )
+        .then(
+          taskList => {
+            this.taskList = { name: taskListName, ...taskList };
+          },
+          error => {
+            this.taskList = { name: taskListName };
+            this.error =
+              (error.json && error.json.message) ||
+              error.status ||
+              error.message;
+          }
+        )
+        .finally(() => {
+          this.loading = false;
+        });
     },
   },
 };
@@ -290,26 +325,28 @@ export default {
         icon="icon_receipt"
         label="Summary"
         :to="{ name: 'workflow/summary' }"
+        data-cy="summary-link"
       />
       <navigation-link
         id="nav-link-history"
         icon="icon_trip-history"
         label="History"
         :to="{ name: 'workflow/history' }"
+        data-cy="history-link"
       />
       <navigation-link
         id="nav-link-stack-trace"
         icon="icon_trips"
         label="Stack Trace"
         :to="{ name: 'workflow/stack-trace' }"
-        v-show="isWorkflowRunning"
+        data-cy="stack-trace-link"
       />
       <navigation-link
         id="nav-link-query"
         icon="icon_lost"
         label="Query"
         :to="{ name: 'workflow/query' }"
-        v-show="isWorkflowRunning"
+        data-cy="query-link"
       />
     </navigation-bar>
     <router-view
@@ -344,6 +381,8 @@ export default {
       name="stacktrace"
       :baseAPIURL="baseAPIURL"
       :date-format="dateFormat"
+      :isWorkerRunning="isWorkerRunning"
+      :taskListName="taskList.name"
       :time-format="timeFormat"
       :timezone="timezone"
       @onNotification="onNotification"
@@ -351,6 +390,8 @@ export default {
     <router-view
       name="query"
       :baseAPIURL="baseAPIURL"
+      :isWorkerRunning="isWorkerRunning"
+      :taskListName="taskList.name"
       @onNotification="onNotification"
     />
   </section>

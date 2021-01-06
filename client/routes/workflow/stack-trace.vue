@@ -1,6 +1,6 @@
 <script>
 // Copyright (c) 2017-2021 Uber Technologies Inc.
-//
+// Portions of the Software are attributed to Copyright (c) 2020 Temporal Technologies Inc.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+import { getQueryResult } from './helpers/get-query-result';
 import { getDatetimeFormattedString } from '~helpers';
 
 export default {
@@ -30,7 +31,14 @@ export default {
       stackTraceTimestamp: undefined,
     };
   },
-  props: ['baseAPIURL', 'dateFormat', 'timeFormat', 'timezone'],
+  props: [
+    'baseAPIURL',
+    'dateFormat',
+    'isWorkerRunning',
+    'taskListName',
+    'timeFormat',
+    'timezone',
+  ],
   computed: {
     formattedStackTraceTimestamp() {
       const { dateFormat, stackTraceTimestamp, timeFormat, timezone } = this;
@@ -46,6 +54,10 @@ export default {
     },
   },
   created() {
+    if (!this.isWorkerRunning) {
+      return;
+    }
+
     this.getStackTrace();
   },
   methods: {
@@ -55,7 +67,7 @@ export default {
       return this.$http
         .post(`${this.baseAPIURL}/query/__stack_trace`)
         .then(({ queryResult }) => {
-          this.stackTrace = queryResult;
+          this.stackTrace = getQueryResult(queryResult);
           this.stackTraceTimestamp = new Date();
         })
         .catch(e => {
@@ -70,20 +82,48 @@ export default {
         });
     },
   },
+  watch: {
+    isWorkerRunning: function(newVal, oldVal) {
+      if (newVal == false) {
+        this.queries = [];
+
+        return;
+      }
+
+      this.getStackTrace();
+    },
+  },
 };
 </script>
 
 <template>
-  <section :class="{ 'stack-trace': true, loading }">
+  <section :class="{ 'stack-trace': true, loading }" data-cy="stack-trace">
     <header v-if="stackTraceTimestamp">
       <span>Stack trace at {{ formattedStackTraceTimestamp }}</span>
       <a href="#" class="refresh" @click="getStackTrace">Refresh</a>
     </header>
 
-    <pre v-if="typeof stackTrace === 'string'">{{ stackTrace }}</pre>
-    <span class="error" v-if="stackTrace && stackTrace.error">{{
-      stackTrace.error
-    }}</span>
+    <pre
+      v-if="stackTrace && stackTrace.payloads !== undefined"
+      class="stack-trace-view"
+      >{{ stackTrace.payloads }}</pre
+    >
+
+    <span class="error" v-if="stackTrace && stackTrace.error">
+      {{ stackTrace.error }}
+    </span>
+    <span v-if="!isWorkerRunning" class="no-queries">
+      There are no Workers currently listening to the Task List:
+      <router-link
+        :to="{
+          name: 'task-list',
+          params: {
+            taskList: taskListName,
+          },
+        }"
+        >{{ taskListName }}
+      </router-link>
+    </span>
   </section>
 </template>
 
@@ -98,4 +138,15 @@ section.stack-trace
     margin 0 1em
     action-button()
     icon-refresh()
+
+section .stack-trace-view
+  white-space pre-wrap
+
+span.no-queries {
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-size: 20px;
+  color: uber-black-60;
+}
 </style>
