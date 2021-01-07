@@ -63,6 +63,7 @@
     "lossless-json": "^1.0.2",
     "moment": "^2.19.1",
     "napa": "^3.0.0",
+    "node-gyp": "^7.1.2",
     "prismjs": "^1.14.0",
     "promise.prototype.finally": "^3.1.0",
     "stylus": "^0.54.5",
