@@ -307,41 +307,47 @@ export default {
         );
         this.nptAlt = nptClosed;
 
-        // saturate diff in workflows between the max dates
-        // so both open and closed workflows are fetched until the same date
-        let maxOpen = maxBy(wfsOpen, (w) => moment(w.startTime));
-        let maxClosed = maxBy(wfsClosed, (w) => moment(w.startTime));
-
-        let nptDiff;
         let wfsDiff = [];
-        let saturateOpen;
+        if (this.npt && this.nptAlt) {
+          // saturate diff in workflows between the max dates
+          // so both open and closed workflows are fetched until the same date
+          let maxOpen = maxBy(wfsOpen, (w) => moment(w.startTime));
+          let maxClosed = maxBy(wfsClosed, (w) => moment(w.startTime));
 
-        if (maxOpen && maxClosed && maxOpen.startTime !== maxClosed.startTime) {
-          maxOpen = moment(maxOpen.startTime);
-          maxClosed = moment(maxClosed.startTime);
-          saturateOpen = maxOpen < maxClosed;
+          let nptDiff;
+          let saturateOpen;
 
-          let [startTime, endTime] = saturateOpen
-            ? [maxOpen, maxClosed]
-            : [maxClosed, maxOpen];
-          startTime = startTime.add(1, 'milliseconds').toISOString();
-          endTime = endTime.add(1, 'milliseconds').toISOString();
-          const queryDiff = { ...this.criteria, startTime, endTime };
+          if (
+            maxOpen &&
+            maxClosed &&
+            maxOpen.startTime !== maxClosed.startTime
+          ) {
+            maxOpen = moment(maxOpen.startTime);
+            maxClosed = moment(maxClosed.startTime);
+            saturateOpen = maxOpen < maxClosed;
 
-          let diff = await this.fetch(
-            `/api/domains/${domain}/workflows/${
-              saturateOpen ? 'open' : 'closed'
-            }`,
-            queryDiff
-          );
+            let [startTime, endTime] = saturateOpen
+              ? [maxOpen, maxClosed]
+              : [maxClosed, maxOpen];
+            startTime = startTime.add(1, 'seconds').toISOString();
+            endTime = endTime.add(1, 'seconds').toISOString();
+            const queryDiff = { ...this.criteria, startTime, endTime };
 
-          wfsDiff = diff.workflows;
-          nptDiff = diff.nextPageToken;
+            let diff = await this.fetch(
+              `/api/domains/${domain}/workflows/${
+                saturateOpen ? 'open' : 'closed'
+              }`,
+              queryDiff
+            );
 
-          if (saturateOpen === true) {
-            this.npt = nptDiff;
-          } else if (saturateOpen === false) {
-            this.nptAlt = nptDiff;
+            wfsDiff = diff.workflows;
+            nptDiff = diff.nextPageToken;
+
+            if (saturateOpen === true) {
+              this.npt = nptDiff;
+            } else if (saturateOpen === false) {
+              this.nptAlt = nptDiff;
+            }
           }
         }
 
