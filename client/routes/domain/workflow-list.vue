@@ -308,7 +308,7 @@ export default {
 
         this.npt = nptOpen;
 
-        const {
+        let {
           workflows: wfsClosed,
           nextPageToken: nptClosed,
         } = await this.fetch(
@@ -353,22 +353,19 @@ export default {
               queryDiff
             );
 
-            wfsDiff = diff.workflows;
             nptDiff = diff.nextPageToken;
 
             if (saturateOpen === true) {
               this.npt = nptDiff;
+              wfsOpen = [...wfsOpen, ...diff.workflows];
             } else if (saturateOpen === false) {
               this.nptAlt = nptDiff;
+              wfsClosed = [...wfsClosed, ...diff.workflows];
             }
           }
         }
 
-        workflows = orderBy(
-          [...wfsOpen, ...wfsClosed, ...wfsDiff],
-          'startTime',
-          ['desc']
-        );
+        workflows = [...wfsOpen, ...wfsClosed];
       }
 
       this.results = [...this.results, ...workflows];
