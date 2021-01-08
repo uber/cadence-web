@@ -205,7 +205,7 @@ export default {
         status: { value: status },
       } = this;
 
-      if (status === 'OPEN') {
+      if (['OPEN', 'ALL'].includes(status)) {
         return null;
       }
 
