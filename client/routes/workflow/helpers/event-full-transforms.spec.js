@@ -23,7 +23,7 @@ import { eventFullTransforms } from './event-full-transforms';
 
 describe('eventFullTransforms', () => {
   describe('MarkerRecorded', () => {
-    describe('When passed event.markerName === "SideEffect"', () => {
+    describe('When passed event.markerName === "SideEffect" from Go Client', () => {
       let event;
 
       beforeEach(() => {
@@ -47,6 +47,33 @@ describe('eventFullTransforms', () => {
         const output = eventFullTransforms.MarkerRecorded(event);
 
         expect(output.data).toEqual({ hello: 'world' });
+      });
+
+      it('should return an object with property decisionTaskCompletedEventId.', () => {
+        const output = eventFullTransforms.MarkerRecorded(event);
+
+        expect(output.decisionTaskCompletedEventId).toEqual(
+          'decisionTaskCompletedEventIdValue'
+        );
+      });
+    });
+
+    describe('When passed event.markerName === "SideEffect" from Java Client', () => {
+      let event;
+
+      beforeEach(() => {
+        event = {
+          decisionTaskCompletedEventId: 'decisionTaskCompletedEventIdValue',
+          details: true,
+          header: null,
+          markerName: 'SideEffect',
+        };
+      });
+
+      it('should return true with property data.', () => {
+        const output = eventFullTransforms.MarkerRecorded(event);
+
+        expect(output.data).toEqual(true);
       });
 
       it('should return an object with property decisionTaskCompletedEventId.', () => {
