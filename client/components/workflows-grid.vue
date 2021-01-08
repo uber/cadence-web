@@ -13,7 +13,7 @@
     <RecycleScroller
       key-field="runId"
       :items="workflows"
-      :item-size="38"
+      :item-size="56"
       emit-update
       @update="onScroll"
       ref="workflowGrid"
@@ -107,12 +107,13 @@ paged-grid()
     width: calc(100% - 10px);
 
   .row
-    height: 38px;
+    height: 56px;
     padding: 0 1rem;
     display: flex;
     flex-direction: row;
     justify-content: start;
     align-items: stretch;
+    line-height: 1.2rem;
     &.odd
       background-color: temporal-white;
     .col
@@ -123,6 +124,7 @@ paged-grid()
     align-self: center;
     flex-basis: auto;
     padding: 0.5rem;
+
     &.col-id
       flex-basis: 400px;
     &.col-link
