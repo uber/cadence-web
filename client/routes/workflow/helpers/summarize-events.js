@@ -101,8 +101,8 @@ export const summarizeEvents = {
     if (d.markerName === 'SideEffect') {
       if (Array.isArray(details)) {
         return {
-          'Side Effect ID': details[0],
           data: JSON.tryParse(atob(details[1])) || details[1],
+          'Side Effect ID': details[0],
         };
       } else {
         // Java client
