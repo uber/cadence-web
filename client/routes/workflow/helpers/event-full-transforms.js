@@ -28,15 +28,14 @@ export const eventFullTransforms = {
         return {
           sideEffectID: d.details[0],
           data: JSON.tryParse(atob(d.details[1])) || d.details[1],
-          decisionTaskCompletedEventId: d.decisionTaskCompletedEventId
-        }
-      }
-      else {
+          decisionTaskCompletedEventId: d.decisionTaskCompletedEventId,
+        };
+      } else {
         // Java client
         return {
           data: d.details,
-          decisionTaskCompletedEventId: d.decisionTaskCompletedEventId
-        }
+          decisionTaskCompletedEventId: d.decisionTaskCompletedEventId,
+        };
       }
     }
 

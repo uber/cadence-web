@@ -102,14 +102,13 @@ export const summarizeEvents = {
       if (Array.isArray(details)) {
         return {
           'Side Effect ID': details[0],
-          data: JSON.tryParse(atob(details[1])) || details[1]
-        }
-      }
-      else {
+          data: JSON.tryParse(atob(details[1])) || details[1],
+        };
+      } else {
         // Java client
         return {
-          data: details
-        }
+          data: details,
+        };
       }
     }
 
