@@ -151,8 +151,9 @@ export default {
       }
 
       if (!this.isRouteRangeValid(this.minStartDate)) {
+        const defaultRange = state === 'open' ? 30 : this.maxRetentionDays || 30;
         const updatedQuery = this.setRange(
-          `last-${Math.min(30, this.maxRetentionDays)}-days`
+          `last-${Math.min(30, defaultRange)}-days`
         );
 
         query.startTime = getStartTimeIsoString(
