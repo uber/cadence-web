@@ -99,6 +99,14 @@ export const summarizeEvents = {
     }
 
     if (d.markerName === 'SideEffect') {
+      if (!Array.isArray(details)) {
+        // Java client
+        return {
+          data: details,
+        };
+      }
+
+      // Go client
       return {
         data: JSON.tryParse(atob(details[1])) || details[1],
         'Side Effect ID': details[0],
