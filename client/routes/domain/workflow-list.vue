@@ -23,7 +23,6 @@
 import moment from 'moment';
 import debounce from 'lodash-es/debounce';
 import { maxBy } from 'lodash-es';
-import orderBy from 'lodash-es/orderBy';
 import { DateRangePicker, WorkflowsGrid } from '~components';
 import {
   getDatetimeFormattedString,
@@ -151,7 +150,8 @@ export default {
       }
 
       if (!this.isRouteRangeValid(this.minStartDate)) {
-        const defaultRange = state === 'open' ? 30 : this.maxRetentionDays || 30;
+        const defaultRange =
+          state === 'open' ? 30 : this.maxRetentionDays || 30;
         const updatedQuery = this.setRange(
           `last-${Math.min(30, defaultRange)}-days`
         );
@@ -300,6 +300,8 @@ export default {
         const { domain } = this;
         const queryOpen = { ...this.criteria, nextPageToken: this.npt };
         const queryClosed = { ...this.criteria, nextPageToken: this.nptAlt };
+        let totalWfsOpen = [];
+        let totalWfsClosed = [];
 
         const { workflows: wfsOpen, nextPageToken: nptOpen } = await this.fetch(
           `/api/domains/${domain}/workflows/open`,
@@ -308,7 +310,7 @@ export default {
 
         this.npt = nptOpen;
 
-        let {
+        const {
           workflows: wfsClosed,
           nextPageToken: nptClosed,
         } = await this.fetch(
@@ -317,8 +319,6 @@ export default {
         );
 
         this.nptAlt = nptClosed;
-
-        let wfsDiff = [];
 
         if (this.npt && this.nptAlt) {
           // saturate diff in workflows between the max dates
@@ -355,17 +355,22 @@ export default {
 
             nptDiff = diff.nextPageToken;
 
+            totalWfsOpen =
+              saturateOpen === true ? [...wfsOpen, ...diff.workflows] : wfsOpen;
+            totalWfsClosed =
+              saturateOpen === false
+                ? [...wfsClosed, ...diff.workflows]
+                : wfsClosed;
+
             if (saturateOpen === true) {
               this.npt = nptDiff;
-              wfsOpen = [...wfsOpen, ...diff.workflows];
             } else if (saturateOpen === false) {
               this.nptAlt = nptDiff;
-              wfsClosed = [...wfsClosed, ...diff.workflows];
             }
           }
         }
 
-        workflows = [...wfsOpen, ...wfsClosed];
+        workflows = [...totalWfsOpen, ...totalWfsClosed];
       }
 
       this.results = [...this.results, ...workflows];
