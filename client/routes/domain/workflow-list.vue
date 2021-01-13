@@ -300,13 +300,11 @@ export default {
         const { domain } = this;
         const queryOpen = { ...this.criteria, nextPageToken: this.npt };
         const queryClosed = { ...this.criteria, nextPageToken: this.nptAlt };
-        let totalWfsOpen = [];
-        let totalWfsClosed = [];
-
         const { workflows: wfsOpen, nextPageToken: nptOpen } = await this.fetch(
           `/api/domains/${domain}/workflows/open`,
           queryOpen
         );
+        let totalWfsOpen = wfsOpen;
 
         this.npt = nptOpen;
 
@@ -317,6 +315,7 @@ export default {
           `/api/domains/${domain}/workflows/closed`,
           queryClosed
         );
+        let totalWfsClosed = wfsClosed;
 
         this.nptAlt = nptClosed;
 
@@ -355,17 +354,12 @@ export default {
 
             nptDiff = diff.nextPageToken;
 
-            totalWfsOpen =
-              saturateOpen === true ? [...wfsOpen, ...diff.workflows] : wfsOpen;
-            totalWfsClosed =
-              saturateOpen === false
-                ? [...wfsClosed, ...diff.workflows]
-                : wfsClosed;
-
             if (saturateOpen === true) {
               this.npt = nptDiff;
+              totalWfsOpen = [...wfsOpen, ...diff.workflows];
             } else if (saturateOpen === false) {
               this.nptAlt = nptDiff;
+              totalWfsClosed = [...wfsClosed, ...diff.workflows];
             }
           }
         }
@@ -559,7 +553,7 @@ export default {
     </header>
     <span class="error" v-if="error">{{ error }}</span>
     <workflows-grid
-      :workflows="results"
+      :workflows="formattedResults"
       :loading="loading"
       @onWorkflowsScroll="onWorkflowsScroll"
       v-if="!error"
