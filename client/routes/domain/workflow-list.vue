@@ -184,13 +184,11 @@ export default {
         return null;
       }
 
-      const includeStatus = !['ALL', 'OPEN', 'CLOSED'].includes(status);
-
       const criteria = {
         startTime,
+        status,
         endTime,
         ...(queryString && { queryString }),
-        ...(includeStatus && { status }),
         ...(workflowId && { workflowId }),
         ...(workflowName && { workflowName }),
       };
@@ -232,9 +230,15 @@ export default {
       typeof Mocha === 'undefined' ? 200 : 60,
       { maxWait: 1000 }
     ),
-    async fetch(url, query) {
+    async fetch(url, queryWithStatus) {
       this.loading = true;
       this.error = undefined;
+
+      const includeStatus = !['ALL', 'OPEN', 'CLOSED'].includes(
+        queryWithStatus.status
+      );
+      const { status, ...queryWithoutStatus } = queryWithStatus;
+      const query = includeStatus ? queryWithStatus : queryWithoutStatus;
 
       let workflows = [];
       let nextPageToken;
@@ -475,8 +479,19 @@ export default {
     },
   },
   watch: {
-    criteria(newCriteria) {
-      this.refreshWorkflows();
+    criteria(newCriteria, oldCriteria) {
+      if (
+        !newCriteria ||
+        !oldCriteria ||
+        newCriteria.startTime !== oldCriteria.startTime ||
+        newCriteria.endTime !== oldCriteria.endTime ||
+        newCriteria.queryString !== oldCriteria.queryString ||
+        newCriteria.status !== oldCriteria.status ||
+        newCriteria.workflowId !== oldCriteria.workflowId ||
+        newCriteria.workflowName !== oldCriteria.workflowName
+      ) {
+        this.refreshWorkflows();
+      }
     },
   },
 };
