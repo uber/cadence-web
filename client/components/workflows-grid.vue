@@ -63,7 +63,7 @@ export default {
       <div class="col col-end">End Time</div>
     </div>
     <div class="spacer" />
-    <no-results :results="workflows" />
+    <no-results :results="workflows" v-if="!loading" />
     <RecycleScroller
       key-field="runId"
       :items="workflows"
@@ -89,7 +89,6 @@ export default {
           </router-link>
         </div>
         <div class="col col-name">{{ item.workflowName }}</div>
-
         <div class="col col-status" :class="item.status">{{ item.status }}</div>
         <div class="col col-start">{{ item.startTime }}</div>
         <div class="col col-end">{{ item.endTime }}</div>
@@ -134,7 +133,7 @@ paged-grid()
     align-items: stretch;
     line-height: 1.2rem;
     &.odd
-      background-color: temporal-white;
+      background-color: uber-white-10;
     .col
       &.col-status
         text-transform: capitalize;

@@ -22,7 +22,6 @@
 
 import moment from 'moment';
 import debounce from 'lodash-es/debounce';
-import { maxBy } from 'lodash-es';
 import { DateRangePicker, WorkflowsGrid } from '~components';
 import {
   getDatetimeFormattedString,
@@ -55,8 +54,8 @@ export default {
       filterMode: 'basic',
     };
   },
-  created() {
-    this.fetchNamespace();
+  async created() {
+    await this.fetchNamespace();
     this.fetchWorkflows();
   },
   mounted() {
@@ -151,7 +150,7 @@ export default {
 
       if (!this.isRouteRangeValid(this.minStartDate)) {
         const defaultRange =
-          state === 'open' ? 30 : this.maxRetentionDays || 30;
+          ['all', 'open'].includes(state) ? 30 : this.maxRetentionDays;
         const updatedQuery = this.setRange(
           `last-${Math.min(30, defaultRange)}-days`
         );
@@ -264,11 +263,14 @@ export default {
     fetchNamespace() {
       const { domain } = this;
 
+      this.loading = true;
+
       return this.$http(`/api/domains/${domain}`).then(r => {
         const { minStartDate } = this;
 
         this.maxRetentionDays =
           Number(r.configuration.workflowExecutionRetentionPeriodInDays) || 30;
+        this.loading = false;
 
         if (!this.isRouteRangeValid(minStartDate)) {
           const prevRange = localStorage.getItem(
@@ -313,6 +315,7 @@ export default {
           `/api/domains/${domain}/workflows/open`,
           queryOpen
         );
+
         this.npt = nptOpen;
 
         const {
@@ -322,6 +325,7 @@ export default {
           `/api/domains/${domain}/workflows/closed`,
           queryClosed
         );
+
         this.nptAlt = nptClosed;
 
         workflows = [...wfsOpen, ...wfsClosed];
