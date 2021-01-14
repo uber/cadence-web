@@ -29,11 +29,18 @@ describe('Workflow list', () => {
       .startingAt('/domains/ci-test/workflows')
       .withNewsFeed()
       .withWorkflows({ status: 'open', query, workflows })
-      .withWorkflows({ status: 'closed', query, workflows, startTimeOffset: 30 })
+      .withWorkflows({
+        status: 'closed',
+        query,
+        workflows,
+        startTimeOffset: 30,
+      })
       .withDomainDescription('ci-test', domainDesc)
       .go();
 
-    const workflowList = await testEl.waitUntilExists('section.workflow-list.ready');
+    const workflowList = await testEl.waitUntilExists(
+      'section.workflow-list.ready'
+    );
 
     return [workflowList, scenario];
   }
@@ -74,25 +81,29 @@ describe('Workflow list', () => {
       .should.deep.equal([
         'github.com/uber/cadence-web/email-daily-summaries-2',
         'github.com/uber/cadence-web/example-1',
-        'email-daily-summaries'
+        'email-daily-summaries',
       ]);
     resultsEl
       .textNodes('.row > .col-link')
       .should.deep.equal([
         'ef2c889e-e709-4d50-99ee-3748dfa0a101',
         'db8da3c0-b7d3-48b7-a9b3-b6f566e58207',
-        '51ccc0d1-6ffe-4a7a-a89f-6b5154df86f7'
+        '51ccc0d1-6ffe-4a7a-a89f-6b5154df86f7',
       ]);
     resultsEl
       .attrValues('.row > .col-link a', 'href')
       .should.deep.equal([
         '/domains/ci-test/workflows/github.com%2Fuber%2Fcadence-web%2Femail-daily-summaries-2/ef2c889e-e709-4d50-99ee-3748dfa0a101/summary',
         '/domains/ci-test/workflows/github.com%2Fuber%2Fcadence-web%2Fexample-1/db8da3c0-b7d3-48b7-a9b3-b6f566e58207/summary',
-        '/domains/ci-test/workflows/email-daily-summaries/51ccc0d1-6ffe-4a7a-a89f-6b5154df86f7/summary'
+        '/domains/ci-test/workflows/email-daily-summaries/51ccc0d1-6ffe-4a7a-a89f-6b5154df86f7/summary',
       ]);
     resultsEl
       .textNodes('.row > .col-name')
-      .should.deep.equal(['email-daily-summaries', 'example', 'github.com/uber/cadence-web/email-daily-summaries-1']);
+      .should.deep.equal([
+        'email-daily-summaries',
+        'example',
+        'github.com/uber/cadence-web/email-daily-summaries-1',
+      ]);
     resultsEl
       .textNodes('.row > .col-status')
       .should.deep.equal(['open', 'open', 'completed']);
@@ -104,7 +115,7 @@ describe('Workflow list', () => {
         ),
         ...fixtures.workflows.closed.map(wf =>
           moment(wf.startTime).format('MMM D, YYYY h:mm:ss A')
-        )
+        ),
       ]);
     resultsEl
       .textNodes('.row > .col-end')
@@ -113,7 +124,7 @@ describe('Workflow list', () => {
         '',
         ...fixtures.workflows.closed.map(wf =>
           moment(wf.closeTime).format('MMM D, YYYY h:mm:ss A')
-        )
+        ),
       ]);
 
     resultsEl.should.not
@@ -157,9 +168,7 @@ describe('Workflow list', () => {
     wfIdEl.input('1234');
 
     await retry(() =>
-      workflowsEl
-        .textNodes('.row > .col-name')
-        .should.deep.equal(['demo'])
+      workflowsEl.textNodes('.row > .col-name').should.deep.equal(['demo'])
     );
   });
 
@@ -316,7 +325,9 @@ describe('Workflow list', () => {
 
     await retry(() => {
       workflowsEl.querySelector('div.no-results').should.be.displayed;
-      workflowsEl.querySelector('section.workflow-grid').should.not.contain('.results');
+      workflowsEl
+        .querySelector('section.workflow-grid')
+        .should.not.contain('.results');
     });
   });
 
@@ -335,7 +346,9 @@ describe('Workflow list', () => {
       .withDomainDescription('ci-test')
       .go();
 
-    const workflowsEl = await testEl.waitUntilExists('section.workflow-list.ready');
+    const workflowsEl = await testEl.waitUntilExists(
+      'section.workflow-list.ready'
+    );
 
     workflowsEl
       .querySelector('header.filters input[name="workflowName"]')

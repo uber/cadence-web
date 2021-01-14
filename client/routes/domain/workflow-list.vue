@@ -149,8 +149,9 @@ export default {
       }
 
       if (!this.isRouteRangeValid(this.minStartDate)) {
-        const defaultRange =
-          ['all', 'open'].includes(state) ? 30 : this.maxRetentionDays;
+        const defaultRange = ['all', 'open'].includes(state)
+          ? 30
+          : this.maxRetentionDays;
         const updatedQuery = this.setRange(
           `last-${Math.min(30, defaultRange)}-days`
         );
@@ -437,6 +438,7 @@ export default {
       if (!this.npt && !this.nptAlt) {
         return;
       }
+
       return this.fetchWorkflows();
     },
   },
@@ -445,14 +447,12 @@ export default {
       if (
         newCriteria &&
         oldCriteria &&
-        (
-          newCriteria.startTime !== oldCriteria.startTime ||
+        (newCriteria.startTime !== oldCriteria.startTime ||
           newCriteria.endTime !== oldCriteria.endTime ||
           newCriteria.queryString !== oldCriteria.queryString ||
           newCriteria.status !== oldCriteria.status ||
           newCriteria.workflowId !== oldCriteria.workflowId ||
-          newCriteria.workflowName !== oldCriteria.workflowName
-        )
+          newCriteria.workflowName !== oldCriteria.workflowName)
       ) {
         this.refreshWorkflows();
       }
