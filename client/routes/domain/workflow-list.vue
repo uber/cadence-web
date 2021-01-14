@@ -209,16 +209,6 @@ export default {
     },
   },
   methods: {
-    refreshWorkflows: debounce(
-      function refreshWorkflows() {
-        this.results = [];
-        this.npt = undefined;
-        this.nptAlt = undefined;
-        this.fetchWorkflows();
-      },
-      typeof Mocha === 'undefined' ? 200 : 60,
-      { maxWait: 1000 }
-    ),
     async fetch(url, queryWithStatus) {
       let workflows = [];
       let nextPageToken = '';
@@ -337,6 +327,16 @@ export default {
         .subtract(maxRetentionDays, 'days')
         .startOf('days');
     },
+    refreshWorkflows: debounce(
+      function refreshWorkflows() {
+        this.results = [];
+        this.npt = undefined;
+        this.nptAlt = undefined;
+        this.fetchWorkflows();
+      },
+      typeof Mocha === 'undefined' ? 200 : 60,
+      { maxWait: 1000 }
+    ),
     setWorkflowFilter(e) {
       const target = e.target || e.testTarget; // test hook since Event.target is readOnly and unsettable
 
