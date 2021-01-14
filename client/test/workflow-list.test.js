@@ -23,18 +23,19 @@ import moment from 'moment';
 import fixtures from './fixtures';
 
 describe('Workflow list', () => {
-  async function workflowsTest(mochaTest, initialWorkflows, query, domainDesc) {
+  async function workflowsTest(mochaTest, workflows, query, domainDesc) {
     const [testEl, scenario] = new Scenario(mochaTest)
       .withDomain('ci-test')
       .startingAt('/domains/ci-test/workflows')
       .withNewsFeed()
-      .withWorkflows('open', query, initialWorkflows)
+      .withWorkflows({ status: 'open', query, workflows })
+      .withWorkflows({ status: 'closed', query, workflows, startTimeOffset: 30 })
       .withDomainDescription('ci-test', domainDesc)
       .go();
 
-    const workflows = await testEl.waitUntilExists('section.workflow-list');
+    const workflowList = await testEl.waitUntilExists('section.workflow-list.ready');
 
-    return [workflows, scenario];
+    return [workflowList, scenario];
   }
 
   const demoWf = [
@@ -47,18 +48,18 @@ describe('Workflow list', () => {
     },
   ];
 
-  it('should query for open workflows and show the results in a grid', async function test() {
+  it('should query for all workflows and show the results in a grid', async function test() {
     const [workflowsEl] = await workflowsTest(this.test);
-    const resultsEl = workflowsEl.querySelector('section.results');
+    const resultsEl = workflowsEl.querySelector('section.workflow-grid');
 
     workflowsEl
       .querySelector('div.status .selected-tag')
-      .should.contain.text('Open');
+      .should.contain.text('All');
 
-    await resultsEl.waitUntilExists('tbody tr:nth-child(2)');
+    await resultsEl.waitUntilExists('.workflow-grid.ready');
 
     resultsEl
-      .textNodes('th')
+      .textNodes('.row-header > div')
       .should.deep.equal([
         'Workflow ID',
         'Run ID',
@@ -69,36 +70,51 @@ describe('Workflow list', () => {
       ]);
 
     resultsEl
-      .textNodes('tbody td:first-child')
+      .textNodes('.row > .col-id')
       .should.deep.equal([
         'github.com/uber/cadence-web/email-daily-summaries-2',
         'github.com/uber/cadence-web/example-1',
+        'email-daily-summaries'
       ]);
     resultsEl
-      .textNodes('tbody td:nth-child(2)')
+      .textNodes('.row > .col-link')
       .should.deep.equal([
         'ef2c889e-e709-4d50-99ee-3748dfa0a101',
         'db8da3c0-b7d3-48b7-a9b3-b6f566e58207',
+        '51ccc0d1-6ffe-4a7a-a89f-6b5154df86f7'
       ]);
     resultsEl
-      .attrValues('tbody td:nth-child(2) a', 'href')
+      .attrValues('.row > .col-link a', 'href')
       .should.deep.equal([
         '/domains/ci-test/workflows/github.com%2Fuber%2Fcadence-web%2Femail-daily-summaries-2/ef2c889e-e709-4d50-99ee-3748dfa0a101/summary',
         '/domains/ci-test/workflows/github.com%2Fuber%2Fcadence-web%2Fexample-1/db8da3c0-b7d3-48b7-a9b3-b6f566e58207/summary',
+        '/domains/ci-test/workflows/email-daily-summaries/51ccc0d1-6ffe-4a7a-a89f-6b5154df86f7/summary'
       ]);
     resultsEl
-      .textNodes('tbody td:nth-child(3)')
-      .should.deep.equal(['email-daily-summaries', 'example']);
+      .textNodes('.row > .col-name')
+      .should.deep.equal(['email-daily-summaries', 'example', 'github.com/uber/cadence-web/email-daily-summaries-1']);
     resultsEl
-      .textNodes('tbody td:nth-child(4)')
-      .should.deep.equal(['open', 'open']);
+      .textNodes('.row > .col-status')
+      .should.deep.equal(['open', 'open', 'completed']);
     resultsEl
-      .textNodes('tbody td:nth-child(5)')
-      .should.deep.equal(
-        fixtures.workflows.open.map(wf =>
+      .textNodes('.row > .col-start')
+      .should.deep.equal([
+        ...fixtures.workflows.open.map(wf =>
+          moment(wf.startTime).format('MMM D, YYYY h:mm:ss A')
+        ),
+        ...fixtures.workflows.closed.map(wf =>
           moment(wf.startTime).format('MMM D, YYYY h:mm:ss A')
         )
-      );
+      ]);
+    resultsEl
+      .textNodes('.row > .col-end')
+      .should.deep.equal([
+        '',
+        '',
+        ...fixtures.workflows.closed.map(wf =>
+          moment(wf.closeTime).format('MMM D, YYYY h:mm:ss A')
+        )
+      ]);
 
     resultsEl.should.not
       .contain('span.no-results')
@@ -114,26 +130,35 @@ describe('Workflow list', () => {
     await Promise.delay(10);
     wfIdEl.value.should.be.empty;
 
-    scenario.withWorkflows(
-      'open',
-      {
-        workflowId: '1234',
-      },
-      [
-        {
-          execution: {
-            workflowId: '1234',
-            runId: '5678',
-          },
-          type: { name: 'demo' },
+    scenario
+      .withWorkflows({
+        status: 'open',
+        query: {
+          workflowId: '1234',
         },
-      ]
-    );
+        workflows: [
+          {
+            execution: {
+              workflowId: '1234',
+              runId: '5678',
+            },
+            type: { name: 'demo' },
+          },
+        ],
+      })
+      .withWorkflows({
+        status: 'closed',
+        startTimeOffset: 30,
+        query: {
+          workflowId: '1234',
+        },
+        workflows: [],
+      });
     wfIdEl.input('1234');
 
     await retry(() =>
       workflowsEl
-        .textNodes('.results tbody td:nth-child(3)')
+        .textNodes('.row > .col-name')
         .should.deep.equal(['demo'])
     );
   });
@@ -145,22 +170,25 @@ describe('Workflow list', () => {
         '/domains/ci-test/workflows?status=FAILED&range=last-24-hours'
       )
       .withNewsFeed()
-      .withWorkflows('closed', {
-        startTime: moment()
-          .subtract(24, 'hours')
-          .startOf('hour')
-          .toISOString(),
-        endTime: moment()
-          .endOf('hour')
-          .toISOString(),
-        status: 'FAILED',
+      .withWorkflows({
+        status: 'closed',
+        query: {
+          startTime: moment()
+            .subtract(24, 'hours')
+            .startOf('hour')
+            .toISOString(),
+          endTime: moment()
+            .endOf('hour')
+            .toISOString(),
+          status: 'FAILED',
+        },
       })
       .withDomainDescription('ci-test')
       .go();
 
     await retry(() =>
       testEl
-        .querySelectorAll('section.workflow-list section.results tbody tr')
+        .querySelectorAll('section.workflow-list section.workflow-grid .row')
         .should.have.length(1)
     );
     await Promise.delay(50);
@@ -175,18 +203,27 @@ describe('Workflow list', () => {
     await Promise.delay(10);
     wfNameEl.value.should.be.empty;
 
-    scenario.withWorkflows(
-      'open',
-      {
-        workflowName: 'demo',
-      },
-      demoWf
-    );
+    scenario
+      .withWorkflows({
+        status: 'open',
+        query: {
+          workflowName: 'demo',
+        },
+        workflows: demoWf,
+      })
+      .withWorkflows({
+        status: 'closed',
+        startTimeOffset: 30,
+        query: {
+          workflowName: 'demo',
+        },
+        workflows: [],
+      });
     wfNameEl.input('demo');
 
     await retry(() =>
       workflowsEl
-        .textNodes('.results tbody td:first-child')
+        .textNodes('section.workflow-list section.workflow-grid .row .col-id')
         .should.deep.equal(['demoWfId'])
     );
   });
@@ -198,15 +235,19 @@ describe('Workflow list', () => {
     );
 
     await retry(() =>
-      statusEl.querySelector('.selected-tag').should.have.trimmed.text('Open')
+      statusEl.querySelector('.selected-tag').should.have.trimmed.text('All')
     );
 
-    scenario.withWorkflows('closed', { status: 'FAILED' }, demoWf);
+    scenario.withWorkflows({
+      status: 'closed',
+      query: { status: 'FAILED' },
+      workflows: demoWf,
+    });
     await statusEl.selectItem('Failed');
 
     await retry(() =>
       workflowsEl
-        .textNodes('.results tbody td:first-child')
+        .textNodes('section.workflow-list section.workflow-grid .row .col-id')
         .should.deep.equal(['demoWfId'])
     );
   });
@@ -217,21 +258,30 @@ describe('Workflow list', () => {
       'header.filters input[name="workflowId"]'
     );
 
-    scenario.withWorkflows(
-      'open',
-      {
-        workflowId: '1234',
-      },
-      [
-        {
-          execution: {
-            workflowId: '1234',
-            runId: '5678',
-          },
-          type: { name: 'demo' },
+    scenario
+      .withWorkflows({
+        status: 'open',
+        query: {
+          workflowId: '1234',
         },
-      ]
-    );
+        workflows: [
+          {
+            execution: {
+              workflowId: '1234',
+              runId: '5678',
+            },
+            type: { name: 'demo' },
+          },
+        ],
+      })
+      .withWorkflows({
+        status: 'closed',
+        startTimeOffset: 30,
+        query: {
+          workflowId: '1234',
+        },
+        workflows: [],
+      });
 
     wfIdEl.input('12');
     Promise.delay(5);
@@ -241,7 +291,7 @@ describe('Workflow list', () => {
 
     await retry(() =>
       workflowsEl
-        .textNodes('.results tbody td:nth-child(3)')
+        .textNodes('section.workflow-list section.workflow-grid .row .col-name')
         .should.deep.equal(['demo'])
     );
   });
@@ -265,9 +315,8 @@ describe('Workflow list', () => {
     const [workflowsEl] = await workflowsTest(this.test, []);
 
     await retry(() => {
-      workflowsEl.querySelector('span.no-results').should.be.displayed;
-      workflowsEl.querySelector('section.results table').should.not.be
-        .displayed;
+      workflowsEl.querySelector('div.no-results').should.be.displayed;
+      workflowsEl.querySelector('section.workflow-grid').should.not.contain('.results');
     });
   });
 
@@ -276,14 +325,17 @@ describe('Workflow list', () => {
       .withDomain('ci-test')
       .startingAt('/domains/ci-test/workflows?status=FAILED&workflowName=demo')
       .withNewsFeed()
-      .withWorkflows('closed', {
-        status: 'FAILED',
-        workflowName: 'demo',
+      .withWorkflows({
+        status: 'closed',
+        query: {
+          status: 'FAILED',
+          workflowName: 'demo',
+        },
       })
       .withDomainDescription('ci-test')
       .go();
 
-    const workflowsEl = await testEl.waitUntilExists('section.workflow-list');
+    const workflowsEl = await testEl.waitUntilExists('section.workflow-list.ready');
 
     workflowsEl
       .querySelector('header.filters input[name="workflowName"]')

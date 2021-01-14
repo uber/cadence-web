@@ -121,7 +121,8 @@ describe('Domain list', () => {
 
     scenario
       .withDomain('ci-tests')
-      .withWorkflows('open')
+      .withWorkflows({ status: 'open' })
+      .withWorkflows({ status: 'closed', startTimeOffset: 30 })
       .withDomainDescription('ci-tests');
 
     domainInput.trigger('keydown', { code: 13, keyCode: 13, key: 'Enter' });
@@ -162,7 +163,8 @@ describe('Domain list', () => {
     scenario
       .withDomain('ci-tests')
       .withDomainDescription('ci-tests')
-      .withWorkflows('open');
+      .withWorkflows({ status: 'open' })
+      .withWorkflows({ status: 'closed', startTimeOffset: 30 });
     changeDomain.trigger('click');
 
     await testEl.waitUntilExists('section.workflow-list');
@@ -197,7 +199,8 @@ describe('Domain list', () => {
     scenario
       .withDomain('ci-tests')
       .withDomainDescription('ci-tests')
-      .withWorkflows('open');
+      .withWorkflows({ status: 'open' })
+      .withWorkflows({ status: 'closed', startTimeOffset: 30 });
 
     await testEl.waitUntilExists('section.workflow-list');
     localStorage.getItem('recent-domains').should.equal('["ci-tests","demo"]');

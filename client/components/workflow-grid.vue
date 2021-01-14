@@ -24,7 +24,7 @@ import { RecycleScroller } from 'vue-virtual-scroller';
 import { NoResults } from '~components';
 
 export default {
-  name: 'workflows-grid',
+  name: 'workflow-grid',
   props: ['workflows', 'onWorkflowsScroll', 'loading'],
   data() {
     return {
@@ -55,8 +55,8 @@ export default {
 <template>
   <section class="workflow-grid" :class="{ loading }">
     <div class="row-header">
-      <div class="col col-id">Workflow Id</div>
-      <div class="col col-link">Run Id</div>
+      <div class="col col-id">Workflow ID</div>
+      <div class="col col-link">Run ID</div>
       <div class="col col-name">Name</div>
       <div class="col col-status">Status</div>
       <div class="col col-start">Start Time</div>
@@ -72,7 +72,7 @@ export default {
       @update="onScroll"
       ref="workflowGrid"
       data-cy="workflow-list"
-      class="workflow-grid"
+      class="workflow-grid results"
       v-if="anyWorkflows"
       v-slot="{ item, index }"
     >

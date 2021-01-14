@@ -227,17 +227,18 @@ Scenario.prototype.withNewsFeed = function withNewsFeed() {
   return this;
 };
 
-Scenario.prototype.withWorkflows = function withWorkflows(
+Scenario.prototype.withWorkflows = function withWorkflows({
   status,
   query,
-  workflows
-) {
+  workflows,
+  startTimeOffset,
+} = {}) {
   if (!workflows) {
     // eslint-disable-next-line no-param-reassign
     workflows = JSON.parse(JSON.stringify(fixtures.workflows[status]));
   }
 
-  const startTimeDays = status === 'open' ? 30 : 21;
+  const startTimeDays = startTimeOffset || status === 'open' ? 30 : 21;
   const url = `/api/domains/${this.domain}/workflows/${status}?${qs.stringify({
     startTime: moment()
       .subtract(startTimeDays, 'day')
@@ -250,7 +251,7 @@ Scenario.prototype.withWorkflows = function withWorkflows(
   })}`;
 
   const response = Array.isArray(workflows)
-    ? { executions: workflows }
+    ? { executions: workflows, nextPageToken: '' }
     : workflows;
 
   this.api.getOnce(url, response);

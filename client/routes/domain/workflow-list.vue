@@ -22,7 +22,7 @@
 
 import moment from 'moment';
 import debounce from 'lodash-es/debounce';
-import { DateRangePicker, WorkflowsGrid } from '~components';
+import { DateRangePicker, WorkflowGrid } from '~components';
 import {
   getDatetimeFormattedString,
   getEndTimeIsoString,
@@ -55,7 +55,7 @@ export default {
     };
   },
   async created() {
-    await this.fetchNamespace();
+    await this.fetchDomain();
     this.fetchWorkflows();
   },
   mounted() {
@@ -68,7 +68,7 @@ export default {
   },
   components: {
     'date-range-picker': DateRangePicker,
-    'workflows-grid': WorkflowsGrid,
+    'workflow-grid': WorkflowGrid,
   },
   computed: {
     fetchUrl() {
@@ -185,8 +185,8 @@ export default {
 
       const criteria = {
         startTime,
-        status,
         endTime,
+        status,
         ...(queryString && { queryString }),
         ...(workflowId && { workflowId }),
         ...(workflowName && { workflowName }),
@@ -198,18 +198,7 @@ export default {
       return this.$route.query.queryString;
     },
     minStartDate() {
-      const {
-        maxRetentionDays,
-        status: { value: status },
-      } = this;
-
-      if (['OPEN', 'ALL'].includes(status)) {
-        return null;
-      }
-
-      return moment(this.now)
-        .subtract(maxRetentionDays, 'days')
-        .startOf('days');
+      return this.getMinStartDate();
     },
     workflowId() {
       return this.$route.query.workflowId;
@@ -260,17 +249,17 @@ export default {
 
       return { workflows, nextPageToken };
     },
-    fetchNamespace() {
+    fetchDomain() {
       const { domain } = this;
 
       this.loading = true;
 
       return this.$http(`/api/domains/${domain}`).then(r => {
-        const { minStartDate } = this;
-
         this.maxRetentionDays =
           Number(r.configuration.workflowExecutionRetentionPeriodInDays) || 30;
         this.loading = false;
+
+        const minStartDate = this.getMinStartDate();
 
         if (!this.isRouteRangeValid(minStartDate)) {
           const prevRange = localStorage.getItem(
@@ -332,6 +321,20 @@ export default {
       }
 
       this.results = [...this.results, ...workflows];
+    },
+    getMinStartDate() {
+      const {
+        maxRetentionDays,
+        status: { value: status },
+      } = this;
+
+      if (['OPEN', 'ALL'].includes(status)) {
+        return null;
+      }
+
+      return moment(this.now)
+        .subtract(maxRetentionDays, 'days')
+        .startOf('days');
     },
     setWorkflowFilter(e) {
       const target = e.target || e.testTarget; // test hook since Event.target is readOnly and unsettable
@@ -434,21 +437,22 @@ export default {
       if (!this.npt && !this.nptAlt) {
         return;
       }
-
       return this.fetchWorkflows();
     },
   },
   watch: {
     criteria(newCriteria, oldCriteria) {
       if (
-        !newCriteria ||
-        !oldCriteria ||
-        newCriteria.startTime !== oldCriteria.startTime ||
-        newCriteria.endTime !== oldCriteria.endTime ||
-        newCriteria.queryString !== oldCriteria.queryString ||
-        newCriteria.status !== oldCriteria.status ||
-        newCriteria.workflowId !== oldCriteria.workflowId ||
-        newCriteria.workflowName !== oldCriteria.workflowName
+        newCriteria &&
+        oldCriteria &&
+        (
+          newCriteria.startTime !== oldCriteria.startTime ||
+          newCriteria.endTime !== oldCriteria.endTime ||
+          newCriteria.queryString !== oldCriteria.queryString ||
+          newCriteria.status !== oldCriteria.status ||
+          newCriteria.workflowId !== oldCriteria.workflowId ||
+          newCriteria.workflowName !== oldCriteria.workflowName
+        )
       ) {
         this.refreshWorkflows();
       }
@@ -458,7 +462,7 @@ export default {
 </script>
 
 <template>
-  <section class="workflow-list" :class="{ loading }">
+  <section class="workflow-list" :class="{ loading, ready: !loading }">
     <header class="filters">
       <template v-if="filterMode === 'advanced'">
         <div class="field query-string">
@@ -527,7 +531,7 @@ export default {
       }}</a>
     </header>
     <span class="error" v-if="error">{{ error }}</span>
-    <workflows-grid
+    <workflow-grid
       :workflows="formattedResults"
       :loading="loading"
       @onWorkflowsScroll="onWorkflowsScroll"
