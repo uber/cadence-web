@@ -434,7 +434,7 @@ export default {
         this.filterMode = 'advanced';
       }
     },
-    onWorkflowsScroll(startIndex, endIndex) {
+    onWorkflowGridScroll(startIndex, endIndex) {
       if (!this.npt && !this.nptAlt) {
         return;
       }
@@ -534,7 +534,7 @@ export default {
     <workflow-grid
       :workflows="formattedResults"
       :loading="loading"
-      @onWorkflowsScroll="onWorkflowsScroll"
+      @onScroll="onWorkflowGridScroll"
       v-if="!error"
     />
   </section>

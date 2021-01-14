@@ -25,7 +25,7 @@ import { NoResults } from '~components';
 
 export default {
   name: 'workflow-grid',
-  props: ['workflows', 'onWorkflowsScroll', 'loading'],
+  props: ['workflows', 'loading'],
   data() {
     return {
       nextPageToken: undefined,
@@ -37,7 +37,7 @@ export default {
         return;
       }
 
-      this.$emit('onWorkflowsScroll', startIndex, endIndex);
+      this.$emit('onScroll', startIndex, endIndex);
     },
   },
   computed: {
