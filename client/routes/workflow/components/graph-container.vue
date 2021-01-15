@@ -1,43 +1,25 @@
-<template>
-  <div class="tree-graph">
-    <div id="canvas">
-      <div class="thead" ref="thead">
-        <!--   <div class="section-header">-->
-        <div
-          class="aside-left"
-          v-if="parentRoute"
-          v-on:click="updateRoute(parentRoute)"
-        >
-          {{ parentBtnText }}
-        </div>
-        <div class="aside-center">
-          {{ workflowName }}
-        </div>
-        <div
-          class="aside-right"
-          v-if="hasChildBtn"
-          v-on:click="updateRoute(childRoute)"
-        >
-          {{ childBtnText }}
-        </div>
-      </div>
-      <div v-if="isGraphLoading" id="loading"></div>
-      <div class="refresh" v-if="!hasAllEvents" v-on:click="reloadWorkflow()">
-        Refresh
-      </div>
-      <Legend />
-      <WorkflowGraph
-        :key="forceRefresh"
-        v-if="!isGraphLoading"
-        :workflow="workflow"
-        :events="events"
-        :selected-event-id="selectedEventId"
-      />
-    </div>
-  </div>
-</template>
-
 <script>
+// Copyright (c) 2021 Uber Technologies Inc.
+//
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
 import omit from 'lodash-es/omit';
 import store from '../../../store/index';
 import WorkflowGraph from './cytoscape-graph.vue';
@@ -123,6 +105,44 @@ export default {
   },
 };
 </script>
+
+<template>
+  <div class="tree-graph">
+    <div id="canvas">
+      <div class="thead" ref="thead">
+        <div
+          class="aside-left"
+          v-if="parentRoute"
+          v-on:click="updateRoute(parentRoute)"
+        >
+          {{ parentBtnText }}
+        </div>
+        <div class="aside-center">
+          {{ workflowName }}
+        </div>
+        <div
+          class="aside-right"
+          v-if="hasChildBtn"
+          v-on:click="updateRoute(childRoute)"
+        >
+          {{ childBtnText }}
+        </div>
+      </div>
+      <div v-if="isGraphLoading" id="loading"></div>
+      <div class="refresh" v-if="!hasAllEvents" v-on:click="reloadWorkflow()">
+        Refresh
+      </div>
+      <Legend />
+      <WorkflowGraph
+        :key="forceRefresh"
+        v-if="!isGraphLoading"
+        :workflow="workflow"
+        :events="events"
+        :selected-event-id="selectedEventId"
+      />
+    </div>
+  </div>
+</template>
 
 <style scoped lang="stylus">
 @require '../../../styles/definitions.styl';
