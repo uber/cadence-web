@@ -5,4 +5,3 @@ dist/
 .DS_Store
 .idea
 server/idl
-client/routes/workflow/demo-data/
