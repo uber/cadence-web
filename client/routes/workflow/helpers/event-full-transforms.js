@@ -24,6 +24,15 @@ import { WORKFLOW_EVENT_TYPE } from '~constants';
 export const eventFullTransforms = {
   [WORKFLOW_EVENT_TYPE.MarkerRecorded]: d => {
     if (d.markerName === 'SideEffect') {
+      if (!Array.isArray(d.details)) {
+        // Java client
+        return {
+          data: d.details,
+          decisionTaskCompletedEventId: d.decisionTaskCompletedEventId,
+        };
+      }
+
+      // Go client
       return {
         sideEffectID: d.details[0],
         data: JSON.tryParse(atob(d.details[1])) || d.details[1],
