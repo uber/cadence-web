@@ -1,9 +1,3 @@
-<template>
-  <div id="cytoscape">
-    <div ref="cy" id="cy"></div>
-  </div>
-</template>
-
 <script>
 import cytoscape from 'cytoscape';
 import omit from 'lodash-es/omit';
@@ -174,6 +168,13 @@ export default {
   },
 };
 </script>
+
+<template>
+  <div id="cytoscape">
+    <div ref="cy" id="cy"></div>
+  </div>
+</template>
+
 <style scoped>
 #cytoscape {
   width: 100%;
