@@ -1,137 +1,25 @@
-<template>
-  <section class="workflow-summary">
-    <aside class="actions">
-      <button-fill
-        color="secondary"
-        :disabled="isTerminateDisabled"
-        :disabled-label="terminateDisabledLabel"
-        label="TERMINATE"
-        @click.prevent="$modal.show('confirm-termination')"
-        v-if="isTerminateShown"
-      />
-    </aside>
-
-    <modal name="confirm-termination">
-      <h3>Are you sure you want to terminate this workflow?</h3>
-      <input v-model="terminationReason" placeholder="Reason" />
-      <footer>
-        <button-fill
-          color="secondary"
-          label="TERMINATE"
-          name="button-terminate"
-          @click.prevent="terminate"
-        />
-
-        <button-fill
-          color="primary"
-          label="CANCEL"
-          name="button-cancel"
-          @click.prevent="$modal.hide('confirm-termination')"
-        />
-      </footer>
-    </modal>
-
-    <dl v-if="workflow">
-      <div v-if="workflow.workflowExecutionInfo.isArchived">
-        <h5>Workflow archived</h5>
-        <p>
-          This workflow has been retrieved from archival. Some summary
-          information may be missing.
-        </p>
-      </div>
-      <div class="workflow-name">
-        <dt>Workflow Name</dt>
-        <dd>{{ workflow.workflowExecutionInfo.type.name }}</dd>
-      </div>
-      <div class="started-at">
-        <dt>Started At</dt>
-        <dd>{{ workflowStartTime }}</dd>
-      </div>
-      <div class="close-time" v-if="workflowCloseTime">
-        <dt>Closed Time</dt>
-        <dd>{{ workflowCloseTime }}</dd>
-      </div>
-      <div
-        class="workflow-status"
-        :data-status="
-          wfStatus !== undefined &&
-            (typeof wfStatus === 'string' ? wfStatus : wfStatus.status)
-        "
-      >
-        <dt>Status</dt>
-        <dd>
-          <bar-loader v-if="wfStatus === 'running'" />
-          <span v-if="typeof wfStatus === 'string'">{{ wfStatus }}</span>
-          <router-link
-            v-if="wfStatus !== undefined && wfStatus.to"
-            :to="wfStatus.to"
-          >
-            {{ wfStatus.text }}
-          </router-link>
-        </dd>
-      </div>
-      <div class="workflow-result" v-if="result">
-        <dt>Result</dt>
-        <dd>
-          <data-viewer :item="result" :title="workflowId + ' Result'" />
-        </dd>
-      </div>
-      <div class="workflow-id">
-        <dt>Workflow Id</dt>
-        <dd>{{ workflowId }}</dd>
-      </div>
-      <div class="run-id">
-        <dt>Run Id</dt>
-        <dd>{{ runId }}</dd>
-      </div>
-      <div class="parent-workflow" v-if="parentWorkflowRoute">
-        <dt>Parent Workflow</dt>
-        <dd>
-          <router-link :to="parentWorkflowRoute.to">
-            {{ parentWorkflowRoute.text }}
-          </router-link>
-        </dd>
-      </div>
-      <div class="task-list">
-        <dt>Task List</dt>
-        <dd>
-          <router-link
-            :to="{
-              name: 'task-list',
-              params: {
-                taskList: workflow.executionConfiguration.taskList.name,
-              },
-            }"
-          >
-            {{ workflow.executionConfiguration.taskList.name }}
-          </router-link>
-        </dd>
-      </div>
-      <div class="history-length">
-        <dt>History Events</dt>
-        <dd>{{ workflow.workflowExecutionInfo.historyLength }}</dd>
-      </div>
-      <div class="workflow-input">
-        <dt>Input</dt>
-        <dd>
-          <data-viewer
-            v-if="input !== undefined"
-            :item="input"
-            :title="workflowId + ' Input'"
-          />
-        </dd>
-      </div>
-      <div class="pending-activities" v-if="workflow.pendingActivities">
-        <dt>Pending Activities</dt>
-        <dd v-for="pa in workflow.pendingActivities" :key="pa.activityID">
-          <detail-list :item="pa" />
-        </dd>
-      </div>
-    </dl>
-  </section>
-</template>
-
 <script>
+// Copyright (c) 2017-2021 Uber Technologies Inc.
+//
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
 import { TERMINATE_DEFAULT_ERROR_MESSAGE } from './constants';
 import { NOTIFICATION_TYPE_ERROR, NOTIFICATION_TYPE_SUCCESS } from '~constants';
 import { getErrorMessage, getDatetimeFormattedString } from '~helpers';
@@ -267,6 +155,139 @@ export default {
   },
 };
 </script>
+
+<template>
+  <section class="workflow-summary">
+    <aside class="actions">
+      <button-fill
+        color="secondary"
+        :disabled="isTerminateDisabled"
+        :disabled-label="terminateDisabledLabel"
+        label="TERMINATE"
+        @click.prevent="$modal.show('confirm-termination')"
+        v-if="isTerminateShown"
+      />
+    </aside>
+
+    <modal name="confirm-termination">
+      <h3>Are you sure you want to terminate this workflow?</h3>
+      <input v-model="terminationReason" placeholder="Reason" />
+      <footer>
+        <button-fill
+          color="secondary"
+          label="TERMINATE"
+          name="button-terminate"
+          @click.prevent="terminate"
+        />
+
+        <button-fill
+          color="primary"
+          label="CANCEL"
+          name="button-cancel"
+          @click.prevent="$modal.hide('confirm-termination')"
+        />
+      </footer>
+    </modal>
+
+    <dl v-if="workflow">
+      <div v-if="workflow.workflowExecutionInfo.isArchived">
+        <h5>Workflow archived</h5>
+        <p>
+          This workflow has been retrieved from archival. Some summary
+          information may be missing.
+        </p>
+      </div>
+      <div class="workflow-name">
+        <dt>Workflow Name</dt>
+        <dd>{{ workflow.workflowExecutionInfo.type.name }}</dd>
+      </div>
+      <div class="started-at">
+        <dt>Started At</dt>
+        <dd>{{ workflowStartTime }}</dd>
+      </div>
+      <div class="close-time" v-if="workflowCloseTime">
+        <dt>Closed Time</dt>
+        <dd>{{ workflowCloseTime }}</dd>
+      </div>
+      <div
+        class="workflow-status"
+        :data-status="
+          wfStatus !== undefined &&
+            (typeof wfStatus === 'string' ? wfStatus : wfStatus.status)
+        "
+      >
+        <dt>Status</dt>
+        <dd>
+          <bar-loader v-if="wfStatus === 'running'" />
+          <span v-if="typeof wfStatus === 'string'">{{ wfStatus }}</span>
+          <router-link
+            v-if="wfStatus !== undefined && wfStatus.to"
+            :to="wfStatus.to"
+          >
+            {{ wfStatus.text }}
+          </router-link>
+        </dd>
+      </div>
+      <div class="workflow-result" v-if="result">
+        <dt>Result</dt>
+        <dd>
+          <data-viewer :item="result" :title="workflowId + ' Result'" />
+        </dd>
+      </div>
+      <div class="workflow-id">
+        <dt>Workflow Id</dt>
+        <dd>{{ workflowId }}</dd>
+      </div>
+      <div class="run-id">
+        <dt>Run Id</dt>
+        <dd>{{ runId }}</dd>
+      </div>
+      <div class="parent-workflow" v-if="parentWorkflowRoute">
+        <dt>Parent Workflow</dt>
+        <dd>
+          <router-link :to="parentWorkflowRoute.to">
+            {{ parentWorkflowRoute.text }}
+          </router-link>
+        </dd>
+      </div>
+      <div class="task-list">
+        <dt>Task List</dt>
+        <dd>
+          <router-link
+            :to="{
+              name: 'task-list',
+              params: {
+                taskList: workflow.executionConfiguration.taskList.name,
+              },
+            }"
+          >
+            {{ workflow.executionConfiguration.taskList.name }}
+          </router-link>
+        </dd>
+      </div>
+      <div class="history-length">
+        <dt>History Events</dt>
+        <dd>{{ workflow.workflowExecutionInfo.historyLength }}</dd>
+      </div>
+      <div class="workflow-input">
+        <dt>Input</dt>
+        <dd>
+          <data-viewer
+            v-if="input !== undefined"
+            :item="input"
+            :title="workflowId + ' Input'"
+          />
+        </dd>
+      </div>
+      <div class="pending-activities" v-if="workflow.pendingActivities">
+        <dt>Pending Activities</dt>
+        <dd v-for="pa in workflow.pendingActivities" :key="pa.activityID">
+          <detail-list :item="pa" />
+        </dd>
+      </div>
+    </dl>
+  </section>
+</template>
 
 <style lang="stylus">
 @require "../../styles/definitions.styl"

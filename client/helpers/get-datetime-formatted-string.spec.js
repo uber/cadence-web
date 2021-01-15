@@ -1,3 +1,24 @@
+// Copyright (c) 2017-2021 Uber Technologies Inc.
+//
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
 import {
   DATE_FORMAT_MMM_D_YYYY,
   DATE_FORMAT_D_MMM_YYYY,
@@ -72,7 +93,7 @@ describe('getDateTimeFormattedString', () => {
   });
 
   describe('getDateTimeFormattedString', () => {
-    it('should return "" when date = Date("2020-01-01T00:00:00.000Z"), dateFormat = DATE_FORMAT_YYYY_MM_DD, timeFormat = TIME_FORMAT_24, timezone = TIMEZONE_UTC.', () => {
+    it('should return "2020-01-01 00:00:00" when date = Date("2020-01-01T00:00:00.000Z"), dateFormat = DATE_FORMAT_YYYY_MM_DD, timeFormat = TIME_FORMAT_24, timezone = TIMEZONE_UTC.', () => {
       const date = new Date('2020-01-01T00:00:00.000Z');
       const dateFormat = DATE_FORMAT_YYYY_MM_DD;
       const timeFormat = TIME_FORMAT_24;
@@ -87,7 +108,7 @@ describe('getDateTimeFormattedString', () => {
       expect(output).toEqual('2020-01-01 00:00:00');
     });
 
-    it('should return "" when date = Date("2020-01-01T00:00:00.000Z"), dateFormat = DATE_FORMAT_D_MMM_YYYY, timeFormat = TIME_FORMAT_12, timezone = TIMEZONE_LOCAL.', () => {
+    it('should return "1 Jan, 2020 12:00:00 AM" when date = Date("2020-01-01T00:00:00.000Z"), dateFormat = DATE_FORMAT_D_MMM_YYYY, timeFormat = TIME_FORMAT_12, timezone = TIMEZONE_LOCAL.', () => {
       const date = new Date('2020-01-01T00:00:00.000Z');
       const dateFormat = DATE_FORMAT_D_MMM_YYYY;
       const timeFormat = TIME_FORMAT_12;
@@ -99,7 +120,7 @@ describe('getDateTimeFormattedString', () => {
         timezone,
       });
 
-      expect(output).toEqual('31 Dec, 2019 4:00:00 PM');
+      expect(output).toEqual('1 Jan, 2020 12:00:00 AM');
     });
   });
 });

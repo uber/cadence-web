@@ -1,79 +1,25 @@
-<template>
-  <div class="date-range-picker">
-    <date-picker
-      range
-      type="datetime"
-      v-model="range"
-      :clearable="false"
-      :disabled-date="isDayDisabled"
-      :showTimePanel="showTimePanel"
-      :open.sync="open"
-      @change="onDateRangeChange"
-    >
-      <template v-slot:input>
-        <input
-          placeholder="Date Range"
-          readonly
-          type="text"
-          :value="rangeDisplayText"
-        />
-      </template>
-      <template v-slot:sidebar>
-        <div class="sidebar-column sidebar-column-shortcuts">
-          <h5>Quick ranges</h5>
-          <button
-            class="mx-btn mx-btn-text mx-btn-shortcut"
-            type="button"
-            v-for="shortcut in shortcuts"
-            :key="shortcut.value"
-            @click="onShortcutClick(shortcut)"
-          >
-            {{ shortcut.text }}
-          </button>
-        </div>
-        <div class="sidebar-column sidebar-column-custom-range">
-          <form @submit.prevent="onCustomRangeSubmit">
-            <h5>Custom range</h5>
-            <div>
-              <label for="custom-range-from">From:</label>
-              <input
-                id="custom-range-from"
-                maxlength="19"
-                v-model="startTimeString"
-                :class="{ invalid: startTimeInvalid }"
-              />
-            </div>
-            <div>
-              <label for="custom-range-to">To:</label>
-              <input
-                id="custom-range-to"
-                maxlength="19"
-                v-model="endTimeString"
-                :class="{ invalid: endTimeInvalid }"
-              />
-            </div>
-            <div>
-              <button
-                class="sidebar-button"
-                type="submit"
-                :disabled="startOrEndTimeInvalid"
-              >
-                Apply
-              </button>
-            </div>
-          </form>
-        </div>
-      </template>
-      <template v-slot:footer>
-        <button class="mx-btn mx-btn-text" @click="onClickTimePanelLabel">
-          {{ timePanelLabel }}
-        </button>
-      </template>
-    </date-picker>
-  </div>
-</template>
-
 <script>
+// Copyright (c) 2017-2021 Uber Technologies Inc.
+//
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
 import moment from 'moment';
 import DatePicker from 'vue2-datepicker';
 import {
@@ -190,6 +136,81 @@ export default {
   },
 };
 </script>
+
+<template>
+  <div class="date-range-picker">
+    <date-picker
+      range
+      type="datetime"
+      v-model="range"
+      :clearable="false"
+      :disabled-date="isDayDisabled"
+      :showTimePanel="showTimePanel"
+      :open.sync="open"
+      @change="onDateRangeChange"
+    >
+      <template v-slot:input>
+        <input
+          placeholder="Date Range"
+          readonly
+          type="text"
+          :value="rangeDisplayText"
+        />
+      </template>
+      <template v-slot:sidebar>
+        <div class="sidebar-column sidebar-column-shortcuts">
+          <h5>Quick ranges</h5>
+          <button
+            class="mx-btn mx-btn-text mx-btn-shortcut"
+            type="button"
+            v-for="shortcut in shortcuts"
+            :key="shortcut.value"
+            @click="onShortcutClick(shortcut)"
+          >
+            {{ shortcut.text }}
+          </button>
+        </div>
+        <div class="sidebar-column sidebar-column-custom-range">
+          <form @submit.prevent="onCustomRangeSubmit">
+            <h5>Custom range</h5>
+            <div>
+              <label for="custom-range-from">From:</label>
+              <input
+                id="custom-range-from"
+                maxlength="19"
+                v-model="startTimeString"
+                :class="{ invalid: startTimeInvalid }"
+              />
+            </div>
+            <div>
+              <label for="custom-range-to">To:</label>
+              <input
+                id="custom-range-to"
+                maxlength="19"
+                v-model="endTimeString"
+                :class="{ invalid: endTimeInvalid }"
+              />
+            </div>
+            <div>
+              <button
+                class="sidebar-button"
+                type="submit"
+                :disabled="startOrEndTimeInvalid"
+              >
+                Apply
+              </button>
+            </div>
+          </form>
+        </div>
+      </template>
+      <template v-slot:footer>
+        <button class="mx-btn mx-btn-text" @click="onClickTimePanelLabel">
+          {{ timePanelLabel }}
+        </button>
+      </template>
+    </date-picker>
+  </div>
+</template>
 
 <style lang="stylus">
 sidebarColumnCustomRangeWidth = 181px;

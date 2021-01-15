@@ -13,5 +13,7 @@ env:
     secure: RpfO25V9JlHtiLzQqtSiu9kGAS3RdczVV2XE4ley/6f/n/bsFUPMezqPG7INnb/pDNJTU1WvdKjbt1Neavr9Y8qPzWYopgmD+zV74er+2x5r0GPni/3jyGztuvGWVYl131BStA3Rjx4tf5cz+N02Fwx71ERu1S21nHeYsy5mifxyps9VIvLhxdt/RkXQDGz4iqv44AMIJHobGxl1OPgPWKB113Ob2E+vpqOiraxdpMmgO4VJbqKm0qy7An/q/1OEQ+MPuYWYQA8gJAx8fUdkg/ckptFed55mTIW3R+4IlSLOxj8MdDpythyqaypC3T39YCA43NXQGNxujZ0zpp7CgBBWf/F+wNacQ1B5DYFdkIe2CfcDBZHe8ERQcn+sbldbV0xoTly7FB2xmQPZBb3uIePtqCOYPz8gEl3XugcuRAnT4bQ14FOQ7jFxxHzEW/+qOXgSRosF2t+4oFkTK1zjtwn4gWBm09Rdy6/L/BvPBgzPZ5LRGe4JAegWjB76lmZ3IF70Oj6ZJPe3fnJE64fC7ogdYM8RhEED2cEdNQdH0mNU30/Z9jsodT/fIAba3etwqF5AZbuc8HCfVz7ojS2Hl3twKtbHZ3T0VPkhcNb8v6RHIO4PbqkWfTEAG3rh54dpHXq9Gqn3RexycrhRPtCD0xulPdp5i7T39Xzo/tCb96w=
 
 before_script:
+  - npm run lint:check
+  - npm run test:unit
   - npm run test-server &
   - sleep 5

@@ -1,52 +1,25 @@
-<template>
-  <div class="domain-navigation" :class="'validation-' + validation">
-    <div class="input-and-validation">
-      <div class="input-wrapper">
-        <input
-          type="text"
-          name="domain"
-          spellcheck="false"
-          autocorrect="off"
-          ref="input"
-          v-bind:value="d"
-          :placeholder="$props.placeholder"
-          @input="onInput"
-          @keydown.enter="changeDomain"
-          @keydown.esc="onEsc"
-        />
-        <a
-          :href="validation === 'valid' ? '#' : ''"
-          class="change-domain"
-          @click="changeDomain"
-        ></a>
-      </div>
-      <p :class="'validation validation-' + validation">
-        {{ validationMessage }}
-      </p>
-    </div>
-    <ul class="recent-domains" v-if="recentDomains.length">
-      <h3>Recent Domains</h3>
-      <li v-for="domain in recentDomains" :key="domain">
-        <a
-          :href="domainLink(domain)"
-          :data-domain="domain"
-          @click="recordDomainFromClick"
-          @mouseover="showDomainDesc(domain)"
-          >{{ domain }}</a
-        >
-      </li>
-    </ul>
-    <div
-      :class="{ 'domain-description': true, pending: !!domainDescRequest }"
-      v-if="domainDesc"
-    >
-      <span class="domain-name">{{ domainDescName }}</span>
-      <detail-list :item="domainDesc" :title="domainDescName" />
-    </div>
-  </div>
-</template>
-
 <script>
+// Copyright (c) 2017-2021 Uber Technologies Inc.
+//
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
 import debounce from 'lodash-es/debounce';
 import omit from 'lodash-es/omit';
 import { stringify } from 'friendly-querystring';
@@ -193,6 +166,54 @@ export default {
   },
 };
 </script>
+
+<template>
+  <div class="domain-navigation" :class="'validation-' + validation">
+    <div class="input-and-validation">
+      <div class="input-wrapper">
+        <input
+          type="text"
+          name="domain"
+          spellcheck="false"
+          autocorrect="off"
+          ref="input"
+          v-bind:value="d"
+          :placeholder="$props.placeholder"
+          @input="onInput"
+          @keydown.enter="changeDomain"
+          @keydown.esc="onEsc"
+        />
+        <a
+          :href="validation === 'valid' ? '#' : ''"
+          class="change-domain"
+          @click="changeDomain"
+        ></a>
+      </div>
+      <p :class="'validation validation-' + validation">
+        {{ validationMessage }}
+      </p>
+    </div>
+    <ul class="recent-domains" v-if="recentDomains.length">
+      <h3>Recent Domains</h3>
+      <li v-for="domain in recentDomains" :key="domain">
+        <a
+          :href="domainLink(domain)"
+          :data-domain="domain"
+          @click="recordDomainFromClick"
+          @mouseover="showDomainDesc(domain)"
+          >{{ domain }}</a
+        >
+      </li>
+    </ul>
+    <div
+      :class="{ 'domain-description': true, pending: !!domainDescRequest }"
+      v-if="domainDesc"
+    >
+      <span class="domain-name">{{ domainDescName }}</span>
+      <detail-list :item="domainDesc" :title="domainDescName" />
+    </div>
+  </div>
+</template>
 
 <style lang="stylus">
 @require "../styles/definitions.styl"

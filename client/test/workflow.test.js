@@ -1,3 +1,24 @@
+// Copyright (c) 2017-2021 Uber Technologies Inc.
+//
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
 import moment from 'moment';
 import fixtures from './fixtures';
 
@@ -30,6 +51,7 @@ describe('Workflow', () => {
           extendedOptions.runId,
           extendedOptions.execution
         )
+        .withTaskList('ci_task_list')
         .startingAt(
           `/domains/ci-test/workflows/${extendedOptions.workflowId}/${
             extendedOptions.runId
@@ -1236,50 +1258,5 @@ describe('Workflow', () => {
       );
       queryEl.should.not.have.descendant('pre');
     });
-  });
-
-  describe('Completed workflows', () => {
-    it('should show summary and history tabs for completed workflows', async function test() {
-      const [, scenario] = await summaryTest(this.test, {
-        execution: closedWorkflowExecution,
-      });
-
-      scenario.vm.$el
-        .attrValues('section.execution > nav a', 'href')
-        .should.deep.equal([
-          '/domains/ci-test/workflows/email-daily-summaries/emailRun1/summary',
-          '/domains/ci-test/workflows/email-daily-summaries/emailRun1/history',
-          '/domains/ci-test/workflows/email-daily-summaries/emailRun1/stack-trace',
-          '/domains/ci-test/workflows/email-daily-summaries/emailRun1/query',
-        ]);
-      scenario.vm.$el
-        .querySelector('section.execution > nav a#nav-link-summary')
-        .should.have.class('router-link-active');
-      await retry(() => {
-        scenario.vm.$el.querySelector(
-          'section.execution > nav a#nav-link-stack-trace'
-        ).should.not.be.displayed;
-        scenario.vm.$el.querySelector(
-          'section.execution > nav a#nav-link-query'
-        ).should.not.be.displayed;
-      });
-    });
-
-    // eslint-disable-next-line jest/no-commented-out-tests
-    /*
-    it.skip('should update the status of the workflow when it completes', async function test() {
-      return summaryTest(this.test).then(async ([summaryEl]) => {
-        const wfStatus = summaryEl.querySelector('.workflow-status');
-
-        wfStatus.should.have.attr('data-status', 'running');
-
-        await summaryEl.waitUntilExists('.workflow-status[data-status="completed"]');
-
-        await retry(() =>
-          wfStatus.should.have.attr('data-status', 'completed')
-        );
-      });
-    });
-    */
   });
 });

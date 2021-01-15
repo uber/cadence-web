@@ -1,113 +1,25 @@
-<template>
-  <section class="workflow-list" :class="{ loading }">
-    <header class="filters">
-      <template v-if="filterMode === 'advanced'">
-        <div class="field query-string">
-          <input
-            type="search"
-            class="query-string"
-            placeholder=" "
-            key="sql-query"
-            name="queryString"
-            v-bind:value="$route.query.queryString"
-            @input="setWorkflowFilter"
-          />
-          <label for="queryString">Query</label>
-        </div>
-      </template>
-      <template v-else>
-        <div class="field workflow-id">
-          <input
-            type="search"
-            class="workflow-id"
-            placeholder=" "
-            name="workflowId"
-            v-bind:value="$route.query.workflowId"
-            @input="setWorkflowFilter"
-          />
-          <label for="workflowId">Workflow ID</label>
-        </div>
-        <div class="field workflow-name">
-          <input
-            type="search"
-            class="workflow-name"
-            placeholder=" "
-            name="workflowName"
-            v-bind:value="$route.query.workflowName"
-            @input="setWorkflowFilter"
-          />
-          <label for="workflowName">Workflow Name</label>
-        </div>
-        <v-select
-          class="status"
-          :value="status"
-          :options="statuses"
-          :on-change="setStatus"
-          :searchable="false"
-        />
-        <div class="field workflow-filter-by">
-          <input
-            class="workflow-filter-by"
-            name="filterBy"
-            placeholder=" "
-            readonly
-            v-bind:value="filterBy"
-          />
-          <label for="filterBy">Filter by</label>
-        </div>
-        <date-range-picker
-          :date-range="range"
-          :max-days="maxRetentionDays"
-          :min-start-date="minStartDate"
-          @change="setRange"
-        />
-      </template>
-      <a class="toggle-filter" @click="toggleFilter">{{
-        filterMode === 'advanced' ? 'basic' : 'advanced'
-      }}</a>
-    </header>
-    <span class="error" v-if="error">{{ error }}</span>
-    <span class="no-results" v-if="showNoResults">No Results</span>
-    <section
-      class="results"
-      v-infinite-scroll="nextPage"
-      infinite-scroll-disabled="disableInfiniteScroll"
-      infinite-scroll-distance="20"
-      infinite-scroll-immediate-check="false"
-    >
-      <table v-show="showTable">
-        <thead>
-          <th>Workflow ID</th>
-          <th>Run ID</th>
-          <th>Name</th>
-          <th>Status</th>
-          <th>Start Time</th>
-          <th>End Time</th>
-        </thead>
-        <tbody>
-          <tr v-for="wf in formattedResults" :key="wf.runId">
-            <td>{{ wf.workflowId }}</td>
-            <td>
-              <router-link
-                :to="{
-                  name: 'workflow/summary',
-                  params: { runId: wf.runId, workflowId: wf.workflowId },
-                }"
-                >{{ wf.runId }}</router-link
-              >
-            </td>
-            <td>{{ wf.workflowName }}</td>
-            <td :class="wf.status">{{ wf.status }}</td>
-            <td>{{ wf.startTime }}</td>
-            <td>{{ wf.endTime }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
-  </section>
-</template>
-
 <script>
+// Copyright (c) 2017-2021 Uber Technologies Inc.
+//
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
 import moment from 'moment';
 import debounce from 'lodash-es/debounce';
 import pagedGrid from '~components/paged-grid';
@@ -457,6 +369,115 @@ export default pagedGrid({
   },
 });
 </script>
+
+<template>
+  <section class="workflow-list" :class="{ loading }">
+    <header class="filters">
+      <template v-if="filterMode === 'advanced'">
+        <div class="field query-string">
+          <input
+            type="search"
+            class="query-string"
+            placeholder=" "
+            key="sql-query"
+            name="queryString"
+            v-bind:value="$route.query.queryString"
+            @input="setWorkflowFilter"
+          />
+          <label for="queryString">Query</label>
+        </div>
+      </template>
+      <template v-else>
+        <div class="field workflow-id">
+          <input
+            type="search"
+            class="workflow-id"
+            placeholder=" "
+            name="workflowId"
+            v-bind:value="$route.query.workflowId"
+            @input="setWorkflowFilter"
+          />
+          <label for="workflowId">Workflow ID</label>
+        </div>
+        <div class="field workflow-name">
+          <input
+            type="search"
+            class="workflow-name"
+            placeholder=" "
+            name="workflowName"
+            v-bind:value="$route.query.workflowName"
+            @input="setWorkflowFilter"
+          />
+          <label for="workflowName">Workflow Name</label>
+        </div>
+        <v-select
+          class="status"
+          :value="status"
+          :options="statuses"
+          :on-change="setStatus"
+          :searchable="false"
+        />
+        <div class="field workflow-filter-by">
+          <input
+            class="workflow-filter-by"
+            name="filterBy"
+            placeholder=" "
+            readonly
+            v-bind:value="filterBy"
+          />
+          <label for="filterBy">Filter by</label>
+        </div>
+        <date-range-picker
+          :date-range="range"
+          :max-days="maxRetentionDays"
+          :min-start-date="minStartDate"
+          @change="setRange"
+        />
+      </template>
+      <a class="toggle-filter" @click="toggleFilter">{{
+        filterMode === 'advanced' ? 'basic' : 'advanced'
+      }}</a>
+    </header>
+    <span class="error" v-if="error">{{ error }}</span>
+    <span class="no-results" v-if="showNoResults">No Results</span>
+    <section
+      class="results"
+      v-infinite-scroll="nextPage"
+      infinite-scroll-disabled="disableInfiniteScroll"
+      infinite-scroll-distance="20"
+      infinite-scroll-immediate-check="false"
+    >
+      <table v-show="showTable">
+        <thead>
+          <th>Workflow ID</th>
+          <th>Run ID</th>
+          <th>Name</th>
+          <th>Status</th>
+          <th>Start Time</th>
+          <th>End Time</th>
+        </thead>
+        <tbody>
+          <tr v-for="wf in formattedResults" :key="wf.runId">
+            <td>{{ wf.workflowId }}</td>
+            <td>
+              <router-link
+                :to="{
+                  name: 'workflow/summary',
+                  params: { runId: wf.runId, workflowId: wf.workflowId },
+                }"
+                >{{ wf.runId }}</router-link
+              >
+            </td>
+            <td>{{ wf.workflowName }}</td>
+            <td :class="wf.status">{{ wf.status }}</td>
+            <td>{{ wf.startTime }}</td>
+            <td>{{ wf.endTime }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </section>
+</template>
 
 <style lang="stylus">
 @require "../../styles/definitions.styl"

@@ -1,63 +1,25 @@
-<template>
-  <div>
-    <div class="content">
-      <div class="content-item">
-        <label for="settingsExample">
-          Example
-        </label>
-        <text-input
-          name="settingsExample"
-          :readonly="true"
-          :value="exampleFormattedDateTime"
-        />
-      </div>
-      <div class="content-item">
-        <flex-grid>
-          <flex-grid-item grow="1">
-            <label for="settingsDateFormat">
-              Date format
-            </label>
-            <v-select
-              input-id="settingsDateFormat"
-              :on-change="onDateFormatChange"
-              :options="dateFormatOptions"
-              :value="modalDateFormat"
-            />
-          </flex-grid-item>
-          <flex-grid-item grow="1">
-            <label for="settingsTimeFormat">
-              Time format
-            </label>
-            <v-select
-              input-id="settingsTimeFormat"
-              :on-change="onTimeFormatChange"
-              :options="timeFormatOptions"
-              :value="modalTimeFormat"
-            />
-          </flex-grid-item>
-          <flex-grid-item grow="1">
-            <label for="settingsTimezone">
-              Timezone
-            </label>
-            <v-select
-              input-id="settingsTimezone"
-              :on-change="onTimezoneChange"
-              :options="timezoneOptions"
-              :value="modalTimezone"
-            />
-          </flex-grid-item>
-        </flex-grid>
-      </div>
-    </div>
-    <settings-footer
-      :submit-enabled="isSettingsChanged"
-      @cancel="onClose"
-      @submit="onSubmit"
-    />
-  </div>
-</template>
-
 <script>
+// Copyright (c) 2017-2021 Uber Technologies Inc.
+//
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
 import FlexGrid from '../../flex-grid';
 import FlexGridItem from '../../flex-grid-item';
 import TextInput from '../../text-input';
@@ -182,3 +144,62 @@ export default {
   },
 };
 </script>
+
+<template>
+  <div>
+    <div class="content">
+      <div class="content-item">
+        <label for="settingsExample">
+          Example
+        </label>
+        <text-input
+          name="settingsExample"
+          :readonly="true"
+          :value="exampleFormattedDateTime"
+        />
+      </div>
+      <div class="content-item">
+        <flex-grid>
+          <flex-grid-item grow="1">
+            <label for="settingsDateFormat">
+              Date format
+            </label>
+            <v-select
+              input-id="settingsDateFormat"
+              :on-change="onDateFormatChange"
+              :options="dateFormatOptions"
+              :value="modalDateFormat"
+            />
+          </flex-grid-item>
+          <flex-grid-item grow="1">
+            <label for="settingsTimeFormat">
+              Time format
+            </label>
+            <v-select
+              input-id="settingsTimeFormat"
+              :on-change="onTimeFormatChange"
+              :options="timeFormatOptions"
+              :value="modalTimeFormat"
+            />
+          </flex-grid-item>
+          <flex-grid-item grow="1">
+            <label for="settingsTimezone">
+              Timezone
+            </label>
+            <v-select
+              input-id="settingsTimezone"
+              :on-change="onTimezoneChange"
+              :options="timezoneOptions"
+              :value="modalTimezone"
+            />
+          </flex-grid-item>
+        </flex-grid>
+      </div>
+    </div>
+    <settings-footer
+      :submit-enabled="isSettingsChanged"
+      @cancel="onClose"
+      @submit="onSubmit"
+    />
+  </div>
+</template>
