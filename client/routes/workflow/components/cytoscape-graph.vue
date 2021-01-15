@@ -60,7 +60,7 @@ export default {
           y: (h - zoom * (bb.y1 + bb.y2)) / 2,
         };
 
-      //Pan the graph to view node
+      // Pan the graph to view node
       this.cy.animate({
         zoom,
         pan,
@@ -109,18 +109,19 @@ export default {
       const container = this.$refs.cy;
       const cy = cytoscape({
         autoungrabify: true,
-        styleEnabled: true,
         container: container,
+        elements,
         headless: true,
         hideEdgesOnViewport: true,
-        //Uncomment the two lines below for better performance
-        //textureOnViewport: true,
-        //pixelRatio: 1,
-        style: graphStyles,
-        elements,
         layout: {
           name: LAYOUT_NAME,
         },
+        style: graphStyles,
+        styleEnabled: true,
+
+        // NOTE: Uncomment the two lines below for better performance
+        // textureOnViewport: true,
+        // pixelRatio: 1,
       });
 
       cy.minZoom(0.1);
@@ -133,19 +134,18 @@ export default {
         container.style.cursor = 'default';
       });
 
-      //Register click event
-      cy.on('tap', evt => {
-        const evtTarget = evt.target;
-
+      // Register click event
+      cy.on('tap', ({ target: eventTarget }) => {
         // Tap on background
-        if (evtTarget === cy) {
+        if (eventTarget === cy) {
           if (this.selectedEventId) {
             this.$router.replace({ query: omit(this.$route.query, 'eventId') });
             store.commit('toggleChildBtn');
           }
-          // Tap on a node that is not already selected
-        } else if (evtTarget.isNode() && !evtTarget.selected()) {
-          const nodeData = evtTarget.data();
+        }
+        // Tap on a node that is not already selected
+        else if (eventTarget.isNode() && !eventTarget.selected()) {
+          const nodeData = eventTarget.data();
 
           this.$router.replace({
             query: { ...this.$route.query, eventId: nodeData.id },
@@ -176,7 +176,8 @@ export default {
       // We are viewing a child workflow, show parent btn
       if (previousExecutionRunId) {
         store.commit('previousExecutionRoute', previousExecutionRunId);
-      } else if (parentWorkflowExecution) {
+      }
+      else if (parentWorkflowExecution) {
         store.commit('parentRoute', parentWorkflowExecution);
       }
 
