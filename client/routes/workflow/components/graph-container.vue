@@ -61,9 +61,9 @@ export default {
           params: { workflowId: route.workflowId, runId: route.runId },
           query: omit(this.$route.query, 'eventId'),
         });
-
-        //We only have run Id as route params
-      } else {
+      }
+      // We only have run Id as route params
+      else {
         this.$router.replace({
           params: { runId: route },
           query: omit(this.$route.query, 'eventId'),
@@ -75,7 +75,7 @@ export default {
       this.isGraphLoading = true;
       this.forceRefresh = !this.forceRefresh;
       this.delayedShow();
-      //We currently show all available events, refresh btn should be hidden
+      // Currently show all available events, refresh button should be hidden
       this.hasAllEvents = true;
     },
   },
@@ -208,7 +208,7 @@ div.thead {
   z-index: 3;
 }
 
-/* ---- Loadig icon  ---- */
+/* ---- Loading icon  ---- */
 #loading {
   display: inline-block;
   width: 50px;

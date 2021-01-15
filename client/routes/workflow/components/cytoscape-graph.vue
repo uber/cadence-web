@@ -173,7 +173,7 @@ export default {
         return;
       }
 
-      // We are viewing a child workflow, show parent btn
+      // Currently viewing a child workflow, show parent button
       if (previousExecutionRunId) {
         store.commit('previousExecutionRoute', previousExecutionRunId);
       }
