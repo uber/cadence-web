@@ -21,14 +21,15 @@
 // THE SOFTWARE.
 
 import omit from 'lodash-es/omit';
-import store from '../../../store/index';
-import WorkflowGraph from './cytoscape-graph.vue';
-import Legend from './graph-legend.vue';
+import store from '../../../../store/index';
+import Graph from './components/graph.vue';
+import Legend from './components/legend.vue';
 
 export default {
+  name: 'workflow-graph',
   props: ['workflow', 'events', 'isWorkflowRunning', 'selectedEventId'],
   components: {
-    WorkflowGraph,
+    Graph,
     Legend,
   },
   data() {
@@ -133,7 +134,7 @@ export default {
         Refresh
       </div>
       <Legend />
-      <WorkflowGraph
+      <Graph
         :key="forceRefresh"
         v-if="!isGraphLoading"
         :workflow="workflow"
@@ -145,7 +146,7 @@ export default {
 </template>
 
 <style scoped lang="stylus">
-@require '../../../styles/definitions.styl';
+@require '../../../../styles/definitions.styl';
 
 .tree-graph {
   width: 100%;

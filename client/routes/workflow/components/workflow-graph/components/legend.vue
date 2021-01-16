@@ -21,6 +21,7 @@
 // THE SOFTWARE.
 
 export default {
+  name: 'legend',
   data() {
     return {
       showLegend: false,
@@ -68,7 +69,7 @@ export default {
 </template>
 
 <style scoped lang="stylus">
-@require '../../../styles/definitions.styl';
+@require '../../../../../styles/definitions.styl';
 .legend {
   background-color: white;
   border: 1px solid #eaeaea;

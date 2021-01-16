@@ -26,12 +26,12 @@ import { mapMutations } from 'vuex';
 import Graph from '../helpers/graph';
 import cytoscapeLayout, { LAYOUT_NAME } from '../helpers/cytoscape-layout';
 import graphStyles from '../helpers/graph-styles';
-import store from '../../../store/index';
+import store from '../../../../../store/index';
 
 cytoscape.use(cytoscapeLayout);
 
 export default {
-  name: 'cytoscape-graph',
+  name: 'graph',
   props: ['events', 'selectedEventId'],
   data() {
     return {

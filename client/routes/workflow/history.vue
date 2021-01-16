@@ -29,7 +29,7 @@ import {
 import debounce from 'lodash-es/debounce';
 import omit from 'lodash-es/omit';
 import Timeline from './components/timeline.vue';
-import DagGraphContainer from './components/graph-container.vue';
+import WorkflowGraph from './components/workflow-graph';
 import EventDetail from './components/event-detail.vue';
 import { DetailList, HighlightToggle } from '~components';
 
@@ -329,7 +329,7 @@ export default {
     'highlight-toggle': HighlightToggle,
     prism: Prism,
     RecycleScroller,
-    DagGraphContainer,
+    WorkflowGraph,
     timeline: Timeline,
   },
 };
@@ -403,13 +403,13 @@ export default {
         :min-size="splitSizeMinSet[0]"
         :size="splitSizeSet[0]"
       >
-        <DagGraphContainer
+        <WorkflowGraph
           :events="events"
           :isWorkflowRunning="isWorkflowRunning"
           :selected-event-id="eventId"
           class="tree-view"
           v-if="this.graphView === 'dagGraph' && events.length"
-        ></DagGraphContainer>
+        />
         <timeline
           :events="timelineEvents"
           :selected-event-id="eventId"

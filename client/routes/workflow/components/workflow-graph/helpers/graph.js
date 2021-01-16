@@ -22,6 +22,7 @@
 import { findIndex } from 'lodash-es';
 import getEventConnections from './get-event-connections';
 
+// TODO - refactor class into components/graph.vue
 class Graph {
   constructor(events = []) {
     this.setEvents(events);
