@@ -24,7 +24,7 @@ export default {
   name: 'legend',
   data() {
     return {
-      showLegend: false,
+      isHidden: true,
       connections: [
         {
           name: 'direct',
@@ -40,18 +40,23 @@ export default {
       ],
     };
   },
+  methods: {
+    onClick() {
+      this.isHidden = !this.isHidden;
+    },
+  }
 };
 </script>
 
 <template>
-  <div v-on:click="showLegend = !showLegend" class="legend">
-    <div v-if="!showLegend" class="legend-preview">
+  <div v-on:click="onClick" class="legend">
+    <div v-if="isHidden" class="legend-preview">
       <div class="arrow-container">
         <span class="arrow direct"></span>
         <hr class="direct" />
       </div>
     </div>
-    <div v-if="showLegend">
+    <div v-if="!isHidden">
       <transition-group appear name="fade">
         <div v-for="connection in connections" :key="connection.name">
           <div class="legend-example">
