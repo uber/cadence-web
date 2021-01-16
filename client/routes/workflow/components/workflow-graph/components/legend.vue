@@ -20,24 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+import { LEGEND_CONNECTION_LIST } from '../constants';
+
 export default {
   name: 'legend',
   data() {
     return {
       isHidden: true,
-      connections: [
-        {
-          name: 'direct',
-          text:
-            'Represents direct connections, when a child has the id of the parent',
-        },
-        { name: 'chron', text: 'Represents chronological connections' },
-        {
-          name: 'inferred',
-          text:
-            'Represents connections between a signal and its triggered child ',
-        },
-      ],
+      connectionList: LEGEND_CONNECTION_LIST,
     };
   },
   methods: {
@@ -58,7 +48,7 @@ export default {
     </div>
     <div v-if="!isHidden">
       <transition-group appear name="fade">
-        <div v-for="connection in connections" :key="connection.name">
+        <div v-for="connection in connectionList" :key="connection.name">
           <div class="legend-example">
             <div class="arrow-container">
               <span :class="connection.name" class="pic arrow"></span>
