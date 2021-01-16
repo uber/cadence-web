@@ -176,8 +176,7 @@ export default {
       // Currently viewing a child workflow, show parent button
       if (previousExecutionRunId) {
         store.commit('previousExecutionRoute', previousExecutionRunId);
-      }
-      else if (parentWorkflowExecution) {
+      } else if (parentWorkflowExecution) {
         store.commit('parentRoute', parentWorkflowExecution);
       }
 

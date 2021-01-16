@@ -28,7 +28,6 @@ export const LEGEND_CONNECTION_LIST = [
   { name: 'chron', text: 'Represents chronological connections' },
   {
     name: 'inferred',
-    text:
-      'Represents connections between a signal and its triggered child ',
+    text: 'Represents connections between a signal and its triggered child ',
   },
 ];

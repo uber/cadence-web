@@ -34,7 +34,7 @@ export default {
     onClick() {
       this.isHidden = !this.isHidden;
     },
-  }
+  },
 };
 </script>
 
