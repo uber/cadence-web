@@ -31,3 +31,7 @@ export const LEGEND_CONNECTION_LIST = [
     text: 'Represents connections between a signal and its triggered child ',
   },
 ];
+
+export const GRAPH_ZOOM_DEFAULT = 1.1;
+export const GRAPH_ZOOM_MAX = 10;
+export const GRAPH_ZOOM_MIN = 0.1;

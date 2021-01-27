@@ -27,6 +27,11 @@ import Graph from '../helpers/graph';
 import cytoscapeLayout, { LAYOUT_NAME } from '../helpers/cytoscape-layout';
 import graphStyles from '../helpers/graph-styles';
 import store from '../../../../../store/index';
+import {
+  GRAPH_ZOOM_DEFAULT,
+  GRAPH_ZOOM_MAX,
+  GRAPH_ZOOM_MIN,
+} from '../constants';
 
 cytoscape.use(cytoscapeLayout);
 
@@ -51,14 +56,14 @@ export default {
   methods: {
     ...mapMutations(['childRoute', 'toggleChildBtn']),
     zoomToNode(node) {
-      const zoom = 1.1,
-        bb = node.boundingBox(),
-        w = this.cy.width(),
-        h = this.cy.height(),
-        pan = {
-          x: (w - zoom * (bb.x1 + bb.x2)) / 2,
-          y: (h - zoom * (bb.y1 + bb.y2)) / 2,
-        };
+      const zoom = GRAPH_ZOOM_DEFAULT;
+      const boundingBox = node.boundingBox();
+      const width = this.cy.width();
+      const height = this.cy.height();
+      const pan = {
+        x: (width - zoom * (boundingBox.x1 + boundingBox.x2)) / 2,
+        y: (height - zoom * (boundingBox.y1 + boundingBox.y2)) / 2,
+      };
 
       // Pan the graph to view node
       this.cy.animate({
@@ -124,8 +129,8 @@ export default {
         // pixelRatio: 1,
       });
 
-      cy.minZoom(0.1);
-      cy.maxZoom(10);
+      cy.minZoom(GRAPH_ZOOM_MIN);
+      cy.maxZoom(GRAPH_ZOOM_MAX);
 
       cy.on('mouseover', 'node', function(e) {
         container.style.cursor = 'pointer';
