@@ -65,7 +65,7 @@ export default {
     <div class="spacer" />
     <no-results :results="workflows" v-if="!loading" />
     <RecycleScroller
-      key-field="runId"
+      key-field="uniqueId"
       :items="workflows"
       :item-size="56"
       emit-update
