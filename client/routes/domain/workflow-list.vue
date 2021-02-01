@@ -96,6 +96,7 @@ export default {
       return results.map(result => ({
         workflowId: result.execution.workflowId,
         runId: result.execution.runId,
+        uniqueId: `${result.execution.runId}-${result.closeStatus || 'OPEN'}`,
         workflowName: result.type.name,
         startTime: getDatetimeFormattedString({
           date: result.startTime,
