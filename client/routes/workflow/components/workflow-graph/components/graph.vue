@@ -24,10 +24,11 @@ import cytoscape from 'cytoscape';
 import omit from 'lodash-es/omit';
 import { mapMutations } from 'vuex';
 import Graph from '../helpers/graph';
-import cytoscapeLayout, { LAYOUT_NAME } from '../helpers/cytoscape-layout';
+import cytoscapeLayout from '../helpers/cytoscape-layout';
 import graphStyles from '../helpers/graph-styles';
 import store from '../../../../../store/index';
 import {
+  CYTOSCAPE_LAYOUT_NAME,
   GRAPH_ZOOM_DEFAULT,
   GRAPH_ZOOM_MAX,
   GRAPH_ZOOM_MIN,
@@ -119,7 +120,7 @@ export default {
         headless: true,
         hideEdgesOnViewport: true,
         layout: {
-          name: LAYOUT_NAME,
+          name: CYTOSCAPE_LAYOUT_NAME,
         },
         style: graphStyles,
         styleEnabled: true,

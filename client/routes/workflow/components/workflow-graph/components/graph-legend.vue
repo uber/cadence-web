@@ -23,7 +23,7 @@
 import { LEGEND_CONNECTION_LIST } from '../constants';
 
 export default {
-  name: 'legend',
+  name: 'graph-legend',
   data() {
     return {
       isHidden: true,
@@ -39,7 +39,7 @@ export default {
 </script>
 
 <template>
-  <div v-on:click="onClick" class="legend">
+  <div v-on:click="onClick" class="graph-legend">
     <div v-if="isHidden" class="legend-preview">
       <div class="arrow-container">
         <span class="arrow direct"></span>
@@ -65,12 +65,13 @@ export default {
 
 <style scoped lang="stylus">
 @require '../../../../../styles/definitions.styl';
-.legend {
+.graph-legend {
   background-color: white;
   border: 1px solid #eaeaea;
   box-shadow: 0px 0px 9px 0px rgba(232, 232, 232, 1);
   width: fit-content;
-   max-width: 200px;
+  max-width: 200px;
+  padding: 10px 15px;
   position: absolute;
   right: inline-spacing-large;
   bottom: inline-spacing-large;

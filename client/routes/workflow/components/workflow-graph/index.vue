@@ -23,14 +23,14 @@
 import omit from 'lodash-es/omit';
 import store from '../../../../store/index';
 import Graph from './components/graph.vue';
-import Legend from './components/legend.vue';
+import GraphLegend from './components/graph-legend.vue';
 
 export default {
   name: 'workflow-graph',
   props: ['workflow', 'events', 'isWorkflowRunning', 'selectedEventId'],
   components: {
     Graph,
-    Legend,
+    GraphLegend,
   },
   data() {
     return {
@@ -133,7 +133,7 @@ export default {
       <div class="refresh" v-if="!hasAllEvents" v-on:click="reloadWorkflow()">
         Refresh
       </div>
-      <Legend />
+      <GraphLegend />
       <Graph
         :key="forceRefresh"
         v-if="!isGraphLoading"

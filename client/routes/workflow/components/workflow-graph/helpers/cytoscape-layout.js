@@ -25,6 +25,51 @@ import {
   CYTOSCAPE_LAYOUT_NAME,
 } from '../constants';
 
+// Traverse the graph recursively and set `level` and `timeIndexSecondary` for all nodes
+// Level is horizontal offset of the tree-like graph node arranged to avoid overlapping.
+// `timeIndexSecondary` is secondary time coordinate:
+//    there are two connected nodes: A -----> B
+//    A.data.timeIndex === B.data.timeIndex
+//  then we set
+//    A.data.timeIndexSecondary = 0
+//    B.data.timeIndexSecondary = 1
+//  To display B node beflow the A node whilst they they have the same timestamp
+const arrangeNodes = ({
+  idToChildren,
+  level = 0,
+  nodes,
+  parentTimeIndex = -1,
+  parentTimeIndexOffset = 0
+}) => {
+  let levelOffset = level;
+
+  nodes.forEach((node, index) => {
+    levelOffset += index ? 1 : 0;
+    const children = idToChildren[node.id()];
+    const nodeScratch = node.scratch(CYTOSCAPE_LAYOUT_NAME);
+
+    nodeScratch.level = levelOffset;
+    nodeScratch.timeIndexSecondary =
+      parentTimeIndex === nodeScratch.timeIndex ? parentTimeIndexOffset + 1 : 0;
+
+    if (children.length) {
+      const { level: newLevel } = arrangeNodes({
+        idToChildren,
+        level: levelOffset,
+        nodes: children,
+        parentTimeIndex: nodeScratch.timeIndex,
+        parentTimeIndexOffset: nodeScratch.timeIndexSecondary,
+      });
+
+      levelOffset = newLevel;
+    }
+  });
+
+  return {
+    level: levelOffset,
+  };
+};
+
 // Arrange graph
 const arrangeGraph = ({ nodes, edges }, options) => {
   const idToNode = {};
@@ -37,78 +82,35 @@ const arrangeGraph = ({ nodes, edges }, options) => {
   // timeIndex is an index of the node timestamp in a sorted array of all timestamps
   // Which is used to keep the chronogical order of nodes but discard the scale of time intervals
   // when drawing the graph
-  nodes.forEach((n, index) => {
-    idToNode[n.id()] = n;
-    idToChildren[n.id()] = [];
-    const timestamp = n.data().timestamp;
+  nodes.forEach((node) => {
+    idToNode[node.id()] = node;
+    idToChildren[node.id()] = [];
+    const timestamp = node.data().timestamp;
 
     if (timeIndices[timestamp] === undefined) {
       timeIndices[timestamp] = Object.keys(timeIndices).length;
     }
 
-    n.scratch(CYTOSCAPE_LAYOUT_NAME, {
+    node.scratch(CYTOSCAPE_LAYOUT_NAME, {
       timeIndex: timeIndices[timestamp],
       timeIndexSecondary: 0,
     });
   });
 
   // Find all roots (entry points with no parents) of the graph
-  for (const e of edges) {
-    idToChildren[e.data().source].push(idToNode[e.data().target]);
-    hasParent[e.data().target] = true;
+  for (const edge of edges) {
+    idToChildren[edge.data().source].push(idToNode[edge.data().target]);
+    hasParent[edge.data().target] = true;
   }
 
-  for (const n of nodes) {
-    if (!hasParent[n.id()]) {
-      rootNodes.push(n);
+  for (const node of nodes) {
+    if (!hasParent[node.id()]) {
+      rootNodes.push(node);
     }
   }
 
-  // Traverse the graph recursively and set `level` and `timeIndexSecondary` for all nodes
-  // Level is horizontal offset of the tree-like graph node arranged to avoid overlapping.
-  // `timeIndexSecondary` is secondary time coordinate:
-  //    there are two connected nodes: A -----> B
-  //    A.data.timeIndex === B.data.timeIndex
-  //  then we set
-  //    A.data.timeIndexSecondary = 0
-  //    B.data.timeIndexSecondary = 1
-  //  To display B node beflow the A node whilst they they have the same timestamp
-  const arrange = (
-    nodes,
-    level = 0,
-    parentTimeIndex = -1,
-    parentTimeIndexOffset = 0
-  ) => {
-    let l = level;
-
-    nodes.forEach((n, i) => {
-      l += i ? 1 : 0;
-      const children = idToChildren[n.id()];
-      const nScratch = n.scratch(CYTOSCAPE_LAYOUT_NAME);
-
-      nScratch.level = l;
-      nScratch.timeIndexSecondary =
-        parentTimeIndex === nScratch.timeIndex ? parentTimeIndexOffset + 1 : 0;
-
-      if (children.length) {
-        const { level: newLevel } = arrange(
-          children,
-          l,
-          nScratch.timeIndex,
-          nScratch.timeIndexSecondary
-        );
-
-        l = newLevel;
-      }
-    });
-
-    return {
-      level: l,
-    };
-  };
-
   // Arrange all nodes in the graph, starting from root entry points
-  arrange(rootNodes);
+  arrangeNodes({ idToChildren, nodes: rootNodes });
 
   // Calculate `tTimes` for all (timeIndex, timeIndexSecondary) pairs
   // which are the time (Y) coordinates nodes in the graph
