@@ -90,7 +90,8 @@ export default {
 
 hr {
   width: 40px;
-  margin-left: 2px;
+  margin-left: 0;
+  margin-top: 8px;
 
   &.direct {
     border-top: 2px solid uber-black-90;
