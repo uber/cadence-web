@@ -20,10 +20,7 @@
 // THE SOFTWARE.
 
 import { orderBy } from 'lodash-es';
-import {
-  CYTOSCAPE_LAYOUT_DEFAULTS,
-  CYTOSCAPE_LAYOUT_NAME,
-} from '../constants';
+import { CYTOSCAPE_LAYOUT_DEFAULTS, CYTOSCAPE_LAYOUT_NAME } from '../constants';
 
 // Traverse the graph recursively and set `level` and `timeIndexSecondary` for all nodes
 // Level is horizontal offset of the tree-like graph node arranged to avoid overlapping.
@@ -39,7 +36,7 @@ const arrangeNodes = ({
   level = 0,
   nodes,
   parentTimeIndex = -1,
-  parentTimeIndexOffset = 0
+  parentTimeIndexOffset = 0,
 }) => {
   let levelOffset = level;
 
@@ -82,7 +79,7 @@ const arrangeGraph = ({ nodes, edges }, options) => {
   // timeIndex is an index of the node timestamp in a sorted array of all timestamps
   // Which is used to keep the chronogical order of nodes but discard the scale of time intervals
   // when drawing the graph
-  nodes.forEach((node) => {
+  nodes.forEach(node => {
     idToNode[node.id()] = node;
     idToChildren[node.id()] = [];
     const timestamp = node.data().timestamp;
