@@ -37,7 +37,12 @@ export const GRAPH_ZOOM_MAX = 10;
 export const GRAPH_ZOOM_MIN = 0.1;
 
 export const CYTOSCAPE_LAYOUT_DEFAULTS = {
-  levelStep: 300, // Horizontal `x` offset between same level nodes
-  timeStep: 90, // Offset between primary chronological layers
-  secondaryTimeStep: 65, // Offset between primary and secondary chronological layers (having the same timestamps)
+  // Horizontal `x` offset between same level nodes
+  levelStep: 300,
+
+  // Offset between primary chronological layers
+  timeStep: 90,
+
+  // Offset between primary and secondary chronological layers (having the same timestamps)
+  secondaryTimeStep: 65,
 };
