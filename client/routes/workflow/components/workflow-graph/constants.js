@@ -19,6 +19,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+export const CYTOSCAPE_LAYOUT_DEFAULTS = {
+  // Horizontal `x` offset between same level nodes
+  levelStep: 300,
+
+  // Offset between primary chronological layers
+  timeStep: 90,
+
+  // Offset between primary and secondary chronological layers (having the same timestamps)
+  secondaryTimeStep: 65,
+};
+export const CYTOSCAPE_LAYOUT_NAME = 'cadence';
+
+export const GRAPH_ZOOM_DEFAULT = 1.1;
+export const GRAPH_ZOOM_MAX = 10;
+export const GRAPH_ZOOM_MIN = 0.1;
+
 export const LEGEND_CONNECTION_LIST = [
   {
     name: 'direct',
@@ -31,20 +47,3 @@ export const LEGEND_CONNECTION_LIST = [
     text: 'Represents connections between a signal and its triggered child ',
   },
 ];
-
-export const GRAPH_ZOOM_DEFAULT = 1.1;
-export const GRAPH_ZOOM_MAX = 10;
-export const GRAPH_ZOOM_MIN = 0.1;
-
-export const CYTOSCAPE_LAYOUT_DEFAULTS = {
-  // Horizontal `x` offset between same level nodes
-  levelStep: 300,
-
-  // Offset between primary chronological layers
-  timeStep: 90,
-
-  // Offset between primary and secondary chronological layers (having the same timestamps)
-  secondaryTimeStep: 65,
-};
-
-export const CYTOSCAPE_LAYOUT_NAME = 'cadence';
