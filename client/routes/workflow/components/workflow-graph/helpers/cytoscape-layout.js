@@ -22,6 +22,8 @@
 import { orderBy } from 'lodash-es';
 import { CYTOSCAPE_LAYOUT_DEFAULTS, CYTOSCAPE_LAYOUT_NAME } from '../constants';
 
+const makeKey = (primary, secondary) => `${primary}-${secondary}`;
+
 /**
  * Traverse the graph recursively and set `level` and `parentTimeIndexOffset` for all nodes
  * @method arrangeNodes
@@ -128,7 +130,6 @@ const arrangeGraph = ({ nodes, edges }, options) => {
     })),
     ['t1', 't2']
   );
-  const makeKey = (primary, secondary) => `${primary}-${secondary}`;
 
   times.forEach(({ t1, t2 }) => {
     const key = makeKey(t1, t2);
