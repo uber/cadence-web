@@ -516,7 +516,7 @@ describe('Workflow', () => {
       async function compactViewTest(mochaTest) {
         const [summaryEl, scenario] = await historyTest(mochaTest, {
           events: fixtures.history.timelineVariety,
-          query: 'format=compact&graphView=timeLine',
+          query: 'format=compact&graphView=timeline',
           attach: true,
         });
 
@@ -598,7 +598,7 @@ describe('Workflow', () => {
 
         timelineEl.timeline.fit();
         scenario.location.should.equal(
-          '/domains/ci-test/workflows/email-daily-summaries/emailRun1/history?format=compact&graphView=timeLine'
+          '/domains/ci-test/workflows/email-daily-summaries/emailRun1/history?format=compact&graphView=timeline'
         );
         await retry(() =>
           timelineEl
@@ -617,7 +617,7 @@ describe('Workflow', () => {
 
         await retry(() => {
           scenario.location.should.equal(
-            '/domains/ci-test/workflows/email-daily-summaries/emailRun1/history?format=compact&graphView=timeLine&eventId=16'
+            '/domains/ci-test/workflows/email-daily-summaries/emailRun1/history?format=compact&graphView=timeline&eventId=16'
           );
           timelineEl
             .querySelector('.vis-range.activity.failed')
@@ -671,7 +671,7 @@ describe('Workflow', () => {
             .querySelector('.selected-event-detail')
             .should.have.class('active');
           scenario.location.should.equal(
-            '/domains/ci-test/workflows/email-daily-summaries/emailRun1/history?format=compact&graphView=timeLine&eventId=18'
+            '/domains/ci-test/workflows/email-daily-summaries/emailRun1/history?format=compact&graphView=timeline&eventId=18'
           );
           timelineEl
             .querySelector('.vis-range.child-workflow.completed')

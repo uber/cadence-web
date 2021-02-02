@@ -183,9 +183,9 @@ export default {
   },
   methods: {
     setSplitSize() {
-      if (this.graphView === 'timeLine') {
+      if (this.graphView === 'timeline') {
         this.splitSizeSet = [20, 80];
-      } else if (this.graphView === 'dagGraph') {
+      } else if (this.graphView === 'dag') {
         this.splitSizeSet = [40, 60];
       } else {
         this.splitSizeSet = [1, 99];
@@ -195,13 +195,13 @@ export default {
     },
     setSplitDirection() {
       this.splitDirection =
-        this.$route.query.graphView === 'dagGraph' ? 'horizontal' : 'vertical';
+        this.$route.query.graphView === 'dag' ? 'horizontal' : 'vertical';
     },
     deselectEvent() {
       this.$router.replace({ query: omit(this.$route.query, 'eventId') });
     },
     enableSplitting() {
-      if (!this.splitEnabled && this.graphView === 'timeLine') {
+      if (!this.splitEnabled && this.graphView === 'timeline') {
         const timelineHeightPct =
           (this.$refs.splitPanel.$el.firstElementChild.offsetHeight /
             this.$refs.splitPanel.$el.offsetHeight) *
@@ -280,24 +280,24 @@ export default {
       );
     },
     toggleShowDagGraph() {
-      if (this.graphView === 'dagGraph') {
+      if (this.graphView === 'dag') {
         this.$router.replace({
           query: omit(this.$route.query, 'graphView'),
         });
       } else {
         this.$router.replace({
-          query: { ...this.$route.query, graphView: 'dagGraph' },
+          query: { ...this.$route.query, graphView: 'dag' },
         });
       }
     },
     toggleShowTimeline() {
-      if (this.graphView === 'timeLine') {
+      if (this.graphView === 'timeline') {
         this.$router.replace({
           query: omit(this.$route.query, 'graphView'),
         });
       } else {
         this.$router.replace({
-          query: { ...this.$route.query, graphView: 'timeLine' },
+          query: { ...this.$route.query, graphView: 'timeline' },
         });
       }
     },
@@ -373,13 +373,13 @@ export default {
       </div>
       <div class="actions">
         <a href="#" @click.prevent="toggleShowDagGraph()"
-          >{{ this.graphView === 'dagGraph' ? 'hide' : 'show' }} graph</a
+          >{{ this.graphView === 'dag' ? 'hide' : 'show' }} graph</a
         >
         <a
           href="#"
           @click.prevent="toggleShowTimeline()"
           class="show-timeline-btn"
-          >{{ this.graphView === 'timeLine' ? 'hide' : 'show' }} timeline</a
+          >{{ this.graphView === 'timeline' ? 'hide' : 'show' }} timeline</a
         >
         <a
           class="export"
@@ -391,7 +391,7 @@ export default {
     </header>
     <Split
       class="split-panel"
-      :class="this.graphView === 'dagGraph' ? 'dag-graph' : ''"
+      :class="this.graphView === 'dag' ? 'dag-graph' : ''"
       :direction="splitDirection"
       @onDrag="onSplitResize"
       @onDragStart="enableSplitting"
@@ -408,12 +408,12 @@ export default {
           :isWorkflowRunning="isWorkflowRunning"
           :selected-event-id="eventId"
           class="tree-view"
-          v-if="this.graphView === 'dagGraph' && events.length"
+          v-if="this.graphView === 'dag' && events.length"
         />
         <timeline
           :events="timelineEvents"
           :selected-event-id="eventId"
-          v-if="this.graphView === 'timeLine'"
+          v-if="this.graphView === 'timeline'"
         />
       </SplitArea>
       <SplitArea
