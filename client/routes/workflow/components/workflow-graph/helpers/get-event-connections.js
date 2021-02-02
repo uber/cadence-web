@@ -22,15 +22,6 @@
 import findChildEvent from './find-child-event';
 
 const eventTypeMap = {
-  WorkflowExecutionStarted: event => {
-    const eventDetails = event.eventFullDetails;
-
-    return {
-      inferredChild: event.eventId + 1,
-      parentWorkflowExecution: eventDetails.parentWorkflowExecution,
-      previousExecutionRunId: eventDetails.continuedExecutionRunId,
-    };
-  },
   ActivityTaskCanceled: event => ({
     parent: event.eventFullDetails.startedEventId,
   }),
@@ -152,7 +143,7 @@ const eventTypeMap = {
     status: 'failed',
     parent: event.eventFullDetails.startedEventId,
   }),
-  DecisionTaskScheduled: (event, workflow) => ({}),
+  DecisionTaskScheduled: () => ({}),
   DecisionTaskStarted: event => ({
     parent: event.eventFullDetails.scheduledEventId,
   }),
@@ -257,6 +248,15 @@ const eventTypeMap = {
 
     return {
       inferredChild: inferredChild,
+    };
+  },
+  WorkflowExecutionStarted: event => {
+    const eventDetails = event.eventFullDetails;
+
+    return {
+      inferredChild: event.eventId + 1,
+      parentWorkflowExecution: eventDetails.parentWorkflowExecution,
+      previousExecutionRunId: eventDetails.continuedExecutionRunId,
     };
   },
   WorkflowExecutionTerminated: () => ({}),
