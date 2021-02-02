@@ -20,18 +20,17 @@
 // THE SOFTWARE.
 
 /**
- * findChildEvent
+ * Looks for a chronological or inferred child.
+ * It is inferred if a DecisionTaskScheduled, otherwise its chronological.
+ * External signals are not children and therefore they are skipped.
+ * @method findChildEvent
  * @param {object} event
  * @param {string} event.eventId
  * @param {string} event.eventType
  * @param {array} workflowList
- * Looks for a chronological or inferred child
- * It is inferred if a DecisionTaskScheduled, otherwise its chronological
- * External signals are not children and therefore they are skipped
  */
-function findChildEvent(event, workflowList) {
-  const slicedWorkflowList = workflowList.slice(event.eventId);
-  let targetEvent;
+function findChildEvent({ eventId, eventType }, workflowList) {
+  const slicedWorkflowList = workflowList.slice(eventId);
 
   // We are at the end of the workflow, no children!
   if (!slicedWorkflowList.length) {
@@ -44,8 +43,8 @@ function findChildEvent(event, workflowList) {
     };
   }
 
-  if (event.eventType === 'WorkflowExecutionSignaled') {
-    for (targetEvent of slicedWorkflowList) {
+  if (eventType === 'WorkflowExecutionSignaled') {
+    for (const targetEvent of slicedWorkflowList) {
       switch (targetEvent.eventType) {
         case 'WorkflowExecutionSignaled':
         case 'WorkflowExecutionCancelRequested':
@@ -57,7 +56,7 @@ function findChildEvent(event, workflowList) {
       }
     }
   } else {
-    for (targetEvent of slicedWorkflowList) {
+    for (const targetEvent of slicedWorkflowList) {
       switch (targetEvent.eventType) {
         case 'WorkflowExecutionSignaled':
         case 'WorkflowExecutionCancelRequested':
