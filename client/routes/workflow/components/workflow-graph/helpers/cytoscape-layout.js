@@ -22,15 +22,22 @@
 import { orderBy } from 'lodash-es';
 import { CYTOSCAPE_LAYOUT_DEFAULTS, CYTOSCAPE_LAYOUT_NAME } from '../constants';
 
-// Traverse the graph recursively and set `level` and `timeIndexSecondary` for all nodes
-// Level is horizontal offset of the tree-like graph node arranged to avoid overlapping.
-// `timeIndexSecondary` is secondary time coordinate:
-//    there are two connected nodes: A -----> B
-//    A.data.timeIndex === B.data.timeIndex
-//  then we set
-//    A.data.timeIndexSecondary = 0
-//    B.data.timeIndexSecondary = 1
-//  To display B node beflow the A node whilst they they have the same timestamp
+/**
+ * Traverse the graph recursively and set `level` and `parentTimeIndexOffset` for all nodes
+ * @method arrangeNodes
+ * @param {object} options
+ * @param {object} options.idToChildren - node id to child lookup hash
+ * @param {object} options.level - horizontal offset of the tree-like graph node arranged to avoid overlapping.
+ * @param {object} options.nodes
+ * @param {object} options.parentTimeIndex
+ * @param {object} options.parentTimeIndexOffset - secondary time coordinate:
+ *    there are two connected nodes: A -----> B
+ *    A.data.timeIndex === B.data.timeIndex
+ *  then we set
+ *    A.data.timeIndexSecondary = 0
+ *    B.data.timeIndexSecondary = 1
+ *  To display B node beflow the A node whilst they they have the same timestamp
+ */
 const arrangeNodes = ({
   idToChildren,
   level = 0,
@@ -67,7 +74,6 @@ const arrangeNodes = ({
   };
 };
 
-// Arrange graph
 const arrangeGraph = ({ nodes, edges }, options) => {
   const idToNode = {};
   const idToChildren = {};
@@ -139,40 +145,45 @@ const arrangeGraph = ({ nodes, edges }, options) => {
   });
 
   // Set the `position` for all nodes using the calculated `level` and `tTimes` values
-  nodes.forEach(n => {
-    const nScratch = n.scratch(CYTOSCAPE_LAYOUT_NAME);
-    const key = makeKey(nScratch.timeIndex, nScratch.timeIndexSecondary);
+  nodes.forEach(node => {
+    const nodeScratch = node.scratch(CYTOSCAPE_LAYOUT_NAME);
+    const key = makeKey(nodeScratch.timeIndex, nodeScratch.timeIndexSecondary);
 
-    nScratch.position = {
-      x: nScratch.level * options.levelStep,
+    nodeScratch.position = {
+      x: nodeScratch.level * options.levelStep,
       y: tTimes[key],
     };
   });
 };
 
-function CadenceLayout(options) {
-  this.options = Object.assign({}, CYTOSCAPE_LAYOUT_DEFAULTS, options);
+class CytoscapeLayout {
+  constructor(options) {
+    this.options = {
+      ...CYTOSCAPE_LAYOUT_DEFAULTS,
+      ...options,
+    };
+  }
+
+  run() {
+    const options = this.options;
+    const eles = options.eles;
+    const nodes = eles
+      .nodes()
+      .sort((n1, n2) => n1.data().timestamp - n2.data().timestamp);
+    const edges = eles.edges();
+
+    arrangeGraph({ nodes, edges }, options);
+
+    nodes.layoutPositions(this, options, ele => {
+      return ele.scratch(CYTOSCAPE_LAYOUT_NAME).position;
+    });
+  }
 }
-
-CadenceLayout.prototype.run = function() {
-  const options = this.options;
-  const eles = options.eles;
-  const nodes = eles
-    .nodes()
-    .sort((n1, n2) => n1.data().timestamp - n2.data().timestamp);
-  const edges = eles.edges();
-
-  arrangeGraph({ nodes, edges }, options);
-
-  nodes.layoutPositions(this, options, ele => {
-    return ele.scratch(CYTOSCAPE_LAYOUT_NAME).position;
-  });
-};
 
 export default function(cytoscape) {
   if (!cytoscape) {
     return;
   }
 
-  cytoscape('layout', 'cadence', CadenceLayout);
+  cytoscape('layout', 'cadence', CytoscapeLayout);
 }
