@@ -20,9 +20,10 @@
 // THE SOFTWARE.
 
 import { orderBy } from 'lodash-es';
-import { CYTOSCAPE_LAYOUT_DEFAULTS } from '../constants';
-
-export const LAYOUT_NAME = 'cadence';
+import {
+  CYTOSCAPE_LAYOUT_DEFAULTS,
+  CYTOSCAPE_LAYOUT_NAME,
+} from '../constants';
 
 // Arrange graph
 const arrangeGraph = ({ nodes, edges }, options) => {
@@ -45,7 +46,7 @@ const arrangeGraph = ({ nodes, edges }, options) => {
       timeIndices[timestamp] = Object.keys(timeIndices).length;
     }
 
-    n.scratch(LAYOUT_NAME, {
+    n.scratch(CYTOSCAPE_LAYOUT_NAME, {
       timeIndex: timeIndices[timestamp],
       timeIndexSecondary: 0,
     });
@@ -83,7 +84,7 @@ const arrangeGraph = ({ nodes, edges }, options) => {
     nodes.forEach((n, i) => {
       l += i ? 1 : 0;
       const children = idToChildren[n.id()];
-      const nScratch = n.scratch(LAYOUT_NAME);
+      const nScratch = n.scratch(CYTOSCAPE_LAYOUT_NAME);
 
       nScratch.level = l;
       nScratch.timeIndexSecondary =
@@ -117,8 +118,8 @@ const arrangeGraph = ({ nodes, edges }, options) => {
   const tTimes = {};
   const times = orderBy(
     nodes.map(n => ({
-      t1: n.scratch(LAYOUT_NAME).timeIndex,
-      t2: n.scratch(LAYOUT_NAME).timeIndexSecondary,
+      t1: n.scratch(CYTOSCAPE_LAYOUT_NAME).timeIndex,
+      t2: n.scratch(CYTOSCAPE_LAYOUT_NAME).timeIndexSecondary,
     })),
     ['t1', 't2']
   );
@@ -140,7 +141,7 @@ const arrangeGraph = ({ nodes, edges }, options) => {
 
   // Set the `position` for all nodes using the calculated `level` and `tTimes` values
   nodes.forEach(n => {
-    const nScratch = n.scratch(LAYOUT_NAME);
+    const nScratch = n.scratch(CYTOSCAPE_LAYOUT_NAME);
     const key = makeKey(nScratch.timeIndex, nScratch.timeIndexSecondary);
 
     nScratch.position = {
@@ -165,7 +166,7 @@ CadenceLayout.prototype.run = function() {
   arrangeGraph({ nodes, edges }, options);
 
   nodes.layoutPositions(this, options, ele => {
-    return ele.scratch(LAYOUT_NAME).position;
+    return ele.scratch(CYTOSCAPE_LAYOUT_NAME).position;
   });
 };
 

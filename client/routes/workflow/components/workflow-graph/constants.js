@@ -46,3 +46,5 @@ export const CYTOSCAPE_LAYOUT_DEFAULTS = {
   // Offset between primary and secondary chronological layers (having the same timestamps)
   secondaryTimeStep: 65,
 };
+
+export const CYTOSCAPE_LAYOUT_NAME = 'cadence';
