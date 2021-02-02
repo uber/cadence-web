@@ -214,7 +214,7 @@ export default {
       let workflows = [];
       let nextPageToken = '';
 
-      if (queryWithStatus.nextPageToken === '') {
+      if ([null, ''].includes(queryWithStatus.nextPageToken)) {
         return { workflows, nextPageToken };
       }
 
