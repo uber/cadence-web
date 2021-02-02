@@ -1,5 +1,5 @@
 // Copyright (c) 2017-2021 Uber Technologies Inc.
-//
+// Portions of the Software are attributed to Copyright (c) 2020 Temporal Technologies Inc.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -41,3 +41,4 @@ export { default as NoResults } from './no-results';
 export { default as NotificationBar } from './notification-bar';
 export { default as SettingsModal } from './settings-modal';
 export { default as TextInput } from './text-input';
+export { default as WorkflowGrid } from './workflow-grid';
