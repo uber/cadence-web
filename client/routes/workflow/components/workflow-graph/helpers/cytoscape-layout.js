@@ -20,12 +20,7 @@
 // THE SOFTWARE.
 
 import { orderBy } from 'lodash-es';
-
-const defaults = {
-  levelStep: 300, // Horizontal `x` offset between same level nodes
-  timeStep: 90, // Offset between primary chronological layers
-  secondaryTimeStep: 65, // Offset between primary and secondary chronological layers (having the same timestamps)
-};
+import { CYTOSCAPE_LAYOUT_DEFAULTS } from '../constants';
 
 export const LAYOUT_NAME = 'cadence';
 
@@ -156,7 +151,7 @@ const arrangeGraph = ({ nodes, edges }, options) => {
 };
 
 function CadenceLayout(options) {
-  this.options = Object.assign({}, defaults, options);
+  this.options = Object.assign({}, CYTOSCAPE_LAYOUT_DEFAULTS, options);
 }
 
 CadenceLayout.prototype.run = function() {
