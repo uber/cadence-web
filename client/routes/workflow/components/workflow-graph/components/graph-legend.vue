@@ -127,7 +127,7 @@ hr.divider {
 }
 
 .text {
-  margin-top: 10px;
+  margin: 10px 0;
 }
 
 .arrow-container {
