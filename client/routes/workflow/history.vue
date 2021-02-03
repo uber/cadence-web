@@ -31,6 +31,7 @@ import omit from 'lodash-es/omit';
 import Timeline from './components/timeline.vue';
 import WorkflowGraph from './components/workflow-graph';
 import EventDetail from './components/event-detail.vue';
+import { getDefaultSplitSize } from './helpers';
 import { DetailList, HighlightToggle } from '~components';
 
 export default {
@@ -180,14 +181,8 @@ export default {
   },
   methods: {
     setSplitSize() {
-      if (this.graphView === 'timeline') {
-        this.splitSizeSet = [20, 80];
-      } else if (this.graphView === 'dag') {
-        this.splitSizeSet = [40, 60];
-      } else {
-        this.splitSizeSet = [1, 99];
-      }
-
+      const { graphView } = this;
+      this.splitSizeSet = getDefaultSplitSize({ graphView });
       this.onSplitResize();
     },
     setSplitDirection() {
