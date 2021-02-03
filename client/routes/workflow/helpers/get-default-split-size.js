@@ -22,7 +22,7 @@
 import {
   DEFAULT_SPLIT_SIZE_DAG,
   DEFAULT_SPLIT_SIZE_TIMELINE,
-  DEFAULT_SPLIT_SIZE_UNKNOWN,
+  DEFAULT_SPLIT_SIZE_NONE,
 } from '../constants';
 
 const getDefaultSplitSize = ({ graphView }) => {
@@ -32,7 +32,7 @@ const getDefaultSplitSize = ({ graphView }) => {
     case 'timeline':
       return DEFAULT_SPLIT_SIZE_TIMELINE;
     default:
-      return DEFAULT_SPLIT_SIZE_UNKNOWN;
+      return DEFAULT_SPLIT_SIZE_NONE;
   }
 };
 
