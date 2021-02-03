@@ -187,7 +187,7 @@ export default {
     },
     setSplitDirection() {
       this.splitDirection =
-        this.$route.query.graphView === 'dag' ? 'horizontal' : 'vertical';
+        this.graphView === 'dag' ? 'horizontal' : 'vertical';
     },
     deselectEvent() {
       this.$router.replace({ query: omit(this.$route.query, 'eventId') });
