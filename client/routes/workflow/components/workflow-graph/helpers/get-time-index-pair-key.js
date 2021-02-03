@@ -19,12 +19,5 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export { default as arrangeGraph } from './arrange-graph';
-export { default as arrangeNodes } from './arrange-nodes';
-export { default as cytoscapeLayout } from './cytoscape-layout';
-export { default as findChildEvent } from './find-child-event';
-export { default as getEventConnections } from './get-event-connections';
-export { default as getGraphPanCenter } from './get-graph-pan-center';
-export { default as getTimeIndexPairKey } from './get-time-index-pair-key';
-export { default as graphStyles } from './graph-styles';
-export { default as graph } from './graph';
+const getTimeIndexPairKey = (primary, secondary) => `${primary}-${secondary}`;
+export default getTimeIndexPairKey;

@@ -37,8 +37,8 @@ const eventTypeMap = {
 
     return {
       parent: eventDetails.startedEventId,
-      chronologicalChild: chronologicalChild,
-      inferredChild: inferredChild,
+      chronologicalChild,
+      inferredChild,
     };
   },
   ActivityTaskFailed: (event, workflow) => {
@@ -50,8 +50,8 @@ const eventTypeMap = {
 
     return {
       parent: eventDetails.startedEventId,
-      chronologicalChild: chronologicalChild,
-      inferredChild: inferredChild,
+      chronologicalChild,
+      inferredChild,
       status: 'failed',
     };
   },
@@ -69,8 +69,8 @@ const eventTypeMap = {
 
     return {
       parent: event.eventFullDetails.startedEventId,
-      chronologicalChild: chronologicalChild,
-      inferredChild: inferredChild,
+      chronologicalChild,
+      inferredChild,
     };
   },
   CancelTimerFailed: event => ({
@@ -90,8 +90,8 @@ const eventTypeMap = {
     return {
       parent: eventDetails.startedEventId,
       status: 'completed',
-      inferredChild: inferredChild,
-      chronologicalChild: chronologicalChild,
+      inferredChild,
+      chronologicalChild,
       childRoute: eventDetails.workflowExecution,
     };
   },
@@ -104,8 +104,8 @@ const eventTypeMap = {
 
     return {
       parent: eventDetails.startedEventId,
-      inferredChild: inferredChild,
-      chronologicalChild: chronologicalChild,
+      inferredChild,
+      chronologicalChild,
       childRoute: eventDetails.workflowExecution,
       status: 'failed',
     };
@@ -119,8 +119,8 @@ const eventTypeMap = {
 
     return {
       parent: eventDetails.initiatedEventId,
-      inferredChild: inferredChild,
-      chronologicalChild: chronologicalChild,
+      inferredChild,
+      chronologicalChild,
       childRoute: eventDetails.workflowExecution,
     };
   },
@@ -136,7 +136,7 @@ const eventTypeMap = {
 
     return {
       parent: eventInfo.startedEventId,
-      chronologicalChild: chronologicalChild,
+      chronologicalChild,
     };
   },
   DecisionTaskFailed: event => ({
@@ -158,8 +158,8 @@ const eventTypeMap = {
 
     return {
       parent: event.eventFullDetails.initiatedEventId,
-      inferredChild: inferredChild,
-      chronologicalChild: chronologicalChild,
+      inferredChild,
+      chronologicalChild,
     };
   },
   ExternalWorkflowExecutionSignaled: (event, workflow) => {
@@ -168,7 +168,7 @@ const eventTypeMap = {
 
     return {
       parent: eventDetails.initiatedEventId,
-      inferredChild: inferredChild,
+      inferredChild,
     };
   },
   MarkerRecorded: event => ({
@@ -207,7 +207,7 @@ const eventTypeMap = {
 
     return {
       parent: event.eventFullDetails.startedEventId,
-      inferredChild: inferredChild,
+      inferredChild,
     };
   },
   TimerStarted: event => ({
@@ -223,7 +223,7 @@ const eventTypeMap = {
     const { inferredChild } = findChildEvent(event, workflow);
 
     return {
-      inferredChild: inferredChild,
+      inferredChild,
     };
   },
   WorkflowExecutionCompleted: event => ({
@@ -231,11 +231,14 @@ const eventTypeMap = {
     status: 'completed',
   }),
   WorkflowExecutionContinuedAsNew: event => {
-    const eventDetails = event.eventFullDetails;
+    const {
+      decisionTaskCompletedEventId,
+      newExecutionRunId
+    } = event.eventFullDetails;
 
     return {
-      parent: eventDetails.decisionTaskCompletedEventId,
-      newExecutionRunId: eventDetails.newExecutionRunId,
+      parent: decisionTaskCompletedEventId,
+      newExecutionRunId,
       status: 'completed',
     };
   },
@@ -247,16 +250,19 @@ const eventTypeMap = {
     const { inferredChild } = findChildEvent(event, workflow);
 
     return {
-      inferredChild: inferredChild,
+      inferredChild,
     };
   },
   WorkflowExecutionStarted: event => {
-    const eventDetails = event.eventFullDetails;
+    const {
+      continuedExecutionRunId,
+      parentWorkflowExecution
+    } = event.eventFullDetails;
 
     return {
       inferredChild: event.eventId + 1,
-      parentWorkflowExecution: eventDetails.parentWorkflowExecution,
-      previousExecutionRunId: eventDetails.continuedExecutionRunId,
+      parentWorkflowExecution,
+      previousExecutionRunId: continuedExecutionRunId,
     };
   },
   WorkflowExecutionTerminated: () => ({}),
