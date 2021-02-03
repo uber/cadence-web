@@ -26,5 +26,4 @@ export { default as findChildEvent } from './find-child-event';
 export { default as getEventConnections } from './get-event-connections';
 export { default as getGraphPanCenter } from './get-graph-pan-center';
 export { default as getTimeIndexPairKey } from './get-time-index-pair-key';
-export { default as graphStyles } from './graph-styles';
 export { default as graph } from './graph';

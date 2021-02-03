@@ -25,10 +25,10 @@ import omit from 'lodash-es/omit';
 import { mapMutations } from 'vuex';
 import Graph from '../helpers/graph';
 import cytoscapeLayout from '../helpers/cytoscape-layout';
-import graphStyles from '../helpers/graph-styles';
 import store from '../../../../../store/index';
 import {
   CYTOSCAPE_LAYOUT_NAME,
+  GRAPH_STYLES,
   GRAPH_ZOOM_DEFAULT,
   GRAPH_ZOOM_MAX,
   GRAPH_ZOOM_MIN,
@@ -43,7 +43,7 @@ export default {
     return {
       nodes: [],
       edges: [],
-      styles: graphStyles,
+      styles: GRAPH_STYLES,
     };
   },
   watch: {
@@ -122,7 +122,7 @@ export default {
         layout: {
           name: CYTOSCAPE_LAYOUT_NAME,
         },
-        style: graphStyles,
+        style: GRAPH_STYLES,
         styleEnabled: true,
 
         // NOTE: Uncomment the two lines below for better performance
