@@ -59,7 +59,6 @@ export default {
       splitSizeSet: [1, 99],
       splitSizeMinSet: [0, 0],
       unwatch: [],
-      splitDirection: 'vertical',
     };
   },
   props: [
@@ -94,7 +93,6 @@ export default {
   },
   mounted() {
     this.setSplitSize();
-    this.setSplitDirection();
     this.unwatch.push(
       this.$watch(
         () =>
@@ -163,6 +161,9 @@ export default {
     showNoResults() {
       return !this.loading && this.events.length === 0;
     },
+    splitDirection() {
+      return this.graphView === 'dag' ? 'horizontal' : 'vertical';
+    },
     timelineEventIdToIndex() {
       return this.timelineEvents
         .map(({ eventIds }) => eventIds)
@@ -184,10 +185,6 @@ export default {
       const { graphView } = this;
       this.splitSizeSet = getDefaultSplitSize({ graphView });
       this.onSplitResize();
-    },
-    setSplitDirection() {
-      this.splitDirection =
-        this.graphView === 'dag' ? 'horizontal' : 'vertical';
     },
     deselectEvent() {
       this.$router.replace({ query: omit(this.$route.query, 'eventId') });
@@ -310,7 +307,6 @@ export default {
     },
     graphView() {
       this.setSplitSize();
-      this.setSplitDirection();
     },
   },
   components: {
