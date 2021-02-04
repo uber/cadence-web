@@ -27,8 +27,7 @@ import { getGraphPanCenter, selectNode } from '../helpers';
 import cytoscapeLayout from '../helpers/cytoscape-layout';
 import store from '../../../../../store/index';
 import {
-  CYTOSCAPE_LAYOUT_NAME,
-  GRAPH_STYLES,
+  CYTOSCAPE_DEFAULT_OPTIONS,
   GRAPH_ZOOM_DEFAULT,
   GRAPH_ZOOM_MAX,
   GRAPH_ZOOM_MIN,
@@ -101,20 +100,9 @@ export default {
       // Create cy instance
       const container = this.$refs.cy;
       const cy = cytoscape({
-        autoungrabify: true,
-        container: container,
+        ...CYTOSCAPE_DEFAULT_OPTIONS,
+        container,
         elements,
-        headless: true,
-        hideEdgesOnViewport: true,
-        layout: {
-          name: CYTOSCAPE_LAYOUT_NAME,
-        },
-        style: GRAPH_STYLES,
-        styleEnabled: true,
-
-        // NOTE: Uncomment the two lines below for better performance
-        // textureOnViewport: true,
-        // pixelRatio: 1,
       });
 
       cy.minZoom(GRAPH_ZOOM_MIN);

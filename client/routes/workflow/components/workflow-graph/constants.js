@@ -30,8 +30,7 @@ export const CYTOSCAPE_LAYOUT_DEFAULTS = {
   secondaryTimeStep: 65,
 };
 export const CYTOSCAPE_LAYOUT_NAME = 'cadence';
-
-export const GRAPH_STYLES = [
+export const CYTOSCAPE_GRAPH_STYLES = [
   {
     selector: 'node',
     style: {
@@ -106,6 +105,20 @@ export const GRAPH_STYLES = [
     },
   },
 ];
+export const CYTOSCAPE_DEFAULT_OPTIONS = {
+  autoungrabify: true,
+  headless: true,
+  hideEdgesOnViewport: true,
+  layout: {
+    name: CYTOSCAPE_LAYOUT_NAME,
+  },
+  style: CYTOSCAPE_GRAPH_STYLES,
+  styleEnabled: true,
+
+  // NOTE: Uncomment the two lines below for better performance
+  // textureOnViewport: true,
+  // pixelRatio: 1,
+};
 
 export const GRAPH_SHOW_DELAY = 400;
 export const GRAPH_ZOOM_DEFAULT = 1.1;
