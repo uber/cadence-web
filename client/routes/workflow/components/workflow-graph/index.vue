@@ -47,19 +47,14 @@ export default {
       }, GRAPH_SHOW_DELAY);
     },
     updateRoute(route) {
-      if (route.workflowId) {
-        this.$router.replace({
-          params: { workflowId: route.workflowId, runId: route.runId },
-          query: omit(this.$route.query, 'eventId'),
-        });
-      }
-      // We only have run Id as route params
-      else {
-        this.$router.replace({
-          params: { runId: route },
-          query: omit(this.$route.query, 'eventId'),
-        });
-      }
+      const params = route.workflowId
+        ? { workflowId: route.workflowId, runId: route.runId }
+        : { runId: route };
+
+      this.$router.replace({
+        params,
+        query: omit(this.$route.query, 'eventId'),
+      });
     },
     reloadWorkflow() {
       this.eventsSnapShot = this.events;
