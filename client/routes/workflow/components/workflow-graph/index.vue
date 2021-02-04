@@ -24,6 +24,7 @@ import omit from 'lodash-es/omit';
 import store from '../../../../store/index';
 import Graph from './components/graph.vue';
 import GraphLegend from './components/graph-legend.vue';
+import { GRAPH_SHOW_DELAY } from './constants';
 
 export default {
   name: 'workflow-graph',
@@ -37,23 +38,13 @@ export default {
       isGraphLoading: true,
       forceRefresh: true,
       eventsSnapShot: [],
-      hasAllEvents: true,
     };
-  },
-  watch: {
-    events: function() {
-      if (this.eventsSnapShot.length < this.events.length) {
-        this.hasAllEvents = false;
-      }
-    },
   },
   methods: {
     delayedShow() {
-      const delay = 400;
-
       setTimeout(() => {
         this.isGraphLoading = false;
-      }, delay);
+      }, GRAPH_SHOW_DELAY);
     },
     updateRoute(route) {
       if (route.workflowId) {
@@ -75,8 +66,6 @@ export default {
       this.isGraphLoading = true;
       this.forceRefresh = !this.forceRefresh;
       this.delayedShow();
-      // Currently show all available events, refresh button should be hidden
-      this.hasAllEvents = true;
     },
   },
   mounted() {
@@ -100,6 +89,9 @@ export default {
     },
     childRoute() {
       return this.$store.getters.childRoute;
+    },
+    hasAllEvents() {
+      return this.eventsSnapShot.length === this.events.length;
     },
     workflowName() {
       return this.events[0] && this.events[0].details.workflowType.name;

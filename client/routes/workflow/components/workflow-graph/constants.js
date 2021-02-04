@@ -107,6 +107,7 @@ export const GRAPH_STYLES = [
   },
 ];
 
+export const GRAPH_SHOW_DELAY = 400;
 export const GRAPH_ZOOM_DEFAULT = 1.1;
 export const GRAPH_ZOOM_MAX = 10;
 export const GRAPH_ZOOM_MIN = 0.1;
