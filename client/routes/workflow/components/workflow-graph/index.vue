@@ -35,7 +35,6 @@ export default {
   data() {
     return {
       isGraphLoading: true,
-      workflowName: null,
       forceRefresh: true,
       eventsSnapShot: [],
       hasAllEvents: true,
@@ -83,7 +82,6 @@ export default {
   mounted() {
     this.delayedShow();
     this.eventsSnapShot = this.events;
-    this.workflowName = this.events[0].details.workflowType.name;
     store.commit('resetState');
   },
 
@@ -102,6 +100,9 @@ export default {
     },
     childRoute() {
       return this.$store.getters.childRoute;
+    },
+    workflowName() {
+      return this.events[0] && this.events[0].details.workflowType.name;
     },
   },
 };
