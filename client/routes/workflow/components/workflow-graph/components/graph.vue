@@ -39,13 +39,6 @@ cytoscape.use(cytoscapeLayout);
 export default {
   name: 'graph',
   props: ['events', 'selectedEventId'],
-  data() {
-    return {
-      nodes: [],
-      edges: [],
-      styles: GRAPH_STYLES,
-    };
-  },
   watch: {
     selectedEventId(id) {
       this.selectNode(id);
