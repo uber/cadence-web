@@ -23,7 +23,7 @@
 import cytoscape from 'cytoscape';
 import omit from 'lodash-es/omit';
 import { mapMutations } from 'vuex';
-import { selectNode } from '../helpers';
+import { getGraphPanCenter, selectNode } from '../helpers';
 import cytoscapeLayout from '../helpers/cytoscape-layout';
 import store from '../../../../../store/index';
 import {
@@ -54,18 +54,15 @@ export default {
   methods: {
     ...mapMutations(['childRoute', 'toggleChildBtn']),
     zoomToNode(node) {
-      const zoom = GRAPH_ZOOM_DEFAULT;
-      const boundingBox = node.boundingBox();
-      const width = this.cy.width();
-      const height = this.cy.height();
-      const pan = {
-        x: (width - zoom * (boundingBox.x1 + boundingBox.x2)) / 2,
-        y: (height - zoom * (boundingBox.y1 + boundingBox.y2)) / 2,
-      };
+      const pan = getGraphPanCenter({
+        boundingBox: node.boundingBox(),
+        height: this.cy.height(),
+        width: this.cy.width(),
+      });
 
       // Pan the graph to view node
       this.cy.animate({
-        zoom,
+        zoom: GRAPH_ZOOM_DEFAULT,
         pan,
       });
     },
