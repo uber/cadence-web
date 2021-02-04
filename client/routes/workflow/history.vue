@@ -67,6 +67,7 @@ export default {
     'eventId',
     'events',
     'format',
+    'isWorkflowRunning',
     'loading',
     'runId',
     'graphView',
