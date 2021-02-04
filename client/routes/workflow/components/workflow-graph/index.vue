@@ -27,7 +27,7 @@ import GraphLegend from './components/graph-legend.vue';
 
 export default {
   name: 'workflow-graph',
-  props: ['workflow', 'events', 'isWorkflowRunning', 'selectedEventId'],
+  props: ['events', 'isWorkflowRunning', 'selectedEventId'],
   components: {
     Graph,
     GraphLegend,
@@ -137,7 +137,6 @@ export default {
       <Graph
         :key="forceRefresh"
         v-if="!isGraphLoading"
-        :workflow="workflow"
         :events="events"
         :selected-event-id="selectedEventId"
       />
