@@ -20,4 +20,5 @@
 // THE SOFTWARE.
 
 const getTimeIndexPairKey = (primary, secondary) => `${primary}-${secondary}`;
+
 export default getTimeIndexPairKey;

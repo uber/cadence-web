@@ -184,6 +184,7 @@ export default {
   methods: {
     setSplitSize() {
       const { graphView } = this;
+
       this.splitSizeSet = getDefaultSplitSize({ graphView });
       this.onSplitResize();
     },

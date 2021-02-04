@@ -21,12 +21,7 @@
 
 import getEventConnections from './get-event-connections';
 
-const setChronologicalChildren = ({
-  edges,
-  eventIds,
-  events,
-  node,
-}) => {
+const setChronologicalChildren = ({ edges, eventIds, events, node }) => {
   const { eventId } = node;
   const { chronologicalChild } = getEventConnections(node, events);
 

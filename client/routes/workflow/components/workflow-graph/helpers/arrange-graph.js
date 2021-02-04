@@ -20,9 +20,9 @@
 // THE SOFTWARE.
 
 import { orderBy } from 'lodash-es';
+import { CYTOSCAPE_LAYOUT_NAME } from '../constants';
 import arrangeNodes from './arrange-nodes';
 import getTimeIndexPairKey from './get-time-index-pair-key';
-import { CYTOSCAPE_LAYOUT_NAME } from '../constants';
 
 const arrangeGraph = ({ nodes, edges }, options) => {
   const idToNode = {};
@@ -96,7 +96,10 @@ const arrangeGraph = ({ nodes, edges }, options) => {
   // Set the `position` for all nodes using the calculated `level` and `tTimes` values
   nodes.forEach(node => {
     const nodeScratch = node.scratch(CYTOSCAPE_LAYOUT_NAME);
-    const key = getTimeIndexPairKey(nodeScratch.timeIndex, nodeScratch.timeIndexSecondary);
+    const key = getTimeIndexPairKey(
+      nodeScratch.timeIndex,
+      nodeScratch.timeIndexSecondary
+    );
 
     nodeScratch.position = {
       x: nodeScratch.level * options.levelStep,

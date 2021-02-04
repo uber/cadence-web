@@ -19,8 +19,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import arrangeGraph from './arrange-graph';
 import { CYTOSCAPE_LAYOUT_DEFAULTS, CYTOSCAPE_LAYOUT_NAME } from '../constants';
+import arrangeGraph from './arrange-graph';
 
 class CytoscapeLayout {
   constructor(options) {

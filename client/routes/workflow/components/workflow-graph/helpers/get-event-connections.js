@@ -233,7 +233,7 @@ const eventTypeMap = {
   WorkflowExecutionContinuedAsNew: event => {
     const {
       decisionTaskCompletedEventId,
-      newExecutionRunId
+      newExecutionRunId,
     } = event.eventFullDetails;
 
     return {
@@ -256,7 +256,7 @@ const eventTypeMap = {
   WorkflowExecutionStarted: event => {
     const {
       continuedExecutionRunId,
-      parentWorkflowExecution
+      parentWorkflowExecution,
     } = event.eventFullDetails;
 
     return {

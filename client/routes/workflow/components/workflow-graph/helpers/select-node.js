@@ -69,10 +69,7 @@ const selectNode = ({
     const delta = N * 0.5 * S;
     const threshold = {
       from: from === 0 ? 0 : Math.floor(center - delta),
-      to:
-        to >= events.length - 1
-          ? events.length
-          : Math.floor(center + delta),
+      to: to >= events.length - 1 ? events.length : Math.floor(center + delta),
     };
 
     if (index >= 0 && index >= threshold.from && index <= threshold.to) {
@@ -147,6 +144,6 @@ const selectNode = ({
   results.elements = [...nodes, ...edges];
 
   return results;
-}
+};
 
 export default selectNode;
