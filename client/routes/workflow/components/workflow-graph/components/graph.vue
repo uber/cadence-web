@@ -23,7 +23,7 @@
 import cytoscape from 'cytoscape';
 import omit from 'lodash-es/omit';
 import { mapMutations } from 'vuex';
-import Graph from '../helpers/graph';
+import { selectNode } from '../helpers';
 import cytoscapeLayout from '../helpers/cytoscape-layout';
 import store from '../../../../../store/index';
 import {
@@ -49,9 +49,6 @@ export default {
   watch: {
     selectedEventId(id) {
       this.selectNode(id);
-    },
-    events(events) {
-      this.graph.setEvents(events);
     },
   },
   methods: {
@@ -173,7 +170,14 @@ export default {
         elements,
         previousExecutionRunId,
         parentWorkflowExecution,
-      } = this.graph.selectNode(id);
+        sliceIndices,
+      } = selectNode({
+        events: this.events,
+        selectedEventId: id,
+        sliceIndices: this.sliceIndices,
+      });
+
+      this.sliceIndices = sliceIndices;
 
       if (!shouldRedraw) {
         return;
@@ -190,7 +194,7 @@ export default {
     },
   },
   mounted() {
-    this.graph = new Graph(this.events);
+    this.sliceIndices = null;
     this.selectNode(this.selectedEventId);
   },
 };

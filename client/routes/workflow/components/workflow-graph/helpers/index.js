@@ -26,4 +26,6 @@ export { default as findChildEvent } from './find-child-event';
 export { default as getEventConnections } from './get-event-connections';
 export { default as getGraphPanCenter } from './get-graph-pan-center';
 export { default as getTimeIndexPairKey } from './get-time-index-pair-key';
-export { default as graph } from './graph';
+export { default as selectNode } from './select-node';
+export { default as setChronologicalChildren } from './set-chronological-children';
+export { default as setDirectAndInferredChildren } from './set-direct-and-inferred-children';
