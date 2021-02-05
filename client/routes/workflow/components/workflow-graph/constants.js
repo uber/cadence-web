@@ -120,6 +120,8 @@ export const CYTOSCAPE_DEFAULT_OPTIONS = {
   // pixelRatio: 1,
 };
 
+export const GRAPH_SLICE_SIZE = 300;
+export const GRAPH_SLICE_DELTA_MAX = GRAPH_SLICE_SIZE * 0.3;
 export const GRAPH_SHOW_DELAY = 400;
 export const GRAPH_ZOOM_DEFAULT = 1.1;
 export const GRAPH_ZOOM_MAX = 10;

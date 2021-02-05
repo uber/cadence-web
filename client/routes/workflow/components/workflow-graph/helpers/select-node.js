@@ -23,6 +23,7 @@ import { findIndex } from 'lodash-es';
 import getEventConnections from './get-event-connections';
 import setChronologicalChildren from './set-chronological-children';
 import setDirectAndInferredChildren from './set-direct-and-inferred-children';
+import { GRAPH_SLICE_DELTA_MAX, GRAPH_SLICE_SIZE } from '../constants';
 
 /**
  * Build a graph around the `node`
@@ -32,13 +33,11 @@ const selectNode = ({
   selectedEventId = null,
   sliceIndices = null,
 }) => {
-  const N = 300;
   // TODO: Improve chrono edge calculations for large workflows
   const enableChronologicalEdges = events && events.length < 100;
 
   // If the selected node index is within (S * 100)% of the middle of rendered slice,
   // we do not need to redraw the graph, just scroll to the node.
-  const S = 0.6;
   const eventIds = {};
   const nodes = [];
   const edges = [];
@@ -66,10 +65,9 @@ const selectNode = ({
     // No need to redraw if selected node is in the middle of rendered slice
     const { from, to } = sliceIndices;
     const center = (to + from) / 2;
-    const delta = N * 0.5 * S;
     const threshold = {
-      from: from === 0 ? 0 : Math.floor(center - delta),
-      to: to >= events.length - 1 ? events.length : Math.floor(center + delta),
+      from: from === 0 ? 0 : Math.floor(center - GRAPH_SLICE_DELTA_MAX),
+      to: to >= events.length - 1 ? events.length : Math.floor(center + GRAPH_SLICE_DELTA_MAX),
     };
 
     if (index >= 0 && index >= threshold.from && index <= threshold.to) {
@@ -79,8 +77,8 @@ const selectNode = ({
 
   results.shouldRedraw = true;
 
-  const from = Math.floor(Math.max(0, index - N / 2));
-  const to = Math.min(events.length, from + N);
+  const from = Math.floor(Math.max(0, index - GRAPH_SLICE_SIZE / 2));
+  const to = Math.min(events.length, from + GRAPH_SLICE_SIZE);
   const sliceEvents = events.slice(from, to);
 
   results.sliceIndices = { from, to };
