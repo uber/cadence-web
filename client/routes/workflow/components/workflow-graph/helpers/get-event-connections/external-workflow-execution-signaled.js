@@ -22,11 +22,10 @@
 import findChildEvent from '../find-child-event';
 
 const ExternalWorkflowExecutionSignaled = (event, workflow) => {
-  const eventDetails = event.eventFullDetails;
   const { inferredChild } = findChildEvent(event, workflow);
 
   return {
-    parent: eventDetails.initiatedEventId,
+    parent: event.eventFullDetails.initiatedEventId,
     inferredChild,
   };
 };

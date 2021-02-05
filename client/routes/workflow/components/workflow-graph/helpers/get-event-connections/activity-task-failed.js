@@ -22,11 +22,10 @@
 import findChildEvent from '../find-child-event';
 
 const ActivityTaskFailed = (event, workflow) => {
-  const eventDetails = event.eventFullDetails;
   const { inferredChild, chronologicalChild } = findChildEvent(event, workflow);
 
   return {
-    parent: eventDetails.startedEventId,
+    parent: event.eventFullDetails.startedEventId,
     chronologicalChild,
     inferredChild,
     status: 'failed',

@@ -22,11 +22,10 @@
 import findChildEvent from '../find-child-event';
 
 const DecisionTaskCompleted = (event, workflow) => {
-  const eventInfo = event.eventFullDetails;
   const { chronologicalChild } = findChildEvent(event, workflow);
 
   return {
-    parent: eventInfo.startedEventId,
+    parent: event.eventFullDetails.startedEventId,
     chronologicalChild,
   };
 };
