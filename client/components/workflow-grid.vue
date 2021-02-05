@@ -98,18 +98,18 @@ export default {
 </template>
 
 <style lang="stylus">
-@require "../styles/definitions.styl"
+@require "../styles/definitions.styl";
 
-paged-grid()
+paged-grid();
 
-.workflow-grid
-  height: calc(100vh - 203px)
+.workflow-grid {
+  height: calc(100vh - 203px);
 
-  &.loading.has-results
-    &::after
-      content none
+  &.loading.has-results::after {
+    content: none;
+  }
 
-  .row-header
+  .row-header {
     display: flex;
     position: relative;
     padding: 0 1rem;
@@ -121,10 +121,11 @@ paged-grid()
     font-weight: 500;
     text-transform: uppercase;
 
-    box-shadow 0px 2px 2px rgba(0,0,0,0.2)
+    box-shadow: 0px 2px 2px rgba(0,0,0,0.2);
     width: calc(100% - 10px);
+  }
 
-  .row
+  .row {
     height: 56px;
     padding: 0 1rem;
     display: flex;
@@ -132,33 +133,59 @@ paged-grid()
     justify-content: start;
     align-items: stretch;
     line-height: 1.2rem;
-    &.odd
-      background-color: uber-white-10;
-    .col
-      &.col-status
-        text-transform: capitalize;
 
-  .col
+    &.odd {
+      background-color: uber-white-10;
+    }
+
+    .col.col-status {
+      text-transform: capitalize;
+    }
+  }
+
+
+  .col {
     align-self: center;
     flex-basis: auto;
     padding: 0.5rem;
 
-    &.col-id
-      flex-basis: 400px;
-    &.col-link
-      flex-basis: 400px;
-    &.col-name
-      flex-basis: 300px;
-    &.col-status
-      flex-basis: 150px;
-      &.completed
-        color uber-green
-      &.failed
-        color uber-orange
-      &.running
-        color uber-blue-120
-    &.col-start
-      flex-basis: 200px;
-    &.col-end
-      flex-basis: 200px;
+    &.col-id {
+      flex: 1;
+      word-break: break-all;
+    }
+
+    &.col-link {
+      width: 300px;
+    }
+
+    &.col-name {
+      flex: 1;
+      word-break: break-all;
+    }
+
+    &.col-status {
+      width: 150px;
+
+      &.completed {
+        color: uber-green;
+      }
+
+      &.failed {
+        color: uber-orange;
+      }
+
+      &.running {
+        color: uber-blue-120;
+      }
+    }
+
+    &.col-start {
+      width: 170px;
+    }
+
+    &.col-end {
+      width: 170px;
+    }
+  }
+}
 </style>
