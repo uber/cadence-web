@@ -32,7 +32,11 @@ import Timeline from './components/timeline.vue';
 import WorkflowGraph from './components/workflow-graph';
 import EventDetail from './components/event-detail.vue';
 import { getDefaultSplitSize } from './helpers';
-import { DetailList, HighlightToggle } from '~components';
+import {
+  DetailList,
+  FeatureFlag,
+  HighlightToggle,
+} from '~components';
 
 export default {
   name: 'history',
@@ -316,6 +320,7 @@ export default {
     DynamicScroller,
     DynamicScrollerItem,
     'event-detail': EventDetail,
+    'feature-flag': FeatureFlag,
     'highlight-toggle': HighlightToggle,
     prism: Prism,
     RecycleScroller,
@@ -362,9 +367,11 @@ export default {
         </div>
       </div>
       <div class="actions">
-        <a href="#" @click.prevent="toggleShowDagGraph()"
-          >{{ this.graphView === 'dag' ? 'hide' : 'show' }} graph</a
-        >
+        <feature-flag name="workflowGraph">
+          <a href="#" @click.prevent="toggleShowDagGraph()"
+            >{{ this.graphView === 'dag' ? 'hide' : 'show' }} graph</a
+          >
+        </feature-flag>
         <a
           href="#"
           @click.prevent="toggleShowTimeline()"
@@ -393,13 +400,15 @@ export default {
         :min-size="splitSizeMinSet[0]"
         :size="splitSizeSet[0]"
       >
-        <WorkflowGraph
-          :events="events"
-          :isWorkflowRunning="isWorkflowRunning"
-          :selected-event-id="eventId"
-          class="tree-view"
-          v-if="this.graphView === 'dag' && events.length"
-        />
+        <feature-flag name="workflowGraph">
+          <WorkflowGraph
+            :events="events"
+            :isWorkflowRunning="isWorkflowRunning"
+            :selected-event-id="eventId"
+            class="tree-view"
+            v-if="this.graphView === 'dag' && events.length"
+          />
+        </feature-flag>
         <timeline
           :events="timelineEvents"
           :selected-event-id="eventId"

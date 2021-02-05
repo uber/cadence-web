@@ -20,6 +20,10 @@
     "value": false
   },
   {
+    "key": "workflowGraph",
+    "value": true
+  },
+  {
     "key": "workflowTerminate",
     "value": true
   }
