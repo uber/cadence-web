@@ -20,10 +20,10 @@
 // THE SOFTWARE.
 
 import { findIndex } from 'lodash-es';
+import { GRAPH_SLICE_DELTA_MAX, GRAPH_SLICE_SIZE } from '../constants';
 import getEventConnections from './get-event-connections';
 import setChronologicalChildren from './set-chronological-children';
 import setDirectAndInferredChildren from './set-direct-and-inferred-children';
-import { GRAPH_SLICE_DELTA_MAX, GRAPH_SLICE_SIZE } from '../constants';
 
 /**
  * Build a graph around the `node`
@@ -67,7 +67,10 @@ const selectNode = ({
     const center = (to + from) / 2;
     const threshold = {
       from: from === 0 ? 0 : Math.floor(center - GRAPH_SLICE_DELTA_MAX),
-      to: to >= events.length - 1 ? events.length : Math.floor(center + GRAPH_SLICE_DELTA_MAX),
+      to:
+        to >= events.length - 1
+          ? events.length
+          : Math.floor(center + GRAPH_SLICE_DELTA_MAX),
     };
 
     if (index >= 0 && index >= threshold.from && index <= threshold.to) {
