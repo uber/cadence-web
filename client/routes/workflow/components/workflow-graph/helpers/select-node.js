@@ -36,7 +36,7 @@ const selectNode = ({
   // TODO: Improve chrono edge calculations for large workflows
   const enableChronologicalEdges = events && events.length < 100;
 
-  // If the selected node index is within (S * 100)% of the middle of rendered slice,
+  // If the selected node index is within (GRAPH_SLICE_SIZE * 100)% of the middle of rendered slice,
   // we do not need to redraw the graph, just scroll to the node.
   const eventIds = {};
   const nodes = [];
