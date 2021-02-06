@@ -400,13 +400,15 @@ export default {
         :min-size="splitSizeMinSet[0]"
         :size="splitSizeSet[0]"
       >
-        <feature-flag name="workflowGraph">
+        <feature-flag
+          name="workflowGraph"
+          v-if="this.graphView === 'dag' && events.length"
+        >
           <WorkflowGraph
             :events="events"
             :isWorkflowRunning="isWorkflowRunning"
             :selected-event-id="eventId"
             class="tree-view"
-            v-if="this.graphView === 'dag' && events.length"
           />
         </feature-flag>
         <timeline
@@ -720,6 +722,9 @@ section.history {
   div.split-panel {
     .timeline-split {
       overflow: hidden;
+      .feature-flag {
+        height: 100%;
+      }
     }
 
     .view-split {
