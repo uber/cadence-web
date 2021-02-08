@@ -21,15 +21,31 @@
 
 import Vue from 'vue';
 import Vuex from 'vuex';
+import {
+  getDefaultState as getSettingsDefaultState,
+  mutations as settingsMutations,
+} from '../components/settings-modal';
+import {
+  getDefaultState as getHistoryDefaultState,
+  mutations as historyMutations,
+} from '../routes/workflow/store';
+
+const getGraphDefaultState = () => ({
+  childRoute: null,
+  newExecutionId: null,
+  parentRoute: null,
+  hasChildBtn: false,
+  childBtnText: null,
+  parentBtnText: 'to parent',
+});
 
 const getDefaultState = () => {
   return {
-    childRoute: null,
-    newExecutionId: null,
-    parentRoute: null,
-    hasChildBtn: false,
-    childBtnText: null,
-    parentBtnText: 'to parent',
+    history: getHistoryDefaultState(),
+    settings: getSettingsDefaultState(),
+
+    // TODO - clean up and consolidate with history store if applicable.
+    graph: getGraphDefaultState(),
   };
 };
 // initial state
@@ -40,6 +56,10 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   state: state,
   mutations: {
+    ...historyMutations,
+    ...settingsMutations,
+
+    // TODO - clean up and consolidate with history store if applicable.
     childRoute(state, param) {
       state.childRoute = param.route;
       state.hasChildBtn = true;
@@ -57,11 +77,12 @@ const store = new Vuex.Store({
     parentRoute(state, route) {
       state.parentRoute = route;
     },
-    resetState(state) {
-      Object.assign(state, getDefaultState());
+    resetGraphState(state) {
+      Object.assign(state, getGraphDefaultState());
     },
   },
   getters: {
+    // TODO - clean up and consolidate with history store if applicable.
     childRoute: state => state.childRoute,
     newExecutionId: state => state.newExecutionId,
     hasChildBtn: state => state.hasChildBtn,
