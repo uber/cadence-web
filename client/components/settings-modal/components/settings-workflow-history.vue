@@ -43,29 +43,29 @@ export default {
     workflowHistoryEventHighlightListEnabled: {
       type: Boolean,
     },
+    workflowHistoryGraphEnabled: {
+      type: Boolean,
+    },
   },
   data() {
     return {
       isWorkflowHistoryEventHighlightListChanged: false,
-      modalWorkflowHistoryEventHighlightListEnabled: this
-        .workflowHistoryEventHighlightListEnabled,
-      modalWorkflowHistoryEventHighlightList: this
-        .workflowHistoryEventHighlightList,
+      modal: {
+        workflowHistoryEventHighlightListEnabled: this.workflowHistoryEventHighlightListEnabled,
+        workflowHistoryEventHighlightList: this.workflowHistoryEventHighlightList,
+        workflowHistoryGraphEnabled: this.workflowHistoryGraphEnabled,
+      },
       workflowEventTypes: WORKFLOW_EVENT_TYPES,
     };
   },
   computed: {
-    isWorkflowHistoryEventHighlightListEnabledChanged() {
-      return (
-        this.modalWorkflowHistoryEventHighlightListEnabled !==
-        this.workflowHistoryEventHighlightListEnabled
-      );
-    },
     isSettingsChanged() {
-      return (
-        this.isWorkflowHistoryEventHighlightListChanged ||
-        this.isWorkflowHistoryEventHighlightListEnabledChanged
-      );
+      for (const setting in this.modal) {
+        if (this.hasSettingChanged(setting)) {
+          return true;
+        }
+      }
+      return false;
     },
   },
   methods: {
@@ -77,53 +77,59 @@ export default {
         return;
       }
 
-      this.modalWorkflowHistoryEventHighlightList = workflowHistoryEventHighlightListAddOrUpdate(
+      this.modal.workflowHistoryEventHighlightList = workflowHistoryEventHighlightListAddOrUpdate(
         {
           ...event,
           [key]: value,
           workflowHistoryEventHighlightList: this
-            .modalWorkflowHistoryEventHighlightList,
+            .modal.workflowHistoryEventHighlightList,
         }
       );
       this.isWorkflowHistoryEventHighlightListChanged = true;
     },
     onWorkflowHistoryEventHighlightListRemove({ id }) {
-      this.modalWorkflowHistoryEventHighlightList = workflowHistoryEventHighlightListRemove(
+      this.modal.workflowHistoryEventHighlightList = workflowHistoryEventHighlightListRemove(
         {
           id,
           workflowHistoryEventHighlightList: this
-            .modalWorkflowHistoryEventHighlightList,
+            .modal.workflowHistoryEventHighlightList,
         }
       );
       this.isWorkflowHistoryEventHighlightListChanged = true;
     },
     onWorkflowHistoryEventHighlightListAdd() {
-      this.modalWorkflowHistoryEventHighlightList = workflowHistoryEventHighlightListAddOrUpdate(
+      this.modal.workflowHistoryEventHighlightList = workflowHistoryEventHighlightListAddOrUpdate(
         {
           eventParamName: '',
           eventType: WORKFLOW_EVENT_TYPES[0],
           id: new Date().getTime(),
           isEnabled: true,
           workflowHistoryEventHighlightList: this
-            .modalWorkflowHistoryEventHighlightList,
+            .modal.workflowHistoryEventHighlightList,
         }
       );
       this.isWorkflowHistoryEventHighlightListChanged = true;
     },
-    onWorkflowHistoryEventHighlightListEnabledChange({ value }) {
-      this.modalWorkflowHistoryEventHighlightListEnabled = value;
+    onSettingChange({ name, value }) {
+      this.modal[name] = value;
     },
     onSubmit() {
       this.$emit('change', {
-        ...(this.isWorkflowHistoryEventHighlightListEnabledChanged && {
-          workflowHistoryEventHighlightListEnabled: this
-            .modalWorkflowHistoryEventHighlightListEnabled,
-        }),
-        ...(this.isWorkflowHistoryEventHighlightListChanged && {
-          workflowHistoryEventHighlightList: this
-            .modalWorkflowHistoryEventHighlightList,
-        }),
+        ...this.addSettingIfChanged('workflowHistoryEventHighlightListEnabled'),
+        ...this.addSettingIfChanged('workflowHistoryEventHighlightList'),
+        ...this.addSettingIfChanged('workflowHistoryGraphEnabled'),
       });
+    },
+    addSettingIfChanged(name) {
+      return this.hasSettingChanged(name) && {
+        [name]: this.modal[name],
+      };
+    },
+    hasSettingChanged(name) {
+      if (name === 'workflowHistoryEventHighlightList') {
+        return this.isWorkflowHistoryEventHighlightListChanged;
+      }
+      return this.modal[name] !== this[name];
     },
   },
   components: {
@@ -144,16 +150,25 @@ export default {
     <div class="content">
       <div class="content-item">
         <settings-toggle
+          label="Enable history graph"
+          name="workflowHistoryGraphEnabled"
+          :value="modal.workflowHistoryGraphEnabled"
+          @change="onSettingChange"
+        />
+      </div>
+
+      <div class="content-item">
+        <settings-toggle
           label="Enable history event param highlighting"
           name="workflowHistoryEventHighlightListEnabled"
-          :value="modalWorkflowHistoryEventHighlightListEnabled"
-          @change="onWorkflowHistoryEventHighlightListEnabledChange"
+          :value="modal.workflowHistoryEventHighlightListEnabled"
+          @change="onSettingChange"
         />
       </div>
 
       <div
         class="history-event-param-content"
-        :class="{ disabled: !modalWorkflowHistoryEventHighlightListEnabled }"
+        :class="{ disabled: !modal.workflowHistoryEventHighlightListEnabled }"
       >
         <div class="content-item">
           <flex-grid align-items="center">
@@ -162,7 +177,7 @@ export default {
             </flex-grid-item>
             <flex-grid-item>
               <button-fill
-                :disabled="!modalWorkflowHistoryEventHighlightListEnabled"
+                :disabled="!modal.workflowHistoryEventHighlightListEnabled"
                 label="NEW"
                 @click="onWorkflowHistoryEventHighlightListAdd"
               />
@@ -173,7 +188,7 @@ export default {
         <div class="scrollable">
           <div
             class="content-item"
-            v-for="event in modalWorkflowHistoryEventHighlightList"
+            v-for="event in modal.workflowHistoryEventHighlightList"
             :key="event.id"
           >
             <flex-grid align-items="center">
@@ -182,7 +197,7 @@ export default {
                   <flex-grid-item grow="1" width="345px">
                     <v-select
                       :disabled="
-                        !modalWorkflowHistoryEventHighlightListEnabled ||
+                        !modal.workflowHistoryEventHighlightListEnabled ||
                           !event.isEnabled
                       "
                       :value="event.eventType"
@@ -201,7 +216,7 @@ export default {
                     <text-input
                       label="Event param name"
                       :disabled="
-                        !modalWorkflowHistoryEventHighlightListEnabled ||
+                        !modal.workflowHistoryEventHighlightListEnabled ||
                           !event.isEnabled
                       "
                       :value="event.eventParamName"
@@ -219,7 +234,7 @@ export default {
               </flex-grid-item>
               <flex-grid-item>
                 <toggle-button
-                  :disabled="!modalWorkflowHistoryEventHighlightListEnabled"
+                  :disabled="!modal.workflowHistoryEventHighlightListEnabled"
                   :labels="true"
                   :value="event.isEnabled"
                   @change="
@@ -234,7 +249,7 @@ export default {
               </flex-grid-item>
               <flex-grid-item>
                 <button-icon
-                  :disabled="!modalWorkflowHistoryEventHighlightListEnabled"
+                  :disabled="!modal.workflowHistoryEventHighlightListEnabled"
                   icon="icon_trash"
                   size="20px"
                   @click="onWorkflowHistoryEventHighlightListRemove(event)"
@@ -263,7 +278,8 @@ export default {
 
   .scrollable {
     overflow-y: auto;
-    height: 200px;
+    height: 165px;
+    margin-bottom: 10px;
   }
 }
 </style>
