@@ -22,16 +22,18 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
-const getDefaultState = () => {
-  return {
-    childRoute: null,
-    newExecutionId: null,
-    parentRoute: null,
-    hasChildBtn: false,
-    childBtnText: null,
-    parentBtnText: 'to parent',
-  };
-};
+const getGraphDefaultState = () => ({
+  childRoute: null,
+  newExecutionId: null,
+  parentRoute: null,
+  hasChildBtn: false,
+  childBtnText: null,
+  parentBtnText: 'to parent',
+});
+
+const getDefaultState = () => ({
+  graph: getGraphDefaultState(),
+});
 // initial state
 const state = getDefaultState();
 
@@ -40,6 +42,7 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   state: state,
   mutations: {
+
     childRoute(state, param) {
       state.childRoute = param.route;
       state.hasChildBtn = true;
@@ -57,8 +60,8 @@ const store = new Vuex.Store({
     parentRoute(state, route) {
       state.parentRoute = route;
     },
-    resetState(state) {
-      Object.assign(state, getDefaultState());
+    resetGraphState(state) {
+      Object.assign(state.graph, getGraphDefaultState());
     },
   },
   getters: {

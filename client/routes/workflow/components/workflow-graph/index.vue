@@ -66,7 +66,7 @@ export default {
   mounted() {
     this.delayedShow();
     this.eventsSnapShot = this.events;
-    store.commit('resetState');
+    store.commit('resetGraphState');
   },
 
   computed: {
