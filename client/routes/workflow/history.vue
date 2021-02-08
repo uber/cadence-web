@@ -32,11 +32,7 @@ import Timeline from './components/timeline.vue';
 import WorkflowGraph from './components/workflow-graph';
 import EventDetail from './components/event-detail.vue';
 import { getDefaultSplitSize } from './helpers';
-import {
-  DetailList,
-  FeatureFlag,
-  HighlightToggle,
-} from '~components';
+import { DetailList, FeatureFlag, HighlightToggle } from '~components';
 
 export default {
   name: 'history',
