@@ -40,6 +40,7 @@ export default {
   methods: {
     onChange(event) {
       const { name } = this;
+
       this.$emit('change', { ...event, name });
     },
   },

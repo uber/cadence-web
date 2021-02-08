@@ -51,8 +51,10 @@ export default {
     return {
       isWorkflowHistoryEventHighlightListChanged: false,
       modal: {
-        workflowHistoryEventHighlightListEnabled: this.workflowHistoryEventHighlightListEnabled,
-        workflowHistoryEventHighlightList: this.workflowHistoryEventHighlightList,
+        workflowHistoryEventHighlightListEnabled: this
+          .workflowHistoryEventHighlightListEnabled,
+        workflowHistoryEventHighlightList: this
+          .workflowHistoryEventHighlightList,
         workflowHistoryGraphEnabled: this.workflowHistoryGraphEnabled,
       },
       workflowEventTypes: WORKFLOW_EVENT_TYPES,
@@ -65,6 +67,7 @@ export default {
           return true;
         }
       }
+
       return false;
     },
   },
@@ -81,8 +84,8 @@ export default {
         {
           ...event,
           [key]: value,
-          workflowHistoryEventHighlightList: this
-            .modal.workflowHistoryEventHighlightList,
+          workflowHistoryEventHighlightList: this.modal
+            .workflowHistoryEventHighlightList,
         }
       );
       this.isWorkflowHistoryEventHighlightListChanged = true;
@@ -91,8 +94,8 @@ export default {
       this.modal.workflowHistoryEventHighlightList = workflowHistoryEventHighlightListRemove(
         {
           id,
-          workflowHistoryEventHighlightList: this
-            .modal.workflowHistoryEventHighlightList,
+          workflowHistoryEventHighlightList: this.modal
+            .workflowHistoryEventHighlightList,
         }
       );
       this.isWorkflowHistoryEventHighlightListChanged = true;
@@ -104,8 +107,8 @@ export default {
           eventType: WORKFLOW_EVENT_TYPES[0],
           id: new Date().getTime(),
           isEnabled: true,
-          workflowHistoryEventHighlightList: this
-            .modal.workflowHistoryEventHighlightList,
+          workflowHistoryEventHighlightList: this.modal
+            .workflowHistoryEventHighlightList,
         }
       );
       this.isWorkflowHistoryEventHighlightListChanged = true;
@@ -121,14 +124,17 @@ export default {
       });
     },
     addSettingIfChanged(name) {
-      return this.hasSettingChanged(name) && {
-        [name]: this.modal[name],
-      };
+      return (
+        this.hasSettingChanged(name) && {
+          [name]: this.modal[name],
+        }
+      );
     },
     hasSettingChanged(name) {
       if (name === 'workflowHistoryEventHighlightList') {
         return this.isWorkflowHistoryEventHighlightListChanged;
       }
+
       return this.modal[name] !== this[name];
     },
   },
