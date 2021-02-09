@@ -29,8 +29,4 @@ const getDefaultState = () => ({
 
 const container = Connector('SettingsWorkflowHistory', Component);
 
-export {
-  container,
-  getDefaultState,
-  mutations,
-}
+export { container, getDefaultState, mutations };

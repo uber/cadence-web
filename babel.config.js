@@ -4,8 +4,9 @@ module.exports = {
       "module-resolver",
       {
         "alias": {
-          "~constants": "./client/constants",
           "~components": "./client/components",
+          "~containers": "./client/containers",
+          "~constants": "./client/constants",
           "~helpers": "./client/helpers",
           "~services": "./client/services",
         },

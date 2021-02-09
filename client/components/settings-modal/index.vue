@@ -25,8 +25,8 @@ import FlexGridItem from '../flex-grid-item';
 import SettingsDateFormat from './components/settings-date-format';
 import SettingsHeader from './components/settings-header';
 import SettingsList from './components/settings-list';
-import SettingsWorkflowHistory from './components/settings-workflow-history';
 import { SETTINGS_VIEW_LIST } from './constants';
+import { SettingsWorkflowHistory } from '~containers';
 
 export default {
   data() {
