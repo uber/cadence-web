@@ -43,7 +43,7 @@ export default {
     workflowHistoryEventHighlightListEnabled: {
       type: Boolean,
     },
-    workflowHistoryGraphEnabled: {
+    graphEnabled: {
       type: Boolean,
     },
   },
@@ -55,7 +55,7 @@ export default {
           .workflowHistoryEventHighlightListEnabled,
         workflowHistoryEventHighlightList: this
           .workflowHistoryEventHighlightList,
-        workflowHistoryGraphEnabled: this.workflowHistoryGraphEnabled,
+        graphEnabled: this.graphEnabled,
       },
       workflowEventTypes: WORKFLOW_EVENT_TYPES,
     };
@@ -120,7 +120,7 @@ export default {
       this.$emit('change', {
         ...this.addSettingIfChanged('workflowHistoryEventHighlightListEnabled'),
         ...this.addSettingIfChanged('workflowHistoryEventHighlightList'),
-        ...this.addSettingIfChanged('workflowHistoryGraphEnabled'),
+        ...this.addSettingIfChanged('graphEnabled'),
       });
     },
     addSettingIfChanged(name) {
@@ -157,8 +157,8 @@ export default {
       <div class="content-item">
         <settings-toggle
           label="Enable history graph"
-          name="workflowHistoryGraphEnabled"
-          :value="modal.workflowHistoryGraphEnabled"
+          name="graphEnabled"
+          :value="modal.graphEnabled"
           @change="onSettingChange"
         />
       </div>
