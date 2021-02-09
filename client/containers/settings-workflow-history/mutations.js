@@ -19,6 +19,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export default state => {
-  state.settingsWorkflowHistory.graphEnabled = state.history.graphEnabled;
+import {
+  SETTINGS_WORKFLOW_HISTORY_ON_CHANGE_VALUE,
+  SETTINGS_WORKFLOW_HISTORY_ON_MOUNTED,
+  SETTINGS_WORKFLOW_HISTORY_ON_SUBMIT,
+} from './mutationTypes';
+
+const mutations = {
+  [SETTINGS_WORKFLOW_HISTORY_ON_CHANGE_VALUE]: (state, { name, value }) => {
+    state.settingsWorkflowHistory[name] = value;
+  },
+  [SETTINGS_WORKFLOW_HISTORY_ON_MOUNTED]: state => {
+    state.settingsWorkflowHistory.graphEnabled = state.history.graphEnabled;
+  },
+  [SETTINGS_WORKFLOW_HISTORY_ON_SUBMIT]: (state, values) => {
+    console.log('mutation with ', values);
+    for (key in values) {
+      state.history[key] = values[key];
+    }
+  },
 };
+
+export default mutations;

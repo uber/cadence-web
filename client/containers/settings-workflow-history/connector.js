@@ -20,9 +20,14 @@
 // THE SOFTWARE.
 
 import { connect } from 'vuex-connect';
+import {
+  SETTINGS_WORKFLOW_HISTORY_ON_CHANGE_VALUE,
+  SETTINGS_WORKFLOW_HISTORY_ON_MOUNTED,
+  SETTINGS_WORKFLOW_HISTORY_ON_SUBMIT,
+} from './mutationTypes';
 
 const lifecycle = {
-  mounted: store => store.dispatch('ON_MOUNTED'),
+  mounted: store => store.dispatch(SETTINGS_WORKFLOW_HISTORY_ON_MOUNTED),
 };
 
 const mapStateToProps = {
@@ -30,7 +35,8 @@ const mapStateToProps = {
 };
 
 const mutationsToEvents = {
-  onChange: 'ON_CHANGE_SETTINGS_WORKFLOW_HISTORY_VALUE',
+  onChange: SETTINGS_WORKFLOW_HISTORY_ON_CHANGE_VALUE,
+  onSubmit: SETTINGS_WORKFLOW_HISTORY_ON_SUBMIT,
 };
 
 export default connect({

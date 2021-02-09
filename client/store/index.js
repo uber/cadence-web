@@ -21,6 +21,10 @@
 
 import Vue from 'vue';
 import Vuex from 'vuex';
+import {
+  getSettingsWorkflowHistoryDefaultState,
+  settingsWorkflowHistoryMutations,
+} from '~containers';
 
 // Graph store
 
@@ -71,16 +75,20 @@ const graphGetters = {
 
 const getDefaultState = () => ({
   graph: getGraphDefaultState(),
+  settingsWorkflowHistory: getSettingsWorkflowHistoryDefaultState(),
 });
 
 const state = getDefaultState();
 
 Vue.use(Vuex);
 
+console.log('settingsWorkflowHistoryMutations = ', settingsWorkflowHistoryMutations);
+
 const store = new Vuex.Store({
   state: state,
   mutations: {
     ...graphMutations,
+    ...settingsWorkflowHistoryMutations,
   },
   getters: {
     ...graphGetters,

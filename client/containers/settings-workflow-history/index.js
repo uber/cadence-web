@@ -21,7 +21,7 @@
 
 import Component from './component';
 import Connector from './connector';
-import * as mutations from './mutations';
+import mutations from './mutations';
 
 const getDefaultState = () => ({
   graphEnabled: false,

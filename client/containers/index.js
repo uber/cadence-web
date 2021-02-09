@@ -19,4 +19,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export { container as SettingsWorkflowHistory } from './settings-workflow-history';
+export {
+  container as SettingsWorkflowHistory,
+  getDefaultState as getSettingsWorkflowHistoryDefaultState,
+  mutations as settingsWorkflowHistoryMutations,
+} from './settings-workflow-history';
