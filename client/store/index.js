@@ -40,10 +40,12 @@ const graphMutations = {
     state.graph.childBtnText = param.btnText;
   },
   newExecutionRoute(state, route) {
-    (state.graph.newExecutionId = route), (state.graph.hasChildBtn = !state.graph.hasChildBtn);
+    (state.graph.newExecutionId = route),
+      (state.graph.hasChildBtn = !state.graph.hasChildBtn);
   },
   previousExecutionRoute(state, route) {
-    (state.graph.parentRoute = route), (state.graph.parentBtnText = 'previous execution');
+    (state.graph.parentRoute = route),
+      (state.graph.parentBtnText = 'previous execution');
   },
   toggleChildBtn(state) {
     state.graph.hasChildBtn = false;
