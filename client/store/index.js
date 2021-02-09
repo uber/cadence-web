@@ -22,17 +22,55 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
-const getDefaultState = () => {
-  return {
-    childRoute: null,
-    newExecutionId: null,
-    parentRoute: null,
-    hasChildBtn: false,
-    childBtnText: null,
-    parentBtnText: 'to parent',
-  };
+// Graph store
+
+const getGraphDefaultState = () => ({
+  childRoute: null,
+  newExecutionId: null,
+  parentRoute: null,
+  hasChildBtn: false,
+  childBtnText: null,
+  parentBtnText: 'to parent',
+});
+
+const graphMutations = {
+  childRoute(state, param) {
+    state.graph.childRoute = param.route;
+    state.graph.hasChildBtn = true;
+    state.graph.childBtnText = param.btnText;
+  },
+  newExecutionRoute(state, route) {
+    (state.graph.newExecutionId = route), (state.graph.hasChildBtn = !state.graph.hasChildBtn);
+  },
+  previousExecutionRoute(state, route) {
+    (state.graph.parentRoute = route), (state.graph.parentBtnText = 'previous execution');
+  },
+  toggleChildBtn(state) {
+    state.graph.hasChildBtn = false;
+  },
+  parentRoute(state, route) {
+    state.graph.parentRoute = route;
+  },
+  resetState(state) {
+    Object.assign(state.graph, getGraphDefaultState());
+  },
 };
-// initial state
+
+const graphGetters = {
+  childRoute: state => state.graph.childRoute,
+  newExecutionId: state => state.graph.newExecutionId,
+  hasChildBtn: state => state.graph.hasChildBtn,
+  childBtnText: state => state.graph.childBtnText,
+  parentBtnText: state => state.graph.parentBtnText,
+  parentRoute: state => state.graph.parentRoute,
+};
+
+// Application store
+
+const getDefaultState = () => ({
+  graph: getGraphDefaultState(),
+});
+
 const state = getDefaultState();
 
 Vue.use(Vuex);
@@ -40,34 +78,10 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   state: state,
   mutations: {
-    childRoute(state, param) {
-      state.childRoute = param.route;
-      state.hasChildBtn = true;
-      state.childBtnText = param.btnText;
-    },
-    newExecutionRoute(state, route) {
-      (state.newExecutionId = route), (state.hasChildBtn = !state.hasChildBtn);
-    },
-    previousExecutionRoute(state, route) {
-      (state.parentRoute = route), (state.parentBtnText = 'previous execution');
-    },
-    toggleChildBtn(state) {
-      state.hasChildBtn = false;
-    },
-    parentRoute(state, route) {
-      state.parentRoute = route;
-    },
-    resetState(state) {
-      Object.assign(state, getDefaultState());
-    },
+    ...graphMutations,
   },
   getters: {
-    childRoute: state => state.childRoute,
-    newExecutionId: state => state.newExecutionId,
-    hasChildBtn: state => state.hasChildBtn,
-    childBtnText: state => state.childBtnText,
-    parentBtnText: state => state.parentBtnText,
-    parentRoute: state => state.parentRoute,
+    ...graphGetters,
   },
 });
 
