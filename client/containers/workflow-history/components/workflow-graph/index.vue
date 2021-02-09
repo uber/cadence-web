@@ -21,7 +21,6 @@
 // THE SOFTWARE.
 
 import omit from 'lodash-es/omit';
-import store from '../../../../store/index';
 import Graph from './components/graph.vue';
 import GraphLegend from './components/graph-legend.vue';
 import { GRAPH_SHOW_DELAY } from './constants';
@@ -66,7 +65,7 @@ export default {
   mounted() {
     this.delayedShow();
     this.eventsSnapShot = this.events;
-    store.commit('resetGraphState');
+    this.$store.commit('resetGraphState');
   },
 
   computed: {
