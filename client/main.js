@@ -39,7 +39,6 @@ import DomainList from './routes/domain-list';
 import DomainMetrics from './routes/domain/domain-metrics';
 import DomainSettings from './routes/domain/domain-settings';
 import Help from './routes/help';
-import History from './routes/workflow/history';
 import News from './routes/news';
 import Query from './routes/workflow/query';
 import Root from './routes';
@@ -54,8 +53,13 @@ import WorkflowArchivalBasic from './routes/domain/workflow-archival/basic';
 import WorkflowList from './routes/domain/workflow-list';
 import WorkflowSummary from './routes/workflow/summary';
 import WorkflowTabs from './routes/workflow';
+import { WorkflowHistory } from '~containers';
+
+console.log('/main WorkflowHistory = ', WorkflowHistory);
 
 import store from './store/index.js';
+
+console.log('/main store = ', store);
 
 import { http, injectMomentDurationFormat, jsonTryParse } from '~helpers';
 
@@ -181,7 +185,7 @@ const routeOpts = {
           name: 'workflow/history',
           path: '/domains/:domain/workflows/:workflowId/:runId/history',
           components: {
-            history: History,
+            history: WorkflowHistory,
           },
           props: {
             history: ({ params, query }) => ({

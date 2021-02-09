@@ -23,7 +23,3 @@ export const RETRY_COUNT_MAX = 3;
 export const RETRY_TIMEOUT = 6000;
 export const TERMINATE_DEFAULT_ERROR_MESSAGE =
   'An error has occurred. Please check you have the correct permissions to terminate this workflow and try again.';
-
-export const DEFAULT_SPLIT_SIZE_DAG = [40, 60];
-export const DEFAULT_SPLIT_SIZE_TIMELINE = [20, 80];
-export const DEFAULT_SPLIT_SIZE_NONE = [1, 99];
