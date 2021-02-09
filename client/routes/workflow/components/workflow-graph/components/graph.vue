@@ -25,7 +25,6 @@ import omit from 'lodash-es/omit';
 import { mapMutations } from 'vuex';
 import { getGraphPanCenter, selectNode } from '../helpers';
 import cytoscapeLayout from '../helpers/cytoscape-layout';
-import store from '../../../../../store/index';
 import {
   CYTOSCAPE_DEFAULT_OPTIONS,
   GRAPH_ZOOM_DEFAULT,
@@ -121,7 +120,7 @@ export default {
         if (eventTarget === cy) {
           if (this.selectedEventId) {
             this.$router.replace({ query: omit(this.$route.query, 'eventId') });
-            store.commit('toggleChildBtn');
+            this.$store.commit('toggleChildBtn');
           }
         }
         // Tap on a node that is not already selected
@@ -163,9 +162,9 @@ export default {
 
       // Currently viewing a child workflow, show parent button
       if (previousExecutionRunId) {
-        store.commit('previousExecutionRoute', previousExecutionRunId);
+        this.$store.commit('previousExecutionRoute', previousExecutionRunId);
       } else if (parentWorkflowExecution) {
-        store.commit('parentRoute', parentWorkflowExecution);
+        this.$store.commit('parentRoute', parentWorkflowExecution);
       }
 
       this.initView(elements);
