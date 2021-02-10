@@ -26,7 +26,7 @@ import SettingsDateFormat from './components/settings-date-format';
 import SettingsHeader from './components/settings-header';
 import SettingsList from './components/settings-list';
 import { SETTINGS_VIEW_LIST } from './constants';
-import { SettingsWorkflowHistory } from '~containers';
+import { SettingsWorkflowHistory } from '../../containers';
 
 export default {
   data() {

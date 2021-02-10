@@ -28,6 +28,4 @@ const getDefaultState = () => ({
 
 const container = Connector('WorkflowHistory', Component);
 
-console.log('/workflow-history getDefaultState = ', getDefaultState);
-
 export { container, getDefaultState };

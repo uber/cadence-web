@@ -25,6 +25,6 @@ export {
   mutations as settingsWorkflowHistoryMutations,
 } from './settings-workflow-history';
 export {
-  container2 as WorkflowHistory,
-  getDefaultState2 as getWorkflowHistoryDefaultState,
+  container as WorkflowHistory,
+  getDefaultState as getWorkflowHistoryDefaultState,
 } from './workflow-history';

@@ -55,11 +55,7 @@ import WorkflowSummary from './routes/workflow/summary';
 import WorkflowTabs from './routes/workflow';
 import { WorkflowHistory } from '~containers';
 
-console.log('/main WorkflowHistory = ', WorkflowHistory);
-
 import store from './store/index.js';
-
-console.log('/main store = ', store);
 
 import { http, injectMomentDurationFormat, jsonTryParse } from '~helpers';
 
