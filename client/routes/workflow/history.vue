@@ -31,6 +31,7 @@ import omit from 'lodash-es/omit';
 import Timeline from './components/timeline.vue';
 import WorkflowGraph from './components/workflow-graph';
 import EventDetail from './components/event-detail.vue';
+import { GRAPH_VIEW_DAG, GRAPH_VIEW_TIMELINE } from './constants';
 import { getDefaultSplitSize } from './helpers';
 import { DetailList, FeatureFlag, HighlightToggle } from '~components';
 
@@ -59,6 +60,10 @@ export default {
       splitSizeSet: [1, 99],
       splitSizeMinSet: [0, 0],
       unwatch: [],
+
+      // allows render method to reference constants
+      GRAPH_VIEW_DAG: GRAPH_VIEW_DAG,
+      GRAPH_VIEW_TIMELINE: GRAPH_VIEW_TIMELINE,
     };
   },
   props: [
@@ -163,7 +168,7 @@ export default {
       return !this.loading && this.events.length === 0;
     },
     splitDirection() {
-      return this.graphView === 'dag' ? 'horizontal' : 'vertical';
+      return this.graphView === GRAPH_VIEW_DAG ? 'horizontal' : 'vertical';
     },
     timelineEventIdToIndex() {
       return this.timelineEvents
@@ -192,7 +197,7 @@ export default {
       this.$router.replace({ query: omit(this.$route.query, 'eventId') });
     },
     enableSplitting() {
-      if (!this.splitEnabled && this.graphView === 'timeline') {
+      if (!this.splitEnabled && this.graphView === GRAPH_VIEW_TIMELINE) {
         const timelineHeightPct =
           (this.$refs.splitPanel.$el.firstElementChild.offsetHeight /
             this.$refs.splitPanel.$el.offsetHeight) *
@@ -271,24 +276,24 @@ export default {
       );
     },
     toggleShowDagGraph() {
-      if (this.graphView === 'dag') {
+      if (this.graphView === GRAPH_VIEW_DAG) {
         this.$router.replace({
           query: omit(this.$route.query, 'graphView'),
         });
       } else {
         this.$router.replace({
-          query: { ...this.$route.query, graphView: 'dag' },
+          query: { ...this.$route.query, graphView: GRAPH_VIEW_DAG },
         });
       }
     },
     toggleShowTimeline() {
-      if (this.graphView === 'timeline') {
+      if (this.graphView === GRAPH_VIEW_TIMELINE) {
         this.$router.replace({
           query: omit(this.$route.query, 'graphView'),
         });
       } else {
         this.$router.replace({
-          query: { ...this.$route.query, graphView: 'timeline' },
+          query: { ...this.$route.query, graphView: GRAPH_VIEW_TIMELINE },
         });
       }
     },
@@ -365,14 +370,17 @@ export default {
       <div class="actions">
         <feature-flag name="workflowGraph">
           <a href="#" @click.prevent="toggleShowDagGraph()"
-            >{{ this.graphView === 'dag' ? 'hide' : 'show' }} graph</a
+            >{{ this.graphView === GRAPH_VIEW_DAG ? 'hide' : 'show' }} graph</a
           >
         </feature-flag>
         <a
           href="#"
           @click.prevent="toggleShowTimeline()"
           class="show-timeline-btn"
-          >{{ this.graphView === 'timeline' ? 'hide' : 'show' }} timeline</a
+          >{{
+            this.graphView === GRAPH_VIEW_TIMELINE ? 'hide' : 'show'
+          }}
+          timeline</a
         >
         <a
           class="export"
@@ -384,7 +392,7 @@ export default {
     </header>
     <Split
       class="split-panel"
-      :class="this.graphView === 'dag' ? 'dag-graph' : ''"
+      :class="this.graphView === GRAPH_VIEW_DAG ? 'dag-graph' : ''"
       :direction="splitDirection"
       @onDrag="onSplitResize"
       @onDragStart="enableSplitting"
@@ -398,7 +406,7 @@ export default {
       >
         <feature-flag
           name="workflowGraph"
-          v-if="this.graphView === 'dag' && events.length"
+          v-if="this.graphView === GRAPH_VIEW_DAG && events.length"
         >
           <WorkflowGraph
             :events="events"
@@ -410,7 +418,7 @@ export default {
         <timeline
           :events="timelineEvents"
           :selected-event-id="eventId"
-          v-if="this.graphView === 'timeline'"
+          v-if="this.graphView === GRAPH_VIEW_TIMELINE"
         />
       </SplitArea>
       <SplitArea

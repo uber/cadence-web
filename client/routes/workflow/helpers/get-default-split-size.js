@@ -23,13 +23,15 @@ import {
   DEFAULT_SPLIT_SIZE_DAG,
   DEFAULT_SPLIT_SIZE_TIMELINE,
   DEFAULT_SPLIT_SIZE_NONE,
+  GRAPH_VIEW_DAG,
+  GRAPH_VIEW_TIMELINE,
 } from '../constants';
 
 const getDefaultSplitSize = ({ graphView }) => {
   switch (graphView) {
-    case 'dag':
+    case GRAPH_VIEW_DAG:
       return DEFAULT_SPLIT_SIZE_DAG;
-    case 'timeline':
+    case GRAPH_VIEW_TIMELINE:
       return DEFAULT_SPLIT_SIZE_TIMELINE;
     default:
       return DEFAULT_SPLIT_SIZE_NONE;
