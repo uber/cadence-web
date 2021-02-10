@@ -34,7 +34,7 @@ const mutations = {
   },
   [SETTINGS_WORKFLOW_HISTORY_ON_SUBMIT]: (state, values) => {
     console.log('mutation with ', values);
-    for (key in values) {
+    for (const key in values) {
       state.workflowHistory[key] = values[key];
     }
   },
