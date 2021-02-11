@@ -79,8 +79,8 @@ const state = getDefaultState();
 Vue.use(Vuex);
 
 const vuexLocal = new VuexPersistence({
-  storage: window.localStorage
-})
+  storage: window.localStorage,
+});
 
 const store = new Vuex.Store({
   state: state,
