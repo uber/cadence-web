@@ -19,18 +19,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export { eventFullTransforms } from './event-full-transforms';
-export { default as getDefaultSplitSize } from './get-default-split-size';
-export { default as getEventDetails } from './get-event-details';
-export { default as getEventFullDetails } from './get-event-full-details';
-export { default as getEventSummary } from './get-event-summary';
-export { default as getHistoryEvents } from './get-history-events';
-export { default as getHistoryTimelineEvents } from './get-history-timeline-events';
-export { default as getSummary } from './get-summary';
-export { default as getSummaryWorkflowStatus } from './get-summary-workflow-status';
-export { default as getTimeElapsedDisplay } from './get-time-elapsed-display';
-export { default as getTimeStampDisplay } from './get-time-stamp-display';
-export { default as mapTimelineEvents } from './map-timeline-events';
-export { default as parentWorkflowLink } from './parent-workflow-link';
-export { summarizeEvents } from './summarize-events';
-export { default as workflowLink } from './workflow-link';
+import {
+  DEFAULT_SPLIT_SIZE_DAG,
+  DEFAULT_SPLIT_SIZE_TIMELINE,
+  DEFAULT_SPLIT_SIZE_NONE,
+  GRAPH_VIEW_DAG,
+  GRAPH_VIEW_TIMELINE,
+} from '../constants';
+
+const getDefaultSplitSize = ({ graphView }) => {
+  switch (graphView) {
+    case GRAPH_VIEW_DAG:
+      return DEFAULT_SPLIT_SIZE_DAG;
+    case GRAPH_VIEW_TIMELINE:
+      return DEFAULT_SPLIT_SIZE_TIMELINE;
+    default:
+      return DEFAULT_SPLIT_SIZE_NONE;
+  }
+};
+
+export default getDefaultSplitSize;

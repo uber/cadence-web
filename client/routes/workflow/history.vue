@@ -29,7 +29,10 @@ import {
 import debounce from 'lodash-es/debounce';
 import omit from 'lodash-es/omit';
 import Timeline from './components/timeline.vue';
+import WorkflowGraph from './components/workflow-graph';
 import EventDetail from './components/event-detail.vue';
+import { GRAPH_VIEW_DAG, GRAPH_VIEW_TIMELINE } from './constants';
+import { getDefaultSplitSize } from './helpers';
 import { DetailList, HighlightToggle } from '~components';
 
 export default {
@@ -57,6 +60,10 @@ export default {
       splitSizeSet: [1, 99],
       splitSizeMinSet: [0, 0],
       unwatch: [],
+
+      // allows render method to reference constants
+      GRAPH_VIEW_DAG: GRAPH_VIEW_DAG,
+      GRAPH_VIEW_TIMELINE: GRAPH_VIEW_TIMELINE,
     };
   },
   props: [
@@ -65,9 +72,10 @@ export default {
     'eventId',
     'events',
     'format',
+    'isWorkflowRunning',
     'loading',
     'runId',
-    'showGraph',
+    'graphView',
     'timelineEvents',
     'workflowHistoryEventHighlightList',
     'workflowHistoryEventHighlightListEnabled',
@@ -90,7 +98,7 @@ export default {
     }, 5);
   },
   mounted() {
-    this.splitSizeSet = this.showGraph ? [20, 80] : [1, 99];
+    this.setSplitSize();
     this.unwatch.push(
       this.$watch(
         () =>
@@ -159,6 +167,9 @@ export default {
     showNoResults() {
       return !this.loading && this.events.length === 0;
     },
+    splitDirection() {
+      return this.graphView === GRAPH_VIEW_DAG ? 'horizontal' : 'vertical';
+    },
     timelineEventIdToIndex() {
       return this.timelineEvents
         .map(({ eventIds }) => eventIds)
@@ -176,11 +187,17 @@ export default {
     },
   },
   methods: {
+    setSplitSize() {
+      const { graphView } = this;
+
+      this.splitSizeSet = getDefaultSplitSize({ graphView });
+      this.onSplitResize();
+    },
     deselectEvent() {
       this.$router.replace({ query: omit(this.$route.query, 'eventId') });
     },
     enableSplitting() {
-      if (!this.splitEnabled) {
+      if (!this.splitEnabled && this.graphView === GRAPH_VIEW_TIMELINE) {
         const timelineHeightPct =
           (this.$refs.splitPanel.$el.firstElementChild.offsetHeight /
             this.$refs.splitPanel.$el.offsetHeight) *
@@ -258,17 +275,33 @@ export default {
         i.eventIds[i.eventIds.length - 1]
       );
     },
-    toggleShowGraph() {
-      if (this.showGraph) {
-        this.$router.replace({ query: omit(this.$route.query, 'showGraph') });
+    toggleShowDagGraph() {
+      if (this.graphView === GRAPH_VIEW_DAG) {
+        this.$router.replace({
+          query: omit(this.$route.query, 'graphView'),
+        });
       } else {
         this.$router.replace({
-          query: { ...this.$route.query, showGraph: true },
+          query: { ...this.$route.query, graphView: GRAPH_VIEW_DAG },
+        });
+      }
+    },
+    toggleShowTimeline() {
+      if (this.graphView === GRAPH_VIEW_TIMELINE) {
+        this.$router.replace({
+          query: omit(this.$route.query, 'graphView'),
+        });
+      } else {
+        this.$router.replace({
+          query: { ...this.$route.query, graphView: GRAPH_VIEW_TIMELINE },
         });
       }
     },
   },
   watch: {
+    eventId(eventId) {
+      this.scrollEventIntoView(eventId);
+    },
     filteredEvents() {
       if (
         !this.scrolledToEventOnInit &&
@@ -279,9 +312,8 @@ export default {
         setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
       }
     },
-    showGraph() {
-      this.splitSizeSet = this.showGraph ? [20, 80] : [1, 99];
-      this.onSplitResize();
+    graphView() {
+      this.setSplitSize();
     },
   },
   components: {
@@ -292,6 +324,7 @@ export default {
     'highlight-toggle': HighlightToggle,
     prism: Prism,
     RecycleScroller,
+    WorkflowGraph,
     timeline: Timeline,
   },
 };
@@ -334,8 +367,17 @@ export default {
         </div>
       </div>
       <div class="actions">
-        <a href="#" @click.prevent="toggleShowGraph()"
-          >{{ showGraph ? 'hide' : 'show' }} graph</a
+        <a href="#" @click.prevent="toggleShowDagGraph()"
+          >{{ this.graphView === GRAPH_VIEW_DAG ? 'hide' : 'show' }} graph</a
+        >
+        <a
+          href="#"
+          @click.prevent="toggleShowTimeline()"
+          class="show-timeline-btn"
+          >{{
+            this.graphView === GRAPH_VIEW_TIMELINE ? 'hide' : 'show'
+          }}
+          timeline</a
         >
         <a
           class="export"
@@ -345,10 +387,10 @@ export default {
         >
       </div>
     </header>
-
     <Split
       class="split-panel"
-      direction="vertical"
+      :class="this.graphView === GRAPH_VIEW_DAG ? 'dag-graph' : ''"
+      :direction="splitDirection"
       @onDrag="onSplitResize"
       @onDragStart="enableSplitting"
       v-if="!showNoResults"
@@ -359,10 +401,17 @@ export default {
         :min-size="splitSizeMinSet[0]"
         :size="splitSizeSet[0]"
       >
+        <WorkflowGraph
+          :events="events"
+          :isWorkflowRunning="isWorkflowRunning"
+          :selected-event-id="eventId"
+          class="tree-view"
+          v-if="this.graphView === GRAPH_VIEW_DAG && events.length"
+        />
         <timeline
           :events="timelineEvents"
           :selected-event-id="eventId"
-          v-if="showGraph"
+          v-if="this.graphView === GRAPH_VIEW_TIMELINE"
         />
       </SplitArea>
       <SplitArea
@@ -593,245 +642,385 @@ export default {
 </template>
 
 <style lang="stylus">
-@require "../../styles/definitions.styl"
+@require '../../styles/definitions.styl';
 
-section.history
-  brdr = 1px solid uber-black-60
-  display flex
-  flex-direction column
-  flex 1 1 auto
+section.history {
+  brdr = 1px solid uber-black-60;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
 
-  header.controls
-    display flex
-    flex-wrap wrap
-    justify-content space-between
-    padding inline-spacing-large
-    flex 0 0 auto
-    .field
-      flex 1 1 auto
-    & > div
-      display flex
-      align-items center
-      & > *
-        margin inline-spacing-small
-    a
-      action-button()
-  .view-formats
-    display flex
-    a
-      flex 0 0 auto
-      margin 0
-      text-transform none
-      &.active
-        background-color darken(uber-blue, 20%)
+  header.controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: inline-spacing-large;
+    flex: 0 0 auto;
 
-  paged-grid()
+    .field {
+      flex: 1 1 auto;
+    }
 
-  &:not(.has-results) header .actions
-    display none
-  &.loading.has-results
-    &::after
-      content none
+    & > div {
+      display: flex;
+      align-items: center;
 
-  a.export
-    icon-download()
+      & > * {
+        margin: inline-spacing-small;
+      }
+    }
 
-  .gutter.gutter-vertical
-    border-top 1px solid uber-white-80
-    border-bottom 1px solid uber-white-80
-    background-color uber-white-20
-  div.split-panel
-    .timeline-split
-      overflow hidden
-    .view-split
-      flex 1
-      overflow hidden
-      display flex
-      position relative
-      flex-direction column
-  &:not(.split-enabled) div.split-panel
-    display flex
-    flex-direction column
-    flex 1
-    .gutter
-      flex 0 0 auto
-    .timeline-split
-      flex 0 0 auto
-      max-height 350px
-  &.split-enabled div.split-panel
-    height calc(100vh - 188px)
+    a {
+      action-button();
+    }
+  }
 
-  section pre
-    border brdr
-    overflow auto
+  .view-formats {
+    display: flex;
 
-  .table
-    .vue-recycle-scroller__slot,
-    .vue-recycle-scroller__item-view,
-    .scroller-item
+    a {
+      flex: 0 0 auto;
+      margin: 0;
+      text-transform: none;
+
+      &.active {
+        background-color: darken(uber-blue, 20%);
+      }
+    }
+  }
+
+  paged-grid();
+
+  &:not(.has-results) header .actions {
+    display: none;
+  }
+
+  &.loading.has-results {
+    &::after {
+      content: none;
+    }
+  }
+
+  a.export {
+    icon-download();
+  }
+
+  .gutter.gutter-vertical {
+    border-top: 1px solid uber-white-80;
+    border-bottom: 1px solid uber-white-80;
+    background-color: uber-white-20;
+  }
+
+  .split-panel.split.dag-graph {
+    display: flex;
+    flex-direction: row-reverse;
+  }
+
+  div.split-panel {
+    .timeline-split {
+      overflow: hidden;
+    }
+
+    .view-split {
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      position: relative;
+      flex-direction: column;
+    }
+  }
+
+  &:not(.split-enabled) div.split-panel {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+
+    .gutter {
+      flex: 0 0 auto;
+    }
+
+    .timeline-split {
+      flex: 0 0 auto;
+      max-height: 350px;
+    }
+  }
+
+  &.split-enabled div.split-panel {
+    height: calc(100vh - 188px);
+  }
+
+  section pre {
+    border: brdr;
+    overflow: auto;
+  }
+
+  .table {
+    .vue-recycle-scroller__slot, .vue-recycle-scroller__item-view, .scroller-item {
       display: flex;
       width: 100%;
-    .col-id
+    }
+
+    .col-id {
       min-width: 50px;
-    .col-summary
+    }
+
+    .col-summary {
       flex: 1;
-    .col-time
+    }
+
+    .col-time {
       min-width: 150px;
-    .col-type
+    }
+
+    .col-type {
       min-width: 212px;
-    .thead
-      background-color uber-white-10
-      box-shadow 2px 2px 2px rgba(0,0,0,0.2)
+    }
+
+    .thead {
+      background-color: uber-white-10;
+      box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
       position: absolute;
       display: flex;
       top: 0;
       left: 0;
       z-index: 2;
       width: calc(100% - 10px);
-      .th
+
+      .th {
         color: rgb(0, 0, 0);
         display: inline-block;
         font-weight: 500;
         text-transform: uppercase;
-        & > .v-select.eventType
+
+        & > .v-select.eventType {
           margin-left: 10px;
           display: inline-block;
           width: 150px;
-      & + .spacer
+        }
+      }
+
+      & + .spacer {
         width: 100%;
         height: 58px;
-    .tr
+      }
+    }
+
+    .tr {
       display: flex;
       flex: 1;
       border: 1px solid transparent;
-      &.odd
+
+      &.odd {
         background-color: #f8f8f9;
-    .td, .th
+      }
+    }
+
+    .td, .th {
       flex-basis: auto;
       padding: 8px;
-    .th a:not([href])
-      border-bottom 1px solid black
-    .td:nth-child(3), .td:nth-child(2)
-      one-liner-ellipsis()
-    .tr[data-event-type*="Started"] .td:nth-child(2)
-      color uber-blue-120
-    .tr[data-event-type*="Failed"], .tr[data-event-type*="TimedOut"]
-      .td:nth-child(2), [data-prop="reason"], [data-prop="details"]
-        color uber-orange
-    .tr[data-event-type*="Completed"]
-      .td:nth-child(2), [data-prop="result"] dt
-        color uber-green
-    .tr.active
-      border-top brdr
-      border-bottom brdr
-      background-color alpha(uber-blue, 5%)
-    pre
-      max-height 15vh
-    &.compact .tr:not(.active)
-      .td:nth-child(4)
-        overflow hidden
-      dl.details
-        max-width 50vw
+    }
 
-  .table.compact .tr:not(.active), .compact-view .timeline-event
-    dl.details
-      white-space nowrap
-      & > div
-        display inline-block
-        padding 0
-        &:nth-child(2n)
-          background none
-      dt, dd
-        display inline-block
-        vertical-align middle
-        margin 0 0.5em
-      dt
-        font-family primary-font-family
-        font-weight 200
-        text-transform uppercase
-      pre
-        display inline-block
-        max-width 40vw
-        one-liner-ellipsis()
+    .th a:not([href]) {
+      border-bottom: 1px solid black;
+    }
 
-  section.results
-    flex 1
-    & > pre
-      margin layout-spacing-small
-      padding layout-spacing-small
+    .td:nth-child(3), .td:nth-child(2) {
+      one-liner-ellipsis();
+    }
 
-  wide-title-width = 400px
+    .tr[data-event-type*='Started'] .td:nth-child(2) {
+      color: uber-blue-120;
+    }
 
-  .compact-view
-    line-height 1.5em
-    overflow-y auto
-    .scroller-compact
+    .tr[data-event-type*='Failed'], .tr[data-event-type*='TimedOut'] {
+      .td:nth-child(2), [data-prop='reason'], [data-prop='details'] {
+        color: uber-orange;
+      }
+    }
+
+    .tr[data-event-type*='Completed'] {
+      .td:nth-child(2), [data-prop='result'] dt {
+        color: uber-green;
+      }
+    }
+
+    .tr.active {
+      border-top: brdr;
+      border-bottom: brdr;
+      background-color: alpha(uber-blue, 5%);
+    }
+
+    pre {
+      max-height: 15vh;
+    }
+
+    &.compact .tr:not(.active) {
+      .td:nth-child(4) {
+        overflow: hidden;
+      }
+
+      dl.details {
+        max-width: 50vw;
+      }
+    }
+  }
+
+  .table.compact .tr:not(.active), .compact-view .timeline-event {
+    dl.details {
+      white-space: nowrap;
+
+      & > div {
+        display: inline-block;
+        padding: 0;
+
+        &:nth-child(2n) {
+          background: none;
+        }
+      }
+
+      dt, dd {
+        display: inline-block;
+        vertical-align: middle;
+        margin: 0 0.5em;
+      }
+
+      dt {
+        font-family: primary-font-family;
+        font-weight: 200;
+        text-transform: uppercase;
+      }
+
+      pre {
+        display: inline-block;
+        max-width: 40vw;
+        one-liner-ellipsis();
+      }
+    }
+  }
+
+  section.results {
+    flex: 1;
+
+    & > pre {
+      margin: layout-spacing-small;
+      padding: layout-spacing-small;
+    }
+  }
+
+  wide-title-width = 400px;
+
+  .hidden {
+    display: none;
+  }
+
+  .compact-view {
+    line-height: 1.5em;
+    overflow-y: auto;
+
+    .scroller-compact {
       padding: layout-spacing-small;
       padding-bottom: 0;
-    .event-title
-      padding 4px
-      font-size 16px
-    pre
-      max-height 15vh
+    }
 
-    .timeline-event
-      border 2px solid primary-color
+    .event-title {
+      padding: 4px;
+      font-size: 16px;
+    }
+
+    pre {
+      max-height: 15vh;
+    }
+
+    .timeline-event {
+      border: 2px solid primary-color;
       cursor: pointer;
-      padding 6px
-      margin-bottom layout-spacing-small
-      history-item-state-color(3%)
-      dl.details dd
-        max-width none
+      padding: 6px;
+      margin-bottom: layout-spacing-small;
+      history-item-state-color(3%);
 
-      @media (max-width: 1400px)
-        dl.details
-          display none
-      @media (min-width: 1400px)
-        display flex
-        align-items center
-        .event-title
-          flex 0 0 wide-title-width
-        dl.details
-          flex 1
-          align-items center
-          overflow hidden
-          pre
-            max-width none
+      dl.details dd {
+        max-width: none;
+      }
 
-    .selected-event-detail
-      position absolute
-      width "calc(100vw - %s)" % (wide-title-width + 30px)
-      height 100%
-      top 0
-      left wide-title-width + 15px
-      overflow auto
-      background-color white
-      padding layout-spacing-small
-      border-left 1px solid uber-black-80
-      box-shadow -5px 0 5px rgba(0,0,0,0.25)
-      .event-title
-        display block
-        font-size 1.4em
-        margin-bottom 0.5em
-      .event-tabs
-        //border-bottom 1px solid uber-black-60
-        margin-bottom layout-spacing-small
-        margin-top layout-spacing-small
-        a
-          display inline-block
-          padding inline-spacing-medium
-          font-family monospace-font-family
-          border-bottom 2px solid transparent
-          &.active
-            border-bottom-color primary-color
-        & > span
-          font-weight 200
-          text-transform uppercase
-          font-size 11px
-      dl.details
-        background-color alpha(uber-white-80, 0.2)
-        &.timeline-details dt, dd
-          padding 4px
-      a.close
-        top layout-spacing-small
+      @media (max-width: 1400px) {
+        dl.details {
+          display: none;
+        }
+      }
+
+      @media (min-width: 1400px) {
+        display: flex;
+        align-items: center;
+
+        .event-title {
+          flex: 0 0 wide-title-width;
+        }
+
+        dl.details {
+          flex: 1;
+          align-items: center;
+          overflow: hidden;
+
+          pre {
+            max-width: none;
+          }
+        }
+      }
+    }
+
+    .selected-event-detail {
+      position: absolute;
+      width: 'calc(100vw - %s)' % (wide-title-width + 30px);
+      height: 100%;
+      top: 0;
+      left: wide-title-width + 15px;
+      overflow: auto;
+      background-color: white;
+      padding: layout-spacing-small;
+      border-left: 1px solid uber-black-80;
+      box-shadow: -5px 0 5px rgba(0, 0, 0, 0.25);
+
+      .event-title {
+        display: block;
+        font-size: 1.4em;
+        margin-bottom: 0.5em;
+      }
+
+      .event-tabs {
+        // border-bottom 1px solid uber-black-60
+        margin-bottom: layout-spacing-small;
+        margin-top: layout-spacing-small;
+
+        a {
+          display: inline-block;
+          padding: inline-spacing-medium;
+          font-family: monospace-font-family;
+          border-bottom: 2px solid transparent;
+
+          &.active {
+            border-bottom-color: primary-color;
+          }
+        }
+
+        & > span {
+          font-weight: 200;
+          text-transform: uppercase;
+          font-size: 11px;
+        }
+      }
+
+      dl.details {
+        background-color: alpha(uber-white-80, 0.2);
+
+        &.timeline-details dt, dd {
+          padding: 4px;
+        }
+      }
+
+      a.close {
+        top: layout-spacing-small;
+      }
+    }
+  }
+}
 </style>

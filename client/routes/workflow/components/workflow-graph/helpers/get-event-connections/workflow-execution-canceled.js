@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021 Uber Technologies Inc.
+// Copyright (c) 2020-2021 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,14 +19,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export const RETRY_COUNT_MAX = 3;
-export const RETRY_TIMEOUT = 6000;
-export const TERMINATE_DEFAULT_ERROR_MESSAGE =
-  'An error has occurred. Please check you have the correct permissions to terminate this workflow and try again.';
+const WorkflowExecutionCanceled = event => ({
+  parent: event.eventFullDetails.decisionTaskCompletedEventId,
+});
 
-export const DEFAULT_SPLIT_SIZE_DAG = [40, 60];
-export const DEFAULT_SPLIT_SIZE_TIMELINE = [20, 80];
-export const DEFAULT_SPLIT_SIZE_NONE = [1, 99];
-
-export const GRAPH_VIEW_DAG = 'dag';
-export const GRAPH_VIEW_TIMELINE = 'timeline';
+export default WorkflowExecutionCanceled;

@@ -55,6 +55,8 @@ import WorkflowList from './routes/domain/workflow-list';
 import WorkflowSummary from './routes/workflow/summary';
 import WorkflowTabs from './routes/workflow';
 
+import store from './store/index.js';
+
 import { http, injectMomentDurationFormat, jsonTryParse } from '~helpers';
 
 const routeOpts = {
@@ -188,6 +190,7 @@ const routeOpts = {
               format: query.format || 'grid',
               runId: params.runId,
               showGraph: Boolean(query.showGraph) === true,
+              graphView: query.graphView,
               workflowId: encodeURIComponent(params.workflowId),
             }),
           },
@@ -345,6 +348,7 @@ if (typeof mocha === 'undefined') {
   new Vue({
     el: 'main',
     router,
+    store,
     template: '<App/>',
     components: { App },
   });

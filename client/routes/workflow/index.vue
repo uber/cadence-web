@@ -368,6 +368,7 @@ export default {
       name="history"
       :baseAPIURL="baseAPIURL"
       :events="historyEvents"
+      :isWorkflowRunning="isWorkflowRunning"
       :loading="history.loading"
       :timelineEvents="historyTimelineEvents"
       :workflow-history-event-highlight-list="workflowHistoryEventHighlightList"
