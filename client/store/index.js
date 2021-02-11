@@ -22,6 +22,11 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import VuexPersistence from 'vuex-persist';
+import {
+  getSettingsWorkflowHistoryDefaultState,
+  settingsWorkflowHistoryGetters,
+  settingsWorkflowHistoryMutations,
+} from '~containers';
 
 // Graph store
 
@@ -72,6 +77,7 @@ const graphGetters = {
 
 const getDefaultState = () => ({
   graph: getGraphDefaultState(),
+  settingsWorkflowHistory: getSettingsWorkflowHistoryDefaultState(),
 });
 
 const state = getDefaultState();
@@ -86,9 +92,11 @@ const store = new Vuex.Store({
   state: state,
   mutations: {
     ...graphMutations,
+    ...settingsWorkflowHistoryMutations,
   },
   getters: {
     ...graphGetters,
+    ...settingsWorkflowHistoryGetters,
   },
   plugins: [vuexLocal.plugin],
 });
