@@ -22,6 +22,9 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import VuexPersistence from 'vuex-persist';
+import {
+  getWorkflowHistoryDefaultState,
+} from '~containers';
 
 // Graph store
 
@@ -72,6 +75,7 @@ const graphGetters = {
 
 const getDefaultState = () => ({
   graph: getGraphDefaultState(),
+  workflowHistory: getWorkflowHistoryDefaultState(),
 });
 
 const state = getDefaultState();

@@ -20,7 +20,12 @@
 // THE SOFTWARE.
 
 import Component from './component';
+import Connector from './connector';
 
-const component = Component;
+const getDefaultState = () => ({
+  graphEnabled: true,
+});
 
-export { component };
+const container = Connector('WorkflowHistory', Component);
+
+export { container, getDefaultState };
