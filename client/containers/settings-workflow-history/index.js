@@ -25,7 +25,7 @@ import getters from './getters';
 import mutations from './mutations';
 
 const getDefaultState = () => ({
-  graphEnabled: false,
+  graphEnabled: true,
 });
 
 const container = Connector('SettingsWorkflowHistory', Component);

@@ -24,6 +24,7 @@ import { ToggleButton } from 'vue-js-toggle-button';
 import {
   ButtonFill,
   ButtonIcon,
+  FeatureFlag,
   FlexGrid,
   FlexGridItem,
   SettingsFooter,
@@ -148,6 +149,7 @@ export default {
   components: {
     'button-fill': ButtonFill,
     'button-icon': ButtonIcon,
+    'feature-flag': FeatureFlag,
     'flex-grid': FlexGrid,
     'flex-grid-item': FlexGridItem,
     'settings-footer': SettingsFooter,
@@ -162,12 +164,14 @@ export default {
   <div class="settings-workflow-history">
     <div class="content">
       <div class="content-item">
-        <settings-toggle
-          label="Enable history graph"
-          name="graphEnabled"
-          :value="graphEnabled"
-          @change="onChange"
-        />
+        <feature-flag name="workflowGraph">
+          <settings-toggle
+            label="Enable history graph"
+            name="graphEnabled"
+            :value="graphEnabled"
+            @change="onChange"
+          />
+        </feature-flag>
       </div>
 
       <div class="content-item">
