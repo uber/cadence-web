@@ -21,6 +21,7 @@
 
 import Vue from 'vue';
 import Vuex from 'vuex';
+import VuexPersistence from 'vuex-persist';
 import {
   getSettingsWorkflowHistoryDefaultState,
   getWorkflowHistoryDefaultState,
@@ -85,6 +86,10 @@ const state = getDefaultState();
 
 Vue.use(Vuex);
 
+const vuexLocal = new VuexPersistence({
+  storage: window.localStorage
+})
+
 const store = new Vuex.Store({
   state: state,
   mutations: {
@@ -95,6 +100,7 @@ const store = new Vuex.Store({
     ...graphGetters,
     ...settingsWorkflowHistoryGetters,
   },
+  plugins: [vuexLocal.plugin],
 });
 
 export default store;
