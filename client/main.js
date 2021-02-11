@@ -56,6 +56,8 @@ import WorkflowTabs from './routes/workflow';
 import store from './store/index.js';
 import { WorkflowHistory } from '~containers';
 
+import store from './store/index.js';
+
 import { http, injectMomentDurationFormat, jsonTryParse } from '~helpers';
 
 const routeOpts = {
