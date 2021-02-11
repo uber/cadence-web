@@ -55,7 +55,7 @@ const graphMutations = {
   parentRoute(state, route) {
     state.graph.parentRoute = route;
   },
-  resetState(state) {
+  resetGraphState(state) {
     Object.assign(state.graph, getGraphDefaultState());
   },
 };
