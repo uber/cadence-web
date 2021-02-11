@@ -21,6 +21,7 @@
 
 import Vue from 'vue';
 import Vuex from 'vuex';
+import VuexPersistence from 'vuex-persist';
 
 // Graph store
 
@@ -77,6 +78,10 @@ const state = getDefaultState();
 
 Vue.use(Vuex);
 
+const vuexLocal = new VuexPersistence({
+  storage: window.localStorage
+})
+
 const store = new Vuex.Store({
   state: state,
   mutations: {
@@ -85,6 +90,7 @@ const store = new Vuex.Store({
   getters: {
     ...graphGetters,
   },
+  plugins: [vuexLocal.plugin],
 });
 
 export default store;
