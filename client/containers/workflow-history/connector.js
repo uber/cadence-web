@@ -21,10 +21,10 @@
 
 import { connect } from 'vuex-connect';
 
-const mapStateToProps = {
+const stateToProps = {
   graphEnabled: state => state.workflowHistory.graphEnabled,
 };
 
 export default connect({
-  mapStateToProps,
+  stateToProps,
 });
