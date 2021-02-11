@@ -33,7 +33,7 @@ import WorkflowGraph from './components/workflow-graph';
 import EventDetail from './components/event-detail.vue';
 import { GRAPH_VIEW_DAG, GRAPH_VIEW_TIMELINE } from './constants';
 import { getDefaultSplitSize } from './helpers';
-import { DetailList, HighlightToggle } from '~components';
+import { DetailList, FeatureFlag, HighlightToggle } from '~components';
 
 export default {
   name: 'history',
@@ -321,6 +321,7 @@ export default {
     DynamicScroller,
     DynamicScrollerItem,
     'event-detail': EventDetail,
+    'feature-flag': FeatureFlag,
     'highlight-toggle': HighlightToggle,
     prism: Prism,
     RecycleScroller,
@@ -367,17 +368,16 @@ export default {
         </div>
       </div>
       <div class="actions">
-        <a href="#" @click.prevent="toggleShowDagGraph()"
-          >{{ this.graphView === GRAPH_VIEW_DAG ? 'hide' : 'show' }} graph</a
-        >
+        <feature-flag name="workflowGraph">
+          <a href="#" @click.prevent="toggleShowDagGraph()"
+            >{{ graphView === GRAPH_VIEW_DAG ? 'hide' : 'show' }} graph</a
+          >
+        </feature-flag>
         <a
           href="#"
           @click.prevent="toggleShowTimeline()"
           class="show-timeline-btn"
-          >{{
-            this.graphView === GRAPH_VIEW_TIMELINE ? 'hide' : 'show'
-          }}
-          timeline</a
+          >{{ graphView === GRAPH_VIEW_TIMELINE ? 'hide' : 'show' }} timeline</a
         >
         <a
           class="export"
@@ -389,7 +389,7 @@ export default {
     </header>
     <Split
       class="split-panel"
-      :class="this.graphView === GRAPH_VIEW_DAG ? 'dag-graph' : ''"
+      :class="graphView === GRAPH_VIEW_DAG ? 'dag-graph' : ''"
       :direction="splitDirection"
       @onDrag="onSplitResize"
       @onDragStart="enableSplitting"
@@ -401,17 +401,21 @@ export default {
         :min-size="splitSizeMinSet[0]"
         :size="splitSizeSet[0]"
       >
-        <WorkflowGraph
-          :events="events"
-          :isWorkflowRunning="isWorkflowRunning"
-          :selected-event-id="eventId"
-          class="tree-view"
-          v-if="this.graphView === GRAPH_VIEW_DAG && events.length"
-        />
+        <feature-flag
+          name="workflowGraph"
+          v-if="graphView === GRAPH_VIEW_DAG && events.length"
+        >
+          <WorkflowGraph
+            :events="events"
+            :isWorkflowRunning="isWorkflowRunning"
+            :selected-event-id="eventId"
+            class="tree-view"
+          />
+        </feature-flag>
         <timeline
           :events="timelineEvents"
           :selected-event-id="eventId"
-          v-if="this.graphView === GRAPH_VIEW_TIMELINE"
+          v-if="graphView === GRAPH_VIEW_TIMELINE"
         />
       </SplitArea>
       <SplitArea
@@ -719,6 +723,9 @@ section.history {
   div.split-panel {
     .timeline-split {
       overflow: hidden;
+      .feature-flag {
+        height: 100%;
+      }
     }
 
     .view-split {
