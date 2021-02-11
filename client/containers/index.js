@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021 Uber Technologies Inc.
+// Copyright (c) 2021 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,7 +19,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export const RETRY_COUNT_MAX = 3;
-export const RETRY_TIMEOUT = 6000;
-export const TERMINATE_DEFAULT_ERROR_MESSAGE =
-  'An error has occurred. Please check you have the correct permissions to terminate this workflow and try again.';
+export {
+  component as WorkflowHistory,
+} from './workflow-history';

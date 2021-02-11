@@ -19,7 +19,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export const RETRY_COUNT_MAX = 3;
-export const RETRY_TIMEOUT = 6000;
-export const TERMINATE_DEFAULT_ERROR_MESSAGE =
-  'An error has occurred. Please check you have the correct permissions to terminate this workflow and try again.';
+import {
+  DEFAULT_SPLIT_SIZE_DAG,
+  DEFAULT_SPLIT_SIZE_TIMELINE,
+  DEFAULT_SPLIT_SIZE_NONE,
+  GRAPH_VIEW_DAG,
+  GRAPH_VIEW_TIMELINE,
+} from './constants';
+
+export const getDefaultSplitSize = ({ graphView }) => {
+  switch (graphView) {
+    case GRAPH_VIEW_DAG:
+      return DEFAULT_SPLIT_SIZE_DAG;
+    case GRAPH_VIEW_TIMELINE:
+      return DEFAULT_SPLIT_SIZE_TIMELINE;
+    default:
+      return DEFAULT_SPLIT_SIZE_NONE;
+  }
+};
