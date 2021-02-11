@@ -377,10 +377,7 @@ export default {
           href="#"
           @click.prevent="toggleShowTimeline()"
           class="show-timeline-btn"
-          >{{
-            graphView === GRAPH_VIEW_TIMELINE ? 'hide' : 'show'
-          }}
-          timeline</a
+          >{{ graphView === GRAPH_VIEW_TIMELINE ? 'hide' : 'show' }} timeline</a
         >
         <a
           class="export"
