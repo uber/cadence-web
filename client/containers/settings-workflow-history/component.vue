@@ -39,6 +39,9 @@ import {
 export default {
   name: 'settings-workflow-history',
   props: {
+    isSubmitEnabled: {
+      type: Boolean,
+    },
     workflowHistoryEventHighlightList: {
       type: Array,
     },
@@ -57,7 +60,6 @@ export default {
           .workflowHistoryEventHighlightListEnabled,
         workflowHistoryEventHighlightList: this
           .workflowHistoryEventHighlightList,
-        graphEnabled: this.graphEnabled,
       },
       workflowEventTypes: WORKFLOW_EVENT_TYPES,
     };
@@ -118,12 +120,16 @@ export default {
     onSettingChange({ name, value }) {
       this.modal[name] = value;
     },
+    onChange({ name, value }) {
+      this.$emit('onChange', { name, value });
+    },
     onSubmit() {
+      const { graphEnabled } = this;
       this.$emit('change', {
         ...this.addSettingIfChanged('workflowHistoryEventHighlightListEnabled'),
         ...this.addSettingIfChanged('workflowHistoryEventHighlightList'),
-        ...this.addSettingIfChanged('graphEnabled'),
       });
+      this.$emit('onSubmit');
     },
     addSettingIfChanged(name) {
       return (
@@ -160,8 +166,8 @@ export default {
         <settings-toggle
           label="Enable history graph"
           name="graphEnabled"
-          :value="modal.graphEnabled"
-          @change="onSettingChange"
+          :value="graphEnabled"
+          @change="onChange"
         />
       </div>
 
@@ -269,7 +275,7 @@ export default {
       </div>
     </div>
     <settings-footer
-      :submit-enabled="isSettingsChanged"
+      :submit-enabled="isSubmitEnabled || isSettingsChanged"
       @cancel="onClose"
       @submit="onSubmit"
     />

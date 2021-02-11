@@ -20,17 +20,22 @@
 // THE SOFTWARE.
 
 import { connect } from 'vuex-connect';
+import { SETTINGS_WORKFLOW_HISTORY_IS_SUBMIT_ENABLED } from './getterTypes';
 import {
   SETTINGS_WORKFLOW_HISTORY_ON_CHANGE_VALUE,
   SETTINGS_WORKFLOW_HISTORY_ON_MOUNTED,
   SETTINGS_WORKFLOW_HISTORY_ON_SUBMIT,
 } from './mutationTypes';
 
-const lifecycle = {
-  mounted: store => store.dispatch(SETTINGS_WORKFLOW_HISTORY_ON_MOUNTED),
+const gettersToProps = {
+  isSubmitEnabled: SETTINGS_WORKFLOW_HISTORY_IS_SUBMIT_ENABLED,
 };
 
-const mapStateToProps = {
+const lifecycle = {
+  mounted: ({ commit }) => commit(SETTINGS_WORKFLOW_HISTORY_ON_MOUNTED),
+};
+
+const stateToProps = {
   graphEnabled: state => state.settingsWorkflowHistory.graphEnabled,
 };
 
@@ -40,7 +45,8 @@ const mutationsToEvents = {
 };
 
 export default connect({
+  gettersToProps,
   lifecycle,
-  mapStateToProps,
   mutationsToEvents,
+  stateToProps,
 });

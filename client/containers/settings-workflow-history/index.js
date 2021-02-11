@@ -21,6 +21,7 @@
 
 import Component from './component';
 import Connector from './connector';
+import getters from './getters';
 import mutations from './mutations';
 
 const getDefaultState = () => ({
@@ -29,4 +30,4 @@ const getDefaultState = () => ({
 
 const container = Connector('SettingsWorkflowHistory', Component);
 
-export { container, getDefaultState, mutations };
+export { container, getDefaultState, getters, mutations };

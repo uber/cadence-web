@@ -24,6 +24,7 @@ import Vuex from 'vuex';
 import {
   getSettingsWorkflowHistoryDefaultState,
   getWorkflowHistoryDefaultState,
+  settingsWorkflowHistoryGetters,
   settingsWorkflowHistoryMutations,
 } from '~containers';
 
@@ -92,6 +93,7 @@ const store = new Vuex.Store({
   },
   getters: {
     ...graphGetters,
+    ...settingsWorkflowHistoryGetters,
   },
 });
 
