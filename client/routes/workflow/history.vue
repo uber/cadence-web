@@ -370,7 +370,7 @@ export default {
       <div class="actions">
         <feature-flag name="workflowGraph">
           <a href="#" @click.prevent="toggleShowDagGraph()"
-            >{{ this.graphView === GRAPH_VIEW_DAG ? 'hide' : 'show' }} graph</a
+            >{{ graphView === GRAPH_VIEW_DAG ? 'hide' : 'show' }} graph</a
           >
         </feature-flag>
         <a
@@ -378,7 +378,7 @@ export default {
           @click.prevent="toggleShowTimeline()"
           class="show-timeline-btn"
           >{{
-            this.graphView === GRAPH_VIEW_TIMELINE ? 'hide' : 'show'
+            graphView === GRAPH_VIEW_TIMELINE ? 'hide' : 'show'
           }}
           timeline</a
         >
@@ -392,7 +392,7 @@ export default {
     </header>
     <Split
       class="split-panel"
-      :class="this.graphView === GRAPH_VIEW_DAG ? 'dag-graph' : ''"
+      :class="graphView === GRAPH_VIEW_DAG ? 'dag-graph' : ''"
       :direction="splitDirection"
       @onDrag="onSplitResize"
       @onDragStart="enableSplitting"
@@ -406,7 +406,7 @@ export default {
       >
         <feature-flag
           name="workflowGraph"
-          v-if="this.graphView === GRAPH_VIEW_DAG && events.length"
+          v-if="graphView === GRAPH_VIEW_DAG && events.length"
         >
           <WorkflowGraph
             :events="events"
@@ -418,7 +418,7 @@ export default {
         <timeline
           :events="timelineEvents"
           :selected-event-id="eventId"
-          v-if="this.graphView === GRAPH_VIEW_TIMELINE"
+          v-if="graphView === GRAPH_VIEW_TIMELINE"
         />
       </SplitArea>
       <SplitArea
