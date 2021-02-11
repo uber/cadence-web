@@ -27,13 +27,22 @@ import {
 
 const mutations = {
   [SETTINGS_WORKFLOW_HISTORY_ON_CHANGE_VALUE]: (state, { name, value }) => {
-    state.settingsWorkflowHistory = { ...state.settingsWorkflowHistory, [name]: value };
+    state.settingsWorkflowHistory = {
+      ...state.settingsWorkflowHistory,
+      [name]: value,
+    };
   },
   [SETTINGS_WORKFLOW_HISTORY_ON_MOUNTED]: state => {
-    state.settingsWorkflowHistory = { ...state.settingsWorkflowHistory, graphEnabled: state.workflowHistory.graphEnabled };
+    state.settingsWorkflowHistory = {
+      ...state.settingsWorkflowHistory,
+      graphEnabled: state.workflowHistory.graphEnabled,
+    };
   },
-  [SETTINGS_WORKFLOW_HISTORY_ON_SUBMIT]: (state) => {
-    state.workflowHistory = { ...state.workflowHistory, ...state.settingsWorkflowHistory };
+  [SETTINGS_WORKFLOW_HISTORY_ON_SUBMIT]: state => {
+    state.workflowHistory = {
+      ...state.workflowHistory,
+      ...state.settingsWorkflowHistory,
+    };
   },
 };
 
