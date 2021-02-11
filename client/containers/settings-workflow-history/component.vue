@@ -21,18 +21,21 @@
 // THE SOFTWARE.
 
 import { ToggleButton } from 'vue-js-toggle-button';
-import ButtonFill from '../../button-fill';
-import ButtonIcon from '../../button-icon';
-import FlexGrid from '../../flex-grid';
-import FlexGridItem from '../../flex-grid-item';
-import TextInput from '../../text-input';
-import SettingsFooter from './settings-footer';
-import SettingsToggle from './settings-toggle';
+import {
+  ButtonFill,
+  ButtonIcon,
+  FeatureFlag,
+  FlexGrid,
+  FlexGridItem,
+  SettingsFooter,
+  SettingsToggle,
+  TextInput,
+} from '~components';
+import { WORKFLOW_EVENT_TYPES } from '~constants';
 import {
   workflowHistoryEventHighlightListAddOrUpdate,
   workflowHistoryEventHighlightListRemove,
 } from '~helpers';
-import { WORKFLOW_EVENT_TYPES } from '~constants';
 
 export default {
   name: 'settings-workflow-history',
