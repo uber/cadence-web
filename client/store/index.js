@@ -22,9 +22,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import VuexPersistence from 'vuex-persist';
-import {
-  getWorkflowHistoryDefaultState,
-} from '~containers';
+import { getWorkflowHistoryDefaultState } from '~containers';
 
 // Graph store
 
