@@ -124,7 +124,6 @@ export default {
       this.$emit('onChange', { name, value });
     },
     onSubmit() {
-      const { graphEnabled } = this;
       this.$emit('change', {
         ...this.addSettingIfChanged('workflowHistoryEventHighlightListEnabled'),
         ...this.addSettingIfChanged('workflowHistoryEventHighlightList'),
