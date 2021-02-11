@@ -58,6 +58,9 @@ export default {
     reloadWorkflow() {
       this.eventsSnapShot = this.events;
       this.isGraphLoading = true;
+
+      // NOTE: This is needed because the graph library being used is not vue reactive (jquery based).
+      // You can read about this approach here: https://michaelnthiessen.com/force-re-render/
       this.forceRefresh = !this.forceRefresh;
       this.delayedShow();
     },
