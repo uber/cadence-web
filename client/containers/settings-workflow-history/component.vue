@@ -24,7 +24,6 @@ import { ToggleButton } from 'vue-js-toggle-button';
 import {
   ButtonFill,
   ButtonIcon,
-  FeatureFlag,
   FlexGrid,
   FlexGridItem,
   SettingsFooter,
