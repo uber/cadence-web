@@ -21,6 +21,7 @@
 
 import Router from 'vue-router';
 import Vue from 'vue';
+import Vuex from 'vuex';
 import moment from 'moment';
 import fetchMock from 'fetch-mock';
 import qs from 'friendly-querystring';
@@ -34,6 +35,7 @@ import fixtures from './fixtures';
 export default function Scenario(test) {
   // eslint-disable-next-line no-param-reassign
   test.scenario = this;
+  this.storeConfig = {};
   this.mochaTest = test;
   this.api = fetchMock.sandbox().catch((url, req, opts) => {
     let msg = `Unexpected request: ${url}${
@@ -64,6 +66,8 @@ Scenario.prototype.render = function render(attachToBody) {
 
   const el = document.createElement('div');
 
+  const store = new Vuex.Store(this.storeConfig);
+
   if (attachToBody || this.isDebuggingJustThisTest()) {
     document.body.appendChild(el);
   }
@@ -72,6 +76,7 @@ Scenario.prototype.render = function render(attachToBody) {
     // vue just throws this away, not sure why
     el,
     router: this.router,
+    store,
     template: '<App/>',
     components: { App: main.App },
     mixins: [
@@ -223,6 +228,12 @@ Scenario.prototype.withNewsFeed = function withNewsFeed() {
       },
     ],
   });
+
+  return this;
+};
+
+Scenario.prototype.withStoreConfig = function withStoreConfig(config = {}) {
+  this.storeConfig = config;
 
   return this;
 };
