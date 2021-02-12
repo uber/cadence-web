@@ -40,6 +40,9 @@ import {
 export default {
   name: 'settings-workflow-history',
   props: {
+    graphEnabled: {
+      type: Boolean,
+    },
     isSubmitEnabled: {
       type: Boolean,
     },
@@ -47,9 +50,6 @@ export default {
       type: Array,
     },
     workflowHistoryEventHighlightListEnabled: {
-      type: Boolean,
-    },
-    graphEnabled: {
       type: Boolean,
     },
   },
@@ -173,7 +173,6 @@ export default {
           />
         </feature-flag>
       </div>
-
       <div class="content-item">
         <settings-toggle
           label="Enable history event param highlighting"
