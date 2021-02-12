@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021 Uber Technologies Inc.
+// Copyright (c) 2021 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,23 +19,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import {
-  DEFAULT_SPLIT_SIZE_DAG,
-  DEFAULT_SPLIT_SIZE_TIMELINE,
-  DEFAULT_SPLIT_SIZE_NONE,
-  GRAPH_VIEW_DAG,
-  GRAPH_VIEW_TIMELINE,
-} from '../constants';
+export const DEFAULT_SPLIT_SIZE_DAG = [40, 60];
+export const DEFAULT_SPLIT_SIZE_TIMELINE = [20, 80];
+export const DEFAULT_SPLIT_SIZE_NONE = [1, 99];
 
-const getDefaultSplitSize = ({ graphView }) => {
-  switch (graphView) {
-    case GRAPH_VIEW_DAG:
-      return DEFAULT_SPLIT_SIZE_DAG;
-    case GRAPH_VIEW_TIMELINE:
-      return DEFAULT_SPLIT_SIZE_TIMELINE;
-    default:
-      return DEFAULT_SPLIT_SIZE_NONE;
-  }
-};
-
-export default getDefaultSplitSize;
+export const GRAPH_VIEW_DAG = 'dag';
+export const GRAPH_VIEW_TIMELINE = 'timeline';

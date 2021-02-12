@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Uber Technologies Inc.
+// Copyright (c) 2017-2021 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,5 +19,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export { component as SettingsWorkflowHistory } from './settings-workflow-history';
-export { component as WorkflowHistory } from './workflow-history';
+import {
+  DEFAULT_SPLIT_SIZE_DAG,
+  DEFAULT_SPLIT_SIZE_TIMELINE,
+  DEFAULT_SPLIT_SIZE_NONE,
+  GRAPH_VIEW_DAG,
+  GRAPH_VIEW_TIMELINE,
+} from './constants';
+
+export const getDefaultSplitSize = ({ graphView }) => {
+  switch (graphView) {
+    case GRAPH_VIEW_DAG:
+      return DEFAULT_SPLIT_SIZE_DAG;
+    case GRAPH_VIEW_TIMELINE:
+      return DEFAULT_SPLIT_SIZE_TIMELINE;
+    default:
+      return DEFAULT_SPLIT_SIZE_NONE;
+  }
+};
