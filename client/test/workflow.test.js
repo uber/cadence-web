@@ -46,6 +46,13 @@ describe('Workflow', () => {
           },
         ])
         .withNewsFeed()
+        .withStoreConfig({
+          state: {
+            workflowHistory: {
+              graphEnabled: true,
+            },
+          },
+        })
         .withWorkflow(
           extendedOptions.workflowId,
           extendedOptions.runId,

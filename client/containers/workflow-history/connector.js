@@ -19,13 +19,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export {
-  container as SettingsWorkflowHistory,
-  getDefaultState as getSettingsWorkflowHistoryDefaultState,
-  getters as settingsWorkflowHistoryGetters,
-  mutations as settingsWorkflowHistoryMutations,
-} from './settings-workflow-history';
-export {
-  container as WorkflowHistory,
-  getDefaultState as getWorkflowHistoryDefaultState,
-} from './workflow-history';
+import { connect } from 'vuex-connect';
+
+const stateToProps = {
+  graphEnabled: state => state.workflowHistory.graphEnabled,
+};
+
+export default connect({
+  stateToProps,
+});

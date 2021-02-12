@@ -19,13 +19,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export {
-  container as SettingsWorkflowHistory,
-  getDefaultState as getSettingsWorkflowHistoryDefaultState,
-  getters as settingsWorkflowHistoryGetters,
-  mutations as settingsWorkflowHistoryMutations,
-} from './settings-workflow-history';
-export {
-  container as WorkflowHistory,
-  getDefaultState as getWorkflowHistoryDefaultState,
-} from './workflow-history';
+export { default as EventDetail } from './event-detail';
+export { default as Timeline } from './timeline';
+export { default as WorkflowGraph } from './workflow-graph';
