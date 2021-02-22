@@ -39,7 +39,9 @@ export default {
   },
   methods: {
     onChange(event) {
-      this.$emit('change', event);
+      const { name } = this;
+
+      this.$emit('change', { ...event, name });
     },
   },
   components: {

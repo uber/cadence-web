@@ -19,7 +19,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export { component as SettingsWorkflowHistory } from './settings-workflow-history';
+export {
+  container as SettingsWorkflowHistory,
+  getDefaultState as getSettingsWorkflowHistoryDefaultState,
+  getters as settingsWorkflowHistoryGetters,
+  mutations as settingsWorkflowHistoryMutations,
+} from './settings-workflow-history';
 export {
   container as WorkflowHistory,
   getDefaultState as getWorkflowHistoryDefaultState,
