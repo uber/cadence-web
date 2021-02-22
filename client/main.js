@@ -158,6 +158,7 @@ const routeOpts = {
       path: '/domains/:domain/workflows/:workflowId/:runId',
       component: WorkflowTabs,
       props: ({ params }) => ({
+        displayWorkflowId: params.workflowId,
         domain: params.domain,
         runId: params.runId,
         workflowId: encodeURIComponent(params.workflowId),

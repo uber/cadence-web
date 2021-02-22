@@ -61,6 +61,7 @@ export default {
   },
   props: [
     'dateFormat',
+    'displayWorkflowId',
     'domain',
     'runId',
     'timeFormat',
@@ -353,6 +354,7 @@ export default {
       name="summary"
       :baseAPIURL="baseAPIURL"
       :date-format="dateFormat"
+      :display-workflow-id="displayWorkflowId"
       :domain="domain"
       :input="summary.input"
       :isWorkflowRunning="summary.isWorkflowRunning"
