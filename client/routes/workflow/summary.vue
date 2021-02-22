@@ -37,6 +37,7 @@ export default {
   props: [
     'baseAPIURL',
     'dateFormat',
+    'displayWorkflowId',
     'domain',
     'input',
     'isWorkflowRunning',
@@ -47,7 +48,6 @@ export default {
     'timezone',
     'wfStatus',
     'workflow',
-    'workflowId',
   ],
   components: {
     'bar-loader': BarLoader,
@@ -231,12 +231,12 @@ export default {
       <div class="workflow-result" v-if="result">
         <dt>Result</dt>
         <dd>
-          <data-viewer :item="result" :title="workflowId + ' Result'" />
+          <data-viewer :item="result" :title="displayWorkflowId + ' Result'" />
         </dd>
       </div>
       <div class="workflow-id">
         <dt>Workflow Id</dt>
-        <dd>{{ workflowId }}</dd>
+        <dd>{{ displayWorkflowId }}</dd>
       </div>
       <div class="run-id">
         <dt>Run Id</dt>
@@ -275,7 +275,7 @@ export default {
           <data-viewer
             v-if="input !== undefined"
             :item="input"
-            :title="workflowId + ' Input'"
+            :title="displayWorkflowId + ' Input'"
           />
         </dd>
       </div>
