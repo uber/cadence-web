@@ -19,15 +19,5 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Component from './component';
-import Connector from './connector';
-import getters from './getters';
-import mutations from './mutations';
-
-const getDefaultState = () => ({
-  graphEnabled: true,
-});
-
-const container = Connector('SettingsWorkflowHistory', Component);
-
-export { container, getDefaultState, getters, mutations };
+export const SETTINGS_WORKFLOW_HISTORY_IS_SUBMIT_ENABLED =
+  'SETTINGS_WORKFLOW_HISTORY_IS_SUBMIT_ENABLED';

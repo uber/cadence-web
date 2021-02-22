@@ -24,6 +24,7 @@ import { ToggleButton } from 'vue-js-toggle-button';
 import {
   ButtonFill,
   ButtonIcon,
+  FeatureFlag,
   FlexGrid,
   FlexGridItem,
   SettingsFooter,
@@ -39,6 +40,12 @@ import {
 export default {
   name: 'settings-workflow-history',
   props: {
+    graphEnabled: {
+      type: Boolean,
+    },
+    isSubmitEnabled: {
+      type: Boolean,
+    },
     workflowHistoryEventHighlightList: {
       type: Array,
     },
@@ -115,6 +122,9 @@ export default {
     onWorkflowHistoryEventHighlightListEnabledChange({ value }) {
       this.modalWorkflowHistoryEventHighlightListEnabled = value;
     },
+    onChange({ name, value }) {
+      this.$emit('onChange', { name, value });
+    },
     onSubmit() {
       this.$emit('change', {
         ...(this.isWorkflowHistoryEventHighlightListEnabledChanged && {
@@ -126,11 +136,13 @@ export default {
             .modalWorkflowHistoryEventHighlightList,
         }),
       });
+      this.$emit('onSubmit');
     },
   },
   components: {
     'button-fill': ButtonFill,
     'button-icon': ButtonIcon,
+    'feature-flag': FeatureFlag,
     'flex-grid': FlexGrid,
     'flex-grid-item': FlexGridItem,
     'settings-footer': SettingsFooter,
@@ -144,6 +156,16 @@ export default {
 <template>
   <div class="settings-workflow-history">
     <div class="content">
+      <div class="content-item">
+        <feature-flag name="workflowGraph">
+          <settings-toggle
+            label="Enable history graph"
+            name="graphEnabled"
+            :value="graphEnabled"
+            @change="onChange"
+          />
+        </feature-flag>
+      </div>
       <div class="content-item">
         <settings-toggle
           label="Enable history event param highlighting"
@@ -248,7 +270,7 @@ export default {
       </div>
     </div>
     <settings-footer
-      :submit-enabled="isSettingsChanged"
+      :submit-enabled="isSubmitEnabled || isSettingsChanged"
       @cancel="onClose"
       @submit="onSubmit"
     />
@@ -265,7 +287,8 @@ export default {
 
   .scrollable {
     overflow-y: auto;
-    height: 200px;
+    height: 165px;
+    margin-bottom: 10px;
   }
 }
 </style>

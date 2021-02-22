@@ -19,15 +19,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Component from './component';
-import Connector from './connector';
-import getters from './getters';
-import mutations from './mutations';
+import { SUBMIT_CHANGE_KEYS } from './constants';
+import { SETTINGS_WORKFLOW_HISTORY_IS_SUBMIT_ENABLED } from './getterTypes';
 
-const getDefaultState = () => ({
-  graphEnabled: true,
-});
+const getters = {
+  [SETTINGS_WORKFLOW_HISTORY_IS_SUBMIT_ENABLED]: ({
+    settingsWorkflowHistory,
+    workflowHistory,
+  }) =>
+    SUBMIT_CHANGE_KEYS.reduce(
+      (accumulator, key) =>
+        accumulator || settingsWorkflowHistory[key] !== workflowHistory[key],
+      false
+    ),
+};
 
-const container = Connector('SettingsWorkflowHistory', Component);
-
-export { container, getDefaultState, getters, mutations };
+export default getters;

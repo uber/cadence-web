@@ -19,15 +19,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Component from './component';
-import Connector from './connector';
-import getters from './getters';
-import mutations from './mutations';
+import { connect } from 'vuex-connect';
+import { SETTINGS_WORKFLOW_HISTORY_IS_SUBMIT_ENABLED } from './getterTypes';
+import {
+  SETTINGS_WORKFLOW_HISTORY_ON_CHANGE_VALUE,
+  SETTINGS_WORKFLOW_HISTORY_ON_MOUNTED,
+  SETTINGS_WORKFLOW_HISTORY_ON_SUBMIT,
+} from './mutationTypes';
 
-const getDefaultState = () => ({
-  graphEnabled: true,
+const gettersToProps = {
+  isSubmitEnabled: SETTINGS_WORKFLOW_HISTORY_IS_SUBMIT_ENABLED,
+};
+
+const lifecycle = {
+  mounted: ({ commit }) => commit(SETTINGS_WORKFLOW_HISTORY_ON_MOUNTED),
+};
+
+const stateToProps = {
+  graphEnabled: state => state.settingsWorkflowHistory.graphEnabled,
+};
+
+const mutationsToEvents = {
+  onChange: SETTINGS_WORKFLOW_HISTORY_ON_CHANGE_VALUE,
+  onSubmit: SETTINGS_WORKFLOW_HISTORY_ON_SUBMIT,
+};
+
+export default connect({
+  gettersToProps,
+  lifecycle,
+  mutationsToEvents,
+  stateToProps,
 });
-
-const container = Connector('SettingsWorkflowHistory', Component);
-
-export { container, getDefaultState, getters, mutations };
