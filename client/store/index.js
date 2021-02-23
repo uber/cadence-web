@@ -24,6 +24,7 @@ import Vuex from 'vuex';
 import VuexPersistence from 'vuex-persist';
 import {
   getSettingsWorkflowHistoryDefaultState,
+  getWorkflowHistoryDefaultState,
   settingsWorkflowHistoryGetters,
   settingsWorkflowHistoryMutations,
 } from '~containers';
@@ -59,7 +60,7 @@ const graphMutations = {
   parentRoute(state, route) {
     state.graph.parentRoute = route;
   },
-  resetState(state) {
+  resetGraphState(state) {
     Object.assign(state.graph, getGraphDefaultState());
   },
 };
@@ -78,6 +79,7 @@ const graphGetters = {
 const getDefaultState = () => ({
   graph: getGraphDefaultState(),
   settingsWorkflowHistory: getSettingsWorkflowHistoryDefaultState(),
+  workflowHistory: getWorkflowHistoryDefaultState(),
 });
 
 const state = getDefaultState();

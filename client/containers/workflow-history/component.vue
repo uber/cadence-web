@@ -28,9 +28,7 @@ import {
 } from 'vue-virtual-scroller';
 import debounce from 'lodash-es/debounce';
 import omit from 'lodash-es/omit';
-import Timeline from './components/timeline.vue';
-import WorkflowGraph from './components/workflow-graph';
-import EventDetail from './components/event-detail.vue';
+import { EventDetail, Timeline, WorkflowGraph } from './components';
 import { GRAPH_VIEW_DAG, GRAPH_VIEW_TIMELINE } from './constants';
 import { getDefaultSplitSize } from './helpers';
 import { DetailList, FeatureFlag, HighlightToggle } from '~components';
@@ -72,10 +70,11 @@ export default {
     'eventId',
     'events',
     'format',
+    'graphEnabled',
+    'graphView',
     'isWorkflowRunning',
     'loading',
     'runId',
-    'graphView',
     'timelineEvents',
     'workflowHistoryEventHighlightList',
     'workflowHistoryEventHighlightListEnabled',
@@ -368,7 +367,7 @@ export default {
         </div>
       </div>
       <div class="actions">
-        <feature-flag name="workflowGraph">
+        <feature-flag name="workflowGraph" v-if="graphEnabled">
           <a href="#" @click.prevent="toggleShowDagGraph()"
             >{{ graphView === GRAPH_VIEW_DAG ? 'hide' : 'show' }} graph</a
           >
@@ -403,7 +402,7 @@ export default {
       >
         <feature-flag
           name="workflowGraph"
-          v-if="graphView === GRAPH_VIEW_DAG && events.length"
+          v-if="graphEnabled && graphView === GRAPH_VIEW_DAG && events.length"
         >
           <WorkflowGraph
             :events="events"
