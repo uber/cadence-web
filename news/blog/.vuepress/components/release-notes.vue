@@ -20,7 +20,6 @@ export default {
   data() {
     return {
       body: '',
-      hasError: false,
     };
   },
   components: {
