@@ -1,9 +1,19 @@
 <template>
-  <div v-html="body"></div>
+  <div>
+    <div v-html="body"></div>
+    <release-notes-link
+      :owner="owner"
+      :repo="repo"
+      :tag="tag"
+      v-if="hasError"
+    />
+  </div>
 </template>
 
 <script>
 import MarkdownIt from 'markdown-it';
+import ReleaseNotesLink from './release-notes-link';
+import { getGithubApi } from '../helpers';
 
 export default {
   name: 'release-notes',
@@ -11,14 +21,16 @@ export default {
   data() {
     return {
       body: '',
+      hasError: false,
     };
   },
+  components: {
+    'release-notes-link': ReleaseNotesLink,
+  },
   computed: {
-    githubLink() {
-      return `https://github.com/${this.owner}/${this.repo}/releases/tag/${this.tag}`;
-    },
     githubApi() {
-      return `https://api.github.com/repos/${this.owner}/${this.repo}/releases/tags/${this.tag}`;
+      const { owner, repo, tag } = this;
+      return getGithubApi({ owner, repo, tag });
     },
   },
   async beforeMount() {
@@ -32,7 +44,7 @@ export default {
         .replace(/&gt;/g, '>')
         .replace(/&quot;/g, '"');
     } catch {
-      this.body = `<p>Please see release notes <a href="${this.githubLink}" target="_blank" rel="noopener noreferrer">here</a></p>`;
+      this.hasError = true;
     }
   }
 };
