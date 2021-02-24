@@ -5,7 +5,6 @@
       :owner="owner"
       :repo="repo"
       :tag="tag"
-      v-if="hasError"
     />
   </div>
 </template>
@@ -34,18 +33,14 @@ export default {
     },
   },
   async beforeMount() {
-    try {
-      const response = await fetch(this.githubApi);
-      const releaseData = await response.json();
-      const md = new MarkdownIt();
-      const rawBody = md.render(releaseData.body);
-      this.body = rawBody
-        .replace(/&lt;/g, '<')
-        .replace(/&gt;/g, '>')
-        .replace(/&quot;/g, '"');
-    } catch {
-      this.hasError = true;
-    }
+    const response = await fetch(this.githubApi);
+    const releaseData = await response.json();
+    const md = new MarkdownIt();
+    const rawBody = md.render(releaseData.body);
+    this.body = rawBody
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"');
   }
 };
 </script>
