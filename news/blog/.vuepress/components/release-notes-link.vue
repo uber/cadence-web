@@ -3,7 +3,6 @@
 </template>
 
 <script>
-import MarkdownIt from 'markdown-it';
 import { getGithubLink } from '../helpers';
 
 export default {
