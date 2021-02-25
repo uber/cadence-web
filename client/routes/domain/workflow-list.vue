@@ -290,7 +290,7 @@ export default {
 
       let workflows = [];
 
-      if (this.state !== 'all') {
+      if (this.state !== 'all' || this.criteria.queryString) {
         const query = { ...this.criteria, nextPageToken: this.npt };
 
         if (query.queryString) {
