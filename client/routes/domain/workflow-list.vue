@@ -22,6 +22,7 @@
 
 import moment from 'moment';
 import debounce from 'lodash-es/debounce';
+import omit from 'lodash-es/omit';
 import { DateRangePicker, WorkflowGrid } from '~components';
 import {
   getDatetimeFormattedString,
@@ -430,7 +431,9 @@ export default {
     toggleFilter() {
       if (this.filterMode === 'advanced') {
         this.filterMode = 'basic';
-        this.$route.query.queryString = '';
+        this.$router.replace({
+          query: omit(this.$route.query, 'queryString'),
+        });
       } else {
         this.filterMode = 'advanced';
       }
