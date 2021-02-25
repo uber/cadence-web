@@ -51,7 +51,10 @@ export default {
         { value: 'TIMED_OUT', label: 'Timed Out' },
       ],
       maxRetentionDays: undefined,
-      filterMode: this.$route.query && this.$route.query.queryString ? 'advanced' : 'basic',
+      filterMode:
+        this.$route.query && this.$route.query.queryString
+          ? 'advanced'
+          : 'basic',
     };
   },
   async created() {
@@ -285,6 +288,7 @@ export default {
 
       if (this.filterMode === 'advanced' && !this.criteria.queryString) {
         this.clearState();
+
         return;
       }
 
@@ -356,10 +360,7 @@ export default {
     setWorkflowFilter(e) {
       const target = e.target || e.testTarget; // test hook since Event.target is readOnly and unsettable
 
-      this.$router.replaceQueryParam(
-        target.getAttribute('name'),
-        target.value
-      );
+      this.$router.replaceQueryParam(target.getAttribute('name'), target.value);
     },
     setStatus(status) {
       if (status) {
@@ -444,8 +445,10 @@ export default {
     },
     toggleFilter() {
       this.clearState();
+
       if (this.filterMode === 'advanced') {
         this.filterMode = 'basic';
+
         if (this.$route.query.queryString) {
           this.$router.replace({
             query: omit(this.$route.query, 'queryString'),
