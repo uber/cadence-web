@@ -52,7 +52,7 @@ export default {
         { value: 'TIMED_OUT', label: 'Timed Out' },
       ],
       maxRetentionDays: undefined,
-      filterMode: 'basic',
+      filterMode: this.$route.query && this.$route.query.queryString ? 'advanced' : 'basic',
     };
   },
   async created() {
