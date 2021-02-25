@@ -37,7 +37,6 @@ export default {
       loading: false,
       results: [],
       error: undefined,
-      nextPageToken: undefined,
       npt: undefined,
       nptAlt: undefined,
       statuses: [
@@ -186,13 +185,18 @@ export default {
         return null;
       }
 
+      if (queryString) {
+        return {
+          queryString: queryString.trim(),
+        };
+      }
+
       const criteria = {
         startTime,
         endTime,
         status,
-        ...(queryString && { queryString }),
-        ...(workflowId && { workflowId }),
-        ...(workflowName && { workflowName }),
+        ...(workflowId && { workflowId: workflowId.trim() }),
+        ...(workflowName && { workflowName: workflowName.trim() }),
       };
 
       return criteria;
@@ -211,6 +215,13 @@ export default {
     },
   },
   methods: {
+    clearState() {
+      this.error = undefined;
+      this.loading = false;
+      this.npt = undefined;
+      this.nptAlt = undefined;
+      this.results = [];
+    },
     async fetch(url, queryWithStatus) {
       let workflows = [];
       let nextPageToken = '';
@@ -269,6 +280,11 @@ export default {
     },
     async fetchWorkflows() {
       if (!this.criteria || this.loading) {
+        return;
+      }
+
+      if (this.filterMode === 'advanced' && !this.criteria.queryString) {
+        this.clearState();
         return;
       }
 
@@ -331,9 +347,7 @@ export default {
     },
     refreshWorkflows: debounce(
       function refreshWorkflows() {
-        this.results = [];
-        this.npt = undefined;
-        this.nptAlt = undefined;
+        this.clearState();
         this.fetchWorkflows();
       },
       typeof Mocha === 'undefined' ? 200 : 60,
@@ -344,7 +358,7 @@ export default {
 
       this.$router.replaceQueryParam(
         target.getAttribute('name'),
-        target.value.trim()
+        target.value
       );
     },
     setStatus(status) {
@@ -429,11 +443,16 @@ export default {
       return query;
     },
     toggleFilter() {
+      this.clearState();
       if (this.filterMode === 'advanced') {
         this.filterMode = 'basic';
-        this.$router.replace({
-          query: omit(this.$route.query, 'queryString'),
-        });
+        if (this.$route.query.queryString) {
+          this.$router.replace({
+            query: omit(this.$route.query, 'queryString'),
+          });
+        } else {
+          this.fetchWorkflows();
+        }
       } else {
         this.filterMode = 'advanced';
       }
