@@ -358,10 +358,10 @@ describe('Workflow list', () => {
       .should.have.trimmed.text('Failed');
   });
 
-  it('should call list API when queryString query param is set', async function test() {
+  it('should call list API when filterMode = advanced and queryString query params are set', async function test() {
     const [testEl] = new Scenario(this.test)
       .withDomain('ci-test')
-      .startingAt('/domains/ci-test/workflows?status=FAILED&queryString=demo')
+      .startingAt('/domains/ci-test/workflows?status=FAILED&queryString=demo&filterMode=advanced')
       .withNewsFeed()
       .withWorkflows({
         status: 'list',
