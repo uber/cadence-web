@@ -36,7 +36,6 @@ export default {
       loading: false,
       results: [],
       error: undefined,
-      nextPageToken: undefined,
       npt: undefined,
       nptAlt: undefined,
       statuses: [
@@ -51,7 +50,6 @@ export default {
         { value: 'TIMED_OUT', label: 'Timed Out' },
       ],
       maxRetentionDays: undefined,
-      filterMode: 'basic',
     };
   },
   async created() {
@@ -72,9 +70,9 @@ export default {
   },
   computed: {
     fetchUrl() {
-      const { domain, queryString, state } = this;
+      const { domain, filterMode, state } = this;
 
-      if (queryString) {
+      if (filterMode === 'advanced') {
         return `/api/domains/${domain}/workflows/list`;
       }
 
@@ -89,6 +87,9 @@ export default {
       return ['ALL', 'OPEN'].includes(this.status.value)
         ? 'StartTime'
         : 'CloseTime';
+    },
+    filterMode() {
+      return this.$route.query.filterMode || 'basic';
     },
     formattedResults() {
       const { dateFormat, results, timeFormat, timezone } = this;
@@ -174,6 +175,7 @@ export default {
     criteria() {
       const {
         endTime,
+        filterMode,
         queryString,
         startTime,
         statusName: status,
@@ -185,19 +187,24 @@ export default {
         return null;
       }
 
+      if (filterMode === 'advanced') {
+        return {
+          queryString: queryString.trim(),
+        };
+      }
+
       const criteria = {
         startTime,
         endTime,
         status,
-        ...(queryString && { queryString }),
-        ...(workflowId && { workflowId }),
-        ...(workflowName && { workflowName }),
+        ...(workflowId && { workflowId: workflowId.trim() }),
+        ...(workflowName && { workflowName: workflowName.trim() }),
       };
 
       return criteria;
     },
     queryString() {
-      return this.$route.query.queryString;
+      return this.$route.query.queryString || '';
     },
     minStartDate() {
       return this.getMinStartDate();
@@ -210,6 +217,13 @@ export default {
     },
   },
   methods: {
+    clearState() {
+      this.error = undefined;
+      this.loading = false;
+      this.npt = undefined;
+      this.nptAlt = undefined;
+      this.results = [];
+    },
     async fetch(url, queryWithStatus) {
       let workflows = [];
       let nextPageToken = '';
@@ -271,9 +285,15 @@ export default {
         return;
       }
 
+      if (this.filterMode === 'advanced' && !this.criteria.queryString) {
+        this.clearState();
+
+        return;
+      }
+
       let workflows = [];
 
-      if (this.state !== 'all') {
+      if (this.state !== 'all' || this.filterMode === 'advanced') {
         const query = { ...this.criteria, nextPageToken: this.npt };
 
         if (query.queryString) {
@@ -330,9 +350,7 @@ export default {
     },
     refreshWorkflows: debounce(
       function refreshWorkflows() {
-        this.results = [];
-        this.npt = undefined;
-        this.nptAlt = undefined;
+        this.clearState();
         this.fetchWorkflows();
       },
       typeof Mocha === 'undefined' ? 200 : 60,
@@ -341,10 +359,7 @@ export default {
     setWorkflowFilter(e) {
       const target = e.target || e.testTarget; // test hook since Event.target is readOnly and unsettable
 
-      this.$router.replaceQueryParam(
-        target.getAttribute('name'),
-        target.value.trim()
-      );
+      this.$router.replaceQueryParam(target.getAttribute('name'), target.value);
     },
     setStatus(status) {
       if (status) {
@@ -428,12 +443,12 @@ export default {
       return query;
     },
     toggleFilter() {
-      if (this.filterMode === 'advanced') {
-        this.filterMode = 'basic';
-        this.$route.query.queryString = '';
-      } else {
-        this.filterMode = 'advanced';
-      }
+      const { query } = this.$route;
+
+      this.clearState();
+      const filterMode = this.filterMode === 'advanced' ? 'basic' : 'advanced';
+
+      this.$router.replace({ query: { ...query, filterMode } });
     },
     onWorkflowGridScroll(startIndex, endIndex) {
       if (!this.npt && !this.nptAlt) {
