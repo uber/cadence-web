@@ -357,4 +357,27 @@ describe('Workflow list', () => {
       .querySelector('header.filters .status .selected-tag')
       .should.have.trimmed.text('Failed');
   });
+
+  it('should call list API when queryString query param is set', async function test() {
+    const [testEl] = new Scenario(this.test)
+      .withDomain('ci-test')
+      .startingAt('/domains/ci-test/workflows?status=FAILED&queryString=demo')
+      .withNewsFeed()
+      .withWorkflows({
+        status: 'list',
+        query: {
+          queryString: 'demo',
+        },
+      })
+      .withDomainDescription('ci-test')
+      .go();
+
+    const workflowsEl = await testEl.waitUntilExists(
+      'section.workflow-list.ready'
+    );
+
+    workflowsEl
+      .querySelector('header.filters input[name="queryString"]')
+      .value.should.equal('demo');
+  });
 });

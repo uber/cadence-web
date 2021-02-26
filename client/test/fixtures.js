@@ -76,6 +76,23 @@ export default {
           .toISOString(),
       },
     ],
+    list: [
+      {
+        execution: {
+          workflowId: 'email-daily-summaries',
+          runId: '51ccc0d1-6ffe-4a7a-a89f-6b5154df86f7',
+        },
+        type: {
+          name: 'github.com/uber/cadence-web/email-daily-summaries-1',
+        },
+        closeStatus: 'COMPLETED',
+        startTime: emailRun1Start.toISOString(),
+        closeTime: moment(timeBasis)
+          .subtract(2, 'minutes')
+          .subtract(1, 'day')
+          .toISOString(),
+      },
+    ],
   },
   history: {
     emailRun1: [
