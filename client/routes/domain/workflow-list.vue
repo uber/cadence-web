@@ -22,7 +22,6 @@
 
 import moment from 'moment';
 import debounce from 'lodash-es/debounce';
-import omit from 'lodash-es/omit';
 import { DateRangePicker, WorkflowGrid } from '~components';
 import {
   getDatetimeFormattedString,
@@ -51,10 +50,6 @@ export default {
         { value: 'TIMED_OUT', label: 'Timed Out' },
       ],
       maxRetentionDays: undefined,
-      filterMode:
-        this.$route.query && this.$route.query.queryString
-          ? 'advanced'
-          : 'basic',
     };
   },
   async created() {
@@ -75,9 +70,9 @@ export default {
   },
   computed: {
     fetchUrl() {
-      const { domain, queryString, state } = this;
+      const { domain, filterMode, state } = this;
 
-      if (queryString) {
+      if (filterMode === 'advanced') {
         return `/api/domains/${domain}/workflows/list`;
       }
 
@@ -92,6 +87,9 @@ export default {
       return ['ALL', 'OPEN'].includes(this.status.value)
         ? 'StartTime'
         : 'CloseTime';
+    },
+    filterMode() {
+      return this.$route.query.filterMode || 'basic';
     },
     formattedResults() {
       const { dateFormat, results, timeFormat, timezone } = this;
@@ -177,6 +175,7 @@ export default {
     criteria() {
       const {
         endTime,
+        filterMode,
         queryString,
         startTime,
         statusName: status,
@@ -188,7 +187,7 @@ export default {
         return null;
       }
 
-      if (queryString) {
+      if (filterMode === 'advanced') {
         return {
           queryString: queryString.trim(),
         };
@@ -205,7 +204,7 @@ export default {
       return criteria;
     },
     queryString() {
-      return this.$route.query.queryString;
+      return this.$route.query.queryString || '';
     },
     minStartDate() {
       return this.getMinStartDate();
@@ -294,7 +293,7 @@ export default {
 
       let workflows = [];
 
-      if (this.state !== 'all' || this.criteria.queryString) {
+      if (this.state !== 'all' || this.filterMode === 'advanced') {
         const query = { ...this.criteria, nextPageToken: this.npt };
 
         if (query.queryString) {
@@ -444,21 +443,10 @@ export default {
       return query;
     },
     toggleFilter() {
+      const { query } = this.$route;
       this.clearState();
-
-      if (this.filterMode === 'advanced') {
-        this.filterMode = 'basic';
-
-        if (this.$route.query.queryString) {
-          this.$router.replace({
-            query: omit(this.$route.query, 'queryString'),
-          });
-        } else {
-          this.fetchWorkflows();
-        }
-      } else {
-        this.filterMode = 'advanced';
-      }
+      const filterMode = this.filterMode === 'advanced' ? 'basic' : 'advanced';
+      this.$router.replace({ query: {  ...query, filterMode } });
     },
     onWorkflowGridScroll(startIndex, endIndex) {
       if (!this.npt && !this.nptAlt) {
