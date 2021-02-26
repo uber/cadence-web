@@ -251,16 +251,20 @@ Scenario.prototype.withWorkflows = function withWorkflows({
 
   const startTimeDays = startTimeOffset || status === 'open' ? 30 : 21;
   const baseUrl = `/api/domains/${this.domain}/workflows/${status}`;
-  const queryString = qs.stringify(status === 'list' ? query : {
-    startTime: moment()
-      .subtract(startTimeDays, 'day')
-      .startOf('day')
-      .toISOString(),
-    endTime: moment()
-      .endOf('day')
-      .toISOString(),
-    ...query,
-  });
+  const queryString = qs.stringify(
+    status === 'list'
+      ? query
+      : {
+          startTime: moment()
+            .subtract(startTimeDays, 'day')
+            .startOf('day')
+            .toISOString(),
+          endTime: moment()
+            .endOf('day')
+            .toISOString(),
+          ...query,
+        }
+  );
   const url = `${baseUrl}?${queryString}`;
   const response = Array.isArray(workflows)
     ? { executions: workflows, nextPageToken: '' }
