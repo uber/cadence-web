@@ -444,9 +444,11 @@ export default {
     },
     toggleFilter() {
       const { query } = this.$route;
+
       this.clearState();
       const filterMode = this.filterMode === 'advanced' ? 'basic' : 'advanced';
-      this.$router.replace({ query: {  ...query, filterMode } });
+
+      this.$router.replace({ query: { ...query, filterMode } });
     },
     onWorkflowGridScroll(startIndex, endIndex) {
       if (!this.npt && !this.nptAlt) {
