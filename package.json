@@ -126,5 +126,8 @@
   },
   "napa": {
     "cadence-idl": "uber/cadence-idl#87b3154c204df27e6055a5a1cf840973b627877f"
+  },
+  "napa-config": {
+    "cache": false
   }
 }
