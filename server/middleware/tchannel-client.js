@@ -153,7 +153,7 @@ module.exports = async function(ctx, next) {
 
   function req(method, reqName, bodyTransform, resTransform) {
     return body =>
-      new Promise(function(resolve, reject) {
+      new Promise(function (resolve, reject) {
         try {
           channel
             .request({
@@ -206,29 +206,43 @@ module.exports = async function(ctx, next) {
         },
         body
       ),
-    withWorkflowExecution = body =>
-      Object.assign(
+    withWorkflowExecution = body => {
+      const domain = get(ctx, 'params.domain');
+      const runId = get(ctx, 'params.runId');
+      const workflowId = get(ctx, 'params.workflowId');
+
+      const execution = (workflowId || runId) && {
+        workflowId,
+        runId,
+      };
+
+      return Object.assign(
         {
-          domain: get(ctx, 'params.domain'),
-          execution: {
-            workflowId: get(ctx, 'params.workflowId'),
-            runId: get(ctx, 'params.runId'),
-          },
+          domain,
+          execution,
+        },
+        body,
+      );
+    },
+    withVerboseWorkflowExecution = body => {
+      const domain = get(ctx, 'params.domain');
+      const runId = get(ctx, 'params.runId');
+      const workflowId = get(ctx, 'params.workflowId');
+
+      const workflowExecution = (workflowId || runId) && {
+        workflowId,
+        runId,
+      };
+
+      return Object.assign(
+        {
+          domain,
+          workflowExecution,
         },
         body
-      ),
-    withVerboseWorkflowExecution = body =>
-      Object.assign(
-        {
-          domain: get(ctx, 'params.domain'),
-          workflowExecution: {
-            workflowId: get(ctx, 'params.workflowId'),
-            runId: get(ctx, 'params.runId'),
-          },
-        },
-        body
-      ),
-    withDomainAndWorkflowExecution = b =>
+      );
+    },
+    withDomainPagingAndWorkflowExecution = b =>
       Object.assign(withDomainPaging(b), withWorkflowExecution(b));
 
   ctx.cadence = {
@@ -252,13 +266,13 @@ module.exports = async function(ctx, next) {
     exportHistory: req(
       'GetWorkflowExecutionHistory',
       'get',
-      withDomainAndWorkflowExecution,
+      withDomainPagingAndWorkflowExecution,
       cliTransform
     ),
     getHistory: req(
       'GetWorkflowExecutionHistory',
       'get',
-      withDomainAndWorkflowExecution
+      withDomainPagingAndWorkflowExecution
     ),
     listDomains: req('ListDomains', 'list'),
     listTaskListPartitions: req('ListTaskListPartitions'),
@@ -272,8 +286,7 @@ module.exports = async function(ctx, next) {
     ),
     startWorkflow: req(
       'StartWorkflowExecution',
-      'start',
-      withWorkflowExecution
+      'start'
     ),
     terminateWorkflow: req(
       'TerminateWorkflowExecution',
