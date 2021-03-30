@@ -198,52 +198,54 @@ module.exports = async function(ctx, next) {
       });
   }
 
-  const withDomainPaging = body =>
-      Object.assign(
-        {
-          domain: get(ctx, 'params.domain'),
-          maximumPageSize: 100,
-        },
-        body
-      ),
-    withWorkflowExecution = body => {
-      const domain = get(ctx, 'params.domain');
-      const runId = get(ctx, 'params.runId');
-      const workflowId = get(ctx, 'params.workflowId');
+  const withDomainPaging = body => {
+    const { domain } = get(ctx, 'params', {});
 
-      const execution = (workflowId || runId) && {
-        workflowId,
-        runId,
-      };
+    return Object.assign(
+      {
+        domain,
+        maximumPageSize: 100,
+      },
+      body
+    );
+  };
 
-      return Object.assign(
-        {
-          domain,
-          execution,
-        },
-        body,
-      );
-    },
-    withVerboseWorkflowExecution = body => {
-      const domain = get(ctx, 'params.domain');
-      const runId = get(ctx, 'params.runId');
-      const workflowId = get(ctx, 'params.workflowId');
+  const withWorkflowExecution = body => {
+    const { domain, runId, workflowId } = get(ctx, 'params', {});
 
-      const workflowExecution = (workflowId || runId) && {
-        workflowId,
-        runId,
-      };
+    const execution = (workflowId || runId) && {
+      workflowId,
+      runId,
+    };
 
-      return Object.assign(
-        {
-          domain,
-          workflowExecution,
-        },
-        body
-      );
-    },
-    withDomainPagingAndWorkflowExecution = b =>
-      Object.assign(withDomainPaging(b), withWorkflowExecution(b));
+    return Object.assign(
+      {
+        domain,
+        execution,
+      },
+      body,
+    );
+  };
+
+  const withVerboseWorkflowExecution = body => {
+    const { domain, runId, workflowId } = get(ctx, 'params', {});
+
+    const workflowExecution = (workflowId || runId) && {
+      workflowId,
+      runId,
+    };
+
+    return Object.assign(
+      {
+        domain,
+        workflowExecution,
+      },
+      body
+    );
+  };
+
+  const withDomainPagingAndWorkflowExecution = body =>
+    Object.assign(withDomainPaging(body), withWorkflowExecution(body));
 
   ctx.cadence = {
     archivedWorkflows: req(
