@@ -269,6 +269,11 @@ module.exports = async function(ctx, next) {
       'signal',
       withVerboseWorkflowExecution
     ),
+    startWorkflow: req(
+      'StartWorkflowExecution',
+      'start',
+      withWorkflowExecution
+    ),
     terminateWorkflow: req(
       'TerminateWorkflowExecution',
       'terminate',
