@@ -153,7 +153,7 @@ module.exports = async function(ctx, next) {
 
   function req(method, reqName, bodyTransform, resTransform) {
     return body =>
-      new Promise(function (resolve, reject) {
+      new Promise(function(resolve, reject) {
         try {
           channel
             .request({
@@ -223,7 +223,7 @@ module.exports = async function(ctx, next) {
         domain,
         execution,
       },
-      body,
+      body
     );
   };
 
@@ -286,10 +286,7 @@ module.exports = async function(ctx, next) {
       'signal',
       withVerboseWorkflowExecution
     ),
-    startWorkflow: req(
-      'StartWorkflowExecution',
-      'start'
-    ),
+    startWorkflow: req('StartWorkflowExecution', 'start'),
     terminateWorkflow: req(
       'TerminateWorkflowExecution',
       'terminate',
