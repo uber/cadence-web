@@ -23,6 +23,7 @@
 
 const path = require('path'),
   dns = require('dns'),
+  get = require('lodash.get'),
   TChannelAsThrift = require('tchannel/as/thrift'),
   TChannel = require('tchannel'),
   Long = require('long'),
@@ -200,7 +201,7 @@ module.exports = async function(ctx, next) {
   const withDomainPaging = body =>
       Object.assign(
         {
-          domain: ctx.params.domain,
+          domain: get(ctx, 'params.domain'),
           maximumPageSize: 100,
         },
         body
@@ -208,10 +209,10 @@ module.exports = async function(ctx, next) {
     withWorkflowExecution = body =>
       Object.assign(
         {
-          domain: ctx.params.domain,
+          domain: get(ctx, 'params.domain'),
           execution: {
-            workflowId: ctx.params.workflowId,
-            runId: ctx.params.runId,
+            workflowId: get(ctx, 'params.workflowId'),
+            runId: get(ctx, 'params.runId'),
           },
         },
         body
@@ -219,10 +220,10 @@ module.exports = async function(ctx, next) {
     withVerboseWorkflowExecution = body =>
       Object.assign(
         {
-          domain: ctx.params.domain,
+          domain: get(ctx, 'params.domain'),
           workflowExecution: {
-            workflowId: ctx.params.workflowId,
-            runId: ctx.params.runId,
+            workflowId: get(ctx, 'params.workflowId'),
+            runId: get(ctx, 'params.runId'),
           },
         },
         body
