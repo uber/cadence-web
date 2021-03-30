@@ -23,6 +23,7 @@
 
 const path = require('path'),
   dns = require('dns'),
+  get = require('lodash.get'),
   TChannelAsThrift = require('tchannel/as/thrift'),
   TChannel = require('tchannel'),
   Long = require('long'),
@@ -197,38 +198,54 @@ module.exports = async function(ctx, next) {
       });
   }
 
-  const withDomainPaging = body =>
-      Object.assign(
-        {
-          domain: ctx.params.domain,
-          maximumPageSize: 100,
-        },
-        body
-      ),
-    withWorkflowExecution = body =>
-      Object.assign(
-        {
-          domain: ctx.params.domain,
-          execution: {
-            workflowId: ctx.params.workflowId,
-            runId: ctx.params.runId,
-          },
-        },
-        body
-      ),
-    withVerboseWorkflowExecution = body =>
-      Object.assign(
-        {
-          domain: ctx.params.domain,
-          workflowExecution: {
-            workflowId: ctx.params.workflowId,
-            runId: ctx.params.runId,
-          },
-        },
-        body
-      ),
-    withDomainAndWorkflowExecution = b =>
-      Object.assign(withDomainPaging(b), withWorkflowExecution(b));
+  const withDomainPaging = body => {
+    const { domain } = get(ctx, 'params', {});
+
+    return Object.assign(
+      {
+        domain,
+        maximumPageSize: 100,
+      },
+      body
+    );
+  };
+
+  const withWorkflowExecution = body => {
+    const { domain, runId, workflowId } = get(ctx, 'params', {});
+
+    const execution = (workflowId || runId) && {
+      workflowId,
+      runId,
+    };
+
+    return Object.assign(
+      {
+        domain,
+        execution,
+      },
+      body
+    );
+  };
+
+  const withVerboseWorkflowExecution = body => {
+    const { domain, runId, workflowId } = get(ctx, 'params', {});
+
+    const workflowExecution = (workflowId || runId) && {
+      workflowId,
+      runId,
+    };
+
+    return Object.assign(
+      {
+        domain,
+        workflowExecution,
+      },
+      body
+    );
+  };
+
+  const withDomainPagingAndWorkflowExecution = body =>
+    Object.assign(withDomainPaging(body), withWorkflowExecution(body));
 
   ctx.cadence = {
     archivedWorkflows: req(
@@ -251,13 +268,13 @@ module.exports = async function(ctx, next) {
     exportHistory: req(
       'GetWorkflowExecutionHistory',
       'get',
-      withDomainAndWorkflowExecution,
+      withDomainPagingAndWorkflowExecution,
       cliTransform
     ),
     getHistory: req(
       'GetWorkflowExecutionHistory',
       'get',
-      withDomainAndWorkflowExecution
+      withDomainPagingAndWorkflowExecution
     ),
     listDomains: req('ListDomains', 'list'),
     listTaskListPartitions: req('ListTaskListPartitions'),
@@ -269,6 +286,7 @@ module.exports = async function(ctx, next) {
       'signal',
       withVerboseWorkflowExecution
     ),
+    startWorkflow: req('StartWorkflowExecution', 'start'),
     terminateWorkflow: req(
       'TerminateWorkflowExecution',
       'terminate',
