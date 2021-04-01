@@ -33,9 +33,11 @@ export default {
 <template>
   <div class="footer-toolbar">
     <button-fill
-      :disabled="true"
+      :disabled="false"
       disabled-label="No pending activities"
       label="PENDING ACTIVITIES AVAILABLE"
+      tag="router-link"
+      :to="{ name: 'workflow/query' }"
     />
   </div>
 </template>

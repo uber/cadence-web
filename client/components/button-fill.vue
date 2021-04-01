@@ -20,6 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+const TAG_LINK_TYPES = [
+  'a',
+  'router-link'
+];
+
 export default {
   name: 'button-fill',
   props: {
@@ -49,6 +54,15 @@ export default {
     },
   },
   computed: {
+    calculatedTag() {
+      const { disabled, tag } = this;
+
+      if (disabled && TAG_LINK_TYPES.includes(tag)) {
+        return 'button';
+      }
+
+      return tag;
+    },
     disabledLabelText() {
       return this.disabled ? this.disabledLabel : '';
     },
@@ -73,7 +87,7 @@ export default {
     }"
     :disabled="disabled"
     :href="href"
-    :is="tag"
+    :is="calculatedTag"
     :to="to"
     :title="disabledLabelText"
     @click="onClick"
