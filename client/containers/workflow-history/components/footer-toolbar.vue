@@ -45,8 +45,8 @@ export default {
 <style lang="stylus">
 .footer-toolbar {
   background-color: #f8f8f9;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
-  padding: 10px 15px;
+  box-shadow: 0 -2px 2px rgba(0, 0, 0, 0.2);
+  padding: 9px 15px;
   position: relative;
 }
 </style>
