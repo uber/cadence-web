@@ -28,7 +28,12 @@ import {
 } from 'vue-virtual-scroller';
 import debounce from 'lodash-es/debounce';
 import omit from 'lodash-es/omit';
-import { EventDetail, FooterToolbar, Timeline, WorkflowGraph } from './components';
+import {
+  EventDetail,
+  FooterToolbar,
+  Timeline,
+  WorkflowGraph,
+} from './components';
 import { GRAPH_VIEW_DAG, GRAPH_VIEW_TIMELINE } from './constants';
 import { getDefaultSplitSize } from './helpers';
 import { DetailList, FeatureFlag, HighlightToggle } from '~components';
@@ -89,7 +94,7 @@ export default {
         return;
       }
 
-      const offsetHeight = this.isGrid ? (60 + 60) : 0;
+      const offsetHeight = this.isGrid ? 60 + 60 : 0;
       const viewSplitHeight = viewSplit.$el.offsetHeight;
       const scrollerHeight = viewSplitHeight - offsetHeight;
 

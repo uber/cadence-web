@@ -28,8 +28,6 @@ export default {
     'button-fill': ButtonFill,
   },
 };
-
-
 </script>
 
 <template>
