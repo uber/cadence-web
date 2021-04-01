@@ -1,3 +1,4 @@
+<script>
 // Copyright (c) 2021 Uber Technologies Inc.
 //
 //
@@ -19,7 +20,33 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export { default as EventDetail } from './event-detail';
-export { default as FooterToolbar } from './footer-toolbar';
-export { default as Timeline } from './timeline';
-export { default as WorkflowGraph } from './workflow-graph';
+import { ButtonFill } from '~components';
+
+export default {
+  name: 'footer-toolbar',
+  components: {
+    'button-fill': ButtonFill,
+  },
+};
+
+
+</script>
+
+<template>
+  <div class="footer-toolbar">
+    <button-fill
+      :disabled="true"
+      disabled-label="No pending activities"
+      label="PENDING ACTIVITIES AVAILABLE"
+    />
+  </div>
+</template>
+
+<style lang="stylus">
+.footer-toolbar {
+  background-color: #f8f8f9;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+  padding: 10px 15px;
+  position: relative;
+}
+</style>

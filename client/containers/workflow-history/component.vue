@@ -28,7 +28,7 @@ import {
 } from 'vue-virtual-scroller';
 import debounce from 'lodash-es/debounce';
 import omit from 'lodash-es/omit';
-import { EventDetail, Timeline, WorkflowGraph } from './components';
+import { EventDetail, FooterToolbar, Timeline, WorkflowGraph } from './components';
 import { GRAPH_VIEW_DAG, GRAPH_VIEW_TIMELINE } from './constants';
 import { getDefaultSplitSize } from './helpers';
 import { DetailList, FeatureFlag, HighlightToggle } from '~components';
@@ -321,6 +321,7 @@ export default {
     DynamicScrollerItem,
     'event-detail': EventDetail,
     'feature-flag': FeatureFlag,
+    'footer-toolbar': FooterToolbar,
     'highlight-toggle': HighlightToggle,
     prism: Prism,
     RecycleScroller,
@@ -537,6 +538,7 @@ export default {
                 </DynamicScrollerItem>
               </template>
             </DynamicScroller>
+            <footer-toolbar />
           </div>
           <prism
             class="json"
