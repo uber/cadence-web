@@ -24,6 +24,24 @@ import { ButtonFill } from '~components';
 
 export default {
   name: 'footer-toolbar',
+  props: {
+    pendingActivityCount: {
+      type: Number,
+      default: 0,
+    },
+  },
+  computed: {
+    pendingActivitiesButtonDisabled() {
+      const { pendingActivityCount } = this;
+
+      return pendingActivityCount === 0;
+    },
+    pendingActivitiesButtonLabel() {
+      const { pendingActivityCount } = this;
+
+      return `${pendingActivityCount} PENDING ACTIVITIES AVAILABLE`;
+    },
+  },
   components: {
     'button-fill': ButtonFill,
   },
@@ -33,9 +51,9 @@ export default {
 <template>
   <div class="footer-toolbar">
     <button-fill
-      :disabled="false"
+      :disabled="pendingActivitiesButtonDisabled"
       disabled-label="No pending activities"
-      label="PENDING ACTIVITIES AVAILABLE"
+      :label="pendingActivitiesButtonLabel"
       tag="router-link"
       :to="{ name: 'workflow/query' }"
     />

@@ -20,10 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const TAG_LINK_TYPES = [
-  'a',
-  'router-link'
-];
+const TAG_LINK_TYPES = ['a', 'router-link'];
 
 export default {
   name: 'button-fill',
