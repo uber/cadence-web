@@ -10,11 +10,11 @@ export default {
   props: {
     filter: {
       type: String,
-      default: 'ALL',
+      default: 'all',
     },
     pendingActivities: {
       type: Array,
-      default: [],
+      default: () => [],
     },
   },
   computed: {
@@ -43,10 +43,11 @@ export default {
   <div class="workflow-pending">
     <div class="top-navigation">
       <button-group
-        :items="['ALL', 'ACTIVITIES', 'CHILDREN']"
+        :items="['all', 'activities', 'children']"
         label="Filters"
-        @onChange="onFilterChange"
+        uppercase
         :value="filter"
+        @change="onFilterChange"
       />
     </div>
     <DynamicScroller

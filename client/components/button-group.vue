@@ -11,6 +11,10 @@ export default {
     label: {
       type: String,
     },
+    uppercase: {
+      type: Boolean,
+      default: false,
+    },
     value: {
       type: String,
       default: '',
@@ -18,6 +22,13 @@ export default {
   },
   components: {
     'button-fill': ButtonFill,
+  },
+  methods: {
+    onClick(item) {
+      if (this.value !== item) {
+        this.$emit('change', item);
+      }
+    },
   },
 };
 </script>
@@ -30,7 +41,9 @@ export default {
     <button-fill
       :active="item === value"
       :label="item"
+      :uppercase="uppercase"
       v-for="item in items"
+      @click="() => onClick(item)"
     />
   </div>
 </template>

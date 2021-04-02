@@ -58,6 +58,10 @@ export default {
     to: {
       type: [String, Object],
     },
+    uppercase: {
+      type: Boolean,
+      default: false,
+    }
   },
   computed: {
     calculatedTag() {
@@ -89,9 +93,10 @@ export default {
     class="button-fill"
     :class="{
       active: active,
-      disabled: disabled,
       [color]: color,
+      disabled: disabled,
       [size]: size,
+      uppercase: uppercase,
     }"
     :disabled="disabled"
     :href="href"
@@ -123,6 +128,7 @@ export default {
     cursor: not-allowed;
   }
 
+  // color
   &.primary {
     background-color: #11939a;
 
@@ -172,6 +178,7 @@ export default {
     }
   }
 
+  // size
   &.small {
     font-size: 12px;
     padding: 6px 10px;
@@ -185,6 +192,11 @@ export default {
   &.large {
     font-size: 26px;
     padding: 26px 42px;
+  }
+
+  // uppercase
+  &.uppercase {
+    text-transform: uppercase;
   }
 }
 </style>
