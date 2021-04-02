@@ -44,8 +44,7 @@ export default {
       default: 0,
     },
     to: {
-      type: String,
-      default: '',
+      type: [String, Object],
     },
   },
 };

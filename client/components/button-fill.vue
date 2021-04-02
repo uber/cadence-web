@@ -25,6 +25,10 @@ const TAG_LINK_TYPES = ['a', 'router-link'];
 export default {
   name: 'button-fill',
   props: {
+    active: {
+      type: Boolean,
+      default: false,
+    },
     color: {
       type: String,
       default: 'primary',
@@ -52,7 +56,7 @@ export default {
       default: 'button',
     },
     to: {
-      type: Object,
+      type: [String, Object],
     },
   },
   computed: {
@@ -84,6 +88,7 @@ export default {
     :aria-disabled="disabled"
     class="button-fill"
     :class="{
+      active: active,
       disabled: disabled,
       [color]: color,
       [size]: size,
@@ -102,12 +107,16 @@ export default {
 <style lang="stylus">
 .button-fill {
   border: none;
+  color: #fff !important;
   cursor: pointer;
   display: inline-block;
   font-weight: 600;
   transition: all 400ms ease;
-  color: #fff !important;
   white-space: nowrap;
+
+  &:focus {
+    outline: none;
+  }
 
   &.disabled {
     opacity: 0.5;
@@ -117,7 +126,15 @@ export default {
   &.primary {
     background-color: #11939a;
 
-    &:hover {
+    &.active {
+      background-color: #0e767b;
+    }
+
+    &:focus, &:hover {
+      background-color: #10858b;
+    }
+
+    &:active {
       background-color: #0e767b;
     }
   }
@@ -125,7 +142,15 @@ export default {
   &.secondary {
     background-color: #ca3b27;
 
-    &:hover {
+    &.active {
+      background-color: #a22f1f;
+    }
+
+    &:focus, &:hover {
+      background-color: #b63523;
+    }
+
+    &:active {
       background-color: #a22f1f;
     }
   }
@@ -134,7 +159,15 @@ export default {
     background-color: transparent;
     color: #11939a !important;
 
-    &:hover {
+    &.active {
+      color: #0e767b  !important;
+    }
+
+    &:focus, &:hover {
+      color: #10858b !important;
+    }
+
+    &:active {
       color: #0e767b  !important;
     }
   }
