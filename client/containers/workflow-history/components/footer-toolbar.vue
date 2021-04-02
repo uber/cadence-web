@@ -54,6 +54,7 @@ export default {
       :disabled="pendingActivitiesButtonDisabled"
       disabled-label="No pending activities"
       :label="pendingActivitiesButtonLabel"
+      size="small"
       tag="router-link"
       :to="{ name: 'workflow/query' }"
     />
@@ -64,7 +65,7 @@ export default {
 .footer-toolbar {
   background-color: #f8f8f9;
   box-shadow: 0 -2px 2px rgba(0, 0, 0, 0.2);
-  padding: 9px 15px;
+  padding: 6px 12px 6px 55px;
   position: relative;
 }
 </style>

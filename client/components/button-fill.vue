@@ -42,6 +42,11 @@ export default {
     label: {
       type: String,
     },
+    size: {
+      type: String,
+      default: 'medium',
+      validator: value => ['small', 'medium', 'large'].includes(value),
+    },
     tag: {
       type: String,
       default: 'button',
@@ -81,6 +86,7 @@ export default {
     :class="{
       disabled: disabled,
       [color]: color,
+      [size]: size,
     }"
     :disabled="disabled"
     :href="href"
@@ -98,9 +104,7 @@ export default {
   border: none;
   cursor: pointer;
   display: inline-block;
-  font-size: 14px;
   font-weight: 600;
-  padding: 13px 21px;
   transition: all 400ms ease;
   color: #fff !important;
   white-space: nowrap;
@@ -133,6 +137,21 @@ export default {
     &:hover {
       color: #0e767b  !important;
     }
+  }
+
+  &.small {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+
+  &.medium {
+    font-size: 14px;
+    padding: 13px 21px;
+  }
+
+  &.large {
+    font-size: 26px;
+    padding: 26px 42px;
   }
 }
 </style>

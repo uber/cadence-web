@@ -94,7 +94,7 @@ export default {
         return;
       }
 
-      const offsetHeight = this.isGrid ? 60 + 60 : 0;
+      const offsetHeight = this.isGrid ? 60 + 38 : 0;
       const viewSplitHeight = viewSplit.$el.offsetHeight;
       const scrollerHeight = viewSplitHeight - offsetHeight;
 
