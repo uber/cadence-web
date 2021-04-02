@@ -80,6 +80,11 @@ a.navigation-link {
     margin-right: 5px;
   }
 
+  &:focus, &:hover {
+    border-bottom-color: #0e767b;
+    outline: none;
+  }
+
   &.router-link-active {
     border-bottom-color: #11939a;
   }
