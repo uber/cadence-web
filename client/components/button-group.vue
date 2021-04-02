@@ -8,6 +8,9 @@ export default {
       type: Array,
       default: [],
     },
+    label: {
+      type: String,
+    },
     value: {
       type: String,
       default: '',
@@ -21,6 +24,9 @@ export default {
 
 <template>
   <div class="button-group">
+    <span class="label" v-if="label">
+      {{ label }}
+    </span>
     <button-fill
       :active="item === value"
       :label="item"
@@ -28,3 +34,13 @@ export default {
     />
   </div>
 </template>
+
+<style lang="stylus">
+.button-group {
+  display: inline-block;
+
+  .label {
+    margin-right: 10px;
+  }
+}
+</style>

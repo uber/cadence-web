@@ -40,10 +40,11 @@ export default {
 </script>
 
 <template>
-  <div>
-    <div>
+  <div class="workflow-pending">
+    <div class="top-navigation">
       <button-group
         :items="['ALL', 'ACTIVITIES', 'CHILDREN']"
+        label="Filters"
         @onChange="onFilterChange"
         :value="filter"
       />
@@ -69,3 +70,11 @@ export default {
     </DynamicScroller>
   </div>
 </template>
+
+<style lang="stylus">
+.workflow-pending {
+  .top-navigation {
+    padding: 24px;
+  }
+}
+</style>
