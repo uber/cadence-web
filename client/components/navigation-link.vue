@@ -73,7 +73,6 @@ a.navigation-link {
   display: inline-block;
   font-weight: 500;
   padding: 11px 18px;
-  position: relative;
   text-transform: uppercase;
   transition: all 400ms ease;
 
@@ -87,13 +86,12 @@ a.navigation-link {
   }
 
   & > .notification {
-    background-color: #ca3b27;
+    background-color: #11939a;
     border-radius: 7px;
-    color: white;
-    font-size: 10px;
-    padding: 1px 5px;
-    position: absolute;
-    top: 2px;
+    color: black;
+    font-size: 12px;
+    margin-left: 5px;
+    padding: 0 6px;
   }
 }
 </style>
