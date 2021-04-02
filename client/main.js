@@ -201,6 +201,11 @@ const routeOpts = {
           components: {
             pending: WorkflowPending,
           },
+          props: {
+            pending: ({ query: { filter } }) => ({
+              filter,
+            }),
+          },
         },
         {
           name: 'workflow/stack-trace',
