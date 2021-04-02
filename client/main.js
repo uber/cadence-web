@@ -54,7 +54,7 @@ import WorkflowList from './routes/domain/workflow-list';
 import WorkflowSummary from './routes/workflow/summary';
 import WorkflowTabs from './routes/workflow';
 import store from './store/index.js';
-import { WorkflowHistory } from '~containers';
+import { WorkflowHistory, WorkflowPending } from '~containers';
 
 import { http, injectMomentDurationFormat, jsonTryParse } from '~helpers';
 
@@ -193,6 +193,13 @@ const routeOpts = {
               graphView: query.graphView,
               workflowId: encodeURIComponent(params.workflowId),
             }),
+          },
+        },
+        {
+          name: 'workflow/pending',
+          path: '/domains/:domain/workflows/:workflowId/:runId/pending',
+          components: {
+            pending: WorkflowPending,
           },
         },
         {

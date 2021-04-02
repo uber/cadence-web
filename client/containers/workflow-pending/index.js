@@ -19,17 +19,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export {
-  container as SettingsWorkflowHistory,
-  getDefaultState as getSettingsWorkflowHistoryDefaultState,
-  getters as settingsWorkflowHistoryGetters,
-  mutations as settingsWorkflowHistoryMutations,
-} from './settings-workflow-history';
-export {
-  container as WorkflowHistory,
-  getDefaultState as getWorkflowHistoryDefaultState,
-} from './workflow-history';
-export {
-  container as WorkflowPending,
-  getDefaultState as getWorkflowPendingDefaultState,
-} from './workflow-pending';
+import Component from './component';
+// import Connector from './connector';
+
+const getDefaultState = () => ({
+  // graphEnabled: true,
+});
+
+const container = Component; //Connector('WorkflowHistory', Component);
+
+export { container, getDefaultState };

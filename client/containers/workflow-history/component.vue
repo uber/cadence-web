@@ -543,7 +543,9 @@ export default {
                 </DynamicScrollerItem>
               </template>
             </DynamicScroller>
-            <footer-toolbar />
+            <footer-toolbar
+              :pending-activity-count="0"
+            />
           </div>
           <prism
             class="json"

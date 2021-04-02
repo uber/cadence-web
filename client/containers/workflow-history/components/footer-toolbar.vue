@@ -39,7 +39,7 @@ export default {
     pendingActivitiesButtonLabel() {
       const { pendingActivityCount } = this;
 
-      return `${pendingActivityCount} PENDING ACTIVITIES AVAILABLE`;
+      return `${pendingActivityCount} PENDING ACTIVIT${pendingActivityCount === 1 ? 'Y' : 'IES'}`;
     },
   },
   components: {
@@ -56,7 +56,7 @@ export default {
       :label="pendingActivitiesButtonLabel"
       size="small"
       tag="router-link"
-      :to="{ name: 'workflow/query' }"
+      :to="{ name: 'workflow/pending' }"
     />
   </div>
 </template>
