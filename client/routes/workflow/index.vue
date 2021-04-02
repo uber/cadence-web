@@ -339,6 +339,7 @@ export default {
         id="nav-link-pending"
         icon="icon_send"
         label="Pending"
+        :notification-count="2"
         :to="{ name: 'workflow/pending' }"
         data-cy="pending-link"
       />

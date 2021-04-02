@@ -22,7 +22,32 @@
 
 export default {
   name: 'navigation-link',
-  props: ['exact', 'icon', 'id', 'label', 'to'],
+  props: {
+    exact: {
+      type: Boolean,
+      default: false,
+    },
+    icon: {
+      type: String,
+      default: '',
+    },
+    id: {
+      type: String,
+      default: '',
+    },
+    label: {
+      type: String,
+      default: '',
+    },
+    notificationCount: {
+      type: Number,
+      default: 0,
+    },
+    to: {
+      type: String,
+      default: '',
+    },
+  },
 };
 </script>
 
@@ -34,18 +59,23 @@ export default {
     :id="id"
     :to="to"
   >
-    {{ label }}
+    <span>{{ label }}</span>
+    <span
+      class="notification"
+      v-if="notificationCount"
+    >{{notificationCount}}</span>
   </router-link>
 </template>
 
 <style lang="stylus">
 a.navigation-link {
-  display: inline-block;
-  padding: 11px 18px;
-  transition: all 400ms ease;
-  font-weight: 500;
-  text-transform: uppercase;
   border-bottom: 4px solid transparent;
+  display: inline-block;
+  font-weight: 500;
+  padding: 11px 18px;
+  position: relative;
+  text-transform: uppercase;
+  transition: all 400ms ease;
 
   &:before {
     font-family: 'uber-icons';
@@ -54,6 +84,16 @@ a.navigation-link {
 
   &.router-link-active {
     border-bottom-color: #11939a;
+  }
+
+  & > .notification {
+    background-color: #ca3b27;
+    border-radius: 7px;
+    color: white;
+    font-size: 10px;
+    padding: 1px 5px;
+    position: absolute;
+    top: 2px;
   }
 }
 </style>
