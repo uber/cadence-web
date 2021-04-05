@@ -20,11 +20,17 @@
 // THE SOFTWARE.
 
 import { connect } from 'vuex-connect';
+import { WORKFLOW_EXECUTION_PENDING_TASK_COUNT } from '../workflow/getter-types';
+
+const gettersToProps = {
+  pendingTaskCount: WORKFLOW_EXECUTION_PENDING_TASK_COUNT,
+};
 
 const stateToProps = {
   graphEnabled: state => state.workflowHistory.graphEnabled,
 };
 
 export default connect({
+  gettersToProps,
   stateToProps,
 });

@@ -25,21 +25,21 @@ import { ButtonFill } from '~components';
 export default {
   name: 'footer-toolbar',
   props: {
-    pendingActivityCount: {
+    pendingTaskCount: {
       type: Number,
       default: 0,
     },
   },
   computed: {
     pendingActivitiesButtonDisabled() {
-      const { pendingActivityCount } = this;
+      const { pendingTaskCount } = this;
 
-      return pendingActivityCount === 0;
+      return pendingTaskCount === 0;
     },
     pendingActivitiesButtonLabel() {
-      const { pendingActivityCount } = this;
+      const { pendingTaskCount } = this;
 
-      return `${pendingActivityCount} PENDING ACTIVIT${pendingActivityCount === 1 ? 'Y' : 'IES'}`;
+      return `${pendingTaskCount} PENDING TASK${pendingTaskCount === 1 ? '' : 'S'}`;
     },
   },
   components: {
@@ -52,7 +52,7 @@ export default {
   <div class="footer-toolbar">
     <button-fill
       :disabled="pendingActivitiesButtonDisabled"
-      disabled-label="No pending activities"
+      disabled-label="No pending tasks"
       :label="pendingActivitiesButtonLabel"
       size="small"
       tag="router-link"

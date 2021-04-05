@@ -79,6 +79,7 @@ export default {
     'graphView',
     'isWorkflowRunning',
     'loading',
+    'pendingTaskCount',
     'runId',
     'timelineEvents',
     'workflowHistoryEventHighlightList',
@@ -544,7 +545,7 @@ export default {
               </template>
             </DynamicScroller>
             <footer-toolbar
-              :pending-activity-count="0"
+              :pending-task-count="pendingTaskCount"
             />
           </div>
           <prism

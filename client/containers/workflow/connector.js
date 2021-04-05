@@ -22,6 +22,7 @@
 import { connect } from 'vuex-connect';
 import {
   WORKFLOW_EXECUTION,
+  WORKFLOW_EXECUTION_PENDING_TASK_COUNT,
   WORKFLOW_EXECUTION_TASK_LIST_NAME,
 } from './getter-types';
 import {
@@ -30,6 +31,7 @@ import {
 } from './mutation-types';
 
 const gettersToProps = {
+  pendingTaskCount: WORKFLOW_EXECUTION_PENDING_TASK_COUNT,
   taskListName: WORKFLOW_EXECUTION_TASK_LIST_NAME,
   workflow: WORKFLOW_EXECUTION,
 };
