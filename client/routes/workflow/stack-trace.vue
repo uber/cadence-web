@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { getQueryResult } from './helpers/get-query-result';
+import { getQueryResult } from './helpers';
 import { getDatetimeFormattedString } from '~helpers';
 
 export default {

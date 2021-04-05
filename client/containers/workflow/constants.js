@@ -19,5 +19,5 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export const TERMINATE_DEFAULT_ERROR_MESSAGE =
-  'An error has occurred. Please check you have the correct permissions to terminate this workflow and try again.';
+export const RETRY_COUNT_MAX = 3;
+export const RETRY_TIMEOUT = 6000;

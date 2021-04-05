@@ -1,5 +1,5 @@
 const getDefaultState = () => ({
-  todo: true,
+  execution: null,
 });
 
 export default getDefaultState;

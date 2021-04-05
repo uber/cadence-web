@@ -39,7 +39,7 @@ export default {
       nextPageToken: undefined,
       fetchHistoryPageRetryCount: 0,
       wfLoading: true,
-      workflow: undefined,
+      // workflow: undefined,
 
       history: {
         loading: undefined,
@@ -64,8 +64,10 @@ export default {
     'displayWorkflowId',
     'domain',
     'runId',
+    'taskListName',
     'timeFormat',
     'timezone',
+    'workflow',
     'workflowHistoryEventHighlightList',
     'workflowHistoryEventHighlightListEnabled',
     'workflowId',
@@ -134,7 +136,7 @@ export default {
       this.nextPageToken = undefined;
       this.fetchHistoryPageRetryCount = 0;
       this.wfLoading = true;
-      this.workflow = undefined;
+      // this.workflow = undefined;
 
       this.history.loading = undefined;
 
@@ -144,6 +146,8 @@ export default {
       this.summary.result = undefined;
       this.summary.wfStatus = undefined;
       this.summary.workflow = undefined;
+
+      this.$emit('clearWorkflow');
     },
     clearWatches() {
       while (this.unwatch.length) {
@@ -252,10 +256,11 @@ export default {
       return this.$http(baseAPIURL)
         .then(
           wf => {
-            this.workflow = wf;
+            this.$emit('setWorkflow', wf);
+            // this.workflow = wf;
             this.isWorkflowRunning = !wf.workflowExecutionInfo.closeTime;
-            this.setupHistoryUrlWatch();
             this.baseApiUrlRetryCount = 0;
+            this.setupHistoryUrlWatch();
           },
           error => {
             this.$emit('onNotification', {
@@ -289,11 +294,14 @@ export default {
       );
     },
     fetchTaskList() {
-      if (!this.workflow || !this.workflow.executionConfiguration) {
+      const { taskListName } = this;
+
+      if (!taskListName) {
+      // if (!this.workflow || !this.workflow.executionConfiguration) {
         return Promise.reject('task list name is required');
       }
 
-      const taskListName = this.workflow.executionConfiguration.taskList.name;
+      // const taskListName = this.workflow.executionConfiguration.taskList.name;
 
       this.$http(
         `/api/domains/${this.$route.params.domain}/task-lists/${taskListName}`

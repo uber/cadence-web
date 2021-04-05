@@ -23,21 +23,24 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import VuexPersistence from 'vuex-persist';
 import {
+  // settings
   getSettingsWorkflowHistoryDefaultState,
-  getWorkflowHistoryDefaultState,
   settingsWorkflowHistoryGetters,
   settingsWorkflowHistoryMutations,
+
+  // workflow
+  getWorkflowDefaultState,
+  workflowGetters,
+  workflowMutations,
+
+  // workflow history
+  getWorkflowHistoryDefaultState,
 } from '~containers';
 import {
   getDefaultState as getGraphDefaultState,
   getters as graphGetters,
   mutations as graphMutations,
 } from './graph';
-import {
-  getDefaultState as getWorkflowDefaultState,
-  getters as workflowGetters,
-  mutations as workflowMutations,
-} from './workflow';
 
 // Application store
 

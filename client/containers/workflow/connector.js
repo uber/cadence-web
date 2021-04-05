@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021 Uber Technologies Inc.
+// Copyright (c) 2021 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,5 +19,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export const TERMINATE_DEFAULT_ERROR_MESSAGE =
-  'An error has occurred. Please check you have the correct permissions to terminate this workflow and try again.';
+import { connect } from 'vuex-connect';
+import {
+  WORKFLOW_EXECUTION,
+  WORKFLOW_EXECUTION_TASK_LIST_NAME,
+} from './getter-types';
+import {
+  WORKFLOW_CLEAR_EXECUTION,
+  WORKFLOW_SET_EXECUTION,
+} from './mutation-types';
+
+const gettersToProps = {
+  taskListName: WORKFLOW_EXECUTION_TASK_LIST_NAME,
+  workflow: WORKFLOW_EXECUTION,
+};
+
+const mutationsToEvents = {
+  clearWorkflow: WORKFLOW_CLEAR_EXECUTION,
+  setWorkflow: WORKFLOW_SET_EXECUTION,
+};
+
+export default connect({
+  gettersToProps,
+  mutationsToEvents,
+});
