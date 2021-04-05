@@ -21,3 +21,11 @@
 
 export const RETRY_COUNT_MAX = 3;
 export const RETRY_TIMEOUT = 6000;
+export const PENDING_TASK_TYPE_TO_ID_MAP = {
+  activity: 'activityID',
+  childWorkflow: 'initiatedID',
+};
+export const PENDING_TASK_TYPE_TO_NAME_MAP = {
+  activity: 'PendingActivityTask',
+  childWorkflow: 'PendingChildWorkflowTask',
+};

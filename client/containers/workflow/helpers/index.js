@@ -29,6 +29,7 @@ export { default as getSummary } from './get-summary';
 export { default as getSummaryWorkflowStatus } from './get-summary-workflow-status';
 export { default as getTimeElapsedDisplay } from './get-time-elapsed-display';
 export { default as getTimeStampDisplay } from './get-time-stamp-display';
+export { default as mapPendingTaskList } from './map-pending-task-list';
 export { default as mapTimelineEvents } from './map-timeline-events';
 export { default as parentWorkflowLink } from './parent-workflow-link';
 export { summarizeEvents } from './summarize-events';
