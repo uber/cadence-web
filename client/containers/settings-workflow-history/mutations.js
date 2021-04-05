@@ -23,7 +23,7 @@ import {
   SETTINGS_WORKFLOW_HISTORY_ON_CHANGE_VALUE,
   SETTINGS_WORKFLOW_HISTORY_ON_MOUNTED,
   SETTINGS_WORKFLOW_HISTORY_ON_SUBMIT,
-} from './mutationTypes';
+} from './mutation-types';
 
 const mutations = {
   [SETTINGS_WORKFLOW_HISTORY_ON_CHANGE_VALUE]: (state, { name, value }) => {

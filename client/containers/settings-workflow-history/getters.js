@@ -20,7 +20,7 @@
 // THE SOFTWARE.
 
 import { SUBMIT_CHANGE_KEYS } from './constants';
-import { SETTINGS_WORKFLOW_HISTORY_IS_SUBMIT_ENABLED } from './getterTypes';
+import { SETTINGS_WORKFLOW_HISTORY_IS_SUBMIT_ENABLED } from './getter-types';
 
 const getters = {
   [SETTINGS_WORKFLOW_HISTORY_IS_SUBMIT_ENABLED]: ({
