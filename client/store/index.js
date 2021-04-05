@@ -28,51 +28,16 @@ import {
   settingsWorkflowHistoryGetters,
   settingsWorkflowHistoryMutations,
 } from '~containers';
-
-// Graph store
-
-const getGraphDefaultState = () => ({
-  childRoute: null,
-  newExecutionId: null,
-  parentRoute: null,
-  hasChildBtn: false,
-  childBtnText: null,
-  parentBtnText: 'to parent',
-});
-
-const graphMutations = {
-  childRoute(state, param) {
-    state.graph.childRoute = param.route;
-    state.graph.hasChildBtn = true;
-    state.graph.childBtnText = param.btnText;
-  },
-  newExecutionRoute(state, route) {
-    (state.graph.newExecutionId = route),
-      (state.graph.hasChildBtn = !state.graph.hasChildBtn);
-  },
-  previousExecutionRoute(state, route) {
-    (state.graph.parentRoute = route),
-      (state.graph.parentBtnText = 'previous execution');
-  },
-  toggleChildBtn(state) {
-    state.graph.hasChildBtn = false;
-  },
-  parentRoute(state, route) {
-    state.graph.parentRoute = route;
-  },
-  resetGraphState(state) {
-    Object.assign(state.graph, getGraphDefaultState());
-  },
-};
-
-const graphGetters = {
-  childRoute: state => state.graph.childRoute,
-  newExecutionId: state => state.graph.newExecutionId,
-  hasChildBtn: state => state.graph.hasChildBtn,
-  childBtnText: state => state.graph.childBtnText,
-  parentBtnText: state => state.graph.parentBtnText,
-  parentRoute: state => state.graph.parentRoute,
-};
+import {
+  getDefaultState as getGraphDefaultState,
+  getters as graphGetters,
+  mutations as graphMutations,
+} from './graph';
+import {
+  getDefaultState as getWorkflowDefaultState,
+  getters as workflowGetters,
+  mutations as workflowMutations,
+} from './workflow';
 
 // Application store
 
@@ -80,6 +45,7 @@ const getDefaultState = () => ({
   graph: getGraphDefaultState(),
   settingsWorkflowHistory: getSettingsWorkflowHistoryDefaultState(),
   workflowHistory: getWorkflowHistoryDefaultState(),
+  workflow: getWorkflowDefaultState(),
 });
 
 const state = getDefaultState();
@@ -95,10 +61,12 @@ const store = new Vuex.Store({
   mutations: {
     ...graphMutations,
     ...settingsWorkflowHistoryMutations,
+    ...workflowMutations,
   },
   getters: {
     ...graphGetters,
     ...settingsWorkflowHistoryGetters,
+    ...workflowGetters,
   },
   plugins: [vuexLocal.plugin],
 });
