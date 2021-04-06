@@ -41,37 +41,46 @@ import {
   getters as graphGetters,
   mutations as graphMutations,
 } from './graph';
+import {
+  getters as routeGetters,
+} from './route';
+export { getterTypes as routeGetterTypes } from './route';
 
 // Application store
 
-const getDefaultState = () => ({
-  graph: getGraphDefaultState(),
-  settingsWorkflowHistory: getSettingsWorkflowHistoryDefaultState(),
-  workflowHistory: getWorkflowHistoryDefaultState(),
-  workflow: getWorkflowDefaultState(),
-});
+const initStore = () => {
+  const getDefaultState = () => ({
+    graph: getGraphDefaultState(),
+    settingsWorkflowHistory: getSettingsWorkflowHistoryDefaultState(),
+    workflowHistory: getWorkflowHistoryDefaultState(),
+    workflow: getWorkflowDefaultState(),
+  });
 
-const state = getDefaultState();
+  const state = getDefaultState();
 
-Vue.use(Vuex);
+  Vue.use(Vuex);
 
-const vuexLocal = new VuexPersistence({
-  storage: window.localStorage,
-});
+  const vuexLocal = new VuexPersistence({
+    storage: window.localStorage,
+  });
 
-const store = new Vuex.Store({
-  state: state,
-  mutations: {
-    ...graphMutations,
-    ...settingsWorkflowHistoryMutations,
-    ...workflowMutations,
-  },
-  getters: {
-    ...graphGetters,
-    ...settingsWorkflowHistoryGetters,
-    ...workflowGetters,
-  },
-  plugins: [vuexLocal.plugin],
-});
+  const store = new Vuex.Store({
+    state: state,
+    mutations: {
+      ...graphMutations,
+      ...settingsWorkflowHistoryMutations,
+      ...workflowMutations,
+    },
+    getters: {
+      ...graphGetters,
+      ...routeGetters,
+      ...settingsWorkflowHistoryGetters,
+      ...workflowGetters,
+    },
+    plugins: [vuexLocal.plugin],
+  });
 
-export default store;
+  return store;
+};
+
+export default initStore;

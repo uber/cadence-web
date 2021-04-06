@@ -25,6 +25,7 @@ import infiniteScroll from 'vue-infinite-scroll';
 import vueSelect from 'vue-select';
 import vueModal from 'vue-js-modal';
 import vueSplit from 'vue-split-panel';
+import { sync } from 'vuex-router-sync';
 import qs from 'friendly-querystring';
 import moment from 'moment';
 import promiseFinally from 'promise.prototype.finally';
@@ -52,7 +53,7 @@ import WorkflowArchivalAdvanced from './routes/domain/workflow-archival/advanced
 import WorkflowArchivalBasic from './routes/domain/workflow-archival/basic';
 import WorkflowList from './routes/domain/workflow-list';
 import WorkflowSummary from './routes/workflow/summary';
-import store from './store/index.js';
+import initStore from './store';
 import {
   Workflow,
   WorkflowHistory,
@@ -358,6 +359,10 @@ if (typeof mocha === 'undefined') {
   if (!document.querySelector('main')) {
     document.body.appendChild(document.createElement('main'));
   }
+
+  const store = initStore();
+
+  sync(store, router);
 
   // eslint-disable-next-line no-new
   new Vue({

@@ -30,7 +30,6 @@ export default {
   },
   methods: {
     onFilterChange(filter) {
-      console.log('onFilterChange called:', filter);
       this.$router.replace({
         query: { ...this.$route.query, filter },
       });
