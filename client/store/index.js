@@ -35,6 +35,10 @@ import {
 
   // workflow history
   getWorkflowHistoryDefaultState,
+
+  // workflow pending
+  workflowPendingActions,
+  workflowPendingGetters,
 } from '~containers';
 import {
   getDefaultState as getGraphDefaultState,
@@ -42,13 +46,15 @@ import {
   mutations as graphMutations,
 } from './graph';
 import {
+  actionTypes as routeActionTypes,
   getters as routeGetters,
 } from './route';
-export { getterTypes as routeGetterTypes } from './route';
+
+const { ROUTE_PUSH, ROUTE_REPLACE } = routeActionTypes;
 
 // Application store
 
-const initStore = () => {
+const initStore = ({ router }) => {
   const getDefaultState = () => ({
     graph: getGraphDefaultState(),
     settingsWorkflowHistory: getSettingsWorkflowHistoryDefaultState(),
@@ -66,6 +72,11 @@ const initStore = () => {
 
   const store = new Vuex.Store({
     state: state,
+    actions: {
+      ...workflowPendingActions,
+      [ROUTE_PUSH]: (_, args) => router.push(args),
+      [ROUTE_REPLACE]: (_, args) => router.replace(args),
+    },
     mutations: {
       ...graphMutations,
       ...settingsWorkflowHistoryMutations,
@@ -76,6 +87,7 @@ const initStore = () => {
       ...routeGetters,
       ...settingsWorkflowHistoryGetters,
       ...workflowGetters,
+      ...workflowPendingGetters,
     },
     plugins: [vuexLocal.plugin],
   });

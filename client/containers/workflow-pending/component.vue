@@ -12,16 +12,10 @@ export default {
       type: String,
       default: 'all',
     },
-    pendingActivities: {
+    pendingTaskList: {
       type: Array,
       default: () => [],
     },
-  },
-  computed: {
-    filteredActivities() {
-      // TODO
-      return this.pendingActivities;
-    }
   },
   components: {
     'button-group': ButtonGroup,
@@ -30,9 +24,7 @@ export default {
   },
   methods: {
     onFilterChange(filter) {
-      this.$router.replace({
-        query: { ...this.$route.query, filter },
-      });
+      this.$emit('filterChanged', filter);
     }
   }
 };
@@ -51,7 +43,7 @@ export default {
     </div>
     <DynamicScroller
       key-field="activityId"
-      :items="filteredActivities"
+      :items="pendingTaskList"
       :min-item-size="38"
       ref="scrollerGrid"
       style="height: 0px;"

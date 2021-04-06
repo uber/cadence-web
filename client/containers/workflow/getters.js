@@ -1,6 +1,5 @@
 import { get } from 'lodash-es';
-import { getterTypes as routeGetterTypes } from '../../store/route';
-
+import { ROUTE_PARAMS } from '../../store/route/getter-types';
 import {
   WORKFLOW_EXECUTION,
   WORKFLOW_EXECUTION_PENDING_ACTIVITIES,
@@ -15,12 +14,12 @@ const getters = {
   [WORKFLOW_EXECUTION]: ({ workflow }) => workflow.execution,
   [WORKFLOW_EXECUTION_TASK_LIST_NAME]: ({ workflow }) => get(workflow, 'execution.executionConfiguration.taskList.name'),
   [WORKFLOW_EXECUTION_PENDING_ACTIVITIES]: ({ workflow }, getters) => mapPendingTaskList({
-    domain: getters[routeGetterTypes.ROUTE_PARAMS].domain,
+    domain: getters[ROUTE_PARAMS].domain,
     pendingTaskType: 'activity',
     pendingTaskList: get(workflow, 'execution.pendingActivities') || []
   }),
   [WORKFLOW_EXECUTION_PENDING_CHILDREN]: ({ workflow }, getters) => mapPendingTaskList({
-    domain: getters[routeGetterTypes.ROUTE_PARAMS].domain,
+    domain: getters[ROUTE_PARAMS].domain,
     pendingTaskType: 'childWorkflow',
     pendingTaskList: get(workflow, 'execution.pendingChildren') || []
   }),

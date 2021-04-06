@@ -19,11 +19,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Component from './component';
-import Connector from './connector';
-import actions from './actions';
-import getters from './getters';
+import { connect } from 'vuex-connect';
+import { WORKFLOW_PENDING_FILTER_CHANGED } from './action-types';
+import {
+  WORKFLOW_PENDING_ACTIVE_FILTER,
+  WORKFLOW_PENDING_ACTIVE_PENDING_TASK_LIST,
+} from './getter-types';
 
-const container = Connector('WorkflowPending', Component);
+const actionsToEvents = {
+  filterChanged: WORKFLOW_PENDING_FILTER_CHANGED,
+};
 
-export { actions, container, getters };
+const gettersToProps = {
+  filter: WORKFLOW_PENDING_ACTIVE_FILTER,
+  pendingTaskList: WORKFLOW_PENDING_ACTIVE_PENDING_TASK_LIST,
+};
+
+export default connect({
+  actionsToEvents,
+  gettersToProps,
+});

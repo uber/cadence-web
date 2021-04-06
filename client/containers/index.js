@@ -36,6 +36,7 @@ export {
   getDefaultState as getWorkflowHistoryDefaultState,
 } from './workflow-history';
 export {
+  actions as workflowPendingActions,
   container as WorkflowPending,
-  getDefaultState as getWorkflowPendingDefaultState,
+  getters as workflowPendingGetters,
 } from './workflow-pending';

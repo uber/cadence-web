@@ -205,11 +205,6 @@ const routeOpts = {
           components: {
             pending: WorkflowPending,
           },
-          props: {
-            pending: ({ query: { filter } }) => ({
-              filter,
-            }),
-          },
         },
         {
           name: 'workflow/stack-trace',
@@ -360,7 +355,7 @@ if (typeof mocha === 'undefined') {
     document.body.appendChild(document.createElement('main'));
   }
 
-  const store = initStore();
+  const store = initStore({ router });
 
   sync(store, router);
 
