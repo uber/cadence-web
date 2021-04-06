@@ -4,6 +4,7 @@ import {
   DynamicScrollerItem,
 } from 'vue-virtual-scroller';
 import { ButtonGroup } from '~components';
+import { PendingTaskListItem } from './components';
 
 export default {
   name: 'workflow-pending',
@@ -21,12 +22,13 @@ export default {
     'button-group': ButtonGroup,
     DynamicScroller,
     DynamicScrollerItem,
+    'pending-task-list-item': PendingTaskListItem,
   },
   methods: {
     onFilterChange(filter) {
       this.$emit('filterChanged', filter);
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -41,25 +43,28 @@ export default {
         @change="onFilterChange"
       />
     </div>
-    <DynamicScroller
-      key-field="activityId"
-      :items="pendingTaskList"
-      :min-item-size="38"
-      ref="scrollerGrid"
-      style="height: 0px;"
-    >
-      <template v-slot="{ item, index, active }">
-        <DynamicScrollerItem
-          class="scroller-item"
-          :active="active"
-          :data-active="active"
-          :data-index="index"
-          :item="item"
-        >
-
-        </DynamicScrollerItem>
-      </template>
-    </DynamicScroller>
+    <div class="pending-list">
+      <DynamicScroller
+        key-field="id"
+        :items="pendingTaskList"
+        :min-item-size="38"
+      >
+        <template v-slot="{ item, index, active }">
+          <DynamicScrollerItem
+            class="scroller-item"
+            :active="active"
+            :data-active="active"
+            :data-index="index"
+            :item="item"
+          >
+            <pending-task-list-item
+              :index="index"
+              :item="item"
+            />
+          </DynamicScrollerItem>
+        </template>
+      </DynamicScroller>
+    </div>
   </div>
 </template>
 
@@ -67,6 +72,11 @@ export default {
 .workflow-pending {
   .top-navigation {
     padding: 24px;
+  }
+
+  .pending-list {
+    max-height: calc(100vh - 190px);
+    overflow-y: auto;
   }
 }
 </style>

@@ -1,3 +1,4 @@
+import getKeyValuePairs from '~helpers/get-key-value-pairs';
 import { ROUTE_QUERY } from '../../store/route/getter-types';
 import {
   WORKFLOW_EXECUTION_PENDING_ACTIVITIES,
@@ -20,12 +21,22 @@ const mapFilterToGetterType = filter => {
   };
 };
 
+const mapWithKvps = item => {
+  const kvps = getKeyValuePairs(item);
+  return {
+    ...item,
+    kvps,
+  }
+};
+
 const getters = {
   [WORKFLOW_PENDING_ACTIVE_FILTER]: (_, getters) => getters[ROUTE_QUERY].filter || 'all',
   [WORKFLOW_PENDING_ACTIVE_PENDING_TASK_LIST]: (_, getters) => {
     const filter = getters[WORKFLOW_PENDING_ACTIVE_FILTER];
     const getterType = mapFilterToGetterType(filter);
-    return getters[getterType];
+    const pendingTaskList = getters[getterType];
+    const mappedPendingTaskList = pendingTaskList.map(mapWithKvps);
+    return mappedPendingTaskList;
   },
 };
 
