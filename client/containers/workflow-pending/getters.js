@@ -19,7 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { ROUTE_QUERY } from '../../store/route/getter-types';
+import { ROUTE_QUERY } from '../route/getter-types';
 import {
   WORKFLOW_EXECUTION_PENDING_ACTIVITIES,
   WORKFLOW_EXECUTION_PENDING_CHILDREN,

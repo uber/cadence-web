@@ -19,8 +19,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { ROUTE_REPLACE } from '../../store/route/action-types';
-import { ROUTE_QUERY } from '../../store/route/getter-types';
+import { ROUTE_REPLACE } from '../route/action-types';
+import { ROUTE_QUERY } from '../route/getter-types';
 import { WORKFLOW_PENDING_FILTER_CHANGED } from './action-types';
 
 const actions = {

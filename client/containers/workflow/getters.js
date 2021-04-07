@@ -20,7 +20,7 @@
 // THE SOFTWARE.
 
 import { get } from 'lodash-es';
-import { ROUTE_PARAMS } from '../../store/route/getter-types';
+import { ROUTE_PARAMS } from '../route/getter-types';
 import {
   WORKFLOW_EXECUTION,
   WORKFLOW_EXECUTION_IS_LOADING,

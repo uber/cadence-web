@@ -28,10 +28,10 @@ import {
   mutations as graphMutations,
 } from './graph';
 import {
-  actionTypes as routeActionTypes,
-  getters as routeGetters,
-} from './route';
-import {
+  // route
+  routeActionTypes,
+  routeGetters,
+
   // settings
   getSettingsWorkflowHistoryDefaultState,
   settingsWorkflowHistoryGetters,
