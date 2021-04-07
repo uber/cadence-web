@@ -23,11 +23,11 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import VuexPersistence from 'vuex-persist';
 import {
-  getDefaultState as getGraphDefaultState,
-  getters as graphGetters,
-  mutations as graphMutations,
-} from './graph';
-import {
+  // graph
+  getGraphDefaultState,
+  graphGetters,
+  graphMutations,
+
   // route
   routeActionTypes,
   routeGetters,

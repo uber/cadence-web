@@ -20,6 +20,11 @@
 // THE SOFTWARE.
 
 export {
+  getDefaultState as getGraphDefaultState,
+  getters as graphGetters,
+  mutations as graphMutations,
+} from './graph';
+export {
   actionTypes as routeActionTypes,
   getters as routeGetters,
   getterTypes as routeGetterTypes,
