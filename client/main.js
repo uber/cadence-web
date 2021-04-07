@@ -54,11 +54,7 @@ import WorkflowArchivalBasic from './routes/domain/workflow-archival/basic';
 import WorkflowList from './routes/domain/workflow-list';
 import WorkflowSummary from './routes/workflow/summary';
 import initStore from './store';
-import {
-  Workflow,
-  WorkflowHistory,
-  WorkflowPending,
-} from '~containers';
+import { Workflow, WorkflowHistory, WorkflowPending } from '~containers';
 
 import { http, injectMomentDurationFormat, jsonTryParse } from '~helpers';
 

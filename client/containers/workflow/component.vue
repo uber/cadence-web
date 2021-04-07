@@ -284,6 +284,7 @@ export default {
             this.$emit('setWorkflow', wf);
             this.isWorkflowRunning = !wf.workflowExecutionInfo.closeTime;
             this.baseApiUrlRetryCount = 0;
+
             return wf;
           },
           error => {
@@ -292,10 +293,7 @@ export default {
               type: NOTIFICATION_TYPE_ERROR,
             });
             this.baseApiUrlRetryCount += 1;
-            setTimeout(
-              () => this.fetchWorkflowInfo(),
-              RETRY_TIMEOUT
-            );
+            setTimeout(() => this.fetchWorkflowInfo(), RETRY_TIMEOUT);
           }
         )
         .finally(() => {
@@ -309,8 +307,9 @@ export default {
     },
     async onHistoryUrlChange(historyUrl) {
       const workflowInfo = await this.fetchWorkflowInfo();
+
       if (workflowInfo) {
-        await this.fetchHistoryPage(historyUrl)
+        await this.fetchHistoryPage(historyUrl);
         this.fetchTaskList();
       }
     },

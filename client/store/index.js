@@ -23,6 +23,15 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import VuexPersistence from 'vuex-persist';
 import {
+  getDefaultState as getGraphDefaultState,
+  getters as graphGetters,
+  mutations as graphMutations,
+} from './graph';
+import {
+  actionTypes as routeActionTypes,
+  getters as routeGetters,
+} from './route';
+import {
   // settings
   getSettingsWorkflowHistoryDefaultState,
   settingsWorkflowHistoryGetters,
@@ -40,15 +49,6 @@ import {
   workflowPendingActions,
   workflowPendingGetters,
 } from '~containers';
-import {
-  getDefaultState as getGraphDefaultState,
-  getters as graphGetters,
-  mutations as graphMutations,
-} from './graph';
-import {
-  actionTypes as routeActionTypes,
-  getters as routeGetters,
-} from './route';
 
 const { ROUTE_PUSH, ROUTE_REPLACE } = routeActionTypes;
 

@@ -59,10 +59,9 @@ export default {
     :to="to"
   >
     <span>{{ label }}</span>
-    <span
-      class="notification"
-      v-if="notificationCount"
-    >{{notificationCount}}</span>
+    <span class="notification" v-if="notificationCount">{{
+      notificationCount
+    }}</span>
   </router-link>
 </template>
 

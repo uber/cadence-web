@@ -544,9 +544,7 @@ export default {
                 </DynamicScrollerItem>
               </template>
             </DynamicScroller>
-            <footer-toolbar
-              :pending-task-count="pendingTaskCount"
-            />
+            <footer-toolbar :pending-task-count="pendingTaskCount" />
           </div>
           <prism
             class="json"

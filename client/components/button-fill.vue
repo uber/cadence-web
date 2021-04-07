@@ -61,7 +61,7 @@ export default {
     uppercase: {
       type: Boolean,
       default: false,
-    }
+    },
   },
   computed: {
     calculatedTag() {

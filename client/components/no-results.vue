@@ -39,7 +39,10 @@ export default {
 </script>
 
 <template>
-  <div class="no-results-container" v-if="!isLoading && results && !results.length">
+  <div
+    class="no-results-container"
+    v-if="!isLoading && results && !results.length"
+  >
     <div class="no-results">{{ message }}</div>
   </div>
 </template>

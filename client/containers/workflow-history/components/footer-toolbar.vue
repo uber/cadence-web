@@ -39,7 +39,9 @@ export default {
     pendingActivitiesButtonLabel() {
       const { pendingTaskCount } = this;
 
-      return `${pendingTaskCount} PENDING TASK${pendingTaskCount === 1 ? '' : 'S'}`;
+      return `${pendingTaskCount} PENDING TASK${
+        pendingTaskCount === 1 ? '' : 'S'
+      }`;
     },
   },
   components: {
