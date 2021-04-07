@@ -22,7 +22,7 @@ export default {
     class="pending-task-list-item"
     :class="{ odd: index % 2 === 1 }"
   >
-    <div class="col type">{{ item.typeDisplay }}</div>
+    <div class="col type">{{ item.pendingTaskTypeDisplay }}</div>
     <div class="col detail">
       <detail-list :item="item" />
     </div>

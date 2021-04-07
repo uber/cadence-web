@@ -45,7 +45,7 @@ export default {
     </div>
     <div class="pending-list">
       <DynamicScroller
-        key-field="id"
+        key-field="pendingTaskId"
         :items="pendingTaskList"
         :min-item-size="38"
       >
