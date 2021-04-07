@@ -76,6 +76,9 @@ export default {
     this.unwatch.push(
       this.$watch('baseAPIURL', this.onBaseApiUrlChange, { immediate: true })
     );
+    this.unwatch.push(
+      this.$watch('historyUrl', this.onHistoryUrlChange, { immediate: true })
+    );
   },
   beforeDestroy() {
     this.clearWatches();
@@ -150,11 +153,6 @@ export default {
     },
     clearWatches() {
       while (this.unwatch.length) {
-        this.unwatch.pop()();
-      }
-    },
-    clearHistoryUrlWatch() {
-      while (this.unwatch.length > 1) {
         this.unwatch.pop()();
       }
     },
@@ -301,9 +299,7 @@ export default {
         });
     },
     onBaseApiUrlChange() {
-      this.clearHistoryUrlWatch();
       this.clearState();
-      this.setupHistoryUrlWatch();
     },
     async onHistoryUrlChange(historyUrl) {
       const workflowInfo = await this.fetchWorkflowInfo();
@@ -318,13 +314,6 @@ export default {
     },
     onWorkflowHistoryEventParamToggle(event) {
       this.$emit('onWorkflowHistoryEventParamToggle', event);
-    },
-    setupHistoryUrlWatch() {
-      setTimeout(() => {
-        this.unwatch.push(
-          this.$watch('historyUrl', this.onHistoryUrlChange, { immediate: true })
-        );
-      }, 10);
     },
   },
 };
