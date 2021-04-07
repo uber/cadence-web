@@ -20,6 +20,7 @@
 // THE SOFTWARE.
 
 import { connect } from 'vuex-connect';
+import { WORKFLOW_EXECUTION_IS_LOADING } from '../workflow/getter-types';
 import { WORKFLOW_PENDING_FILTER_CHANGED } from './action-types';
 import {
   WORKFLOW_PENDING_ACTIVE_FILTER,
@@ -32,6 +33,7 @@ const actionsToEvents = {
 
 const gettersToProps = {
   filter: WORKFLOW_PENDING_ACTIVE_FILTER,
+  isLoading: WORKFLOW_EXECUTION_IS_LOADING,
   pendingTaskList: WORKFLOW_PENDING_ACTIVE_PENDING_TASK_LIST,
 };
 

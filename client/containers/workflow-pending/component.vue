@@ -14,6 +14,10 @@ export default {
       type: String,
       default: 'all',
     },
+    isLoading: {
+      type: Boolean,
+      default: false,
+    },
     pendingTaskList: {
       type: Array,
       default: () => [],
@@ -52,6 +56,7 @@ export default {
       />
     </div>
     <no-results
+      :is-loading="isLoading"
       :message="emptyMessage"
       :results="pendingTaskList"
     />

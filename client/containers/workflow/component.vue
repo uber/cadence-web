@@ -74,6 +74,7 @@ export default {
     'workflowId',
   ],
   created() {
+    this.clearState();
     this.unwatch.push(
       this.$watch('baseAPIURL', this.onBaseApiUrlChange, { immediate: true })
     );

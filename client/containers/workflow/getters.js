@@ -2,6 +2,7 @@ import { get } from 'lodash-es';
 import { ROUTE_PARAMS } from '../../store/route/getter-types';
 import {
   WORKFLOW_EXECUTION,
+  WORKFLOW_EXECUTION_IS_LOADING,
   WORKFLOW_EXECUTION_PENDING_ACTIVITIES,
   WORKFLOW_EXECUTION_PENDING_CHILDREN,
   WORKFLOW_EXECUTION_PENDING_TASK_COUNT,
@@ -12,6 +13,7 @@ import { mapPendingTaskList } from './helpers';
 
 const getters = {
   [WORKFLOW_EXECUTION]: ({ workflow }) => workflow.execution,
+  [WORKFLOW_EXECUTION_IS_LOADING]: ({ workflow }) => workflow.isLoading,
   [WORKFLOW_EXECUTION_TASK_LIST_NAME]: ({ workflow }) => get(workflow, 'execution.executionConfiguration.taskList.name'),
   [WORKFLOW_EXECUTION_PENDING_ACTIVITIES]: ({ workflow }, getters) => mapPendingTaskList({
     domain: getters[ROUTE_PARAMS].domain,
