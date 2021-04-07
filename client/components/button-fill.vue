@@ -92,11 +92,11 @@ export default {
     :aria-disabled="disabled"
     class="button-fill"
     :class="{
-      active: active,
+      active,
       [color]: color,
-      disabled: disabled,
+      disabled,
       [size]: size,
-      uppercase: uppercase,
+      uppercase,
     }"
     :disabled="disabled"
     :href="href"
