@@ -3,8 +3,9 @@ import {
   DynamicScroller,
   DynamicScrollerItem,
 } from 'vue-virtual-scroller';
-import { ButtonGroup } from '~components';
+import { ButtonGroup, NoResults } from '~components';
 import { PendingTaskListItem } from './components';
+import { PENDING_TASK_FILTER_TO_EMPTY_MESSAGE_MAP } from './constants';
 
 export default {
   name: 'workflow-pending',
@@ -22,7 +23,14 @@ export default {
     'button-group': ButtonGroup,
     DynamicScroller,
     DynamicScrollerItem,
+    'no-results': NoResults,
     'pending-task-list-item': PendingTaskListItem,
+  },
+  computed: {
+    emptyMessage() {
+      const { filter } = this;
+      return PENDING_TASK_FILTER_TO_EMPTY_MESSAGE_MAP[filter];
+    },
   },
   methods: {
     onFilterChange(filter) {
@@ -43,7 +51,11 @@ export default {
         @change="onFilterChange"
       />
     </div>
-    <div class="pending-list">
+    <no-results
+      :message="emptyMessage"
+      :results="pendingTaskList"
+    />
+    <div class="pending-task-list" v-if="pendingTaskList.length">
       <DynamicScroller
         key-field="pendingTaskId"
         :items="pendingTaskList"
@@ -75,7 +87,7 @@ export default {
     padding: 24px;
   }
 
-  .pending-list {
+  .pending-task-list {
     max-height: calc(100vh - 191px);
     overflow-y: auto;
   }
