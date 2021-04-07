@@ -1,4 +1,4 @@
-import getKeyValuePairs from '~helpers/get-key-value-pairs';
+import { getKeyValuePairs } from '~helpers';
 import { ROUTE_QUERY } from '../../store/route/getter-types';
 import {
   WORKFLOW_EXECUTION_PENDING_ACTIVITIES,
@@ -22,7 +22,7 @@ const mapFilterToGetterType = filter => {
 };
 
 const mapWithKvps = item => {
-  const kvps = getKeyValuePairs(item);
+  const kvps = getKeyValuePairs({ item });
   return {
     ...item,
     kvps,

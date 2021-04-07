@@ -40,7 +40,7 @@ export default {
       .then(
         r => {
           const domainConfig = mapDomainDescription(r);
-          const kvps = getKeyValuePairs(domainConfig);
+          const kvps = getKeyValuePairs({ item: domainConfig });
 
           this.domainConfig = { ...domainConfig, kvps };
         },

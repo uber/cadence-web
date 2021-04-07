@@ -40,7 +40,7 @@ const getEventSummary = event => {
       ? maps[event.eventType](event.details)
       : event.details;
 
-  const kvps = getKeyValuePairs(item);
+  const kvps = getKeyValuePairs({ item });
 
   return {
     ...item,
