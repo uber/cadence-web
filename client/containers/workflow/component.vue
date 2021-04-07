@@ -39,7 +39,6 @@ export default {
       nextPageToken: undefined,
       fetchHistoryPageRetryCount: 0,
       wfLoading: true,
-      // workflow: undefined,
 
       history: {
         loading: undefined,
@@ -137,7 +136,6 @@ export default {
       this.nextPageToken = undefined;
       this.fetchHistoryPageRetryCount = 0;
       this.wfLoading = true;
-      // this.workflow = undefined;
 
       this.history.loading = undefined;
 
@@ -249,11 +247,8 @@ export default {
       const { taskListName } = this;
 
       if (!taskListName) {
-      // if (!this.workflow || !this.workflow.executionConfiguration) {
         return Promise.reject('task list name is required');
       }
-
-      // const taskListName = this.workflow.executionConfiguration.taskList.name;
 
       this.$http(
         `/api/domains/${this.$route.params.domain}/task-lists/${taskListName}`
@@ -287,7 +282,6 @@ export default {
         .then(
           wf => {
             this.$emit('setWorkflow', wf);
-            // this.workflow = wf;
             this.isWorkflowRunning = !wf.workflowExecutionInfo.closeTime;
             this.baseApiUrlRetryCount = 0;
             return wf;
