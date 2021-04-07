@@ -74,7 +74,6 @@ export default {
     'workflowId',
   ],
   created() {
-    this.clearState();
     this.unwatch.push(
       this.$watch('baseAPIURL', this.onBaseApiUrlChange, { immediate: true })
     );
@@ -246,55 +245,6 @@ export default {
           }
         });
     },
-    onBaseApiUrlChange(baseAPIURL) {
-      if (this.baseApiUrlRetryCount >= RETRY_COUNT_MAX) {
-        return;
-      }
-
-      this.clearHistoryUrlWatch();
-      this.clearState();
-      this.wfLoading = true;
-
-      return this.$http(baseAPIURL)
-        .then(
-          wf => {
-            this.$emit('setWorkflow', wf);
-            // this.workflow = wf;
-            this.isWorkflowRunning = !wf.workflowExecutionInfo.closeTime;
-            this.baseApiUrlRetryCount = 0;
-            this.setupHistoryUrlWatch();
-          },
-          error => {
-            this.$emit('onNotification', {
-              message: getErrorMessage(error),
-              type: NOTIFICATION_TYPE_ERROR,
-            });
-            this.baseApiUrlRetryCount += 1;
-            setTimeout(
-              () => this.onBaseApiUrlChange(baseAPIURL),
-              RETRY_TIMEOUT
-            );
-          }
-        )
-        .finally(() => {
-          this.wfLoading = false;
-        });
-    },
-    onHistoryUrlChange(historyUrl) {
-      this.fetchHistoryPage(historyUrl).then(this.fetchTaskList);
-    },
-    onNotification(event) {
-      this.$emit('onNotification', event);
-    },
-    onWorkflowHistoryEventParamToggle(event) {
-      this.$emit('onWorkflowHistoryEventParamToggle', event);
-    },
-    setupHistoryUrlWatch() {
-      this.clearHistoryUrlWatch();
-      this.unwatch.push(
-        this.$watch('historyUrl', this.onHistoryUrlChange, { immediate: true })
-      );
-    },
     fetchTaskList() {
       const { taskListName } = this;
 
@@ -323,6 +273,63 @@ export default {
         .finally(() => {
           this.loading = false;
         });
+    },
+    fetchWorkflowInfo() {
+      const { baseAPIURL } = this;
+
+      if (this.baseApiUrlRetryCount >= RETRY_COUNT_MAX) {
+        return;
+      }
+
+      this.wfLoading = true;
+
+      return this.$http(baseAPIURL)
+        .then(
+          wf => {
+            this.$emit('setWorkflow', wf);
+            // this.workflow = wf;
+            this.isWorkflowRunning = !wf.workflowExecutionInfo.closeTime;
+            this.baseApiUrlRetryCount = 0;
+            return wf;
+          },
+          error => {
+            this.$emit('onNotification', {
+              message: getErrorMessage(error),
+              type: NOTIFICATION_TYPE_ERROR,
+            });
+            this.baseApiUrlRetryCount += 1;
+            setTimeout(
+              () => this.fetchWorkflowInfo(),
+              RETRY_TIMEOUT
+            );
+          }
+        )
+        .finally(() => {
+          this.wfLoading = false;
+        });
+    },
+    onBaseApiUrlChange() {
+      this.clearHistoryUrlWatch();
+      this.clearState();
+      this.setupHistoryUrlWatch();
+    },
+    async onHistoryUrlChange(historyUrl) {
+      const workflowInfo = await this.fetchWorkflowInfo();
+      if (workflowInfo) {
+        await this.fetchHistoryPage(historyUrl)
+        this.fetchTaskList();
+      }
+    },
+    onNotification(event) {
+      this.$emit('onNotification', event);
+    },
+    onWorkflowHistoryEventParamToggle(event) {
+      this.$emit('onWorkflowHistoryEventParamToggle', event);
+    },
+    setupHistoryUrlWatch() {
+      this.unwatch.push(
+        this.$watch('historyUrl', this.onHistoryUrlChange, { immediate: true })
+      );
     },
   },
 };

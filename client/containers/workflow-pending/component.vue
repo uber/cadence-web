@@ -89,6 +89,7 @@ export default {
 .workflow-pending {
   .top-navigation {
     border-bottom: 1px solid #c6c6c6;
+    box-shadow: 0 2px 2px rgba(0,0,0,0.2);
     padding: 24px;
   }
 
