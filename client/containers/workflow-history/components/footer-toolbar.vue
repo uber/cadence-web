@@ -31,12 +31,12 @@ export default {
     },
   },
   computed: {
-    pendingActivitiesButtonDisabled() {
+    pendingTasksButtonDisabled() {
       const { pendingTaskCount } = this;
 
       return pendingTaskCount === 0;
     },
-    pendingActivitiesButtonLabel() {
+    pendingTasksButtonLabel() {
       const { pendingTaskCount } = this;
 
       return `${pendingTaskCount} PENDING TASK${
@@ -53,9 +53,9 @@ export default {
 <template>
   <div class="footer-toolbar">
     <button-fill
-      :disabled="pendingActivitiesButtonDisabled"
+      :disabled="pendingTasksButtonDisabled"
       disabled-label="No pending tasks"
-      :label="pendingActivitiesButtonLabel"
+      :label="pendingTasksButtonLabel"
       size="small"
       tag="router-link"
       :to="{ name: 'workflow/pending' }"
