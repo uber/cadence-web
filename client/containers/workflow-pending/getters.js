@@ -5,6 +5,7 @@ import {
   WORKFLOW_EXECUTION_PENDING_CHILDREN,
   WORKFLOW_EXECUTION_PENDING_TASKS,
 } from '../workflow/getter-types';
+import { PENDING_TASK_KVPS_EXCLUDE_KEYS } from './constants';
 import {
   WORKFLOW_PENDING_ACTIVE_FILTER,
   WORKFLOW_PENDING_ACTIVE_PENDING_TASK_LIST,
@@ -22,7 +23,10 @@ const mapFilterToGetterType = filter => {
 };
 
 const mapWithKvps = item => {
-  const kvps = getKeyValuePairs({ item });
+  const kvps = getKeyValuePairs({
+    excludes: PENDING_TASK_KVPS_EXCLUDE_KEYS,
+    item,
+  });
   return {
     ...item,
     kvps,
