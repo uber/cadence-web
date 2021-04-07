@@ -23,7 +23,10 @@ import moment from 'moment';
 import getJsonStringObject from './get-json-string-object';
 import { jsonKeys, preKeys } from '~constants';
 
-const getKeyValuePairs = ({ excludes = [], item }) => {
+const getKeyValuePairs = ({
+  excludes = [],
+  item,
+}) => {
   const kvps = [];
   const flatten = (prefix, obj, root) => {
     Object.entries(obj).forEach(([k, value]) => {
