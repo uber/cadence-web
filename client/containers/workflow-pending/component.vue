@@ -71,11 +71,12 @@ export default {
 <style lang="stylus">
 .workflow-pending {
   .top-navigation {
+    border-bottom: 1px solid #c6c6c6;
     padding: 24px;
   }
 
   .pending-list {
-    max-height: calc(100vh - 190px);
+    max-height: calc(100vh - 191px);
     overflow-y: auto;
   }
 }
