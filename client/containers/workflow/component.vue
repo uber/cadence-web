@@ -320,9 +320,11 @@ export default {
       this.$emit('onWorkflowHistoryEventParamToggle', event);
     },
     setupHistoryUrlWatch() {
-      this.unwatch.push(
-        this.$watch('historyUrl', this.onHistoryUrlChange, { immediate: true })
-      );
+      setTimeout(() => {
+        this.unwatch.push(
+          this.$watch('historyUrl', this.onHistoryUrlChange, { immediate: true })
+        );
+      }, 10);
     },
   },
 };
