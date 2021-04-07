@@ -64,7 +64,7 @@ export default {
     },
   },
   computed: {
-    calculatedTag() {
+    computedTag() {
       const { disabled, tag } = this;
 
       if (disabled && TAG_LINK_TYPES.includes(tag)) {
@@ -100,7 +100,7 @@ export default {
     }"
     :disabled="disabled"
     :href="href"
-    :is="calculatedTag"
+    :is="computedTag"
     :to="to"
     :title="disabledLabelText"
     @click="onClick"
