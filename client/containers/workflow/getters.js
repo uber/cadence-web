@@ -31,16 +31,16 @@ import {
 } from './getter-types';
 
 const getters = {
-  [WORKFLOW_EXECUTION]: ({ workflow }) => workflow.execution,
-  [WORKFLOW_EXECUTION_IS_LOADING]: ({ workflow }) => workflow.isLoading,
-  [WORKFLOW_EXECUTION_TASK_LIST_NAME]: ({ workflow }) =>
-    get(workflow, 'execution.executionConfiguration.taskList.name') || '',
-  [WORKFLOW_EXECUTION_PENDING_ACTIVITIES]: (state) => (get(state, 'workflow.execution.pendingActivities') || [])
+  [WORKFLOW_EXECUTION]: state => get(state, 'workflow.execution'),
+  [WORKFLOW_EXECUTION_IS_LOADING]: state => get(state, 'workflow.isLoading') || false,
+  [WORKFLOW_EXECUTION_TASK_LIST_NAME]: state =>
+    get(state, 'workflow.execution.executionConfiguration.taskList.name') || '',
+  [WORKFLOW_EXECUTION_PENDING_ACTIVITIES]: state => (get(state, 'workflow.execution.pendingActivities') || [])
     .map(item => ({
       ...item,
       pendingTaskType: 'activity',
     })),
-  [WORKFLOW_EXECUTION_PENDING_CHILDREN]: (state) => (get(state, 'workflow.execution.pendingChildren') || [])
+  [WORKFLOW_EXECUTION_PENDING_CHILDREN]: state => (get(state, 'workflow.execution.pendingChildren') || [])
     .map(item => ({
       ...item,
       pendingTaskType: 'childWorkflow',
