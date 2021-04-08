@@ -20,13 +20,8 @@
 // THE SOFTWARE.
 
 import { ROUTE_QUERY } from '../route/getter-types';
+
 import {
-  WORKFLOW_EXECUTION_PENDING_ACTIVITIES,
-  WORKFLOW_EXECUTION_PENDING_CHILDREN,
-  WORKFLOW_EXECUTION_PENDING_TASKS,
-} from '../workflow/getter-types';
-import {
-  PENDING_TASK_KVPS_EXCLUDE_KEYS,
   PENDING_TASK_FILTER_TO_EMPTY_MESSAGE_MAP,
 } from './constants';
 import {
@@ -34,42 +29,23 @@ import {
   WORKFLOW_PENDING_ACTIVE_FILTER_EMPTY_MESSAGE,
   WORKFLOW_PENDING_ACTIVE_PENDING_TASK_LIST,
 } from './getter-types';
-import { getKeyValuePairs } from '~helpers';
-
-const WORKFLOW_PENDING_FILTER_TO_GETTER_TYPE_MAP = {
-  activities: WORKFLOW_EXECUTION_PENDING_ACTIVITIES,
-  children: WORKFLOW_EXECUTION_PENDING_CHILDREN,
-};
-
-const mapFilterToGetterType = filter =>
-  WORKFLOW_PENDING_FILTER_TO_GETTER_TYPE_MAP[filter] || WORKFLOW_EXECUTION_PENDING_TASKS;
-
-const mapWithKvps = item => {
-  const kvps = getKeyValuePairs({
-    excludes: PENDING_TASK_KVPS_EXCLUDE_KEYS,
-    item,
-  });
-
-  return {
-    ...item,
-    kvps,
-  };
-};
+import {
+  mapFilterToGetterType,
+  mapPendingTaskList,
+} from './helpers';
 
 const getters = {
   [WORKFLOW_PENDING_ACTIVE_FILTER]: (_, getters) =>
     getters[ROUTE_QUERY].filter || 'all',
   [WORKFLOW_PENDING_ACTIVE_FILTER_EMPTY_MESSAGE]: (_, getters) => {
     const filter = getters[WORKFLOW_PENDING_ACTIVE_FILTER];
-    return PENDING_TASK_FILTER_TO_EMPTY_MESSAGE_MAP[filter];
+    return PENDING_TASK_FILTER_TO_EMPTY_MESSAGE_MAP[filter] || 'No results';
   },
   [WORKFLOW_PENDING_ACTIVE_PENDING_TASK_LIST]: (_, getters) => {
     const filter = getters[WORKFLOW_PENDING_ACTIVE_FILTER];
     const getterType = mapFilterToGetterType(filter);
     const pendingTaskList = getters[getterType];
-    const mappedPendingTaskList = pendingTaskList.map(mapWithKvps);
-
-    return mappedPendingTaskList;
+    return mapPendingTaskList(pendingTaskList);
   },
 };
 
