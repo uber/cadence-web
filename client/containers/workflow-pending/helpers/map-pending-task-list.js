@@ -19,15 +19,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { getKeyValuePairs } from '~helpers';
 import {
   PENDING_TASK_KVPS_EXCLUDE_KEYS,
-} from '../constants';
-import {
   PENDING_TASK_TYPE_TO_ID_MAP,
   PENDING_TASK_TYPE_TO_DISPLAY_MAP,
 } from '../constants';
+
 import getWorkflowLink from './get-workflow-link';
+import { getKeyValuePairs } from '~helpers';
 
 const mapPendingTaskItem = domain => item => {
   const { pendingTaskType, runID } = item;
@@ -36,7 +35,7 @@ const mapPendingTaskItem = domain => item => {
     ...item,
     pendingTaskId: `${pendingTaskType}_${
       item[PENDING_TASK_TYPE_TO_ID_MAP[pendingTaskType]]
-      }`,
+    }`,
     runID: getWorkflowLink({ ...item, domain }) || runID,
     pendingTaskTypeDisplay: PENDING_TASK_TYPE_TO_DISPLAY_MAP[pendingTaskType],
   };
@@ -50,6 +49,7 @@ const mapPendingTaskItem = domain => item => {
   };
 };
 
-const mapPendingTaskList = ({ domain, pendingTaskList }) => pendingTaskList.map(mapPendingTaskItem(domain));
+const mapPendingTaskList = ({ domain, pendingTaskList }) =>
+  pendingTaskList.map(mapPendingTaskItem(domain));
 
 export default mapPendingTaskList;

@@ -21,24 +21,20 @@
 
 import { ROUTE_PARAMS, ROUTE_QUERY } from '../route/getter-types';
 
-import {
-  PENDING_TASK_FILTER_TO_EMPTY_MESSAGE_MAP,
-} from './constants';
+import { PENDING_TASK_FILTER_TO_EMPTY_MESSAGE_MAP } from './constants';
 import {
   WORKFLOW_PENDING_ACTIVE_FILTER,
   WORKFLOW_PENDING_ACTIVE_FILTER_EMPTY_MESSAGE,
   WORKFLOW_PENDING_ACTIVE_PENDING_TASK_LIST,
 } from './getter-types';
-import {
-  mapFilterToGetterType,
-  mapPendingTaskList,
-} from './helpers';
+import { mapFilterToGetterType, mapPendingTaskList } from './helpers';
 
 const getters = {
   [WORKFLOW_PENDING_ACTIVE_FILTER]: (_, getters) =>
     getters[ROUTE_QUERY].filter || 'all',
   [WORKFLOW_PENDING_ACTIVE_FILTER_EMPTY_MESSAGE]: (_, getters) => {
     const filter = getters[WORKFLOW_PENDING_ACTIVE_FILTER];
+
     return PENDING_TASK_FILTER_TO_EMPTY_MESSAGE_MAP[filter] || 'No results';
   },
   [WORKFLOW_PENDING_ACTIVE_PENDING_TASK_LIST]: (_, getters) => {
@@ -46,6 +42,7 @@ const getters = {
     const filter = getters[WORKFLOW_PENDING_ACTIVE_FILTER];
     const getterType = mapFilterToGetterType(filter);
     const pendingTaskList = getters[getterType] || [];
+
     return mapPendingTaskList({
       domain,
       pendingTaskList,

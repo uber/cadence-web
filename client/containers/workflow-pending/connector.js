@@ -20,9 +20,7 @@
 // THE SOFTWARE.
 
 import { connect } from 'vuex-connect';
-import {
-  WORKFLOW_EXECUTION_IS_LOADING,
-} from '../workflow/getter-types';
+import { WORKFLOW_EXECUTION_IS_LOADING } from '../workflow/getter-types';
 import { WORKFLOW_PENDING_FILTER_CHANGED } from './action-types';
 import {
   WORKFLOW_PENDING_ACTIVE_FILTER,
