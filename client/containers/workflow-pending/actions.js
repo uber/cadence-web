@@ -23,7 +23,8 @@ import { ROUTE_UPDATE_QUERY } from '../route/action-types';
 import { WORKFLOW_PENDING_FILTER_CHANGED } from './action-types';
 
 const actions = {
-  [WORKFLOW_PENDING_FILTER_CHANGED]: ({ dispatch }, filter) => dispatch(ROUTE_UPDATE_QUERY, { filter }),
+  [WORKFLOW_PENDING_FILTER_CHANGED]: ({ dispatch }, filter) =>
+    dispatch(ROUTE_UPDATE_QUERY, { filter }),
 };
 
 export default actions;
