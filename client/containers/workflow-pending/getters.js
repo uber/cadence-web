@@ -44,7 +44,7 @@ const getters = {
   [WORKFLOW_PENDING_ACTIVE_PENDING_TASK_LIST]: (_, getters) => {
     const filter = getters[WORKFLOW_PENDING_ACTIVE_FILTER];
     const getterType = mapFilterToGetterType(filter);
-    const pendingTaskList = getters[getterType];
+    const pendingTaskList = getters[getterType] || [];
     return mapPendingTaskList(pendingTaskList);
   },
 };
