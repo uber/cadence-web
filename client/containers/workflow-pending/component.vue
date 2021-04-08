@@ -22,7 +22,6 @@
 
 import { DynamicScroller, DynamicScrollerItem } from 'vue-virtual-scroller';
 import { PendingTaskListItem } from './components';
-import { PENDING_TASK_FILTER_TO_EMPTY_MESSAGE_MAP } from './constants';
 import { ButtonGroup, NoResults } from '~components';
 
 export default {
