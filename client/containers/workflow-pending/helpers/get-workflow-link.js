@@ -23,7 +23,14 @@ const getWorkflowLink = ({ domain, runID, workflowID }) =>
   (domain &&
     runID &&
     workflowID && {
-      routeLink: `/domains/${domain}/workflows/${workflowID}/${runID}/summary`,
+      routeLink: {
+        name: 'workflow/summary',
+        params: {
+          domain,
+          workflowId: workflowID,
+          runId: runID,
+        },
+      },
       text: runID,
     }) ||
   undefined;
