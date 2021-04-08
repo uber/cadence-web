@@ -35,6 +35,7 @@ export const PENDING_TASK_TYPE_TO_ID_MAP = {
   activity: 'activityID',
   childWorkflow: 'initiatedID',
 };
+
 export const PENDING_TASK_TYPE_TO_DISPLAY_MAP = {
   activity: 'PendingActivityTask',
   childWorkflow: 'PendingChildWorkflowTask',
