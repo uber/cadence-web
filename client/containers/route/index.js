@@ -20,13 +20,18 @@
 // THE SOFTWARE.
 
 import actionCreator from './action-creator';
-import { ROUTE_PUSH, ROUTE_REPLACE } from './action-types';
+import {
+  ROUTE_PUSH,
+  ROUTE_REPLACE,
+  ROUTE_UPDATE_QUERY,
+} from './action-types';
 import { ROUTE_PARAMS, ROUTE_QUERY } from './getter-types';
 import getters from './getters';
 
 const actionTypes = {
   ROUTE_PUSH,
   ROUTE_REPLACE,
+  ROUTE_UPDATE_QUERY,
 };
 
 const getterTypes = {
