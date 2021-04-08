@@ -55,11 +55,6 @@ export default {
       return PENDING_TASK_FILTER_TO_EMPTY_MESSAGE_MAP[filter];
     },
   },
-  methods: {
-    onFilterChange(filter) {
-      this.$emit('filterChanged', filter);
-    },
-  },
 };
 </script>
 
@@ -71,7 +66,7 @@ export default {
         label="Filters"
         uppercase
         :value="filter"
-        @change="onFilterChange"
+        @change="$emit('filterChanged', $event)"
       />
     </div>
     <no-results
