@@ -32,6 +32,10 @@ export default {
       type: String,
       default: 'all',
     },
+    emptyMessage: {
+      type: String,
+      default: 'No results',
+    },
     isLoading: {
       type: Boolean,
       default: false,
@@ -47,13 +51,6 @@ export default {
     DynamicScrollerItem,
     'no-results': NoResults,
     'pending-task-list-item': PendingTaskListItem,
-  },
-  computed: {
-    emptyMessage() {
-      const { filter } = this;
-
-      return PENDING_TASK_FILTER_TO_EMPTY_MESSAGE_MAP[filter];
-    },
   },
 };
 </script>
