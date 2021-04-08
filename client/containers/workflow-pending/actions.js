@@ -19,18 +19,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { ROUTE_REPLACE } from '../route/action-types';
-import { ROUTE_QUERY } from '../route/getter-types';
+import { ROUTE_UPDATE_QUERY } from '../route/action-types';
 import { WORKFLOW_PENDING_FILTER_CHANGED } from './action-types';
 
 const actions = {
-  [WORKFLOW_PENDING_FILTER_CHANGED]: ({ dispatch, getters }, filter) => {
-    const query = getters[ROUTE_QUERY];
-
-    dispatch(ROUTE_REPLACE, {
-      query: { ...query, filter },
-    });
-  },
+  [WORKFLOW_PENDING_FILTER_CHANGED]: ({ dispatch }, filter) => dispatch(ROUTE_UPDATE_QUERY, { filter }),
 };
 
 export default actions;

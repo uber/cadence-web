@@ -29,7 +29,7 @@ import {
   graphMutations,
 
   // route
-  routeActionTypes,
+  routeActionCreator,
   routeGetters,
 
   // settings
@@ -49,8 +49,6 @@ import {
   workflowPendingActions,
   workflowPendingGetters,
 } from '~containers';
-
-const { ROUTE_PUSH, ROUTE_REPLACE } = routeActionTypes;
 
 // Application store
 
@@ -73,9 +71,8 @@ const initStore = ({ router }) => {
   const store = new Vuex.Store({
     state: state,
     actions: {
+      ...routeActionCreator(router),
       ...workflowPendingActions,
-      [ROUTE_PUSH]: (_, args) => router.push(args),
-      [ROUTE_REPLACE]: (_, args) => router.replace(args),
     },
     mutations: {
       ...graphMutations,

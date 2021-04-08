@@ -25,6 +25,7 @@ export {
   mutations as graphMutations,
 } from './graph';
 export {
+  actionCreator as routeActionCreator,
   actionTypes as routeActionTypes,
   getters as routeGetters,
   getterTypes as routeGetterTypes,

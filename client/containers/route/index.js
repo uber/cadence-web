@@ -19,9 +19,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import getters from './getters';
+import actionCreator from './action-creator';
 import { ROUTE_PUSH, ROUTE_REPLACE } from './action-types';
 import { ROUTE_PARAMS, ROUTE_QUERY } from './getter-types';
+import getters from './getters';
 
 const actionTypes = {
   ROUTE_PUSH,
@@ -33,4 +34,4 @@ const getterTypes = {
   ROUTE_QUERY,
 };
 
-export { actionTypes, getters, getterTypes };
+export { actionCreator, actionTypes, getterTypes, getters };
