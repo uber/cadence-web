@@ -23,4 +23,4 @@ const getQueryResult = queryResponse => {
   return { payloads: queryResponse };
 };
 
-export { getQueryResult };
+export default getQueryResult;
