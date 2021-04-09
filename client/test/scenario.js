@@ -66,6 +66,8 @@ Scenario.prototype.render = function render(attachToBody) {
 
   const el = document.createElement('div');
 
+  Vue.use(Vuex);
+
   const store = new Vuex.Store(this.storeConfig);
 
   if (attachToBody || this.isDebuggingJustThisTest()) {
