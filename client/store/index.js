@@ -52,7 +52,7 @@ import {
 
 // Application store
 
-const initStore = ({ router }) => {
+export const getStoreConfig = (router) => {
   const getDefaultState = () => ({
     graph: getGraphDefaultState(),
     settingsWorkflowHistory: getSettingsWorkflowHistoryDefaultState(),
@@ -62,13 +62,11 @@ const initStore = ({ router }) => {
 
   const state = getDefaultState();
 
-  Vue.use(Vuex);
-
   const vuexLocal = new VuexPersistence({
     storage: window.localStorage,
   });
 
-  const store = new Vuex.Store({
+  const storeConfig = {
     state: state,
     actions: {
       ...routeActionCreator(router),
@@ -87,7 +85,17 @@ const initStore = ({ router }) => {
       ...workflowPendingGetters,
     },
     plugins: [vuexLocal.plugin],
-  });
+  };
+
+  return storeConfig;
+};
+
+const initStore = ({ router }) => {
+  Vue.use(Vuex);
+
+  const storeConfig = getStoreConfig(router);
+
+  const store = new Vuex.Store(storeConfig);
 
   return store;
 };
