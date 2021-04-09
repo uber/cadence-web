@@ -1,5 +1,5 @@
 <script>
-// Copyright (c) 2017-2021 Uber Technologies Inc.
+// Copyright (c) 2021 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,81 +20,62 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+import ButtonFill from './button-fill';
+
 export default {
-  name: 'navigation-link',
+  name: 'button-group',
   props: {
-    exact: {
-      type: Boolean,
-      default: false,
-    },
-    icon: {
-      type: String,
-      default: '',
-    },
-    id: {
-      type: String,
-      default: '',
+    items: {
+      type: Array,
+      default: () => [],
     },
     label: {
       type: String,
+    },
+    uppercase: {
+      type: Boolean,
+      default: false,
+    },
+    value: {
+      type: String,
       default: '',
     },
-    notificationCount: {
-      type: Number,
-      default: 0,
-    },
-    to: {
-      type: [String, Object],
+  },
+  components: {
+    'button-fill': ButtonFill,
+  },
+  methods: {
+    onClick(item) {
+      if (this.value !== item) {
+        this.$emit('change', item);
+      }
     },
   },
 };
 </script>
 
 <template>
-  <router-link
-    class="navigation-link"
-    :class="icon"
-    :exact="exact"
-    :id="id"
-    :to="to"
-  >
-    <span>{{ label }}</span>
-    <span class="notification" v-if="notificationCount">{{
-      notificationCount
-    }}</span>
-  </router-link>
+  <div class="button-group">
+    <span class="label" v-if="label">
+      {{ label }}
+    </span>
+    <button-fill
+      :active="item === value"
+      :key="item"
+      :label="item"
+      :uppercase="uppercase"
+      v-for="item in items"
+      @click="() => onClick(item)"
+    />
+  </div>
 </template>
 
 <style lang="stylus">
-a.navigation-link {
-  border-bottom: 4px solid transparent;
+.button-group {
   display: inline-block;
-  font-weight: 500;
-  padding: 11px 18px;
-  text-transform: uppercase;
-  transition: all 400ms ease;
 
-  &:before {
-    font-family: 'uber-icons';
-    margin-right: 5px;
-  }
-
-  &:focus, &:hover {
-    border-bottom-color: #0e767b;
-    outline: none;
-  }
-
-  &.router-link-active {
-    border-bottom-color: #11939a;
-  }
-
-  & > .notification {
-    background-color: #11939a;
-    border-radius: 7px;
-    color: black;
-    font-size: 12px;
-    margin-left: 5px;
-    padding: 0 6px;
+  .label {
+    margin-right: 10px;
   }
 }
 </style>

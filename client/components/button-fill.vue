@@ -20,13 +20,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+const COLOR_TYPE_DEFAULT = 'primary';
+const COLOR_TYPES = ['primary', 'secondary', 'tertiary'];
+const SIZE_TYPE_DEFAULT = 'medium';
+const SIZE_TYPES = ['small', 'medium', 'large'];
+const TAG_TYPE_DEFAULT = 'button';
+const TAG_LINK_TYPES = ['a', 'router-link'];
+
 export default {
   name: 'button-fill',
   props: {
+    active: {
+      type: Boolean,
+      default: false,
+    },
     color: {
       type: String,
-      default: 'primary',
-      validator: value => ['primary', 'secondary', 'tertiary'].includes(value),
+      default: COLOR_TYPE_DEFAULT,
+      validator: value => COLOR_TYPES.includes(value),
     },
     disabled: {
       type: Boolean,
@@ -40,15 +51,33 @@ export default {
     label: {
       type: String,
     },
+    size: {
+      type: String,
+      default: SIZE_TYPE_DEFAULT,
+      validator: value => SIZE_TYPES.includes(value),
+    },
     tag: {
       type: String,
-      default: 'button',
+      default: TAG_TYPE_DEFAULT,
     },
     to: {
-      type: Object,
+      type: [String, Object],
+    },
+    uppercase: {
+      type: Boolean,
+      default: false,
     },
   },
   computed: {
+    computedTag() {
+      const { disabled, tag } = this;
+
+      if (disabled && TAG_LINK_TYPES.includes(tag)) {
+        return 'button';
+      }
+
+      return tag;
+    },
     disabledLabelText() {
       return this.disabled ? this.disabledLabel : '';
     },
@@ -68,12 +97,15 @@ export default {
     :aria-disabled="disabled"
     class="button-fill"
     :class="{
-      disabled: disabled,
+      active,
       [color]: color,
+      disabled,
+      [size]: size,
+      uppercase,
     }"
     :disabled="disabled"
     :href="href"
-    :is="tag"
+    :is="computedTag"
     :to="to"
     :title="disabledLabelText"
     @click="onClick"
@@ -85,24 +117,35 @@ export default {
 <style lang="stylus">
 .button-fill {
   border: none;
+  color: #fff !important;
   cursor: pointer;
   display: inline-block;
-  font-size: 14px;
   font-weight: 600;
-  padding: 13px 21px;
   transition: all 400ms ease;
-  color: #fff !important;
   white-space: nowrap;
+
+  &:focus {
+    outline: none;
+  }
 
   &.disabled {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
+  // color
   &.primary {
     background-color: #11939a;
 
-    &:hover {
+    &.active {
+      background-color: #0e767b;
+    }
+
+    &:focus, &:hover {
+      background-color: #10858b;
+    }
+
+    &:active {
       background-color: #0e767b;
     }
   }
@@ -110,7 +153,15 @@ export default {
   &.secondary {
     background-color: #ca3b27;
 
-    &:hover {
+    &.active {
+      background-color: #a22f1f;
+    }
+
+    &:focus, &:hover {
+      background-color: #b63523;
+    }
+
+    &:active {
       background-color: #a22f1f;
     }
   }
@@ -119,9 +170,38 @@ export default {
     background-color: transparent;
     color: #11939a !important;
 
-    &:hover {
+    &.active {
       color: #0e767b  !important;
     }
+
+    &:focus, &:hover {
+      color: #10858b !important;
+    }
+
+    &:active {
+      color: #0e767b  !important;
+    }
+  }
+
+  // size
+  &.small {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+
+  &.medium {
+    font-size: 14px;
+    padding: 13px 21px;
+  }
+
+  &.large {
+    font-size: 26px;
+    padding: 26px 42px;
+  }
+
+  // uppercase
+  &.uppercase {
+    text-transform: uppercase;
   }
 }
 </style>
