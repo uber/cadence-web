@@ -20,6 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+const COLOR_TYPE_DEFAULT = 'primary';
+const COLOR_TYPES = ['primary', 'secondary', 'tertiary'];
+const SIZE_TYPE_DEFAULT = 'medium';
+const SIZE_TYPES = ['small', 'medium', 'large'];
+const TAG_TYPE_DEFAULT = 'button';
 const TAG_LINK_TYPES = ['a', 'router-link'];
 
 export default {
@@ -31,8 +36,8 @@ export default {
     },
     color: {
       type: String,
-      default: 'primary',
-      validator: value => ['primary', 'secondary', 'tertiary'].includes(value),
+      default: COLOR_TYPE_DEFAULT,
+      validator: value => COLOR_TYPES.includes(value),
     },
     disabled: {
       type: Boolean,
@@ -48,12 +53,12 @@ export default {
     },
     size: {
       type: String,
-      default: 'medium',
-      validator: value => ['small', 'medium', 'large'].includes(value),
+      default: SIZE_TYPE_DEFAULT,
+      validator: value => SIZE_TYPES.includes(value),
     },
     tag: {
       type: String,
-      default: 'button',
+      default: TAG_TYPE_DEFAULT,
     },
     to: {
       type: [String, Object],
