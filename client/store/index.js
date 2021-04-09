@@ -21,86 +21,54 @@
 
 import Vue from 'vue';
 import Vuex from 'vuex';
-import VuexPersistence from 'vuex-persist';
 import {
+  // graph
+  getGraphDefaultState,
+  graphGetters,
+  graphMutations,
+
+  // settings
   getSettingsWorkflowHistoryDefaultState,
-  getWorkflowHistoryDefaultState,
   settingsWorkflowHistoryGetters,
   settingsWorkflowHistoryMutations,
+
+  // workflow history
+  getWorkflowHistoryDefaultState,
 } from '~containers';
 
-// Graph store
-
-const getGraphDefaultState = () => ({
-  childRoute: null,
-  newExecutionId: null,
-  parentRoute: null,
-  hasChildBtn: false,
-  childBtnText: null,
-  parentBtnText: 'to parent',
+const getDefaultState = (state = {}) => ({
+  graph: getGraphDefaultState(state.graph),
+  settingsWorkflowHistory: getSettingsWorkflowHistoryDefaultState(
+    state.settingsWorkflowHistory
+  ),
+  workflowHistory: getWorkflowHistoryDefaultState(state.workflowHistory),
 });
 
-const graphMutations = {
-  childRoute(state, param) {
-    state.graph.childRoute = param.route;
-    state.graph.hasChildBtn = true;
-    state.graph.childBtnText = param.btnText;
-  },
-  newExecutionRoute(state, route) {
-    (state.graph.newExecutionId = route),
-      (state.graph.hasChildBtn = !state.graph.hasChildBtn);
-  },
-  previousExecutionRoute(state, route) {
-    (state.graph.parentRoute = route),
-      (state.graph.parentBtnText = 'previous execution');
-  },
-  toggleChildBtn(state) {
-    state.graph.hasChildBtn = false;
-  },
-  parentRoute(state, route) {
-    state.graph.parentRoute = route;
-  },
-  resetGraphState(state) {
-    Object.assign(state.graph, getGraphDefaultState());
-  },
+const getStoreConfig = ({ state }) => {
+  const initialState = getDefaultState(state);
+
+  const storeConfig = {
+    state: initialState,
+    mutations: {
+      ...graphMutations,
+      ...settingsWorkflowHistoryMutations,
+    },
+    getters: {
+      ...graphGetters,
+      ...settingsWorkflowHistoryGetters,
+    },
+  };
+
+  return storeConfig;
 };
 
-const graphGetters = {
-  childRoute: state => state.graph.childRoute,
-  newExecutionId: state => state.graph.newExecutionId,
-  hasChildBtn: state => state.graph.hasChildBtn,
-  childBtnText: state => state.graph.childBtnText,
-  parentBtnText: state => state.graph.parentBtnText,
-  parentRoute: state => state.graph.parentRoute,
+const initStore = ({ state } = {}) => {
+  Vue.use(Vuex);
+
+  const storeConfig = getStoreConfig({ state });
+  const store = new Vuex.Store(storeConfig);
+
+  return store;
 };
 
-// Application store
-
-const getDefaultState = () => ({
-  graph: getGraphDefaultState(),
-  settingsWorkflowHistory: getSettingsWorkflowHistoryDefaultState(),
-  workflowHistory: getWorkflowHistoryDefaultState(),
-});
-
-const state = getDefaultState();
-
-Vue.use(Vuex);
-
-const vuexLocal = new VuexPersistence({
-  storage: window.localStorage,
-});
-
-const store = new Vuex.Store({
-  state: state,
-  mutations: {
-    ...graphMutations,
-    ...settingsWorkflowHistoryMutations,
-  },
-  getters: {
-    ...graphGetters,
-    ...settingsWorkflowHistoryGetters,
-  },
-  plugins: [vuexLocal.plugin],
-});
-
-export default store;
+export default initStore;

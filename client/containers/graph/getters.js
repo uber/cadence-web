@@ -19,18 +19,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export {
-  getDefaultState as getGraphDefaultState,
-  getters as graphGetters,
-  mutations as graphMutations,
-} from './graph';
-export {
-  container as SettingsWorkflowHistory,
-  getDefaultState as getSettingsWorkflowHistoryDefaultState,
-  getters as settingsWorkflowHistoryGetters,
-  mutations as settingsWorkflowHistoryMutations,
-} from './settings-workflow-history';
-export {
-  container as WorkflowHistory,
-  getDefaultState as getWorkflowHistoryDefaultState,
-} from './workflow-history';
+const getters = {
+  childRoute: state => state.graph.childRoute,
+  newExecutionId: state => state.graph.newExecutionId,
+  hasChildBtn: state => state.graph.hasChildBtn,
+  childBtnText: state => state.graph.childBtnText,
+  parentBtnText: state => state.graph.parentBtnText,
+  parentRoute: state => state.graph.parentRoute,
+};
+
+export default getters;

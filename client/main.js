@@ -53,7 +53,7 @@ import WorkflowArchivalBasic from './routes/domain/workflow-archival/basic';
 import WorkflowList from './routes/domain/workflow-list';
 import WorkflowSummary from './routes/workflow/summary';
 import WorkflowTabs from './routes/workflow';
-import store from './store/index.js';
+import initStore from './store';
 import { WorkflowHistory } from '~containers';
 
 import { http, injectMomentDurationFormat, jsonTryParse } from '~helpers';
@@ -343,6 +343,8 @@ if (typeof mocha === 'undefined') {
   if (!document.querySelector('main')) {
     document.body.appendChild(document.createElement('main'));
   }
+
+  const store = initStore();
 
   // eslint-disable-next-line no-new
   new Vue({

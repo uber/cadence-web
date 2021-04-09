@@ -21,7 +21,6 @@
 
 import Router from 'vue-router';
 import Vue from 'vue';
-import Vuex from 'vuex';
 import moment from 'moment';
 import fetchMock from 'fetch-mock';
 import qs from 'friendly-querystring';
@@ -30,12 +29,13 @@ import deepmerge from 'deepmerge';
 
 import main from '../main';
 import { http } from '../helpers';
+import initStore from '../store';
 import fixtures from './fixtures';
 
 export default function Scenario(test) {
   // eslint-disable-next-line no-param-reassign
   test.scenario = this;
-  this.storeConfig = {};
+  this.storeState = {};
   this.mochaTest = test;
   this.api = fetchMock.sandbox().catch((url, req, opts) => {
     let msg = `Unexpected request: ${url}${
@@ -66,7 +66,9 @@ Scenario.prototype.render = function render(attachToBody) {
 
   const el = document.createElement('div');
 
-  const store = new Vuex.Store(this.storeConfig);
+  const store = initStore({
+    state: this.storeState,
+  });
 
   if (attachToBody || this.isDebuggingJustThisTest()) {
     document.body.appendChild(el);
@@ -232,8 +234,8 @@ Scenario.prototype.withNewsFeed = function withNewsFeed() {
   return this;
 };
 
-Scenario.prototype.withStoreConfig = function withStoreConfig(config = {}) {
-  this.storeConfig = config;
+Scenario.prototype.withStoreState = function withStoreState(state = {}) {
+  this.storeState = state;
 
   return this;
 };
@@ -289,7 +291,7 @@ Scenario.prototype.withWorkflow = function withWorkflow(
   this.workflowId = workflowId;
   this.runId = runId;
 
-  this.api.getOnce(this.execApiBase(), {
+  this.api.get(this.execApiBase(), {
     executionConfiguration: {
       taskList: { name: 'ci_task_list' },
       executionStartToCloseTimeoutSeconds: 3600,
