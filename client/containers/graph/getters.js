@@ -19,13 +19,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+import { get } from 'lodash-es';
+
 const getters = {
-  childRoute: state => state.graph.childRoute,
-  newExecutionId: state => state.graph.newExecutionId,
-  hasChildBtn: state => state.graph.hasChildBtn,
-  childBtnText: state => state.graph.childBtnText,
-  parentBtnText: state => state.graph.parentBtnText,
-  parentRoute: state => state.graph.parentRoute,
+  childRoute: state => get(state, 'graph.childRoute'),
+  newExecutionId: state => get(state, 'graph.newExecutionId'),
+  hasChildBtn: state => get(state, 'graph.hasChildBtn'),
+  childBtnText: state => get(state, 'graph.childBtnText'),
+  parentBtnText: state => get(state, 'graph.parentBtnText'),
+  parentRoute: state => get(state, 'graph.parentRoute'),
 };
 
 export default getters;
