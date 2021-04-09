@@ -21,7 +21,6 @@
 
 import Router from 'vue-router';
 import Vue from 'vue';
-import Vuex from 'vuex';
 import moment from 'moment';
 import fetchMock from 'fetch-mock';
 import qs from 'friendly-querystring';
@@ -30,8 +29,8 @@ import deepmerge from 'deepmerge';
 
 import main from '../main';
 import { http } from '../helpers';
+import initStore from '../store';
 import fixtures from './fixtures';
-import initStore, { getStoreConfig } from '../store';
 
 export default function Scenario(test) {
   // eslint-disable-next-line no-param-reassign

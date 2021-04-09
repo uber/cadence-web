@@ -52,7 +52,9 @@ import {
 
 const getDefaultState = (state = {}) => ({
   graph: getGraphDefaultState(state.graph),
-  settingsWorkflowHistory: getSettingsWorkflowHistoryDefaultState(state.settingsWorkflowHistory),
+  settingsWorkflowHistory: getSettingsWorkflowHistoryDefaultState(
+    state.settingsWorkflowHistory
+  ),
   workflow: getWorkflowDefaultState(state.workflow),
   workflowHistory: getWorkflowHistoryDefaultState(state.workflowHistory),
 });
@@ -89,9 +91,9 @@ const getStoreConfig = ({ router, state }) => {
 };
 
 const initStore = ({ router, state }) => {
-  const storeConfig = getStoreConfig({ router, state });
-
   Vue.use(Vuex);
+
+  const storeConfig = getStoreConfig({ router, state });
   const store = new Vuex.Store(storeConfig);
 
   return store;
