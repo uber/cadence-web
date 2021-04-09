@@ -21,6 +21,7 @@
 
 import Vue from 'vue';
 import Vuex from 'vuex';
+import VuexPersistence from 'vuex-persist';
 import {
   // graph
   getGraphDefaultState,
@@ -47,6 +48,10 @@ const getDefaultState = (state = {}) => ({
 const getStoreConfig = ({ state }) => {
   const initialState = getDefaultState(state);
 
+  const vuexLocal = new VuexPersistence({
+    storage: window.localStorage,
+  });
+
   const storeConfig = {
     state: initialState,
     mutations: {
@@ -57,6 +62,7 @@ const getStoreConfig = ({ state }) => {
       ...graphGetters,
       ...settingsWorkflowHistoryGetters,
     },
+    plugins: [vuexLocal.plugin],
   };
 
   return storeConfig;
