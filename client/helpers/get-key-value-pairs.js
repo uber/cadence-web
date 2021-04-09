@@ -23,7 +23,7 @@ import moment from 'moment';
 import getJsonStringObject from './get-json-string-object';
 import { jsonKeys, preKeys } from '~constants';
 
-const getKeyValuePairs = event => {
+const getKeyValuePairs = ({ excludes = [], item }) => {
   const kvps = [];
   const flatten = (prefix, obj, root) => {
     Object.entries(obj).forEach(([k, value]) => {
@@ -32,6 +32,10 @@ const getKeyValuePairs = event => {
       }
 
       const key = prefix ? `${prefix}.${k}` : k;
+
+      if (excludes.includes(key)) {
+        return;
+      }
 
       if (value.routeLink) {
         kvps.push({
@@ -108,7 +112,7 @@ const getKeyValuePairs = event => {
     });
   };
 
-  flatten('', event || {}, event);
+  flatten('', item || {}, item);
 
   return kvps;
 };

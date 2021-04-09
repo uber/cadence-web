@@ -32,9 +32,11 @@ const getEventDetails = ({
   const { kvps, isHighlighted } = getEventKvpsHighlight({
     eventType,
     kvps: getKeyValuePairs({
-      timestamp: timeStampDisplay,
-      eventId,
-      ...details,
+      item: {
+        timestamp: timeStampDisplay,
+        eventId,
+        ...details,
+      },
     }),
     workflowHistoryEventHighlightList,
     workflowHistoryEventHighlightListEnabled,

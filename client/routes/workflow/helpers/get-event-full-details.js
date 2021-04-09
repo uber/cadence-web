@@ -43,7 +43,7 @@ const getEventFullDetails = ({
 
   const { kvps, isHighlighted } = getEventKvpsHighlight({
     eventType,
-    kvps: getKeyValuePairs(item),
+    kvps: getKeyValuePairs({ item }),
     workflowHistoryEventHighlightList,
     workflowHistoryEventHighlightListEnabled,
   });

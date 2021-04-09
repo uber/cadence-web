@@ -111,10 +111,10 @@ export default {
         this.validation = 'pending';
         this.domainDescRequest = this.getDomainDesc(newDomain)
           .then(
-            desc => {
+            item => {
               this.domainDescName = newDomain;
               this.domainDesc = {
-                kvps: getKeyValuePairs(desc),
+                kvps: getKeyValuePairs({ item }),
               };
 
               return 'valid';
@@ -151,10 +151,10 @@ export default {
         .catch(res => ({
           error: `${res.statusText || res.message} ${res.status}`,
         }))
-        .then(desc => {
+        .then(item => {
           if (this.domainDescName === d) {
             this.domainDesc = {
-              kvps: getKeyValuePairs(desc),
+              kvps: getKeyValuePairs({ item }),
             };
             this.domainDescRequest = null;
           }
