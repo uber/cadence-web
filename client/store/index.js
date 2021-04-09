@@ -50,24 +50,22 @@ import {
   workflowPendingGetters,
 } from '~containers';
 
-// Application store
+const getDefaultState = (state = {}) => ({
+  graph: getGraphDefaultState(state.graph),
+  settingsWorkflowHistory: getSettingsWorkflowHistoryDefaultState(state.settingsWorkflowHistory),
+  workflow: getWorkflowDefaultState(state.workflow),
+  workflowHistory: getWorkflowHistoryDefaultState(state.workflowHistory),
+});
 
-export const getStoreConfig = (router) => {
-  const getDefaultState = () => ({
-    graph: getGraphDefaultState(),
-    settingsWorkflowHistory: getSettingsWorkflowHistoryDefaultState(),
-    workflowHistory: getWorkflowHistoryDefaultState(),
-    workflow: getWorkflowDefaultState(),
-  });
-
-  const state = getDefaultState();
+const getStoreConfig = ({ router, state }) => {
+  const initialState = getDefaultState(state);
 
   const vuexLocal = new VuexPersistence({
     storage: window.localStorage,
   });
 
   const storeConfig = {
-    state: state,
+    state: initialState,
     actions: {
       ...routeActionCreator(router),
       ...workflowPendingActions,
@@ -90,11 +88,10 @@ export const getStoreConfig = (router) => {
   return storeConfig;
 };
 
-const initStore = ({ router }) => {
+const initStore = ({ router, state }) => {
+  const storeConfig = getStoreConfig({ router, state });
+
   Vue.use(Vuex);
-
-  const storeConfig = getStoreConfig(router);
-
   const store = new Vuex.Store(storeConfig);
 
   return store;

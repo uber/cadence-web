@@ -19,13 +19,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const getDefaultState = () => ({
+const getDefaultState = (state = {}) => ({
   childRoute: null,
   newExecutionId: null,
   parentRoute: null,
   hasChildBtn: false,
   childBtnText: null,
   parentBtnText: 'to parent',
+  ...state,
 });
 
 export default getDefaultState;

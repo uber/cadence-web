@@ -31,7 +31,7 @@ import deepmerge from 'deepmerge';
 import main from '../main';
 import { http } from '../helpers';
 import fixtures from './fixtures';
-import { getStoreConfig } from '../store';
+import initStore, { getStoreConfig } from '../store';
 
 export default function Scenario(test) {
   // eslint-disable-next-line no-param-reassign
@@ -67,18 +67,10 @@ Scenario.prototype.render = function render(attachToBody) {
 
   const el = document.createElement('div');
 
-  Vue.use(Vuex);
-
-  this.storeConfig = getStoreConfig(this.router);
-  this.storeConfig = {
-    ...this.storeConfig,
-    state: {
-      ...this.storeConfig.state,
-      ...this.storeState,
-    },
-  };
-
-  const store = new Vuex.Store(this.storeConfig);
+  const store = initStore({
+    router: this.router,
+    state: this.storeState,
+  });
 
   if (attachToBody || this.isDebuggingJustThisTest()) {
     document.body.appendChild(el);

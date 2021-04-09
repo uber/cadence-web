@@ -19,9 +19,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const getDefaultState = () => ({
+const getDefaultState = (state = {}) => ({
   execution: null,
   isLoading: true,
+  ...state,
 });
 
 export default getDefaultState;
