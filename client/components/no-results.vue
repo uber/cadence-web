@@ -22,15 +22,28 @@
 
 export default {
   name: 'no-results',
-  props: ['results'],
+  props: {
+    isLoading: {
+      type: Boolean,
+      default: false,
+    },
+    message: {
+      type: String,
+      default: 'No Results',
+    },
+    results: {
+      type: Array,
+    },
+  },
 };
 </script>
 
 <template>
-  <div class="no-results-container" v-if="results && !results.length">
-    <div class="no-results">
-      No Results
-    </div>
+  <div
+    class="no-results-container"
+    v-if="!isLoading && results && !results.length"
+  >
+    <div class="no-results">{{ message }}</div>
   </div>
 </template>
 

@@ -21,6 +21,7 @@
 
 export { default as BarLoader } from './bar-loader';
 export { default as ButtonFill } from './button-fill';
+export { default as ButtonGroup } from './button-group';
 export { default as ButtonIcon } from './button-icon';
 export { default as Copy } from './copy';
 export { default as DataViewer } from './data-viewer';
