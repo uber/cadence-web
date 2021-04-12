@@ -33,6 +33,11 @@ import {
   settingsWorkflowHistoryGetters,
   settingsWorkflowHistoryMutations,
 
+  // workflow
+  getWorkflowDefaultState,
+  workflowGetters,
+  workflowMutations,
+
   // workflow history
   getWorkflowHistoryDefaultState,
 } from '~containers';
@@ -42,6 +47,7 @@ const getDefaultState = (state = {}) => ({
   settingsWorkflowHistory: getSettingsWorkflowHistoryDefaultState(
     state.settingsWorkflowHistory
   ),
+  workflow: getWorkflowDefaultState(state.workflow),
   workflowHistory: getWorkflowHistoryDefaultState(state.workflowHistory),
 });
 
@@ -57,10 +63,12 @@ const getStoreConfig = ({ state }) => {
     mutations: {
       ...graphMutations,
       ...settingsWorkflowHistoryMutations,
+      ...workflowMutations,
     },
     getters: {
       ...graphGetters,
       ...settingsWorkflowHistoryGetters,
+      ...workflowGetters,
     },
     plugins: [vuexLocal.plugin],
   };

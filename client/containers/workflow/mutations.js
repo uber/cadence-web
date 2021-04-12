@@ -19,12 +19,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Component from './component';
-import Connector from './connector';
-import getDefaultState from './get-default-state';
-import getters from './getters';
-import mutations from './mutations';
+import {
+  WORKFLOW_CLEAR_EXECUTION,
+  WORKFLOW_SET_EXECUTION,
+} from './mutation-types';
 
-const container = Connector('Workflow', Component);
+const mutations = {
+  [WORKFLOW_CLEAR_EXECUTION]: state => {
+    state.workflow.execution = null;
+    state.workflow.isLoading = true;
+  },
+  [WORKFLOW_SET_EXECUTION]: (state, payload) => {
+    state.workflow.execution = payload;
+    state.workflow.isLoading = false;
+  },
+};
 
-export { container, getDefaultState, getters, mutations };
+export default mutations;

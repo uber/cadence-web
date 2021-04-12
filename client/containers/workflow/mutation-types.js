@@ -19,12 +19,5 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Component from './component';
-import Connector from './connector';
-import getDefaultState from './get-default-state';
-import getters from './getters';
-import mutations from './mutations';
-
-const container = Connector('Workflow', Component);
-
-export { container, getDefaultState, getters, mutations };
+export const WORKFLOW_CLEAR_EXECUTION = 'WORKFLOW_CLEAR_EXECUTION';
+export const WORKFLOW_SET_EXECUTION = 'WORKFLOW_SET_EXECUTION';
