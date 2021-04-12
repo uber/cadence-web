@@ -46,11 +46,9 @@ describe('Workflow', () => {
           },
         ])
         .withNewsFeed()
-        .withStoreConfig({
-          state: {
-            workflowHistory: {
-              graphEnabled: true,
-            },
+        .withStoreState({
+          workflowHistory: {
+            graphEnabled: true,
           },
         })
         .withWorkflow(
