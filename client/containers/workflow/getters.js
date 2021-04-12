@@ -21,6 +21,10 @@
 
 import { get } from 'lodash-es';
 import {
+  PENDING_TASK_TYPE_ACTIVITY,
+  PENDING_TASK_TYPE_CHILD_WORKFLOW,
+} from './constants';
+import {
   WORKFLOW_EXECUTION,
   WORKFLOW_EXECUTION_IS_LOADING,
   WORKFLOW_EXECUTION_PENDING_ACTIVITIES,
@@ -39,12 +43,12 @@ const getters = {
   [WORKFLOW_EXECUTION_PENDING_ACTIVITIES]: state =>
     (get(state, 'workflow.execution.pendingActivities') || []).map(item => ({
       ...item,
-      pendingTaskType: 'activity',
+      pendingTaskType: PENDING_TASK_TYPE_ACTIVITY,
     })),
   [WORKFLOW_EXECUTION_PENDING_CHILDREN]: state =>
     (get(state, 'workflow.execution.pendingChildren') || []).map(item => ({
       ...item,
-      pendingTaskType: 'childWorkflow',
+      pendingTaskType: PENDING_TASK_TYPE_CHILD_WORKFLOW,
     })),
   [WORKFLOW_EXECUTION_PENDING_TASK_COUNT]: (_, getters) =>
     getters[WORKFLOW_EXECUTION_PENDING_TASKS].length,

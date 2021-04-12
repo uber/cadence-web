@@ -19,6 +19,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+import {
+  PENDING_TASK_TYPE_ACTIVITY,
+  PENDING_TASK_TYPE_CHILD_WORKFLOW,
+} from '../workflow/constants';
+
 export const PENDING_TASK_FILTER_TO_EMPTY_MESSAGE_MAP = {
   all: 'No pending tasks',
   activities: 'No pending activities',
@@ -32,11 +37,11 @@ export const PENDING_TASK_KVPS_EXCLUDE_KEYS = [
 ];
 
 export const PENDING_TASK_TYPE_TO_ID_MAP = {
-  activity: 'activityID',
-  childWorkflow: 'initiatedID',
+  [PENDING_TASK_TYPE_ACTIVITY]: 'activityID',
+  [PENDING_TASK_TYPE_CHILD_WORKFLOW]: 'initiatedID',
 };
 
 export const PENDING_TASK_TYPE_TO_DISPLAY_MAP = {
-  activity: 'PendingActivityTask',
-  childWorkflow: 'PendingChildWorkflowTask',
+  [PENDING_TASK_TYPE_ACTIVITY]: 'PendingActivityTask',
+  [PENDING_TASK_TYPE_CHILD_WORKFLOW]: 'PendingChildWorkflowTask',
 };
