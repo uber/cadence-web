@@ -20,6 +20,12 @@
 // THE SOFTWARE.
 
 export {
+  actionCreator as routeActionCreator,
+  actionTypes as routeActionTypes,
+  getters as routeGetters,
+  getterTypes as routeGetterTypes,
+} from './route';
+export {
   container as SettingsWorkflowHistory,
   getDefaultState as getSettingsWorkflowHistoryDefaultState,
   getters as settingsWorkflowHistoryGetters,
