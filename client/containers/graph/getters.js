@@ -19,24 +19,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export {
-  getDefaultState as getGraphDefaultState,
-  getters as graphGetters,
-  mutations as graphMutations,
-} from './graph';
-export {
-  actionCreator as routeActionCreator,
-  actionTypes as routeActionTypes,
-  getters as routeGetters,
-  getterTypes as routeGetterTypes,
-} from './route';
-export {
-  container as SettingsWorkflowHistory,
-  getDefaultState as getSettingsWorkflowHistoryDefaultState,
-  getters as settingsWorkflowHistoryGetters,
-  mutations as settingsWorkflowHistoryMutations,
-} from './settings-workflow-history';
-export {
-  container as WorkflowHistory,
-  getDefaultState as getWorkflowHistoryDefaultState,
-} from './workflow-history';
+import { get } from 'lodash-es';
+
+const getters = {
+  childRoute: state => get(state, 'graph.childRoute'),
+  newExecutionId: state => get(state, 'graph.newExecutionId'),
+  hasChildBtn: state => get(state, 'graph.hasChildBtn'),
+  childBtnText: state => get(state, 'graph.childBtnText'),
+  parentBtnText: state => get(state, 'graph.parentBtnText'),
+  parentRoute: state => get(state, 'graph.parentRoute'),
+};
+
+export default getters;
