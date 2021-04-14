@@ -19,9 +19,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { initGetters } from '~test';
 import { ROUTE_PARAMS, ROUTE_QUERY } from './getter-types';
 import getterFns from './getters';
+import { initGetters } from '~test';
 
 describe('route getters', () => {
   describe('calling getters[ROUTE_PARAMS]', () => {
