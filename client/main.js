@@ -53,9 +53,8 @@ import WorkflowArchivalAdvanced from './routes/domain/workflow-archival/advanced
 import WorkflowArchivalBasic from './routes/domain/workflow-archival/basic';
 import WorkflowList from './routes/domain/workflow-list';
 import WorkflowSummary from './routes/workflow/summary';
-import WorkflowTabs from './routes/workflow';
-import initStore from './store';
-import { WorkflowHistory } from '~containers';
+import initStore from './store/index.js';
+import { Workflow, WorkflowHistory } from '~containers';
 
 import { http, injectMomentDurationFormat, jsonTryParse } from '~helpers';
 
@@ -157,7 +156,7 @@ const routeOpts = {
     {
       name: 'workflow',
       path: '/domains/:domain/workflows/:workflowId/:runId',
-      component: WorkflowTabs,
+      component: Workflow,
       props: ({ params }) => ({
         displayWorkflowId: params.workflowId,
         domain: params.domain,
