@@ -24,7 +24,7 @@ import { ROUTE_PARAMS, ROUTE_QUERY } from './getter-types';
 import getterFns from './getters';
 
 describe('route getters', () => {
-  describe('calling getters[ROUTE_PARAMS](state)', () => {
+  describe('calling getters[ROUTE_PARAMS]', () => {
     describe('and state.route.params is defined', () => {
       const state = {
         route: {
@@ -58,7 +58,7 @@ describe('route getters', () => {
     });
   });
 
-  describe('calling getters[ROUTE_QUERY](state)', () => {
+  describe('calling getters[ROUTE_QUERY]', () => {
     describe('and state.route.query is defined', () => {
       const state = {
         route: {
