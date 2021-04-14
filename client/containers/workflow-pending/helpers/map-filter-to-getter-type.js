@@ -19,35 +19,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export {
-  getDefaultState as getGraphDefaultState,
-  getters as graphGetters,
-  mutations as graphMutations,
-} from './graph';
-export {
-  actionCreator as routeActionCreator,
-  actionTypes as routeActionTypes,
-  getters as routeGetters,
-  getterTypes as routeGetterTypes,
-} from './route';
-export {
-  container as SettingsWorkflowHistory,
-  getDefaultState as getSettingsWorkflowHistoryDefaultState,
-  getters as settingsWorkflowHistoryGetters,
-  mutations as settingsWorkflowHistoryMutations,
-} from './settings-workflow-history';
-export {
-  container as Workflow,
-  getDefaultState as getWorkflowDefaultState,
-  getters as workflowGetters,
-  mutations as workflowMutations,
-} from './workflow';
-export {
-  container as WorkflowHistory,
-  getDefaultState as getWorkflowHistoryDefaultState,
-} from './workflow-history';
-export {
-  actions as workflowPendingActions,
-  container as WorkflowPending,
-  getters as workflowPendingGetters,
-} from './workflow-pending';
+import {
+  WORKFLOW_EXECUTION_PENDING_ACTIVITIES,
+  WORKFLOW_EXECUTION_PENDING_CHILDREN,
+  WORKFLOW_EXECUTION_PENDING_TASKS,
+} from '../../workflow/getter-types';
+
+const WORKFLOW_PENDING_FILTER_TO_GETTER_TYPE_MAP = {
+  activities: WORKFLOW_EXECUTION_PENDING_ACTIVITIES,
+  all: WORKFLOW_EXECUTION_PENDING_TASKS,
+  children: WORKFLOW_EXECUTION_PENDING_CHILDREN,
+};
+
+const mapFilterToGetterType = filter =>
+  WORKFLOW_PENDING_FILTER_TO_GETTER_TYPE_MAP[filter] || '';
+
+export default mapFilterToGetterType;

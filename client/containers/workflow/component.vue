@@ -337,6 +337,14 @@ export default {
         data-cy="history-link"
       />
       <navigation-link
+        id="nav-link-pending"
+        icon="icon_send"
+        label="Pending"
+        :notification-count="pendingTaskCount"
+        :to="{ name: 'workflow/pending' }"
+        data-cy="pending-link"
+      />
+      <navigation-link
         id="nav-link-stack-trace"
         icon="icon_trips"
         label="Stack Trace"
@@ -380,6 +388,12 @@ export default {
       "
       @onNotification="onNotification"
       @onWorkflowHistoryEventParamToggle="onWorkflowHistoryEventParamToggle"
+    />
+    <router-view
+      name="pending"
+      :baseAPIURL="baseAPIURL"
+      :time-format="timeFormat"
+      :timezone="timezone"
     />
     <router-view
       name="stacktrace"

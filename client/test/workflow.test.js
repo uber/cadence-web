@@ -1100,6 +1100,7 @@ describe('Workflow', () => {
         .should.deep.equal([
           '/domains/ci-test/workflows/email-daily-summaries/emailRun1/summary',
           '/domains/ci-test/workflows/email-daily-summaries/emailRun1/history',
+          '/domains/ci-test/workflows/email-daily-summaries/emailRun1/pending',
           '/domains/ci-test/workflows/email-daily-summaries/emailRun1/stack-trace',
           '/domains/ci-test/workflows/email-daily-summaries/emailRun1/query',
         ]);
