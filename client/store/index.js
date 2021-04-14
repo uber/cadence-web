@@ -28,6 +28,10 @@ import {
   graphGetters,
   graphMutations,
 
+  // route
+  routeActionCreator,
+  routeGetters,
+
   // settings
   getSettingsWorkflowHistoryDefaultState,
   settingsWorkflowHistoryGetters,
@@ -45,7 +49,7 @@ const getDefaultState = (state = {}) => ({
   workflowHistory: getWorkflowHistoryDefaultState(state.workflowHistory),
 });
 
-const getStoreConfig = ({ state }) => {
+const getStoreConfig = ({ router, state }) => {
   const initialState = getDefaultState(state);
 
   const vuexLocal = new VuexPersistence({
@@ -54,12 +58,16 @@ const getStoreConfig = ({ state }) => {
 
   const storeConfig = {
     state: initialState,
+    actions: {
+      ...routeActionCreator(router),
+    },
     mutations: {
       ...graphMutations,
       ...settingsWorkflowHistoryMutations,
     },
     getters: {
       ...graphGetters,
+      ...routeGetters,
       ...settingsWorkflowHistoryGetters,
     },
     plugins: [vuexLocal.plugin],
@@ -68,10 +76,10 @@ const getStoreConfig = ({ state }) => {
   return storeConfig;
 };
 
-const initStore = ({ state } = {}) => {
+const initStore = ({ router, state } = {}) => {
   Vue.use(Vuex);
 
-  const storeConfig = getStoreConfig({ state });
+  const storeConfig = getStoreConfig({ router, state });
   const store = new Vuex.Store(storeConfig);
 
   return store;
