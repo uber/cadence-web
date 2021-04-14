@@ -19,8 +19,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+import { initGetters } from '~test';
 import { ROUTE_PARAMS, ROUTE_QUERY } from './getter-types';
-import getters from './getters';
+import getterFns from './getters';
 
 describe('route getters', () => {
   describe('calling getters[ROUTE_PARAMS](state)', () => {
@@ -35,7 +36,8 @@ describe('route getters', () => {
       };
 
       it('should return the value from state.route.params', () => {
-        const output = getters[ROUTE_PARAMS](state);
+        const getters = initGetters({ getterFns, state });
+        const output = getters[ROUTE_PARAMS];
 
         expect(output.paramA).toEqual('valueA');
         expect(output.paramB).toEqual('valueB');
@@ -48,7 +50,8 @@ describe('route getters', () => {
       };
 
       it('should return an empty object.', () => {
-        const output = getters[ROUTE_PARAMS](state);
+        const getters = initGetters({ getterFns, state });
+        const output = getters[ROUTE_PARAMS];
 
         expect(output).toEqual({});
       });
@@ -67,7 +70,8 @@ describe('route getters', () => {
       };
 
       it('should return the value from state.route.query', () => {
-        const output = getters[ROUTE_QUERY](state);
+        const getters = initGetters({ getterFns, state });
+        const output = getters[ROUTE_QUERY];
 
         expect(output.queryA).toEqual('valueA');
         expect(output.queryB).toEqual('valueB');
@@ -80,7 +84,8 @@ describe('route getters', () => {
       };
 
       it('should return an empty object.', () => {
-        const output = getters[ROUTE_QUERY](state);
+        const getters = initGetters({ getterFns, state });
+        const output = getters[ROUTE_QUERY];
 
         expect(output).toEqual({});
       });
