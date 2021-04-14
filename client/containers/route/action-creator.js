@@ -19,30 +19,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export {
-  getDefaultState as getGraphDefaultState,
-  getters as graphGetters,
-  mutations as graphMutations,
-} from './graph';
-export {
-  actionCreator as routeActionCreator,
-  actionTypes as routeActionTypes,
-  getters as routeGetters,
-  getterTypes as routeGetterTypes,
-} from './route';
-export {
-  container as SettingsWorkflowHistory,
-  getDefaultState as getSettingsWorkflowHistoryDefaultState,
-  getters as settingsWorkflowHistoryGetters,
-  mutations as settingsWorkflowHistoryMutations,
-} from './settings-workflow-history';
-export {
-  container as Workflow,
-  getDefaultState as getWorkflowDefaultState,
-  getters as workflowGetters,
-  mutations as workflowMutations,
-} from './workflow';
-export {
-  container as WorkflowHistory,
-  getDefaultState as getWorkflowHistoryDefaultState,
-} from './workflow-history';
+import { ROUTE_PUSH, ROUTE_REPLACE, ROUTE_UPDATE_QUERY } from './action-types';
+import { ROUTE_QUERY } from './getter-types';
+
+const actionCreator = router => ({
+  [ROUTE_PUSH]: (_, args) => router.push(args),
+  [ROUTE_REPLACE]: (_, args) => router.replace(args),
+  [ROUTE_UPDATE_QUERY]: ({ getters }, args) => {
+    const query = getters[ROUTE_QUERY];
+
+    router.replace({
+      query: {
+        ...query,
+        ...args,
+      },
+    });
+  },
+});
+
+export default actionCreator;

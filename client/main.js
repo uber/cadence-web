@@ -25,6 +25,7 @@ import infiniteScroll from 'vue-infinite-scroll';
 import vueSelect from 'vue-select';
 import vueModal from 'vue-js-modal';
 import vueSplit from 'vue-split-panel';
+import { sync } from 'vuex-router-sync';
 import qs from 'friendly-querystring';
 import moment from 'moment';
 import promiseFinally from 'promise.prototype.finally';
@@ -343,7 +344,9 @@ if (typeof mocha === 'undefined') {
     document.body.appendChild(document.createElement('main'));
   }
 
-  const store = initStore();
+  const store = initStore({ router });
+
+  sync(store, router);
 
   // eslint-disable-next-line no-new
   new Vue({
