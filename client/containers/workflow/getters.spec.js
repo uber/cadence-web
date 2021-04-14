@@ -172,6 +172,56 @@ describe('workflow getters', () => {
     });
   });
 
+  describe('when calling getters[WORKFLOW_EXECUTION_PENDING_TASKS]', () => {
+    describe('and state.workflow.execution.pendingActivities & pendingChildren are defined and has 1 item in each', () => {
+      const state = {
+        workflow: {
+          execution: {
+            pendingActivities: [
+              {
+                activityKey: 'activityValue',
+              }
+            ],
+            pendingChildren: [
+              {
+                childKey: 'childValue',
+              }
+            ],
+          },
+        },
+      };
+
+      it('should return both items.', () => {
+        const getters = initGetters({ getterFns, state });
+        const output = getters[WORKFLOW_EXECUTION_PENDING_TASKS];
+
+        expect(output).toEqual([
+          {
+            activityKey: 'activityValue',
+            pendingTaskType: PENDING_TASK_TYPE_ACTIVITY,
+          },
+          {
+            childKey: 'childValue',
+            pendingTaskType: PENDING_TASK_TYPE_CHILD_WORKFLOW,
+          }
+        ]);
+      });
+    });
+
+    describe('and state.workflow.execution.pendingActivities and pendingChildren are not defined', () => {
+      const state = {
+        workflow: {},
+      };
+
+      it('should return empty array.', () => {
+        const getters = initGetters({ getterFns, state });
+        const output = getters[WORKFLOW_EXECUTION_PENDING_TASKS];
+
+        expect(output).toEqual([]);
+      });
+    });
+  });
+
   describe('when calling getters[WORKFLOW_EXECUTION_TASK_LIST_NAME]', () => {
     describe('and state.workflow.execution.executionConfiguration.taskList.name = "taskList"', () => {
       const state = {
