@@ -9,6 +9,7 @@ module.exports = {
           "~containers": "./client/containers",
           "~helpers": "./client/helpers",
           "~services": "./client/services",
+          "~test": "./test/helpers",
         },
       }
     ],
