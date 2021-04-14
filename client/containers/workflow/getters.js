@@ -56,7 +56,6 @@ const getters = {
   ],
   [WORKFLOW_EXECUTION_TASK_LIST_NAME]: state =>
     get(state, 'workflow.execution.executionConfiguration.taskList.name') || '',
-
 };
 
 export default getters;

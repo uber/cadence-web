@@ -1,4 +1,24 @@
-import { initGetters } from '~test';
+// Copyright (c) 2021 Uber Technologies Inc.
+//
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
 import getterFns from './getters';
 import {
   WORKFLOW_EXECUTION,
@@ -9,7 +29,11 @@ import {
   WORKFLOW_EXECUTION_PENDING_TASKS,
   WORKFLOW_EXECUTION_TASK_LIST_NAME,
 } from './getter-types';
-import { PENDING_TASK_TYPE_ACTIVITY, PENDING_TASK_TYPE_CHILD_WORKFLOW } from './constants';
+import {
+  PENDING_TASK_TYPE_ACTIVITY,
+  PENDING_TASK_TYPE_CHILD_WORKFLOW,
+} from './constants';
+import { initGetters } from '~test';
 
 describe('workflow getters', () => {
   describe('when calling getters[WORKFLOW_EXECUTION]', () => {
@@ -25,6 +49,7 @@ describe('workflow getters', () => {
       it('should return the value from state.workflow.execution', () => {
         const getters = initGetters({ getterFns, state });
         const output = getters[WORKFLOW_EXECUTION];
+
         expect(output.executionKey).toEqual('executionValue');
       });
     });
@@ -41,6 +66,7 @@ describe('workflow getters', () => {
       it('should return true', () => {
         const getters = initGetters({ getterFns, state });
         const output = getters[WORKFLOW_EXECUTION_IS_LOADING];
+
         expect(output).toEqual(true);
       });
     });
@@ -53,6 +79,7 @@ describe('workflow getters', () => {
       it('should return false', () => {
         const getters = initGetters({ getterFns, state });
         const output = getters[WORKFLOW_EXECUTION_IS_LOADING];
+
         expect(output).toEqual(false);
       });
     });
@@ -66,7 +93,7 @@ describe('workflow getters', () => {
             pendingActivities: [
               {
                 activityKey: 'activityValue',
-              }
+              },
             ],
           },
         },
@@ -89,11 +116,11 @@ describe('workflow getters', () => {
       it('should return an empty array.', () => {
         const getters = initGetters({ getterFns, state });
         const output = getters[WORKFLOW_EXECUTION_PENDING_ACTIVITIES];
+
         expect(output).toEqual([]);
       });
     });
   });
-
 
   describe('when calling getters[WORKFLOW_EXECUTION_PENDING_CHILDREN]', () => {
     describe('and state.workflow.execution.pendingChildren is defined', () => {
@@ -103,7 +130,7 @@ describe('workflow getters', () => {
             pendingChildren: [
               {
                 childKey: 'childValue',
-              }
+              },
             ],
           },
         },
@@ -114,7 +141,9 @@ describe('workflow getters', () => {
         const output = getters[WORKFLOW_EXECUTION_PENDING_CHILDREN];
 
         expect(output[0].childKey).toEqual('childValue');
-        expect(output[0].pendingTaskType).toEqual(PENDING_TASK_TYPE_CHILD_WORKFLOW);
+        expect(output[0].pendingTaskType).toEqual(
+          PENDING_TASK_TYPE_CHILD_WORKFLOW
+        );
       });
     });
 
@@ -126,6 +155,7 @@ describe('workflow getters', () => {
       it('should return an empty array.', () => {
         const getters = initGetters({ getterFns, state });
         const output = getters[WORKFLOW_EXECUTION_PENDING_CHILDREN];
+
         expect(output).toEqual([]);
       });
     });
@@ -139,12 +169,12 @@ describe('workflow getters', () => {
             pendingActivities: [
               {
                 activityKey: 'activityValue',
-              }
+              },
             ],
             pendingChildren: [
               {
                 childKey: 'childValue',
-              }
+              },
             ],
           },
         },
@@ -180,12 +210,12 @@ describe('workflow getters', () => {
             pendingActivities: [
               {
                 activityKey: 'activityValue',
-              }
+              },
             ],
             pendingChildren: [
               {
                 childKey: 'childValue',
-              }
+              },
             ],
           },
         },
@@ -203,7 +233,7 @@ describe('workflow getters', () => {
           {
             childKey: 'childValue',
             pendingTaskType: PENDING_TASK_TYPE_CHILD_WORKFLOW,
-          }
+          },
         ]);
       });
     });
@@ -239,6 +269,7 @@ describe('workflow getters', () => {
       it('should return "taskList', () => {
         const getters = initGetters({ getterFns, state });
         const output = getters[WORKFLOW_EXECUTION_TASK_LIST_NAME];
+
         expect(output).toEqual('taskList');
       });
     });
@@ -251,6 +282,7 @@ describe('workflow getters', () => {
       it('should return ""', () => {
         const getters = initGetters({ getterFns, state });
         const output = getters[WORKFLOW_EXECUTION_TASK_LIST_NAME];
+
         expect(output).toEqual('');
       });
     });
