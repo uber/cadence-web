@@ -117,6 +117,7 @@
     "fetch-mock": "^7.7.0",
     "jest": "^24.9.0",
     "jest-fetch-mock": "^3.0.3",
+    "jest-useragent-mock": "^0.1.1",
     "mocha": "^4.0.1",
     "mocha-chrome": "^1.1.0",
     "moment-timezone": "^0.5.32",
