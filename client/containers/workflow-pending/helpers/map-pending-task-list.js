@@ -36,8 +36,8 @@ const mapPendingTaskItem = domain => item => {
     pendingTaskId: `${pendingTaskType}_${
       item[PENDING_TASK_TYPE_TO_ID_MAP[pendingTaskType]]
     }`,
-    runID: getWorkflowLink({ ...item, domain }) || runID,
     pendingTaskTypeDisplay: PENDING_TASK_TYPE_TO_DISPLAY_MAP[pendingTaskType],
+    ...(runID && { runID: getWorkflowLink({ ...item, domain }) || runID })
   };
 
   return {
