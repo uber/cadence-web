@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021 Uber Technologies Inc.
+// Copyright (c) 2021 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,8 +19,5 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export const PENDING_TASK_TYPE_ACTIVITY = 'PENDING_TASK_TYPE_ACTIVITY';
-export const PENDING_TASK_TYPE_CHILD_WORKFLOW =
-  'PENDING_TASK_TYPE_CHILD_WORKFLOW';
-export const RETRY_COUNT_MAX = 3;
-export const RETRY_TIMEOUT = 6000;
+export const WORKFLOW_CLEAR_EXECUTION = 'WORKFLOW_CLEAR_EXECUTION';
+export const WORKFLOW_SET_EXECUTION = 'WORKFLOW_SET_EXECUTION';

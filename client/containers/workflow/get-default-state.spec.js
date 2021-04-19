@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021 Uber Technologies Inc.
+// Copyright (c) 2021 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,8 +19,40 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export const PENDING_TASK_TYPE_ACTIVITY = 'PENDING_TASK_TYPE_ACTIVITY';
-export const PENDING_TASK_TYPE_CHILD_WORKFLOW =
-  'PENDING_TASK_TYPE_CHILD_WORKFLOW';
-export const RETRY_COUNT_MAX = 3;
-export const RETRY_TIMEOUT = 6000;
+import getDefaultState from './get-default-state';
+
+describe('workflow getDefaultState', () => {
+  describe('when state is not passed', () => {
+    it('should return execution = null.', () => {
+      const output = getDefaultState();
+
+      expect(output.execution).toEqual(null);
+    });
+
+    it('should return isLoading = true.', () => {
+      const output = getDefaultState();
+
+      expect(output.isLoading).toEqual(true);
+    });
+  });
+
+  describe('when state is passed with execution defined', () => {
+    const state = { execution: {} };
+
+    it('should return execution.', () => {
+      const output = getDefaultState(state);
+
+      expect(output.execution).toEqual({});
+    });
+  });
+
+  describe('when state is passed with isLoading = false', () => {
+    const state = { isLoading: false };
+
+    it('should return isLoading = false.', () => {
+      const output = getDefaultState(state);
+
+      expect(output.isLoading).toEqual(false);
+    });
+  });
+});
