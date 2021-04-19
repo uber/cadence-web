@@ -44,6 +44,10 @@ import {
 
   // workflow history
   getWorkflowHistoryDefaultState,
+
+  // workflow pending
+  workflowPendingActions,
+  workflowPendingGetters,
 } from '~containers';
 
 const getDefaultState = (state = {}) => ({
@@ -66,6 +70,7 @@ const getStoreConfig = ({ router, state }) => {
     state: initialState,
     actions: {
       ...routeActionCreator(router),
+      ...workflowPendingActions,
     },
     mutations: {
       ...graphMutations,
@@ -77,6 +82,7 @@ const getStoreConfig = ({ router, state }) => {
       ...routeGetters,
       ...settingsWorkflowHistoryGetters,
       ...workflowGetters,
+      ...workflowPendingGetters,
     },
     plugins: [vuexLocal.plugin],
   };

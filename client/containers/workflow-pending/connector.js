@@ -19,35 +19,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export {
-  getDefaultState as getGraphDefaultState,
-  getters as graphGetters,
-  mutations as graphMutations,
-} from './graph';
-export {
-  actionCreator as routeActionCreator,
-  actionTypes as routeActionTypes,
-  getters as routeGetters,
-  getterTypes as routeGetterTypes,
-} from './route';
-export {
-  container as SettingsWorkflowHistory,
-  getDefaultState as getSettingsWorkflowHistoryDefaultState,
-  getters as settingsWorkflowHistoryGetters,
-  mutations as settingsWorkflowHistoryMutations,
-} from './settings-workflow-history';
-export {
-  container as Workflow,
-  getDefaultState as getWorkflowDefaultState,
-  getters as workflowGetters,
-  mutations as workflowMutations,
-} from './workflow';
-export {
-  container as WorkflowHistory,
-  getDefaultState as getWorkflowHistoryDefaultState,
-} from './workflow-history';
-export {
-  actions as workflowPendingActions,
-  container as WorkflowPending,
-  getters as workflowPendingGetters,
-} from './workflow-pending';
+import { connect } from 'vuex-connect';
+import { WORKFLOW_EXECUTION_IS_LOADING } from '../workflow/getter-types';
+import { WORKFLOW_PENDING_FILTER_CHANGED } from './action-types';
+import {
+  WORKFLOW_PENDING_ACTIVE_FILTER,
+  WORKFLOW_PENDING_ACTIVE_FILTER_EMPTY_MESSAGE,
+  WORKFLOW_PENDING_ACTIVE_PENDING_TASK_LIST,
+} from './getter-types';
+
+const actionsToEvents = {
+  filterChanged: WORKFLOW_PENDING_FILTER_CHANGED,
+};
+
+const gettersToProps = {
+  emptyMessage: WORKFLOW_PENDING_ACTIVE_FILTER_EMPTY_MESSAGE,
+  filter: WORKFLOW_PENDING_ACTIVE_FILTER,
+  isLoading: WORKFLOW_EXECUTION_IS_LOADING,
+  pendingTaskList: WORKFLOW_PENDING_ACTIVE_PENDING_TASK_LIST,
+};
+
+export default connect({
+  actionsToEvents,
+  gettersToProps,
+});

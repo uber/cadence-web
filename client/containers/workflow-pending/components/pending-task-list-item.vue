@@ -1,3 +1,4 @@
+<script>
 // Copyright (c) 2021 Uber Technologies Inc.
 //
 //
@@ -19,35 +20,56 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export {
-  getDefaultState as getGraphDefaultState,
-  getters as graphGetters,
-  mutations as graphMutations,
-} from './graph';
-export {
-  actionCreator as routeActionCreator,
-  actionTypes as routeActionTypes,
-  getters as routeGetters,
-  getterTypes as routeGetterTypes,
-} from './route';
-export {
-  container as SettingsWorkflowHistory,
-  getDefaultState as getSettingsWorkflowHistoryDefaultState,
-  getters as settingsWorkflowHistoryGetters,
-  mutations as settingsWorkflowHistoryMutations,
-} from './settings-workflow-history';
-export {
-  container as Workflow,
-  getDefaultState as getWorkflowDefaultState,
-  getters as workflowGetters,
-  mutations as workflowMutations,
-} from './workflow';
-export {
-  container as WorkflowHistory,
-  getDefaultState as getWorkflowHistoryDefaultState,
-} from './workflow-history';
-export {
-  actions as workflowPendingActions,
-  container as WorkflowPending,
-  getters as workflowPendingGetters,
-} from './workflow-pending';
+import { DetailList } from '~components';
+
+export default {
+  name: 'pending-task-list-item',
+  props: {
+    index: {
+      type: Number,
+      default: 0,
+    },
+    item: {
+      type: Object,
+      default: () => ({
+        kvps: [],
+        pendingTaskTypeDisplay: '',
+      }),
+    },
+  },
+  components: {
+    'detail-list': DetailList,
+  },
+};
+</script>
+
+<template>
+  <div class="pending-task-list-item" :class="{ odd: index % 2 === 1 }">
+    <div class="col type">{{ item.pendingTaskTypeDisplay }}</div>
+    <div class="col detail">
+      <detail-list :item="item" />
+    </div>
+  </div>
+</template>
+
+<style lang="stylus">
+.pending-task-list-item {
+  display: flex;
+
+  &.odd {
+    background-color: #f8f8f9;
+  }
+
+  .col {
+    padding: 8px;
+
+    &.type {
+      width: 200px;
+    }
+
+    &.detail {
+      flex: 1;
+    }
+  }
+}
+</style>

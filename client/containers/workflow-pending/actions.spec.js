@@ -19,35 +19,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export {
-  getDefaultState as getGraphDefaultState,
-  getters as graphGetters,
-  mutations as graphMutations,
-} from './graph';
-export {
-  actionCreator as routeActionCreator,
-  actionTypes as routeActionTypes,
-  getters as routeGetters,
-  getterTypes as routeGetterTypes,
-} from './route';
-export {
-  container as SettingsWorkflowHistory,
-  getDefaultState as getSettingsWorkflowHistoryDefaultState,
-  getters as settingsWorkflowHistoryGetters,
-  mutations as settingsWorkflowHistoryMutations,
-} from './settings-workflow-history';
-export {
-  container as Workflow,
-  getDefaultState as getWorkflowDefaultState,
-  getters as workflowGetters,
-  mutations as workflowMutations,
-} from './workflow';
-export {
-  container as WorkflowHistory,
-  getDefaultState as getWorkflowHistoryDefaultState,
-} from './workflow-history';
-export {
-  actions as workflowPendingActions,
-  container as WorkflowPending,
-  getters as workflowPendingGetters,
-} from './workflow-pending';
+import { ROUTE_UPDATE_QUERY } from '../route/action-types';
+import actions from './actions';
+import { WORKFLOW_PENDING_FILTER_CHANGED } from './action-types';
+
+describe('workflow pending actions', () => {
+  describe('when actions[WORKFLOW_PENDING_FILTER_CHANGED] is called', () => {
+    it('should dispatch ROUTE_UPDATE_QUERY with the filter that is changed.', () => {
+      const dispatch = jest.fn();
+      const filter = 'activity';
+
+      actions[WORKFLOW_PENDING_FILTER_CHANGED]({ dispatch }, filter);
+      expect(dispatch).toHaveBeenCalledWith(ROUTE_UPDATE_QUERY, {
+        filter: 'activity',
+      });
+    });
+  });
+});

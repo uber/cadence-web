@@ -19,35 +19,29 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export {
-  getDefaultState as getGraphDefaultState,
-  getters as graphGetters,
-  mutations as graphMutations,
-} from './graph';
-export {
-  actionCreator as routeActionCreator,
-  actionTypes as routeActionTypes,
-  getters as routeGetters,
-  getterTypes as routeGetterTypes,
-} from './route';
-export {
-  container as SettingsWorkflowHistory,
-  getDefaultState as getSettingsWorkflowHistoryDefaultState,
-  getters as settingsWorkflowHistoryGetters,
-  mutations as settingsWorkflowHistoryMutations,
-} from './settings-workflow-history';
-export {
-  container as Workflow,
-  getDefaultState as getWorkflowDefaultState,
-  getters as workflowGetters,
-  mutations as workflowMutations,
-} from './workflow';
-export {
-  container as WorkflowHistory,
-  getDefaultState as getWorkflowHistoryDefaultState,
-} from './workflow-history';
-export {
-  actions as workflowPendingActions,
-  container as WorkflowPending,
-  getters as workflowPendingGetters,
-} from './workflow-pending';
+import {
+  PENDING_TASK_TYPE_ACTIVITY,
+  PENDING_TASK_TYPE_CHILD_WORKFLOW,
+} from '../workflow/constants';
+
+export const PENDING_TASK_FILTER_TO_EMPTY_MESSAGE_MAP = {
+  all: 'No pending tasks',
+  activities: 'No pending activities',
+  children: 'No pending child workflows',
+};
+
+export const PENDING_TASK_KVPS_EXCLUDE_KEYS = [
+  'pendingTaskId',
+  'pendingTaskType',
+  'pendingTaskTypeDisplay',
+];
+
+export const PENDING_TASK_TYPE_TO_ID_MAP = {
+  [PENDING_TASK_TYPE_ACTIVITY]: 'activityID',
+  [PENDING_TASK_TYPE_CHILD_WORKFLOW]: 'initiatedID',
+};
+
+export const PENDING_TASK_TYPE_TO_DISPLAY_MAP = {
+  [PENDING_TASK_TYPE_ACTIVITY]: 'PendingActivityTask',
+  [PENDING_TASK_TYPE_CHILD_WORKFLOW]: 'PendingChildWorkflowTask',
+};

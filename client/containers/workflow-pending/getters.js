@@ -19,35 +19,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export {
-  getDefaultState as getGraphDefaultState,
-  getters as graphGetters,
-  mutations as graphMutations,
-} from './graph';
-export {
-  actionCreator as routeActionCreator,
-  actionTypes as routeActionTypes,
-  getters as routeGetters,
-  getterTypes as routeGetterTypes,
-} from './route';
-export {
-  container as SettingsWorkflowHistory,
-  getDefaultState as getSettingsWorkflowHistoryDefaultState,
-  getters as settingsWorkflowHistoryGetters,
-  mutations as settingsWorkflowHistoryMutations,
-} from './settings-workflow-history';
-export {
-  container as Workflow,
-  getDefaultState as getWorkflowDefaultState,
-  getters as workflowGetters,
-  mutations as workflowMutations,
-} from './workflow';
-export {
-  container as WorkflowHistory,
-  getDefaultState as getWorkflowHistoryDefaultState,
-} from './workflow-history';
-export {
-  actions as workflowPendingActions,
-  container as WorkflowPending,
-  getters as workflowPendingGetters,
-} from './workflow-pending';
+import { ROUTE_PARAMS, ROUTE_QUERY } from '../route/getter-types';
+
+import { PENDING_TASK_FILTER_TO_EMPTY_MESSAGE_MAP } from './constants';
+import {
+  WORKFLOW_PENDING_ACTIVE_FILTER,
+  WORKFLOW_PENDING_ACTIVE_FILTER_EMPTY_MESSAGE,
+  WORKFLOW_PENDING_ACTIVE_PENDING_TASK_LIST,
+} from './getter-types';
+import { mapFilterToGetterType, mapPendingTaskList } from './helpers';
+
+const getters = {
+  [WORKFLOW_PENDING_ACTIVE_FILTER]: (_, getters) =>
+    getters[ROUTE_QUERY].filter || 'all',
+  [WORKFLOW_PENDING_ACTIVE_FILTER_EMPTY_MESSAGE]: (_, getters) => {
+    const filter = getters[WORKFLOW_PENDING_ACTIVE_FILTER];
+
+    return PENDING_TASK_FILTER_TO_EMPTY_MESSAGE_MAP[filter] || 'No results';
+  },
+  [WORKFLOW_PENDING_ACTIVE_PENDING_TASK_LIST]: (_, getters) => {
+    const domain = getters[ROUTE_PARAMS].domain;
+    const filter = getters[WORKFLOW_PENDING_ACTIVE_FILTER];
+    const getterType = mapFilterToGetterType(filter);
+    const pendingTaskList = getters[getterType] || [];
+
+    return mapPendingTaskList({
+      domain,
+      pendingTaskList,
+    });
+  },
+};
+
+export default getters;
