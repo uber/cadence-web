@@ -19,7 +19,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export { default as EventDetail } from './event-detail';
-export { default as FooterToolbar } from './footer-toolbar';
-export { default as Timeline } from './timeline';
-export { default as WorkflowGraph } from './workflow-graph';
+const getDefaultState = (state = {}) => ({
+  graphEnabled: true,
+  ...state,
+});
+
+export default getDefaultState;

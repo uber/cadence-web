@@ -28,7 +28,12 @@ import {
 } from 'vue-virtual-scroller';
 import debounce from 'lodash-es/debounce';
 import omit from 'lodash-es/omit';
-import { EventDetail, Timeline, WorkflowGraph } from './components';
+import {
+  EventDetail,
+  FooterToolbar,
+  Timeline,
+  WorkflowGraph,
+} from './components';
 import { GRAPH_VIEW_DAG, GRAPH_VIEW_TIMELINE } from './constants';
 import { getDefaultSplitSize } from './helpers';
 import { DetailList, FeatureFlag, HighlightToggle } from '~components';
@@ -74,6 +79,7 @@ export default {
     'graphView',
     'isWorkflowRunning',
     'loading',
+    'pendingTaskCount',
     'runId',
     'timelineEvents',
     'workflowHistoryEventHighlightList',
@@ -82,14 +88,14 @@ export default {
   ],
   created() {
     this.onResizeWindow = debounce(() => {
-      const { scrollerCompact, scrollerGrid, thead, viewSplit } = this.$refs;
+      const { scrollerCompact, scrollerGrid, viewSplit } = this.$refs;
       const scroller = this.isGrid ? scrollerGrid : scrollerCompact;
 
       if (!scroller) {
         return;
       }
 
-      const offsetHeight = this.isGrid ? thead.offsetHeight : 0;
+      const offsetHeight = this.isGrid ? 60 + 38 : 0;
       const viewSplitHeight = viewSplit.$el.offsetHeight;
       const scrollerHeight = viewSplitHeight - offsetHeight;
 
@@ -321,6 +327,7 @@ export default {
     DynamicScrollerItem,
     'event-detail': EventDetail,
     'feature-flag': FeatureFlag,
+    'footer-toolbar': FooterToolbar,
     'highlight-toggle': HighlightToggle,
     prism: Prism,
     RecycleScroller,
@@ -429,7 +436,7 @@ export default {
             v-if="format === 'grid' && showTable"
             :class="{ compact: compactDetails }"
           >
-            <div class="thead" ref="thead">
+            <div class="thead">
               <div class="th col-id">ID</div>
               <div class="th col-type">
                 Type
@@ -537,6 +544,7 @@ export default {
                 </DynamicScrollerItem>
               </template>
             </DynamicScroller>
+            <footer-toolbar :pending-task-count="pendingTaskCount" />
           </div>
           <prism
             class="json"
@@ -807,7 +815,7 @@ section.history {
 
       & + .spacer {
         width: 100%;
-        height: 58px;
+        height: 60px;
       }
     }
 

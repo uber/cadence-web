@@ -84,7 +84,7 @@ const getStoreConfig = ({ router, state }) => {
   return storeConfig;
 };
 
-const initStore = ({ router, state } = {}) => {
+const initStore = ({ router, state }) => {
   Vue.use(Vuex);
 
   const storeConfig = getStoreConfig({ router, state });

@@ -1,3 +1,4 @@
+<script>
 // Copyright (c) 2021 Uber Technologies Inc.
 //
 //
@@ -19,7 +20,54 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export { default as EventDetail } from './event-detail';
-export { default as FooterToolbar } from './footer-toolbar';
-export { default as Timeline } from './timeline';
-export { default as WorkflowGraph } from './workflow-graph';
+import { ButtonFill } from '~components';
+
+export default {
+  name: 'footer-toolbar',
+  props: {
+    pendingTaskCount: {
+      type: Number,
+      default: 0,
+    },
+  },
+  computed: {
+    pendingTasksButtonDisabled() {
+      const { pendingTaskCount } = this;
+
+      return pendingTaskCount === 0;
+    },
+    pendingTasksButtonLabel() {
+      const { pendingTaskCount } = this;
+
+      return `${pendingTaskCount} PENDING TASK${
+        pendingTaskCount === 1 ? '' : 'S'
+      }`;
+    },
+  },
+  components: {
+    'button-fill': ButtonFill,
+  },
+};
+</script>
+
+<template>
+  <div class="footer-toolbar">
+    <button-fill
+      :disabled="pendingTasksButtonDisabled"
+      disabled-label="No pending tasks"
+      :label="pendingTasksButtonLabel"
+      size="small"
+      tag="router-link"
+      :to="{ name: 'workflow/pending' }"
+    />
+  </div>
+</template>
+
+<style lang="stylus">
+.footer-toolbar {
+  background-color: #f8f8f9;
+  box-shadow: 0 -2px 2px rgba(0, 0, 0, 0.2);
+  padding: 6px 12px 6px 55px;
+  position: relative;
+}
+</style>

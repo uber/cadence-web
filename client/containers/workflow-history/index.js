@@ -21,10 +21,7 @@
 
 import Component from './component';
 import Connector from './connector';
-
-const getDefaultState = () => ({
-  graphEnabled: true,
-});
+import getDefaultState from './get-default-state';
 
 const container = Connector('WorkflowHistory', Component);
 
