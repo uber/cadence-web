@@ -20,12 +20,12 @@
 // THE SOFTWARE.
 
 import { connect } from 'vuex-connect';
-import { SETTINGS_WORKFLOW_HISTORY_IS_SUBMIT_ENABLED } from './getterTypes';
+import { SETTINGS_WORKFLOW_HISTORY_IS_SUBMIT_ENABLED } from './getter-types';
 import {
   SETTINGS_WORKFLOW_HISTORY_ON_CHANGE_VALUE,
   SETTINGS_WORKFLOW_HISTORY_ON_MOUNTED,
   SETTINGS_WORKFLOW_HISTORY_ON_SUBMIT,
-} from './mutationTypes';
+} from './mutation-types';
 
 const gettersToProps = {
   isSubmitEnabled: SETTINGS_WORKFLOW_HISTORY_IS_SUBMIT_ENABLED,
