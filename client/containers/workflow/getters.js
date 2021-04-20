@@ -23,12 +23,14 @@ import { get } from 'lodash-es';
 import {
   PENDING_TASK_TYPE_ACTIVITY,
   PENDING_TASK_TYPE_CHILD_WORKFLOW,
+  PENDING_TASK_TYPE_DECISION,
 } from './constants';
 import {
   WORKFLOW_EXECUTION,
   WORKFLOW_EXECUTION_IS_LOADING,
   WORKFLOW_EXECUTION_PENDING_ACTIVITIES,
   WORKFLOW_EXECUTION_PENDING_CHILDREN,
+  WORKFLOW_EXECUTION_PENDING_DECISIONS,
   WORKFLOW_EXECUTION_PENDING_TASK_COUNT,
   WORKFLOW_EXECUTION_PENDING_TASKS,
   WORKFLOW_EXECUTION_TASK_LIST_NAME,
@@ -48,11 +50,26 @@ const getters = {
       ...item,
       pendingTaskType: PENDING_TASK_TYPE_CHILD_WORKFLOW,
     })),
+  [WORKFLOW_EXECUTION_PENDING_DECISIONS]: state => {
+    const pendingDecision = get(state, 'workflow.execution.pendingDecision');
+
+    if (!pendingDecision) {
+      return [];
+    }
+
+    return [
+      {
+        ...pendingDecision,
+        pendingTaskType: PENDING_TASK_TYPE_DECISION,
+      },
+    ];
+  },
   [WORKFLOW_EXECUTION_PENDING_TASK_COUNT]: (_, getters) =>
     getters[WORKFLOW_EXECUTION_PENDING_TASKS].length,
   [WORKFLOW_EXECUTION_PENDING_TASKS]: (_, getters) => [
     ...getters[WORKFLOW_EXECUTION_PENDING_ACTIVITIES],
     ...getters[WORKFLOW_EXECUTION_PENDING_CHILDREN],
+    ...getters[WORKFLOW_EXECUTION_PENDING_DECISIONS],
   ],
   [WORKFLOW_EXECUTION_TASK_LIST_NAME]: state =>
     get(state, 'workflow.execution.executionConfiguration.taskList.name') || '',
