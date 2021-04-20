@@ -33,7 +33,7 @@ import {
 
 export const PENDING_TASK_FILTER_ALL = 'all';
 export const PENDING_TASK_FILTER_ACTIVITIES = 'activities';
-export const PENDING_TASK_FILTER_CHILDREN = 'children';
+export const PENDING_TASK_FILTER_CHILDREN = 'child workflows';
 export const PENDING_TASK_FILTER_DECISIONS = 'decisions';
 
 export const PENDING_TASK_FILTERS = [
