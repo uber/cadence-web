@@ -22,10 +22,16 @@
 
 import { DynamicScroller, DynamicScrollerItem } from 'vue-virtual-scroller';
 import { PendingTaskListItem } from './components';
+import { PENDING_TASK_FILTERS } from './constants';
 import { ButtonGroup, NoResults } from '~components';
 
 export default {
   name: 'workflow-pending',
+  data() {
+    return {
+      pendingTaskFilters: PENDING_TASK_FILTERS,
+    };
+  },
   props: {
     filter: {
       type: String,
@@ -58,7 +64,7 @@ export default {
   <div class="workflow-pending">
     <div class="top-navigation">
       <button-group
-        :items="['all', 'activities', 'children']"
+        :items="pendingTaskFilters"
         label="Filters"
         uppercase
         :value="filter"
