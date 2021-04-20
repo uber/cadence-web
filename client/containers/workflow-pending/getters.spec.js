@@ -91,7 +91,8 @@ describe('workflow pending getters', () => {
       it('should return "No pending activities".', () => {
         const getterFns = {
           ...workflowPendingGetterFns,
-          [WORKFLOW_PENDING_ACTIVE_FILTER]: () => PENDING_TASK_FILTER_ACTIVITIES,
+          [WORKFLOW_PENDING_ACTIVE_FILTER]: () =>
+            PENDING_TASK_FILTER_ACTIVITIES,
         };
         const getters = initGetters({ getterFns });
         const output = getters[WORKFLOW_PENDING_ACTIVE_FILTER_EMPTY_MESSAGE];
@@ -152,7 +153,8 @@ describe('workflow pending getters', () => {
           const getterFns = {
             ...workflowPendingGetterFns,
             [ROUTE_PARAMS]: () => ({ domain: 'samples-domain' }),
-            [WORKFLOW_PENDING_ACTIVE_FILTER]: () => PENDING_TASK_FILTER_ACTIVITIES,
+            [WORKFLOW_PENDING_ACTIVE_FILTER]: () =>
+              PENDING_TASK_FILTER_ACTIVITIES,
             [WORKFLOW_EXECUTION_PENDING_ACTIVITIES]: () => [
               {
                 activityID: 'activity-id-1',
@@ -192,7 +194,8 @@ describe('workflow pending getters', () => {
           const getterFns = {
             ...workflowPendingGetterFns,
             [ROUTE_PARAMS]: () => ({ domain: 'samples-domain' }),
-            [WORKFLOW_PENDING_ACTIVE_FILTER]: () => PENDING_TASK_FILTER_CHILDREN,
+            [WORKFLOW_PENDING_ACTIVE_FILTER]: () =>
+              PENDING_TASK_FILTER_CHILDREN,
             [WORKFLOW_EXECUTION_PENDING_CHILDREN]: () => [
               {
                 initiatedID: 'initiated-id-1',
@@ -262,7 +265,8 @@ describe('workflow pending getters', () => {
           const getterFns = {
             ...workflowPendingGetterFns,
             [ROUTE_PARAMS]: () => ({ domain: 'samples-domain' }),
-            [WORKFLOW_PENDING_ACTIVE_FILTER]: () => PENDING_TASK_FILTER_DECISIONS,
+            [WORKFLOW_PENDING_ACTIVE_FILTER]: () =>
+              PENDING_TASK_FILTER_DECISIONS,
             [WORKFLOW_EXECUTION_PENDING_DECISIONS]: () => [
               {
                 scheduledTimestamp: 'timestamp-1',
