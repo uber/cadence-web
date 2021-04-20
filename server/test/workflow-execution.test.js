@@ -46,6 +46,7 @@ describe('Workflow Execution', function() {
         workflowExecutionInfo: null,
         pendingChildren: null,
         pendingActivities: null,
+        pendingDecision: null,
       });
   });
 
