@@ -65,7 +65,7 @@ export default {
         <div
           class="news-item"
           :key="id"
-          v-for="{ id, summary, title, url } in newsItems"
+          v-for="{ id, image, summary, title, url } in newsItems"
         >
           <h3>
             <router-link :to="url" v-on:click.native="onLinkClick">
@@ -73,6 +73,7 @@ export default {
             </router-link>
           </h3>
           <p>{{ summary }}</p>
+          <img alt="news image" class="news-image" :src="image" v-if="image" />
         </div>
       </div>
       <div class="footer">
@@ -98,7 +99,7 @@ export default {
 <style lang="stylus">
 .news-modal {
   .content {
-    max-height: 400px
+    max-height: 650px
     overflow-y: auto;
   }
 
@@ -120,6 +121,10 @@ export default {
     p {
       line-height: 22px;
     }
+  }
+
+  .news-image {
+    max-width: 800px;
   }
 
   .see-more {
