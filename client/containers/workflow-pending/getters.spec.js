@@ -23,11 +23,19 @@ import { ROUTE_PARAMS, ROUTE_QUERY } from '../route/getter-types';
 import {
   PENDING_TASK_TYPE_ACTIVITY,
   PENDING_TASK_TYPE_CHILD_WORKFLOW,
+  PENDING_TASK_TYPE_DECISION,
 } from '../workflow/constants';
 import {
   WORKFLOW_EXECUTION_PENDING_ACTIVITIES,
   WORKFLOW_EXECUTION_PENDING_CHILDREN,
+  WORKFLOW_EXECUTION_PENDING_DECISIONS,
 } from '../workflow/getter-types';
+import {
+  PENDING_TASK_FILTER_ACTIVITIES,
+  PENDING_TASK_FILTER_ALL,
+  PENDING_TASK_FILTER_CHILDREN,
+  PENDING_TASK_FILTER_DECISIONS,
+} from './constants';
 import {
   WORKFLOW_PENDING_ACTIVE_FILTER,
   WORKFLOW_PENDING_ACTIVE_FILTER_EMPTY_MESSAGE,
@@ -39,7 +47,7 @@ import { initGetters } from '~test';
 describe('workflow pending getters', () => {
   describe('when calling getters[WORKFLOW_PENDING_ACTIVE_FILTER]', () => {
     describe('and getters[ROUTE_QUERY] returns empty object', () => {
-      it('should return "all".', () => {
+      it('should return PENDING_TASK_FILTER_ALL.', () => {
         const getterFns = {
           ...workflowPendingGetterFns,
           [ROUTE_QUERY]: () => ({}),
@@ -47,7 +55,7 @@ describe('workflow pending getters', () => {
         const getters = initGetters({ getterFns });
         const output = getters[WORKFLOW_PENDING_ACTIVE_FILTER];
 
-        expect(output).toEqual('all');
+        expect(output).toEqual(PENDING_TASK_FILTER_ALL);
       });
     });
 
@@ -66,11 +74,11 @@ describe('workflow pending getters', () => {
   });
 
   describe('when calling getters[WORKFLOW_PENDING_ACTIVE_FILTER_EMPTY_MESSAGE]', () => {
-    describe('and getters[WORKFLOW_PENDING_ACTIVE_FILTER] returns "all"', () => {
+    describe('and getters[WORKFLOW_PENDING_ACTIVE_FILTER] returns PENDING_TASK_FILTER_ALL', () => {
       it('should return "No pending tasks".', () => {
         const getterFns = {
           ...workflowPendingGetterFns,
-          [WORKFLOW_PENDING_ACTIVE_FILTER]: () => 'all',
+          [WORKFLOW_PENDING_ACTIVE_FILTER]: () => PENDING_TASK_FILTER_ALL,
         };
         const getters = initGetters({ getterFns });
         const output = getters[WORKFLOW_PENDING_ACTIVE_FILTER_EMPTY_MESSAGE];
@@ -79,11 +87,12 @@ describe('workflow pending getters', () => {
       });
     });
 
-    describe('and getters[WORKFLOW_PENDING_ACTIVE_FILTER] returns "activities"', () => {
+    describe('and getters[WORKFLOW_PENDING_ACTIVE_FILTER] returns PENDING_TASK_FILTER_ACTIVITIES', () => {
       it('should return "No pending activities".', () => {
         const getterFns = {
           ...workflowPendingGetterFns,
-          [WORKFLOW_PENDING_ACTIVE_FILTER]: () => 'activities',
+          [WORKFLOW_PENDING_ACTIVE_FILTER]: () =>
+            PENDING_TASK_FILTER_ACTIVITIES,
         };
         const getters = initGetters({ getterFns });
         const output = getters[WORKFLOW_PENDING_ACTIVE_FILTER_EMPTY_MESSAGE];
@@ -92,16 +101,29 @@ describe('workflow pending getters', () => {
       });
     });
 
-    describe('and getters[WORKFLOW_PENDING_ACTIVE_FILTER] returns "children"', () => {
+    describe('and getters[WORKFLOW_PENDING_ACTIVE_FILTER] returns PENDING_TASK_FILTER_CHILDREN', () => {
       it('should return "No pending child workflows".', () => {
         const getterFns = {
           ...workflowPendingGetterFns,
-          [WORKFLOW_PENDING_ACTIVE_FILTER]: () => 'children',
+          [WORKFLOW_PENDING_ACTIVE_FILTER]: () => PENDING_TASK_FILTER_CHILDREN,
         };
         const getters = initGetters({ getterFns });
         const output = getters[WORKFLOW_PENDING_ACTIVE_FILTER_EMPTY_MESSAGE];
 
         expect(output).toEqual('No pending child workflows');
+      });
+    });
+
+    describe('and getters[WORKFLOW_PENDING_ACTIVE_FILTER] returns PENDING_TASK_FILTER_DECISIONS', () => {
+      it('should return "No pending decisions".', () => {
+        const getterFns = {
+          ...workflowPendingGetterFns,
+          [WORKFLOW_PENDING_ACTIVE_FILTER]: () => PENDING_TASK_FILTER_DECISIONS,
+        };
+        const getters = initGetters({ getterFns });
+        const output = getters[WORKFLOW_PENDING_ACTIVE_FILTER_EMPTY_MESSAGE];
+
+        expect(output).toEqual('No pending decisions');
       });
     });
 
@@ -123,7 +145,7 @@ describe('workflow pending getters', () => {
     describe(
       [
         'and getters[ROUTE_PARAMS] returns { domain: "samples-domain" } and ',
-        'getters[WORKFLOW_PENDING_ACTIVE_FILTER] returns "activities" and ',
+        'getters[WORKFLOW_PENDING_ACTIVE_FILTER] returns PENDING_TASK_FILTER_ACTIVITIES and ',
         'getters[WORKFLOW_EXECUTION_PENDING_ACTIVITIES] returns a pending activity list',
       ].join(''),
       () => {
@@ -131,7 +153,8 @@ describe('workflow pending getters', () => {
           const getterFns = {
             ...workflowPendingGetterFns,
             [ROUTE_PARAMS]: () => ({ domain: 'samples-domain' }),
-            [WORKFLOW_PENDING_ACTIVE_FILTER]: () => 'activities',
+            [WORKFLOW_PENDING_ACTIVE_FILTER]: () =>
+              PENDING_TASK_FILTER_ACTIVITIES,
             [WORKFLOW_EXECUTION_PENDING_ACTIVITIES]: () => [
               {
                 activityID: 'activity-id-1',
@@ -163,7 +186,7 @@ describe('workflow pending getters', () => {
     describe(
       [
         'and getters[ROUTE_PARAMS] returns { domain: "samples-domain" } and ',
-        'getters[WORKFLOW_PENDING_ACTIVE_FILTER] returns "children" and ',
+        'getters[WORKFLOW_PENDING_ACTIVE_FILTER] returns PENDING_TASK_FILTER_CHILDREN and ',
         'getters[WORKFLOW_EXECUTION_PENDING_CHILDREN] returns a pending child workflow list',
       ].join(''),
       () => {
@@ -171,7 +194,8 @@ describe('workflow pending getters', () => {
           const getterFns = {
             ...workflowPendingGetterFns,
             [ROUTE_PARAMS]: () => ({ domain: 'samples-domain' }),
-            [WORKFLOW_PENDING_ACTIVE_FILTER]: () => 'children',
+            [WORKFLOW_PENDING_ACTIVE_FILTER]: () =>
+              PENDING_TASK_FILTER_CHILDREN,
             [WORKFLOW_EXECUTION_PENDING_CHILDREN]: () => [
               {
                 initiatedID: 'initiated-id-1',
@@ -224,6 +248,47 @@ describe('workflow pending getters', () => {
                 text: 'run-id-1',
               },
               workflowID: 'workflow-id-1',
+            },
+          ]);
+        });
+      }
+    );
+
+    describe(
+      [
+        'and getters[ROUTE_PARAMS] returns { domain: "samples-domain" } and ',
+        'getters[WORKFLOW_PENDING_ACTIVE_FILTER] returns PENDING_TASK_FILTER_DECISIONS and ',
+        'getters[WORKFLOW_EXECUTION_PENDING_DECISIONS] returns a pending decision list',
+      ].join(''),
+      () => {
+        it('should return a mapped pending decision list.', () => {
+          const getterFns = {
+            ...workflowPendingGetterFns,
+            [ROUTE_PARAMS]: () => ({ domain: 'samples-domain' }),
+            [WORKFLOW_PENDING_ACTIVE_FILTER]: () =>
+              PENDING_TASK_FILTER_DECISIONS,
+            [WORKFLOW_EXECUTION_PENDING_DECISIONS]: () => [
+              {
+                scheduledTimestamp: 'timestamp-1',
+                pendingTaskType: PENDING_TASK_TYPE_DECISION,
+              },
+            ],
+          };
+          const getters = initGetters({ getterFns });
+          const output = getters[WORKFLOW_PENDING_ACTIVE_PENDING_TASK_LIST];
+
+          expect(output).toEqual([
+            {
+              scheduledTimestamp: 'timestamp-1',
+              kvps: [
+                {
+                  key: 'scheduledTimestamp',
+                  value: 'timestamp-1',
+                },
+              ],
+              pendingTaskId: 'PENDING_TASK_TYPE_DECISION_timestamp-1',
+              pendingTaskType: PENDING_TASK_TYPE_DECISION,
+              pendingTaskTypeDisplay: 'PendingDecisionTask',
             },
           ]);
         });
