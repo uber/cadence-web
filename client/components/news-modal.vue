@@ -73,12 +73,7 @@ export default {
             </router-link>
           </h3>
           <p>{{ summary }}</p>
-          <img
-            alt="news image"
-            class="news-image"
-            :src="image"
-            v-if="image"
-          />
+          <img alt="news image" class="news-image" :src="image" v-if="image" />
         </div>
       </div>
       <div class="footer">
