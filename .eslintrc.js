@@ -156,7 +156,7 @@ module.exports = {
     'import/resolver': {
       'babel-module': {},
       webpack: {
-        config: 'webpack.config.js',
+        config: 'webpack.config.cjs',
       },
     },
   },

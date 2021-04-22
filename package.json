@@ -6,17 +6,17 @@
   "licence": "MIT",
   "scripts": {
     "clean": "rm -rf dist",
-    "dev": "NODE_ENV=development node server.js",
+    "dev": "NODE_ENV=development node --experimental-json-modules server.js",
     "lint": "npm run lint:check -- --fix",
     "lint:check": "eslint --ext .js,.vue client server LICENSE",
     "install": "npm run install:idl && npm run install:news",
     "install:idl": "napa && rm -rf server/idl && cp -R node_modules/cadence-idl/thrift server/idl",
     "install:news": "cd news && npm install",
-    "start": "npm run build && NODE_ENV=production node server.js",
+    "start": "npm run build && NODE_ENV=production node --experimental-json-modules server.js",
     "test": "mocha server/test && mocha-chrome http://localhost:8090",
     "test:unit": "TZ=UTC jest",
-    "test-server": "CADENCE_WEB_PORT=8090 TEST_RUN=ci node server.js",
-    "build": "webpack",
+    "test-server": "CADENCE_WEB_PORT=8090 TEST_RUN=ci node --experimental-json-modules server.js",
+    "build": "webpack --config webpack.config.cjs",
     "build:news": "cd news && npm run build && cp -R blog/.vuepress/dist ../",
     "build-production": "NODE_ENV=production npm run clean && npm run build && npm run build:news"
   },
@@ -27,8 +27,9 @@
     "asynchronous"
   ],
   "author": "Nathan Black <nathanbl@uber.com>",
+  "type": "module",
   "engines": {
-    "node": "10.22.1",
+    "node": "14.16.0",
     "npm": "6.14.4"
   },
   "dependencies": {

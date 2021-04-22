@@ -19,15 +19,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const path = require('path'),
-  Koa = require('koa'),
-  bodyparser = require('koa-bodyparser'),
-  send = require('koa-send'),
-  staticRoot = path.join(__dirname, '../dist'),
-  app = new Koa(),
-  router = require('./routes');
+import Koa from 'koa';
+import koaBodyparser from 'koa-bodyparser';
+import koaCompress from 'koa-compress';
+import koaSend from 'koa-send';
+import koaStatic from 'koa-static';
+import koaWebpack from 'koa-webpack';
+import path from 'path';
+import { getLocalPath } from './helpers/index.js';
+import tchannelClient from './middleware/tchannel-client.js';
+import initRouter from './router.js';
+import webpack from 'webpack';
+import webpackConfig from '../webpack.config.cjs';
 
-app.webpackConfig = require('../webpack.config');
+const staticRoot = getLocalPath('../../dist');
+
+const app = new Koa();
+app.webpackConfig = webpackConfig;
+
+const router = initRouter();
 
 app.init = function(options) {
   options = options || {};
@@ -37,14 +47,10 @@ app.init = function(options) {
       ? options.useWebpack
       : process.env.NODE_ENV !== 'production';
 
-  let koaWebpack;
   let compiler;
 
   if (useWebpack) {
-    const Webpack = require('webpack');
-
-    koaWebpack = require('koa-webpack');
-    compiler = Webpack(app.webpackConfig);
+    compiler = webpack(app.webpackConfig);
   }
 
   app
@@ -63,13 +69,13 @@ app.init = function(options) {
         ctx.body = { message: err.message };
       }
     })
-    .use(bodyparser())
+    .use(koaBodyparser())
     .use(
-      require('koa-compress')({
+      koaCompress({
         filter: contentType => !contentType.startsWith('text/event-stream'),
       })
     )
-    .use(require('./middleware/tchannel-client'))
+    .use(tchannelClient)
     .use(
       useWebpack
         ? koaWebpack({
@@ -77,7 +83,7 @@ app.init = function(options) {
             dev: { stats: { colors: true } },
             hot: { port: process.env.TEST_RUN ? 8082 : 8081 },
           })
-        : require('koa-static')(staticRoot)
+        : koaStatic(staticRoot)
     )
     .use(router.routes())
     .use(router.allowedMethods())
@@ -97,7 +103,7 @@ app.init = function(options) {
             ctx.set('content-type', 'text/html');
             ctx.body = compiler.outputFileSystem.readFileSync(filename);
           } else {
-            await send(ctx, 'index.html', { root: staticRoot });
+            await koaSend(ctx, 'index.html', { root: staticRoot });
           }
         } catch (err) {
           if (err.status !== 404) {
@@ -110,4 +116,4 @@ app.init = function(options) {
   return app;
 };
 
-module.exports = app;
+export default app;

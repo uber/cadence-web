@@ -19,8 +19,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const Long = require('long'),
-  wfHistoryThrift = [
+import Long from 'long';
+
+const wfHistoryThrift = [
     {
       eventId: new Long(1),
       timestamp: new Long(800610625, 351737684, false),

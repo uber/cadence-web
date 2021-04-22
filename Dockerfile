@@ -20,7 +20,7 @@ WORKDIR /usr/app
 
 # copy from build image
 COPY --from=BUILD_IMAGE /usr/build/server.js ./
-COPY --from=BUILD_IMAGE /usr/build/webpack.config.js ./
+COPY --from=BUILD_IMAGE /usr/build/webpack.config.cjs ./
 COPY --from=BUILD_IMAGE /usr/build/dist ./dist
 COPY --from=BUILD_IMAGE /usr/build/server ./server
 COPY --from=BUILD_IMAGE /usr/build/node_modules ./node_modules

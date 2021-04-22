@@ -19,15 +19,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const path = require('path'),
-  supertest = require('supertest'),
-  TChannel = require('tchannel'),
-  TChannelAsThrift = require('tchannel/as/thrift'),
-  Long = require('long');
+import chai from 'chai';
+import Long from 'long';
+import path from 'path';
+import supertest from 'supertest';
+import TChannel from 'tchannel';
+import TChannelAsThrift from 'tchannel/as/thrift';
+import app from '../index.js';
 
-let tchanServer, currTest, client, app;
+let tchanServer, currTest, client;
 
-global.should = require('chai').should();
+global.should = chai.should();
 
 global.dateToLong = d => Long.fromValue(Number(new Date(d))).mul(1000000);
 
@@ -79,9 +81,12 @@ before(function(done) {
   process.env.CADENCE_TCHANNEL_PEERS = '127.0.0.1:11343';
   tchanServer.listen(11343, '127.0.0.1', () => done());
 
-  app = require('../')
-    .init({ useWebpack: false, logErrors: false })
-    .listen();
+  const appConfig = {
+    useWebpack: false,
+    logErrors: false,
+  };
+
+  app.init(appConfig).listen();
   global.request = supertest.bind(supertest, app);
 });
 

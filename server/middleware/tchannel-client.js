@@ -21,15 +21,15 @@
 
 'use strict';
 
-const path = require('path'),
-  dns = require('dns'),
-  get = require('lodash.get'),
-  TChannelAsThrift = require('tchannel/as/thrift'),
-  TChannel = require('tchannel'),
-  Long = require('long'),
-  losslessJSON = require('lossless-json'),
-  moment = require('moment'),
-  isIPv4 = require('is-ipv4-node');
+import dns from 'dns';
+import get from 'lodash.get';
+import isIPv4 from 'is-ipv4-node';
+import Long from 'long';
+import losslessJSON from 'lossless-json';
+import moment from 'moment';
+import TChannel from 'tchannel';
+import TChannelAsThrift from 'tchannel/as/thrift.js';
+import { getLocalPath } from '../helpers/index.js';
 
 function uiTransform(item) {
   if (!item || typeof item !== 'object') {
@@ -140,13 +140,13 @@ async function makeChannel(client) {
 
   const tchannelAsThrift = TChannelAsThrift({
     channel: cadenceChannel,
-    entryPoint: path.join(__dirname, '../idl/cadence.thrift'),
+    entryPoint: getLocalPath('../idl/cadence.thrift'),
   });
 
   return tchannelAsThrift;
 }
 
-module.exports = async function(ctx, next) {
+const tchannelClient = async function(ctx, next) {
   const client = TChannel();
   const channel = await makeChannel(client, ctx);
   const { authTokenHeaders = {} } = ctx;
@@ -302,3 +302,5 @@ module.exports = async function(ctx, next) {
     throw e;
   }
 };
+
+export default tchannelClient;
