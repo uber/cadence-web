@@ -24,7 +24,7 @@ const formatBody = require('./format-body');
 const formatMethod = require('./format-method');
 const formatRequestName = require('./format-request-name');
 const lookupAsync = require('./lookup-async');
-const makeChannel = require('./make-channel');
+const makeChannels = require('./make-channels');
 const makeRequest = require('./make-request');
 const uiTransform = require('./ui-transform');
 const withDomainPagingAndWorkflowExecution = require('./with-domain-paging-and-workflow-execution');
@@ -38,7 +38,7 @@ module.exports = {
   formatMethod,
   formatRequestName,
   lookupAsync,
-  makeChannel,
+  makeChannels,
   makeRequest,
   uiTransform,
   withDomainPagingAndWorkflowExecution,

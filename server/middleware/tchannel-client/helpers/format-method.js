@@ -19,6 +19,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const formatMethod = method => `WorkflowService::${method}`;
+const formatMethod = ({ method, serviceName }) => `${serviceName}::${method}`;
 
 module.exports = formatMethod;

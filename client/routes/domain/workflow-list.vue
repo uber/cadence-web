@@ -53,6 +53,7 @@ export default {
     };
   },
   async created() {
+    this.fetchCluster();
     await this.fetchDomain();
     this.fetchWorkflows();
   },
@@ -254,6 +255,12 @@ export default {
       this.loading = false;
 
       return { workflows, nextPageToken };
+    },
+    async fetchCluster() {
+      const cluster = this.$http(`/api/cluster`);
+
+      // TODO - hook up advanced button show/hide based on results returned.
+      // Should hide by default until response is returned.
     },
     fetchDomain() {
       const { domain } = this;

@@ -25,7 +25,7 @@ const TChannelAsThrift = require('tchannel/as/thrift');
 const { PEERS } = require('../constants');
 const lookupAsync = require('./lookup-async');
 
-const makeChannel = async client => {
+const makeChannels = async client => {
   const ipPeers = await Promise.all(
     PEERS.map(peer => {
       const [host, port] = peer.split(':');
@@ -47,12 +47,20 @@ const makeChannel = async client => {
     },
   });
 
-  const tchannelAsThrift = TChannelAsThrift({
+  const adminTChannelAsThrift = TChannelAsThrift({
+    channel: cadenceChannel,
+    entryPoint: path.join(__dirname, '../../../idl/admin.thrift'),
+  });
+
+  const cadenceTChannelAsThrift = TChannelAsThrift({
     channel: cadenceChannel,
     entryPoint: path.join(__dirname, '../../../idl/cadence.thrift'),
   });
 
-  return tchannelAsThrift;
+  return {
+    admin: adminTChannelAsThrift,
+    cadence: cadenceTChannelAsThrift,
+  };
 };
 
-module.exports = makeChannel;
+module.exports = makeChannels;
