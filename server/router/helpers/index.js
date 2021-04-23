@@ -19,8 +19,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+const buildQueryString = require('./build-query-string');
+const listWorkflows = require('./list-workflows');
+const mapHistoryResponse = require('./map-history-response');
 const momentToLong = require('./moment-to-long');
+const replacer = require('./replacer');
 
 module.exports = {
+  buildQueryString,
+  listWorkflows,
+  mapHistoryResponse,
   momentToLong,
+  replacer,
 };

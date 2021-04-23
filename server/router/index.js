@@ -24,7 +24,11 @@ const losslessJSON = require('lossless-json');
 const moment = require('moment');
 
 const featureFlags = require('./feature-flags.json');
-const { momentToLong } = require('./helpers');
+const {
+  buildQueryString,
+  listWorkflows,
+  mapHistoryResponse,
+} = require('./helpers');
 
 const router = new Router();
 
@@ -41,26 +45,6 @@ router.get('/api/domains/:domain', async function(ctx) {
   ctx.body = await ctx.cadence.describeDomain({ name: ctx.params.domain });
 });
 
-async function listWorkflows(state, ctx) {
-  const q = ctx.query || {},
-    startTime = moment(q.startTime || NaN),
-    endTime = moment(q.endTime || NaN);
-
-  ctx.assert(startTime.isValid() && endTime.isValid(), 400);
-
-  ctx.body = await ctx.cadence[state + 'Workflows']({
-    StartTimeFilter: {
-      earliestTime: momentToLong(startTime),
-      latestTime: momentToLong(endTime),
-    },
-    typeFilter: q.workflowName ? { name: q.workflowName } : undefined,
-    executionFilter: q.workflowId ? { workflowId: q.workflowId } : undefined,
-    statusFilter: q.status || undefined,
-    nextPageToken: q.nextPageToken
-      ? Buffer.from(q.nextPageToken, 'base64')
-      : undefined,
-  });
-}
 
 /**
  * Override this route to perform authorization check
@@ -89,25 +73,11 @@ router.get(
   '/api/domains/:domain/workflows/open',
   listWorkflows.bind(null, 'open')
 );
+
 router.get(
   '/api/domains/:domain/workflows/closed',
   listWorkflows.bind(null, 'closed')
 );
-
-const buildQueryString = (
-  startTime,
-  endTime,
-  { status, workflowId, workflowName }
-) =>
-  [
-    `CloseTime >= "${startTime.toISOString()}"`,
-    `CloseTime <= "${endTime.toISOString()}"`,
-    status && `CloseStatus = "${status}"`,
-    workflowId && `WorkflowID = "${workflowId}"`,
-    workflowName && `WorkflowType = "${workflowName}"`,
-  ]
-    .filter(subQuery => !!subQuery)
-    .join(' and ');
 
 router.get('/api/domains/:domain/workflows/archived', async function(ctx) {
   const { nextPageToken, ...query } = ctx.query || {};
@@ -141,38 +111,6 @@ router.get('/api/domains/:domain/workflows/list', async function(ctx) {
       : undefined,
   });
 });
-
-function replacer(key, value) {
-  if (value && value.type && value.type === 'Buffer') {
-    return Buffer.from(value)
-      .toString()
-      .replace(/["]/g, '')
-      .trim();
-  }
-
-  return value;
-}
-
-const mapHistoryResponse = history => {
-  if (Array.isArray(history && history.events)) {
-    return history.events.map(e => {
-      const attr = e.eventType
-        ? e.eventType.charAt(0).toLowerCase() +
-          e.eventType.slice(1) +
-          'EventAttributes'
-        : '';
-
-      const details = e[attr] && JSON.parse(JSON.stringify(e[attr]), replacer);
-
-      return {
-        timestamp: e.timestamp,
-        eventType: e.eventType,
-        eventId: e.eventId,
-        details,
-      };
-    });
-  }
-};
 
 router.get(
   '/api/domains/:domain/workflows/:workflowId/:runId/history',
