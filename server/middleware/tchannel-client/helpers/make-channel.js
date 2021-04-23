@@ -1,15 +1,13 @@
 const isIPv4 = require('is-ipv4-node');
 const path = require('path');
 const TChannelAsThrift = require('tchannel/as/thrift');
-
-const getPeers = require('./get-peers');
 const lookupAsync = require('./lookup-async');
 
-const peers = getPeers();
+const { PEERS } = require('../constants');
 
 const makeChannel = async (client) => {
   const ipPeers = await Promise.all(
-    peers.map(peer => {
+    PEERS.map(peer => {
       const [host, port] = peer.split(':');
 
       if (!isIPv4(host)) {
