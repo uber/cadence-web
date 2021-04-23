@@ -41,9 +41,7 @@ const {
   workflowTerminateHandler,
 } = require('./routes');
 
-const {
-  listWorkflows,
-} = require('./helpers');
+const { listWorkflows } = require('./helpers');
 
 const router = new Router();
 
@@ -77,7 +75,10 @@ router.get(
   listWorkflows.bind(null, 'closed')
 );
 
-router.get('/api/domains/:domain/workflows/archived', workflowArchivedListHandler);
+router.get(
+  '/api/domains/:domain/workflows/archived',
+  workflowArchivedListHandler
+);
 
 router.get('/api/domains/:domain/workflows/list', workflowListHandler);
 
@@ -111,9 +112,15 @@ router.post(
   workflowSignalHandler
 );
 
-router.get('/api/domains/:domain/workflows/:workflowId/:runId', workflowHandler);
+router.get(
+  '/api/domains/:domain/workflows/:workflowId/:runId',
+  workflowHandler
+);
 
-router.get('/api/domains/:domain/task-lists/:taskList/pollers', tasklistPollerListHandler);
+router.get(
+  '/api/domains/:domain/task-lists/:taskList/pollers',
+  tasklistPollerListHandler
+);
 
 router.get(
   '/api/domains/:domain/task-lists/:taskList/partitions',
