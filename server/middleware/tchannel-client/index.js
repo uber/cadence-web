@@ -55,6 +55,10 @@ const tchannelClient = async function(ctx, next) {
       requestName: 'list',
       bodyTransform: withDomainPaging(ctx),
     }),
+    describeCluster: request({
+      method: 'DescribeCluster',
+      requestName: 'describe',
+    }),
     describeDomain: request({
       method: 'DescribeDomain',
       requestName: 'describe',
