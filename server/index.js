@@ -28,12 +28,13 @@ const koaStatic = require('koa-static');
 const koaWebpack = require('koa-webpack');
 const webpack = require('webpack');
 
+const webpackConfig = require('../webpack.config');
 const tchannelClient = require('./middleware/tchannel-client');
 const router = require('./router');
-const webpackConfig = require('../webpack.config');
 
 const staticRoot = path.join(__dirname, '../dist');
 const app = new Koa();
+
 app.webpackConfig = webpackConfig;
 
 app.init = function(options) {
