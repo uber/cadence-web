@@ -29,12 +29,13 @@ const clusterHandler = async ctx => {
   }
 
   const cluster = await ctx.cadence.describeCluster();
+
   cache = { ...cluster, membershipInfo: null };
   ctx.body = cache;
 
   // This timeout will clear cache after TTL period.
   // It will fetch a new value on the next request to clusterHandler.
-  setTimeout(() => cache = null, CLUSTER_CACHE_TTL);
+  setTimeout(() => (cache = null), CLUSTER_CACHE_TTL);
 };
 
 module.exports = clusterHandler;
