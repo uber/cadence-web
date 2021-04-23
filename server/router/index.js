@@ -24,11 +24,15 @@ const losslessJSON = require('lossless-json');
 const moment = require('moment');
 
 const featureFlags = require('./feature-flags.json');
+<<<<<<< HEAD:server/router/index.js
 const {
   buildQueryString,
   listWorkflows,
   mapHistoryResponse,
 } = require('./helpers');
+=======
+const { momentToLong } = require('./helpers');
+>>>>>>> master:server/router.js
 
 const router = new Router();
 
