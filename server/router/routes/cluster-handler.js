@@ -19,12 +19,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const clusterHandler = async ctx => {
-  // TODO - Check cached response before calling API
-  // if cached, returned cache
-  // if not request and then save to cache.
+const ONE_HOUR_IN_MILLISECONDS = 60 * 60 * 1000;
 
-  ctx.body = await ctx.cadence.describeCluster();
+let cache = null;
+
+const clusterHandler = async ctx => {
+  if (cache) {
+    return (ctx.body = cache);
+  }
+
+  const cluster = await ctx.cadence.describeCluster();
+  cache = { ...cluster, membershipInfo: null };
+  ctx.body = cache;
+
+  // clear cache after 1 hour. It will fetch new value on next request to clusterHandler.
+  setTimeout(() => cache = null, ONE_HOUR_IN_MILLISECONDS);
 };
 
 module.exports = clusterHandler;
