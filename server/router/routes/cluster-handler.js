@@ -19,7 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const ONE_HOUR_IN_MILLISECONDS = 60 * 60 * 1000;
+const { CLUSTER_CACHE_TTL } = require('../constants');
 
 let cache = null;
 
@@ -32,8 +32,9 @@ const clusterHandler = async ctx => {
   cache = { ...cluster, membershipInfo: null };
   ctx.body = cache;
 
-  // clear cache after 1 hour. It will fetch new value on next request to clusterHandler.
-  setTimeout(() => cache = null, ONE_HOUR_IN_MILLISECONDS);
+  // This timeout will clear cache after TTL period.
+  // It will fetch a new value on the next request to clusterHandler.
+  setTimeout(() => cache = null, CLUSTER_CACHE_TTL);
 };
 
 module.exports = clusterHandler;
