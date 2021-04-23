@@ -19,13 +19,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const Router = require('koa-router'),
-  router = new Router(),
-  moment = require('moment'),
-  Long = require('long'),
-  losslessJSON = require('lossless-json'),
-  featureFlags = require('./feature-flags.json'),
-  momentToLong = m => Long.fromValue(m.unix()).mul(1000000000);
+const Router = require('koa-router');
+const losslessJSON = require('lossless-json');
+const moment = require('moment');
+
+const featureFlags = require('./feature-flags.json');
+const { momentToLong } = require('./helpers');
+
+const router = new Router();
 
 router.get('/api/domains', async function(ctx) {
   ctx.body = await ctx.cadence.listDomains({
