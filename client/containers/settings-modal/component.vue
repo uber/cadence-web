@@ -20,12 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { FlexGrid, FlexGridItem } from '~components';
 import { container as SettingsWorkflowHistory } from '../settings-workflow-history';
 import SettingsDateFormat from './components/settings-date-format';
 import SettingsHeader from './components/settings-header';
 import SettingsList from './components/settings-list';
 import { SETTINGS_VIEW_LIST } from './constants';
+import { FlexGrid, FlexGridItem } from '~components';
 
 export default {
   data() {
