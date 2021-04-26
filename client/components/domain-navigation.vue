@@ -24,7 +24,7 @@ import debounce from 'lodash-es/debounce';
 import omit from 'lodash-es/omit';
 import { stringify } from 'friendly-querystring';
 import { getKeyValuePairs, mapDomainDescription } from '~helpers';
-import { DetailList } from '~components';
+import DetailList from './detail-list';
 
 const validationMessages = {
   valid: d => `${d} exists`,
