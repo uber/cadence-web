@@ -20,7 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { ButtonFill, ButtonIcon, FlexGrid, FlexGridItem } from '~components';
+import ButtonFill from './button-fill';
+import ButtonIcon from './button-icon';
+import FlexGrid from './flex-grid';
+import FlexGridItem from './flex-grid-item';
 
 export default {
   props: ['newsItems'],
