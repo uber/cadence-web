@@ -22,7 +22,7 @@
 import { connect } from 'vuex-connect';
 
 const gettersToProps = {
-  // TODO
+  // TODO - add connect variables to vuex store in future PR
 };
 
 export default connect({
