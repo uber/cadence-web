@@ -20,9 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import ButtonIcon from '../../button-icon';
-import FlexGrid from '../../flex-grid';
-import FlexGridItem from '../../flex-grid-item';
+import { ButtonIcon, FlexGrid, FlexGridItem } from '~components';
 
 export default {
   name: 'settings-header',

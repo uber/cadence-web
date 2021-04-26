@@ -21,8 +21,8 @@
 // THE SOFTWARE.
 
 import { ToggleButton } from 'vue-js-toggle-button';
-import FlexGrid from '../../flex-grid';
-import FlexGridItem from '../../flex-grid-item';
+import FlexGrid from './flex-grid';
+import FlexGridItem from './flex-grid-item';
 
 export default {
   name: 'settings-toggle',

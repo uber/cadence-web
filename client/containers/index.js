@@ -31,6 +31,9 @@ export {
   getterTypes as routeGetterTypes,
 } from './route';
 export {
+  container as SettingsModal,
+} from './settings-modal';
+export {
   container as SettingsWorkflowHistory,
   getDefaultState as getSettingsWorkflowHistoryDefaultState,
   getters as settingsWorkflowHistoryGetters,
@@ -46,6 +49,9 @@ export {
   container as WorkflowHistory,
   getDefaultState as getWorkflowHistoryDefaultState,
 } from './workflow-history';
+export {
+  container as WorkflowList,
+} from './workflow-list';
 export {
   actions as workflowPendingActions,
   container as WorkflowPending,
