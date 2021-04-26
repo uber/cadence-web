@@ -30,6 +30,7 @@ export {
   getters as routeGetters,
   getterTypes as routeGetterTypes,
 } from './route';
+export { container as SettingsModal } from './settings-modal';
 export {
   container as SettingsWorkflowHistory,
   getDefaultState as getSettingsWorkflowHistoryDefaultState,

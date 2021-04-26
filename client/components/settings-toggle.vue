@@ -20,44 +20,58 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import ButtonFill from '../../button-fill';
-import FlexGrid from '../../flex-grid';
-import FlexGridItem from '../../flex-grid-item';
+import { ToggleButton } from 'vue-js-toggle-button';
+import FlexGrid from './flex-grid';
+import FlexGridItem from './flex-grid-item';
 
 export default {
-  name: 'settings-footer',
+  name: 'settings-toggle',
   props: {
-    submitEnabled: {
+    label: {
+      type: String,
+    },
+    name: {
+      type: String,
+    },
+    value: {
       type: Boolean,
     },
   },
   methods: {
-    onCancelClick() {
-      this.$emit('cancel');
-    },
-    onSubmitClick() {
-      this.$emit('submit');
+    onChange(event) {
+      const { name } = this;
+
+      this.$emit('change', { ...event, name });
     },
   },
   components: {
-    'button-fill': ButtonFill,
     'flex-grid': FlexGrid,
     'flex-grid-item': FlexGridItem,
+    'toggle-button': ToggleButton,
   },
 };
 </script>
 
 <template>
-  <flex-grid align-items="center" justify-content="flex-end">
-    <flex-grid-item width="102px">
-      <button-fill color="tertiary" label="CANCEL" @click="onCancelClick" />
+  <flex-grid class="settings-toggle" align-items="center">
+    <flex-grid-item grow="1">
+      <label :for="name">
+        {{ label }}
+      </label>
     </flex-grid-item>
     <flex-grid-item>
-      <button-fill
-        :disabled="!submitEnabled"
-        label="APPLY"
-        @click="onSubmitClick"
+      <toggle-button
+        :labels="true"
+        :name="name"
+        :value="value"
+        @change="onChange"
       />
     </flex-grid-item>
   </flex-grid>
 </template>
+
+<style lang="stylus">
+.settings-toggle {
+  height: 22px;
+}
+</style>

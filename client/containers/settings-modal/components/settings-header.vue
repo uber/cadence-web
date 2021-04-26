@@ -20,58 +20,51 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { ToggleButton } from 'vue-js-toggle-button';
-import FlexGrid from '../../flex-grid';
-import FlexGridItem from '../../flex-grid-item';
+import { ButtonIcon, FlexGrid, FlexGridItem } from '~components';
 
 export default {
-  name: 'settings-toggle',
+  name: 'settings-header',
   props: {
-    label: {
+    title: {
       type: String,
     },
-    name: {
+    titleSuffix: {
       type: String,
     },
-    value: {
-      type: Boolean,
+  },
+  computed: {
+    displayTitle() {
+      const { title, titleSuffix } = this;
+
+      return [title, titleSuffix].join(' ');
     },
   },
   methods: {
-    onChange(event) {
-      const { name } = this;
-
-      this.$emit('change', { ...event, name });
+    onCloseClick() {
+      this.$emit('close');
     },
   },
   components: {
+    'button-icon': ButtonIcon,
     'flex-grid': FlexGrid,
     'flex-grid-item': FlexGridItem,
-    'toggle-button': ToggleButton,
   },
 };
 </script>
 
 <template>
-  <flex-grid class="settings-toggle" align-items="center">
+  <flex-grid align-items="center" class="settings-header">
     <flex-grid-item grow="1">
-      <label :for="name">
-        {{ label }}
-      </label>
+      <h2>{{ displayTitle }}</h2>
     </flex-grid-item>
-    <flex-grid-item>
-      <toggle-button
-        :labels="true"
-        :name="name"
-        :value="value"
-        @change="onChange"
-      />
+    <flex-grid-item width="40px">
+      <button-icon icon="icon_delete-thin" size="30px" @click="onCloseClick" />
     </flex-grid-item>
   </flex-grid>
 </template>
 
 <style lang="stylus">
-.settings-toggle {
-  height: 22px;
+.settings-header {
+  margin-bottom: 15px;
 }
 </style>

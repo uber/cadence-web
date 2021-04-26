@@ -20,10 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import FlexGrid from '../../flex-grid';
-import FlexGridItem from '../../flex-grid-item';
-import TextInput from '../../text-input';
-import SettingsFooter from './settings-footer';
+import { FlexGrid, FlexGridItem, SettingsFooter, TextInput } from '~components';
 import { getDatetimeFormattedString } from '~helpers';
 
 export default {
