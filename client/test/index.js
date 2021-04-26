@@ -77,7 +77,7 @@ require('nathanboktae-browser-test-utils');
 
 mocha.setup({
   ui: 'bdd',
-  globals: ['Scenario', 'testEl'],
+  globals: ['Scenario', 'testEl', '__VUE_DEVTOOLS_TOAST__'],
   slow: 500,
 });
 
