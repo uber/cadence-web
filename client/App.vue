@@ -29,8 +29,8 @@ import {
   FlexGridItem,
   NewsModal,
   NotificationBar,
-  SettingsModal,
 } from '~components';
+import { SettingsModal } from '~containers';
 import {
   DATE_FORMAT_MMM_D_YYYY,
   DATE_FORMAT_OPTIONS,
@@ -87,6 +87,7 @@ export default {
         type: '',
         timeout: undefined,
       },
+      // TODO - refactor App to store these in vuex store
       settings: {
         dateFormat:
           localStorage.getItem(LOCAL_STORAGE_SETTINGS.dateFormat) ||

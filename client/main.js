@@ -51,10 +51,14 @@ import TaskListPollers from './routes/task-list/pollers';
 import WorkflowArchival from './routes/domain/workflow-archival';
 import WorkflowArchivalAdvanced from './routes/domain/workflow-archival/advanced';
 import WorkflowArchivalBasic from './routes/domain/workflow-archival/basic';
-import WorkflowList from './routes/domain/workflow-list';
 import WorkflowSummary from './routes/workflow/summary';
 import initStore from './store';
-import { Workflow, WorkflowHistory, WorkflowPending } from '~containers';
+import {
+  Workflow,
+  WorkflowHistory,
+  WorkflowList,
+  WorkflowPending,
+} from '~containers';
 
 import { http, injectMomentDurationFormat, jsonTryParse } from '~helpers';
 
