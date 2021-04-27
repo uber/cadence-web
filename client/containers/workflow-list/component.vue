@@ -34,6 +34,7 @@ export default {
   props: [
     'dateFormat',
     'domain',
+    'fetchUrl',
     'filterBy',
     'filterMode',
     'queryString',
@@ -73,15 +74,6 @@ export default {
     'workflow-grid': WorkflowGrid,
   },
   computed: {
-    fetchUrl() {
-      const { domain, filterMode, state } = this;
-
-      if (filterMode === 'advanced') {
-        return `/api/domains/${domain}/workflows/list`;
-      }
-
-      return `/api/domains/${domain}/workflows/${state}`;
-    },
     endTime() {
       const { endTime, range } = this.$route.query;
 
