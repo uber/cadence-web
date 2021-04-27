@@ -36,6 +36,8 @@ export default {
     'domain',
     'filterMode',
     'queryString',
+    'status',
+    'statusName',
     'timeFormat',
     'timezone',
     'workflowId',
@@ -84,7 +86,7 @@ export default {
       return getEndTimeIsoString(range, endTime);
     },
     filterBy() {
-      return ['ALL', 'OPEN'].includes(this.status.value)
+      return ['ALL', 'OPEN'].includes(this.statusName)
         ? 'StartTime'
         : 'CloseTime';
     },
@@ -125,19 +127,11 @@ export default {
     state() {
       const { statusName } = this;
 
-      if (!this.statusName || statusName == 'ALL') {
+      if (!statusName || statusName == 'ALL') {
         return 'all';
       }
 
       return statusName === 'OPEN' ? 'open' : 'closed';
-    },
-    status() {
-      return !this.$route.query || !this.$route.query.status
-        ? this.statusList[0]
-        : this.statusList.find(s => s.value === this.$route.query.status);
-    },
-    statusName() {
-      return this.status.value;
     },
     range() {
       const { state } = this;

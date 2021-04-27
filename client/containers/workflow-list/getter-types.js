@@ -19,24 +19,5 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { connect } from 'vuex-connect';
-import {
-  ROUTE_QUERY_FILTER_MODE,
-  ROUTE_QUERY_QUERY_STRING,
-  ROUTE_QUERY_WORKFLOW_ID,
-  ROUTE_QUERY_WORKFLOW_NAME,
-} from '../route/getter-types';
-import { WORKFLOW_LIST_STATUS, WORKFLOW_LIST_STATUS_NAME } from './getter-types';
-
-const gettersToProps = {
-  filterMode: ROUTE_QUERY_FILTER_MODE,
-  queryString: ROUTE_QUERY_QUERY_STRING,
-  status: WORKFLOW_LIST_STATUS,
-  statusName: WORKFLOW_LIST_STATUS_NAME,
-  workflowId: ROUTE_QUERY_WORKFLOW_ID,
-  workflowName: ROUTE_QUERY_WORKFLOW_NAME,
-};
-
-export default connect({
-  gettersToProps,
-});
+export const WORKFLOW_LIST_STATUS = 'WORKFLOW_LIST_STATUS';
+export const WORKFLOW_LIST_STATUS_NAME = 'WORKFLOW_LIST_STATUS_NAME';

@@ -21,7 +21,8 @@
 
 import Component from './component';
 import Connector from './connector';
+import getters from './getters';
 
 const container = Connector('WorkflowList', Component);
 
-export { container };
+export { container, getters };
