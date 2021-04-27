@@ -25,16 +25,18 @@ const formatMethod = require('./format-method');
 const formatRequestName = require('./format-request-name');
 const uiTransform = require('./ui-transform');
 
-const makeRequest = ({ authTokenHeaders, channel, ctx }) => ({
+const makeRequest = ({ authTokenHeaders, channels, ctx }) => ({
+  bodyTransform,
+  channelName = 'cadence',
   method,
   requestName,
-  bodyTransform,
   responseTransform,
+  serviceName = 'WorkflowService',
 }) => body =>
   new Promise((resolve, reject) => {
     try {
-      channel.request(REQUEST_CONFIG).send(
-        formatMethod(method),
+      channels[channelName].request(REQUEST_CONFIG).send(
+        formatMethod({ method, serviceName }),
         {
           ...authTokenHeaders,
         },

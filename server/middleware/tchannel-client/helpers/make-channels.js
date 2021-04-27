@@ -19,30 +19,48 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const cliTransform = require('./cli-transform');
-const formatBody = require('./format-body');
-const formatMethod = require('./format-method');
-const formatRequestName = require('./format-request-name');
+const path = require('path');
+const isIPv4 = require('is-ipv4-node');
+const TChannelAsThrift = require('tchannel/as/thrift');
+const { PEERS } = require('../constants');
 const lookupAsync = require('./lookup-async');
-const makeChannels = require('./make-channels');
-const makeRequest = require('./make-request');
-const uiTransform = require('./ui-transform');
-const withDomainPagingAndWorkflowExecution = require('./with-domain-paging-and-workflow-execution');
-const withDomainPaging = require('./with-domain-paging');
-const withVerboseWorkflowExecution = require('./with-verbose-workflow-execution');
-const withWorkflowExecution = require('./with-workflow-execution');
 
-module.exports = {
-  cliTransform,
-  formatBody,
-  formatMethod,
-  formatRequestName,
-  lookupAsync,
-  makeChannels,
-  makeRequest,
-  uiTransform,
-  withDomainPagingAndWorkflowExecution,
-  withDomainPaging,
-  withVerboseWorkflowExecution,
-  withWorkflowExecution,
+const makeChannels = async client => {
+  const ipPeers = await Promise.all(
+    PEERS.map(peer => {
+      const [host, port] = peer.split(':');
+
+      if (!isIPv4(host)) {
+        return lookupAsync(host).then(ip => [ip, port].join(':'));
+      } else {
+        return peer;
+      }
+    })
+  );
+
+  const cadenceChannel = client.makeSubChannel({
+    serviceName: 'cadence-frontend',
+    peers: ipPeers,
+    requestDefaults: {
+      hasNoParent: true,
+      headers: { as: 'raw', cn: 'cadence-web' },
+    },
+  });
+
+  const adminTChannelAsThrift = TChannelAsThrift({
+    channel: cadenceChannel,
+    entryPoint: path.join(__dirname, '../../../idl/admin.thrift'),
+  });
+
+  const cadenceTChannelAsThrift = TChannelAsThrift({
+    channel: cadenceChannel,
+    entryPoint: path.join(__dirname, '../../../idl/cadence.thrift'),
+  });
+
+  return {
+    admin: adminTChannelAsThrift,
+    cadence: cadenceTChannelAsThrift,
+  };
 };
+
+module.exports = makeChannels;

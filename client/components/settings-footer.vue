@@ -20,25 +20,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import ButtonFill from '../../button-fill';
-import FlexGrid from '../../flex-grid';
-import FlexGridItem from '../../flex-grid-item';
+import ButtonFill from './button-fill';
+import FlexGrid from './flex-grid';
+import FlexGridItem from './flex-grid-item';
 
 export default {
-  name: 'settings-list',
+  name: 'settings-footer',
   props: {
-    activeViewName: {
-      type: String,
-    },
-    viewList: {
-      type: Array,
+    submitEnabled: {
+      type: Boolean,
     },
   },
   methods: {
-    onClick(view) {
-      if (view.name !== this.activeViewName) {
-        this.$emit('change', { view });
-      }
+    onCancelClick() {
+      this.$emit('cancel');
+    },
+    onSubmitClick() {
+      this.$emit('submit');
     },
   },
   components: {
@@ -50,27 +48,16 @@ export default {
 </script>
 
 <template>
-  <flex-grid class="settings-list" flex-direction="column">
-    <flex-grid-item v-for="view in viewList" :key="view.name" margin="0">
+  <flex-grid align-items="center" justify-content="flex-end">
+    <flex-grid-item width="102px">
+      <button-fill color="tertiary" label="CANCEL" @click="onCancelClick" />
+    </flex-grid-item>
+    <flex-grid-item>
       <button-fill
-        class="settings-list-item"
-        :color="view.name === activeViewName ? 'primary' : 'tertiary'"
-        :label="view.displayName"
-        @click="() => onClick(view)"
+        :disabled="!submitEnabled"
+        label="APPLY"
+        @click="onSubmitClick"
       />
     </flex-grid-item>
   </flex-grid>
 </template>
-
-<style lang="stylus">
-.settings-list {
-  background-color: #fafafa;
-  height: 100%;
-
-  .settings-list-item {
-    padding: 10px 40px 10px 15px;;
-    text-align: left;
-    width: 100%;
-  }
-}
-</style>

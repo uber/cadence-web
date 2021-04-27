@@ -19,37 +19,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export {
-  getDefaultState as getGraphDefaultState,
-  getters as graphGetters,
-  mutations as graphMutations,
-} from './graph';
-export {
-  actionCreator as routeActionCreator,
-  actionTypes as routeActionTypes,
-  getters as routeGetters,
-  getterTypes as routeGetterTypes,
-} from './route';
-export { container as SettingsModal } from './settings-modal';
-export {
-  container as SettingsWorkflowHistory,
-  getDefaultState as getSettingsWorkflowHistoryDefaultState,
-  getters as settingsWorkflowHistoryGetters,
-  mutations as settingsWorkflowHistoryMutations,
-} from './settings-workflow-history';
-export {
-  container as Workflow,
-  getDefaultState as getWorkflowDefaultState,
-  getters as workflowGetters,
-  mutations as workflowMutations,
-} from './workflow';
-export {
-  container as WorkflowHistory,
-  getDefaultState as getWorkflowHistoryDefaultState,
-} from './workflow-history';
-export { container as WorkflowList } from './workflow-list';
-export {
-  actions as workflowPendingActions,
-  container as WorkflowPending,
-  getters as workflowPendingGetters,
-} from './workflow-pending';
+const { CLUSTER_CACHE_TTL } = require('../constants');
+
+let cache = null;
+
+const clusterHandler = async ctx => {
+  if (cache) {
+    return (ctx.body = cache);
+  }
+
+  const cluster = await ctx.cadence.describeCluster();
+
+  cache = { ...cluster, membershipInfo: null };
+  ctx.body = cache;
+
+  // This timeout will clear cache after TTL period.
+  // It will fetch a new value on the next request to clusterHandler.
+  setTimeout(() => (cache = null), CLUSTER_CACHE_TTL);
+};
+
+module.exports = clusterHandler;

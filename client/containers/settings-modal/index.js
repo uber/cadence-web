@@ -19,40 +19,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const path = require('path');
-const isIPv4 = require('is-ipv4-node');
-const TChannelAsThrift = require('tchannel/as/thrift');
-const { PEERS } = require('../constants');
-const lookupAsync = require('./lookup-async');
+import Component from './component';
 
-const makeChannel = async client => {
-  const ipPeers = await Promise.all(
-    PEERS.map(peer => {
-      const [host, port] = peer.split(':');
+// TODO - refactor App.vue to reference props from vuex store
+// const container = Connector('SettingsModal', Component);
+const container = Component;
 
-      if (!isIPv4(host)) {
-        return lookupAsync(host).then(ip => [ip, port].join(':'));
-      } else {
-        return peer;
-      }
-    })
-  );
-
-  const cadenceChannel = client.makeSubChannel({
-    serviceName: 'cadence-frontend',
-    peers: ipPeers,
-    requestDefaults: {
-      hasNoParent: true,
-      headers: { as: 'raw', cn: 'cadence-web' },
-    },
-  });
-
-  const tchannelAsThrift = TChannelAsThrift({
-    channel: cadenceChannel,
-    entryPoint: path.join(__dirname, '../../../idl/cadence.thrift'),
-  });
-
-  return tchannelAsThrift;
-};
-
-module.exports = makeChannel;
+export { container };

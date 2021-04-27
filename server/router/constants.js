@@ -1,5 +1,4 @@
-<script>
-// Copyright (c) 2017-2021 Uber Technologies Inc.
+// Copyright (c) 2021 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,53 +19,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import ButtonIcon from '../../button-icon';
-import FlexGrid from '../../flex-grid';
-import FlexGridItem from '../../flex-grid-item';
+const ONE_HOUR_IN_MILLISECONDS = 60 * 60 * 1000;
+const CLUSTER_CACHE_TTL = ONE_HOUR_IN_MILLISECONDS;
 
-export default {
-  name: 'settings-header',
-  props: {
-    title: {
-      type: String,
-    },
-    titleSuffix: {
-      type: String,
-    },
-  },
-  computed: {
-    displayTitle() {
-      const { title, titleSuffix } = this;
-
-      return [title, titleSuffix].join(' ');
-    },
-  },
-  methods: {
-    onCloseClick() {
-      this.$emit('close');
-    },
-  },
-  components: {
-    'button-icon': ButtonIcon,
-    'flex-grid': FlexGrid,
-    'flex-grid-item': FlexGridItem,
-  },
+module.exports = {
+  CLUSTER_CACHE_TTL,
 };
-</script>
-
-<template>
-  <flex-grid align-items="center" class="settings-header">
-    <flex-grid-item grow="1">
-      <h2>{{ displayTitle }}</h2>
-    </flex-grid-item>
-    <flex-grid-item width="40px">
-      <button-icon icon="icon_delete-thin" size="30px" @click="onCloseClick" />
-    </flex-grid-item>
-  </flex-grid>
-</template>
-
-<style lang="stylus">
-.settings-header {
-  margin-bottom: 15px;
-}
-</style>
