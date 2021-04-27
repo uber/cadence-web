@@ -48,7 +48,7 @@ export default {
       error: undefined,
       npt: undefined,
       nptAlt: undefined,
-      statuses: STATUS_LIST,
+      statusList: STATUS_LIST,
       maxRetentionDays: undefined,
     };
   },
@@ -133,8 +133,8 @@ export default {
     },
     status() {
       return !this.$route.query || !this.$route.query.status
-        ? this.statuses[0]
-        : this.statuses.find(s => s.value === this.$route.query.status);
+        ? this.statusList[0]
+        : this.statusList.find(s => s.value === this.$route.query.status);
     },
     statusName() {
       return this.status.value;
@@ -508,7 +508,7 @@ export default {
         <v-select
           class="status"
           :value="status"
-          :options="statuses"
+          :options="statusList"
           :on-change="setStatus"
           :searchable="false"
           data-cy="status-filter"
