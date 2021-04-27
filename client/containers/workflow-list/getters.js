@@ -19,11 +19,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { STATUS_LIST } from './constants';
+import {
+  STATUS_ALL,
+  STATUS_LIST,
+  STATUS_OPEN,
+} from './constants';
 import {
   WORKFLOW_LIST_FILTER_MODE,
   WORKFLOW_LIST_QUERY_STRING,
   WORKFLOW_LIST_RANGE,
+  WORKFLOW_LIST_STATE,
   WORKFLOW_LIST_STATUS,
   WORKFLOW_LIST_STATUS_NAME,
   WORKFLOW_LIST_WORKFLOW_ID,
@@ -35,6 +40,15 @@ const getters = {
   [WORKFLOW_LIST_FILTER_MODE]: (_, getters) => getters[ROUTE_QUERY].filterMode || 'basic',
   [WORKFLOW_LIST_QUERY_STRING]: (_, getters) => getters[ROUTE_QUERY].queryString || '',
   [WORKFLOW_LIST_RANGE]: (_, getters) => getters[ROUTE_QUERY].range,
+  [WORKFLOW_LIST_STATE]: (_, getters) => {
+    const statusName = getters[WORKFLOW_LIST_STATUS_NAME];
+
+    if (!statusName || statusName == STATUS_ALL) {
+      return 'all';
+    }
+
+    return statusName === STATUS_OPEN ? 'open' : 'closed';
+  },
   [WORKFLOW_LIST_STATUS]: (_, getters) => {
     const { status } = getters[ROUTE_QUERY];
     return !status

@@ -36,6 +36,7 @@ export default {
     'domain',
     'filterMode',
     'queryString',
+    'state',
     'status',
     'statusName',
     'timeFormat',
@@ -123,15 +124,6 @@ export default {
       }
 
       return getStartTimeIsoString(range, startTime);
-    },
-    state() {
-      const { statusName } = this;
-
-      if (!statusName || statusName == 'ALL') {
-        return 'all';
-      }
-
-      return statusName === 'OPEN' ? 'open' : 'closed';
     },
     range() {
       const { state } = this;
