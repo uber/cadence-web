@@ -21,7 +21,7 @@
 // THE SOFTWARE.
 
 import { RecycleScroller } from 'vue-virtual-scroller';
-import { NoResults } from '~components';
+import NoResults from './no-results';
 
 export default {
   name: 'workflow-grid',
