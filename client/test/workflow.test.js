@@ -337,14 +337,14 @@ describe('Workflow', () => {
 
     describe('Actions', () => {
       it('should offer the user to terminate a running workflow, prompting the user for a termination reason', async function test(done) {
+        this.timeout(4000);
+
         const [summaryEl] = await summaryTest(this.test);
         const terminateEl = await summaryEl.waitUntilExists(
           'aside.actions button'
         );
 
         terminateEl.trigger('click');
-
-        this.timeout(500);
 
         const confirmTerminateEl = await summaryEl.waitUntilExists(
           '[data-modal="confirm-termination"]'
