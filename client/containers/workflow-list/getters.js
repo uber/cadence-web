@@ -20,12 +20,23 @@
 // THE SOFTWARE.
 
 import { STATUS_LIST } from './constants';
-import { WORKFLOW_LIST_STATUS, WORKFLOW_LIST_STATUS_NAME } from './getter-types';
-import { ROUTE_QUERY_STATUS } from '../route/getter-types';
+import {
+  WORKFLOW_LIST_FILTER_MODE,
+  WORKFLOW_LIST_QUERY_STRING,
+  WORKFLOW_LIST_RANGE,
+  WORKFLOW_LIST_STATUS,
+  WORKFLOW_LIST_STATUS_NAME,
+  WORKFLOW_LIST_WORKFLOW_ID,
+  WORKFLOW_LIST_WORKFLOW_NAME,
+} from './getter-types';
+import { ROUTE_QUERY } from '../route/getter-types';
 
 const getters = {
+  [WORKFLOW_LIST_FILTER_MODE]: (_, getters) => getters[ROUTE_QUERY].filterMode || 'basic',
+  [WORKFLOW_LIST_QUERY_STRING]: (_, getters) => getters[ROUTE_QUERY].queryString || '',
+  [WORKFLOW_LIST_RANGE]: (_, getters) => getters[ROUTE_QUERY].range,
   [WORKFLOW_LIST_STATUS]: (_, getters) => {
-    const status = getters[ROUTE_QUERY_STATUS];
+    const { status } = getters[ROUTE_QUERY];
     return !status
         ? STATUS_LIST[0]
         : STATUS_LIST.find(item => item.value === status);
@@ -33,6 +44,8 @@ const getters = {
   [WORKFLOW_LIST_STATUS_NAME]: (_, getters) => {
     return getters[WORKFLOW_LIST_STATUS].value;
   },
+  [WORKFLOW_LIST_WORKFLOW_ID]: (_, getters) => getters[ROUTE_QUERY].workflowId,
+  [WORKFLOW_LIST_WORKFLOW_NAME]: (_, getters) => getters[ROUTE_QUERY].workflowName,
 };
 
 export default getters;
