@@ -34,6 +34,7 @@ export default {
   props: [
     'dateFormat',
     'domain',
+    'filterMode',
     'timeFormat',
     'timezone',
     'workflowId',
@@ -85,9 +86,6 @@ export default {
       return ['ALL', 'OPEN'].includes(this.status.value)
         ? 'StartTime'
         : 'CloseTime';
-    },
-    filterMode() {
-      return this.$route.query.filterMode || 'basic';
     },
     formattedResults() {
       const { dateFormat, results, timeFormat, timezone } = this;

@@ -20,9 +20,14 @@
 // THE SOFTWARE.
 
 import { connect } from 'vuex-connect';
-import { ROUTE_QUERY_WORKFLOW_ID, ROUTE_QUERY_WORKFLOW_NAME } from '../route/getter-types';
+import {
+  ROUTE_QUERY_FILTER_MODE,
+  ROUTE_QUERY_WORKFLOW_ID,
+  ROUTE_QUERY_WORKFLOW_NAME,
+} from '../route/getter-types';
 
 const gettersToProps = {
+  filterMode: ROUTE_QUERY_FILTER_MODE,
   workflowId: ROUTE_QUERY_WORKFLOW_ID,
   workflowName: ROUTE_QUERY_WORKFLOW_NAME,
 };
