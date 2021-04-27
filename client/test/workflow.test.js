@@ -344,7 +344,7 @@ describe('Workflow', () => {
 
         terminateEl.trigger('click');
 
-        await Promise.delay(1000);
+        await Promise.delay(100);
 
         const confirmTerminateEl = await summaryEl.waitUntilExists(
           '[data-modal="confirm-termination"]'
