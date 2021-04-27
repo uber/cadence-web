@@ -25,7 +25,7 @@ const TChannel = require('tchannel');
 
 const {
   cliTransform,
-  makeChannel,
+  makeChannels,
   makeRequest,
   withDomainPaging,
   withWorkflowExecution,
@@ -37,10 +37,10 @@ const tchannelClient = async function(ctx, next) {
   const { authTokenHeaders = {} } = ctx;
 
   const client = TChannel();
-  const channel = await makeChannel(client);
+  const channels = await makeChannels(client);
   const request = makeRequest({
     authTokenHeaders,
-    channel,
+    channels,
     ctx,
   });
 
@@ -54,6 +54,12 @@ const tchannelClient = async function(ctx, next) {
       method: 'ListClosedWorkflowExecutions',
       requestName: 'list',
       bodyTransform: withDomainPaging(ctx),
+    }),
+    describeCluster: request({
+      channelName: 'admin',
+      method: 'DescribeCluster',
+      requestName: 'describe',
+      serviceName: 'AdminService',
     }),
     describeDomain: request({
       method: 'DescribeDomain',

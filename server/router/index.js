@@ -22,6 +22,7 @@
 const Router = require('koa-router');
 
 const {
+  clusterHandler,
   domainAuthorizationHandler,
   domainHandler,
   domainListHandler,
@@ -45,7 +46,10 @@ const { listWorkflows } = require('./helpers');
 
 const router = new Router();
 
+router.get('/api/cluster', clusterHandler);
+
 router.get('/api/domains', domainListHandler);
+
 router.get('/api/domains/:domain', domainHandler);
 
 /**

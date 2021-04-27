@@ -19,6 +19,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const formatMethod = ({ method, serviceName }) => `${serviceName}::${method}`;
+const { CLUSTER_CACHE_TTL } = require('../constants');
 
-module.exports = formatMethod;
+let cache = null;
+
+const clusterHandler = async ctx => {
+  if (cache) {
+    return (ctx.body = cache);
+  }
+
+  const cluster = await ctx.cadence.describeCluster();
+
+  cache = { ...cluster, membershipInfo: null };
+  ctx.body = cache;
+
+  // This timeout will clear cache after TTL period.
+  // It will fetch a new value on the next request to clusterHandler.
+  setTimeout(() => (cache = null), CLUSTER_CACHE_TTL);
+};
+
+module.exports = clusterHandler;

@@ -19,6 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+const clusterHandler = require('./cluster-handler');
 const domainAuthorizationHandler = require('./domain-authorization-handler');
 const domainHandler = require('./domain-handler');
 const domainListHandler = require('./domain-list-handler');
@@ -38,6 +39,7 @@ const workflowSignalHandler = require('./workflow-signal-handler');
 const workflowTerminateHandler = require('./workflow-terminate-handler');
 
 module.exports = {
+  clusterHandler,
   domainAuthorizationHandler,
   domainHandler,
   domainListHandler,
