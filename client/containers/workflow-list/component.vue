@@ -35,6 +35,7 @@ export default {
     'dateFormat',
     'domain',
     'filterMode',
+    'queryString',
     'timeFormat',
     'timezone',
     'workflowId',
@@ -198,9 +199,6 @@ export default {
       };
 
       return criteria;
-    },
-    queryString() {
-      return this.$route.query.queryString || '';
     },
     minStartDate() {
       return this.getMinStartDate();
@@ -478,7 +476,7 @@ export default {
             placeholder=" "
             key="sql-query"
             name="queryString"
-            v-bind:value="$route.query.queryString"
+            v-bind:value="queryString"
             @input="setWorkflowFilter"
           />
           <label for="queryString">Query</label>

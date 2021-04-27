@@ -22,12 +22,14 @@
 import { connect } from 'vuex-connect';
 import {
   ROUTE_QUERY_FILTER_MODE,
+  ROUTE_QUERY_QUERY_STRING,
   ROUTE_QUERY_WORKFLOW_ID,
   ROUTE_QUERY_WORKFLOW_NAME,
 } from '../route/getter-types';
 
 const gettersToProps = {
   filterMode: ROUTE_QUERY_FILTER_MODE,
+  queryString: ROUTE_QUERY_QUERY_STRING,
   workflowId: ROUTE_QUERY_WORKFLOW_ID,
   workflowName: ROUTE_QUERY_WORKFLOW_NAME,
 };
