@@ -20,6 +20,8 @@
 // THE SOFTWARE.
 
 import {
+  FILTER_BY_START_TIME,
+  FILTER_BY_CLOSE_TIME,
   STATE_ALL,
   STATE_CLOSED,
   STATE_OPEN,
@@ -28,6 +30,7 @@ import {
   STATUS_OPEN,
 } from './constants';
 import {
+  WORKFLOW_LIST_FILTER_BY,
   WORKFLOW_LIST_FILTER_MODE,
   WORKFLOW_LIST_QUERY_STRING,
   WORKFLOW_LIST_RANGE,
@@ -40,6 +43,12 @@ import {
 import { ROUTE_QUERY } from '../route/getter-types';
 
 const getters = {
+  [WORKFLOW_LIST_FILTER_BY]: (_, getters) => {
+    const statusName = getters[WORKFLOW_LIST_STATUS_NAME];
+    return [STATUS_ALL, STATUS_OPEN].includes(statusName)
+        ? FILTER_BY_START_TIME
+        : FILTER_BY_CLOSE_TIME;
+  },
   [WORKFLOW_LIST_FILTER_MODE]: (_, getters) => getters[ROUTE_QUERY].filterMode || 'basic',
   [WORKFLOW_LIST_QUERY_STRING]: (_, getters) => getters[ROUTE_QUERY].queryString || '',
   [WORKFLOW_LIST_RANGE]: (_, getters) => getters[ROUTE_QUERY].range,

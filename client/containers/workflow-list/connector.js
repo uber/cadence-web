@@ -21,6 +21,7 @@
 
 import { connect } from 'vuex-connect';
 import {
+  WORKFLOW_LIST_FILTER_BY,
   WORKFLOW_LIST_FILTER_MODE,
   WORKFLOW_LIST_QUERY_STRING,
   WORKFLOW_LIST_STATE,
@@ -31,6 +32,7 @@ import {
 } from './getter-types';
 
 const gettersToProps = {
+  filterBy: WORKFLOW_LIST_FILTER_BY,
   filterMode: WORKFLOW_LIST_FILTER_MODE,
   queryString: WORKFLOW_LIST_QUERY_STRING,
   state: WORKFLOW_LIST_STATE,
