@@ -20,6 +20,9 @@
 // THE SOFTWARE.
 
 import {
+  STATE_ALL,
+  STATE_CLOSED,
+  STATE_OPEN,
   STATUS_ALL,
   STATUS_LIST,
   STATUS_OPEN,
@@ -44,10 +47,10 @@ const getters = {
     const statusName = getters[WORKFLOW_LIST_STATUS_NAME];
 
     if (!statusName || statusName == STATUS_ALL) {
-      return 'all';
+      return STATE_ALL;
     }
 
-    return statusName === STATUS_OPEN ? 'open' : 'closed';
+    return statusName === STATUS_OPEN ? STATE_OPEN : STATE_CLOSED;
   },
   [WORKFLOW_LIST_STATUS]: (_, getters) => {
     const { status } = getters[ROUTE_QUERY];
