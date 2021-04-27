@@ -20,11 +20,28 @@
 // THE SOFTWARE.
 
 import { get } from 'lodash-es';
-import { ROUTE_PARAMS, ROUTE_QUERY } from './getter-types';
+import {
+  ROUTE_PARAMS,
+  ROUTE_PARAMS_DOMAIN,
+  ROUTE_QUERY,
+  ROUTE_QUERY_FILTER_MODE,
+  ROUTE_QUERY_QUERY_STRING,
+  ROUTE_QUERY_RANGE,
+  ROUTE_QUERY_STATUS,
+  ROUTE_QUERY_WORKFLOW_ID,
+  ROUTE_QUERY_WORKFLOW_NAME,
+} from './getter-types';
 
 const getters = {
   [ROUTE_PARAMS]: state => get(state, 'route.params', {}),
+  [ROUTE_PARAMS_DOMAIN]: (_, getters) => getters[ROUTE_PARAMS].domain,
   [ROUTE_QUERY]: state => get(state, 'route.query', {}),
+  [ROUTE_QUERY_FILTER_MODE]: (_, getters) => getters[ROUTE_QUERY].filterMode,
+  [ROUTE_QUERY_QUERY_STRING]: (_, getters) => getters[ROUTE_QUERY].queryString,
+  [ROUTE_QUERY_RANGE]: (_, getters) => getters[ROUTE_QUERY].range,
+  [ROUTE_QUERY_STATUS]: (_, getters) => getters[ROUTE_QUERY].status,
+  [ROUTE_QUERY_WORKFLOW_ID]: (_, getters) => getters[ROUTE_QUERY].workflowId,
+  [ROUTE_QUERY_WORKFLOW_NAME]: (_, getters) => getters[ROUTE_QUERY].workflowName,
 };
 
 export default getters;

@@ -20,9 +20,11 @@
 // THE SOFTWARE.
 
 import { connect } from 'vuex-connect';
+import { ROUTE_QUERY_WORKFLOW_ID, ROUTE_QUERY_WORKFLOW_NAME } from '../route/getter-types';
 
 const gettersToProps = {
-  // TODO - add connect variables to vuex store in future PR
+  workflowId: ROUTE_QUERY_WORKFLOW_ID,
+  workflowName: ROUTE_QUERY_WORKFLOW_NAME,
 };
 
 export default connect({

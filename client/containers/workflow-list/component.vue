@@ -32,7 +32,12 @@ import {
 
 export default {
   props: [
-    'dateFormat', 'domain', 'timeFormat', 'timezone'
+    'dateFormat',
+    'domain',
+    'timeFormat',
+    'timezone',
+    'workflowId',
+    'workflowName'
   ],
   data() {
     return {
@@ -201,12 +206,6 @@ export default {
     },
     minStartDate() {
       return this.getMinStartDate();
-    },
-    workflowId() {
-      return this.$route.query.workflowId;
-    },
-    workflowName() {
-      return this.$route.query.workflowName;
     },
   },
   methods: {
@@ -494,7 +493,7 @@ export default {
             class="workflow-id"
             placeholder=" "
             name="workflowId"
-            v-bind:value="$route.query.workflowId"
+            v-bind:value="workflowId"
             @input="setWorkflowFilter"
           />
           <label for="workflowId">Workflow ID</label>
@@ -505,7 +504,7 @@ export default {
             class="workflow-name"
             placeholder=" "
             name="workflowName"
-            v-bind:value="$route.query.workflowName"
+            v-bind:value="workflowName"
             @input="setWorkflowFilter"
           />
           <label for="workflowName">Workflow Name</label>
