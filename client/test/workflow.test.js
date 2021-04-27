@@ -336,7 +336,7 @@ describe('Workflow', () => {
     });
 
     describe('Actions', () => {
-      it('should offer the user to terminate a running workflow, prompting the user for a termination reason', async function test() {
+      it('should offer the user to terminate a running workflow, prompting the user for a termination reason', async function test(done) {
         const [summaryEl] = await summaryTest(this.test);
         const terminateEl = await summaryEl.waitUntilExists(
           'aside.actions button'
@@ -357,6 +357,8 @@ describe('Workflow', () => {
           .contain('button[name="button-terminate"]')
           .and.contain('button[name="button-cancel"]')
           .and.contain('input[placeholder="Reason"]');
+
+        done();
       });
 
       it('should terminate the workflow with the provided reason', async function test() {
