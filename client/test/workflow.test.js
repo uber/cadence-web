@@ -343,6 +343,9 @@ describe('Workflow', () => {
         );
 
         terminateEl.trigger('click');
+
+        this.timeout(1000);
+
         const confirmTerminateEl = await summaryEl.waitUntilExists(
           '[data-modal="confirm-termination"]'
         );
