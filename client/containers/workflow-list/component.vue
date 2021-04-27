@@ -22,6 +22,7 @@
 
 import moment from 'moment';
 import debounce from 'lodash-es/debounce';
+import { STATUS_LIST } from './constants';
 import { DateRangePicker, WorkflowGrid } from '~components';
 import {
   getDatetimeFormattedString,
@@ -30,7 +31,9 @@ import {
 } from '~helpers';
 
 export default {
-  props: ['dateFormat', 'domain', 'timeFormat', 'timezone'],
+  props: [
+    'dateFormat', 'domain', 'timeFormat', 'timezone'
+  ],
   data() {
     return {
       loading: false,
@@ -38,17 +41,7 @@ export default {
       error: undefined,
       npt: undefined,
       nptAlt: undefined,
-      statuses: [
-        { value: 'ALL', label: 'All' },
-        { value: 'OPEN', label: 'Open' },
-        { value: 'CLOSED', label: 'Closed' },
-        { value: 'COMPLETED', label: 'Completed' },
-        { value: 'FAILED', label: 'Failed' },
-        { value: 'CANCELED', label: 'Cancelled' },
-        { value: 'TERMINATED', label: 'Terminated' },
-        { value: 'CONTINUED_AS_NEW', label: 'Continued As New' },
-        { value: 'TIMED_OUT', label: 'Timed Out' },
-      ],
+      statuses: STATUS_LIST,
       maxRetentionDays: undefined,
     };
   },
