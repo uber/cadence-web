@@ -398,17 +398,13 @@ export default {
         />
       </template>
       <template v-else>
-        <div class="field workflow-id">
-          <input
-            type="search"
-            class="workflow-id"
-            placeholder=" "
-            name="workflowId"
-            v-bind:value="workflowId"
-            @input="onFilterChange"
-          />
-          <label for="workflowId">Workflow ID</label>
-        </div>
+        <text-input
+          label="Workflow ID"
+          type="search"
+          name="workflowId"
+          :value="workflowId"
+          @input="onFilterChange"
+        />
         <div class="field workflow-name">
           <input
             type="search"
