@@ -33,8 +33,6 @@ import {
   STATUS_OPEN,
 } from './constants';
 import {
-  WORKFLOW_LIST_FETCH_DOMAIN_URL,
-  WORKFLOW_LIST_FETCH_WORKFLOWS_BASE_URL,
   WORKFLOW_LIST_FETCH_WORKFLOWS_URL,
   WORKFLOW_LIST_FILTER_BY,
   WORKFLOW_LIST_FILTER_MODE,
@@ -46,20 +44,19 @@ import {
   WORKFLOW_LIST_WORKFLOW_ID,
   WORKFLOW_LIST_WORKFLOW_NAME,
 } from './getter-types';
+import { getFetchWorkflowsUrl } from './helpers';
 
 const getters = {
-  [WORKFLOW_LIST_FETCH_DOMAIN_URL]: (_, getters) =>
-    `/api/domains/${getters[ROUTE_PARAMS_DOMAIN]}`,
-  [WORKFLOW_LIST_FETCH_WORKFLOWS_BASE_URL]: (_, getters) =>
-    `${getters[WORKFLOW_LIST_FETCH_DOMAIN_URL]}/workflows`,
   [WORKFLOW_LIST_FETCH_WORKFLOWS_URL]: (_, getters) => {
-    const workflowsBaseUrl = getters[WORKFLOW_LIST_FETCH_WORKFLOWS_BASE_URL];
+    const domain = getters[ROUTE_PARAMS_DOMAIN];
     const filterMode = getters[WORKFLOW_LIST_FILTER_MODE];
     const state = getters[WORKFLOW_LIST_STATE];
 
-    return filterMode === FILTER_MODE_ADVANCED
-      ? `${workflowsBaseUrl}/list`
-      : `${workflowsBaseUrl}/${state}`;
+    return getFetchWorkflowsUrl({
+      domain,
+      filterMode,
+      state,
+    });
   },
   [WORKFLOW_LIST_FILTER_BY]: (_, getters) => {
     const statusName = getters[WORKFLOW_LIST_STATUS_NAME];

@@ -40,7 +40,7 @@ export default {
   props: [
     'dateFormat',
     'domain',
-    'fetchUrl',
+    'fetchWorkflowsUrl',
     'filterBy',
     'filterMode',
     'queryString',
@@ -243,7 +243,7 @@ export default {
         }
 
         const { workflows: wfs, nextPageToken } = await this.fetch(
-          this.fetchUrl,
+          this.fetchWorkflowsUrl,
           query
         );
 
