@@ -28,10 +28,29 @@ const actionCreator = router => ({
   [ROUTE_UPDATE_QUERY]: ({ getters }, args) => {
     const query = getters[ROUTE_QUERY];
 
+    // omit entries with empty string to be removed from URL query params
+    const omittedKeys = [];
+    const omittedArgs = Object.entries(args).reduce((accumulator, [key, value]) => {
+      if (value === '') {
+        omittedKeys.push(key);
+        return accumulator;
+      }
+      accumulator[key] = value;
+      return accumulator;
+    }, {});
+
+    const omittedQuery = Object.entries(query).reduce((accumulator, [key, value]) => {
+      if (omittedKeys.includes(key)) {
+        return accumulator;
+      }
+      accumulator[key] = value;
+      return accumulator;
+    }, {});
+
     router.replace({
       query: {
-        ...query,
-        ...args,
+        ...omittedQuery,
+        ...omittedArgs,
       },
     });
   },

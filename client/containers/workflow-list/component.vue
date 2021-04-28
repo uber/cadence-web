@@ -318,13 +318,16 @@ export default {
       typeof Mocha === 'undefined' ? 200 : 60,
       { maxWait: 1000 }
     ),
-    setWorkflowFilter(e) {
-      const target = e.target || e.testTarget; // test hook since Event.target is readOnly and unsettable
-
-      this.$router.replaceQueryParam(target.getAttribute('name'), target.value);
+    onFilterChange(event) {
+      const target = event.target || event.testTarget; // test hook since Event.target is readOnly and unsettable
+      const name = target.getAttribute('name');
+      const value = target.value;
+      this.$emit('onFilterChange', { [name]: value });
     },
     onStatusChange(status) {
-      this.$emit('onStatusChange', status);
+      if (status) {
+        this.$emit('onFilterChange', { status: status.value });
+      }
     },
     isRangeValid(range, minStartDate) {
       if (typeof range === 'string') {
@@ -447,7 +450,7 @@ export default {
             key="sql-query"
             name="queryString"
             v-bind:value="queryString"
-            @input="setWorkflowFilter"
+            @input="onFilterChange"
           />
           <label for="queryString">Query</label>
         </div>
@@ -460,7 +463,7 @@ export default {
             placeholder=" "
             name="workflowId"
             v-bind:value="workflowId"
-            @input="setWorkflowFilter"
+            @input="onFilterChange"
           />
           <label for="workflowId">Workflow ID</label>
         </div>
@@ -471,7 +474,7 @@ export default {
             placeholder=" "
             name="workflowName"
             v-bind:value="workflowName"
-            @input="setWorkflowFilter"
+            @input="onFilterChange"
           />
           <label for="workflowName">Workflow Name</label>
         </div>
