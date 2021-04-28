@@ -29,7 +29,10 @@ import {
   getEndTimeIsoString,
   getStartTimeIsoString,
 } from '~helpers';
-import { isRangeValid } from './helpers';
+import {
+  isRangeValid,
+  isRouteRangeValid,
+} from './helpers';
 
 export default {
   props: [
@@ -334,15 +337,12 @@ export default {
     isRouteRangeValid(minStartDate) {
       const { endTime, range, startTime } = this.$route.query || {};
 
-      if (range) {
-        return isRangeValid(range, minStartDate);
-      }
-
-      if (startTime && endTime) {
-        return isRangeValid({ endTime, startTime }, minStartDate);
-      }
-
-      return false;
+      return isRouteRangeValid({
+        endTime,
+        minStartDate,
+        range,
+        startTime,
+      });
     },
     setRange(range) {
       const query = { ...this.$route.query };
