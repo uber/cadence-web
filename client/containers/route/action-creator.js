@@ -23,14 +23,14 @@ import { ROUTE_PUSH, ROUTE_REPLACE, ROUTE_UPDATE_QUERY } from './action-types';
 import { ROUTE_QUERY } from './getter-types';
 
 const actionCreator = router => ({
-  [ROUTE_PUSH]: (_, args) => router.push(args),
-  [ROUTE_REPLACE]: (_, args) => router.replace(args),
-  [ROUTE_UPDATE_QUERY]: ({ getters }, args) => {
+  [ROUTE_PUSH]: (_, payload) => router.push(payload),
+  [ROUTE_REPLACE]: (_, payload) => router.replace(payload),
+  [ROUTE_UPDATE_QUERY]: ({ getters }, payload) => {
     const query = getters[ROUTE_QUERY];
 
     // omit entries with empty string to be removed from URL query params
     const omittedKeys = [];
-    const omittedArgs = Object.entries(args).reduce((accumulator, [key, value]) => {
+    const omittedArgs = Object.entries(payload).reduce((accumulator, [key, value]) => {
       if (value === '') {
         omittedKeys.push(key);
         return accumulator;
