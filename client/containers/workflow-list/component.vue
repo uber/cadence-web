@@ -403,13 +403,9 @@ export default {
 
       return query;
     },
-    toggleFilter() {
-      const { query } = this.$route;
-
+    onFilterModeClick() {
       this.clearState();
-      const filterMode = this.filterMode === 'advanced' ? 'basic' : 'advanced';
-
-      this.$router.replace({ query: { ...query, filterMode } });
+      this.$emit('onFilterModeClick');
     },
     onWorkflowGridScroll(startIndex, endIndex) {
       if (!this.npt && !this.nptAlt) {
@@ -503,7 +499,7 @@ export default {
           @change="setRange"
         />
       </template>
-      <a class="toggle-filter" @click="toggleFilter">{{
+      <a class="toggle-filter" @click="onFilterModeClick">{{
         filterMode === 'advanced' ? 'basic' : 'advanced'
       }}</a>
     </header>
