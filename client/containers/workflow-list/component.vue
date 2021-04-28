@@ -38,6 +38,7 @@ import {
 import {
   formatResults,
   getCriteria,
+  getMinStartDate,
   isRangeValid,
   isRouteRangeValid,
 } from './helpers';
@@ -289,16 +290,15 @@ export default {
     getMinStartDate() {
       const {
         maxRetentionDays,
-        status: { value: status },
+        now,
+        statusName,
       } = this;
 
-      if (['OPEN', 'ALL'].includes(status)) {
-        return null;
-      }
-
-      return moment(this.now)
-        .subtract(maxRetentionDays, 'days')
-        .startOf('days');
+      return getMinStartDate({
+        maxRetentionDays,
+        now,
+        statusName,
+      });
     },
     refreshWorkflows: debounce(
       function refreshWorkflows() {
