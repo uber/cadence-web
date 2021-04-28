@@ -20,11 +20,7 @@
 // THE SOFTWARE.
 
 import { get } from 'lodash-es';
-import {
-  ROUTE_PARAMS,
-  ROUTE_PARAMS_DOMAIN,
-  ROUTE_QUERY,
-} from './getter-types';
+import { ROUTE_PARAMS, ROUTE_PARAMS_DOMAIN, ROUTE_QUERY } from './getter-types';
 
 const getters = {
   [ROUTE_PARAMS]: state => get(state, 'route.params', {}),

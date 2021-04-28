@@ -44,7 +44,7 @@ export default {
     'timeFormat',
     'timezone',
     'workflowId',
-    'workflowName'
+    'workflowName',
   ],
   data() {
     return {
@@ -322,6 +322,7 @@ export default {
       const target = event.target || event.testTarget; // test hook since Event.target is readOnly and unsettable
       const name = target.getAttribute('name');
       const value = target.value;
+
       this.$emit('onFilterChange', { [name]: value });
     },
     onStatusChange(status) {

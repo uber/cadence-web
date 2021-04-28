@@ -19,6 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+import { ROUTE_PARAMS_DOMAIN, ROUTE_QUERY } from '../route/getter-types';
 import {
   FILTER_BY_START_TIME,
   FILTER_BY_CLOSE_TIME,
@@ -45,28 +46,32 @@ import {
   WORKFLOW_LIST_WORKFLOW_ID,
   WORKFLOW_LIST_WORKFLOW_NAME,
 } from './getter-types';
-import { ROUTE_PARAMS_DOMAIN, ROUTE_QUERY } from '../route/getter-types';
 
 const getters = {
-  [WORKFLOW_LIST_FETCH_DOMAIN_URL]: (_, getters) => `/api/domains/${getters[ROUTE_PARAMS_DOMAIN]}`,
-  [WORKFLOW_LIST_FETCH_WORKFLOWS_BASE_URL]: (_, getters) => `${getters[WORKFLOW_LIST_FETCH_DOMAIN_URL]}/workflows`,
+  [WORKFLOW_LIST_FETCH_DOMAIN_URL]: (_, getters) =>
+    `/api/domains/${getters[ROUTE_PARAMS_DOMAIN]}`,
+  [WORKFLOW_LIST_FETCH_WORKFLOWS_BASE_URL]: (_, getters) =>
+    `${getters[WORKFLOW_LIST_FETCH_DOMAIN_URL]}/workflows`,
   [WORKFLOW_LIST_FETCH_WORKFLOWS_URL]: (_, getters) => {
     const workflowsBaseUrl = getters[WORKFLOW_LIST_FETCH_WORKFLOWS_BASE_URL];
     const filterMode = getters[WORKFLOW_LIST_FILTER_MODE];
     const state = getters[WORKFLOW_LIST_STATE];
 
-    return filterMode === FILTER_MODE_ADVANCED ?
-      `${workflowsBaseUrl}/list` :
-      `${workflowsBaseUrl}/${state}`;
+    return filterMode === FILTER_MODE_ADVANCED
+      ? `${workflowsBaseUrl}/list`
+      : `${workflowsBaseUrl}/${state}`;
   },
   [WORKFLOW_LIST_FILTER_BY]: (_, getters) => {
     const statusName = getters[WORKFLOW_LIST_STATUS_NAME];
+
     return [STATUS_ALL, STATUS_OPEN].includes(statusName)
-        ? FILTER_BY_START_TIME
-        : FILTER_BY_CLOSE_TIME;
+      ? FILTER_BY_START_TIME
+      : FILTER_BY_CLOSE_TIME;
   },
-  [WORKFLOW_LIST_FILTER_MODE]: (_, getters) => getters[ROUTE_QUERY].filterMode || FILTER_MODE_BASIC,
-  [WORKFLOW_LIST_QUERY_STRING]: (_, getters) => getters[ROUTE_QUERY].queryString || '',
+  [WORKFLOW_LIST_FILTER_MODE]: (_, getters) =>
+    getters[ROUTE_QUERY].filterMode || FILTER_MODE_BASIC,
+  [WORKFLOW_LIST_QUERY_STRING]: (_, getters) =>
+    getters[ROUTE_QUERY].queryString || '',
   [WORKFLOW_LIST_RANGE]: (_, getters) => getters[ROUTE_QUERY].range,
   [WORKFLOW_LIST_STATE]: (_, getters) => {
     const statusName = getters[WORKFLOW_LIST_STATUS_NAME];
@@ -79,13 +84,16 @@ const getters = {
   },
   [WORKFLOW_LIST_STATUS]: (_, getters) => {
     const { status } = getters[ROUTE_QUERY];
+
     return !status
-        ? STATUS_LIST[0]
-        : STATUS_LIST.find(item => item.value === status);
+      ? STATUS_LIST[0]
+      : STATUS_LIST.find(item => item.value === status);
   },
-  [WORKFLOW_LIST_STATUS_NAME]: (_, getters) => getters[WORKFLOW_LIST_STATUS].value,
+  [WORKFLOW_LIST_STATUS_NAME]: (_, getters) =>
+    getters[WORKFLOW_LIST_STATUS].value,
   [WORKFLOW_LIST_WORKFLOW_ID]: (_, getters) => getters[ROUTE_QUERY].workflowId,
-  [WORKFLOW_LIST_WORKFLOW_NAME]: (_, getters) => getters[ROUTE_QUERY].workflowName,
+  [WORKFLOW_LIST_WORKFLOW_NAME]: (_, getters) =>
+    getters[ROUTE_QUERY].workflowName,
 };
 
 export default getters;
