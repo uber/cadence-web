@@ -23,7 +23,12 @@
 import moment from 'moment';
 import debounce from 'lodash-es/debounce';
 import { STATUS_LIST } from './constants';
-import { ButtonFill, DateRangePicker, WorkflowGrid } from '~components';
+import {
+  ButtonFill,
+  DateRangePicker,
+  ErrorMessage,
+  WorkflowGrid
+} from '~components';
 import {
   getDatetimeFormattedString,
   getEndTimeIsoString,
@@ -79,6 +84,7 @@ export default {
   components: {
     'button-fill': ButtonFill,
     'date-range-picker': DateRangePicker,
+    'error-message': ErrorMessage,
     'workflow-grid': WorkflowGrid,
   },
   computed: {
@@ -448,7 +454,7 @@ export default {
         uppercase
       />
     </header>
-    <span class="error" v-if="error">{{ error }}</span>
+    <error-message :error="error" />
     <workflow-grid
       :workflows="formattedResults"
       :loading="loading"
@@ -489,8 +495,6 @@ section.workflow-list
     .workflow-filter-by {
       max-width: 105px;
     }
-    a.toggle-filter
-      action-button()
 
   &.loading section.results table
     opacity 0.7
