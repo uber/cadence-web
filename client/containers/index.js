@@ -48,6 +48,7 @@ export {
   getDefaultState as getWorkflowHistoryDefaultState,
 } from './workflow-history';
 export {
+  actions as workflowListActions,
   container as WorkflowList,
   getters as workflowListGetters,
 } from './workflow-list';

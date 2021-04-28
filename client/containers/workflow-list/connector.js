@@ -20,6 +20,7 @@
 // THE SOFTWARE.
 
 import { connect } from 'vuex-connect';
+import { WORKFLOW_LIST_ON_STATUS_CHANGE } from './action-types';
 import {
   WORKFLOW_LIST_FETCH_WORKFLOWS_URL,
   WORKFLOW_LIST_FILTER_BY,
@@ -31,6 +32,10 @@ import {
   WORKFLOW_LIST_WORKFLOW_ID,
   WORKFLOW_LIST_WORKFLOW_NAME,
 } from './getter-types';
+
+const actionsToEvents = {
+  onStatusChange: WORKFLOW_LIST_ON_STATUS_CHANGE,
+};
 
 const gettersToProps = {
   fetchUrl: WORKFLOW_LIST_FETCH_WORKFLOWS_URL,
@@ -45,5 +50,6 @@ const gettersToProps = {
 };
 
 export default connect({
+  actionsToEvents,
   gettersToProps,
 });

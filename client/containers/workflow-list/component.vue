@@ -323,12 +323,8 @@ export default {
 
       this.$router.replaceQueryParam(target.getAttribute('name'), target.value);
     },
-    setStatus(status) {
-      if (status) {
-        this.$router.replace({
-          query: { ...this.$route.query, status: status.value },
-        });
-      }
+    onStatusChange(status) {
+      this.$emit('onStatusChange', status);
     },
     isRangeValid(range, minStartDate) {
       if (typeof range === 'string') {
@@ -483,7 +479,7 @@ export default {
           class="status"
           :value="status"
           :options="statusList"
-          :on-change="setStatus"
+          :on-change="onStatusChange"
           :searchable="false"
           data-cy="status-filter"
         />

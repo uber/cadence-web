@@ -43,6 +43,7 @@ import {
   workflowMutations,
 
   // workflow list
+  workflowListActions,
   workflowListGetters,
 
   // workflow history
@@ -73,6 +74,7 @@ const getStoreConfig = ({ router, state }) => {
     state: initialState,
     actions: {
       ...routeActionCreator(router),
+      ...workflowListActions,
       ...workflowPendingActions,
     },
     mutations: {
