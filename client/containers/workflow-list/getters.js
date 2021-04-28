@@ -33,7 +33,7 @@ import {
   STATUS_OPEN,
 } from './constants';
 import {
-  WORKFLOW_LIST_FETCH_WORKFLOWS_URL,
+  WORKFLOW_LIST_FETCH_WORKFLOW_LIST_URL,
   WORKFLOW_LIST_FILTER_BY,
   WORKFLOW_LIST_FILTER_MODE,
   WORKFLOW_LIST_QUERY_STRING,
@@ -44,15 +44,15 @@ import {
   WORKFLOW_LIST_WORKFLOW_ID,
   WORKFLOW_LIST_WORKFLOW_NAME,
 } from './getter-types';
-import { getFetchWorkflowsUrl } from './helpers';
+import { getFetchWorkflowListUrl } from './helpers';
 
 const getters = {
-  [WORKFLOW_LIST_FETCH_WORKFLOWS_URL]: (_, getters) => {
+  [WORKFLOW_LIST_FETCH_WORKFLOW_LIST_URL]: (_, getters) => {
     const domain = getters[ROUTE_PARAMS_DOMAIN];
     const filterMode = getters[WORKFLOW_LIST_FILTER_MODE];
     const state = getters[WORKFLOW_LIST_STATE];
 
-    return getFetchWorkflowsUrl({
+    return getFetchWorkflowListUrl({
       domain,
       filterMode,
       state,

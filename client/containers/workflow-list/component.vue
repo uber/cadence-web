@@ -40,7 +40,7 @@ export default {
   props: [
     'dateFormat',
     'domain',
-    'fetchWorkflowsUrl',
+    'fetchWorkflowListUrl',
     'filterBy',
     'filterMode',
     'queryString',
@@ -65,7 +65,7 @@ export default {
   },
   async created() {
     await this.fetchDomain();
-    this.fetchWorkflows();
+    this.fetchWorkflowList();
   },
   mounted() {
     this.interval = setInterval(() => {
@@ -222,7 +222,7 @@ export default {
         }
       });
     },
-    async fetchWorkflows() {
+    async fetchWorkflowList() {
       if (!this.criteria || this.loading) {
         return;
       }
@@ -243,7 +243,7 @@ export default {
         }
 
         const { workflows: wfs, nextPageToken } = await this.fetch(
-          this.fetchWorkflowsUrl,
+          this.fetchWorkflowListUrl,
           query
         );
 
@@ -293,7 +293,7 @@ export default {
     refreshWorkflows: debounce(
       function refreshWorkflows() {
         this.clearState();
-        this.fetchWorkflows();
+        this.fetchWorkflowList();
       },
       typeof Mocha === 'undefined' ? 200 : 60,
       { maxWait: 1000 }
@@ -353,7 +353,7 @@ export default {
         return;
       }
 
-      return this.fetchWorkflows();
+      return this.fetchWorkflowList();
     },
   },
   watch: {

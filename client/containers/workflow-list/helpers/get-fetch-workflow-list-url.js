@@ -1,6 +1,6 @@
 import { FILTER_MODE_ADVANCED } from '../constants';
 
-const getFetchWorkflowsUrl = ({
+const getFetchWorkflowListUrl = ({
   domain,
   filterMode,
   state,
@@ -11,4 +11,4 @@ const getFetchWorkflowsUrl = ({
     : `${workflowsBaseUrl}/${state}`;
 };
 
-export default getFetchWorkflowsUrl;
+export default getFetchWorkflowListUrl;
