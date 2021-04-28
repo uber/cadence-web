@@ -31,6 +31,7 @@ import {
 } from '~helpers';
 import {
   formatResults,
+  getCriteria,
   isRangeValid,
   isRouteRangeValid,
 } from './helpers';
@@ -143,25 +144,15 @@ export default {
         workflowName,
       } = this;
 
-      if (!startTime || !endTime) {
-        return null;
-      }
-
-      if (filterMode === 'advanced') {
-        return {
-          queryString: queryString.trim(),
-        };
-      }
-
-      const criteria = {
-        startTime,
+      return getCriteria({
         endTime,
+        filterMode,
+        queryString,
+        startTime,
         status,
-        ...(workflowId && { workflowId: workflowId.trim() }),
-        ...(workflowName && { workflowName: workflowName.trim() }),
-      };
-
-      return criteria;
+        workflowId,
+        workflowName,
+      });
     },
     minStartDate() {
       return this.getMinStartDate();
