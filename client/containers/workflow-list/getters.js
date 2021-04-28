@@ -36,6 +36,7 @@ import {
   WORKFLOW_LIST_FETCH_WORKFLOW_LIST_URL,
   WORKFLOW_LIST_FILTER_BY,
   WORKFLOW_LIST_FILTER_MODE,
+  WORKFLOW_LIST_FILTER_MODE_BUTTON_LABEL,
   WORKFLOW_LIST_QUERY_STRING,
   WORKFLOW_LIST_RANGE,
   WORKFLOW_LIST_STATE,
@@ -67,6 +68,8 @@ const getters = {
   },
   [WORKFLOW_LIST_FILTER_MODE]: (_, getters) =>
     getters[ROUTE_QUERY].filterMode || FILTER_MODE_BASIC,
+  [WORKFLOW_LIST_FILTER_MODE_BUTTON_LABEL]: (_, getters) =>
+    getters[WORKFLOW_LIST_FILTER_MODE] === 'advanced' ? 'basic' : 'advanced',
   [WORKFLOW_LIST_QUERY_STRING]: (_, getters) =>
     getters[ROUTE_QUERY].queryString || '',
   [WORKFLOW_LIST_RANGE]: (_, getters) => getters[ROUTE_QUERY].range,

@@ -23,7 +23,7 @@
 import moment from 'moment';
 import debounce from 'lodash-es/debounce';
 import { STATUS_LIST } from './constants';
-import { DateRangePicker, WorkflowGrid } from '~components';
+import { ButtonFill, DateRangePicker, WorkflowGrid } from '~components';
 import {
   getDatetimeFormattedString,
   getEndTimeIsoString,
@@ -43,6 +43,7 @@ export default {
     'fetchWorkflowListUrl',
     'filterBy',
     'filterMode',
+    'filterModeButtonLabel',
     'queryString',
     'state',
     'status',
@@ -76,6 +77,7 @@ export default {
     clearInterval(this.interval);
   },
   components: {
+    'button-fill': ButtonFill,
     'date-range-picker': DateRangePicker,
     'workflow-grid': WorkflowGrid,
   },
@@ -440,9 +442,11 @@ export default {
           @change="setRange"
         />
       </template>
-      <a class="toggle-filter" @click="onFilterModeClick">{{
-        filterMode === 'advanced' ? 'basic' : 'advanced'
-      }}</a>
+      <button-fill
+        @click="onFilterModeClick"
+        :label="filterModeButtonLabel"
+        uppercase
+      />
     </header>
     <span class="error" v-if="error">{{ error }}</span>
     <workflow-grid
