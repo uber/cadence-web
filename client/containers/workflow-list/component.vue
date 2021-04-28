@@ -30,6 +30,7 @@ import {
   getStartTimeIsoString,
 } from '~helpers';
 import {
+  formatResults,
   isRangeValid,
   isRouteRangeValid,
 } from './helpers';
@@ -86,27 +87,7 @@ export default {
     formattedResults() {
       const { dateFormat, results, timeFormat, timezone } = this;
 
-      return results.map(result => ({
-        workflowId: result.execution.workflowId,
-        runId: result.execution.runId,
-        uniqueId: `${result.execution.runId}-${result.closeStatus || 'OPEN'}`,
-        workflowName: result.type.name,
-        startTime: getDatetimeFormattedString({
-          date: result.startTime,
-          dateFormat,
-          timeFormat,
-          timezone,
-        }),
-        endTime: result.closeTime
-          ? getDatetimeFormattedString({
-              date: result.closeTime,
-              dateFormat,
-              timeFormat,
-              timezone,
-            })
-          : '',
-        status: (result.closeStatus || 'open').toLowerCase(),
-      }));
+      return formatResults({ dateFormat, results, timeFormat, timezone });
     },
     startTime() {
       const { range, startTime } = this.$route.query;
@@ -118,17 +99,21 @@ export default {
       return getStartTimeIsoString(range, startTime);
     },
     range() {
-      const { state } = this;
+      const {
+        maxRetentionDays,
+        minStartDate,
+        state,
+      } = this;
       const query = this.$route.query || {};
 
-      if (state === 'closed' && this.maxRetentionDays === undefined) {
+      if (state === 'closed' && maxRetentionDays === undefined) {
         return null;
       }
 
-      if (!this.isRouteRangeValid(this.minStartDate)) {
+      if (!this.isRouteRangeValid(minStartDate)) {
         const defaultRange = ['all', 'open'].includes(state)
           ? 30
-          : this.maxRetentionDays;
+          : maxRetentionDays;
         const updatedQuery = this.setRange(
           `last-${Math.min(30, defaultRange)}-days`
         );
