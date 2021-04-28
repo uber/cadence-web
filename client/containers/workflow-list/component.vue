@@ -27,6 +27,7 @@ import {
   ButtonFill,
   DateRangePicker,
   ErrorMessage,
+  TextInput,
   WorkflowGrid
 } from '~components';
 import {
@@ -85,6 +86,7 @@ export default {
     'button-fill': ButtonFill,
     'date-range-picker': DateRangePicker,
     'error-message': ErrorMessage,
+    'text-input': TextInput,
     'workflow-grid': WorkflowGrid,
   },
   computed: {
@@ -387,18 +389,13 @@ export default {
   <section class="workflow-list" :class="{ loading, ready: !loading }">
     <header class="filters">
       <template v-if="filterMode === 'advanced'">
-        <div class="field query-string">
-          <input
-            type="search"
-            class="query-string"
-            placeholder=" "
-            key="sql-query"
-            name="queryString"
-            v-bind:value="queryString"
-            @input="onFilterChange"
-          />
-          <label for="queryString">Query</label>
-        </div>
+        <text-input
+          label="Query"
+          type="search"
+          name="queryString"
+          :value="queryString"
+          @input="onFilterChange"
+        />
       </template>
       <template v-else>
         <div class="field workflow-id">
