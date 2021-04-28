@@ -421,8 +421,8 @@ export default {
           data-cy="status-filter"
         />
         <text-input
-          className="workflow-filter-by"
           label="Filter by"
+          max-width="105px"
           name="filterBy"
           readonly
           :value="filterBy"
@@ -477,9 +477,6 @@ section.workflow-list
 
     .status {
       width: 160px;
-    }
-    .workflow-filter-by {
-      max-width: 105px;
     }
 
   &.loading section.results table
