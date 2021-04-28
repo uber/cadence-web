@@ -405,17 +405,13 @@ export default {
           :value="workflowId"
           @input="onFilterChange"
         />
-        <div class="field workflow-name">
-          <input
-            type="search"
-            class="workflow-name"
-            placeholder=" "
-            name="workflowName"
-            v-bind:value="workflowName"
-            @input="onFilterChange"
-          />
-          <label for="workflowName">Workflow Name</label>
-        </div>
+        <text-input
+          label="Workflow Name"
+          type="search"
+          name="workflowName"
+          :value="workflowName"
+          @input="onFilterChange"
+        />
         <v-select
           class="status"
           :value="status"
