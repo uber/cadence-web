@@ -420,16 +420,13 @@ export default {
           :searchable="false"
           data-cy="status-filter"
         />
-        <div class="field workflow-filter-by">
-          <input
-            class="workflow-filter-by"
-            name="filterBy"
-            placeholder=" "
-            readonly
-            v-bind:value="filterBy"
-          />
-          <label for="filterBy">Filter by</label>
-        </div>
+        <text-input
+          className="workflow-filter-by"
+          label="Filter by"
+          name="filterBy"
+          readonly
+          :value="filterBy"
+        />
         <date-range-picker
           :date-range="range"
           :max-days="maxRetentionDays"
