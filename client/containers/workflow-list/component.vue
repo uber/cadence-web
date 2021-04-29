@@ -100,6 +100,9 @@ export default {
     filterMode() {
       return this.$route.query.filterMode || 'basic';
     },
+    filterModeButtonLabel() {
+      return this.filterMode === 'advanced' ? 'basic' : 'advanced';
+    },
     formattedResults() {
       const { dateFormat, results, timeFormat, timezone } = this;
 
@@ -537,7 +540,7 @@ export default {
       </template>
       <button-fill
         @click="onFilterModeClick"
-        :label="filterMode === 'advanced' ? 'basic' : 'advanced'"
+        :label="filterModeButtonLabel"
         uppercase
       />
     </header>
