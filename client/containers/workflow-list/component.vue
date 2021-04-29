@@ -33,24 +33,20 @@ import {
   STATUS_OPEN,
 } from './constants';
 import {
-  ButtonFill,
-  DateRangePicker,
-  ErrorMessage,
-  TextInput,
-  WorkflowGrid
-} from '~components';
-import {
-  getDatetimeFormattedString,
-  getEndTimeIsoString,
-  getStartTimeIsoString,
-} from '~helpers';
-import {
   getCriteria,
   getFormattedResults,
   getMinStartDate,
   isRangeValid,
   isRouteRangeValid,
 } from './helpers';
+import {
+  ButtonFill,
+  DateRangePicker,
+  ErrorMessage,
+  TextInput,
+  WorkflowGrid,
+} from '~components';
+import { getEndTimeIsoString, getStartTimeIsoString } from '~helpers';
 
 export default {
   props: [
@@ -120,11 +116,7 @@ export default {
       return getStartTimeIsoString(range, startTime);
     },
     range() {
-      const {
-        maxRetentionDays,
-        minStartDate,
-        state,
-      } = this;
+      const { maxRetentionDays, minStartDate, state } = this;
       const query = this.$route.query || {};
 
       if (state === STATE_CLOSED && maxRetentionDays === undefined) {
@@ -247,7 +239,10 @@ export default {
         return;
       }
 
-      if (this.filterMode === FILTER_MODE_ADVANCED && !this.criteria.queryString) {
+      if (
+        this.filterMode === FILTER_MODE_ADVANCED &&
+        !this.criteria.queryString
+      ) {
         this.clearState();
 
         return;
@@ -255,7 +250,10 @@ export default {
 
       let workflows = [];
 
-      if (this.state !== STATE_ALL || this.filterMode === FILTER_MODE_ADVANCED) {
+      if (
+        this.state !== STATE_ALL ||
+        this.filterMode === FILTER_MODE_ADVANCED
+      ) {
         const query = { ...this.criteria, nextPageToken: this.npt };
 
         if (query.queryString) {
@@ -297,11 +295,7 @@ export default {
       this.results = [...this.results, ...workflows];
     },
     getMinStartDate() {
-      const {
-        maxRetentionDays,
-        now,
-        statusName,
-      } = this;
+      const { maxRetentionDays, now, statusName } = this;
 
       return getMinStartDate({
         maxRetentionDays,
