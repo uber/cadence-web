@@ -19,30 +19,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+import { STATUS_OPEN } from '../constants';
 import { getDatetimeFormattedString } from '~helpers';
 
-const getFormattedResults = ({ dateFormat, results, timeFormat, timezone }) => {
-  return results.map(result => ({
-    workflowId: result.execution.workflowId,
-    runId: result.execution.runId,
-    uniqueId: `${result.execution.runId}-${result.closeStatus || 'OPEN'}`,
-    workflowName: result.type.name,
-    startTime: getDatetimeFormattedString({
-      date: result.startTime,
-      dateFormat,
-      timeFormat,
-      timezone,
-    }),
-    endTime: result.closeTime
-      ? getDatetimeFormattedString({
-          date: result.closeTime,
-          dateFormat,
-          timeFormat,
-          timezone,
-        })
-      : '',
-    status: (result.closeStatus || 'open').toLowerCase(),
-  }));
-};
+const getFormattedResults = ({ dateFormat, results, timeFormat, timezone }) =>
+  results.map(result => {
+    const status = (result.closeStatus || STATUS_OPEN).toLowerCase();
+
+    return {
+      workflowId: result.execution.workflowId,
+      runId: result.execution.runId,
+      uniqueId: `${result.execution.runId}-${status}`,
+      workflowName: result.type.name,
+      startTime: getDatetimeFormattedString({
+        date: result.startTime,
+        dateFormat,
+        timeFormat,
+        timezone,
+      }),
+      endTime: result.closeTime
+        ? getDatetimeFormattedString({
+            date: result.closeTime,
+            dateFormat,
+            timeFormat,
+            timezone,
+          })
+        : '',
+      status,
+    };
+  });
 
 export default getFormattedResults;
