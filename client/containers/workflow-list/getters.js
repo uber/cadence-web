@@ -19,17 +19,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { connect } from 'vuex-connect';
-
-const actionsToEvents = {
-  // TODO - add connect variables here...
+const getters = {
+  // TODO - add getters here...
 };
 
-const gettersToProps = {
-  // TODO - add connect variables here...
-};
-
-export default connect({
-  actionsToEvents,
-  gettersToProps,
-});
+export default getters;
