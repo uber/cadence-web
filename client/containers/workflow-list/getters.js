@@ -38,7 +38,12 @@ import {
   WORKFLOW_LIST_WORKFLOW_ID,
   WORKFLOW_LIST_WORKFLOW_NAME,
 } from './getter-types';
-import { getFetchWorkflowListUrl, getFilterBy, getState } from './helpers';
+import {
+  getFetchWorkflowListUrl,
+  getFilterBy,
+  getState,
+  getStatus,
+} from './helpers';
 
 const getters = {
   [WORKFLOW_LIST_FETCH_WORKFLOW_LIST_URL]: (_, getters) => {
@@ -72,9 +77,7 @@ const getters = {
   [WORKFLOW_LIST_STATUS]: (_, getters) => {
     const { status } = getters[ROUTE_QUERY];
 
-    return !status
-      ? STATUS_LIST[0]
-      : STATUS_LIST.find(item => item.value === status);
+    return getStatus(status);
   },
   [WORKFLOW_LIST_STATUS_NAME]: (_, getters) =>
     getters[WORKFLOW_LIST_STATUS].value,

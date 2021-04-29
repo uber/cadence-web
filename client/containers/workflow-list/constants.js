@@ -50,3 +50,5 @@ export const STATUS_LIST = [
   { value: STATUS_CONTINUED_AS_NEW, label: 'Continued As New' },
   { value: STATUS_TIMED_OUT, label: 'Timed Out' },
 ];
+
+export const STATUS_LIST_OPTION_DEFAULT = STATUS_LIST[0];
