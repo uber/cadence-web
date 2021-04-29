@@ -22,7 +22,13 @@
 
 import moment from 'moment';
 import debounce from 'lodash-es/debounce';
-import { DateRangePicker, WorkflowGrid } from '~components';
+import {
+  ButtonFill,
+  DateRangePicker,
+  ErrorMessage,
+  TextInput,
+  WorkflowGrid,
+} from '~components';
 import {
   getDatetimeFormattedString,
   getEndTimeIsoString,
@@ -38,7 +44,7 @@ export default {
       error: undefined,
       npt: undefined,
       nptAlt: undefined,
-      statuses: [
+      statusList: [
         { value: 'ALL', label: 'All' },
         { value: 'OPEN', label: 'Open' },
         { value: 'CLOSED', label: 'Closed' },
@@ -65,7 +71,10 @@ export default {
     clearInterval(this.interval);
   },
   components: {
+    'button-fill': ButtonFill,
     'date-range-picker': DateRangePicker,
+    'error-message': ErrorMessage,
+    'text-input': TextInput,
     'workflow-grid': WorkflowGrid,
   },
   computed: {
@@ -136,8 +145,8 @@ export default {
     },
     status() {
       return !this.$route.query || !this.$route.query.status
-        ? this.statuses[0]
-        : this.statuses.find(s => s.value === this.$route.query.status);
+        ? this.statusList[0]
+        : this.statusList.find(s => s.value === this.$route.query.status);
     },
     statusName() {
       return this.status.value;
@@ -356,12 +365,12 @@ export default {
       typeof Mocha === 'undefined' ? 200 : 60,
       { maxWait: 1000 }
     ),
-    setWorkflowFilter(e) {
+    onFilterChange(e) {
       const target = e.target || e.testTarget; // test hook since Event.target is readOnly and unsettable
 
       this.$router.replaceQueryParam(target.getAttribute('name'), target.value);
     },
-    setStatus(status) {
+    onStatusChange(status) {
       if (status) {
         this.$router.replace({
           query: { ...this.$route.query, status: status.value },
@@ -442,7 +451,7 @@ export default {
 
       return query;
     },
-    toggleFilter() {
+    onFilterModeClick() {
       const { query } = this.$route;
 
       this.clearState();
@@ -481,60 +490,44 @@ export default {
   <section class="workflow-list" :class="{ loading, ready: !loading }">
     <header class="filters">
       <template v-if="filterMode === 'advanced'">
-        <div class="field query-string">
-          <input
-            type="search"
-            class="query-string"
-            placeholder=" "
-            key="sql-query"
-            name="queryString"
-            v-bind:value="$route.query.queryString"
-            @input="setWorkflowFilter"
-          />
-          <label for="queryString">Query</label>
-        </div>
+        <text-input
+          label="Query"
+          type="search"
+          name="queryString"
+          :value="queryString"
+          @input="onFilterChange"
+        />
       </template>
       <template v-else>
-        <div class="field workflow-id">
-          <input
-            type="search"
-            class="workflow-id"
-            placeholder=" "
-            name="workflowId"
-            v-bind:value="$route.query.workflowId"
-            @input="setWorkflowFilter"
-          />
-          <label for="workflowId">Workflow ID</label>
-        </div>
-        <div class="field workflow-name">
-          <input
-            type="search"
-            class="workflow-name"
-            placeholder=" "
-            name="workflowName"
-            v-bind:value="$route.query.workflowName"
-            @input="setWorkflowFilter"
-          />
-          <label for="workflowName">Workflow Name</label>
-        </div>
+        <text-input
+          label="Workflow ID"
+          type="search"
+          name="workflowId"
+          :value="workflowId"
+          @input="onFilterChange"
+        />
+        <text-input
+          label="Workflow Name"
+          type="search"
+          name="workflowName"
+          :value="workflowName"
+          @input="onFilterChange"
+        />
         <v-select
           class="status"
           :value="status"
-          :options="statuses"
-          :on-change="setStatus"
+          :options="statusList"
+          :on-change="onStatusChange"
           :searchable="false"
           data-cy="status-filter"
         />
-        <div class="field workflow-filter-by">
-          <input
-            class="workflow-filter-by"
-            name="filterBy"
-            placeholder=" "
-            readonly
-            v-bind:value="filterBy"
-          />
-          <label for="filterBy">Filter by</label>
-        </div>
+        <text-input
+          label="Filter by"
+          max-width="105px"
+          name="filterBy"
+          readonly
+          :value="filterBy"
+        />
         <date-range-picker
           :date-range="range"
           :max-days="maxRetentionDays"
@@ -542,11 +535,13 @@ export default {
           @change="setRange"
         />
       </template>
-      <a class="toggle-filter" @click="toggleFilter">{{
-        filterMode === 'advanced' ? 'basic' : 'advanced'
-      }}</a>
+      <button-fill
+        @click="onFilterModeClick"
+        :label="filterMode === 'advanced' ? 'basic' : 'advanced'"
+        uppercase
+      />
     </header>
-    <span class="error" v-if="error">{{ error }}</span>
+    <error-message :error="error" />
     <workflow-grid
       :workflows="formattedResults"
       :loading="loading"
@@ -584,11 +579,6 @@ section.workflow-list
     .status {
       width: 160px;
     }
-    .workflow-filter-by {
-      max-width: 105px;
-    }
-    a.toggle-filter
-      action-button()
 
   &.loading section.results table
     opacity 0.7
