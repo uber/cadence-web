@@ -1,3 +1,5 @@
+import { FILTER_MODE_ADVANCED } from '../constants';
+
 const getCriteria = ({
   endTime,
   filterMode,
@@ -11,7 +13,7 @@ const getCriteria = ({
     return null;
   }
 
-  if (filterMode === 'advanced') {
+  if (filterMode === FILTER_MODE_ADVANCED) {
     return {
       queryString: queryString.trim(),
     };

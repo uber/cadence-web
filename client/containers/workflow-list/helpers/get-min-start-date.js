@@ -1,7 +1,8 @@
 import moment from 'moment';
+import { STATUS_OPEN, STATUS_ALL } from '../constants';
 
 const getMinStartDate = ({ maxRetentionDays, now, statusName }) => {
-  if (['OPEN', 'ALL'].includes(statusName)) {
+  if ([STATUS_OPEN, STATUS_ALL].includes(statusName)) {
     return null;
   }
 

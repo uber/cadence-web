@@ -21,8 +21,6 @@
 
 import { ROUTE_PARAMS_DOMAIN, ROUTE_QUERY } from '../route/getter-types';
 import {
-  FILTER_BY_START_TIME,
-  FILTER_BY_CLOSE_TIME,
   FILTER_MODE_ADVANCED,
   FILTER_MODE_BASIC,
   STATE_ALL,
@@ -45,7 +43,7 @@ import {
   WORKFLOW_LIST_WORKFLOW_ID,
   WORKFLOW_LIST_WORKFLOW_NAME,
 } from './getter-types';
-import { getFetchWorkflowListUrl } from './helpers';
+import { getFetchWorkflowListUrl, getFilterBy } from './helpers';
 
 const getters = {
   [WORKFLOW_LIST_FETCH_WORKFLOW_LIST_URL]: (_, getters) => {
@@ -62,14 +60,12 @@ const getters = {
   [WORKFLOW_LIST_FILTER_BY]: (_, getters) => {
     const statusName = getters[WORKFLOW_LIST_STATUS_NAME];
 
-    return [STATUS_ALL, STATUS_OPEN].includes(statusName)
-      ? FILTER_BY_START_TIME
-      : FILTER_BY_CLOSE_TIME;
+    return getFilterBy(statusName);
   },
   [WORKFLOW_LIST_FILTER_MODE]: (_, getters) =>
     getters[ROUTE_QUERY].filterMode || FILTER_MODE_BASIC,
   [WORKFLOW_LIST_FILTER_MODE_BUTTON_LABEL]: (_, getters) =>
-    getters[WORKFLOW_LIST_FILTER_MODE] === 'advanced' ? 'basic' : 'advanced',
+    getters[WORKFLOW_LIST_FILTER_MODE] === FILTER_MODE_ADVANCED ? FILTER_MODE_BASIC : FILTER_MODE_ADVANCED,
   [WORKFLOW_LIST_QUERY_STRING]: (_, getters) =>
     getters[ROUTE_QUERY].queryString || '',
   [WORKFLOW_LIST_RANGE]: (_, getters) => getters[ROUTE_QUERY].range,
