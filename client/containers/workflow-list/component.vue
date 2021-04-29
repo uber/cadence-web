@@ -22,7 +22,16 @@
 
 import moment from 'moment';
 import debounce from 'lodash-es/debounce';
-import { STATUS_LIST } from './constants';
+import {
+  FILTER_MODE_ADVANCED,
+  STATE_ALL,
+  STATE_CLOSED,
+  STATE_OPEN,
+  STATUS_ALL,
+  STATUS_CLOSED,
+  STATUS_LIST,
+  STATUS_OPEN,
+} from './constants';
 import {
   ButtonFill,
   DateRangePicker,
@@ -118,12 +127,12 @@ export default {
       } = this;
       const query = this.$route.query || {};
 
-      if (state === 'closed' && maxRetentionDays === undefined) {
+      if (state === STATE_CLOSED && maxRetentionDays === undefined) {
         return null;
       }
 
       if (!this.isRouteRangeValid(minStartDate)) {
-        const defaultRange = ['all', 'open'].includes(state)
+        const defaultRange = [STATE_ALL, STATE_OPEN].includes(state)
           ? 30
           : maxRetentionDays;
         const updatedQuery = this.setRange(
@@ -188,7 +197,7 @@ export default {
       this.loading = true;
       this.error = undefined;
 
-      const includeStatus = !['ALL', 'OPEN', 'CLOSED'].includes(
+      const includeStatus = ![STATUS_ALL, STATUS_OPEN, STATUS_CLOSED].includes(
         queryWithStatus.status
       );
       const { status, ...queryWithoutStatus } = queryWithStatus;
@@ -238,7 +247,7 @@ export default {
         return;
       }
 
-      if (this.filterMode === 'advanced' && !this.criteria.queryString) {
+      if (this.filterMode === FILTER_MODE_ADVANCED && !this.criteria.queryString) {
         this.clearState();
 
         return;
@@ -246,7 +255,7 @@ export default {
 
       let workflows = [];
 
-      if (this.state !== 'all' || this.filterMode === 'advanced') {
+      if (this.state !== STATE_ALL || this.filterMode === FILTER_MODE_ADVANCED) {
         const query = { ...this.criteria, nextPageToken: this.npt };
 
         if (query.queryString) {
