@@ -25,13 +25,14 @@ import {
   WORKFLOW_LIST_ON_FILTER_MODE_CLICK,
 } from './action-types';
 import { WORKFLOW_LIST_FILTER_MODE } from './getter-types';
+import { FILTER_MODE_ADVANCED, FILTER_MODE_BASIC } from './constants';
 
 const actions = {
   [WORKFLOW_LIST_ON_FILTER_CHANGE]: ({ dispatch }, payload) =>
     dispatch(ROUTE_UPDATE_QUERY, payload),
   [WORKFLOW_LIST_ON_FILTER_MODE_CLICK]: ({ dispatch, getters }) => {
     const filterMode =
-      getters[WORKFLOW_LIST_FILTER_MODE] === 'advanced' ? 'basic' : 'advanced';
+      getters[WORKFLOW_LIST_FILTER_MODE] === FILTER_MODE_ADVANCED ? FILTER_MODE_BASIC : FILTER_MODE_ADVANCED;
 
     dispatch(ROUTE_UPDATE_QUERY, { filterMode });
   },
