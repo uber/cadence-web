@@ -23,12 +23,7 @@ import { ROUTE_PARAMS_DOMAIN, ROUTE_QUERY } from '../route/getter-types';
 import {
   FILTER_MODE_ADVANCED,
   FILTER_MODE_BASIC,
-  STATE_ALL,
-  STATE_CLOSED,
-  STATE_OPEN,
-  STATUS_ALL,
   STATUS_LIST,
-  STATUS_OPEN,
 } from './constants';
 import {
   WORKFLOW_LIST_FETCH_WORKFLOW_LIST_URL,
@@ -43,7 +38,7 @@ import {
   WORKFLOW_LIST_WORKFLOW_ID,
   WORKFLOW_LIST_WORKFLOW_NAME,
 } from './getter-types';
-import { getFetchWorkflowListUrl, getFilterBy } from './helpers';
+import { getFetchWorkflowListUrl, getFilterBy, getState } from './helpers';
 
 const getters = {
   [WORKFLOW_LIST_FETCH_WORKFLOW_LIST_URL]: (_, getters) => {
@@ -72,11 +67,7 @@ const getters = {
   [WORKFLOW_LIST_STATE]: (_, getters) => {
     const statusName = getters[WORKFLOW_LIST_STATUS_NAME];
 
-    if (!statusName || statusName == STATUS_ALL) {
-      return STATE_ALL;
-    }
-
-    return statusName === STATUS_OPEN ? STATE_OPEN : STATE_CLOSED;
+    return getState(statusName);
   },
   [WORKFLOW_LIST_STATUS]: (_, getters) => {
     const { status } = getters[ROUTE_QUERY];
