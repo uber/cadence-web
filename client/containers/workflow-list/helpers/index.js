@@ -8,3 +8,4 @@ export { default as getState } from './get-state';
 export { default as getStatus } from './get-status';
 export { default as isRangeValid } from './is-range-valid';
 export { default as isRouteRangeValid } from './is-route-range-valid';
+export { default as toggleFilterMode } from './toggle-filter-mode';
