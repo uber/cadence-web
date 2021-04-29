@@ -1,6 +1,6 @@
 import { getDatetimeFormattedString } from '~helpers';
 
-const formatResults = ({ dateFormat, results, timeFormat, timezone }) => {
+const getFormattedResults = ({ dateFormat, results, timeFormat, timezone }) => {
   return results.map(result => ({
     workflowId: result.execution.workflowId,
     runId: result.execution.runId,
@@ -24,4 +24,4 @@ const formatResults = ({ dateFormat, results, timeFormat, timezone }) => {
   }));
 };
 
-export default formatResults;
+export default getFormattedResults;

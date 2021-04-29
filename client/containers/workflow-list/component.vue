@@ -45,8 +45,8 @@ import {
   getStartTimeIsoString,
 } from '~helpers';
 import {
-  formatResults,
   getCriteria,
+  getFormattedResults,
   getMinStartDate,
   isRangeValid,
   isRouteRangeValid,
@@ -108,7 +108,7 @@ export default {
     formattedResults() {
       const { dateFormat, results, timeFormat, timezone } = this;
 
-      return formatResults({ dateFormat, results, timeFormat, timezone });
+      return getFormattedResults({ dateFormat, results, timeFormat, timezone });
     },
     startTime() {
       const { range, startTime } = this.$route.query;
