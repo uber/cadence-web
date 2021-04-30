@@ -42,6 +42,10 @@ import {
   workflowGetters,
   workflowMutations,
 
+  // workflow list
+  workflowListActions,
+  workflowListGetters,
+
   // workflow history
   getWorkflowHistoryDefaultState,
 
@@ -70,6 +74,7 @@ const getStoreConfig = ({ router, state }) => {
     state: initialState,
     actions: {
       ...routeActionCreator(router),
+      ...workflowListActions,
       ...workflowPendingActions,
     },
     mutations: {
@@ -82,6 +87,7 @@ const getStoreConfig = ({ router, state }) => {
       ...routeGetters,
       ...settingsWorkflowHistoryGetters,
       ...workflowGetters,
+      ...workflowListGetters,
       ...workflowPendingGetters,
     },
     plugins: [vuexLocal.plugin],
