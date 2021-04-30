@@ -340,10 +340,11 @@ describe('Workflow', () => {
         const [summaryEl] = await summaryTest(this.test);
 
         const terminateEl = await summaryEl.waitUntilExists(
-          'aside.actions button:not([disabled])'
+          'aside.actions button'
         );
 
-        terminateEl.should.not.have.attr('disabled');
+        await retry(() => terminateEl.should.not.have.attr('disabled'));
+
         terminateEl.trigger('click');
 
         const confirmTerminateEl = await summaryEl.waitUntilExists(
