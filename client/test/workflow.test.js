@@ -364,7 +364,7 @@ describe('Workflow', () => {
       it('should terminate the workflow with the provided reason', async function test() {
         const [summaryEl, scenario] = await summaryTest(this.test);
 
-        (await summaryEl.waitUntilExists('aside.actions button')).trigger(
+        (await summaryEl.waitUntilExists('aside.actions button:not([disabled])')).trigger(
           'click'
         );
 
@@ -389,7 +389,7 @@ describe('Workflow', () => {
       it('should terminate the workflow without a reason', async function test() {
         const [summaryEl, scenario] = await summaryTest(this.test);
 
-        (await summaryEl.waitUntilExists('aside.actions button')).trigger(
+        (await summaryEl.waitUntilExists('aside.actions button:not([disabled])')).trigger(
           'click'
         );
 
@@ -408,7 +408,7 @@ describe('Workflow', () => {
       it('should allow the user to cancel the termination prompt, doing nothing', async function test() {
         const [summaryEl] = await summaryTest(this.test);
 
-        (await summaryEl.waitUntilExists('aside.actions button')).trigger(
+        (await summaryEl.waitUntilExists('aside.actions button:not([disabled])')).trigger(
           'click'
         );
 
