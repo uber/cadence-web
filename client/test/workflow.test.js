@@ -340,13 +340,14 @@ describe('Workflow', () => {
         this.timeout(4000);
 
         const [summaryEl] = await summaryTest(this.test);
+
+        await Promise.delay(2000);
+
         const terminateEl = await summaryEl.waitUntilExists(
           'aside.actions button:not([disabled])'
         );
 
         terminateEl.trigger('click');
-
-        await Promise.delay(2000);
 
         const confirmTerminateEl = await summaryEl.waitUntilExists(
           '[data-modal="confirm-termination"]'
