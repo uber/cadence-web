@@ -339,7 +339,10 @@ describe('Workflow', () => {
       it('should offer the user to terminate a running workflow, prompting the user for a termination reason', async function test() {
         const [summaryEl] = await summaryTest(this.test);
 
-        const terminateEl = await summaryEl.waitUntilExists('aside.actions button');
+        const terminateEl = await summaryEl.waitUntilExists(
+          'aside.actions button'
+        );
+
         terminateEl.should.not.have.attr('disabled');
         terminateEl.trigger('click');
 
