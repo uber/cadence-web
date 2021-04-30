@@ -22,7 +22,7 @@
 
 export default {
   name: 'text-input',
-  props: ['disabled', 'label', 'name', 'readonly', 'type', 'value'],
+  props: ['disabled', 'label', 'maxWidth', 'name', 'readonly', 'type', 'value'],
   methods: {
     onInputChange(...args) {
       this.$emit('input', ...args);
@@ -32,12 +32,13 @@ export default {
 </script>
 
 <template>
-  <div class="text-input field">
+  <div class="text-input field" :style="{ maxWidth }">
     <input
       :disabled="disabled"
       :name="name"
       placeholder=" "
       :readonly="readonly"
+      :style="{ maxWidth }"
       :type="type"
       :value="value"
       @input="onInputChange"
