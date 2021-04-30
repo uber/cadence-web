@@ -341,7 +341,7 @@ describe('Workflow', () => {
 
         const [summaryEl] = await summaryTest(this.test);
         const terminateEl = await summaryEl.waitUntilExists(
-          'aside.actions button'
+          'aside.actions button:not([disabled])'
         );
 
         terminateEl.trigger('click');
