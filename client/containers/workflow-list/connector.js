@@ -21,10 +21,15 @@
 
 import { connect } from 'vuex-connect';
 
+const actionsToEvents = {
+  // TODO - add connect variables here...
+};
+
 const gettersToProps = {
-  // TODO - add connect variables to vuex store in future PR
+  // TODO - add connect variables here...
 };
 
 export default connect({
+  actionsToEvents,
   gettersToProps,
 });

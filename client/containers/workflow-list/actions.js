@@ -1,5 +1,4 @@
-<script>
-// Copyright (c) 2017-2021 Uber Technologies Inc.
+// Copyright (c) 2021 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,33 +19,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export default {
-  name: 'text-input',
-  props: ['disabled', 'label', 'maxWidth', 'name', 'readonly', 'type', 'value'],
-  methods: {
-    onInputChange(...args) {
-      this.$emit('input', ...args);
-    },
-  },
+const actions = {
+  // TODO - add actions here...
 };
-</script>
 
-<template>
-  <div class="text-input field" :style="{ maxWidth }">
-    <input
-      :disabled="disabled"
-      :name="name"
-      placeholder=" "
-      :readonly="readonly"
-      :style="{ maxWidth }"
-      :type="type"
-      :value="value"
-      @input="onInputChange"
-    />
-    <label :for="name">{{ label }}</label>
-  </div>
-</template>
-
-<style lang="stylus">
-@require "../styles/base.styl"
-</style>
+export default actions;
