@@ -19,17 +19,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { ROUTE_PUSH, ROUTE_REPLACE, ROUTE_UPDATE_QUERY } from './action-types';
-import { ROUTE_QUERY } from './getter-types';
-import { getUpdatedQuery } from './helpers';
+import getUpdatedQuery from './get-updated-query';
 
-const actionCreator = router => ({
-  [ROUTE_PUSH]: (_, args) => router.push(args),
-  [ROUTE_REPLACE]: (_, args) => router.replace(args),
-  [ROUTE_UPDATE_QUERY]: ({ getters }, payload) =>
-    router.replace({
-      query: getUpdatedQuery({ payload, query: getters[ROUTE_QUERY] }),
-    }),
+describe('route helpers getUpdatedQuery', () => {
+  describe('when getUpdatedQuery is called with a param in payload that is an empty string', () => {
+    it('should omit that entry from the returned updated query.', () => {
+      const query = {
+        omittedQuery: 'previous-query-value',
+      };
+
+      const payload = {
+        omittedQuery: '',
+      };
+
+      const output = getUpdatedQuery({ payload, query });
+
+      expect(output.omittedQuery).toEqual(undefined);
+    });
+  });
 });
-
-export default actionCreator;

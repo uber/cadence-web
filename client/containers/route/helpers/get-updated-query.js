@@ -19,17 +19,41 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { ROUTE_PUSH, ROUTE_REPLACE, ROUTE_UPDATE_QUERY } from './action-types';
-import { ROUTE_QUERY } from './getter-types';
-import { getUpdatedQuery } from './helpers';
+// omits entries from payload with empty string to be removed from original URL query params
+const getUpdatedQuery = ({ payload, query }) => {
+  const omittedKeys = [];
+  const omittedPayload = Object.entries(payload).reduce(
+    (accumulator, [key, value]) => {
+      if (value === '') {
+        omittedKeys.push(key);
 
-const actionCreator = router => ({
-  [ROUTE_PUSH]: (_, args) => router.push(args),
-  [ROUTE_REPLACE]: (_, args) => router.replace(args),
-  [ROUTE_UPDATE_QUERY]: ({ getters }, payload) =>
-    router.replace({
-      query: getUpdatedQuery({ payload, query: getters[ROUTE_QUERY] }),
-    }),
-});
+        return accumulator;
+      }
 
-export default actionCreator;
+      accumulator[key] = value;
+
+      return accumulator;
+    },
+    {}
+  );
+
+  const omittedQuery = Object.entries(query).reduce(
+    (accumulator, [key, value]) => {
+      if (omittedKeys.includes(key)) {
+        return accumulator;
+      }
+
+      accumulator[key] = value;
+
+      return accumulator;
+    },
+    {}
+  );
+
+  return {
+    ...omittedQuery,
+    ...omittedPayload,
+  };
+};
+
+export default getUpdatedQuery;

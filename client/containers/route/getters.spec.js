@@ -19,7 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { ROUTE_PARAMS, ROUTE_QUERY } from './getter-types';
+import { ROUTE_PARAMS, ROUTE_PARAMS_DOMAIN, ROUTE_QUERY } from './getter-types';
 import getterFns from './getters';
 import { initGetters } from '~test';
 
@@ -54,6 +54,25 @@ describe('route getters', () => {
         const output = getters[ROUTE_PARAMS];
 
         expect(output).toEqual({});
+      });
+    });
+  });
+
+  describe('calling getters[ROUTE_PARAMS_DOMAIN]', () => {
+    describe('and state.route.params.domain is defined', () => {
+      const state = {
+        route: {
+          params: {
+            domain: 'domainA',
+          },
+        },
+      };
+
+      it('should return the value from state.route.params.domain', () => {
+        const getters = initGetters({ getterFns, state });
+        const output = getters[ROUTE_PARAMS_DOMAIN];
+
+        expect(output).toEqual('domainA');
       });
     });
   });
