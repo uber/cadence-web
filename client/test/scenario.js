@@ -355,7 +355,7 @@ Scenario.prototype.withFullHistory = function withFullHistory(events, options) {
 
   return this.withHistory(parsedEvents.slice(0, third), true, options)
     .withHistory(parsedEvents.slice(third, third + third), true, options)
-    .withHistory(parsedEvents.slice(third + third), options);
+    .withHistory(parsedEvents.slice(third + third), false, options);
 };
 
 Scenario.prototype.withQuery = function withQuery(query) {
