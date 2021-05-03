@@ -19,8 +19,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+import { ROUTE_QUERY } from '../route/getter-types';
+import { FILTER_MODE_BASIC } from './constants';
+import { WORKFLOW_LIST_FILTER_MODE } from './getter-types';
+
 const getters = {
-  // TODO - add getters here...
+  [WORKFLOW_LIST_FILTER_MODE]: (_, getters) =>
+    getters[ROUTE_QUERY].filterMode || FILTER_MODE_BASIC,
 };
 
 export default getters;

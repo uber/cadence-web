@@ -20,13 +20,14 @@
 // THE SOFTWARE.
 
 import { connect } from 'vuex-connect';
+import { WORKFLOW_LIST_FILTER_MODE } from './getter-types';
 
 const actionsToEvents = {
   // TODO - add connect variables here...
 };
 
 const gettersToProps = {
-  // TODO - add connect variables here...
+  filterMode: WORKFLOW_LIST_FILTER_MODE,
 };
 
 export default connect({
