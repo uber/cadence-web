@@ -337,7 +337,9 @@ describe('Workflow', () => {
 
     describe('Actions', () => {
       it('should offer the user to terminate a running workflow, prompting the user for a termination reason', async function test() {
-        const [summaryEl] = await summaryTest(this.test, { history: { delay: 250 } });
+        const [summaryEl] = await summaryTest(this.test, {
+          history: { delay: 250 },
+        });
 
         const terminateEl = await summaryEl.waitUntilExists(
           'aside.actions button'
@@ -361,7 +363,9 @@ describe('Workflow', () => {
       });
 
       it('should terminate the workflow with the provided reason', async function test() {
-        const [summaryEl, scenario] = await summaryTest(this.test, { history: { delay: 250 } });
+        const [summaryEl, scenario] = await summaryTest(this.test, {
+          history: { delay: 250 },
+        });
 
         const terminateEl = await summaryEl.waitUntilExists(
           'aside.actions button'
@@ -390,7 +394,9 @@ describe('Workflow', () => {
       });
 
       it('should terminate the workflow without a reason', async function test() {
-        const [summaryEl, scenario] = await summaryTest(this.test, { history: { delay: 250 } });
+        const [summaryEl, scenario] = await summaryTest(this.test, {
+          history: { delay: 250 },
+        });
 
         const terminateEl = await summaryEl.waitUntilExists(
           'aside.actions button'
@@ -413,7 +419,9 @@ describe('Workflow', () => {
       });
 
       it('should allow the user to cancel the termination prompt, doing nothing', async function test() {
-        const [summaryEl] = await summaryTest(this.test, { history: { delay: 250 } });
+        const [summaryEl] = await summaryTest(this.test, {
+          history: { delay: 250 },
+        });
 
         const terminateEl = await summaryEl.waitUntilExists(
           'aside.actions button'
