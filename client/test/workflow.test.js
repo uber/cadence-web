@@ -68,13 +68,13 @@ describe('Workflow', () => {
     ];
   }
 
-  async function summaryTest(mochaTest, o) {
+  async function summaryTest(mochaTest, options = {}) {
     const [scenario, opts] = workflowTest(mochaTest, {
       view: 'summary',
-      ...o,
+      ...options,
     });
 
-    scenario.withFullHistory(opts.events);
+    scenario.withFullHistory(opts.events, options.history);
     const summaryEl = await scenario
       .render(opts.attach)
       .waitUntilExists('section.execution section.workflow-summary dl');
@@ -337,14 +337,17 @@ describe('Workflow', () => {
 
     describe('Actions', () => {
       it('should offer the user to terminate a running workflow, prompting the user for a termination reason', async function test() {
-        const [summaryEl] = await summaryTest(this.test);
+        const [summaryEl] = await summaryTest(this.test, {
+          history: { delay: 250 },
+        });
+
         const terminateEl = await summaryEl.waitUntilExists(
           'aside.actions button'
         );
 
-        terminateEl.trigger('click');
+        await retry(() => terminateEl.should.not.have.attr('disabled'));
 
-        await Promise.delay(1000);
+        terminateEl.trigger('click');
 
         const confirmTerminateEl = await summaryEl.waitUntilExists(
           '[data-modal="confirm-termination"]'
@@ -360,11 +363,17 @@ describe('Workflow', () => {
       });
 
       it('should terminate the workflow with the provided reason', async function test() {
-        const [summaryEl, scenario] = await summaryTest(this.test);
+        const [summaryEl, scenario] = await summaryTest(this.test, {
+          history: { delay: 250 },
+        });
 
-        (await summaryEl.waitUntilExists('aside.actions button')).trigger(
-          'click'
+        const terminateEl = await summaryEl.waitUntilExists(
+          'aside.actions button'
         );
+
+        await retry(() => terminateEl.should.not.have.attr('disabled'));
+
+        terminateEl.trigger('click');
 
         const confirmTerminateEl = await summaryEl.waitUntilExists(
           '[data-modal="confirm-termination"]'
@@ -385,18 +394,24 @@ describe('Workflow', () => {
       });
 
       it('should terminate the workflow without a reason', async function test() {
-        const [summaryEl, scenario] = await summaryTest(this.test);
-
-        (await summaryEl.waitUntilExists('aside.actions button')).trigger(
-          'click'
-        );
+        const [summaryEl, scenario] = await summaryTest(this.test, {
+          history: { delay: 250 },
+        });
 
         const terminateEl = await summaryEl.waitUntilExists(
+          'aside.actions button'
+        );
+
+        await retry(() => terminateEl.should.not.have.attr('disabled'));
+
+        terminateEl.trigger('click');
+
+        const terminateConfirmEl = await summaryEl.waitUntilExists(
           '[data-modal="confirm-termination"] button[name="button-terminate"]'
         );
 
         scenario.withWorkflowTermination();
-        terminateEl.trigger('click');
+        terminateConfirmEl.trigger('click');
 
         await retry(() =>
           summaryEl.should.not.contain('[data-modal="confirm-termination"]')
@@ -404,11 +419,17 @@ describe('Workflow', () => {
       });
 
       it('should allow the user to cancel the termination prompt, doing nothing', async function test() {
-        const [summaryEl] = await summaryTest(this.test);
+        const [summaryEl] = await summaryTest(this.test, {
+          history: { delay: 250 },
+        });
 
-        (await summaryEl.waitUntilExists('aside.actions button')).trigger(
-          'click'
+        const terminateEl = await summaryEl.waitUntilExists(
+          'aside.actions button'
         );
+
+        await retry(() => terminateEl.should.not.have.attr('disabled'));
+
+        terminateEl.trigger('click');
 
         const cancelDialog = await summaryEl.waitUntilExists(
           '[data-modal="confirm-termination"] button[name="button-cancel"]'
@@ -424,6 +445,7 @@ describe('Workflow', () => {
       it('should not offer the user the ability to terminate completed workflows', async function test() {
         const [summaryEl] = await summaryTest(this.test, {
           execution: closedWorkflowExecution,
+          history: { delay: 250 },
         });
 
         await retry(() =>

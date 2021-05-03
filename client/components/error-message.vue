@@ -28,9 +28,7 @@ export default {
 
 <template>
   <div class="error-message-container" v-if="error">
-    <span class="error">
-      {{ error }}
-    </span>
+    <span class="error">{{ error }}</span>
   </div>
 </template>
 
