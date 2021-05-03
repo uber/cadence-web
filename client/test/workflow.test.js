@@ -68,13 +68,13 @@ describe('Workflow', () => {
     ];
   }
 
-  async function summaryTest(mochaTest, o) {
+  async function summaryTest(mochaTest, options) {
     const [scenario, opts] = workflowTest(mochaTest, {
       view: 'summary',
-      ...o,
+      ...options,
     });
 
-    scenario.withFullHistory(opts.events);
+    scenario.withFullHistory(opts.events, options);
     const summaryEl = await scenario
       .render(opts.attach)
       .waitUntilExists('section.execution section.workflow-summary dl');
