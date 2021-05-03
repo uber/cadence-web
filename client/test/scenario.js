@@ -312,11 +312,7 @@ Scenario.prototype.withWorkflow = function withWorkflow(
   return this;
 };
 
-Scenario.prototype.withHistory = function withHistory(
-  events,
-  hasMorePages,
-  options = {}
-) {
+Scenario.prototype.withHistory = function withHistory(events, hasMorePages) {
   if (!this.historyNpt) {
     this.historyNpt = {};
   }
@@ -342,20 +338,20 @@ Scenario.prototype.withHistory = function withHistory(
     response.nextPageToken = makeToken();
   }
 
-  this.api.getOnce(url, response, { delay: 100, ...options });
+  this.api.getOnce(url, response, { delay: 100 });
 
   return this;
 };
 
-Scenario.prototype.withFullHistory = function withFullHistory(events, options) {
+Scenario.prototype.withFullHistory = function withFullHistory(events) {
   const parsedEvents = JSON.parse(
     JSON.stringify(events || fixtures.history.emailRun1)
   );
   const third = Math.floor(parsedEvents.length / 3);
 
-  return this.withHistory(parsedEvents.slice(0, third), true, options)
-    .withHistory(parsedEvents.slice(third, third + third), true, options)
-    .withHistory(parsedEvents.slice(third + third), false, options);
+  return this.withHistory(parsedEvents.slice(0, third), true)
+    .withHistory(parsedEvents.slice(third, third + third), true)
+    .withHistory(parsedEvents.slice(third + third));
 };
 
 Scenario.prototype.withQuery = function withQuery(query) {
