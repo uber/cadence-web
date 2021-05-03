@@ -312,7 +312,11 @@ Scenario.prototype.withWorkflow = function withWorkflow(
   return this;
 };
 
-Scenario.prototype.withHistory = function withHistory(events, hasMorePages, options = {}) {
+Scenario.prototype.withHistory = function withHistory(
+  events,
+  hasMorePages,
+  options = {}
+) {
   if (!this.historyNpt) {
     this.historyNpt = {};
   }
