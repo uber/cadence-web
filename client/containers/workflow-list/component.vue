@@ -24,6 +24,7 @@ import moment from 'moment';
 import debounce from 'lodash-es/debounce';
 import {
   FILTER_MODE_ADVANCED,
+  FILTER_MODE_BASIC,
   STATE_ALL,
   STATE_CLOSED,
   STATE_OPEN,
@@ -74,6 +75,7 @@ export default {
       nptAlt: undefined,
       statusList: STATUS_LIST,
       maxRetentionDays: undefined,
+      FILTER_MODE_ADVANCED: FILTER_MODE_ADVANCED,
     };
   },
   async created() {
@@ -391,7 +393,7 @@ export default {
 <template>
   <section class="workflow-list" :class="{ loading, ready: !loading }">
     <header class="filters">
-      <template v-if="filterMode === 'advanced'">
+      <template v-if="filterMode === FILTER_MODE_ADVANCED">
         <text-input
           label="Query"
           type="search"
