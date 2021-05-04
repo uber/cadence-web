@@ -22,6 +22,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import VuexPersistence from 'vuex-persist';
+import { sync } from 'vuex-router-sync';
 import {
   // graph
   getGraphDefaultState,
@@ -100,7 +101,10 @@ const initStore = ({ router, state }) => {
   Vue.use(Vuex);
 
   const storeConfig = getStoreConfig({ router, state });
+
   const store = new Vuex.Store(storeConfig);
+
+  sync(store, router);
 
   return store;
 };
