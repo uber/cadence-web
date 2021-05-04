@@ -19,4 +19,5 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+export { default as getFetchWorkflowListUrl } from './get-fetch-workflow-list-url';
 export { default as getFilterModeButtonLabel } from './get-filter-mode-button-label';

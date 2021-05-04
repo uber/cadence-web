@@ -19,26 +19,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { ROUTE_PARAMS_DOMAIN, ROUTE_QUERY } from '../route/getter-types';
-import { FILTER_MODE_BASIC } from './constants';
-import {
-  WORKFLOW_LIST_FETCH_WORKFLOW_LIST_URL,
-  WORKFLOW_LIST_FILTER_MODE,
-  WORKFLOW_LIST_FILTER_MODE_BUTTON_LABEL,
-} from './getter-types';
-import { getFetchWorkflowListUrl, getFilterModeButtonLabel } from './helpers';
+import { FILTER_MODE_ADVANCED } from '../constants';
 
-const getters = {
-  [WORKFLOW_LIST_FETCH_WORKFLOW_LIST_URL]: (_, getters) =>
-    getFetchWorkflowListUrl({
-      domain: getters[ROUTE_PARAMS_DOMAIN],
-      filterMode: getters[WORKFLOW_LIST_FILTER_MODE],
-      state: getters[WORKFLOW_LIST_STATE],
-    }),
-  [WORKFLOW_LIST_FILTER_MODE]: (_, getters) =>
-    getters[ROUTE_QUERY].filterMode || FILTER_MODE_BASIC,
-  [WORKFLOW_LIST_FILTER_MODE_BUTTON_LABEL]: (_, getters) =>
-    getFilterModeButtonLabel(getters[WORKFLOW_LIST_FILTER_MODE]),
+const getFetchWorkflowListUrl = ({ domain, filterMode, state }) => {
+  const workflowsBaseUrl = `/api/domains/${domain}/workflows`;
+
+  return filterMode === FILTER_MODE_ADVANCED
+    ? `${workflowsBaseUrl}/list`
+    : `${workflowsBaseUrl}/${state}`;
 };
 
-export default getters;
+export default getFetchWorkflowListUrl;
