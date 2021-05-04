@@ -22,6 +22,7 @@
 
 import moment from 'moment';
 import debounce from 'lodash-es/debounce';
+import { FILTER_MODE_ADVANCED, FILTER_MODE_BASIC } from './constants';
 import {
   ButtonFill,
   DateRangePicker,
@@ -36,7 +37,7 @@ import {
 } from '~helpers';
 
 export default {
-  props: ['dateFormat', 'domain', 'timeFormat', 'timezone'],
+  props: ['dateFormat', 'domain', 'filterMode', 'timeFormat', 'timezone'],
   data() {
     return {
       loading: false,
@@ -56,6 +57,7 @@ export default {
         { value: 'TIMED_OUT', label: 'Timed Out' },
       ],
       maxRetentionDays: undefined,
+      FILTER_MODE_ADVANCED: FILTER_MODE_ADVANCED,
     };
   },
   async created() {
@@ -81,7 +83,7 @@ export default {
     fetchUrl() {
       const { domain, filterMode, state } = this;
 
-      if (filterMode === 'advanced') {
+      if (filterMode === FILTER_MODE_ADVANCED) {
         return `/api/domains/${domain}/workflows/list`;
       }
 
@@ -97,11 +99,10 @@ export default {
         ? 'StartTime'
         : 'CloseTime';
     },
-    filterMode() {
-      return this.$route.query.filterMode || 'basic';
-    },
     filterModeButtonLabel() {
-      return this.filterMode === 'advanced' ? 'basic' : 'advanced';
+      return this.filterMode === FILTER_MODE_ADVANCED
+        ? FILTER_MODE_BASIC
+        : FILTER_MODE_ADVANCED;
     },
     formattedResults() {
       const { dateFormat, results, timeFormat, timezone } = this;
@@ -199,7 +200,7 @@ export default {
         return null;
       }
 
-      if (filterMode === 'advanced') {
+      if (filterMode === FILTER_MODE_ADVANCED) {
         return {
           queryString: queryString.trim(),
         };
@@ -297,7 +298,10 @@ export default {
         return;
       }
 
-      if (this.filterMode === 'advanced' && !this.criteria.queryString) {
+      if (
+        this.filterMode === FILTER_MODE_ADVANCED &&
+        !this.criteria.queryString
+      ) {
         this.clearState();
 
         return;
@@ -305,7 +309,7 @@ export default {
 
       let workflows = [];
 
-      if (this.state !== 'all' || this.filterMode === 'advanced') {
+      if (this.state !== 'all' || this.filterMode === FILTER_MODE_ADVANCED) {
         const query = { ...this.criteria, nextPageToken: this.npt };
 
         if (query.queryString) {
@@ -458,7 +462,10 @@ export default {
       const { query } = this.$route;
 
       this.clearState();
-      const filterMode = this.filterMode === 'advanced' ? 'basic' : 'advanced';
+      const filterMode =
+        this.filterMode === FILTER_MODE_ADVANCED
+          ? FILTER_MODE_BASIC
+          : FILTER_MODE_ADVANCED;
 
       this.$router.replace({ query: { ...query, filterMode } });
     },
@@ -492,7 +499,7 @@ export default {
 <template>
   <section class="workflow-list" :class="{ loading, ready: !loading }">
     <header class="filters">
-      <template v-if="filterMode === 'advanced'">
+      <template v-if="filterMode === FILTER_MODE_ADVANCED">
         <text-input
           label="Query"
           type="search"

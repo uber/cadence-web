@@ -19,4 +19,5 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-// TODO - Add constants that are used by the container here...
+export const FILTER_MODE_ADVANCED = 'advanced';
+export const FILTER_MODE_BASIC = 'basic';

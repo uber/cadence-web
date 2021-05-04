@@ -67,6 +67,7 @@ Scenario.prototype.render = function render(attachToBody) {
   const el = document.createElement('div');
 
   const store = initStore({
+    router: this.router,
     state: this.storeState,
   });
 
