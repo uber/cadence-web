@@ -20,7 +20,10 @@
 // THE SOFTWARE.
 
 import { connect } from 'vuex-connect';
-import { WORKFLOW_LIST_FILTER_MODE, WORKFLOW_LIST_FILTER_MODE_BUTTON_LABEL } from './getter-types';
+import {
+  WORKFLOW_LIST_FILTER_MODE,
+  WORKFLOW_LIST_FILTER_MODE_BUTTON_LABEL,
+} from './getter-types';
 
 const actionsToEvents = {
   // TODO - add connect variables here...

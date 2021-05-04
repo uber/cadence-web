@@ -37,7 +37,14 @@ import {
 } from '~helpers';
 
 export default {
-  props: ['dateFormat', 'domain', 'filterMode', 'filterModeButtonLabel', 'timeFormat', 'timezone'],
+  props: [
+    'dateFormat',
+    'domain',
+    'filterMode',
+    'filterModeButtonLabel',
+    'timeFormat',
+    'timezone',
+  ],
   data() {
     return {
       loading: false,
