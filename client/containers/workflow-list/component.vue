@@ -100,7 +100,9 @@ export default {
         : 'CloseTime';
     },
     filterModeButtonLabel() {
-      return this.filterMode === FILTER_MODE_ADVANCED ? FILTER_MODE_BASIC : FILTER_MODE_ADVANCED;
+      return this.filterMode === FILTER_MODE_ADVANCED
+        ? FILTER_MODE_BASIC
+        : FILTER_MODE_ADVANCED;
     },
     formattedResults() {
       const { dateFormat, results, timeFormat, timezone } = this;
@@ -296,7 +298,10 @@ export default {
         return;
       }
 
-      if (this.filterMode === FILTER_MODE_ADVANCED && !this.criteria.queryString) {
+      if (
+        this.filterMode === FILTER_MODE_ADVANCED &&
+        !this.criteria.queryString
+      ) {
         this.clearState();
 
         return;
@@ -457,7 +462,10 @@ export default {
       const { query } = this.$route;
 
       this.clearState();
-      const filterMode = this.filterMode === FILTER_MODE_ADVANCED ? FILTER_MODE_BASIC : FILTER_MODE_ADVANCED;
+      const filterMode =
+        this.filterMode === FILTER_MODE_ADVANCED
+          ? FILTER_MODE_BASIC
+          : FILTER_MODE_ADVANCED;
 
       this.$router.replace({ query: { ...query, filterMode } });
     },
