@@ -19,19 +19,37 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { ROUTE_QUERY } from '../route/getter-types';
-import { FILTER_MODE_BASIC } from './constants';
-import {
-  WORKFLOW_LIST_FILTER_MODE,
-  WORKFLOW_LIST_FILTER_MODE_BUTTON_LABEL,
-} from './getter-types';
-import { getFilterModeButtonLabel } from './helpers';
+import { FILTER_MODE_ADVANCED, FILTER_MODE_BASIC } from '../constants';
+import getFilterModeButtonLabel from './get-filter-mode-button-label';
 
-const getters = {
-  [WORKFLOW_LIST_FILTER_MODE]: (_, getters) =>
-    getters[ROUTE_QUERY].filterMode || FILTER_MODE_BASIC,
-  [WORKFLOW_LIST_FILTER_MODE_BUTTON_LABEL]: (_, getters) =>
-    getFilterModeButtonLabel(getters[WORKFLOW_LIST_FILTER_MODE]),
-};
+describe('getFilterModeButtonLabel', () => {
+  describe('when called with "filterMode" = FILTER_MODE_ADVANCED', () => {
+    const filterMode = FILTER_MODE_ADVANCED;
 
-export default getters;
+    it('should return FILTER_MODE_BASIC.', () => {
+      const output = getFilterModeButtonLabel(filterMode);
+
+      expect(output).toEqual(FILTER_MODE_BASIC);
+    });
+  });
+
+  describe('when called with "filterMode" = FILTER_MODE_BASIC', () => {
+    const filterMode = FILTER_MODE_BASIC;
+
+    it('should return FILTER_MODE_ADVANCED.', () => {
+      const output = getFilterModeButtonLabel(filterMode);
+
+      expect(output).toEqual(FILTER_MODE_ADVANCED);
+    });
+  });
+
+  describe('when called with "filterMode" = undefined', () => {
+    const filterMode = undefined;
+
+    it('should return FILTER_MODE_ADVANCED.', () => {
+      const output = getFilterModeButtonLabel(filterMode);
+
+      expect(output).toEqual(FILTER_MODE_ADVANCED);
+    });
+  });
+});
