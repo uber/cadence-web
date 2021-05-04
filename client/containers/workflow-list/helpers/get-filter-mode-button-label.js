@@ -19,19 +19,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { connect } from 'vuex-connect';
-import { WORKFLOW_LIST_FILTER_MODE, WORKFLOW_LIST_FILTER_MODE_BUTTON_LABEL } from './getter-types';
+import { FILTER_MODE_ADVANCED, FILTER_MODE_BASIC } from '../constants';
 
-const actionsToEvents = {
-  // TODO - add connect variables here...
-};
+const getFilterModeButtonLabel = filterMode =>
+  filterMode === FILTER_MODE_ADVANCED
+    ? FILTER_MODE_BASIC
+    : FILTER_MODE_ADVANCED;
 
-const gettersToProps = {
-  filterMode: WORKFLOW_LIST_FILTER_MODE,
-  filterModeButtonLabel: WORKFLOW_LIST_FILTER_MODE_BUTTON_LABEL,
-};
-
-export default connect({
-  actionsToEvents,
-  gettersToProps,
-});
+export default getFilterModeButtonLabel;

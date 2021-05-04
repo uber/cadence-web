@@ -37,7 +37,7 @@ import {
 } from '~helpers';
 
 export default {
-  props: ['dateFormat', 'domain', 'filterMode', 'timeFormat', 'timezone'],
+  props: ['dateFormat', 'domain', 'filterMode', 'filterModeButtonLabel', 'timeFormat', 'timezone'],
   data() {
     return {
       loading: false,
@@ -98,11 +98,6 @@ export default {
       return ['ALL', 'OPEN'].includes(this.status.value)
         ? 'StartTime'
         : 'CloseTime';
-    },
-    filterModeButtonLabel() {
-      return this.filterMode === FILTER_MODE_ADVANCED
-        ? FILTER_MODE_BASIC
-        : FILTER_MODE_ADVANCED;
     },
     formattedResults() {
       const { dateFormat, results, timeFormat, timezone } = this;

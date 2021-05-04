@@ -21,11 +21,14 @@
 
 import { ROUTE_QUERY } from '../route/getter-types';
 import { FILTER_MODE_BASIC } from './constants';
-import { WORKFLOW_LIST_FILTER_MODE } from './getter-types';
+import { WORKFLOW_LIST_FILTER_MODE, WORKFLOW_LIST_FILTER_MODE_BUTTON_LABEL } from './getter-types';
+import { getFilterModeButtonLabel } from './helpers';
 
 const getters = {
   [WORKFLOW_LIST_FILTER_MODE]: (_, getters) =>
     getters[ROUTE_QUERY].filterMode || FILTER_MODE_BASIC,
+  [WORKFLOW_LIST_FILTER_MODE_BUTTON_LABEL]: (_, getters) =>
+    getFilterModeButtonLabel(getters[WORKFLOW_LIST_FILTER_MODE]),
 };
 
 export default getters;

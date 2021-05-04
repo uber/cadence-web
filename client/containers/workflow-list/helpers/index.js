@@ -19,4 +19,4 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-// TODO - Add helpers used by actions and getters here...
+export { default as getFilterModeButtonLabel } from './get-filter-mode-button-label';
