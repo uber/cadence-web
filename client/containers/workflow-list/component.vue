@@ -22,7 +22,14 @@
 
 import moment from 'moment';
 import debounce from 'lodash-es/debounce';
-import { FILTER_MODE_ADVANCED, FILTER_MODE_BASIC } from './constants';
+import {
+  FILTER_MODE_ADVANCED,
+  FILTER_MODE_BASIC,
+  STATUS_ALL,
+  STATUS_CLOSED,
+  STATUS_LIST,
+  STATUS_OPEN,
+} from './constants';
 import {
   ButtonFill,
   DateRangePicker,
@@ -42,6 +49,7 @@ export default {
     'domain',
     'filterMode',
     'filterModeButtonLabel',
+    'status',
     'timeFormat',
     'timezone',
   ],
@@ -52,17 +60,7 @@ export default {
       error: undefined,
       npt: undefined,
       nptAlt: undefined,
-      statusList: [
-        { value: 'ALL', label: 'All' },
-        { value: 'OPEN', label: 'Open' },
-        { value: 'CLOSED', label: 'Closed' },
-        { value: 'COMPLETED', label: 'Completed' },
-        { value: 'FAILED', label: 'Failed' },
-        { value: 'CANCELED', label: 'Cancelled' },
-        { value: 'TERMINATED', label: 'Terminated' },
-        { value: 'CONTINUED_AS_NEW', label: 'Continued As New' },
-        { value: 'TIMED_OUT', label: 'Timed Out' },
-      ],
+      statusList: STATUS_LIST,
       maxRetentionDays: undefined,
       FILTER_MODE_ADVANCED: FILTER_MODE_ADVANCED,
     };
@@ -148,11 +146,6 @@ export default {
       }
 
       return statusName === 'OPEN' ? 'open' : 'closed';
-    },
-    status() {
-      return !this.$route.query || !this.$route.query.status
-        ? this.statusList[0]
-        : this.statusList.find(s => s.value === this.$route.query.status);
     },
     statusName() {
       return this.status.value;
@@ -250,7 +243,7 @@ export default {
       this.loading = true;
       this.error = undefined;
 
-      const includeStatus = !['ALL', 'OPEN', 'CLOSED'].includes(
+      const includeStatus = ![STATUS_ALL, STATUS_OPEN, STATUS_CLOSED].includes(
         queryWithStatus.status
       );
       const { status, ...queryWithoutStatus } = queryWithStatus;

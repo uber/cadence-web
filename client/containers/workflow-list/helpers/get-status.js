@@ -19,22 +19,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { ROUTE_QUERY } from '../route/getter-types';
-import { FILTER_MODE_BASIC } from './constants';
-import {
-  WORKFLOW_LIST_FILTER_MODE,
-  WORKFLOW_LIST_FILTER_MODE_BUTTON_LABEL,
-  WORKFLOW_LIST_STATUS,
-} from './getter-types';
-import { getFilterModeButtonLabel, getStatus } from './helpers';
+import { STATUS_LIST, STATUS_LIST_OPTION_DEFAULT } from '../constants';
 
-const getters = {
-  [WORKFLOW_LIST_FILTER_MODE]: (_, getters) =>
-    getters[ROUTE_QUERY].filterMode || FILTER_MODE_BASIC,
-  [WORKFLOW_LIST_FILTER_MODE_BUTTON_LABEL]: (_, getters) =>
-    getFilterModeButtonLabel(getters[WORKFLOW_LIST_FILTER_MODE]),
-  [WORKFLOW_LIST_STATUS]: (_, getters) =>
-    getStatus(getters[ROUTE_QUERY].status),
-};
+const getStatus = status =>
+  (status && STATUS_LIST.find(item => item.value === status)) ||
+  STATUS_LIST_OPTION_DEFAULT;
 
-export default getters;
+export default getStatus;
