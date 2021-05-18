@@ -21,8 +21,17 @@
 
 import { STATUS_LIST, STATUS_LIST_OPTION_DEFAULT } from '../constants';
 
-const getStatus = status =>
-  (status && STATUS_LIST.find(item => item.value === status)) ||
-  STATUS_LIST_OPTION_DEFAULT;
+const getStatus = status => {
+  if (!status) {
+    return STATUS_LIST_OPTION_DEFAULT;
+  }
+
+  const formattedStatus = status.toUpperCase();
+
+  return (
+    STATUS_LIST.find(item => item.value === formattedStatus) ||
+    STATUS_LIST_OPTION_DEFAULT
+  );
+};
 
 export default getStatus;

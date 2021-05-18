@@ -142,4 +142,15 @@ describe('getStatus', () => {
       expect(output.value).toEqual(STATUS_ALL);
     });
   });
+
+  describe('when calling getStatus with status = "open"', () => {
+    const status = 'open';
+
+    it('should return { value: STATUS_OPEN, label: "Open" }.', () => {
+      const output = getStatus(status);
+
+      expect(output.label).toEqual('Open');
+      expect(output.value).toEqual(STATUS_OPEN);
+    });
+  });
 });
