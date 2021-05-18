@@ -24,6 +24,7 @@ import {
   WORKFLOW_LIST_FILTER_MODE,
   WORKFLOW_LIST_FILTER_MODE_BUTTON_LABEL,
   WORKFLOW_LIST_STATUS,
+  WORKFLOW_LIST_STATUS_NAME,
 } from './getter-types';
 
 const actionsToEvents = {
@@ -34,6 +35,7 @@ const gettersToProps = {
   filterMode: WORKFLOW_LIST_FILTER_MODE,
   filterModeButtonLabel: WORKFLOW_LIST_FILTER_MODE_BUTTON_LABEL,
   status: WORKFLOW_LIST_STATUS,
+  statusName: WORKFLOW_LIST_STATUS_NAME,
 };
 
 export default connect({
