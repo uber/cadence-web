@@ -19,10 +19,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export const WORKFLOW_LIST_FILTER_MODE = 'WORKFLOW_LIST_FILTER_MODE';
-export const WORKFLOW_LIST_FILTER_MODE_BUTTON_LABEL =
-  'WORKFLOW_LIST_FILTER_MODE_BUTTON_LABEL';
-export const WORKFLOW_LIST_STATE = 'WORKFLOW_LIST_STATE';
-export const WORKFLOW_LIST_STATUS = 'WORKFLOW_LIST_STATUS';
-export const WORKFLOW_LIST_STATUS_NAME = 'WORKFLOW_LIST_STATUS_NAME';
-export const WORKFLOW_LIST_WORKFLOW_ID = 'WORKFLOW_LIST_WORKFLOW_ID';
+import { FILTER_MODE_ADVANCED } from '../constants';
+
+const getCriteria = ({
+  endTime,
+  filterMode,
+  queryString,
+  startTime,
+  status,
+  workflowId,
+  workflowName,
+}) => {
+  if (!endTime || !startTime) {
+    return null;
+  }
+
+  if (filterMode === FILTER_MODE_ADVANCED) {
+    return {
+      queryString: queryString.trim(),
+    };
+  }
+
+  const criteria = {
+    startTime,
+    endTime,
+    status,
+    ...(workflowId && { workflowId: workflowId.trim() }),
+    ...(workflowName && { workflowName: workflowName.trim() }),
+  };
+
+  return criteria;
+};
+
+export default getCriteria;
