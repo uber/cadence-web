@@ -41,8 +41,8 @@ const getCriteria = ({
   }
 
   const criteria = {
-    endTime,
     startTime,
+    endTime,
     status,
     ...(workflowId && { workflowId: workflowId.trim() }),
     ...(workflowName && { workflowName: workflowName.trim() }),
