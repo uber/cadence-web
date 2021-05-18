@@ -25,6 +25,9 @@ import debounce from 'lodash-es/debounce';
 import {
   FILTER_MODE_ADVANCED,
   FILTER_MODE_BASIC,
+  STATE_ALL,
+  STATE_CLOSED,
+  STATE_OPEN,
   STATUS_ALL,
   STATUS_CLOSED,
   STATUS_LIST,
@@ -50,6 +53,7 @@ export default {
     'domain',
     'filterMode',
     'filterModeButtonLabel',
+    'state',
     'status',
     'statusName',
     'timeFormat',
@@ -140,27 +144,18 @@ export default {
 
       return getStartTimeIsoString(range, startTime);
     },
-    state() {
-      const { statusName } = this;
-
-      if (!this.statusName || statusName == 'ALL') {
-        return 'all';
-      }
-
-      return statusName === 'OPEN' ? 'open' : 'closed';
-    },
     range() {
-      const { state } = this;
+      const { maxRetentionDays, minStartDate, state } = this;
       const query = this.$route.query || {};
 
-      if (state === 'closed' && this.maxRetentionDays === undefined) {
+      if (state === STATE_CLOSED && maxRetentionDays === undefined) {
         return null;
       }
 
-      if (!this.isRouteRangeValid(this.minStartDate)) {
-        const defaultRange = ['all', 'open'].includes(state)
+      if (!this.isRouteRangeValid(minStartDate)) {
+        const defaultRange = [STATE_ALL, STATE_OPEN].includes(state)
           ? 30
-          : this.maxRetentionDays;
+          : maxRetentionDays;
         const updatedQuery = this.setRange(
           `last-${Math.min(30, defaultRange)}-days`
         );
@@ -303,7 +298,10 @@ export default {
 
       let workflows = [];
 
-      if (this.state !== 'all' || this.filterMode === FILTER_MODE_ADVANCED) {
+      if (
+        this.state !== STATE_ALL ||
+        this.filterMode === FILTER_MODE_ADVANCED
+      ) {
         const query = { ...this.criteria, nextPageToken: this.npt };
 
         if (query.queryString) {

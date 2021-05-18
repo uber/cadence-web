@@ -24,16 +24,19 @@ import { FILTER_MODE_BASIC } from './constants';
 import {
   WORKFLOW_LIST_FILTER_MODE,
   WORKFLOW_LIST_FILTER_MODE_BUTTON_LABEL,
+  WORKFLOW_LIST_STATE,
   WORKFLOW_LIST_STATUS,
   WORKFLOW_LIST_STATUS_NAME,
 } from './getter-types';
-import { getFilterModeButtonLabel, getStatus } from './helpers';
+import { getFilterModeButtonLabel, getState, getStatus } from './helpers';
 
 const getters = {
   [WORKFLOW_LIST_FILTER_MODE]: (_, getters) =>
     getters[ROUTE_QUERY].filterMode || FILTER_MODE_BASIC,
   [WORKFLOW_LIST_FILTER_MODE_BUTTON_LABEL]: (_, getters) =>
     getFilterModeButtonLabel(getters[WORKFLOW_LIST_FILTER_MODE]),
+  [WORKFLOW_LIST_STATE]: (_, getters) =>
+    getState(getters[WORKFLOW_LIST_STATUS_NAME]),
   [WORKFLOW_LIST_STATUS]: (_, getters) =>
     getStatus(getters[ROUTE_QUERY].status),
   [WORKFLOW_LIST_STATUS_NAME]: (_, getters) =>

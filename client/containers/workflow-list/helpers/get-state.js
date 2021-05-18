@@ -19,9 +19,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export const WORKFLOW_LIST_FILTER_MODE = 'WORKFLOW_LIST_FILTER_MODE';
-export const WORKFLOW_LIST_FILTER_MODE_BUTTON_LABEL =
-  'WORKFLOW_LIST_FILTER_MODE_BUTTON_LABEL';
-export const WORKFLOW_LIST_STATE = 'WORKFLOW_LIST_STATE';
-export const WORKFLOW_LIST_STATUS = 'WORKFLOW_LIST_STATUS';
-export const WORKFLOW_LIST_STATUS_NAME = 'WORKFLOW_LIST_STATUS_NAME';
+import {
+  STATE_ALL,
+  STATE_CLOSED,
+  STATE_OPEN,
+  STATUS_ALL,
+  STATUS_OPEN,
+} from '../constants';
+
+const getState = statusName => {
+  if (!statusName || statusName === STATUS_ALL) {
+    return STATE_ALL;
+  }
+
+  if (statusName === STATUS_OPEN) {
+    return STATE_OPEN;
+  }
+
+  return STATE_CLOSED;
+};
+
+export default getState;
