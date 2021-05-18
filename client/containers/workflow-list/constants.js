@@ -22,6 +22,10 @@
 export const FILTER_MODE_ADVANCED = 'advanced';
 export const FILTER_MODE_BASIC = 'basic';
 
+export const STATE_ALL = 'all';
+export const STATE_CLOSED = 'closed';
+export const STATE_OPEN = 'open';
+
 export const STATUS_ALL = 'ALL';
 export const STATUS_CANCELED = 'CANCELED';
 export const STATUS_CLOSED = 'CLOSED';
