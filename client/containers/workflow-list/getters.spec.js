@@ -22,7 +22,7 @@
 import { ROUTE_QUERY } from '../route/getter-types';
 import { FILTER_MODE_ADVANCED, FILTER_MODE_BASIC } from './constants';
 import wfListGetterFns from './getters';
-import { WORKFLOW_LIST_FILTER_MODE } from './getter-types';
+import { WORKFLOW_LIST_FILTER_MODE, WORKFLOW_LIST_QUERY_STRING } from './getter-types';
 import { initGetters } from '~test';
 
 describe('workflow list getters', () => {
@@ -56,6 +56,40 @@ describe('workflow list getters', () => {
         const output = getters[WORKFLOW_LIST_FILTER_MODE];
 
         expect(output).toEqual(FILTER_MODE_BASIC);
+      });
+    });
+  });
+
+  describe('when calling getters[WORKFLOW_LIST_QUERY_STRING]', () => {
+    describe('and getters[ROUTE_QUERY].queryString is set', () => {
+      const getterFns = {
+        ...wfListGetterFns,
+        [ROUTE_QUERY]: () => ({
+          queryString: 'WorkflowId = "1234"',
+        }),
+      };
+
+      it('should return the value set.', () => {
+        const getters = initGetters({ getterFns });
+        const output = getters[WORKFLOW_LIST_QUERY_STRING];
+
+        expect(output).toEqual('WorkflowId = "1234"');
+      });
+    });
+
+    describe('and getters[ROUTE_QUERY].queryString is not set', () => {
+      const getterFns = {
+        ...wfListGetterFns,
+        [ROUTE_QUERY]: () => ({
+          queryString: null,
+        }),
+      };
+
+      it('should return "".', () => {
+        const getters = initGetters({ getterFns });
+        const output = getters[WORKFLOW_LIST_QUERY_STRING];
+
+        expect(output).toEqual('');
       });
     });
   });
