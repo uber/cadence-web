@@ -30,6 +30,7 @@ import {
   STATUS_LIST,
   STATUS_OPEN,
 } from './constants';
+import { getMinStartDate } from './helpers';
 import {
   ButtonFill,
   DateRangePicker,
@@ -50,6 +51,7 @@ export default {
     'filterMode',
     'filterModeButtonLabel',
     'status',
+    'statusName',
     'timeFormat',
     'timezone',
   ],
@@ -146,9 +148,6 @@ export default {
       }
 
       return statusName === 'OPEN' ? 'open' : 'closed';
-    },
-    statusName() {
-      return this.status.value;
     },
     range() {
       const { state } = this;
@@ -346,18 +345,13 @@ export default {
       this.results = [...this.results, ...workflows];
     },
     getMinStartDate() {
-      const {
+      const { maxRetentionDays, now, statusName } = this;
+
+      return getMinStartDate({
         maxRetentionDays,
-        status: { value: status },
-      } = this;
-
-      if (['OPEN', 'ALL'].includes(status)) {
-        return null;
-      }
-
-      return moment(this.now)
-        .subtract(maxRetentionDays, 'days')
-        .startOf('days');
+        now,
+        statusName,
+      });
     },
     refreshWorkflows: debounce(
       function refreshWorkflows() {

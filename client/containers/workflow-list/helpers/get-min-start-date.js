@@ -19,8 +19,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export const WORKFLOW_LIST_FILTER_MODE = 'WORKFLOW_LIST_FILTER_MODE';
-export const WORKFLOW_LIST_FILTER_MODE_BUTTON_LABEL =
-  'WORKFLOW_LIST_FILTER_MODE_BUTTON_LABEL';
-export const WORKFLOW_LIST_STATUS = 'WORKFLOW_LIST_STATUS';
-export const WORKFLOW_LIST_STATUS_NAME = 'WORKFLOW_LIST_STATUS_NAME';
+import moment from 'moment';
+import { STATUS_OPEN, STATUS_ALL } from '../constants';
+
+const getMinStartDate = ({ maxRetentionDays, now, statusName }) => {
+  if ([STATUS_OPEN, STATUS_ALL].includes(statusName)) {
+    return null;
+  }
+
+  return moment(now)
+    .subtract(maxRetentionDays, 'days')
+    .startOf('days');
+};
+
+export default getMinStartDate;

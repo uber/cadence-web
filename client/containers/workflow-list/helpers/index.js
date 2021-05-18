@@ -20,4 +20,5 @@
 // THE SOFTWARE.
 
 export { default as getFilterModeButtonLabel } from './get-filter-mode-button-label';
+export { default as getMinStartDate } from './get-min-start-date';
 export { default as getStatus } from './get-status';
