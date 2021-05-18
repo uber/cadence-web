@@ -30,7 +30,7 @@ const getCriteria = ({
   workflowId,
   workflowName,
 }) => {
-  if (!startTime || !endTime) {
+  if (!endTime || !startTime) {
     return null;
   }
 

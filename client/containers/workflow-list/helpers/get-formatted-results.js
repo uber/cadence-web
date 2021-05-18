@@ -27,16 +27,6 @@ const getFormattedResults = ({ dateFormat, results, timeFormat, timezone }) =>
     const status = (result.closeStatus || STATUS_OPEN).toLowerCase();
 
     return {
-      workflowId: result.execution.workflowId,
-      runId: result.execution.runId,
-      uniqueId: `${result.execution.runId}-${status}`,
-      workflowName: result.type.name,
-      startTime: getDatetimeFormattedString({
-        date: result.startTime,
-        dateFormat,
-        timeFormat,
-        timezone,
-      }),
       endTime: result.closeTime
         ? getDatetimeFormattedString({
             date: result.closeTime,
@@ -45,7 +35,17 @@ const getFormattedResults = ({ dateFormat, results, timeFormat, timezone }) =>
             timezone,
           })
         : '',
+      runId: result.execution.runId,
+      startTime: getDatetimeFormattedString({
+        date: result.startTime,
+        dateFormat,
+        timeFormat,
+        timezone,
+      }),
       status,
+      uniqueId: `${result.execution.runId}-${status}`,
+      workflowId: result.execution.workflowId,
+      workflowName: result.type.name,
     };
   });
 
