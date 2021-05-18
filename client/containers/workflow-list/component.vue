@@ -58,6 +58,7 @@ export default {
     'statusName',
     'timeFormat',
     'timezone',
+    'workflowName',
   ],
   data() {
     return {
@@ -213,9 +214,6 @@ export default {
     },
     workflowId() {
       return this.$route.query.workflowId;
-    },
-    workflowName() {
-      return this.$route.query.workflowName;
     },
   },
   methods: {
