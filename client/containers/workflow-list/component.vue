@@ -33,7 +33,7 @@ import {
   STATUS_LIST,
   STATUS_OPEN,
 } from './constants';
-import { getMinStartDate } from './helpers';
+import { getCriteria, getFormattedResults, getMinStartDate } from './helpers';
 import {
   ButtonFill,
   DateRangePicker,
@@ -41,11 +41,7 @@ import {
   TextInput,
   WorkflowGrid,
 } from '~components';
-import {
-  getDatetimeFormattedString,
-  getEndTimeIsoString,
-  getStartTimeIsoString,
-} from '~helpers';
+import { getEndTimeIsoString, getStartTimeIsoString } from '~helpers';
 
 export default {
   props: [
@@ -58,6 +54,7 @@ export default {
     'statusName',
     'timeFormat',
     'timezone',
+    'workflowId',
   ],
   data() {
     return {
@@ -113,27 +110,7 @@ export default {
     formattedResults() {
       const { dateFormat, results, timeFormat, timezone } = this;
 
-      return results.map(result => ({
-        workflowId: result.execution.workflowId,
-        runId: result.execution.runId,
-        uniqueId: `${result.execution.runId}-${result.closeStatus || 'OPEN'}`,
-        workflowName: result.type.name,
-        startTime: getDatetimeFormattedString({
-          date: result.startTime,
-          dateFormat,
-          timeFormat,
-          timezone,
-        }),
-        endTime: result.closeTime
-          ? getDatetimeFormattedString({
-              date: result.closeTime,
-              dateFormat,
-              timeFormat,
-              timezone,
-            })
-          : '',
-        status: (result.closeStatus || 'open').toLowerCase(),
-      }));
+      return getFormattedResults({ dateFormat, results, timeFormat, timezone });
     },
     startTime() {
       const { range, startTime } = this.$route.query;
@@ -185,34 +162,21 @@ export default {
         workflowName,
       } = this;
 
-      if (!startTime || !endTime) {
-        return null;
-      }
-
-      if (filterMode === FILTER_MODE_ADVANCED) {
-        return {
-          queryString: queryString.trim(),
-        };
-      }
-
-      const criteria = {
-        startTime,
+      return getCriteria({
         endTime,
+        filterMode,
+        queryString,
+        startTime,
         status,
-        ...(workflowId && { workflowId: workflowId.trim() }),
-        ...(workflowName && { workflowName: workflowName.trim() }),
-      };
-
-      return criteria;
+        workflowId,
+        workflowName,
+      });
     },
     queryString() {
       return this.$route.query.queryString || '';
     },
     minStartDate() {
       return this.getMinStartDate();
-    },
-    workflowId() {
-      return this.$route.query.workflowId;
     },
     workflowName() {
       return this.$route.query.workflowName;
