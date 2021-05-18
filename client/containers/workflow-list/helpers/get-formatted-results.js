@@ -19,11 +19,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export const WORKFLOW_LIST_FILTER_MODE = 'WORKFLOW_LIST_FILTER_MODE';
-export const WORKFLOW_LIST_FILTER_MODE_BUTTON_LABEL =
-  'WORKFLOW_LIST_FILTER_MODE_BUTTON_LABEL';
-export const WORKFLOW_LIST_STATE = 'WORKFLOW_LIST_STATE';
-export const WORKFLOW_LIST_STATUS = 'WORKFLOW_LIST_STATUS';
-export const WORKFLOW_LIST_STATUS_NAME = 'WORKFLOW_LIST_STATUS_NAME';
-export const WORKFLOW_LIST_WORKFLOW_ID = 'WORKFLOW_LIST_WORKFLOW_ID';
-export const WORKFLOW_LIST_WORKFLOW_NAME = 'WORKFLOW_LIST_WORKFLOW_NAME';
+import { STATUS_OPEN } from '../constants';
+import { getDatetimeFormattedString } from '~helpers';
+
+const getFormattedResults = ({ dateFormat, results, timeFormat, timezone }) =>
+  results.map(result => {
+    const status = (result.closeStatus || STATUS_OPEN).toLowerCase();
+
+    return {
+      endTime: result.closeTime
+        ? getDatetimeFormattedString({
+            date: result.closeTime,
+            dateFormat,
+            timeFormat,
+            timezone,
+          })
+        : '',
+      runId: result.execution.runId,
+      startTime: getDatetimeFormattedString({
+        date: result.startTime,
+        dateFormat,
+        timeFormat,
+        timezone,
+      }),
+      status,
+      uniqueId: `${result.execution.runId}-${status}`,
+      workflowId: result.execution.workflowId,
+      workflowName: result.type.name,
+    };
+  });
+
+export default getFormattedResults;
