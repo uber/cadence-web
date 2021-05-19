@@ -212,7 +212,7 @@ export default {
       return { workflows, nextPageToken };
     },
     fetchDomain() {
-      const { domain } = this;
+      const { domain, now } = this;
 
       this.loading = true;
 
@@ -228,7 +228,7 @@ export default {
             `${domain}:workflows-time-range`
           );
 
-          if (prevRange && isRangeValid(prevRange, minStartDate)) {
+          if (prevRange && isRangeValid({ minStartDate, now, range: prevRange })) {
             this.setRange(prevRange);
           } else {
             this.setRange(`last-${Math.min(30, this.maxRetentionDays)}-days`);
@@ -326,11 +326,13 @@ export default {
       }
     },
     isRouteRangeValid(minStartDate) {
+      const { now } = this;
       const { endTime, range, startTime } = this.$route.query || {};
 
       return isRouteRangeValid({
         endTime,
         minStartDate,
+        now,
         range,
         startTime,
       });

@@ -21,13 +21,13 @@
 
 import moment from 'moment';
 
-const isRangeValid = (range, minStartDate) => {
+const isRangeValid = ({ minStartDate, now, range }) => {
   if (typeof range === 'string') {
     const [, count, unit] = range.split('-');
     let startTime;
 
     try {
-      startTime = moment()
+      startTime = moment(now)
         .subtract(count, unit)
         .startOf(unit);
     } catch (e) {
