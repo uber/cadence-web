@@ -19,8 +19,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+import { ROUTE_UPDATE_QUERY } from '../route/action-types';
+import { WORKFLOW_LIST_ON_FILTER_CHANGE } from './action-types';
+
 const actions = {
-  // TODO - add actions here...
+  [WORKFLOW_LIST_ON_FILTER_CHANGE]: ({ dispatch }, payload) =>
+    dispatch(ROUTE_UPDATE_QUERY, payload),
 };
 
 export default actions;
