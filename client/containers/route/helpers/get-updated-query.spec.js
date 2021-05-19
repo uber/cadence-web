@@ -23,18 +23,35 @@ import getUpdatedQuery from './get-updated-query';
 
 describe('route helpers getUpdatedQuery', () => {
   describe('when getUpdatedQuery is called with a param in payload that is an empty string', () => {
+    const query = {
+      omittedQuery: 'previous-query-value',
+    };
+
+    const payload = {
+      omittedQuery: '',
+    };
+
     it('should omit that entry from the returned updated query.', () => {
-      const query = {
-        omittedQuery: 'previous-query-value',
-      };
-
-      const payload = {
-        omittedQuery: '',
-      };
-
       const output = getUpdatedQuery({ payload, query });
 
       expect(output.omittedQuery).toEqual(undefined);
+    });
+  });
+
+  describe('when getUpdatedQuery is called with a payload which does not change the query', () => {
+    const query = {
+      key: 'value',
+      key2: 'value2',
+    };
+
+    const payload = {
+      key: 'value',
+    };
+
+    it('should return null.', () => {
+      const output = getUpdatedQuery({ payload, query });
+
+      expect(output).toEqual(null);
     });
   });
 });
