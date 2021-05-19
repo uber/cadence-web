@@ -26,10 +26,18 @@ import { getUpdatedQuery } from './helpers';
 const actionCreator = router => ({
   [ROUTE_PUSH]: (_, args) => router.push(args),
   [ROUTE_REPLACE]: (_, args) => router.replace(args),
-  [ROUTE_UPDATE_QUERY]: ({ getters }, payload) =>
-    router.replace({
-      query: getUpdatedQuery({ payload, query: getters[ROUTE_QUERY] }),
-    }),
+  [ROUTE_UPDATE_QUERY]: ({ getters }, payload) => {
+    const updatedQuery = getUpdatedQuery({
+      payload,
+      query: getters[ROUTE_QUERY],
+    });
+
+    if (updatedQuery) {
+      router.replace({
+        query: updatedQuery,
+      });
+    }
+  },
 });
 
 export default actionCreator;
