@@ -32,7 +32,12 @@ import {
   WORKFLOW_LIST_WORKFLOW_ID,
   WORKFLOW_LIST_WORKFLOW_NAME,
 } from './getter-types';
-import { getFetchWorkflowListUrl, getFilterModeButtonLabel, getState, getStatus } from './helpers';
+import {
+  getFetchWorkflowListUrl,
+  getFilterModeButtonLabel,
+  getState,
+  getStatus,
+} from './helpers';
 
 const getters = {
   [WORKFLOW_LIST_FETCH_WORKFLOW_LIST_URL]: (_, getters) =>
