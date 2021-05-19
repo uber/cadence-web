@@ -49,6 +49,7 @@ export default {
     'domain',
     'filterMode',
     'filterModeButtonLabel',
+    'queryString',
     'state',
     'status',
     'statusName',
@@ -172,9 +173,6 @@ export default {
         workflowId,
         workflowName,
       });
-    },
-    queryString() {
-      return this.$route.query.queryString || '';
     },
     minStartDate() {
       return this.getMinStartDate();

@@ -24,6 +24,7 @@ import { FILTER_MODE_BASIC } from './constants';
 import {
   WORKFLOW_LIST_FILTER_MODE,
   WORKFLOW_LIST_FILTER_MODE_BUTTON_LABEL,
+  WORKFLOW_LIST_QUERY_STRING,
   WORKFLOW_LIST_STATE,
   WORKFLOW_LIST_STATUS,
   WORKFLOW_LIST_STATUS_NAME,
@@ -37,6 +38,8 @@ const getters = {
     getters[ROUTE_QUERY].filterMode || FILTER_MODE_BASIC,
   [WORKFLOW_LIST_FILTER_MODE_BUTTON_LABEL]: (_, getters) =>
     getFilterModeButtonLabel(getters[WORKFLOW_LIST_FILTER_MODE]),
+  [WORKFLOW_LIST_QUERY_STRING]: (_, getters) =>
+    getters[ROUTE_QUERY].queryString || '',
   [WORKFLOW_LIST_STATE]: (_, getters) =>
     getState(getters[WORKFLOW_LIST_STATUS_NAME]),
   [WORKFLOW_LIST_STATUS]: (_, getters) =>
