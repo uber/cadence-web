@@ -20,11 +20,20 @@
 // THE SOFTWARE.
 
 import { ROUTE_UPDATE_QUERY } from '../route/action-types';
-import { WORKFLOW_LIST_ON_FILTER_CHANGE } from './action-types';
+import {
+  WORKFLOW_LIST_ON_FILTER_CHANGE,
+  WORKFLOW_LIST_ON_FILTER_MODE_CLICK,
+} from './action-types';
+import { WORKFLOW_LIST_FILTER_MODE } from './getter-types';
+import { toggleFilterMode } from './helpers';
 
 const actions = {
   [WORKFLOW_LIST_ON_FILTER_CHANGE]: ({ dispatch }, payload) =>
     dispatch(ROUTE_UPDATE_QUERY, payload),
+  [WORKFLOW_LIST_ON_FILTER_MODE_CLICK]: ({ dispatch, getters }) =>
+    dispatch(ROUTE_UPDATE_QUERY, {
+      filterMode: toggleFilterMode(getters[WORKFLOW_LIST_FILTER_MODE]),
+    }),
 };
 
 export default actions;
