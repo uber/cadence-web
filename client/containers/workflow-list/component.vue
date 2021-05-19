@@ -24,7 +24,6 @@ import moment from 'moment';
 import debounce from 'lodash-es/debounce';
 import {
   FILTER_MODE_ADVANCED,
-  FILTER_MODE_BASIC,
   STATE_ALL,
   STATE_CLOSED,
   STATE_OPEN,
@@ -365,15 +364,8 @@ export default {
       return query;
     },
     onFilterModeClick() {
-      const { query } = this.$route;
-
       this.clearState();
-      const filterMode =
-        this.filterMode === FILTER_MODE_ADVANCED
-          ? FILTER_MODE_BASIC
-          : FILTER_MODE_ADVANCED;
-
-      this.$router.replace({ query: { ...query, filterMode } });
+      this.$emit('onFilterModeClick');
     },
     onWorkflowGridScroll(startIndex, endIndex) {
       if (!this.npt && !this.nptAlt) {

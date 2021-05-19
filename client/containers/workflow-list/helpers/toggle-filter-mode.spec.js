@@ -19,6 +19,37 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export const WORKFLOW_LIST_ON_FILTER_CHANGE = 'WORKFLOW_LIST_ON_FILTER_CHANGE';
-export const WORKFLOW_LIST_ON_FILTER_MODE_CLICK =
-  'WORKFLOW_LIST_ON_FILTER_MODE_CLICK';
+import { FILTER_MODE_ADVANCED, FILTER_MODE_BASIC } from '../constants';
+import toggleFilterMode from './toggle-filter-mode';
+
+describe('toggleFilterMode', () => {
+  describe('filterMode = FILTER_MODE_ADVANCED', () => {
+    const filterMode = FILTER_MODE_ADVANCED;
+
+    it('should return FILTER_MODE_BASIC', () => {
+      const output = toggleFilterMode(filterMode);
+
+      expect(output).toEqual(FILTER_MODE_BASIC);
+    });
+  });
+
+  describe('filterMode = FILTER_MODE_BASIC', () => {
+    const filterMode = FILTER_MODE_BASIC;
+
+    it('should return FILTER_MODE_ADVANCED', () => {
+      const output = toggleFilterMode(filterMode);
+
+      expect(output).toEqual(FILTER_MODE_ADVANCED);
+    });
+  });
+
+  describe('filterMode = null', () => {
+    const filterMode = null;
+
+    it('should return FILTER_MODE_ADVANCED', () => {
+      const output = toggleFilterMode(filterMode);
+
+      expect(output).toEqual(FILTER_MODE_ADVANCED);
+    });
+  });
+});

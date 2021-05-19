@@ -20,7 +20,10 @@
 // THE SOFTWARE.
 
 import { connect } from 'vuex-connect';
-import { WORKFLOW_LIST_ON_FILTER_CHANGE } from './action-types';
+import {
+  WORKFLOW_LIST_ON_FILTER_CHANGE,
+  WORKFLOW_LIST_ON_FILTER_MODE_CLICK,
+} from './action-types';
 import {
   WORKFLOW_LIST_FETCH_WORKFLOW_LIST_URL,
   WORKFLOW_LIST_FILTER_BY,
@@ -36,6 +39,7 @@ import {
 
 const actionsToEvents = {
   onFilterChange: WORKFLOW_LIST_ON_FILTER_CHANGE,
+  onFilterModeClick: WORKFLOW_LIST_ON_FILTER_MODE_CLICK,
 };
 
 const gettersToProps = {
