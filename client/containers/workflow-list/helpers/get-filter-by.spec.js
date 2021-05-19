@@ -19,15 +19,43 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export const WORKFLOW_LIST_FETCH_WORKFLOW_LIST_URL =
-  'WORKFLOW_LIST_FETCH_WORKFLOW_LIST_URL';
-export const WORKFLOW_LIST_FILTER_BY = 'WORKFLOW_LIST_FILTER_BY';
-export const WORKFLOW_LIST_FILTER_MODE = 'WORKFLOW_LIST_FILTER_MODE';
-export const WORKFLOW_LIST_FILTER_MODE_BUTTON_LABEL =
-  'WORKFLOW_LIST_FILTER_MODE_BUTTON_LABEL';
-export const WORKFLOW_LIST_QUERY_STRING = 'WORKFLOW_LIST_QUERY_STRING';
-export const WORKFLOW_LIST_STATE = 'WORKFLOW_LIST_STATE';
-export const WORKFLOW_LIST_STATUS = 'WORKFLOW_LIST_STATUS';
-export const WORKFLOW_LIST_STATUS_NAME = 'WORKFLOW_LIST_STATUS_NAME';
-export const WORKFLOW_LIST_WORKFLOW_ID = 'WORKFLOW_LIST_WORKFLOW_ID';
-export const WORKFLOW_LIST_WORKFLOW_NAME = 'WORKFLOW_LIST_WORKFLOW_NAME';
+import {
+  FILTER_BY_CLOSE_TIME,
+  FILTER_BY_START_TIME,
+  STATUS_ALL,
+  STATUS_CLOSED,
+  STATUS_OPEN,
+} from '../constants';
+import getFilterBy from './get-filter-by';
+
+describe('getFilterBy', () => {
+  describe('statusName = STATUS_ALL', () => {
+    const statusName = STATUS_ALL;
+
+    it('should return FILTER_BY_START_TIME.', () => {
+      const output = getFilterBy(statusName);
+
+      expect(output).toEqual(FILTER_BY_START_TIME);
+    });
+  });
+
+  describe('statusName = STATUS_OPEN', () => {
+    const statusName = STATUS_OPEN;
+
+    it('should return FILTER_BY_START_TIME.', () => {
+      const output = getFilterBy(statusName);
+
+      expect(output).toEqual(FILTER_BY_START_TIME);
+    });
+  });
+
+  describe('statusName = STATUS_CLOSED', () => {
+    const statusName = STATUS_CLOSED;
+
+    it('should return FILTER_BY_CLOSE_TIME.', () => {
+      const output = getFilterBy(statusName);
+
+      expect(output).toEqual(FILTER_BY_CLOSE_TIME);
+    });
+  });
+});
