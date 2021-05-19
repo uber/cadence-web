@@ -19,13 +19,38 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export { default as getCriteria } from './get-criteria';
-export { default as getFetchWorkflowListUrl } from './get-fetch-workflow-list-url';
-export { default as getFilterBy } from './get-filter-by';
-export { default as getFilterModeButtonLabel } from './get-filter-mode-button-label';
-export { default as getFormattedResults } from './get-formatted-results';
-export { default as getMinStartDate } from './get-min-start-date';
-export { default as getState } from './get-state';
-export { default as getStatus } from './get-status';
-export { default as isRangeValid } from './is-range-valid';
-export { default as isRouteRangeValid } from './is-route-range-valid';
+import moment from 'moment';
+import isRouteRangeValid from './is-route-range-valid';
+
+describe('isRouteRangeValid', () => {
+  describe('minStartDate = 5 days before now', () => {
+    const now = '2021-05-06';
+    const minStartDate = moment(now).subtract(5, 'days');
+
+    describe('range = "last-3-days"', () => {
+      const range = 'last-3-days';
+
+      it('should return true', () => {
+        const output = isRouteRangeValid({ minStartDate, now, range });
+
+        expect(output).toEqual(true);
+      });
+    });
+
+    describe('startTime = "2021-05-01", endTime = "2021-05-06"', () => {
+      const startTime = '2021-05-01';
+      const endTime = '2021-05-06';
+
+      it('should return true', () => {
+        const output = isRouteRangeValid({
+          endTime,
+          minStartDate,
+          now,
+          startTime,
+        });
+
+        expect(output).toEqual(true);
+      });
+    });
+  });
+});
