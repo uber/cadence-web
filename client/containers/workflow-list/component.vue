@@ -22,7 +22,18 @@
 
 import moment from 'moment';
 import debounce from 'lodash-es/debounce';
-import { FILTER_MODE_ADVANCED, FILTER_MODE_BASIC } from './constants';
+import {
+  FILTER_MODE_ADVANCED,
+  FILTER_MODE_BASIC,
+  STATE_ALL,
+  STATE_CLOSED,
+  STATE_OPEN,
+  STATUS_ALL,
+  STATUS_CLOSED,
+  STATUS_LIST,
+  STATUS_OPEN,
+} from './constants';
+import { getCriteria, getFormattedResults, getMinStartDate } from './helpers';
 import {
   ButtonFill,
   DateRangePicker,
@@ -30,11 +41,7 @@ import {
   TextInput,
   WorkflowGrid,
 } from '~components';
-import {
-  getDatetimeFormattedString,
-  getEndTimeIsoString,
-  getStartTimeIsoString,
-} from '~helpers';
+import { getEndTimeIsoString, getStartTimeIsoString } from '~helpers';
 
 export default {
   props: [
@@ -42,8 +49,14 @@ export default {
     'domain',
     'filterMode',
     'filterModeButtonLabel',
+    'queryString',
+    'state',
+    'status',
+    'statusName',
     'timeFormat',
     'timezone',
+    'workflowId',
+    'workflowName',
   ],
   data() {
     return {
@@ -52,17 +65,7 @@ export default {
       error: undefined,
       npt: undefined,
       nptAlt: undefined,
-      statusList: [
-        { value: 'ALL', label: 'All' },
-        { value: 'OPEN', label: 'Open' },
-        { value: 'CLOSED', label: 'Closed' },
-        { value: 'COMPLETED', label: 'Completed' },
-        { value: 'FAILED', label: 'Failed' },
-        { value: 'CANCELED', label: 'Cancelled' },
-        { value: 'TERMINATED', label: 'Terminated' },
-        { value: 'CONTINUED_AS_NEW', label: 'Continued As New' },
-        { value: 'TIMED_OUT', label: 'Timed Out' },
-      ],
+      statusList: STATUS_LIST,
       maxRetentionDays: undefined,
       FILTER_MODE_ADVANCED: FILTER_MODE_ADVANCED,
     };
@@ -109,27 +112,7 @@ export default {
     formattedResults() {
       const { dateFormat, results, timeFormat, timezone } = this;
 
-      return results.map(result => ({
-        workflowId: result.execution.workflowId,
-        runId: result.execution.runId,
-        uniqueId: `${result.execution.runId}-${result.closeStatus || 'OPEN'}`,
-        workflowName: result.type.name,
-        startTime: getDatetimeFormattedString({
-          date: result.startTime,
-          dateFormat,
-          timeFormat,
-          timezone,
-        }),
-        endTime: result.closeTime
-          ? getDatetimeFormattedString({
-              date: result.closeTime,
-              dateFormat,
-              timeFormat,
-              timezone,
-            })
-          : '',
-        status: (result.closeStatus || 'open').toLowerCase(),
-      }));
+      return getFormattedResults({ dateFormat, results, timeFormat, timezone });
     },
     startTime() {
       const { range, startTime } = this.$route.query;
@@ -140,35 +123,18 @@ export default {
 
       return getStartTimeIsoString(range, startTime);
     },
-    state() {
-      const { statusName } = this;
-
-      if (!this.statusName || statusName == 'ALL') {
-        return 'all';
-      }
-
-      return statusName === 'OPEN' ? 'open' : 'closed';
-    },
-    status() {
-      return !this.$route.query || !this.$route.query.status
-        ? this.statusList[0]
-        : this.statusList.find(s => s.value === this.$route.query.status);
-    },
-    statusName() {
-      return this.status.value;
-    },
     range() {
-      const { state } = this;
+      const { maxRetentionDays, minStartDate, state } = this;
       const query = this.$route.query || {};
 
-      if (state === 'closed' && this.maxRetentionDays === undefined) {
+      if (state === STATE_CLOSED && maxRetentionDays === undefined) {
         return null;
       }
 
-      if (!this.isRouteRangeValid(this.minStartDate)) {
-        const defaultRange = ['all', 'open'].includes(state)
+      if (!this.isRouteRangeValid(minStartDate)) {
+        const defaultRange = [STATE_ALL, STATE_OPEN].includes(state)
           ? 30
-          : this.maxRetentionDays;
+          : maxRetentionDays;
         const updatedQuery = this.setRange(
           `last-${Math.min(30, defaultRange)}-days`
         );
@@ -198,37 +164,18 @@ export default {
         workflowName,
       } = this;
 
-      if (!startTime || !endTime) {
-        return null;
-      }
-
-      if (filterMode === FILTER_MODE_ADVANCED) {
-        return {
-          queryString: queryString.trim(),
-        };
-      }
-
-      const criteria = {
-        startTime,
+      return getCriteria({
         endTime,
+        filterMode,
+        queryString,
+        startTime,
         status,
-        ...(workflowId && { workflowId: workflowId.trim() }),
-        ...(workflowName && { workflowName: workflowName.trim() }),
-      };
-
-      return criteria;
-    },
-    queryString() {
-      return this.$route.query.queryString || '';
+        workflowId,
+        workflowName,
+      });
     },
     minStartDate() {
       return this.getMinStartDate();
-    },
-    workflowId() {
-      return this.$route.query.workflowId;
-    },
-    workflowName() {
-      return this.$route.query.workflowName;
     },
   },
   methods: {
@@ -250,7 +197,7 @@ export default {
       this.loading = true;
       this.error = undefined;
 
-      const includeStatus = !['ALL', 'OPEN', 'CLOSED'].includes(
+      const includeStatus = ![STATUS_ALL, STATUS_OPEN, STATUS_CLOSED].includes(
         queryWithStatus.status
       );
       const { status, ...queryWithoutStatus } = queryWithStatus;
@@ -311,7 +258,10 @@ export default {
 
       let workflows = [];
 
-      if (this.state !== 'all' || this.filterMode === FILTER_MODE_ADVANCED) {
+      if (
+        this.state !== STATE_ALL ||
+        this.filterMode === FILTER_MODE_ADVANCED
+      ) {
         const query = { ...this.criteria, nextPageToken: this.npt };
 
         if (query.queryString) {
@@ -353,18 +303,13 @@ export default {
       this.results = [...this.results, ...workflows];
     },
     getMinStartDate() {
-      const {
+      const { maxRetentionDays, now, statusName } = this;
+
+      return getMinStartDate({
         maxRetentionDays,
-        status: { value: status },
-      } = this;
-
-      if (['OPEN', 'ALL'].includes(status)) {
-        return null;
-      }
-
-      return moment(this.now)
-        .subtract(maxRetentionDays, 'days')
-        .startOf('days');
+        now,
+        statusName,
+      });
     },
     refreshWorkflows: debounce(
       function refreshWorkflows() {

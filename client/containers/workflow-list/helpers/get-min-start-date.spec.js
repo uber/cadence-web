@@ -19,33 +19,39 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export const FILTER_MODE_ADVANCED = 'advanced';
-export const FILTER_MODE_BASIC = 'basic';
+import { STATUS_ALL, STATUS_CLOSED, STATUS_OPEN } from '../constants';
+import getMinStartDate from './get-min-start-date';
 
-export const STATE_ALL = 'all';
-export const STATE_CLOSED = 'closed';
-export const STATE_OPEN = 'open';
+describe('getMinStartDate', () => {
+  describe('when statusName = STATUS_OPEN', () => {
+    const statusName = STATUS_OPEN;
 
-export const STATUS_ALL = 'ALL';
-export const STATUS_CANCELED = 'CANCELED';
-export const STATUS_CLOSED = 'CLOSED';
-export const STATUS_COMPLETED = 'COMPLETED';
-export const STATUS_CONTINUED_AS_NEW = 'CONTINUED_AS_NEW';
-export const STATUS_FAILED = 'FAILED';
-export const STATUS_OPEN = 'OPEN';
-export const STATUS_TERMINATED = 'TERMINATED';
-export const STATUS_TIMED_OUT = 'TIMED_OUT';
+    it('should return null.', () => {
+      const output = getMinStartDate({ statusName });
 
-export const STATUS_LIST = [
-  { value: STATUS_ALL, label: 'All' },
-  { value: STATUS_OPEN, label: 'Open' },
-  { value: STATUS_CLOSED, label: 'Closed' },
-  { value: STATUS_COMPLETED, label: 'Completed' },
-  { value: STATUS_FAILED, label: 'Failed' },
-  { value: STATUS_CANCELED, label: 'Cancelled' },
-  { value: STATUS_TERMINATED, label: 'Terminated' },
-  { value: STATUS_CONTINUED_AS_NEW, label: 'Continued As New' },
-  { value: STATUS_TIMED_OUT, label: 'Timed Out' },
-];
+      expect(output).toEqual(null);
+    });
+  });
 
-export const STATUS_LIST_OPTION_DEFAULT = STATUS_LIST[0];
+  describe('when statusName = STATUS_ALL', () => {
+    const statusName = STATUS_ALL;
+
+    it('should return null.', () => {
+      const output = getMinStartDate({ statusName });
+
+      expect(output).toEqual(null);
+    });
+  });
+
+  describe('when statusName = STATUS_CLOSED and maxRetentionDays = 3', () => {
+    const maxRetentionDays = 3;
+    const statusName = STATUS_CLOSED;
+
+    it('should return a date 3 days before now.', () => {
+      const now = new Date(2021, 4, 4); // month is 0 based. 4 = may
+      const output = getMinStartDate({ maxRetentionDays, now, statusName });
+
+      expect(output.toISOString()).toEqual('2021-05-01T00:00:00.000Z');
+    });
+  });
+});

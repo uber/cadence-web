@@ -19,7 +19,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+import isEqual from 'lodash.isequal';
+
 // omits entries from payload with empty string to be removed from original URL query params
+// if query and updated query are equal, it will return null.
 const getUpdatedQuery = ({ payload, query }) => {
   const omittedKeys = [];
   const omittedPayload = Object.entries(payload).reduce(
@@ -50,10 +53,16 @@ const getUpdatedQuery = ({ payload, query }) => {
     {}
   );
 
-  return {
+  const updatedQuery = {
     ...omittedQuery,
     ...omittedPayload,
   };
+
+  if (isEqual(query, updatedQuery)) {
+    return null;
+  }
+
+  return updatedQuery;
 };
 
 export default getUpdatedQuery;
