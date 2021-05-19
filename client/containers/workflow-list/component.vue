@@ -316,16 +316,16 @@ export default {
       typeof Mocha === 'undefined' ? 200 : 60,
       { maxWait: 1000 }
     ),
-    onFilterChange(e) {
-      const target = e.target || e.testTarget; // test hook since Event.target is readOnly and unsettable
+    onFilterChange(event) {
+      const target = event.target || event.testTarget; // test hook since Event.target is readOnly and unsettable
+      const name = target.getAttribute('name');
+      const value = target.value;
 
-      this.$router.replaceQueryParam(target.getAttribute('name'), target.value);
+      this.$emit('onFilterChange', { [name]: value });
     },
     onStatusChange(status) {
       if (status) {
-        this.$router.replace({
-          query: { ...this.$route.query, status: status.value },
-        });
+        this.$emit('onFilterChange', { status: status.value });
       }
     },
     isRouteRangeValid(minStartDate) {

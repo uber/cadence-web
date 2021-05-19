@@ -19,4 +19,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export const WORKFLOW_LIST_ON_FILTER_CHANGE = 'WORKFLOW_LIST_ON_FILTER_CHANGE';
+import { ROUTE_UPDATE_QUERY } from '../route/action-types';
+import actions from './actions';
+import { WORKFLOW_LIST_ON_FILTER_CHANGE } from './action-types';
+import { STATUS_CLOSED } from './constants';
+
+describe('workflow list actions', () => {
+  describe('when calling actions[WORKFLOW_LIST_ON_FILTER_CHANGE]', () => {
+    it('should call dispatch with ROUTE_UPDATE_QUERY & payload', () => {
+      const dispatch = jest.fn();
+      const payload = {
+        status: STATUS_CLOSED,
+      };
+
+      actions[WORKFLOW_LIST_ON_FILTER_CHANGE]({ dispatch }, payload);
+      expect(dispatch).toHaveBeenCalledWith(ROUTE_UPDATE_QUERY, payload);
+    });
+  });
+});
