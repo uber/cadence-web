@@ -24,7 +24,6 @@ import moment from 'moment';
 import debounce from 'lodash-es/debounce';
 import {
   FILTER_MODE_ADVANCED,
-  FILTER_MODE_BASIC,
   STATE_ALL,
   STATE_CLOSED,
   STATE_OPEN,
