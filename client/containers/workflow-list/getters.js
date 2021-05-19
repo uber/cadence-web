@@ -19,9 +19,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { ROUTE_QUERY } from '../route/getter-types';
+import { ROUTE_PARAMS_DOMAIN, ROUTE_QUERY } from '../route/getter-types';
 import { FILTER_MODE_BASIC } from './constants';
 import {
+  WORKFLOW_LIST_FETCH_WORKFLOW_LIST_URL,
   WORKFLOW_LIST_FILTER_BY,
   WORKFLOW_LIST_FILTER_MODE,
   WORKFLOW_LIST_FILTER_MODE_BUTTON_LABEL,
@@ -33,6 +34,7 @@ import {
   WORKFLOW_LIST_WORKFLOW_NAME,
 } from './getter-types';
 import {
+  getFetchWorkflowListUrl,
   getFilterBy,
   getFilterModeButtonLabel,
   getState,
@@ -40,6 +42,12 @@ import {
 } from './helpers';
 
 const getters = {
+  [WORKFLOW_LIST_FETCH_WORKFLOW_LIST_URL]: (_, getters) =>
+    getFetchWorkflowListUrl({
+      domain: getters[ROUTE_PARAMS_DOMAIN],
+      filterMode: getters[WORKFLOW_LIST_FILTER_MODE],
+      state: getters[WORKFLOW_LIST_STATE],
+    }),
   [WORKFLOW_LIST_FILTER_BY]: (_, getters) =>
     getFilterBy(getters[WORKFLOW_LIST_STATUS_NAME]),
   [WORKFLOW_LIST_FILTER_MODE]: (_, getters) =>

@@ -20,6 +20,7 @@
 // THE SOFTWARE.
 
 export { default as getCriteria } from './get-criteria';
+export { default as getFetchWorkflowListUrl } from './get-fetch-workflow-list-url';
 export { default as getFilterBy } from './get-filter-by';
 export { default as getFilterModeButtonLabel } from './get-filter-mode-button-label';
 export { default as getFormattedResults } from './get-formatted-results';
