@@ -28,6 +28,7 @@ import {
   WORKFLOW_LIST_STATUS,
   WORKFLOW_LIST_STATUS_NAME,
   WORKFLOW_LIST_WORKFLOW_ID,
+  WORKFLOW_LIST_WORKFLOW_NAME,
 } from './getter-types';
 
 const actionsToEvents = {
@@ -42,6 +43,7 @@ const gettersToProps = {
   status: WORKFLOW_LIST_STATUS,
   statusName: WORKFLOW_LIST_STATUS_NAME,
   workflowId: WORKFLOW_LIST_WORKFLOW_ID,
+  workflowName: WORKFLOW_LIST_WORKFLOW_NAME,
 };
 
 export default connect({

@@ -56,6 +56,7 @@ export default {
     'timeFormat',
     'timezone',
     'workflowId',
+    'workflowName',
   ],
   data() {
     return {
@@ -175,9 +176,6 @@ export default {
     },
     minStartDate() {
       return this.getMinStartDate();
-    },
-    workflowName() {
-      return this.$route.query.workflowName;
     },
   },
   methods: {

@@ -25,6 +25,7 @@ import wfListGetterFns from './getters';
 import {
   WORKFLOW_LIST_FILTER_MODE,
   WORKFLOW_LIST_QUERY_STRING,
+  WORKFLOW_LIST_WORKFLOW_NAME,
 } from './getter-types';
 import { initGetters } from '~test';
 
@@ -94,6 +95,22 @@ describe('workflow list getters', () => {
 
         expect(output).toEqual('');
       });
+    });
+  });
+
+  describe('when calling getters[WORKFLOW_LIST_WORKFLOW_NAME] and getters[ROUTE_QUERY].workflowName = "wf-name"', () => {
+    const getterFns = {
+      ...wfListGetterFns,
+      [ROUTE_QUERY]: () => ({
+        workflowName: 'wf-name',
+      }),
+    };
+
+    it('should return "wf-name".', () => {
+      const getters = initGetters({ getterFns });
+      const output = getters[WORKFLOW_LIST_WORKFLOW_NAME];
+
+      expect(output).toEqual('wf-name');
     });
   });
 });
