@@ -22,7 +22,10 @@
 import { ROUTE_QUERY } from '../route/getter-types';
 import { FILTER_MODE_ADVANCED, FILTER_MODE_BASIC } from './constants';
 import wfListGetterFns from './getters';
-import { WORKFLOW_LIST_FILTER_MODE } from './getter-types';
+import {
+  WORKFLOW_LIST_FILTER_MODE,
+  WORKFLOW_LIST_WORKFLOW_NAME,
+} from './getter-types';
 import { initGetters } from '~test';
 
 describe('workflow list getters', () => {
@@ -57,6 +60,22 @@ describe('workflow list getters', () => {
 
         expect(output).toEqual(FILTER_MODE_BASIC);
       });
+    });
+  });
+
+  describe('when calling getters[WORKFLOW_LIST_WORKFLOW_NAME] and getters[ROUTE_QUERY].workflowName = "wf-name"', () => {
+    const getterFns = {
+      ...wfListGetterFns,
+      [ROUTE_QUERY]: () => ({
+        workflowName: 'wf-name',
+      }),
+    };
+
+    it('should return "wf-name".', () => {
+      const getters = initGetters({ getterFns });
+      const output = getters[WORKFLOW_LIST_WORKFLOW_NAME];
+
+      expect(output).toEqual('wf-name');
     });
   });
 });

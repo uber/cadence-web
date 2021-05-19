@@ -28,6 +28,7 @@ import {
   WORKFLOW_LIST_STATUS,
   WORKFLOW_LIST_STATUS_NAME,
   WORKFLOW_LIST_WORKFLOW_ID,
+  WORKFLOW_LIST_WORKFLOW_NAME,
 } from './getter-types';
 import { getFilterModeButtonLabel, getState, getStatus } from './helpers';
 
@@ -43,6 +44,8 @@ const getters = {
   [WORKFLOW_LIST_STATUS_NAME]: (_, getters) =>
     getters[WORKFLOW_LIST_STATUS].value,
   [WORKFLOW_LIST_WORKFLOW_ID]: (_, getters) => getters[ROUTE_QUERY].workflowId,
+  [WORKFLOW_LIST_WORKFLOW_NAME]: (_, getters) =>
+    getters[ROUTE_QUERY].workflowName,
 };
 
 export default getters;
