@@ -47,6 +47,7 @@ export default {
   props: [
     'dateFormat',
     'domain',
+    'filterBy',
     'filterMode',
     'filterModeButtonLabel',
     'queryString',
@@ -103,11 +104,6 @@ export default {
       const { endTime, range } = this.$route.query;
 
       return getEndTimeIsoString(range, endTime);
-    },
-    filterBy() {
-      return ['ALL', 'OPEN'].includes(this.status.value)
-        ? 'StartTime'
-        : 'CloseTime';
     },
     formattedResults() {
       const { dateFormat, results, timeFormat, timezone } = this;

@@ -21,6 +21,7 @@
 
 import { connect } from 'vuex-connect';
 import {
+  WORKFLOW_LIST_FILTER_BY,
   WORKFLOW_LIST_FILTER_MODE,
   WORKFLOW_LIST_FILTER_MODE_BUTTON_LABEL,
   WORKFLOW_LIST_QUERY_STRING,
@@ -36,6 +37,7 @@ const actionsToEvents = {
 };
 
 const gettersToProps = {
+  filterBy: WORKFLOW_LIST_FILTER_BY,
   filterMode: WORKFLOW_LIST_FILTER_MODE,
   filterModeButtonLabel: WORKFLOW_LIST_FILTER_MODE_BUTTON_LABEL,
   queryString: WORKFLOW_LIST_QUERY_STRING,

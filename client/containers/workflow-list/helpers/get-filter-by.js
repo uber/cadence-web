@@ -19,10 +19,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export { default as getCriteria } from './get-criteria';
-export { default as getFilterBy } from './get-filter-by';
-export { default as getFilterModeButtonLabel } from './get-filter-mode-button-label';
-export { default as getFormattedResults } from './get-formatted-results';
-export { default as getMinStartDate } from './get-min-start-date';
-export { default as getState } from './get-state';
-export { default as getStatus } from './get-status';
+import {
+  FILTER_BY_CLOSE_TIME,
+  FILTER_BY_START_TIME,
+  STATUS_ALL,
+  STATUS_OPEN,
+} from '../constants';
+
+const getFilterBy = statusName =>
+  [STATUS_ALL, STATUS_OPEN].includes(statusName)
+    ? FILTER_BY_START_TIME
+    : FILTER_BY_CLOSE_TIME;
+
+export default getFilterBy;
