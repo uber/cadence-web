@@ -19,6 +19,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+export const FILTER_BY_START_TIME = 'StartTime';
+export const FILTER_BY_CLOSE_TIME = 'CloseTime';
+
 export const FILTER_MODE_ADVANCED = 'advanced';
 export const FILTER_MODE_BASIC = 'basic';
 
