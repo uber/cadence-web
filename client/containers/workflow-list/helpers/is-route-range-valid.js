@@ -21,13 +21,19 @@
 
 import isRangeValid from './is-range-valid';
 
-const isRouteRangeValid = ({ endTime, minStartDate, range, startTime }) => {
+const isRouteRangeValid = ({
+  endTime,
+  minStartDate,
+  now,
+  range,
+  startTime,
+}) => {
   if (range) {
-    return isRangeValid(range, minStartDate);
+    return isRangeValid({ minStartDate, now, range });
   }
 
   if (startTime && endTime) {
-    return isRangeValid({ endTime, startTime }, minStartDate);
+    return isRangeValid({ minStartDate, now, range: { endTime, startTime } });
   }
 
   return false;
