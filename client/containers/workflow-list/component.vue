@@ -228,7 +228,10 @@ export default {
             `${domain}:workflows-time-range`
           );
 
-          if (prevRange && isRangeValid({ minStartDate, now, range: prevRange })) {
+          if (
+            prevRange &&
+            isRangeValid({ minStartDate, now, range: prevRange })
+          ) {
             this.setRange(prevRange);
           } else {
             this.setRange(`last-${Math.min(30, this.maxRetentionDays)}-days`);
