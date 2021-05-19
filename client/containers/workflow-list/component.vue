@@ -47,6 +47,7 @@ export default {
   props: [
     'dateFormat',
     'domain',
+    'fetchWorkflowListUrl',
     'filterMode',
     'filterModeButtonLabel',
     'queryString',
@@ -72,7 +73,7 @@ export default {
   },
   async created() {
     await this.fetchDomain();
-    this.fetchWorkflows();
+    this.fetchWorkflowList();
   },
   mounted() {
     this.interval = setInterval(() => {
@@ -90,15 +91,6 @@ export default {
     'workflow-grid': WorkflowGrid,
   },
   computed: {
-    fetchUrl() {
-      const { domain, filterMode, state } = this;
-
-      if (filterMode === FILTER_MODE_ADVANCED) {
-        return `/api/domains/${domain}/workflows/list`;
-      }
-
-      return `/api/domains/${domain}/workflows/${state}`;
-    },
     endTime() {
       const { endTime, range } = this.$route.query;
 
@@ -242,7 +234,7 @@ export default {
         }
       });
     },
-    async fetchWorkflows() {
+    async fetchWorkflowList() {
       if (!this.criteria || this.loading) {
         return;
       }
@@ -269,7 +261,7 @@ export default {
         }
 
         const { workflows: wfs, nextPageToken } = await this.fetch(
-          this.fetchUrl,
+          this.fetchWorkflowListUrl,
           query
         );
 
@@ -314,7 +306,7 @@ export default {
     refreshWorkflows: debounce(
       function refreshWorkflows() {
         this.clearState();
-        this.fetchWorkflows();
+        this.fetchWorkflowList();
       },
       typeof Mocha === 'undefined' ? 200 : 60,
       { maxWait: 1000 }
@@ -421,7 +413,7 @@ export default {
         return;
       }
 
-      return this.fetchWorkflows();
+      return this.fetchWorkflowList();
     },
   },
   watch: {
