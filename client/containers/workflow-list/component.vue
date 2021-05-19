@@ -33,7 +33,13 @@ import {
   STATUS_LIST,
   STATUS_OPEN,
 } from './constants';
-import { getCriteria, getFormattedResults, getMinStartDate } from './helpers';
+import {
+  getCriteria,
+  getFormattedResults,
+  getMinStartDate,
+  isRangeValid,
+  isRouteRangeValid,
+} from './helpers';
 import {
   ButtonFill,
   DateRangePicker,
@@ -222,7 +228,7 @@ export default {
             `${domain}:workflows-time-range`
           );
 
-          if (prevRange && this.isRangeValid(prevRange, minStartDate)) {
+          if (prevRange && isRangeValid(prevRange, minStartDate)) {
             this.setRange(prevRange);
           } else {
             this.setRange(`last-${Math.min(30, this.maxRetentionDays)}-days`);
@@ -319,55 +325,15 @@ export default {
         });
       }
     },
-    isRangeValid(range, minStartDate) {
-      if (typeof range === 'string') {
-        const [, count, unit] = range.split('-');
-        let startTime;
-
-        try {
-          startTime = moment()
-            .subtract(count, unit)
-            .startOf(unit);
-        } catch (e) {
-          return false;
-        }
-
-        if (minStartDate && startTime < minStartDate) {
-          return false;
-        }
-
-        return true;
-      }
-
-      if (range.startTime && range.endTime) {
-        const startTime = moment(range.startTime);
-        const endTime = moment(range.endTime);
-
-        if (startTime > endTime) {
-          return false;
-        }
-
-        if (minStartDate && startTime < minStartDate) {
-          return false;
-        }
-
-        return true;
-      }
-
-      return false;
-    },
     isRouteRangeValid(minStartDate) {
       const { endTime, range, startTime } = this.$route.query || {};
 
-      if (range) {
-        return this.isRangeValid(range, minStartDate);
-      }
-
-      if (startTime && endTime) {
-        return this.isRangeValid({ endTime, startTime }, minStartDate);
-      }
-
-      return false;
+      return isRouteRangeValid({
+        endTime,
+        minStartDate,
+        range,
+        startTime,
+      });
     },
     setRange(range) {
       const query = { ...this.$route.query };

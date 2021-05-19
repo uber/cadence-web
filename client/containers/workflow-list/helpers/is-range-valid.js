@@ -19,13 +19,44 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export { default as getCriteria } from './get-criteria';
-export { default as getFetchWorkflowListUrl } from './get-fetch-workflow-list-url';
-export { default as getFilterBy } from './get-filter-by';
-export { default as getFilterModeButtonLabel } from './get-filter-mode-button-label';
-export { default as getFormattedResults } from './get-formatted-results';
-export { default as getMinStartDate } from './get-min-start-date';
-export { default as getState } from './get-state';
-export { default as getStatus } from './get-status';
-export { default as isRangeValid } from './is-range-valid';
-export { default as isRouteRangeValid } from './is-route-range-valid';
+import moment from 'moment';
+
+const isRangeValid = (range, minStartDate) => {
+  if (typeof range === 'string') {
+    const [, count, unit] = range.split('-');
+    let startTime;
+
+    try {
+      startTime = moment()
+        .subtract(count, unit)
+        .startOf(unit);
+    } catch (e) {
+      return false;
+    }
+
+    if (minStartDate && startTime < minStartDate) {
+      return false;
+    }
+
+    return true;
+  }
+
+  if (range.startTime && range.endTime) {
+    const startTime = moment(range.startTime);
+    const endTime = moment(range.endTime);
+
+    if (startTime > endTime) {
+      return false;
+    }
+
+    if (minStartDate && startTime < minStartDate) {
+      return false;
+    }
+
+    return true;
+  }
+
+  return false;
+};
+
+export default isRangeValid;
