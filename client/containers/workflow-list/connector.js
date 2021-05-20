@@ -20,6 +20,7 @@
 // THE SOFTWARE.
 
 import { connect } from 'vuex-connect';
+import { CLUSTER_FETCH } from '../cluster/action-types';
 import {
   WORKFLOW_LIST_ON_FILTER_CHANGE,
   WORKFLOW_LIST_ON_FILTER_MODE_CLICK,
@@ -55,7 +56,12 @@ const gettersToProps = {
   workflowName: WORKFLOW_LIST_WORKFLOW_NAME,
 };
 
+const lifecycle = {
+  created: ({ dispatch }) => dispatch(CLUSTER_FETCH),
+};
+
 export default connect({
   actionsToEvents,
   gettersToProps,
+  lifecycle,
 });

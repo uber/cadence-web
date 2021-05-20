@@ -20,6 +20,12 @@
 // THE SOFTWARE.
 
 export {
+  actions as clusterActions,
+  getDefaultState as getClusterDefaultState,
+  getters as clusterGetters,
+  mutations as clusterMutations,
+} from './cluster';
+export {
   getDefaultState as getGraphDefaultState,
   getters as graphGetters,
   mutations as graphMutations,
