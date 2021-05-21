@@ -19,6 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+export { getDefaultState as getClusterDefaultState } from './cluster';
 export {
   actions as clusterActions,
   getDefaultState as getClusterDefaultState,

@@ -111,7 +111,6 @@ const initStore = ({ router, state }) => {
   Vue.use(Vuex);
 
   const storeConfig = getStoreConfig({ router, state });
-
   const store = new Vuex.Store(storeConfig);
 
   sync(store, router);
