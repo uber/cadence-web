@@ -41,9 +41,14 @@ export default {
     },
     disabled: {
       type: Boolean,
+      default: false,
     },
     disabledLabel: {
       type: String,
+    },
+    enabled: {
+      type: Boolean,
+      default: true,
     },
     href: {
       type: String,
@@ -70,21 +75,25 @@ export default {
   },
   computed: {
     computedTag() {
-      const { disabled, tag } = this;
+      const { disabled, enabled, tag } = this;
 
-      if (disabled && TAG_LINK_TYPES.includes(tag)) {
+      if ((disabled || !enabled) && TAG_LINK_TYPES.includes(tag)) {
         return 'button';
       }
 
       return tag;
     },
     disabledLabelText() {
-      return this.disabled ? this.disabledLabel : '';
+      const { disabled, disabledLabel, enabled } = this;
+
+      return disabled || !enabled ? disabledLabel : '';
     },
   },
   methods: {
     onClick(...args) {
-      if (!this.disabled) {
+      const { disabled, enabled } = this;
+
+      if (!disabled && enabled) {
         this.$emit('click', ...args);
       }
     },
@@ -94,16 +103,16 @@ export default {
 
 <template>
   <component
-    :aria-disabled="disabled"
+    :aria-disabled="disabled || !enabled"
     class="button-fill"
     :class="{
       active,
       [color]: color,
-      disabled,
+      disabled: disabled || !enabled,
       [size]: size,
       uppercase,
     }"
-    :disabled="disabled"
+    :disabled="disabled || !enabled"
     :href="href"
     :is="computedTag"
     :to="to"

@@ -21,6 +21,7 @@
 
 import { connect } from 'vuex-connect';
 import { CLUSTER_FETCH } from '../cluster/action-types';
+import { CLUSTER_ADVANCED_VISIBILITY_ENABLED } from '../cluster/getter-types';
 import {
   WORKFLOW_LIST_ON_FILTER_CHANGE,
   WORKFLOW_LIST_ON_FILTER_MODE_CLICK,
@@ -47,6 +48,7 @@ const gettersToProps = {
   fetchWorkflowListUrl: WORKFLOW_LIST_FETCH_WORKFLOW_LIST_URL,
   filterBy: WORKFLOW_LIST_FILTER_BY,
   filterMode: WORKFLOW_LIST_FILTER_MODE,
+  filterModeButtonEnabled: CLUSTER_ADVANCED_VISIBILITY_ENABLED,
   filterModeButtonLabel: WORKFLOW_LIST_FILTER_MODE_BUTTON_LABEL,
   queryString: WORKFLOW_LIST_QUERY_STRING,
   state: WORKFLOW_LIST_STATE,
