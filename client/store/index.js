@@ -26,6 +26,7 @@ import { sync } from 'vuex-router-sync';
 import {
   // cluster
   getClusterDefaultState,
+  clusterGetters,
 
   // graph
   getGraphDefaultState,
@@ -82,6 +83,7 @@ const getStoreConfig = ({ router, state }) => {
       ...workflowPendingActions,
     },
     getters: {
+      ...clusterGetters,
       ...graphGetters,
       ...routeGetters,
       ...settingsWorkflowHistoryGetters,
