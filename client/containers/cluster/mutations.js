@@ -25,21 +25,14 @@ import {
   CLUSTER_FETCH_START,
   CLUSTER_FETCH_SUCCESS,
 } from './mutation-types';
-import {
-  CLUSTER_FETCH_EXPIRY_TTL,
-  CLUSTER_FETCH_EXPIRY_RETRY,
-} from './constants';
+import { CLUSTER_FETCH_EXPIRY_TTL } from './constants';
 
 const mutations = {
   [CLUSTER_FETCH_FAILED]: (state, payload) => {
-    state.cluster.expiryDateTime = null;
     state.cluster.error = payload;
   },
   [CLUSTER_FETCH_START]: state => {
     state.cluster.error = null;
-    state.cluster.expiryDateTime = moment()
-      .add(CLUSTER_FETCH_EXPIRY_RETRY)
-      .toISOString();
   },
   [CLUSTER_FETCH_SUCCESS]: (state, payload) => {
     state.cluster.expiryDateTime = moment()

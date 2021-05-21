@@ -20,4 +20,3 @@
 // THE SOFTWARE.
 
 export { default as canFetchCluster } from './can-fetch-cluster';
-export { default as formatDateTimeStringToMoment } from './format-date-time-string-to-moment';

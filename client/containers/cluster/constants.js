@@ -19,7 +19,5 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export const CLUSTER_FETCH_EXPIRY_TTL = 1000 * 30; // 30 seconds
-// 1000 * 60 * 60; // 1 hour until application will try to fetch a fresh value from server to replaced cached value.
-export const CLUSTER_FETCH_EXPIRY_RETRY = 1000 * 5; // 5 seconds
-// 1000 * 30; // 30 seconds until application will try to refetch if request has not returned or has frozen.
+// time until application will try to fetch a fresh value from server to replace cached value.
+export const CLUSTER_FETCH_EXPIRY_TTL = 1000 * 60 * 60; // 1 hour

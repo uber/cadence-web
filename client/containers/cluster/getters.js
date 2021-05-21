@@ -25,7 +25,6 @@ import {
   CLUSTER_FETCH_ERROR,
   CLUSTER_FETCH_EXPIRY_DATE_TIME,
 } from './getter-types';
-// import { formatDateTimeStringToMoment } from './helpers';
 
 const getters = {
   [CLUSTER_DATA]: () => state => get(state, 'cluster.data'),
