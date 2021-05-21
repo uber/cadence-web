@@ -21,16 +21,33 @@
 
 import { get } from 'lodash-es';
 import {
-  CLUSTER_DATA,
+  CLUSTER_ADVANCED_VISIBILITY_ENABLED,
   CLUSTER_FETCH_ERROR,
   CLUSTER_FETCH_EXPIRY_DATE_TIME,
+  CLUSTER_VISIBILITY_FEATURES,
 } from './getter-types';
+import { CLUSTER_VISIBILITY_FEATURES_ADVANCED_VISIBILITY_ENABLED_KEY } from './constants';
 
 const getters = {
-  [CLUSTER_DATA]: () => state => get(state, 'cluster.data'),
-  [CLUSTER_FETCH_ERROR]: () => state => get(state, 'cluster.error'),
+  [CLUSTER_ADVANCED_VISIBILITY_ENABLED]: (_, getters) => {
+    const advancedVisibilityEnabledFeature = getters[
+      CLUSTER_VISIBILITY_FEATURES
+    ].find(
+      ({ key }) =>
+        key === CLUSTER_VISIBILITY_FEATURES_ADVANCED_VISIBILITY_ENABLED_KEY
+    );
+
+    if (advancedVisibilityEnabledFeature) {
+      return advancedVisibilityEnabledFeature.enabled;
+    }
+
+    return false;
+  },
+  [CLUSTER_FETCH_ERROR]: state => get(state, 'cluster.error'),
   [CLUSTER_FETCH_EXPIRY_DATE_TIME]: state =>
     get(state, 'cluster.expiryDateTime'),
+  [CLUSTER_VISIBILITY_FEATURES]: state =>
+    get(state, 'cluster.data.persistenceInfo.visibilityStore.features') || [],
 };
 
 export default getters;
