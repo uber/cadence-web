@@ -19,9 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import actions from './actions';
-import getDefaultState from './get-default-state';
-import getters from './getters';
-import mutations from './mutations';
-
-export { actions, getDefaultState, getters, mutations };
+// time until application will try to fetch a fresh value from server to replace cached value.
+export const CLUSTER_FETCH_EXPIRY_TTL = 1000 * 60 * 60; // 1 hour
+export const CLUSTER_VISIBILITY_FEATURES_ADVANCED_VISIBILITY_ENABLED_KEY =
+  'advancedVisibilityEnabled';

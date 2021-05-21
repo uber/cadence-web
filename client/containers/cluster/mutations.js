@@ -19,9 +19,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import actions from './actions';
-import getDefaultState from './get-default-state';
-import getters from './getters';
-import mutations from './mutations';
+import moment from 'moment';
+import {
+  CLUSTER_FETCH_FAILED,
+  CLUSTER_FETCH_START,
+  CLUSTER_FETCH_SUCCESS,
+} from './mutation-types';
+import { CLUSTER_FETCH_EXPIRY_TTL } from './constants';
 
-export { actions, getDefaultState, getters, mutations };
+const mutations = {
+  [CLUSTER_FETCH_FAILED]: (state, payload) => {
+    state.cluster.error = payload;
+  },
+  [CLUSTER_FETCH_START]: state => {
+    state.cluster.error = null;
+  },
+  [CLUSTER_FETCH_SUCCESS]: (state, payload) => {
+    state.cluster.expiryDateTime = moment()
+      .add(CLUSTER_FETCH_EXPIRY_TTL)
+      .toISOString();
+    state.cluster.data = payload;
+  },
+};
+
+export default mutations;

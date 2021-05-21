@@ -19,9 +19,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import actions from './actions';
-import getDefaultState from './get-default-state';
-import getters from './getters';
-import mutations from './mutations';
-
-export { actions, getDefaultState, getters, mutations };
+export const CLUSTER_ADVANCED_VISIBILITY_ENABLED =
+  'CLUSTER_ADVANCED_VISIBILITY_ENABLED';
+export const CLUSTER_FETCH_ERROR = 'CLUSTER_FETCH_ERROR';
+export const CLUSTER_FETCH_EXPIRY_DATE_TIME = 'CLUSTER_FETCH_EXPIRY_DATE_TIME';
+export const CLUSTER_VISIBILITY_FEATURES = 'CLUSTER_VISIBILITY_FEATURES';

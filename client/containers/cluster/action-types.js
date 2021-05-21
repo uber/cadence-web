@@ -19,9 +19,4 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import actions from './actions';
-import getDefaultState from './get-default-state';
-import getters from './getters';
-import mutations from './mutations';
-
-export { actions, getDefaultState, getters, mutations };
+export const CLUSTER_FETCH = 'CLUSTER_FETCH';
