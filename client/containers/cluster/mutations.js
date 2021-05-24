@@ -19,7 +19,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-// time until application will try to fetch a fresh value from server to replace cached value.
-export const CLUSTER_FETCH_EXPIRY_TTL = 1000 * 60 * 60; // 1 hour
-export const CLUSTER_VISIBILITY_FEATURES_ADVANCED_VISIBILITY_ENABLED_KEY =
-  'advancedVisibilityEnabled';
+import moment from 'moment';
+import {
+  CLUSTER_FETCH_FAILED,
+  CLUSTER_FETCH_START,
+  CLUSTER_FETCH_SUCCESS,
+} from './mutation-types';
+import { CLUSTER_FETCH_EXPIRY_TTL } from './constants';
+
+const mutations = {
+  [CLUSTER_FETCH_FAILED]: (state, payload) => {
+    state.cluster.error = payload;
+  },
+  [CLUSTER_FETCH_START]: state => {
+    state.cluster.error = null;
+  },
+  [CLUSTER_FETCH_SUCCESS]: (state, payload) => {
+    state.cluster.expiryDateTime = moment()
+      .add(CLUSTER_FETCH_EXPIRY_TTL)
+      .toISOString();
+    state.cluster.data = payload;
+  },
+};
+
+export default mutations;

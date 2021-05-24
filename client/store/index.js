@@ -27,6 +27,7 @@ import {
   // cluster
   getClusterDefaultState,
   clusterGetters,
+  clusterMutations,
 
   // graph
   getGraphDefaultState,
@@ -92,6 +93,7 @@ const getStoreConfig = ({ router, state }) => {
       ...workflowPendingGetters,
     },
     mutations: {
+      ...clusterMutations,
       ...graphMutations,
       ...settingsWorkflowHistoryMutations,
       ...workflowMutations,

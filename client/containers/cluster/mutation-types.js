@@ -19,7 +19,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-// time until application will try to fetch a fresh value from server to replace cached value.
-export const CLUSTER_FETCH_EXPIRY_TTL = 1000 * 60 * 60; // 1 hour
-export const CLUSTER_VISIBILITY_FEATURES_ADVANCED_VISIBILITY_ENABLED_KEY =
-  'advancedVisibilityEnabled';
+export const CLUSTER_FETCH_FAILED = 'CLUSTER_FETCH_FAILED';
+export const CLUSTER_FETCH_START = 'CLUSTER_FETCH_START';
+export const CLUSTER_FETCH_SUCCESS = 'CLUSTER_FETCH_SUCCESS';
