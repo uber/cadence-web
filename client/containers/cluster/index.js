@@ -20,6 +20,7 @@
 // THE SOFTWARE.
 
 import getDefaultState from './get-default-state';
+import getters from './getters';
 import mutations from './mutations';
 
-export { getDefaultState, mutations };
+export { getDefaultState, getters, mutations };

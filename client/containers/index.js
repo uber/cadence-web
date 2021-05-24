@@ -21,6 +21,7 @@
 
 export {
   getDefaultState as getClusterDefaultState,
+  getters as clusterGetters,
   mutations as clusterMutations,
 } from './cluster';
 export {
