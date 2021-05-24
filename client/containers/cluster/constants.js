@@ -19,7 +19,5 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import getDefaultState from './get-default-state';
-import getters from './getters';
-
-export { getDefaultState, getters };
+export const CLUSTER_VISIBILITY_FEATURES_ADVANCED_VISIBILITY_ENABLED_KEY =
+  'advancedVisibilityEnabled';
