@@ -20,6 +20,7 @@
 // THE SOFTWARE.
 
 export {
+  actions as clusterActions,
   getDefaultState as getClusterDefaultState,
   getters as clusterGetters,
   mutations as clusterMutations,

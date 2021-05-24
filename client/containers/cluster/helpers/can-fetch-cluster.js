@@ -19,9 +19,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import actions from './actions';
-import getDefaultState from './get-default-state';
-import getters from './getters';
-import mutations from './mutations';
+import moment from 'moment';
 
-export { actions, getDefaultState, getters, mutations };
+const canFetchCluster = expiryDateTime => {
+  if (!expiryDateTime) {
+    return true;
+  }
+
+  return moment().isAfter(expiryDateTime);
+};
+
+export default canFetchCluster;

@@ -19,9 +19,32 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import actions from './actions';
-import getDefaultState from './get-default-state';
-import getters from './getters';
-import mutations from './mutations';
+import { CLUSTER_FETCH } from './action-types';
+import { CLUSTER_FETCH_EXPIRY_DATE_TIME } from './getter-types';
+import { canFetchCluster } from './helpers';
+import {
+  CLUSTER_FETCH_FAILED,
+  CLUSTER_FETCH_START,
+  CLUSTER_FETCH_SUCCESS,
+} from './mutation-types';
+import { http } from '~helpers';
 
-export { actions, getDefaultState, getters, mutations };
+const actions = {
+  [CLUSTER_FETCH]: async ({ commit, getters }) => {
+    if (!canFetchCluster(getters[CLUSTER_FETCH_EXPIRY_DATE_TIME])) {
+      return;
+    }
+
+    commit(CLUSTER_FETCH_START);
+
+    try {
+      const cluster = await http.global('/api/cluster');
+
+      commit(CLUSTER_FETCH_SUCCESS, cluster);
+    } catch (error) {
+      commit(CLUSTER_FETCH_FAILED, error);
+    }
+  },
+};
+
+export default actions;

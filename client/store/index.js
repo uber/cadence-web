@@ -25,6 +25,7 @@ import VuexPersistence from 'vuex-persist';
 import { sync } from 'vuex-router-sync';
 import {
   // cluster
+  clusterActions,
   getClusterDefaultState,
   clusterGetters,
   clusterMutations,
@@ -79,6 +80,7 @@ const getStoreConfig = ({ router, state }) => {
 
   const storeConfig = {
     actions: {
+      ...clusterActions,
       ...routeActionCreator(router),
       ...workflowListActions,
       ...workflowPendingActions,
