@@ -19,7 +19,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const { REQUEST_CONFIG } = require('../constants');
+const {
+  REQUEST_CONFIG_DEFAULTS,
+  SERVICE_NAME_DEFAULT,
+} = require('../constants');
 const formatBody = require('./format-body');
 const formatMethod = require('./format-method');
 const formatRequestName = require('./format-request-name');
@@ -34,6 +37,11 @@ const makeRequest = ({ authTokenHeaders, channels, ctx }) => ({
   serviceName = 'WorkflowService',
 }) => body =>
   new Promise((resolve, reject) => {
+    const REQUEST_CONFIG = {
+      ...REQUEST_CONFIG_DEFAULTS,
+      serviceName: process.env.CADENCE_TCHANNEL_SERVICE || SERVICE_NAME_DEFAULT,
+    };
+
     try {
       channels[channelName].request(REQUEST_CONFIG).send(
         formatMethod({ method, serviceName }),

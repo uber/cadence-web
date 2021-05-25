@@ -22,10 +22,14 @@
 const path = require('path');
 const isIPv4 = require('is-ipv4-node');
 const TChannelAsThrift = require('tchannel/as/thrift');
-const { PEERS } = require('../constants');
+const { PEERS_DEFAULT } = require('../constants');
 const lookupAsync = require('./lookup-async');
 
 const makeChannels = async client => {
+  const PEERS = process.env.CADENCE_TCHANNEL_PEERS
+    ? process.env.CADENCE_TCHANNEL_PEERS.split(',')
+    : PEERS_DEFAULT;
+
   const ipPeers = await Promise.all(
     PEERS.map(peer => {
       const [host, port] = peer.split(':');
