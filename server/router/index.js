@@ -46,7 +46,7 @@ const { listWorkflows } = require('./helpers');
 
 const router = new Router();
 
-router.get('/api/cluster', clusterHandler);
+router.get('/api/cluster', clusterHandler.getCluster);
 
 router.get('/api/domains', domainListHandler);
 
