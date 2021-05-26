@@ -22,20 +22,36 @@
 const { CLUSTER_CACHE_TTL } = require('../constants');
 
 let cache = null;
+let cacheExpiryDateTime = null;
 
-const clusterHandler = async ctx => {
-  if (cache) {
+const clearCache = () => {
+  cache = null;
+  cacheExpiryDateTime = null;
+};
+
+const setCache = data => {
+  cache = data;
+  cacheExpiryDateTime = Date.now() + CLUSTER_CACHE_TTL;
+};
+
+const getCluster = async ctx => {
+  if (cacheExpiryDateTime && Date.now() < cacheExpiryDateTime) {
     return (ctx.body = cache);
   }
 
   const cluster = await ctx.cadence.describeCluster();
 
-  cache = { ...cluster, membershipInfo: null };
-  ctx.body = cache;
+  const data = { ...cluster, membershipInfo: null };
 
-  // This timeout will clear cache after TTL period.
-  // It will fetch a new value on the next request to clusterHandler.
-  setTimeout(() => (cache = null), CLUSTER_CACHE_TTL);
+  setCache(data);
+
+  ctx.body = data;
+};
+
+const clusterHandler = {
+  clearCache,
+  getCluster,
+  setCache,
 };
 
 module.exports = clusterHandler;

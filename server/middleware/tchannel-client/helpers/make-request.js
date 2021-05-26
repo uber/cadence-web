@@ -19,13 +19,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const { REQUEST_CONFIG } = require('../constants');
 const formatBody = require('./format-body');
 const formatMethod = require('./format-method');
 const formatRequestName = require('./format-request-name');
 const uiTransform = require('./ui-transform');
 
-const makeRequest = ({ authTokenHeaders, channels, ctx }) => ({
+const makeRequest = ({ authTokenHeaders, channels, ctx, requestConfig }) => ({
   bodyTransform,
   channelName = 'cadence',
   method,
@@ -35,13 +34,16 @@ const makeRequest = ({ authTokenHeaders, channels, ctx }) => ({
 }) => body =>
   new Promise((resolve, reject) => {
     try {
-      channels[channelName].request(REQUEST_CONFIG).send(
+      channels[channelName].request(requestConfig).send(
         formatMethod({ method, serviceName }),
         {
           ...authTokenHeaders,
         },
         {
-          [formatRequestName(requestName)]: formatBody({ body, bodyTransform }),
+          [formatRequestName(requestName)]: formatBody({
+            body,
+            bodyTransform,
+          }),
         },
         (error, response) => {
           try {
