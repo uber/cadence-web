@@ -19,66 +19,53 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const { REQUEST_CONFIG_DEFAULTS } = require('../constants');
 const formatBody = require('./format-body');
 const formatMethod = require('./format-method');
 const formatRequestName = require('./format-request-name');
 const uiTransform = require('./ui-transform');
 
-const makeRequest = ({ authTokenHeaders, channels, ctx }) => {
-  const REQUEST_CONFIG = {
-    ...REQUEST_CONFIG_DEFAULTS,
-    ...(process.env.CADENCE_TCHANNEL_SERVICE && {
-      serviceName: process.env.CADENCE_TCHANNEL_SERVICE,
-    }),
-    ...(process.env.CADENCE_TCHANNEL_RETRY_LIMIT && {
-      retryLimit: process.env.CADENCE_TCHANNEL_RETRY_LIMIT,
-    }),
-  };
-
-  return ({
-    bodyTransform,
-    channelName = 'cadence',
-    method,
-    requestName,
-    responseTransform,
-    serviceName = 'WorkflowService',
-  }) => body =>
-    new Promise((resolve, reject) => {
-      try {
-        channels[channelName].request(REQUEST_CONFIG).send(
-          formatMethod({ method, serviceName }),
-          {
-            ...authTokenHeaders,
-          },
-          {
-            [formatRequestName(requestName)]: formatBody({
-              body,
-              bodyTransform,
-            }),
-          },
-          (error, response) => {
-            try {
-              if (error) {
-                reject(error);
-              } else if (response.ok) {
-                resolve((responseTransform || uiTransform)(response.body));
-              } else {
-                ctx.throw(
-                  response.typeName === 'entityNotExistError' ? 404 : 400,
-                  null,
-                  response.body || response
-                );
-              }
-            } catch (error) {
+const makeRequest = ({ authTokenHeaders, channels, ctx, requestConfig }) => ({
+  bodyTransform,
+  channelName = 'cadence',
+  method,
+  requestName,
+  responseTransform,
+  serviceName = 'WorkflowService',
+}) => body =>
+  new Promise((resolve, reject) => {
+    try {
+      channels[channelName].request(requestConfig).send(
+        formatMethod({ method, serviceName }),
+        {
+          ...authTokenHeaders,
+        },
+        {
+          [formatRequestName(requestName)]: formatBody({
+            body,
+            bodyTransform,
+          }),
+        },
+        (error, response) => {
+          try {
+            if (error) {
               reject(error);
+            } else if (response.ok) {
+              resolve((responseTransform || uiTransform)(response.body));
+            } else {
+              ctx.throw(
+                response.typeName === 'entityNotExistError' ? 404 : 400,
+                null,
+                response.body || response
+              );
             }
+          } catch (error) {
+            reject(error);
           }
-        );
-      } catch (error) {
-        reject(error);
-      }
-    });
-};
+        }
+      );
+    } catch (error) {
+      reject(error);
+    }
+  });
 
 module.exports = makeRequest;
