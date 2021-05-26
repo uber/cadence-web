@@ -33,102 +33,104 @@ const {
   withDomainPagingAndWorkflowExecution,
 } = require('./helpers');
 
-const tchannelClient = async function(ctx, next) {
-  const { authTokenHeaders = {} } = ctx;
+const tchannelClient = ({ peers, requestConfig }) =>
+  async function(ctx, next) {
+    const { authTokenHeaders = {} } = ctx;
 
-  const client = TChannel();
-  const channels = await makeChannels(client);
-  const request = makeRequest({
-    authTokenHeaders,
-    channels,
-    ctx,
-  });
+    const client = TChannel();
+    const channels = await makeChannels({ client, peers });
+    const request = makeRequest({
+      authTokenHeaders,
+      channels,
+      ctx,
+      requestConfig,
+    });
 
-  ctx.cadence = {
-    archivedWorkflows: request({
-      method: 'ListArchivedWorkflowExecutions',
-      requestName: 'list',
-      bodyTransform: withDomainPaging(ctx),
-    }),
-    closedWorkflows: request({
-      method: 'ListClosedWorkflowExecutions',
-      requestName: 'list',
-      bodyTransform: withDomainPaging(ctx),
-    }),
-    describeCluster: request({
-      channelName: 'admin',
-      method: 'DescribeCluster',
-      requestName: 'describe',
-      serviceName: 'AdminService',
-    }),
-    describeDomain: request({
-      method: 'DescribeDomain',
-      requestName: 'describe',
-    }),
-    describeTaskList: request({
-      method: 'DescribeTaskList',
-    }),
-    describeWorkflow: request({
-      method: 'DescribeWorkflowExecution',
-      requestName: 'describe',
-      bodyTransform: withWorkflowExecution(ctx),
-    }),
-    exportHistory: request({
-      method: 'GetWorkflowExecutionHistory',
-      requestName: 'get',
-      bodyTransform: withDomainPagingAndWorkflowExecution(ctx),
-      responseTransform: cliTransform,
-    }),
-    getHistory: request({
-      method: 'GetWorkflowExecutionHistory',
-      requestName: 'get',
-      bodyTransform: withDomainPagingAndWorkflowExecution(ctx),
-    }),
-    listDomains: request({
-      method: 'ListDomains',
-      requestName: 'list',
-    }),
-    listTaskListPartitions: request({
-      method: 'ListTaskListPartitions',
-    }),
-    listWorkflows: request({
-      method: 'ListWorkflowExecutions',
-      requestName: 'list',
-      bodyTransform: withDomainPaging(ctx),
-    }),
-    openWorkflows: request({
-      method: 'ListOpenWorkflowExecutions',
-      requestName: 'list',
-      bodyTransform: withDomainPaging(ctx),
-    }),
-    queryWorkflow: request({
-      method: 'QueryWorkflow',
-      requestName: 'query',
-      bodyTransform: withWorkflowExecution(ctx),
-    }),
-    signalWorkflow: request({
-      method: 'SignalWorkflowExecution',
-      requestName: 'signal',
-      bodyTransform: withVerboseWorkflowExecution(ctx),
-    }),
-    startWorkflow: request({
-      method: 'StartWorkflowExecution',
-      requestName: 'start',
-    }),
-    terminateWorkflow: request({
-      method: 'TerminateWorkflowExecution',
-      requestName: 'terminate',
-      bodyTransform: withVerboseWorkflowExecution(ctx),
-    }),
+    ctx.cadence = {
+      archivedWorkflows: request({
+        method: 'ListArchivedWorkflowExecutions',
+        requestName: 'list',
+        bodyTransform: withDomainPaging(ctx),
+      }),
+      closedWorkflows: request({
+        method: 'ListClosedWorkflowExecutions',
+        requestName: 'list',
+        bodyTransform: withDomainPaging(ctx),
+      }),
+      describeCluster: request({
+        channelName: 'admin',
+        method: 'DescribeCluster',
+        requestName: 'describe',
+        serviceName: 'AdminService',
+      }),
+      describeDomain: request({
+        method: 'DescribeDomain',
+        requestName: 'describe',
+      }),
+      describeTaskList: request({
+        method: 'DescribeTaskList',
+      }),
+      describeWorkflow: request({
+        method: 'DescribeWorkflowExecution',
+        requestName: 'describe',
+        bodyTransform: withWorkflowExecution(ctx),
+      }),
+      exportHistory: request({
+        method: 'GetWorkflowExecutionHistory',
+        requestName: 'get',
+        bodyTransform: withDomainPagingAndWorkflowExecution(ctx),
+        responseTransform: cliTransform,
+      }),
+      getHistory: request({
+        method: 'GetWorkflowExecutionHistory',
+        requestName: 'get',
+        bodyTransform: withDomainPagingAndWorkflowExecution(ctx),
+      }),
+      listDomains: request({
+        method: 'ListDomains',
+        requestName: 'list',
+      }),
+      listTaskListPartitions: request({
+        method: 'ListTaskListPartitions',
+      }),
+      listWorkflows: request({
+        method: 'ListWorkflowExecutions',
+        requestName: 'list',
+        bodyTransform: withDomainPaging(ctx),
+      }),
+      openWorkflows: request({
+        method: 'ListOpenWorkflowExecutions',
+        requestName: 'list',
+        bodyTransform: withDomainPaging(ctx),
+      }),
+      queryWorkflow: request({
+        method: 'QueryWorkflow',
+        requestName: 'query',
+        bodyTransform: withWorkflowExecution(ctx),
+      }),
+      signalWorkflow: request({
+        method: 'SignalWorkflowExecution',
+        requestName: 'signal',
+        bodyTransform: withVerboseWorkflowExecution(ctx),
+      }),
+      startWorkflow: request({
+        method: 'StartWorkflowExecution',
+        requestName: 'start',
+      }),
+      terminateWorkflow: request({
+        method: 'TerminateWorkflowExecution',
+        requestName: 'terminate',
+        bodyTransform: withVerboseWorkflowExecution(ctx),
+      }),
+    };
+
+    try {
+      await next();
+      client.close();
+    } catch (e) {
+      client.close();
+      throw e;
+    }
   };
-
-  try {
-    await next();
-    client.close();
-  } catch (e) {
-    client.close();
-    throw e;
-  }
-};
 
 module.exports = tchannelClient;

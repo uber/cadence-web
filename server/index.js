@@ -31,19 +31,35 @@ const webpack = require('webpack');
 const webpackConfig = require('../webpack.config');
 const tchannelClient = require('./middleware/tchannel-client');
 const router = require('./router');
+const {
+  PEERS_DEFAULT,
+  REQUEST_RETRY_FLAGS_DEFAULT,
+  REQUEST_RETRY_LIMIT_DEFAULT,
+  REQUEST_TIMEOUT_DEFAULT,
+  SERVICE_NAME_DEFAULT,
+} = require('./constants');
 
 const staticRoot = path.join(__dirname, '../dist');
 const app = new Koa();
 
 app.webpackConfig = webpackConfig;
 
-app.init = function(options) {
-  options = options || {};
-
-  const useWebpack =
-    'useWebpack' in options
-      ? options.useWebpack
-      : process.env.NODE_ENV !== 'production';
+app.init = function({
+  logErrors,
+  peers = process.env.CADENCE_TCHANNEL_PEERS || PEERS_DEFAULT,
+  retryFlags = REQUEST_RETRY_FLAGS_DEFAULT,
+  retryLimit = process.env.CADENCE_TCHANNEL_RETRY_LIMIT ||
+    REQUEST_RETRY_LIMIT_DEFAULT,
+  serviceName = process.env.CADENCE_TCHANNEL_SERVICE || SERVICE_NAME_DEFAULT,
+  timeout = REQUEST_TIMEOUT_DEFAULT,
+  useWebpack = process.env.NODE_ENV !== 'production',
+} = {}) {
+  const requestConfig = {
+    retryFlags,
+    retryLimit,
+    serviceName,
+    timeout,
+  };
 
   let compiler;
 
@@ -57,7 +73,7 @@ app.init = function(options) {
         await next();
       } catch (err) {
         if (
-          options.logErrors !== false &&
+          logErrors !== false &&
           (typeof err.statusCode !== 'number' || err.statusCode >= 500)
         ) {
           console.error(err);
@@ -73,7 +89,7 @@ app.init = function(options) {
         filter: contentType => !contentType.startsWith('text/event-stream'),
       })
     )
-    .use(tchannelClient)
+    .use(tchannelClient({ peers, requestConfig }))
     .use(
       useWebpack
         ? koaWebpack({
