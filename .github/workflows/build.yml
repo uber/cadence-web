@@ -3,11 +3,7 @@
 
 name: Build
 
-on:
-  push:
-    branches: [ feature/build-pipeline ]
-  pull_request:
-    branches: [ feature/build-pipeline ]
+on: [push, pull_request]
 
 jobs:
   build:
