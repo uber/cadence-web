@@ -22,6 +22,6 @@ jobs:
     - run: npm ci
     - run: npm run lint:check
     - run: npm run test:unit
-    - run: npm run test-server
+    - run: npm run test-server &
     - run: npm run test
     - run: npm run build
