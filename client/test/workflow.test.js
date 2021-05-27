@@ -338,7 +338,7 @@ describe('Workflow', () => {
     describe('Actions', () => {
       it('should offer the user to terminate a running workflow, prompting the user for a termination reason', async function test() {
         const [summaryEl] = await summaryTest(this.test, {
-          history: { delay: 250 },
+          history: { delay: 500 },
         });
 
         const terminateEl = await summaryEl.waitUntilExists(
