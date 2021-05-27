@@ -55,6 +55,7 @@ export default {
     'fetchWorkflowListUrl',
     'filterBy',
     'filterMode',
+    'filterModeButtonEnabled',
     'filterModeButtonLabel',
     'queryString',
     'state',
@@ -445,6 +446,8 @@ export default {
       </template>
       <button-fill
         @click="onFilterModeClick"
+        disabledLabel="Advanced visibility is not enabled"
+        :enabled="filterModeButtonEnabled"
         :label="filterModeButtonLabel"
         uppercase
       />
