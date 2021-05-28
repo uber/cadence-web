@@ -40,6 +40,7 @@ export { default as NavigationLink } from './navigation-link';
 export { default as NewsModal } from './news-modal';
 export { default as NoResults } from './no-results';
 export { default as NotificationBar } from './notification-bar';
+export { default as SelectInput } from './select-input';
 export { default as SettingsFooter } from './settings-footer';
 export { default as SettingsToggle } from './settings-toggle';
 export { default as TextInput } from './text-input';
