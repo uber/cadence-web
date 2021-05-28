@@ -20,7 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { FlexGrid, FlexGridItem, SettingsFooter, TextInput } from '~components';
+import {
+  FlexGrid,
+  FlexGridItem,
+  SelectInput,
+  SettingsFooter,
+  TextInput,
+} from '~components';
 import { getDatetimeFormattedString } from '~helpers';
 
 export default {
@@ -126,6 +132,7 @@ export default {
     'flex-grid': FlexGrid,
     'flex-grid-item': FlexGridItem,
     'settings-footer': SettingsFooter,
+    'select-input': SelectInput,
     'text-input': TextInput,
   },
   watch: {
@@ -158,36 +165,30 @@ export default {
       <div class="content-item">
         <flex-grid>
           <flex-grid-item grow="1">
-            <label for="settingsDateFormat">
-              Date format
-            </label>
-            <v-select
-              input-id="settingsDateFormat"
-              :on-change="onDateFormatChange"
+            <select-input
+              label="Date format"
+              name="settingsDateFormat"
               :options="dateFormatOptions"
               :value="modalDateFormat"
+              @change="onDateFormatChange"
             />
           </flex-grid-item>
           <flex-grid-item grow="1">
-            <label for="settingsTimeFormat">
-              Time format
-            </label>
-            <v-select
-              input-id="settingsTimeFormat"
-              :on-change="onTimeFormatChange"
+            <select-input
+              label="Time format"
+              name="settingsTimeFormat"
               :options="timeFormatOptions"
               :value="modalTimeFormat"
+              @change="onTimeFormatChange"
             />
           </flex-grid-item>
           <flex-grid-item grow="1">
-            <label for="settingsTimezone">
-              Timezone
-            </label>
-            <v-select
-              input-id="settingsTimezone"
-              :on-change="onTimezoneChange"
+            <select-input
+              label="Timezone"
+              name="settingsTimezone"
               :options="timezoneOptions"
               :value="modalTimezone"
+              @change="onTimezoneChange"
             />
           </flex-grid-item>
         </flex-grid>
