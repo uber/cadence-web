@@ -342,7 +342,6 @@ export default {
 global-reset()
 
 @import "./styles/base"
-@import "./styles/select"
 @import "./styles/modal"
 @import "./styles/code"
 

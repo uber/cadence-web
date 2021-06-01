@@ -344,7 +344,6 @@ Vue.use(vueModal, {
   dynamic: true,
 });
 Vue.use(vueSplit);
-Vue.component('v-select', vueSelect);
 Vue.component('copy', copyButton);
 Vue.directive('snapscroll', snapscroll);
 Vue.config.ignoredElements = ['loader'];

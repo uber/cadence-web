@@ -447,7 +447,6 @@ export default {
               <div class="th col-type">
                 <select-input
                   background-color="rgb(248, 248, 249)"
-                  class="eventType"
                   label="Type"
                   min-width="150px"
                   :options="eventTypes"
@@ -812,11 +811,6 @@ section.history {
         display: inline-block;
         font-weight: 500;
         text-transform: uppercase;
-
-        & > .v-select.eventType {
-          margin-left: 10px;
-          display: inline-block;
-        }
       }
 
       & + .spacer {
