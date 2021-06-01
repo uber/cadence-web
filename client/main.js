@@ -22,7 +22,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import infiniteScroll from 'vue-infinite-scroll';
-import vueSelect from 'vue-select';
 import vueModal from 'vue-js-modal';
 import vueSplit from 'vue-split-panel';
 import qs from 'friendly-querystring';
