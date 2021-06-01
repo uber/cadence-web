@@ -451,8 +451,8 @@ export default {
                   label="Type"
                   min-width="150px"
                   :options="eventTypes"
-                  :on-change="setEventType"
-                  :value="eventType"
+                  value="All"
+                  @change="setEventType"
                 />
               </div>
               <div class="th col-time">
