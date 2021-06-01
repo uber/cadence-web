@@ -60,7 +60,7 @@ describe('Workflow list', () => {
     const resultsEl = workflowsEl.querySelector('section.workflow-grid');
 
     workflowsEl
-      .querySelector('div.status .selected-tag')
+      .querySelector('[data-cy="status-filter"] .selected-tag')
       .should.contain.text('All');
 
     await resultsEl.waitUntilExists('.workflow-grid.ready');
@@ -240,7 +240,7 @@ describe('Workflow list', () => {
   it('should allow querying by status of the workflow', async function test() {
     const [workflowsEl, scenario] = await workflowsTest(this.test);
     const statusEl = workflowsEl.querySelector(
-      'header.filters .dropdown.status'
+      'header.filters [data-cy="status-filter"]'
     );
 
     await retry(() =>
@@ -354,7 +354,7 @@ describe('Workflow list', () => {
       .querySelector('header.filters input[name="workflowName"]')
       .value.should.equal('demo');
     workflowsEl
-      .querySelector('header.filters .status .selected-tag')
+      .querySelector('header.filters [data-cy="status-filter"] .selected-tag')
       .should.have.trimmed.text('Failed');
   });
 

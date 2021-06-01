@@ -29,6 +29,7 @@ import {
   FlexGridItem,
   NewsModal,
   NotificationBar,
+  SelectInput,
 } from '~components';
 import { SettingsModal } from '~containers';
 import {
@@ -61,6 +62,7 @@ export default {
     'flex-grid-item': FlexGridItem,
     'news-modal': NewsModal,
     'notification-bar': NotificationBar,
+    'select-input': SelectInput,
     'settings-modal': SettingsModal,
   },
   data() {
@@ -253,12 +255,11 @@ export default {
 
         <feature-flag name="environmentSelect">
           <flex-grid-item>
-            <v-select
+            <select-input
               class="environment-select"
-              :on-change="onEnvironmentSelectChange"
               :options="environment.list"
-              :searchable="false"
               :value="environment.value"
+              @change="onEnvironmentSelectChange"
             />
           </flex-grid-item>
         </feature-flag>
@@ -341,7 +342,6 @@ export default {
 global-reset()
 
 @import "./styles/base"
-@import "./styles/select"
 @import "./styles/modal"
 @import "./styles/code"
 

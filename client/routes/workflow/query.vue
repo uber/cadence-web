@@ -21,8 +21,12 @@
 // THE SOFTWARE.
 
 import { getQueryResult } from './helpers';
+import { SelectInput } from '~components';
 
 export default {
+  components: {
+    'select-input': SelectInput,
+  },
   data() {
     return {
       error: undefined,
@@ -106,12 +110,11 @@ export default {
   <section class="query" :class="{ loading }" data-cy="query">
     <header v-if="queries && queries.length">
       <div class="query-name">
-        <v-select
-          placeholder="Choose a Query"
-          :value="queryName"
+        <select-input
+          label="Query"
           :options="queries"
-          :on-change="setQuery"
-          :searchable="false"
+          :value="queryName"
+          @change="setQuery"
         />
       </div>
       <a
@@ -160,11 +163,6 @@ section.query {
       flex: 0 0 auto;
       min-width: 350px;
       superlabel();
-
-      &::before {
-        top: -16px;
-        content: 'query';
-      }
     }
 
     a.run {
