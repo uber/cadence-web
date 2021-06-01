@@ -36,7 +36,12 @@ import {
 } from './components';
 import { GRAPH_VIEW_DAG, GRAPH_VIEW_TIMELINE } from './constants';
 import { getDefaultSplitSize } from './helpers';
-import { DetailList, FeatureFlag, HighlightToggle } from '~components';
+import {
+  DetailList,
+  FeatureFlag,
+  HighlightToggle,
+  SelectInput,
+} from '~components';
 
 export default {
   name: 'history',
@@ -331,6 +336,7 @@ export default {
     'highlight-toggle': HighlightToggle,
     prism: Prism,
     RecycleScroller,
+    'select-input': SelectInput,
     WorkflowGraph,
     timeline: Timeline,
   },
@@ -439,13 +445,14 @@ export default {
             <div class="thead">
               <div class="th col-id">ID</div>
               <div class="th col-type">
-                Type
-                <v-select
+                <select-input
+                  background-color="rgb(248, 248, 249)"
                   class="eventType"
-                  value="All"
+                  label="Type"
+                  min-width="150px"
                   :options="eventTypes"
                   :on-change="setEventType"
-                  :searchable="false"
+                  :value="eventType"
                 />
               </div>
               <div class="th col-time">
@@ -809,7 +816,6 @@ section.history {
         & > .v-select.eventType {
           margin-left: 10px;
           display: inline-block;
-          width: 150px;
         }
       }
 

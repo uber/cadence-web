@@ -27,15 +27,31 @@ export default {
     'v-select': VueSelect,
   },
   name: 'select-input',
-  props: [
-    'disabled',
-    'label',
-    'maxWidth',
-    'name',
-    'options',
-    'readonly',
-    'value',
-  ],
+  props: {
+    backgroundColor: {
+      type: String,
+      default: 'white',
+    },
+    disabled: {
+      type: Boolean,
+    },
+    label: {
+      type: String,
+    },
+    maxWidth: {
+      type: String,
+    },
+    name: {
+      type: String,
+    },
+    options: {
+      type: Array,
+      default: () => [],
+    },
+    value: {
+      type: [Boolean, Number, Object, String],
+    },
+  },
   methods: {
     onSelectChange(...args) {
       this.$emit('change', ...args);
@@ -55,7 +71,7 @@ export default {
       :style="{ maxWidth }"
       :value="value"
     />
-    <label :for="name">{{ label }}</label>
+    <label :for="name" :style="{ backgroundColor }">{{ label }}</label>
   </div>
 </template>
 
@@ -67,7 +83,6 @@ export default {
     top: -4px !important;
     left: 6px !important;
     color: black !important;
-    background-color: white;
     transform: scale(0.8);
   }
 

@@ -153,10 +153,8 @@ export default {
   <div>
     <div class="content">
       <div class="content-item">
-        <label for="settingsExample">
-          Example
-        </label>
         <text-input
+          label="Example"
           name="settingsExample"
           :readonly="true"
           :value="exampleFormattedDateTime"
