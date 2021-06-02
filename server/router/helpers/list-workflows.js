@@ -20,27 +20,41 @@
 // THE SOFTWARE.
 
 const moment = require('moment');
+const isAdvancedVisibilityEnabled = require('./is-advanced-visibility-enabled');
 const momentToLong = require('./moment-to-long');
 
-async function listWorkflows(state, ctx) {
+async function listWorkflows({ clusterHandler, state }, ctx) {
   const q = ctx.query || {},
     startTime = moment(q.startTime || NaN),
     endTime = moment(q.endTime || NaN);
 
   ctx.assert(startTime.isValid() && endTime.isValid(), 400);
 
-  ctx.body = await ctx.cadence[state + 'Workflows']({
-    StartTimeFilter: {
-      earliestTime: momentToLong(startTime),
-      latestTime: momentToLong(endTime),
-    },
-    typeFilter: q.workflowName ? { name: q.workflowName } : undefined,
-    executionFilter: q.workflowId ? { workflowId: q.workflowId } : undefined,
-    statusFilter: q.status || undefined,
-    nextPageToken: q.nextPageToken
-      ? Buffer.from(q.nextPageToken, 'base64')
-      : undefined,
-  });
+  const cluster = await clusterHandler.getCluster(ctx);
+  const advancedVisibility = isAdvancedVisibilityEnabled(cluster);
+
+  const requestArgs = advancedVisibility
+    ? {
+        query: 'WorkflowID = "cron_1614b8d6-5282-4f09-be27-f151bfb96a76"',
+      }
+    : {
+        StartTimeFilter: {
+          earliestTime: momentToLong(startTime),
+          latestTime: momentToLong(endTime),
+        },
+        typeFilter: q.workflowName ? { name: q.workflowName } : undefined,
+        executionFilter: q.workflowId
+          ? { workflowId: q.workflowId }
+          : undefined,
+        statusFilter: q.status || undefined,
+        nextPageToken: q.nextPageToken
+          ? Buffer.from(q.nextPageToken, 'base64')
+          : undefined,
+      };
+
+  const requestApi = advancedVisibility ? 'listWorkflows' : state + 'Workflows';
+
+  ctx.body = await ctx.cadence[requestApi](requestArgs);
 }
 
 module.exports = listWorkflows;

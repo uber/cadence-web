@@ -71,12 +71,12 @@ router.get('/api/domains/:domain/authorization', domainAuthorizationHandler);
 
 router.get(
   '/api/domains/:domain/workflows/open',
-  listWorkflows.bind(null, 'open')
+  listWorkflows.bind(null, { clusterHandler, state: 'open' })
 );
 
 router.get(
   '/api/domains/:domain/workflows/closed',
-  listWorkflows.bind(null, 'closed')
+  listWorkflows.bind(null, { clusterHandler, state: 'closed' })
 );
 
 router.get(

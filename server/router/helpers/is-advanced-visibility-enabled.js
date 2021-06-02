@@ -19,18 +19,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const buildQueryString = require('./build-query-string');
-const isAdvancedVisibilityEnabled = require('./is-advanced-visibility-enabled');
-const listWorkflows = require('./list-workflows');
-const mapHistoryResponse = require('./map-history-response');
-const momentToLong = require('./moment-to-long');
-const replacer = require('./replacer');
+const get = require('lodash.get');
 
-module.exports = {
-  buildQueryString,
-  isAdvancedVisibilityEnabled,
-  listWorkflows,
-  mapHistoryResponse,
-  momentToLong,
-  replacer,
+const isAdvancedVisibilityEnabled = cluster => {
+  const clusterVisibilityFeatures =
+    get(cluster, 'cluster.data.persistenceInfo.visibilityStore.features') || [];
+
+  const advancedVisibilityEnabledFeature = clusterVisibilityFeatures.find(
+    ({ key }) => key === 'advancedVisibilityEnabled'
+  );
+
+  if (advancedVisibilityEnabledFeature) {
+    return advancedVisibilityEnabledFeature.enabled;
+  }
+
+  return false;
 };
+
+module.exports = isAdvancedVisibilityEnabled;
