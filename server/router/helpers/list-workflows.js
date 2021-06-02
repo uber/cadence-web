@@ -24,32 +24,35 @@ const isAdvancedVisibilityEnabled = require('./is-advanced-visibility-enabled');
 const momentToLong = require('./moment-to-long');
 
 async function listWorkflows({ clusterHandler, state }, ctx) {
-  const q = ctx.query || {},
-    startTime = moment(q.startTime || NaN),
-    endTime = moment(q.endTime || NaN);
+  const { query = {} } = ctx;
+  const startTime = moment(query.startTime || NaN);
+  const endTime = moment(query.endTime || NaN);
 
   ctx.assert(startTime.isValid() && endTime.isValid(), 400);
 
   const cluster = await clusterHandler.getCluster(ctx);
   const advancedVisibility = isAdvancedVisibilityEnabled(cluster);
 
+  const earliestTime = momentToLong(startTime);
+  const latestTime = momentToLong(endTime);
+  const { nextPageToken, status, workflowId, workflowName } = query;
+  const nextPageTokenBuffer =
+    nextPageToken && Buffer.from(nextPageToken, 'base64');
+
   const requestArgs = advancedVisibility
     ? {
+        // TODO - construct query based on available arguments...
         query: 'WorkflowID = "cron_1614b8d6-5282-4f09-be27-f151bfb96a76"',
       }
     : {
         StartTimeFilter: {
-          earliestTime: momentToLong(startTime),
-          latestTime: momentToLong(endTime),
+          earliestTime,
+          latestTime,
         },
-        typeFilter: q.workflowName ? { name: q.workflowName } : undefined,
-        executionFilter: q.workflowId
-          ? { workflowId: q.workflowId }
-          : undefined,
-        statusFilter: q.status || undefined,
-        nextPageToken: q.nextPageToken
-          ? Buffer.from(q.nextPageToken, 'base64')
-          : undefined,
+        ...(workflowName && { typeFilter: { name: workflowName } }),
+        ...(workflowId && { executionFilter: { workflowId } }),
+        ...(status && { statusFilter: status }),
+        ...(nextPageTokenBuffer && { nextPageToken: nextPageTokenBuffer }),
       };
 
   const requestApi = advancedVisibility ? 'listWorkflows' : state + 'Workflows';
