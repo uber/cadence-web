@@ -20,6 +20,7 @@
 // THE SOFTWARE.
 
 const moment = require('moment');
+const buildQueryString = require('./build-query-string');
 const isAdvancedVisibilityEnabled = require('./is-advanced-visibility-enabled');
 const momentToLong = require('./moment-to-long');
 
@@ -41,8 +42,10 @@ async function listWorkflows({ clusterHandler, state }, ctx) {
 
   const requestArgs = advancedVisibility
     ? {
-        // TODO - construct query based on available arguments...
-        query: 'WorkflowID = "cron_1614b8d6-5282-4f09-be27-f151bfb96a76"',
+        query: buildQueryString(startTime, endTime, {
+          ...query,
+          state,
+        }),
       }
     : {
         StartTimeFilter: {
