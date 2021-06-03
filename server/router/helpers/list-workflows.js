@@ -24,14 +24,15 @@ const buildQueryString = require('./build-query-string');
 const isAdvancedVisibilityEnabled = require('./is-advanced-visibility-enabled');
 const momentToLong = require('./moment-to-long');
 
-async function listWorkflows({ clusterHandler, state }, ctx) {
+async function listWorkflows({ clusterService, state }, ctx) {
   const { query = {} } = ctx;
   const startTime = moment(query.startTime || NaN);
   const endTime = moment(query.endTime || NaN);
 
   ctx.assert(startTime.isValid() && endTime.isValid(), 400);
 
-  const cluster = await clusterHandler.getCluster(ctx);
+  const cluster = await clusterService.getCluster(ctx);
+
   const advancedVisibility = isAdvancedVisibilityEnabled(cluster);
 
   const earliestTime = momentToLong(startTime);

@@ -19,21 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const get = require('lodash.get');
+const clusterClearCacheHandler = clusterService => async ctx =>
+  (ctx.body = await clusterService.clearCache(ctx));
 
-const isAdvancedVisibilityEnabled = cluster => {
-  const clusterVisibilityFeatures =
-    get(cluster, 'persistenceInfo.visibilityStore.features') || [];
-
-  const advancedVisibilityEnabledFeature = clusterVisibilityFeatures.find(
-    ({ key }) => key === 'advancedVisibilityEnabled'
-  );
-
-  if (advancedVisibilityEnabledFeature) {
-    return advancedVisibilityEnabledFeature.enabled;
-  }
-
-  return false;
-};
-
-module.exports = isAdvancedVisibilityEnabled;
+module.exports = clusterClearCacheHandler;

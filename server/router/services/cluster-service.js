@@ -19,21 +19,39 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const get = require('lodash.get');
+const { CLUSTER_CACHE_TTL } = require('../constants');
 
-const isAdvancedVisibilityEnabled = cluster => {
-  const clusterVisibilityFeatures =
-    get(cluster, 'persistenceInfo.visibilityStore.features') || [];
+let cache = null;
+let cacheExpiryDateTime = null;
 
-  const advancedVisibilityEnabledFeature = clusterVisibilityFeatures.find(
-    ({ key }) => key === 'advancedVisibilityEnabled'
-  );
-
-  if (advancedVisibilityEnabledFeature) {
-    return advancedVisibilityEnabledFeature.enabled;
-  }
-
-  return false;
+const clearCache = () => {
+  cache = null;
+  cacheExpiryDateTime = null;
 };
 
-module.exports = isAdvancedVisibilityEnabled;
+const setCache = data => {
+  cache = data;
+  cacheExpiryDateTime = Date.now() + CLUSTER_CACHE_TTL;
+};
+
+const getCluster = async ctx => {
+  if (cacheExpiryDateTime && Date.now() < cacheExpiryDateTime) {
+    return cache;
+  }
+
+  const cluster = await ctx.cadence.describeCluster();
+
+  const data = { ...cluster, membershipInfo: null };
+
+  setCache(data);
+
+  return data;
+};
+
+const clusterService = {
+  clearCache,
+  getCluster,
+  setCache,
+};
+
+module.exports = clusterService;

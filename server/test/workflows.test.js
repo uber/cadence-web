@@ -32,6 +32,7 @@ describe('Listing Workflows', function() {
       closeTime: null,
       closeStatus: null,
       historyLength: null,
+      isCron: null,
       autoResetPoints: null,
       executionTime: null,
       memo: null,
@@ -44,7 +45,37 @@ describe('Listing Workflows', function() {
       taskList: null,
     });
 
-  it('should list open workflows', function() {
+  const clusterElasticSearchEnabled = {
+    persistenceInfo: {
+      visibilityStore: {
+        features: [
+          {
+            key: 'advancedVisibilityEnabled',
+            enabled: true,
+          },
+        ],
+      },
+    },
+  };
+
+  const clusterElasticSearchDisabled = {
+    persistenceInfo: {
+      visibilityStore: {
+        features: [
+          {
+            key: 'advancedVisibilityEnabled',
+            enabled: false,
+          },
+        ],
+      },
+    },
+  };
+
+  afterEach(() => {
+    return request().delete('/api/cluster/cache');
+  });
+
+  it('should list open workflows with ES disabled', function() {
     this.test.ListOpenWorkflowExecutions = ({ listRequest }) => {
       listRequest.domain.should.equal('canary');
       listRequest.StartTimeFilter.earliestTime
@@ -64,6 +95,10 @@ describe('Listing Workflows', function() {
       };
     };
 
+    this.test.DescribeCluster = () => {
+      return clusterElasticSearchDisabled;
+    };
+
     return request()
       .get(
         '/api/domains/canary/workflows/open?startTime=2017-11-12T12:00:00Z&endTime=2017-11-13T14:30:00Z'
@@ -77,7 +112,40 @@ describe('Listing Workflows', function() {
       });
   });
 
-  it('should list closed workflows', function() {
+  it('should list open workflows with ES enabled', function() {
+    this.test.ListWorkflowExecutions = ({ listRequest }) => {
+      listRequest.query
+        .match('2017-11-12T12:00:00.000Z')[0]
+        .should.equal('2017-11-12T12:00:00.000Z');
+
+      listRequest.query
+        .match('2017-11-13T14:30:00.000Z')[0]
+        .should.equal('2017-11-13T14:30:00.000Z');
+
+      return {
+        executions: [demoExecThrift],
+        nextPageToken: new Buffer('{"IsWorkflowRunning":true,NextEventId:37}'),
+      };
+    };
+
+    this.test.DescribeCluster = () => {
+      return clusterElasticSearchEnabled;
+    };
+
+    return request()
+      .get(
+        '/api/domains/canary/workflows/open?startTime=2017-11-12T12:00:00Z&endTime=2017-11-13T14:30:00Z'
+      )
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .expect({
+        executions: [demoExecJson],
+        nextPageToken:
+          'eyJJc1dvcmtmbG93UnVubmluZyI6dHJ1ZSxOZXh0RXZlbnRJZDozN30=',
+      });
+  });
+
+  it('should list closed workflows with ES disabled', function() {
     this.test.ListClosedWorkflowExecutions = ({ listRequest }) => {
       listRequest.domain.should.equal('canary');
       listRequest.StartTimeFilter.earliestTime
@@ -95,6 +163,44 @@ describe('Listing Workflows', function() {
         executions: [demoExecThrift],
         nextPageToken: new Buffer('{"IsWorkflowRunning":false}'),
       };
+    };
+
+    this.test.DescribeCluster = () => {
+      return clusterElasticSearchDisabled;
+    };
+
+    return request()
+      .get(
+        '/api/domains/canary/workflows/closed?startTime=2017-11-12T12:00:00Z&endTime=2017-11-13T14:30:00Z'
+      )
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .expect({
+        executions: [demoExecJson],
+        nextPageToken: 'eyJJc1dvcmtmbG93UnVubmluZyI6ZmFsc2V9',
+      });
+  });
+
+  it('should list closed workflows with ES enabled', function() {
+    this.test.ListWorkflowExecutions = ({ listRequest }) => {
+      listRequest.domain.should.equal('canary');
+
+      listRequest.query
+        .match('2017-11-12T12:00:00.000Z')[0]
+        .should.equal('2017-11-12T12:00:00.000Z');
+
+      listRequest.query
+        .match('2017-11-13T14:30:00.000Z')[0]
+        .should.equal('2017-11-13T14:30:00.000Z');
+
+      return {
+        executions: [demoExecThrift],
+        nextPageToken: new Buffer('{"IsWorkflowRunning":false}'),
+      };
+    };
+
+    this.test.DescribeCluster = () => {
+      return clusterElasticSearchEnabled;
     };
 
     return request()
@@ -117,6 +223,10 @@ describe('Listing Workflows', function() {
         executions: [],
         nextPageToken: new Buffer('page2'),
       };
+    };
+
+    this.test.DescribeCluster = () => {
+      return clusterElasticSearchDisabled;
     };
 
     return request()

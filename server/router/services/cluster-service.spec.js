@@ -19,12 +19,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import clusterHandler from './cluster-handler';
+import clusterService from './cluster-service';
 
-describe('cluster handler', () => {
+describe('cluster service', () => {
   describe('getCluster', () => {
     beforeEach(() => {
-      clusterHandler.clearCache();
+      clusterService.clearCache();
     });
 
     describe('cache = null', () => {
@@ -36,15 +36,14 @@ describe('cluster handler', () => {
         };
 
         const ctx = {
-          body: null,
           cadence: {
             describeCluster: jest.fn().mockImplementation(() => cluster),
           },
         };
 
-        await clusterHandler.getCluster(ctx);
+        const data = await clusterService.getCluster(ctx);
 
-        expect(ctx.body).toEqual(cluster);
+        expect(data).toEqual(cluster);
       });
     });
 
@@ -57,15 +56,14 @@ describe('cluster handler', () => {
         };
 
         const ctx = {
-          body: null,
           cadence: {
             describeCluster: jest.fn().mockImplementation(() => clusterCache),
           },
         };
 
-        await clusterHandler.getCluster(ctx);
+        const data = await clusterService.getCluster(ctx);
 
-        expect(ctx.body).toEqual(clusterCache);
+        expect(data).toEqual(clusterCache);
 
         const clusterUpdated = {
           persistenceInfo: {},
@@ -73,12 +71,11 @@ describe('cluster handler', () => {
           version: 2,
         };
 
-        ctx.body = null;
         ctx.cadence.describeCluster.mockImplementation(() => clusterUpdated);
 
-        await clusterHandler.getCluster(ctx);
+        const updatedData = await clusterService.getCluster(ctx);
 
-        expect(ctx.body).toEqual(clusterCache);
+        expect(updatedData).toEqual(clusterCache);
       });
 
       describe('and time passes over CLUSTER_CACHE_TTL', () => {
@@ -90,7 +87,6 @@ describe('cluster handler', () => {
           };
 
           const ctx = {
-            body: null,
             cadence: {
               describeCluster: jest.fn().mockImplementation(() => clusterCache),
             },
@@ -103,9 +99,9 @@ describe('cluster handler', () => {
               new Date(Date.UTC(2020, 2, 10)).getTime()
             );
 
-          await clusterHandler.getCluster(ctx);
+          const data = await clusterService.getCluster(ctx);
 
-          expect(ctx.body).toEqual(clusterCache);
+          expect(data).toEqual(clusterCache);
 
           const clusterUpdated = {
             persistenceInfo: {},
@@ -113,7 +109,6 @@ describe('cluster handler', () => {
             version: 2,
           };
 
-          ctx.body = null;
           ctx.cadence.describeCluster.mockImplementation(() => clusterUpdated);
 
           // set current time to an hour into the future
@@ -123,9 +118,9 @@ describe('cluster handler', () => {
               new Date(Date.UTC(2020, 2, 10, 2)).getTime()
             );
 
-          await clusterHandler.getCluster(ctx);
+          const updatedData = await clusterService.getCluster(ctx);
 
-          expect(ctx.body).toEqual(clusterUpdated);
+          expect(updatedData).toEqual(clusterUpdated);
         });
       });
     });

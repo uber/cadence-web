@@ -35,16 +35,20 @@ before(function(done) {
   tchanServer = new TChannel({ serviceName: 'cadence-frontend' });
 
   client = new TChannel();
-  const cadenceChan = client.makeSubChannel({
+  const cadenceChannel = client.makeSubChannel({
     serviceName: 'cadence-frontend',
   });
   const tchan = TChannelAsThrift({
-    channel: cadenceChan,
+    channel: cadenceChannel,
     entryPoint: path.join(__dirname, '../idl/cadence.thrift'),
   });
+  const adminTChannel = TChannelAsThrift({
+    channel: cadenceChannel,
+    entryPoint: path.join(__dirname, '../idl/admin.thrift'),
+  });
 
-  const handler = (ctx, req, head, body, cb) => {
-    const mockName = req.endpoint.replace('WorkflowService::', '');
+  const handler = serviceName => (ctx, req, head, body, cb) => {
+    const mockName = req.endpoint.replace(`${serviceName}::`, '');
 
     if (!currTest[mockName]) {
       throw new Error(`unexpected request to ${req.endpoint}`);
@@ -64,6 +68,7 @@ before(function(done) {
   [
     'ListOpenWorkflowExecutions',
     'ListClosedWorkflowExecutions',
+    'ListWorkflowExecutions',
     'GetWorkflowExecutionHistory',
     'QueryWorkflow',
     'DescribeWorkflowExecution',
@@ -73,7 +78,19 @@ before(function(done) {
     'DescribeDomain',
     'DescribeTaskList',
   ].forEach(endpoint =>
-    tchan.register(tchanServer, 'WorkflowService::' + endpoint, {}, handler)
+    tchan.register(
+      tchanServer,
+      'WorkflowService::' + endpoint,
+      {},
+      handler('WorkflowService')
+    )
+  );
+
+  adminTChannel.register(
+    tchanServer,
+    'AdminService::DescribeCluster',
+    {},
+    handler('AdminService')
   );
 
   process.env.CADENCE_TCHANNEL_PEERS = '127.0.0.1:11343';
