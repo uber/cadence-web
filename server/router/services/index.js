@@ -19,7 +19,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const clusterHandler = clusterService => async ctx =>
-  (ctx.body = await clusterService.getCluster(ctx));
+const clusterService = require('./cluster-service');
 
-module.exports = clusterHandler;
+module.exports = {
+  clusterService,
+};

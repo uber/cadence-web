@@ -41,12 +41,13 @@ const {
   workflowSignalHandler,
   workflowTerminateHandler,
 } = require('./routes');
+const { clusterService } = require('./services');
 
 const { listWorkflows } = require('./helpers');
 
 const router = new Router();
 
-router.get('/api/cluster', clusterHandler.getCluster);
+router.get('/api/cluster', clusterHandler(clusterService));
 
 router.get('/api/domains', domainListHandler);
 

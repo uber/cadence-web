@@ -19,7 +19,39 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const clusterHandler = clusterService => async ctx =>
-  (ctx.body = await clusterService.getCluster(ctx));
+const { CLUSTER_CACHE_TTL } = require('../constants');
 
-module.exports = clusterHandler;
+let cache = null;
+let cacheExpiryDateTime = null;
+
+const clearCache = () => {
+  cache = null;
+  cacheExpiryDateTime = null;
+};
+
+const setCache = data => {
+  cache = data;
+  cacheExpiryDateTime = Date.now() + CLUSTER_CACHE_TTL;
+};
+
+const getCluster = async ctx => {
+  if (cacheExpiryDateTime && Date.now() < cacheExpiryDateTime) {
+    return cache;
+  }
+
+  const cluster = await ctx.cadence.describeCluster();
+
+  const data = { ...cluster, membershipInfo: null };
+
+  setCache(data);
+
+  return data;
+};
+
+const clusterService = {
+  clearCache,
+  getCluster,
+  setCache,
+};
+
+module.exports = clusterService;
