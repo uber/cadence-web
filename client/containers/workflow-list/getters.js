@@ -26,6 +26,7 @@ import {
   WORKFLOW_LIST_FILTER_BY,
   WORKFLOW_LIST_FILTER_MODE,
   WORKFLOW_LIST_FILTER_MODE_BUTTON_LABEL,
+  WORKFLOW_LIST_IS_CRON,
   WORKFLOW_LIST_QUERY_STRING,
   WORKFLOW_LIST_STATE,
   WORKFLOW_LIST_STATUS,
@@ -37,6 +38,7 @@ import {
   getFetchWorkflowListUrl,
   getFilterBy,
   getFilterModeButtonLabel,
+  getIsCron,
   getState,
   getStatus,
 } from './helpers';
@@ -54,6 +56,8 @@ const getters = {
     getters[ROUTE_QUERY].filterMode || FILTER_MODE_BASIC,
   [WORKFLOW_LIST_FILTER_MODE_BUTTON_LABEL]: (_, getters) =>
     getFilterModeButtonLabel(getters[WORKFLOW_LIST_FILTER_MODE]),
+  [WORKFLOW_LIST_IS_CRON]: (_, getters) =>
+    getIsCron(getters[ROUTE_QUERY].isCron),
   [WORKFLOW_LIST_QUERY_STRING]: (_, getters) =>
     getters[ROUTE_QUERY].queryString || '',
   [WORKFLOW_LIST_STATE]: (_, getters) =>

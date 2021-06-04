@@ -30,6 +30,8 @@ import { CLUSTER_VISIBILITY_FEATURES_ADVANCED_VISIBILITY_ENABLED_KEY } from './c
 
 const getters = {
   [CLUSTER_ADVANCED_VISIBILITY_ENABLED]: (_, getters) => {
+    return true;
+
     const advancedVisibilityEnabledFeature = getters[
       CLUSTER_VISIBILITY_FEATURES
     ].find(

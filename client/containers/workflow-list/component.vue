@@ -23,6 +23,7 @@
 import moment from 'moment';
 import debounce from 'lodash-es/debounce';
 import {
+  IS_CRON_LIST,
   FILTER_MODE_ADVANCED,
   STATE_ALL,
   STATE_CLOSED,
@@ -58,6 +59,8 @@ export default {
     'filterMode',
     'filterModeButtonEnabled',
     'filterModeButtonLabel',
+    'isCron',
+    'isCronInputVisible',
     'queryString',
     'state',
     'status',
@@ -69,6 +72,7 @@ export default {
   ],
   data() {
     return {
+      isCronList: IS_CRON_LIST,
       loading: false,
       results: [],
       error: undefined,
@@ -325,6 +329,11 @@ export default {
 
       this.$emit('onFilterChange', { [name]: value });
     },
+    onIsCronChange(isCron) {
+      if (isCron) {
+        this.$emit('onFilterChange', { isCron: isCron.value });
+      }
+    },
     onStatusChange(status) {
       if (status) {
         this.$emit('onFilterChange', { status: status.value });
@@ -432,6 +441,15 @@ export default {
           :options="statusList"
           :value="status"
           @change="onStatusChange"
+        />
+        <select-input
+          label="Cron"
+          max-width="115px"
+          name="isCron"
+          :options="isCronList"
+          :value="isCron"
+          @change="onIsCronChange"
+          v-if="isCronInputVisible"
         />
         <text-input
           label="Filter by"
