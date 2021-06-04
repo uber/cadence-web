@@ -31,6 +31,7 @@ const buildQueryString = (
   return [
     `${filterBy} >= "${startTime.toISOString()}"`,
     `${filterBy} <= "${endTime.toISOString()}"`,
+    state === 'open' && `CloseTime = missing`,
     status && `CloseStatus = "${status}"`,
     isCron !== undefined && `IsCron = "${isCron}"`,
     workflowId && `WorkflowID = "${workflowId}"`,
