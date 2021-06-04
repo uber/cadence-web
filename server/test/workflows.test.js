@@ -75,6 +75,39 @@ describe('Listing Workflows', function() {
     return request().delete('/api/cluster/cache');
   });
 
+  it('should list all workflows with ES enabled', function() {
+    this.test.ListWorkflowExecutions = ({ listRequest }) => {
+      listRequest.query
+        .match('2017-11-12T12:00:00.000Z')[0]
+        .should.equal('2017-11-12T12:00:00.000Z');
+
+      listRequest.query
+        .match('2017-11-13T14:30:00.000Z')[0]
+        .should.equal('2017-11-13T14:30:00.000Z');
+
+      return {
+        executions: [demoExecThrift],
+        nextPageToken: new Buffer('{"IsWorkflowRunning":true,NextEventId:37}'),
+      };
+    };
+
+    this.test.DescribeCluster = () => {
+      return clusterElasticSearchEnabled;
+    };
+
+    return request()
+      .get(
+        '/api/domains/canary/workflows/all?startTime=2017-11-12T12:00:00Z&endTime=2017-11-13T14:30:00Z'
+      )
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .expect({
+        executions: [demoExecJson],
+        nextPageToken:
+          'eyJJc1dvcmtmbG93UnVubmluZyI6dHJ1ZSxOZXh0RXZlbnRJZDozN30=',
+      });
+  });
+
   it('should list open workflows with ES disabled', function() {
     this.test.ListOpenWorkflowExecutions = ({ listRequest }) => {
       listRequest.domain.should.equal('canary');
