@@ -21,7 +21,7 @@
 
 import clusterService from './cluster-service';
 
-describe('cluster service', () => {
+describe('clusterService', () => {
   describe('getCluster', () => {
     beforeEach(() => {
       clusterService.clearCache();
