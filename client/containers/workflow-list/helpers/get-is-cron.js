@@ -26,7 +26,7 @@ const getIsCron = isCron => {
     return IS_CRON_LIST_OPTION_DEFAULT;
   }
 
-  const formattedIsCron = isCron.toLowerCase();
+  const formattedIsCron = isCron.toString().toLowerCase();
 
   return (
     IS_CRON_LIST.find(item => item.value === formattedIsCron) ||

@@ -157,6 +157,7 @@ export default {
       const {
         endTime,
         filterMode,
+        isCron,
         queryString,
         startTime,
         statusName: status,
@@ -167,6 +168,7 @@ export default {
       return getCriteria({
         endTime,
         filterMode,
+        isCron,
         queryString,
         startTime,
         status,
@@ -394,6 +396,7 @@ export default {
         oldCriteria &&
         (newCriteria.startTime !== oldCriteria.startTime ||
           newCriteria.endTime !== oldCriteria.endTime ||
+          newCriteria.isCron !== oldCriteria.isCron ||
           newCriteria.queryString !== oldCriteria.queryString ||
           newCriteria.status !== oldCriteria.status ||
           newCriteria.workflowId !== oldCriteria.workflowId ||
