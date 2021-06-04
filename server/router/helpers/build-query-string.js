@@ -19,19 +19,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+const { STATE_TO_FILTER_BY_MAP } = require('../constants');
+
 const buildQueryString = (
   startTime,
   endTime,
-  { status, workflowId, workflowName }
-) =>
-  [
-    `CloseTime >= "${startTime.toISOString()}"`,
-    `CloseTime <= "${endTime.toISOString()}"`,
+  { isCron, state = 'closed', status, workflowId, workflowName } = {}
+) => {
+  const filterBy = STATE_TO_FILTER_BY_MAP[state];
+
+  return [
+    `${filterBy} >= "${startTime.toISOString()}"`,
+    `${filterBy} <= "${endTime.toISOString()}"`,
+    state === 'open' && `CloseTime = missing`,
     status && `CloseStatus = "${status}"`,
+    isCron !== undefined && `IsCron = "${isCron}"`,
     workflowId && `WorkflowID = "${workflowId}"`,
     workflowName && `WorkflowType = "${workflowName}"`,
   ]
     .filter(subQuery => !!subQuery)
     .join(' and ');
+};
 
 module.exports = buildQueryString;
