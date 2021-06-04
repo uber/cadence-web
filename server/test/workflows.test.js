@@ -75,6 +75,23 @@ describe('Listing Workflows', function() {
     return request().delete('/api/cluster/cache');
   });
 
+  it('should fail to list all workflows with ES disabled', function() {
+    this.test.DescribeCluster = () => {
+      return clusterElasticSearchDisabled;
+    };
+
+    return request()
+      .get(
+        '/api/domains/canary/workflows/all?startTime=2017-11-12T12:00:00Z&endTime=2017-11-13T14:30:00Z'
+      )
+      .expect(400)
+      .expect('Content-Type', /json/)
+      .expect({
+        message:
+          'Advanced visibility is not supported for cluster. Try using workflows open or closed APIs.',
+      });
+  });
+
   it('should list all workflows with ES enabled', function() {
     this.test.ListWorkflowExecutions = ({ listRequest }) => {
       listRequest.query

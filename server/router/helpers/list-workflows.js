@@ -35,35 +35,39 @@ async function listWorkflows({ clusterService, state }, ctx) {
 
   const advancedVisibility = isAdvancedVisibilityEnabled(cluster);
 
+  if (state === 'all') {
+    ctx.assert(
+      advancedVisibility,
+      'Advanced visibility is not supported for cluster. Try using workflows open or closed APIs.',
+      400
+    );
+  }
+
   const earliestTime = momentToLong(startTime);
   const latestTime = momentToLong(endTime);
   const { nextPageToken, status, workflowId, workflowName } = query;
   const nextPageTokenBuffer =
     nextPageToken && Buffer.from(nextPageToken, 'base64');
 
-  const requestArgs =
-    advancedVisibility || state === 'all'
-      ? {
-          query: buildQueryString(startTime, endTime, {
-            ...query,
-            state,
-          }),
-        }
-      : {
-          StartTimeFilter: {
-            earliestTime,
-            latestTime,
-          },
-          ...(workflowName && { typeFilter: { name: workflowName } }),
-          ...(workflowId && { executionFilter: { workflowId } }),
-          ...(status && { statusFilter: status }),
-          ...(nextPageTokenBuffer && { nextPageToken: nextPageTokenBuffer }),
-        };
+  const requestArgs = advancedVisibility
+    ? {
+        query: buildQueryString(startTime, endTime, {
+          ...query,
+          state,
+        }),
+      }
+    : {
+        StartTimeFilter: {
+          earliestTime,
+          latestTime,
+        },
+        ...(workflowName && { typeFilter: { name: workflowName } }),
+        ...(workflowId && { executionFilter: { workflowId } }),
+        ...(status && { statusFilter: status }),
+        ...(nextPageTokenBuffer && { nextPageToken: nextPageTokenBuffer }),
+      };
 
-  const requestApi =
-    advancedVisibility || state === 'all'
-      ? 'listWorkflows'
-      : state + 'Workflows';
+  const requestApi = advancedVisibility ? 'listWorkflows' : state + 'Workflows';
 
   ctx.body = await ctx.cadence[requestApi](requestArgs);
 }
