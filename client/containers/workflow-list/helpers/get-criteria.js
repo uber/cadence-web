@@ -24,6 +24,7 @@ import { FILTER_MODE_ADVANCED } from '../constants';
 const getCriteria = ({
   endTime,
   filterMode,
+  isCron,
   queryString,
   startTime,
   status,
@@ -43,6 +44,7 @@ const getCriteria = ({
   const criteria = {
     startTime,
     endTime,
+    ...(isCron && isCron.value !== '' && { isCron: isCron.value }),
     status,
     ...(workflowId && { workflowId: workflowId.trim() }),
     ...(workflowName && { workflowName: workflowName.trim() }),

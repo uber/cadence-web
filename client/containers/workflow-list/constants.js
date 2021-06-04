@@ -25,6 +25,16 @@ export const FILTER_BY_CLOSE_TIME = 'CloseTime';
 export const FILTER_MODE_ADVANCED = 'advanced';
 export const FILTER_MODE_BASIC = 'basic';
 
+export const IS_CRON_ALL = '';
+export const IS_CRON_TRUE = 'true';
+export const IS_CRON_FALSE = 'false';
+export const IS_CRON_LIST = [
+  { value: IS_CRON_ALL, label: 'All' },
+  { value: IS_CRON_TRUE, label: 'Is a cron' },
+  { value: IS_CRON_FALSE, label: 'Is not a cron' },
+];
+export const IS_CRON_LIST_OPTION_DEFAULT = IS_CRON_LIST[0];
+
 export const STATE_ALL = 'all';
 export const STATE_CLOSED = 'closed';
 export const STATE_OPEN = 'open';
