@@ -64,6 +64,18 @@ describe('buildQueryString', () => {
       });
     });
 
+    describe('state = "all"', () => {
+      const state = 'all';
+
+      it('should return "StartTime >= "2021-06-03T00:00:00.000Z" and StartTime <= "2021-06-04T00:00:00.000Z"".', () => {
+        const output = buildQueryString(startTime, endTime, { state });
+
+        expect(output).toEqual(
+          'StartTime >= "2021-06-03T00:00:00.000Z" and StartTime <= "2021-06-04T00:00:00.000Z"'
+        );
+      });
+    });
+
     describe('state = "closed"', () => {
       const state = 'closed';
 

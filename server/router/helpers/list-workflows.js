@@ -41,25 +41,29 @@ async function listWorkflows({ clusterService, state }, ctx) {
   const nextPageTokenBuffer =
     nextPageToken && Buffer.from(nextPageToken, 'base64');
 
-  const requestArgs = advancedVisibility
-    ? {
-        query: buildQueryString(startTime, endTime, {
-          ...query,
-          state,
-        }),
-      }
-    : {
-        StartTimeFilter: {
-          earliestTime,
-          latestTime,
-        },
-        ...(workflowName && { typeFilter: { name: workflowName } }),
-        ...(workflowId && { executionFilter: { workflowId } }),
-        ...(status && { statusFilter: status }),
-        ...(nextPageTokenBuffer && { nextPageToken: nextPageTokenBuffer }),
-      };
+  const requestArgs =
+    advancedVisibility || state === 'all'
+      ? {
+          query: buildQueryString(startTime, endTime, {
+            ...query,
+            state,
+          }),
+        }
+      : {
+          StartTimeFilter: {
+            earliestTime,
+            latestTime,
+          },
+          ...(workflowName && { typeFilter: { name: workflowName } }),
+          ...(workflowId && { executionFilter: { workflowId } }),
+          ...(status && { statusFilter: status }),
+          ...(nextPageTokenBuffer && { nextPageToken: nextPageTokenBuffer }),
+        };
 
-  const requestApi = advancedVisibility ? 'listWorkflows' : state + 'Workflows';
+  const requestApi =
+    advancedVisibility || state === 'all'
+      ? 'listWorkflows'
+      : state + 'Workflows';
 
   ctx.body = await ctx.cadence[requestApi](requestArgs);
 }
