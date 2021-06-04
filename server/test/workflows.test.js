@@ -32,6 +32,7 @@ describe('Listing Workflows', function() {
       closeTime: null,
       closeStatus: null,
       historyLength: null,
+      isCron: null,
       autoResetPoints: null,
       executionTime: null,
       memo: null,
