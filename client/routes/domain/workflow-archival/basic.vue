@@ -42,6 +42,7 @@ import {
   LoadingMessage,
   LoadingSpinner,
   NoResults,
+  SelectInput,
   TextInput,
 } from '~components';
 import {
@@ -227,6 +228,7 @@ export default pagedGrid({
     'loading-message': LoadingMessage,
     'loading-spinner': LoadingSpinner,
     'no-results': NoResults,
+    'select-input': SelectInput,
     'text-input': TextInput,
   },
 });
@@ -255,11 +257,11 @@ export default pagedGrid({
           />
         </flex-grid-item>
         <flex-grid-item width="160px">
-          <v-select
-            :on-change="onSelectChange"
+          <select-input
+            label="Status"
             :options="statusList"
-            :searchable="false"
             :value="status"
+            @change="onSelectChange"
           />
         </flex-grid-item>
         <flex-grid-item width="165px">

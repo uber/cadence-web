@@ -19,18 +19,39 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const buildQueryString = require('./build-query-string');
-const isAdvancedVisibilityEnabled = require('./is-advanced-visibility-enabled');
-const listWorkflows = require('./list-workflows');
-const mapHistoryResponse = require('./map-history-response');
-const momentToLong = require('./moment-to-long');
-const replacer = require('./replacer');
+const { CLUSTER_CACHE_TTL } = require('../constants');
 
-module.exports = {
-  buildQueryString,
-  isAdvancedVisibilityEnabled,
-  listWorkflows,
-  mapHistoryResponse,
-  momentToLong,
-  replacer,
+let cache = null;
+let cacheExpiryDateTime = null;
+
+const clearCache = () => {
+  cache = null;
+  cacheExpiryDateTime = null;
 };
+
+const setCache = data => {
+  cache = data;
+  cacheExpiryDateTime = Date.now() + CLUSTER_CACHE_TTL;
+};
+
+const getCluster = async ctx => {
+  if (cacheExpiryDateTime && Date.now() < cacheExpiryDateTime) {
+    return cache;
+  }
+
+  const cluster = await ctx.cadence.describeCluster();
+
+  const data = { ...cluster, membershipInfo: null };
+
+  setCache(data);
+
+  return data;
+};
+
+const clusterService = {
+  clearCache,
+  getCluster,
+  setCache,
+};
+
+module.exports = clusterService;

@@ -43,6 +43,7 @@ import {
   ButtonFill,
   DateRangePicker,
   ErrorMessage,
+  SelectInput,
   TextInput,
   WorkflowGrid,
 } from '~components';
@@ -94,6 +95,7 @@ export default {
     'button-fill': ButtonFill,
     'date-range-picker': DateRangePicker,
     'error-message': ErrorMessage,
+    'select-input': SelectInput,
     'text-input': TextInput,
     'workflow-grid': WorkflowGrid,
   },
@@ -422,13 +424,14 @@ export default {
           :value="workflowName"
           @input="onFilterChange"
         />
-        <v-select
-          class="status"
-          :value="status"
-          :options="statusList"
-          :on-change="onStatusChange"
-          :searchable="false"
+        <select-input
           data-cy="status-filter"
+          label="Status"
+          max-width="160px"
+          name="status"
+          :options="statusList"
+          :value="status"
+          @change="onStatusChange"
         />
         <text-input
           label="Filter by"
@@ -481,14 +484,6 @@ section.workflow-list
 
     .date-range-picker {
       margin-right: 5px;
-    }
-
-    .dropdown {
-      margin-right: 5px;
-    }
-
-    .status {
-      width: 160px;
     }
 
   &.loading section.results table

@@ -20,27 +20,56 @@
 // THE SOFTWARE.
 
 const moment = require('moment');
+const buildQueryString = require('./build-query-string');
+const isAdvancedVisibilityEnabled = require('./is-advanced-visibility-enabled');
 const momentToLong = require('./moment-to-long');
 
-async function listWorkflows(state, ctx) {
-  const q = ctx.query || {},
-    startTime = moment(q.startTime || NaN),
-    endTime = moment(q.endTime || NaN);
+async function listWorkflows({ clusterService, state }, ctx) {
+  const { query = {} } = ctx;
+  const startTime = moment(query.startTime || NaN);
+  const endTime = moment(query.endTime || NaN);
 
   ctx.assert(startTime.isValid() && endTime.isValid(), 400);
 
-  ctx.body = await ctx.cadence[state + 'Workflows']({
-    StartTimeFilter: {
-      earliestTime: momentToLong(startTime),
-      latestTime: momentToLong(endTime),
-    },
-    typeFilter: q.workflowName ? { name: q.workflowName } : undefined,
-    executionFilter: q.workflowId ? { workflowId: q.workflowId } : undefined,
-    statusFilter: q.status || undefined,
-    nextPageToken: q.nextPageToken
-      ? Buffer.from(q.nextPageToken, 'base64')
-      : undefined,
-  });
+  const cluster = await clusterService.getCluster(ctx);
+
+  const advancedVisibility = isAdvancedVisibilityEnabled(cluster);
+
+  if (state === 'all') {
+    ctx.assert(
+      advancedVisibility,
+      'Advanced visibility is not supported for cluster. Try using workflows open or closed APIs.',
+      400
+    );
+  }
+
+  const earliestTime = momentToLong(startTime);
+  const latestTime = momentToLong(endTime);
+  const { nextPageToken, status, workflowId, workflowName } = query;
+  const nextPageTokenBuffer =
+    nextPageToken && Buffer.from(nextPageToken, 'base64');
+
+  const requestArgs = advancedVisibility
+    ? {
+        query: buildQueryString(startTime, endTime, {
+          ...query,
+          state,
+        }),
+      }
+    : {
+        StartTimeFilter: {
+          earliestTime,
+          latestTime,
+        },
+        ...(workflowName && { typeFilter: { name: workflowName } }),
+        ...(workflowId && { executionFilter: { workflowId } }),
+        ...(status && { statusFilter: status }),
+        ...(nextPageTokenBuffer && { nextPageToken: nextPageTokenBuffer }),
+      };
+
+  const requestApi = advancedVisibility ? 'listWorkflows' : state + 'Workflows';
+
+  ctx.body = await ctx.cadence[requestApi](requestArgs);
 }
 
 module.exports = listWorkflows;
