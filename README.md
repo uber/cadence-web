@@ -1,6 +1,6 @@
 # Cadence Web UI
 
-[![Build Status](https://travis-ci.com/uber/cadence-web.svg?branch=master)](https://travis-ci.com/uber/cadence-web)
+[![Build Status](https://github.com/uber/cadence-web/actions/workflows/build.yml/badge.svg)](https://github.com/uber/cadence-web/actions/workflows/build.yml)
 
 Cadence is a distributed, scalable, durable, and highly available orchestration engine we developed at Uber Engineering to execute asynchronous long-running business logic in a scalable and resilient way.
 
