@@ -29,12 +29,21 @@ export default {
       type: String,
       validator: value => ['inline', 'inline-block'].includes(value),
     },
+    grow: {
+      type: Number,
+    },
+    margin: {
+      type: String,
+    },
     name: {
       required: true,
       type: String,
     },
     params: {
       type: Object,
+    },
+    width: {
+      type: String,
     },
   },
   data() {
@@ -58,6 +67,7 @@ export default {
   <div
     class="feature-flag"
     :class="{ [display]: display }"
+    :style="{ flexGrow: grow, marginRight: margin, maxWidth: width }"
     v-if="isFeatureFlagEnabled"
   >
     <slot></slot>
