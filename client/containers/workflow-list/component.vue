@@ -44,6 +44,9 @@ import {
   ButtonFill,
   DateRangePicker,
   ErrorMessage,
+  FeatureFlag,
+  FlexGrid,
+  FlexGridItem,
   SelectInput,
   TextInput,
   WorkflowGrid,
@@ -99,6 +102,9 @@ export default {
     'button-fill': ButtonFill,
     'date-range-picker': DateRangePicker,
     'error-message': ErrorMessage,
+    'feature-flag': FeatureFlag,
+    'flex-grid': FlexGrid,
+    'flex-grid-item': FlexGridItem,
     'select-input': SelectInput,
     'text-input': TextInput,
     'workflow-grid': WorkflowGrid,
@@ -413,68 +419,100 @@ export default {
   <section class="workflow-list" :class="{ loading, ready: !loading }">
     <header class="filters">
       <template v-if="filterMode === FILTER_MODE_ADVANCED">
-        <text-input
-          label="Query"
-          type="search"
-          name="queryString"
-          :value="queryString"
-          @input="onFilterChange"
-        />
+        <flex-grid width="100%">
+          <flex-grid-item grow="1">
+            <text-input
+              label="Query"
+              type="search"
+              name="queryString"
+              :value="queryString"
+              @input="onFilterChange"
+            />
+          </flex-grid-item>
+          <flex-grid-item>
+            <button-fill
+              @click="onFilterModeClick"
+              disabledLabel="Advanced visibility is not enabled"
+              :enabled="filterModeButtonEnabled"
+              :label="filterModeButtonLabel"
+              uppercase
+            />
+          </flex-grid-item>
+        </flex-grid>
       </template>
       <template v-else>
-        <text-input
-          label="Workflow ID"
-          type="search"
-          name="workflowId"
-          :value="workflowId"
-          @input="onFilterChange"
-        />
-        <text-input
-          label="Workflow Name"
-          type="search"
-          name="workflowName"
-          :value="workflowName"
-          @input="onFilterChange"
-        />
-        <select-input
-          data-cy="status-filter"
-          label="Status"
-          max-width="160px"
-          name="status"
-          :options="statusList"
-          :value="status"
-          @change="onStatusChange"
-        />
-        <select-input
-          label="Cron"
-          max-width="115px"
-          name="isCron"
-          :options="isCronList"
-          :value="isCron"
-          @change="onIsCronChange"
-          v-if="isCronInputVisible"
-        />
-        <text-input
-          label="Filter by"
-          max-width="105px"
-          name="filterBy"
-          readonly
-          :value="filterBy"
-        />
-        <date-range-picker
-          :date-range="range"
-          :max-days="maxRetentionDays"
-          :min-start-date="minStartDate"
-          @change="setRange"
-        />
+        <flex-grid width="100%">
+          <flex-grid-item grow="1">
+            <text-input
+              label="Workflow ID"
+              type="search"
+              name="workflowId"
+              :value="workflowId"
+              @input="onFilterChange"
+            />
+          </flex-grid-item>
+          <flex-grid-item grow="1">
+            <text-input
+              label="Workflow Name"
+              type="search"
+              name="workflowName"
+              :value="workflowName"
+              @input="onFilterChange"
+            />
+          </flex-grid-item>
+          <flex-grid-item grow="1" width="160px">
+            <select-input
+              data-cy="status-filter"
+              label="Status"
+              name="status"
+              :options="statusList"
+              :value="status"
+              @change="onStatusChange"
+            />
+          </flex-grid-item>
+          <feature-flag
+            grow="1"
+            margin="5px"
+            name="workflowListIsCron"
+            width="115px"
+          >
+            <select-input
+              label="Cron"
+              name="isCron"
+              :options="isCronList"
+              :value="isCron"
+              @change="onIsCronChange"
+              v-if="isCronInputVisible"
+            />
+          </feature-flag>
+          <flex-grid-item grow="1" width="105px">
+            <text-input
+              label="Filter by"
+              max-width="100%"
+              name="filterBy"
+              readonly
+              :value="filterBy"
+            />
+          </flex-grid-item>
+          <flex-grid-item>
+            <date-range-picker
+              :date-range="range"
+              :max-days="maxRetentionDays"
+              :min-start-date="minStartDate"
+              @change="setRange"
+            />
+          </flex-grid-item>
+          <flex-grid-item>
+            <button-fill
+              @click="onFilterModeClick"
+              disabledLabel="Advanced visibility is not enabled"
+              :enabled="filterModeButtonEnabled"
+              :label="filterModeButtonLabel"
+              uppercase
+            />
+          </flex-grid-item>
+        </flex-grid>
       </template>
-      <button-fill
-        @click="onFilterModeClick"
-        disabledLabel="Advanced visibility is not enabled"
-        :enabled="filterModeButtonEnabled"
-        :label="filterModeButtonLabel"
-        uppercase
-      />
     </header>
     <error-message :error="error" />
     <workflow-grid
@@ -493,19 +531,6 @@ section.workflow-list
   display: flex;
   flex: auto;
   flex-direction: column;
-
-  .filters
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-
-    > .field
-      flex 1 1 auto
-      margin-right: 5px;
-
-    .date-range-picker {
-      margin-right: 5px;
-    }
 
   &.loading section.results table
     opacity 0.7
