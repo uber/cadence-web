@@ -24,6 +24,10 @@
     "value": true
   },
   {
+    "key": "workflowListIsCron",
+    "value": true
+  },
+  {
     "key": "workflowTerminate",
     "value": true
   }
