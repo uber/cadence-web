@@ -474,6 +474,7 @@ export default {
             grow="1"
             margin="5px"
             name="workflowListIsCron"
+            v-if="isCronInputVisible"
             width="115px"
           >
             <select-input
@@ -482,7 +483,6 @@ export default {
               :options="isCronList"
               :value="isCron"
               @change="onIsCronChange"
-              v-if="isCronInputVisible"
             />
           </feature-flag>
           <flex-grid-item grow="1" width="105px">

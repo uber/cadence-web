@@ -353,6 +353,8 @@ describe('Workflow', () => {
           '[data-modal="confirm-termination"]'
         );
 
+        await Promise.delay(50);
+
         confirmTerminateEl.should.contain.text(
           'Are you sure you want to terminate this workflow?'
         );

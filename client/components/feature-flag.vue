@@ -30,7 +30,7 @@ export default {
       validator: value => ['inline', 'inline-block'].includes(value),
     },
     grow: {
-      type: Number,
+      type: [String, Number],
     },
     margin: {
       type: String,
