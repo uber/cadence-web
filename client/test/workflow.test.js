@@ -338,7 +338,7 @@ describe('Workflow', () => {
     describe('Actions', () => {
       it('should offer the user to terminate a running workflow, prompting the user for a termination reason', async function test() {
         const [summaryEl] = await summaryTest(this.test, {
-          history: { delay: 1000 },
+          history: { delay: 500 },
         });
 
         const terminateEl = await summaryEl.waitUntilExists(
@@ -352,6 +352,8 @@ describe('Workflow', () => {
         const confirmTerminateEl = await summaryEl.waitUntilExists(
           '[data-modal="confirm-termination"]'
         );
+
+        await Promise.delay(50);
 
         confirmTerminateEl.should.contain.text(
           'Are you sure you want to terminate this workflow?'
