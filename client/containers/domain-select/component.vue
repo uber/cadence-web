@@ -155,10 +155,6 @@ export default {
           transition: none;
         }
 
-        // &:nth-child(2n) {
-          // background: none;
-        // }
-
         &.highlight > a {
           background-color: uber-blue;
         }
@@ -170,40 +166,5 @@ export default {
       }
     }
   }
-
-  // .dropdown {
-  //   width: 100%;
-  // }
-
-  // .v-select {
-
-  //   input {
-  //     left: 0;
-  //     position: absolute !important;
-  //   }
-
-  //   .dropdown-toggle {
-  //     border-radius: 0;
-  //     border: input-border;
-  //     padding: 4px;
-  //     position: relative;
-  //     white-space: nowrap;
-  //   }
-
-  //   .open-indicator {
-  //     height 24px
-  //   }
-
-  //   span.selected-tag {
-  //     height: 28px;
-  //     margin-right: 25px;
-  //     position: relative !important;
-  //     one-liner-ellipsis();
-  //   }
-
-  //   .dropdown-toggle button.clear {
-  //     display: none;
-  //   }
-
 }
 </style>
