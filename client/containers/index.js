@@ -25,6 +25,7 @@ export {
   getters as clusterGetters,
   mutations as clusterMutations,
 } from './cluster';
+export { container as DomainSelect } from './domain-select';
 export {
   getDefaultState as getGraphDefaultState,
   getters as graphGetters,

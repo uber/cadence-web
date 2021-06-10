@@ -21,6 +21,7 @@
 // THE SOFTWARE.
 
 import { DomainNavigation } from '~components';
+import { DomainSelect } from '~containers';
 
 export default {
   data() {
@@ -28,12 +29,15 @@ export default {
   },
   components: {
     'domain-navigation': DomainNavigation,
+    'domain-select': DomainSelect,
   },
 };
 </script>
 
 <template>
   <section class="domain-search">
+    <domain-select />
+
     <domain-navigation type="text" placeholder="cadence-canary" />
   </section>
 </template>
