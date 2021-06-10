@@ -23,10 +23,19 @@
 import VueSelect from 'vue-select';
 import { DATA } from './constants';
 import { formatDomainList } from './helpers';
+import { FlexGrid, FlexGridItem } from '~components';
 
 export default {
+  name: 'select-input',
   components: {
+    'flex-grid': FlexGrid,
+    'flex-grid-item': FlexGridItem,
     'v-select': VueSelect,
+  },
+  computed: {
+    domainUrl() {
+      return `/domains${this.value && '/' + this.value}`;
+    },
   },
   data() {
     return {
@@ -34,7 +43,6 @@ export default {
       value: undefined,
     };
   },
-  name: 'select-input',
   props: {
     maxWidth: {
       type: String,
@@ -69,13 +77,21 @@ export default {
 
 <template>
   <div class="domain-select" :style="{ maxWidth }">
-    <v-select
-      :on-change="onSelectChange"
-      :options="options"
-      :searchable="true"
-      :style="{ maxWidth }"
-      :value="value"
-    />
+    <flex-grid align-items="center">
+      <flex-grid-item grow="1">
+        <v-select
+          :on-change="onSelectChange"
+          :options="options"
+          :searchable="true"
+          :style="{ maxWidth }"
+          :value="value"
+        />
+      </flex-grid-item>
+      <flex-grid-item width="32px">
+        <span class="change-domain disabled" v-if="!value" />
+        <a class="change-domain" :href="domainUrl" v-if="value" />
+      </flex-grid-item>
+    </flex-grid>
   </div>
 </template>
 
@@ -84,13 +100,42 @@ export default {
 @require "../../styles/base.styl"
 
 .domain-select {
+
+  .change-domain {
+    icon('\ea87');
+
+    &.disabled::before {
+      opacity: 0.25;
+    }
+
+    &::before {
+      background-color: primary-color;
+      border-radius: 32px;
+      color: white;
+      display: inline-block;
+      height: 32px;
+      line-height: 32px;
+      text-align: center;
+      width: 32px;
+    }
+  }
+
   .v-select {
     color: text-color;
     font-family: inherit;
 
-    .dropdown-toggle .clear {
-      bottom: 6px;
-      right: 12px;
+    .dropdown-toggle {
+      border: input-border;
+      border-radius: 0;
+
+      &.open {
+        border-color: uber-blue;
+      }
+
+      .clear {
+        bottom: 6px;
+        right: 12px;
+      }
     }
 
     .open-indicator {
