@@ -5,7 +5,7 @@
   },
   {
     "key": "domainAutocomplete",
-    "value": true
+    "value": false
   },
   {
     "key": "domainMetrics",

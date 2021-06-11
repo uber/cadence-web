@@ -23,7 +23,7 @@
 import debounce from 'lodash-es/debounce';
 import omit from 'lodash-es/omit';
 import { stringify } from 'friendly-querystring';
-import { DetailList } from '~components';
+import { DetailList, FeatureFlag, FlexGrid } from '~components';
 import { DomainAutocomplete } from '~containers';
 import { getKeyValuePairs, mapDomainDescription } from '~helpers';
 
@@ -50,6 +50,8 @@ export default {
   components: {
     'detail-list': DetailList,
     'domain-autocomplete': DomainAutocomplete,
+    'feature-flag': FeatureFlag,
+    'flex-grid': FlexGrid,
   },
   created() {
     this.domainDescCache = {};
@@ -171,52 +173,60 @@ export default {
 
 <template>
   <div class="domain-navigation" :class="'validation-' + validation">
-    <div class="domain-autocomplete-container">
-      <domain-autocomplete />
-    </div>
-    <div class="input-and-validation">
-      <div class="input-wrapper">
-        <input
-          type="text"
-          name="domain"
-          spellcheck="false"
-          autocorrect="off"
-          ref="input"
-          v-bind:value="d"
-          placeholder="cadence-canary"
-          @input="onInput"
-          @keydown.enter="changeDomain"
-          @keydown.esc="onEsc"
-        />
-        <a
-          :href="validation === 'valid' ? '#' : ''"
-          class="change-domain"
-          @click="changeDomain"
-        ></a>
+    <feature-flag :allow-disabled="true" name="domainAutocomplete">
+      <template v-slot:enabled>
+        <div class="domain-autocomplete-container">
+          <domain-autocomplete />
+        </div>
+      </template>
+      <template v-slot:disabled>
+        <div class="input-and-validation">
+          <div class="input-wrapper">
+            <input
+              type="text"
+              name="domain"
+              spellcheck="false"
+              autocorrect="off"
+              ref="input"
+              v-bind:value="d"
+              placeholder="cadence-canary"
+              @input="onInput"
+              @keydown.enter="changeDomain"
+              @keydown.esc="onEsc"
+            />
+            <a
+              :href="validation === 'valid' ? '#' : ''"
+              class="change-domain"
+              @click="changeDomain"
+            ></a>
+          </div>
+          <p :class="'validation validation-' + validation">
+            {{ validationMessage }}
+          </p>
+        </div>
+      </template>
+    </feature-flag>
+    <flex-grid class="grid">
+      <ul class="recent-domains" v-if="recentDomains.length">
+        <h3>Recent Domains</h3>
+        <li v-for="domain in recentDomains" :key="domain">
+          <a
+            :href="domainLink(domain)"
+            :data-domain="domain"
+            @click="recordDomainFromClick"
+            @mouseover="showDomainDesc(domain)"
+            >{{ domain }}</a
+          >
+        </li>
+      </ul>
+      <div
+        :class="{ 'domain-description': true, pending: !!domainDescRequest }"
+        v-if="domainDesc"
+      >
+        <span class="domain-name">{{ domainDescName }}</span>
+        <detail-list :item="domainDesc" :title="domainDescName" />
       </div>
-      <p :class="'validation validation-' + validation">
-        {{ validationMessage }}
-      </p>
-    </div>
-    <ul class="recent-domains" v-if="recentDomains.length">
-      <h3>Recent Domains</h3>
-      <li v-for="domain in recentDomains" :key="domain">
-        <a
-          :href="domainLink(domain)"
-          :data-domain="domain"
-          @click="recordDomainFromClick"
-          @mouseover="showDomainDesc(domain)"
-          >{{ domain }}</a
-        >
-      </li>
-    </ul>
-    <div
-      :class="{ 'domain-description': true, pending: !!domainDescRequest }"
-      v-if="domainDesc"
-    >
-      <span class="domain-name">{{ domainDescName }}</span>
-      <detail-list :item="domainDesc" :title="domainDescName" />
-    </div>
+    </flex-grid>
   </div>
 </template>
 
@@ -233,9 +243,11 @@ validation(color, symbol)
     content symbol
 
 .domain-navigation
-  display flex
-  flex-wrap wrap
   change-domain-size = 32px
+
+  .grid {
+    flex-wrap: wrap;
+  }
 
   .domain-autocomplete-container {
     flex: 0 0 100%;
