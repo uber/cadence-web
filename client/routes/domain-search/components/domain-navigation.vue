@@ -24,7 +24,7 @@ import debounce from 'lodash-es/debounce';
 import omit from 'lodash-es/omit';
 import { stringify } from 'friendly-querystring';
 import { DetailList } from '~components';
-import { DomainSelect } from '~containers';
+import { DomainAutocomplete } from '~containers';
 import { getKeyValuePairs, mapDomainDescription } from '~helpers';
 
 const validationMessages = {
@@ -49,7 +49,7 @@ export default {
   },
   components: {
     'detail-list': DetailList,
-    'domain-select': DomainSelect,
+    'domain-autocomplete': DomainAutocomplete,
   },
   created() {
     this.domainDescCache = {};
@@ -171,10 +171,10 @@ export default {
 
 <template>
   <div class="domain-navigation" :class="'validation-' + validation">
+    <div class="domain-autocomplete-container">
+      <domain-autocomplete />
+    </div>
     <div class="input-and-validation">
-      <div class="input-wrapper">
-        <domain-select />
-      </div>
       <div class="input-wrapper">
         <input
           type="text"
@@ -236,6 +236,13 @@ validation(color, symbol)
   display flex
   flex-wrap wrap
   change-domain-size = 32px
+
+  .domain-autocomplete-container {
+    flex: 0 0 100%;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 850px;
+  }
 
   div.input-and-validation
     flex 0 0 100%

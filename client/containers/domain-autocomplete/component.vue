@@ -20,19 +20,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import VueSelect from 'vue-select';
+import debounce from 'lodash-es/debounce';
 import { DATA } from './constants';
 import { formatDomainList } from './helpers';
-import { FlexGrid, FlexGridItem } from '~components';
+import { Autocomplete, FlexGrid, FlexGridItem } from '~components';
 
 export default {
-  name: 'select-input',
+  name: 'domain-autocomplete',
   components: {
     'flex-grid': FlexGrid,
     'flex-grid-item': FlexGridItem,
-    'v-select': VueSelect,
+    autocomplete: Autocomplete,
   },
   computed: {
+    // TODO - convert to getter...
     domainUrl() {
       return `/domains${this.value && '/' + this.value}`;
     },
@@ -61,7 +62,8 @@ export default {
     // },
   },
   methods: {
-    onSelectChange(option) {
+    // TODO - convert to action...
+    onAutocompleteChange(option) {
       console.log('option selected = ', option);
 
       if (!option) {
@@ -76,14 +78,23 @@ export default {
 
       // this.$emit('change', ...args);
     },
-    onSelectSearch(search, loading) {
+    // TODO - convert to action...
+    onAutocompleteSearch(search, loading) {
       // TODO
       console.log('search = ', search);
       this.search = search;
 
+      if (!search) {
+        this.options = [];
+
+        return;
+      }
+
+      // need to consider debounce logic here...
       this.isLoading = true;
 
       setTimeout(() => {
+        this.options = formatDomainList(DATA);
         this.isLoading = false;
       }, 2000);
     },
@@ -95,33 +106,20 @@ export default {
   <div class="domain-select" :style="{ maxWidth }">
     <flex-grid align-items="center">
       <flex-grid-item grow="1" margin="10px">
-        <v-select
-          :filterable="false"
-          :loading="isLoading"
+        <autocomplete
+          empty-hint="Start typing to search for a domain."
+          :is-loading="isLoading"
           :options="options"
           placeholder="cadence-canary"
           :search="search"
-          :searchable="true"
-          :searching="false"
-          :style="{ maxWidth }"
           :value="value"
-          @input="onSelectChange"
-          @search="onSelectSearch"
-        >
-          <template v-slot:no-options>
-            <template v-if="!isLoading && search">
-              No results found for <em>{{ search }}</em
-              >.
-            </template>
-            <em style="opacity: 0.5;" v-else>
-              Start typing to search for a domain.</em
-            >
-          </template>
-        </v-select>
+          @change="onAutocompleteChange"
+          @search="onAutocompleteSearch"
+        />
       </flex-grid-item>
       <flex-grid-item width="32px">
-        <span class="change-domain disabled" v-if="!value" />
-        <a class="change-domain" :href="domainUrl" v-if="value" />
+        <span class="navigate-to-domain disabled" v-if="!value" />
+        <a class="navigate-to-domain" :href="domainUrl" v-if="value" />
       </flex-grid-item>
     </flex-grid>
   </div>
@@ -134,7 +132,7 @@ export default {
 .domain-select {
   width: 100%;
 
-  .change-domain {
+  .navigate-to-domain {
     icon('\ea87');
 
     &.disabled::before {
@@ -150,63 +148,6 @@ export default {
       line-height: 32px;
       text-align: center;
       width: 32px;
-    }
-  }
-
-  .v-select {
-    color: text-color;
-    font-family: inherit;
-
-    .dropdown-toggle {
-      border: input-border;
-      border-radius: 0;
-
-      &.open {
-        border-color: uber-blue;
-      }
-
-      .clear {
-        bottom: 6px;
-        right: 12px;
-      }
-    }
-
-    input[type=search], input[type=search]:focus {
-      height: 42px;
-      line-height: 24px;
-      padding: 8px 18px;
-    }
-
-    .open-indicator {
-      display: none !important;
-    }
-
-    .spinner {
-      top: 9px;
-    }
-
-    ul.dropdown-menu {
-      max-height: initial !important;
-      overflow: auto;
-      border: input-border;
-      box-shadow: none;
-      padding: 0;
-
-      li {
-        a {
-          line-height: 2.5em;
-          transition: none;
-        }
-
-        &.highlight > a {
-          background-color: uber-blue;
-        }
-
-        .active > a {
-          color: #333;
-          background: rgba(50, 50, 50, .1);
-        }
-      }
     }
   }
 }
