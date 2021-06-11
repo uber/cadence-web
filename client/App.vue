@@ -331,6 +331,7 @@ export default {
   </main>
 </template>
 
+<style src="vue-select/dist/vue-select.css"></style>
 <style src="vue-virtual-scroller/dist/vue-virtual-scroller.css"></style>
 <style src="vue2-datepicker/index.css"></style>
 <style lang="stylus">

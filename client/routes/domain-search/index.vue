@@ -20,30 +20,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { DomainNavigation } from '~components';
-import { DomainSelect } from '~containers';
+import { DomainNavigation } from './components';
 
 export default {
+  name: 'domain-search',
   data() {
     return {};
   },
   components: {
     'domain-navigation': DomainNavigation,
-    'domain-select': DomainSelect,
   },
 };
 </script>
 
 <template>
   <section class="domain-search">
-    <domain-select />
-
-    <domain-navigation type="text" placeholder="cadence-canary" />
+    <domain-navigation />
   </section>
 </template>
 
 <style lang="stylus">
-@require "../styles/definitions"
+@require "../../styles/definitions"
 
 section.domain-search
   margin layout-spacing-large

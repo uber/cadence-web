@@ -39,11 +39,16 @@ export default {
   },
   data() {
     return {
-      options: formatDomainList(DATA),
+      isLoading: false,
+      options: [], //formatDomainList(DATA),
+      search: '',
       value: undefined,
     };
   },
   props: {
+    // isLoading: {
+    //   type: Boolean,
+    // },
     maxWidth: {
       type: String,
     },
@@ -71,6 +76,17 @@ export default {
 
       // this.$emit('change', ...args);
     },
+    onSelectSearch(search, loading) {
+      // TODO
+      console.log('search = ', search);
+      this.search = search;
+
+      this.isLoading = true;
+
+      setTimeout(() => {
+        this.isLoading = false;
+      }, 2000);
+    },
   },
 };
 </script>
@@ -78,14 +94,30 @@ export default {
 <template>
   <div class="domain-select" :style="{ maxWidth }">
     <flex-grid align-items="center">
-      <flex-grid-item grow="1">
+      <flex-grid-item grow="1" margin="10px">
         <v-select
-          :on-change="onSelectChange"
+          :filterable="false"
+          :loading="isLoading"
           :options="options"
+          placeholder="cadence-canary"
+          :search="search"
           :searchable="true"
+          :searching="false"
           :style="{ maxWidth }"
           :value="value"
-        />
+          @input="onSelectChange"
+          @search="onSelectSearch"
+        >
+          <template v-slot:no-options>
+            <template v-if="!isLoading && search">
+              No results found for <em>{{ search }}</em
+              >.
+            </template>
+            <em style="opacity: 0.5;" v-else>
+              Start typing to search for a domain.</em
+            >
+          </template>
+        </v-select>
       </flex-grid-item>
       <flex-grid-item width="32px">
         <span class="change-domain disabled" v-if="!value" />
@@ -100,6 +132,7 @@ export default {
 @require "../../styles/base.styl"
 
 .domain-select {
+  width: 100%;
 
   .change-domain {
     icon('\ea87');
@@ -138,8 +171,18 @@ export default {
       }
     }
 
+    input[type=search], input[type=search]:focus {
+      height: 42px;
+      line-height: 24px;
+      padding: 8px 18px;
+    }
+
     .open-indicator {
       display: none !important;
+    }
+
+    .spinner {
+      top: 9px;
     }
 
     ul.dropdown-menu {

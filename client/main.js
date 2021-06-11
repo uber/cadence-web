@@ -34,7 +34,7 @@ import snapscroll from './directives/snapscroll';
 
 import App from './App';
 import Domain from './routes/domain';
-import DomainList from './routes/domain-list';
+import DomainSearch from './routes/domain-search';
 import DomainMetrics from './routes/domain/domain-metrics';
 import DomainSettings from './routes/domain/domain-settings';
 import Help from './routes/help';
@@ -69,10 +69,10 @@ const routeOpts = {
       component: Root,
       children: [
         {
-          name: 'domain-list',
+          name: 'domain-search',
           path: '/domains',
           components: {
-            'domain-list': DomainList,
+            'domain-search': DomainSearch,
           },
         },
         {

@@ -23,7 +23,8 @@
 import debounce from 'lodash-es/debounce';
 import omit from 'lodash-es/omit';
 import { stringify } from 'friendly-querystring';
-import DetailList from './detail-list';
+import { DetailList } from '~components';
+import { DomainSelect } from '~containers';
 import { getKeyValuePairs, mapDomainDescription } from '~helpers';
 
 const validationMessages = {
@@ -33,7 +34,7 @@ const validationMessages = {
 };
 
 export default {
-  props: ['domain', 'placeholder'],
+  props: ['placeholder'],
   data() {
     return {
       d: this.$props.domain,
@@ -48,6 +49,7 @@ export default {
   },
   components: {
     'detail-list': DetailList,
+    'domain-select': DomainSelect,
   },
   created() {
     this.domainDescCache = {};
@@ -171,6 +173,9 @@ export default {
   <div class="domain-navigation" :class="'validation-' + validation">
     <div class="input-and-validation">
       <div class="input-wrapper">
+        <domain-select />
+      </div>
+      <div class="input-wrapper">
         <input
           type="text"
           name="domain"
@@ -178,7 +183,7 @@ export default {
           autocorrect="off"
           ref="input"
           v-bind:value="d"
-          :placeholder="$props.placeholder"
+          placeholder="cadence-canary"
           @input="onInput"
           @keydown.enter="changeDomain"
           @keydown.esc="onEsc"
@@ -216,7 +221,7 @@ export default {
 </template>
 
 <style lang="stylus">
-@require "../styles/definitions.styl"
+@require "../../../styles/definitions.styl"
 
 validation(color, symbol)
   input
