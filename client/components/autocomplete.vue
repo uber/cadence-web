@@ -36,18 +36,22 @@ export default {
     isLoading: {
       type: Boolean,
     },
-    placeholder: {
-      type: String,
+    multiple: {
+      type: Boolean,
+      default: false,
     },
     options: {
       type: Array,
       default: () => [],
     },
+    placeholder: {
+      type: String,
+    },
     search: {
       type: String,
     },
     value: {
-      type: String,
+      type: [Array, String],
     },
   },
   methods: {
@@ -66,6 +70,7 @@ export default {
     <v-select
       :filterable="false"
       :loading="isLoading"
+      :multiple="multiple"
       :options="options"
       :placeholder="placeholder"
       :search="search"
