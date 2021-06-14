@@ -19,14 +19,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const formatDomainLabel = domain =>
-  [
-    domain.domainInfo.name,
-    domain.isGlobalDomain ? 'Global' : 'Local',
-    domain.isGlobalDomain === false &&
-      domain.replicationConfiguration.activeClusterName,
-  ]
-    .filter(item => !!item)
-    .join(' - ');
+import {
+  DOMAIN_AUTOCOMPLETE_SET_IS_LOADING,
+  DOMAIN_AUTOCOMPLETE_SET_RECENT_RESULTS,
+  DOMAIN_AUTOCOMPLETE_SET_RESULTS,
+  DOMAIN_AUTOCOMPLETE_SET_SEARCH,
+} from './mutation-types';
 
-export default formatDomainLabel;
+const mutations = {
+  [DOMAIN_AUTOCOMPLETE_SET_IS_LOADING]: (state, payload) => {
+    state.domainAutocomplete.isLoading = payload;
+  },
+  [DOMAIN_AUTOCOMPLETE_SET_RECENT_RESULTS]: (state, payload) => {
+    state.domainAutocomplete.recentResults = payload;
+  },
+  [DOMAIN_AUTOCOMPLETE_SET_RESULTS]: (state, payload) => {
+    state.domainAutocomplete.results = payload;
+  },
+  [DOMAIN_AUTOCOMPLETE_SET_SEARCH]: (state, payload) => {
+    state.domainAutocomplete.search = payload;
+  },
+};
+
+export default mutations;

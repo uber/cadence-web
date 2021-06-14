@@ -19,25 +19,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { connect } from 'vuex-connect';
-import {
-  DOMAIN_AUTOCOMPLETE_COMBINED_RESULTS,
-  DOMAIN_AUTOCOMPLETE_IS_LOADING,
-  DOMAIN_AUTOCOMPLETE_SEARCH,
-} from './getter-types';
-import { DOMAIN_AUTOCOMPLETE_SET_SEARCH } from './mutation-types';
+const formatResultLabel = result =>
+  [
+    result.domainInfo.name,
+    result.isGlobalDomain ? 'Global' : 'Local',
+    result.isGlobalDomain === false &&
+      result.replicationConfiguration.activeClusterName,
+  ]
+    .filter(result => !!result)
+    .join(' - ');
 
-const gettersToProps = {
-  isLoading: DOMAIN_AUTOCOMPLETE_IS_LOADING,
-  results: DOMAIN_AUTOCOMPLETE_COMBINED_RESULTS,
-  search: DOMAIN_AUTOCOMPLETE_SEARCH,
-};
-
-const mutationsToEvents = {
-  onSearch: DOMAIN_AUTOCOMPLETE_SET_SEARCH,
-};
-
-export default connect({
-  gettersToProps,
-  mutationsToEvents,
-});
+export default formatResultLabel;

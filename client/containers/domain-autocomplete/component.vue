@@ -44,9 +44,9 @@ export default {
     isLoading: {
       type: Boolean,
     },
-    // maxWidth: {
-    //   type: String,
-    // },
+    maxWidth: {
+      type: String,
+    },
     results: {
       type: Array,
       default: () => [],
@@ -75,25 +75,8 @@ export default {
 
       // this.$emit('change', ...args);
     },
-    // TODO - convert to action...
-    onAutocompleteSearch(search, loading) {
-      // TODO
-      console.log('search = ', search);
-      // this.search = search;
-
-      // if (!search) {
-      //   this.options = [];
-
-      //   return;
-      // }
-
-      // // need to consider debounce logic here...
-      // this.isLoading = true;
-
-      // setTimeout(() => {
-      //   this.options = formatDomainList(DATA);
-      //   this.isLoading = false;
-      // }, 2000);
+    onAutocompleteSearch(search) {
+      this.$emit('onSearch', search);
     },
   },
 };

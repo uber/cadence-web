@@ -19,25 +19,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { connect } from 'vuex-connect';
-import {
-  DOMAIN_AUTOCOMPLETE_COMBINED_RESULTS,
-  DOMAIN_AUTOCOMPLETE_IS_LOADING,
-  DOMAIN_AUTOCOMPLETE_SEARCH,
-} from './getter-types';
-import { DOMAIN_AUTOCOMPLETE_SET_SEARCH } from './mutation-types';
+import { DOMAIN_AUTOCOMPLETE_STATE_PREFIX } from '../constants';
 
-const gettersToProps = {
-  isLoading: DOMAIN_AUTOCOMPLETE_IS_LOADING,
-  results: DOMAIN_AUTOCOMPLETE_COMBINED_RESULTS,
-  search: DOMAIN_AUTOCOMPLETE_SEARCH,
-};
+const statePrefix = term => `${DOMAIN_AUTOCOMPLETE_STATE_PREFIX}.${term}`;
 
-const mutationsToEvents = {
-  onSearch: DOMAIN_AUTOCOMPLETE_SET_SEARCH,
-};
-
-export default connect({
-  gettersToProps,
-  mutationsToEvents,
-});
+export default statePrefix;

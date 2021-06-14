@@ -32,13 +32,11 @@ import {
   combineResults,
   filterRecentResults,
   filterTopResults,
-  formatDomainList,
+  formatResults,
   sortResults,
+  statePrefix,
 } from './helpers';
 import { combine } from '~helpers';
-
-const domainAutocomplete = 'domainAutocomplete';
-const prefix = term => `${domainAutocomplete}.${term}`;
 
 const getters = {
   [DOMAIN_AUTOCOMPLETE_COMBINED_RESULTS]: (_, getters) => {
@@ -49,7 +47,7 @@ const getters = {
     return combine(combinedResults)(
       sortResults,
       filterTopResults,
-      formatDomainList
+      formatResults
     );
   },
   [DOMAIN_AUTOCOMPLETE_FILTERED_RECENT_RESULTS]: (_, getters) =>
@@ -58,12 +56,13 @@ const getters = {
       search: getters[DOMAIN_AUTOCOMPLETE_SEARCH],
     }),
   [DOMAIN_AUTOCOMPLETE_IS_LOADING]: state =>
-    get(state, prefix('isLoading')) || false,
+    get(state, statePrefix('isLoading')) || false,
   [DOMAIN_AUTOCOMPLETE_RECENT_RESULTS]: state =>
-    sortResults(get(state, prefix('recentResults')) || []),
+    sortResults(get(state, statePrefix('recentResults')) || []),
   [DOMAIN_AUTOCOMPLETE_RESULTS]: state =>
-    sortResults(get(state, prefix('results')) || []),
-  [DOMAIN_AUTOCOMPLETE_SEARCH]: state => get(state, prefix('search')) || '',
+    sortResults(get(state, statePrefix('results')) || []),
+  [DOMAIN_AUTOCOMPLETE_SEARCH]: state =>
+    get(state, statePrefix('search')) || '',
 };
 
 export default getters;

@@ -22,6 +22,8 @@
 const filterRecentResults = ({ recentResults, search }) =>
   !search
     ? recentResults
-    : recentResults.filter(result => result.domainInfo.name.contains(search));
+    : recentResults.filter(
+        result => result.domainInfo.name.indexOf(search) !== -1
+      );
 
 export default filterRecentResults;

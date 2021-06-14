@@ -19,12 +19,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import formatDomainLabel from './format-domain-label';
+import { DOMAIN_AUTOCOMPLETE_TYPE_PREFIX } from '../constants';
 
-const formatDomainList = domainList =>
-  domainList.map(domain => ({
-    label: formatDomainLabel(domain),
-    value: domain.domainInfo.name,
-  }));
+const typePrefix = term => `${DOMAIN_AUTOCOMPLETE_TYPE_PREFIX}_${term}`;
 
-export default formatDomainList;
+export default typePrefix;

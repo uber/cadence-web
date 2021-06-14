@@ -22,6 +22,8 @@
 export { default as combineResults } from './combine-results';
 export { default as filterRecentResults } from './filter-recent-results';
 export { default as filterTopResults } from './filter-top-results';
-export { default as formatDomainLabel } from './format-domain-label';
-export { default as formatDomainList } from './format-domain-list';
+export { default as formatResultLabel } from './format-result-label';
+export { default as formatResults } from './format-results';
 export { default as sortResults } from './sort-results';
+export { default as statePrefix } from './state-prefix';
+export { default as typePrefix } from './type-prefix';

@@ -19,6 +19,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+export const DOMAIN_AUTOCOMPLETE_STATE_PREFIX = 'domainAutocomplete';
+export const DOMAIN_AUTOCOMPLETE_TYPE_PREFIX = 'DOMAIN_AUTOCOMPLETE';
 export const RECENT_RESULT_LIMIT = 10;
 export const TOP_RESULT_COUNT = 10;
 
@@ -31,7 +33,7 @@ export const DATA = [
       description: 'Local domain for cadence canaries',
       ownerEmail: '',
       data: {},
-      uuid: '',
+      uuid: '1',
     },
     configuration: {
       workflowExecutionRetentionPeriodInDays: 1,
@@ -56,7 +58,7 @@ export const DATA = [
       description: 'Global domain for cadence canaries',
       ownerEmail: '',
       data: {},
-      uuid: '',
+      uuid: '2',
     },
     configuration: {
       workflowExecutionRetentionPeriodInDays: 1,
@@ -84,7 +86,7 @@ export const DATA = [
       description: 'Local domain for cadence canaries',
       ownerEmail: '',
       data: {},
-      uuid: '',
+      uuid: '3',
     },
     configuration: {
       workflowExecutionRetentionPeriodInDays: 1,
@@ -109,7 +111,7 @@ export const DATA = [
       description: 'Global domain for cadence canaries',
       ownerEmail: '',
       data: {},
-      uuid: '',
+      uuid: '4',
     },
     configuration: {
       workflowExecutionRetentionPeriodInDays: 1,
@@ -140,7 +142,7 @@ export const RECENT_DATA = [
       description: 'Local domain for cadence canaries',
       ownerEmail: '',
       data: {},
-      uuid: '',
+      uuid: '1',
     },
     configuration: {
       workflowExecutionRetentionPeriodInDays: 1,
@@ -165,7 +167,7 @@ export const RECENT_DATA = [
       description: 'Global domain for cadence canaries',
       ownerEmail: '',
       data: {},
-      uuid: '',
+      uuid: '2',
     },
     configuration: {
       workflowExecutionRetentionPeriodInDays: 1,
@@ -193,7 +195,7 @@ export const RECENT_DATA = [
       description: 'Local domain for cadence canaries',
       ownerEmail: '',
       data: {},
-      uuid: '',
+      uuid: '3',
     },
     configuration: {
       workflowExecutionRetentionPeriodInDays: 1,
@@ -218,7 +220,60 @@ export const RECENT_DATA = [
       description: 'Global domain for cadence canaries',
       ownerEmail: '',
       data: {},
-      uuid: '',
+      uuid: '4',
+    },
+    configuration: {
+      workflowExecutionRetentionPeriodInDays: 1,
+      emitMetric: true,
+      badBinaries: { binaries: {} },
+      historyArchivalStatus: 'DISABLED',
+      historyArchivalURI: '',
+      visibilityArchivalStatus: 'DISABLED',
+      visibilityArchivalURI: '',
+    },
+    replicationConfiguration: {
+      activeClusterName: 'staging_dca',
+      clusters: [
+        { clusterName: 'staging_dca' },
+        { clusterName: 'staging_phx' },
+      ],
+    },
+    failoverVersion: -24,
+    isGlobalDomain: true,
+  },
+  {
+    domainInfo: {
+      name: 'recent-cadence-canary-local-5',
+      status: 'REGISTERED',
+      description: 'Local domain for cadence canaries',
+      ownerEmail: '',
+      data: {},
+      uuid: '5',
+    },
+    configuration: {
+      workflowExecutionRetentionPeriodInDays: 1,
+      emitMetric: true,
+      badBinaries: { binaries: {} },
+      historyArchivalStatus: 'DISABLED',
+      historyArchivalURI: '',
+      visibilityArchivalStatus: 'DISABLED',
+      visibilityArchivalURI: '',
+    },
+    replicationConfiguration: {
+      activeClusterName: 'staging_dca',
+      clusters: [{ clusterName: 'staging_dca' }],
+    },
+    failoverVersion: -24,
+    isGlobalDomain: false,
+  },
+  {
+    domainInfo: {
+      name: 'recent-cadence-canary-global-6',
+      status: 'REGISTERED',
+      description: 'Global domain for cadence canaries',
+      ownerEmail: '',
+      data: {},
+      uuid: '6',
     },
     configuration: {
       workflowExecutionRetentionPeriodInDays: 1,

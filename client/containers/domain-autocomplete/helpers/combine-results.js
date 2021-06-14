@@ -19,9 +19,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const combineResults = ({ recentResults, results }) => [
-  ...recentResults,
-  ...results,
-];
+const combineResults = ({ recentResults, results }) => {
+  const resultsUuidList = results.map(result => result.domainInfo.uuid);
+
+  return [
+    ...results,
+    ...recentResults.filter(
+      result => resultsUuidList.indexOf(result.domainInfo.uuid) === -1
+    ),
+  ];
+};
 
 export default combineResults;
