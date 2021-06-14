@@ -19,9 +19,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export { default as combineResults } from './combine-results';
-export { default as filterRecentResults } from './filter-recent-results';
-export { default as filterTopResults } from './filter-top-results';
-export { default as formatDomainLabel } from './format-domain-label';
-export { default as formatDomainList } from './format-domain-list';
-export { default as sortResults } from './sort-results';
+import { connect } from 'vuex-connect';
+import {
+  DOMAIN_AUTOCOMPLETE_COMBINED_RESULTS,
+  DOMAIN_AUTOCOMPLETE_IS_LOADING,
+  DOMAIN_AUTOCOMPLETE_SEARCH,
+} from './getter-types';
+
+const gettersToProps = {
+  isLoading: DOMAIN_AUTOCOMPLETE_IS_LOADING,
+  results: DOMAIN_AUTOCOMPLETE_COMBINED_RESULTS,
+  search: DOMAIN_AUTOCOMPLETE_SEARCH,
+};
+
+export default connect({
+  gettersToProps,
+});

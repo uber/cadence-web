@@ -19,9 +19,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export { default as combineResults } from './combine-results';
-export { default as filterRecentResults } from './filter-recent-results';
-export { default as filterTopResults } from './filter-top-results';
-export { default as formatDomainLabel } from './format-domain-label';
-export { default as formatDomainList } from './format-domain-list';
-export { default as sortResults } from './sort-results';
+const DOMAIN_AUTOCOMPLETE = 'DOMAIN_AUTOCOMPLETE';
+const prefix = term => `${DOMAIN_AUTOCOMPLETE}_${term}`;
+
+export const DOMAIN_AUTOCOMPLETE_COMBINED_RESULTS = prefix('COMBINED_RESULTS');
+export const DOMAIN_AUTOCOMPLETE_FILTERED_RECENT_RESULTS = prefix(
+  'FILTERED_RECENT_RESULTS'
+);
+export const DOMAIN_AUTOCOMPLETE_IS_LOADING = prefix('IS_LOADING');
+export const DOMAIN_AUTOCOMPLETE_RECENT_RESULTS = prefix('RECENT_RESULTS');
+export const DOMAIN_AUTOCOMPLETE_RESULTS = prefix('RESULTS');
+export const DOMAIN_AUTOCOMPLETE_SEARCH = prefix('SEARCH');

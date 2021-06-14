@@ -19,6 +19,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+export const RECENT_RESULT_LIMIT = 10;
+export const TOP_RESULT_COUNT = 10;
+
 // TODO - replace with API call...
 export const DATA = [
   {
@@ -102,6 +105,115 @@ export const DATA = [
   {
     domainInfo: {
       name: 'cadence-canary-global-4',
+      status: 'REGISTERED',
+      description: 'Global domain for cadence canaries',
+      ownerEmail: '',
+      data: {},
+      uuid: '',
+    },
+    configuration: {
+      workflowExecutionRetentionPeriodInDays: 1,
+      emitMetric: true,
+      badBinaries: { binaries: {} },
+      historyArchivalStatus: 'DISABLED',
+      historyArchivalURI: '',
+      visibilityArchivalStatus: 'DISABLED',
+      visibilityArchivalURI: '',
+    },
+    replicationConfiguration: {
+      activeClusterName: 'staging_dca',
+      clusters: [
+        { clusterName: 'staging_dca' },
+        { clusterName: 'staging_phx' },
+      ],
+    },
+    failoverVersion: -24,
+    isGlobalDomain: true,
+  },
+];
+
+export const RECENT_DATA = [
+  {
+    domainInfo: {
+      name: 'recent-cadence-canary-local-1',
+      status: 'REGISTERED',
+      description: 'Local domain for cadence canaries',
+      ownerEmail: '',
+      data: {},
+      uuid: '',
+    },
+    configuration: {
+      workflowExecutionRetentionPeriodInDays: 1,
+      emitMetric: true,
+      badBinaries: { binaries: {} },
+      historyArchivalStatus: 'DISABLED',
+      historyArchivalURI: '',
+      visibilityArchivalStatus: 'DISABLED',
+      visibilityArchivalURI: '',
+    },
+    replicationConfiguration: {
+      activeClusterName: 'staging_dca',
+      clusters: [{ clusterName: 'staging_dca' }],
+    },
+    failoverVersion: -24,
+    isGlobalDomain: false,
+  },
+  {
+    domainInfo: {
+      name: 'recent-cadence-canary-global-2',
+      status: 'REGISTERED',
+      description: 'Global domain for cadence canaries',
+      ownerEmail: '',
+      data: {},
+      uuid: '',
+    },
+    configuration: {
+      workflowExecutionRetentionPeriodInDays: 1,
+      emitMetric: true,
+      badBinaries: { binaries: {} },
+      historyArchivalStatus: 'DISABLED',
+      historyArchivalURI: '',
+      visibilityArchivalStatus: 'DISABLED',
+      visibilityArchivalURI: '',
+    },
+    replicationConfiguration: {
+      activeClusterName: 'staging_dca',
+      clusters: [
+        { clusterName: 'staging_dca' },
+        { clusterName: 'staging_phx' },
+      ],
+    },
+    failoverVersion: -24,
+    isGlobalDomain: true,
+  },
+  {
+    domainInfo: {
+      name: 'recent-cadence-canary-local-3',
+      status: 'REGISTERED',
+      description: 'Local domain for cadence canaries',
+      ownerEmail: '',
+      data: {},
+      uuid: '',
+    },
+    configuration: {
+      workflowExecutionRetentionPeriodInDays: 1,
+      emitMetric: true,
+      badBinaries: { binaries: {} },
+      historyArchivalStatus: 'DISABLED',
+      historyArchivalURI: '',
+      visibilityArchivalStatus: 'DISABLED',
+      visibilityArchivalURI: '',
+    },
+    replicationConfiguration: {
+      activeClusterName: 'staging_dca',
+      clusters: [{ clusterName: 'staging_dca' }],
+    },
+    failoverVersion: -24,
+    isGlobalDomain: false,
+  },
+  {
+    domainInfo: {
+      name: 'recent-cadence-canary-global-4',
       status: 'REGISTERED',
       description: 'Global domain for cadence canaries',
       ownerEmail: '',

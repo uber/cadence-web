@@ -19,6 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+export { default as combine } from './combine';
 export { default as getDatetimeFormattedString } from './get-datetime-formatted-string';
 export { default as getEndTimeIsoString } from './get-end-time-iso-string';
 export { default as getEnvironment } from './get-environment';

@@ -19,9 +19,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export { default as combineResults } from './combine-results';
-export { default as filterRecentResults } from './filter-recent-results';
-export { default as filterTopResults } from './filter-top-results';
-export { default as formatDomainLabel } from './format-domain-label';
-export { default as formatDomainList } from './format-domain-list';
-export { default as sortResults } from './sort-results';
+const sortResults = results =>
+  results.sort((resultA, resultB) => {
+    const domainNameA = resultA.domainInfo.name;
+    const domainNameB = resultB.domainInfo.name;
+
+    if (domainNameA < domainNameB) {
+      return -1;
+    }
+
+    if (domainNameA > domainNameB) {
+      return 1;
+    }
+
+    return 0;
+  });
+
+export default sortResults;

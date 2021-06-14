@@ -20,9 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import debounce from 'lodash-es/debounce';
-import { DATA } from './constants';
-import { formatDomainList } from './helpers';
 import { Autocomplete, FlexGrid, FlexGridItem } from '~components';
 
 export default {
@@ -40,23 +37,23 @@ export default {
   },
   data() {
     return {
-      isLoading: false,
-      options: [], //formatDomainList(DATA),
-      search: '',
       value: undefined,
     };
   },
   props: {
-    // isLoading: {
-    //   type: Boolean,
+    isLoading: {
+      type: Boolean,
+    },
+    // maxWidth: {
+    //   type: String,
     // },
-    maxWidth: {
+    results: {
+      type: Array,
+      default: () => [],
+    },
+    search: {
       type: String,
     },
-    // options: {
-    //   type: Array,
-    //   default: () => [],
-    // },
     // value: {
     //   type: String,
     // },
@@ -82,21 +79,21 @@ export default {
     onAutocompleteSearch(search, loading) {
       // TODO
       console.log('search = ', search);
-      this.search = search;
+      // this.search = search;
 
-      if (!search) {
-        this.options = [];
+      // if (!search) {
+      //   this.options = [];
 
-        return;
-      }
+      //   return;
+      // }
 
-      // need to consider debounce logic here...
-      this.isLoading = true;
+      // // need to consider debounce logic here...
+      // this.isLoading = true;
 
-      setTimeout(() => {
-        this.options = formatDomainList(DATA);
-        this.isLoading = false;
-      }, 2000);
+      // setTimeout(() => {
+      //   this.options = formatDomainList(DATA);
+      //   this.isLoading = false;
+      // }, 2000);
     },
   },
 };
@@ -109,7 +106,7 @@ export default {
         <autocomplete
           empty-hint="Start typing to search for a domain."
           :is-loading="isLoading"
-          :options="options"
+          :options="results"
           placeholder="cadence-canary"
           :search="search"
           :value="value"

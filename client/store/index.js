@@ -30,6 +30,10 @@ import {
   clusterGetters,
   clusterMutations,
 
+  // domain autocomplete
+  getDomainAutocompleteDefaultState,
+  domainAutocompleteGetters,
+
   // graph
   getGraphDefaultState,
   graphGetters,
@@ -63,6 +67,9 @@ import {
 
 const getDefaultState = (state = {}) => ({
   cluster: getClusterDefaultState(state.cluster),
+  domainAutocomplete: getDomainAutocompleteDefaultState(
+    state.domainAutocomplete
+  ),
   graph: getGraphDefaultState(state.graph),
   settingsWorkflowHistory: getSettingsWorkflowHistoryDefaultState(
     state.settingsWorkflowHistory
@@ -87,6 +94,7 @@ const getStoreConfig = ({ router, state }) => {
     },
     getters: {
       ...clusterGetters,
+      ...domainAutocompleteGetters,
       ...graphGetters,
       ...routeGetters,
       ...settingsWorkflowHistoryGetters,

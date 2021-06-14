@@ -19,9 +19,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export { default as combineResults } from './combine-results';
-export { default as filterRecentResults } from './filter-recent-results';
-export { default as filterTopResults } from './filter-top-results';
-export { default as formatDomainLabel } from './format-domain-label';
-export { default as formatDomainList } from './format-domain-list';
-export { default as sortResults } from './sort-results';
+import { TOP_RESULT_COUNT } from '../constants';
+
+const filterTopResults = results => results.slice(0, TOP_RESULT_COUNT);
+
+export default filterTopResults;

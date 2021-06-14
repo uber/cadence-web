@@ -20,7 +20,10 @@
 // THE SOFTWARE.
 
 import Component from './component';
+import getDefaultState from './get-default-state';
+import getters from './getters';
+import connector from './connector';
 
-const container = Component;
+const container = connector(Component);
 
-export { container };
+export { container, getDefaultState, getters };
