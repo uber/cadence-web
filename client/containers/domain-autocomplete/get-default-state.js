@@ -19,12 +19,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { DATA, RECENT_DATA } from './constants';
+// import { DATA, RECENT_DATA } from './constants';
 
 const getDefaultState = (state = {}) => ({
   isLoading: false,
-  recentResults: RECENT_DATA,
-  results: DATA,
+  recentResults: [], // RECENT_DATA,
+  results: [], // DATA,
   search: '',
   ...state,
 });

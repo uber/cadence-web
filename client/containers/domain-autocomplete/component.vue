@@ -85,7 +85,7 @@ export default {
           :is-loading="isLoading"
           :options="results"
           placeholder="cadence-canary"
-          :value="search"
+          :search="search"
           @change="onAutocompleteChange"
           @search="onAutocompleteSearch"
         />
