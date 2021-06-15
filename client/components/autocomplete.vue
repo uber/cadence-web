@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import debounce from 'lodash-es/debounce';
 import VueSelect from 'vue-select';
 
 export default {
@@ -68,6 +67,7 @@ export default {
 <template>
   <div class="autocomplete">
     <v-select
+      :clear-search-on-blur="() => false"
       :filterable="false"
       :loading="isLoading"
       :multiple="multiple"

@@ -34,7 +34,7 @@ class CacheManager {
   }
 
   async get(fetchCallback) {
-    const { cache, cacheExpiryDateTime, setCache } = this;
+    const { cache, cacheExpiryDateTime } = this;
 
     if (cacheExpiryDateTime && Date.now() < cacheExpiryDateTime) {
       return cache;
@@ -42,7 +42,7 @@ class CacheManager {
 
     const data = await fetchCallback();
 
-    setCache(data);
+    this.setCache(data);
 
     return data;
   }

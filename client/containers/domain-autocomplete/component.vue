@@ -32,7 +32,7 @@ export default {
   computed: {
     // TODO - convert to getter...
     domainUrl() {
-      return `/domains${this.value && '/' + this.value}`;
+      return `/domains${this.search && '/' + this.search}`;
     },
   },
   data() {
@@ -54,9 +54,6 @@ export default {
     search: {
       type: String,
     },
-    // value: {
-    //   type: String,
-    // },
   },
   methods: {
     // TODO - convert to action...
@@ -64,16 +61,13 @@ export default {
       console.log('option selected = ', option);
 
       if (!option) {
-        return (this.value = undefined);
+        return this.$emit('onSearch', '');
       }
 
-      if (typeof option === 'string') {
-        return (this.value = option);
-      }
+      const value = typeof option === 'string' ? option : option.value;
 
-      this.value = option.value;
-
-      // this.$emit('change', ...args);
+      // TODO - do this in vuex router...
+      window.location = `/domains${value && '/' + value}`;
     },
     onAutocompleteSearch(search) {
       this.$emit('onSearch', search);
@@ -91,15 +85,14 @@ export default {
           :is-loading="isLoading"
           :options="results"
           placeholder="cadence-canary"
-          :search="search"
-          :value="value"
+          :value="search"
           @change="onAutocompleteChange"
           @search="onAutocompleteSearch"
         />
       </flex-grid-item>
       <flex-grid-item width="32px">
-        <span class="navigate-to-domain disabled" v-if="!value" />
-        <a class="navigate-to-domain" :href="domainUrl" v-if="value" />
+        <span class="navigate-to-domain disabled" v-if="!search" />
+        <a class="navigate-to-domain" :href="domainUrl" v-if="search" />
       </flex-grid-item>
     </flex-grid>
   </div>
