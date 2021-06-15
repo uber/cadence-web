@@ -19,24 +19,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-class ClusterService {
+const { getDomainList, getMatchingDomains } = require('./helpers');
+
+class DomainService {
   constructor(cacheManager) {
     this.cacheManager = cacheManager;
   }
 
-  fetch(ctx) {
-    return async () => {
-      const cluster = await ctx.cadence.describeCluster();
+  async searchDomains(ctx) {
+    const { cacheManager } = this;
+    const { querystring } = ctx.query;
 
-      return { ...cluster, membershipInfo: null };
-    };
-  }
+    const domainList = await getDomainList({ cacheManager, ctx });
 
-  getCluster(ctx) {
-    const { cacheManager, fetch } = this;
-
-    return cacheManager.get(fetch(ctx));
+    return getMatchingDomains({ domainList, querystring });
   }
 }
 
-module.exports = ClusterService;
+module.exports = DomainService;

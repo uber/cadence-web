@@ -19,24 +19,37 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-class ClusterService {
-  constructor(cacheManager) {
-    this.cacheManager = cacheManager;
+const { DOMAIN_LIST_DELAY_MS, DOMAIN_LIST_PAGE_SIZE } = require('../constants');
+
+const fetchDomainListNextPage = async ({
+  ctx,
+  domainList = [],
+  nextPageToken = '',
+}) => {
+  const data = await ctx.cadence.listDomains({
+    pageSize: DOMAIN_LIST_PAGE_SIZE,
+    nextPageToken: nextPageToken
+      ? Buffer.from(encodeURIComponent(nextPageToken), 'base64')
+      : undefined,
+  });
+
+  domainList.concat(data.domains);
+
+  if (!data.nextPageToken) {
+    return domainList;
   }
 
-  fetch(ctx) {
-    return async () => {
-      const cluster = await ctx.cadence.describeCluster();
-
-      return { ...cluster, membershipInfo: null };
-    };
+  if (data.nextPageToken) {
+    setTimeout(
+      () =>
+        fetchDomainListNextPage({
+          ctx,
+          nextPageToken: data.nextPageToken,
+          domainList,
+        }),
+      DOMAIN_LIST_DELAY_MS
+    );
   }
+};
 
-  getCluster(ctx) {
-    const { cacheManager, fetch } = this;
-
-    return cacheManager.get(fetch(ctx));
-  }
-}
-
-module.exports = ClusterService;
+module.exports = fetchDomainListNextPage;

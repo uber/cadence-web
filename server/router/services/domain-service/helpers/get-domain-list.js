@@ -19,24 +19,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-class ClusterService {
-  constructor(cacheManager) {
-    this.cacheManager = cacheManager;
-  }
+const fetchDomainList = require('./fetch-domain-list');
 
-  fetch(ctx) {
-    return async () => {
-      const cluster = await ctx.cadence.describeCluster();
+const getDomainList = ({ cacheManager, ctx }) =>
+  cacheManager.get(fetchDomainList(ctx));
 
-      return { ...cluster, membershipInfo: null };
-    };
-  }
-
-  getCluster(ctx) {
-    const { cacheManager, fetch } = this;
-
-    return cacheManager.get(fetch(ctx));
-  }
-}
-
-module.exports = ClusterService;
+module.exports = getDomainList;

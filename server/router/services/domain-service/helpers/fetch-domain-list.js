@@ -19,7 +19,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const clusterClearCacheHandler = clusterService => async ctx =>
-  (ctx.body = await clusterService.clearCache(ctx));
+const fetchDomainListNextPage = require('./fetch-domain-list-next-page');
+const sortDomainList = require('./sort-domain-list');
 
-module.exports = clusterClearCacheHandler;
+const fetchDomainList = ctx => async () => {
+  const domainList = await fetchDomainListNextPage({ ctx });
+
+  return sortDomainList(domainList);
+};
+
+module.exports = fetchDomainList;

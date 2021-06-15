@@ -19,24 +19,40 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-class ClusterService {
-  constructor(cacheManager) {
-    this.cacheManager = cacheManager;
+const { ONE_HOUR_IN_MILLISECONDS } = require('../constants');
+
+class CacheManager {
+  constructor(cacheTimeLimit = ONE_HOUR_IN_MILLISECONDS) {
+    this.cache = null;
+    this.cacheExpiryDateTime = null;
+    this.cacheTimeLimit = cacheTimeLimit;
   }
 
-  fetch(ctx) {
-    return async () => {
-      const cluster = await ctx.cadence.describeCluster();
-
-      return { ...cluster, membershipInfo: null };
-    };
+  clearCache() {
+    this.cache = null;
+    this.cacheExpiryDateTime = null;
   }
 
-  getCluster(ctx) {
-    const { cacheManager, fetch } = this;
+  async get(fetchCallback) {
+    const { cache, cacheExpiryDateTime, setCache } = this;
 
-    return cacheManager.get(fetch(ctx));
+    if (cacheExpiryDateTime && Date.now() < cacheExpiryDateTime) {
+      return cache;
+    }
+
+    const data = await fetchCallback();
+
+    setCache(data);
+
+    return data;
+  }
+
+  setCache(data) {
+    const { cacheTimeLimit } = this;
+
+    this.cache = data;
+    this.cacheExpiryDateTime = Date.now() + cacheTimeLimit;
   }
 }
 
-module.exports = ClusterService;
+module.exports = CacheManager;
