@@ -173,11 +173,13 @@ export default {
 
 <template>
   <div class="domain-navigation" :class="'validation-' + validation">
+    <div class="domain-autocomplete-container">
+      <domain-autocomplete />
+    </div>
+    <!--
     <feature-flag :allow-disabled="true" name="domainAutocomplete">
       <template v-slot:enabled>
-        <div class="domain-autocomplete-container">
-          <domain-autocomplete />
-        </div>
+
       </template>
       <template v-slot:disabled>
         <div class="input-and-validation">
@@ -206,6 +208,7 @@ export default {
         </div>
       </template>
     </feature-flag>
+    -->
     <flex-grid class="grid">
       <ul class="recent-domains" v-if="recentDomains.length">
         <h3>Recent Domains</h3>
