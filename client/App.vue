@@ -80,6 +80,7 @@ export default {
           origin,
         }),
       },
+      isEditingDomain: false,
       newsLastUpdated: localStorage.getItem(LOCAL_STORAGE_NEWS_LAST_VIEWED_AT),
       newsItems: [],
       logo,
@@ -151,6 +152,9 @@ export default {
           this.$router.push(href);
         }
       }
+    },
+    onEditDomainClick() {
+      this.isEditingDomain = !this.isEditingDomain;
     },
     onEnvironmentSelectChange(environment) {
       if (environment === this.environment.value) {
@@ -272,9 +276,17 @@ export default {
                 $route.path === `/domains/${$route.params.domain}/workflows`,
             }"
             :href="`/domains/${$route.params.domain}/workflows`"
+            v-if="!isEditingDomain"
           >
             {{ $route.params.domain }}
           </a>
+          <button-icon
+            color="primary"
+            :icon="`${isEditingDomain ? 'icon_delete' : 'icon_edit'}`"
+            size="14px"
+            width="22px"
+            @click="onEditDomainClick"
+          />
         </flex-grid-item>
 
         <flex-grid-item v-if="$route.params.workflowId">
