@@ -418,7 +418,7 @@ export default {
     async domain(newDomain, oldDomain) {
       if (newDomain && oldDomain && newDomain !== oldDomain) {
         await this.fetchDomain();
-        this.fetchWorkflowList();
+        this.refreshWorkflows();
       }
     },
   },

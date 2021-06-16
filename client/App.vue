@@ -154,6 +154,9 @@ export default {
         }
       }
     },
+    onDomainAutocompleteChange() {
+      this.isEditingDomain = false;
+    },
     onEditDomainClick() {
       this.isEditingDomain = !this.isEditingDomain;
     },
@@ -288,6 +291,7 @@ export default {
                 height="slim"
                 width="500px"
                 v-if="isEditingDomain"
+                @onChange="onDomainAutocompleteChange"
               />
             </flex-grid-item>
             <flex-grid-item>
