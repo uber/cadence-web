@@ -24,7 +24,7 @@ import formatResultLabel from './format-result-label';
 const formatResults = results =>
   results.map(result => ({
     label: formatResultLabel(result),
-    value: result.domainInfo.name,
+    value: result,
   }));
 
 export default formatResults;
