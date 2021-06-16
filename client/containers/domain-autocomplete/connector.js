@@ -21,11 +21,20 @@
 
 import { connect } from 'vuex-connect';
 import {
+  DOMAIN_AUTOCOMPLETE_ON_CHANGE,
+  DOMAIN_AUTOCOMPLETE_ON_SEARCH,
+} from './action-types';
+import {
   DOMAIN_AUTOCOMPLETE_COMBINED_RESULTS,
   DOMAIN_AUTOCOMPLETE_IS_LOADING,
   DOMAIN_AUTOCOMPLETE_SEARCH,
 } from './getter-types';
-import { DOMAIN_AUTOCOMPLETE_SET_SEARCH } from './mutation-types';
+import { DOMAIN_AUTOCOMPLETE_ON_MOUNTED } from './mutation-types';
+
+const actionsToEvents = {
+  onChange: DOMAIN_AUTOCOMPLETE_ON_CHANGE,
+  onSearch: DOMAIN_AUTOCOMPLETE_ON_SEARCH,
+};
 
 const gettersToProps = {
   isLoading: DOMAIN_AUTOCOMPLETE_IS_LOADING,
@@ -33,11 +42,12 @@ const gettersToProps = {
   search: DOMAIN_AUTOCOMPLETE_SEARCH,
 };
 
-const mutationsToEvents = {
-  onSearch: DOMAIN_AUTOCOMPLETE_SET_SEARCH,
+const lifecycle = {
+  mounted: ({ commit }) => commit(DOMAIN_AUTOCOMPLETE_ON_MOUNTED),
 };
 
 export default connect({
+  actionsToEvents,
   gettersToProps,
-  mutationsToEvents,
+  lifecycle,
 });

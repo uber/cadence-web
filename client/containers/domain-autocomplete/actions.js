@@ -19,13 +19,33 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import actions from './actions';
-import Component from './component';
-import getDefaultState from './get-default-state';
-import getters from './getters';
-import connector from './connector';
-import mutations from './mutations';
+import { ROUTE_PUSH } from '../route/action-types';
+import {
+  DOMAIN_AUTOCOMPLETE_ON_CHANGE,
+  DOMAIN_AUTOCOMPLETE_ON_SEARCH,
+} from './action-types';
+import {
+  DOMAIN_AUTOCOMPLETE_SET_RESULTS,
+  DOMAIN_AUTOCOMPLETE_SET_SEARCH,
+} from './mutation-types';
+import { http } from '~helpers';
 
-const container = connector(Component);
+const actions = {
+  [DOMAIN_AUTOCOMPLETE_ON_CHANGE]: ({ dispatch }, payload) => {
+    const { value } = payload;
 
-export { actions, container, getDefaultState, getters, mutations };
+    dispatch(ROUTE_PUSH, `/domains/${value}`);
+  },
+  [DOMAIN_AUTOCOMPLETE_ON_SEARCH]: async ({ commit }, payload) => {
+    commit(DOMAIN_AUTOCOMPLETE_SET_SEARCH, payload);
+
+    const results = await http(
+      window.fetch,
+      `/api/domains?querystring=${payload}`
+    );
+
+    commit(DOMAIN_AUTOCOMPLETE_SET_RESULTS, results);
+  },
+};
+
+export default actions;

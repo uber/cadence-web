@@ -46,9 +46,6 @@ export default {
     placeholder: {
       type: String,
     },
-    search: {
-      type: String,
-    },
   },
   methods: {
     onSelectChange(...args) {
@@ -70,7 +67,6 @@ export default {
       :multiple="multiple"
       :options="options"
       :placeholder="placeholder"
-      :search="search"
       :searchable="true"
       @input="onSelectChange"
       @search="onSelectSearch"

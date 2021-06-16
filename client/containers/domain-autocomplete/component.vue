@@ -58,16 +58,7 @@ export default {
   methods: {
     // TODO - convert to action...
     onAutocompleteChange(option) {
-      console.log('option selected = ', option);
-
-      if (!option) {
-        return this.$emit('onSearch', '');
-      }
-
-      const value = typeof option === 'string' ? option : option.value;
-
-      // TODO - do this in vuex router...
-      window.location = `/domains${value && '/' + value}`;
+      this.$emit('onChange', option);
     },
     onAutocompleteSearch(search) {
       this.$emit('onSearch', search);

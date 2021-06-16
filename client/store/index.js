@@ -31,6 +31,7 @@ import {
   clusterMutations,
 
   // domain autocomplete
+  domainAutocompleteActions,
   getDomainAutocompleteDefaultState,
   domainAutocompleteGetters,
   domainAutocompleteMutations,
@@ -88,6 +89,7 @@ const getStoreConfig = ({ router, state }) => {
 
   const storeConfig = {
     actions: {
+      ...domainAutocompleteActions,
       ...clusterActions,
       ...routeActionCreator(router),
       ...workflowListActions,

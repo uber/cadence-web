@@ -20,6 +20,7 @@
 // THE SOFTWARE.
 
 import {
+  DOMAIN_AUTOCOMPLETE_ON_MOUNTED,
   DOMAIN_AUTOCOMPLETE_SET_IS_LOADING,
   DOMAIN_AUTOCOMPLETE_SET_RECENT_RESULTS,
   DOMAIN_AUTOCOMPLETE_SET_RESULTS,
@@ -27,6 +28,11 @@ import {
 } from './mutation-types';
 
 const mutations = {
+  [DOMAIN_AUTOCOMPLETE_ON_MOUNTED]: state => {
+    state.domainAutocomplete.isLoading = false;
+    state.domainAutocomplete.results = [];
+    state.domainAutocomplete.search = '';
+  },
   [DOMAIN_AUTOCOMPLETE_SET_IS_LOADING]: (state, payload) => {
     state.domainAutocomplete.isLoading = payload;
   },
