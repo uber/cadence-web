@@ -41,6 +41,9 @@ export default {
     };
   },
   props: {
+    domain: {
+      type: String,
+    },
     height: {
       type: String,
     },
@@ -78,7 +81,7 @@ export default {
           :height="height"
           :is-loading="isLoading"
           :options="domainList"
-          placeholder="cadence-canary"
+          :placeholder="`${domain ? domain : 'cadence-canary'}`"
           :search="search"
           @change="onAutocompleteChange"
           @search="onAutocompleteSearch"
@@ -96,7 +99,7 @@ export default {
 @require "../../styles/definitions"
 @require "../../styles/base.styl"
 
-.domain-select {
+.domain-autocomplete {
   width: 100%;
 
   .navigate-to-domain {
