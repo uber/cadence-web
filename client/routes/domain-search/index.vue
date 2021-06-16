@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { DomainNavigation } from './components';
+import { DomainAutocomplete } from '~containers';
 
 export default {
   name: 'domain-search',
@@ -28,50 +28,23 @@ export default {
     return {};
   },
   components: {
-    'domain-navigation': DomainNavigation,
+    'domain-autocomplete': DomainAutocomplete,
   },
 };
 </script>
 
 <template>
   <section class="domain-search">
-    <domain-navigation />
+    <domain-autocomplete />
   </section>
 </template>
 
 <style lang="stylus">
 @require "../../styles/definitions"
-
-section.domain-search
-  margin layout-spacing-large
-  @media (min-width 1600px)
-    width 1580px
-    margin 0 auto
-    .domain-navigation
-      padding-left layout-spacing-medium
-      padding-right layout-spacing-medium
-  .links
-    margin layout-spacing-large auto
-    a
-      display block
-  h1
-    margin-bottom base-font-size*2
-  p, h3, .domain-navigation
-    margin 1em 0
-  a
-    line-height 2.5em
-    &:nth-child(2n)
-      background none
-  .domain-navigation
-    div.input-and-validation
-      align-items center
-      .input-wrapper, p
-        max-width 850px
-        margin-left auto
-        margin-right auto
-    input
-      margin 0
-  .recent-domains
-    li
-      padding 0 inline-spacing-medium
+section.domain-search {
+  margin: layout-spacing-large auto;
+  width: 500px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
 </style>
