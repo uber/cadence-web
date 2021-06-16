@@ -32,6 +32,11 @@ export default {
       type: String,
       default: 'Start typing to search.',
     },
+    height: {
+      type: String,
+      default: 'normal',
+      validator: value => ['normal', 'slim'].indexOf(value) !== -1,
+    },
     isLoading: {
       type: Boolean,
     },
@@ -59,7 +64,7 @@ export default {
 </script>
 
 <template>
-  <div class="autocomplete">
+  <div class="autocomplete" :class="{ [height]: height }">
     <v-select
       :clear-search-on-blur="() => false"
       :filterable="false"
@@ -88,11 +93,28 @@ export default {
 .autocomplete {
   width: 100%;
 
+  &.normal .v-select  {
+    input[type=search], input[type=search]:focus {
+      height: 42px;
+      line-height: 24px;
+      padding: 8px 18px;
+    }
+  }
+
+  &.slim .v-select {
+    input[type=search], input[type=search]:focus {
+      height: 26px;
+      line-height: 20px;
+      padding: 8px 18px;
+    }
+  }
+
   .empty-hint {
     opacity: 0.5;
   }
 
   .v-select {
+    background-color: white;
     color: text-color;
     font-family: inherit;
 
@@ -108,12 +130,6 @@ export default {
         bottom: 6px;
         right: 12px;
       }
-    }
-
-    input[type=search], input[type=search]:focus {
-      height: 42px;
-      line-height: 24px;
-      padding: 8px 18px;
     }
 
     input[type=search]::placeholder {

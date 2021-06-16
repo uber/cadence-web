@@ -31,7 +31,7 @@ import {
   NotificationBar,
   SelectInput,
 } from '~components';
-import { SettingsModal } from '~containers';
+import { DomainAutocomplete, SettingsModal } from '~containers';
 import {
   DATE_FORMAT_MMM_D_YYYY,
   DATE_FORMAT_OPTIONS,
@@ -57,6 +57,7 @@ import {
 export default {
   components: {
     'button-icon': ButtonIcon,
+    'domain-autocomplete': DomainAutocomplete,
     'feature-flag': FeatureFlag,
     'flex-grid': FlexGrid,
     'flex-grid-item': FlexGridItem,
@@ -269,24 +270,36 @@ export default {
         </feature-flag>
 
         <flex-grid-item v-if="$route.params.domain" margin="15px">
-          <a
-            class="workflows"
-            :class="{
-              'router-link-active':
-                $route.path === `/domains/${$route.params.domain}/workflows`,
-            }"
-            :href="`/domains/${$route.params.domain}/workflows`"
-            v-if="!isEditingDomain"
-          >
-            {{ $route.params.domain }}
-          </a>
-          <button-icon
-            color="primary"
-            :icon="`${isEditingDomain ? 'icon_delete' : 'icon_edit'}`"
-            size="14px"
-            width="22px"
-            @click="onEditDomainClick"
-          />
+          <flex-grid align-items="center">
+            <flex-grid-item>
+              <a
+                class="workflows"
+                :class="{
+                  'router-link-active':
+                    $route.path ===
+                    `/domains/${$route.params.domain}/workflows`,
+                }"
+                :href="`/domains/${$route.params.domain}/workflows`"
+                v-if="!isEditingDomain"
+              >
+                {{ $route.params.domain }}
+              </a>
+              <domain-autocomplete
+                height="slim"
+                width="500px"
+                v-if="isEditingDomain"
+              />
+            </flex-grid-item>
+            <flex-grid-item>
+              <button-icon
+                color="primary"
+                :icon="`${isEditingDomain ? 'icon_delete' : 'icon_edit'}`"
+                size="14px"
+                width="22px"
+                @click="onEditDomainClick"
+              />
+            </flex-grid-item>
+          </flex-grid>
         </flex-grid-item>
 
         <flex-grid-item v-if="$route.params.workflowId">

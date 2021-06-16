@@ -41,10 +41,13 @@ export default {
     };
   },
   props: {
+    height: {
+      type: String,
+    },
     isLoading: {
       type: Boolean,
     },
-    maxWidth: {
+    width: {
       type: String,
     },
     domainList: {
@@ -56,7 +59,6 @@ export default {
     },
   },
   methods: {
-    // TODO - convert to action...
     onAutocompleteChange(option) {
       this.$emit('onChange', option);
     },
@@ -68,11 +70,12 @@ export default {
 </script>
 
 <template>
-  <div class="domain-select" :style="{ maxWidth }">
+  <div class="domain-autocomplete" :style="{ width }">
     <flex-grid align-items="center">
       <flex-grid-item grow="1" margin="10px">
         <autocomplete
           empty-hint="Start typing to search for a domain."
+          :height="height"
           :is-loading="isLoading"
           :options="domainList"
           placeholder="cadence-canary"
