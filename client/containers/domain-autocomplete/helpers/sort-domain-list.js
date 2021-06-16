@@ -19,8 +19,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { TOP_RESULT_COUNT } from '../constants';
+const sortDomainList = domainList =>
+  domainList.sort((domainA, domainB) => {
+    const domainNameA =
+      typeof domainA === 'string' ? domainA : domainA.domainInfo.name;
+    const domainNameB =
+      typeof domainB === 'string' ? domainB : domainB.domainInfo.name;
 
-const filterTopResults = results => results.slice(0, TOP_RESULT_COUNT);
+    if (domainNameA < domainNameB) {
+      return -1;
+    }
 
-export default filterTopResults;
+    if (domainNameA > domainNameB) {
+      return 1;
+    }
+
+    return 0;
+  });
+
+export default sortDomainList;

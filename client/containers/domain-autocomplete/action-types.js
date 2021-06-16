@@ -21,6 +21,8 @@
 
 import { typePrefix } from './helpers';
 
-export const DOMAIN_AUTOCOMPLETE_FETCH_SEARCH = typePrefix('FETCH_SEARCH');
+export const DOMAIN_AUTOCOMPLETE_FETCH_DOMAIN_LIST = typePrefix(
+  'FETCH_DOMAIN_LIST'
+);
 export const DOMAIN_AUTOCOMPLETE_ON_CHANGE = typePrefix('ON_CHANGE');
 export const DOMAIN_AUTOCOMPLETE_ON_SEARCH = typePrefix('ON_SEARCH');

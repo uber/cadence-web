@@ -19,14 +19,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const formatResultLabel = result =>
-  [
-    result.domainInfo.name,
-    result.isGlobalDomain ? 'Global' : 'Local',
-    result.isGlobalDomain === false &&
-      result.replicationConfiguration.activeClusterName,
-  ]
-    .filter(result => !!result)
-    .join(' - ');
+const formatDomainLabel = domain =>
+  typeof domain === 'string'
+    ? domain
+    : [
+        domain.domainInfo.name,
+        domain.isGlobalDomain ? 'Global' : 'Local',
+        domain.isGlobalDomain === false &&
+          domain.replicationConfiguration.activeClusterName,
+      ]
+        .filter(domain => !!domain)
+        .join(' - ');
 
-export default formatResultLabel;
+export default formatDomainLabel;

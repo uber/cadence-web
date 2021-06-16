@@ -23,8 +23,10 @@ import { typePrefix } from './helpers';
 
 export const DOMAIN_AUTOCOMPLETE_ON_MOUNTED = typePrefix('ON_MOUNTED');
 export const DOMAIN_AUTOCOMPLETE_SET_IS_LOADING = typePrefix('SET_IS_LOADING');
-export const DOMAIN_AUTOCOMPLETE_SET_RECENT_RESULTS = typePrefix(
-  'SET_RECENT_RESULTS'
+export const DOMAIN_AUTOCOMPLETE_SET_DOMAIN_LIST = typePrefix(
+  'SET_DOMAIN_LIST'
 );
-export const DOMAIN_AUTOCOMPLETE_SET_RESULTS = typePrefix('SET_RESULTS');
 export const DOMAIN_AUTOCOMPLETE_SET_SEARCH = typePrefix('SET_SEARCH');
+export const DOMAIN_AUTOCOMPLETE_SET_VISITED_DOMAIN_LIST = typePrefix(
+  'SET_VISITED_DOMAIN_LIST'
+);

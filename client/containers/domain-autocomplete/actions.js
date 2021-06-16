@@ -22,57 +22,71 @@
 import { debounce } from 'lodash-es';
 import { ROUTE_PUSH } from '../route/action-types';
 import {
-  DOMAIN_AUTOCOMPLETE_FETCH_SEARCH,
+  DOMAIN_AUTOCOMPLETE_FETCH_DOMAIN_LIST,
   DOMAIN_AUTOCOMPLETE_ON_CHANGE,
   DOMAIN_AUTOCOMPLETE_ON_SEARCH,
 } from './action-types';
 import {
   DOMAIN_AUTOCOMPLETE_SET_IS_LOADING,
-  DOMAIN_AUTOCOMPLETE_SET_RECENT_RESULTS,
-  DOMAIN_AUTOCOMPLETE_SET_RESULTS,
+  DOMAIN_AUTOCOMPLETE_SET_DOMAIN_LIST,
   DOMAIN_AUTOCOMPLETE_SET_SEARCH,
+  DOMAIN_AUTOCOMPLETE_SET_VISITED_DOMAIN_LIST,
 } from './mutation-types';
 import {
-  DOMAIN_AUTOCOMPLETE_RECENT_RESULTS,
+  DOMAIN_AUTOCOMPLETE_VISITED_DOMAIN_LIST,
   DOMAIN_AUTOCOMPLETE_SEARCH,
 } from './getter-types';
 import { DEBOUNCE_WAIT } from './constants';
+import { updateVisitedDomainList } from './helpers';
 import { http } from '~helpers';
 
 const actions = {
-  [DOMAIN_AUTOCOMPLETE_FETCH_SEARCH]: debounce(async ({ commit, getters }) => {
-    const search = getters[DOMAIN_AUTOCOMPLETE_SEARCH];
+  [DOMAIN_AUTOCOMPLETE_FETCH_DOMAIN_LIST]: debounce(
+    async ({ commit, getters }) => {
+      const search = getters[DOMAIN_AUTOCOMPLETE_SEARCH];
 
-    const results = await http(
-      window.fetch,
-      `/api/domains?querystring=${search}`
-    );
+      const domainList = await http(
+        window.fetch,
+        `/api/domains?querystring=${search}`
+      );
 
-    commit(DOMAIN_AUTOCOMPLETE_SET_IS_LOADING, false);
+      commit(DOMAIN_AUTOCOMPLETE_SET_IS_LOADING, false);
 
-    commit(DOMAIN_AUTOCOMPLETE_SET_RESULTS, results);
-  }, DEBOUNCE_WAIT),
+      commit(DOMAIN_AUTOCOMPLETE_SET_DOMAIN_LIST, domainList);
+    },
+    DEBOUNCE_WAIT
+  ),
   [DOMAIN_AUTOCOMPLETE_ON_CHANGE]: ({ commit, dispatch, getters }, payload) => {
     const { value } = payload;
-    const { name, uuid } = value.domainInfo;
 
-    // Add domain to recently accessed domains
-    const recentResults = getters[DOMAIN_AUTOCOMPLETE_RECENT_RESULTS];
+    // Add domain to visited domains if not already contained in visited domain list.
+    const visitedDomainList = getters[DOMAIN_AUTOCOMPLETE_VISITED_DOMAIN_LIST];
 
-    if (
-      !recentResults.find(recentResult => recentResult.domainInfo.uuid === uuid)
-    ) {
-      commit(DOMAIN_AUTOCOMPLETE_SET_RECENT_RESULTS, [...recentResults, value]);
+    const updatedVisitedDomainList = updateVisitedDomainList({
+      value,
+      visitedDomainList,
+    });
+
+    if (updatedVisitedDomainList) {
+      commit(
+        DOMAIN_AUTOCOMPLETE_SET_VISITED_DOMAIN_LIST,
+        updatedVisitedDomainList
+      );
     }
 
-    dispatch(ROUTE_PUSH, `/domains/${name}`);
+    const domainName =
+      typeof value === 'string' ? value : value.domainInfo.name;
+
+    dispatch(ROUTE_PUSH, `/domains/${domainName}`);
   },
   [DOMAIN_AUTOCOMPLETE_ON_SEARCH]: async ({ commit, dispatch }, payload) => {
     commit(DOMAIN_AUTOCOMPLETE_SET_SEARCH, payload);
 
     if (payload) {
       commit(DOMAIN_AUTOCOMPLETE_SET_IS_LOADING, true);
-      dispatch(DOMAIN_AUTOCOMPLETE_FETCH_SEARCH);
+      dispatch(DOMAIN_AUTOCOMPLETE_FETCH_DOMAIN_LIST);
+    } else {
+      commit(DOMAIN_AUTOCOMPLETE_SET_DOMAIN_LIST, []);
     }
   },
 };

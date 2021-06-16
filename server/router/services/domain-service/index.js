@@ -32,9 +32,7 @@ class DomainService {
 
     const domainList = await getDomainList({ cacheManager, ctx });
 
-    return domainList;
-
-    // return getMatchingDomains({ domainList, querystring });
+    return getMatchingDomains({ domainList, querystring });
   }
 }
 

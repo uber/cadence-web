@@ -21,26 +21,26 @@
 
 import {
   DOMAIN_AUTOCOMPLETE_ON_MOUNTED,
+  DOMAIN_AUTOCOMPLETE_SET_DOMAIN_LIST,
   DOMAIN_AUTOCOMPLETE_SET_IS_LOADING,
-  DOMAIN_AUTOCOMPLETE_SET_RECENT_RESULTS,
-  DOMAIN_AUTOCOMPLETE_SET_RESULTS,
   DOMAIN_AUTOCOMPLETE_SET_SEARCH,
+  DOMAIN_AUTOCOMPLETE_SET_VISITED_DOMAIN_LIST,
 } from './mutation-types';
 
 const mutations = {
   [DOMAIN_AUTOCOMPLETE_ON_MOUNTED]: state => {
     state.domainAutocomplete.isLoading = false;
-    state.domainAutocomplete.results = [];
+    state.domainAutocomplete.domainList = [];
     state.domainAutocomplete.search = '';
+  },
+  [DOMAIN_AUTOCOMPLETE_SET_DOMAIN_LIST]: (state, payload) => {
+    state.domainAutocomplete.domainList = payload;
   },
   [DOMAIN_AUTOCOMPLETE_SET_IS_LOADING]: (state, payload) => {
     state.domainAutocomplete.isLoading = payload;
   },
-  [DOMAIN_AUTOCOMPLETE_SET_RECENT_RESULTS]: (state, payload) => {
-    state.domainAutocomplete.recentResults = payload;
-  },
-  [DOMAIN_AUTOCOMPLETE_SET_RESULTS]: (state, payload) => {
-    state.domainAutocomplete.results = payload;
+  [DOMAIN_AUTOCOMPLETE_SET_VISITED_DOMAIN_LIST]: (state, payload) => {
+    state.domainAutocomplete.visitedDomainList = payload;
   },
   [DOMAIN_AUTOCOMPLETE_SET_SEARCH]: (state, payload) => {
     state.domainAutocomplete.search = payload;

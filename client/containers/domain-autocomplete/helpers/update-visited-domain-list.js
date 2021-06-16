@@ -19,12 +19,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import formatResultLabel from './format-result-label';
+const updateVisitedDomainList = ({ value, visitedDomainList }) => {
+  const name = typeof value === 'string' ? value : value.domainInfo.name;
+  const uuid = typeof value === 'string' ? null : value.domainInfo.uuid;
 
-const formatResults = results =>
-  results.map(result => ({
-    label: formatResultLabel(result),
-    value: result,
-  }));
+  const matchedDomainIndex = visitedDomainList.findIndex(visitedDomain =>
+    typeof visitedDomain === 'string'
+      ? visitedDomain === name
+      : visitedDomain.domainInfo.uuid === uuid
+  );
 
-export default formatResults;
+  if (matchedDomainIndex === -1) {
+    return [...visitedDomainList, value];
+  }
+
+  if (!uuid) {
+    return null;
+  }
+
+  const matchedDomain = visitedDomainList[matchedDomainIndex];
+
+  if (typeof matchedDomain === 'string') {
+    return [
+      ...visitedDomainList.slice(0, matchedDomainIndex),
+      value,
+      ...visitedDomainList.slice(matchedDomainIndex + 1),
+    ];
+  }
+
+  return null;
+};
+
+export default updateVisitedDomainList;

@@ -19,11 +19,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export { default as combineResults } from './combine-results';
-export { default as filterRecentResults } from './filter-recent-results';
-export { default as filterTopResults } from './filter-top-results';
-export { default as formatResultLabel } from './format-result-label';
-export { default as formatResults } from './format-results';
-export { default as sortResults } from './sort-results';
+export { default as combineDomainList } from './combine-domain-list';
+export { default as filterTopDomainList } from './filter-top-domain-list';
+export { default as filterVisitedDomainList } from './filter-visited-domain-list';
+export { default as formatDomainLabel } from './format-domain-label';
+export { default as formatDomainList } from './format-domain-list';
+export { default as sortDomainList } from './sort-domain-list';
 export { default as statePrefix } from './state-prefix';
 export { default as typePrefix } from './type-prefix';
+export { default as updateVisitedDomainList } from './update-visited-domain-list';

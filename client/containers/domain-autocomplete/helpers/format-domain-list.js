@@ -19,20 +19,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const sortResults = results =>
-  results.sort((resultA, resultB) => {
-    const domainNameA = resultA.domainInfo.name;
-    const domainNameB = resultB.domainInfo.name;
+import formatDomainLabel from './format-domain-label';
 
-    if (domainNameA < domainNameB) {
-      return -1;
-    }
+const formatDomainList = domainList =>
+  domainList.map(domain => ({
+    label: formatDomainLabel(domain),
+    value: domain,
+  }));
 
-    if (domainNameA > domainNameB) {
-      return 1;
-    }
-
-    return 0;
-  });
-
-export default sortResults;
+export default formatDomainList;

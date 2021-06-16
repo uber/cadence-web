@@ -47,7 +47,7 @@ export default {
     maxWidth: {
       type: String,
     },
-    results: {
+    domainList: {
       type: Array,
       default: () => [],
     },
@@ -74,7 +74,7 @@ export default {
         <autocomplete
           empty-hint="Start typing to search for a domain."
           :is-loading="isLoading"
-          :options="results"
+          :options="domainList"
           placeholder="cadence-canary"
           :search="search"
           @change="onAutocompleteChange"

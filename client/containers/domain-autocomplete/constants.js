@@ -22,5 +22,4 @@
 export const DEBOUNCE_WAIT = 500;
 export const DOMAIN_AUTOCOMPLETE_STATE_PREFIX = 'domainAutocomplete';
 export const DOMAIN_AUTOCOMPLETE_TYPE_PREFIX = 'DOMAIN_AUTOCOMPLETE';
-export const RECENT_RESULT_LIMIT = 10;
-export const TOP_RESULT_COUNT = 10;
+export const TOP_DOMAIN_LIST_LIMIT = 15;

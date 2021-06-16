@@ -19,11 +19,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const filterRecentResults = ({ recentResults, search }) =>
+const filterVisitedDomainList = ({ visitedDomainList, search }) =>
   !search
-    ? recentResults
-    : recentResults.filter(
-        result => result.domainInfo.name.indexOf(search) !== -1
-      );
+    ? visitedDomainList
+    : visitedDomainList.filter(domain => {
+        const domainName =
+          typeof domain === 'string' ? domain : domain.domainInfo.name;
 
-export default filterRecentResults;
+        return domainName.indexOf(search) !== -1;
+      });
+
+export default filterVisitedDomainList;

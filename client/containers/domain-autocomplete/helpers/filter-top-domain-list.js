@@ -19,37 +19,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const { DOMAIN_LIST_DELAY_MS, DOMAIN_LIST_PAGE_SIZE } = require('../constants');
+import { TOP_DOMAIN_LIST_LIMIT } from '../constants';
 
-const fetchDomainListNextPage = async ({
-  ctx,
-  domainList = [],
-  nextPageToken = '',
-}) => {
-  const data = await ctx.cadence.listDomains({
-    pageSize: DOMAIN_LIST_PAGE_SIZE,
-    nextPageToken: nextPageToken
-      ? Buffer.from(encodeURIComponent(nextPageToken), 'base64')
-      : undefined,
-  });
+const filterTopDomainList = domainList =>
+  domainList.slice(0, TOP_DOMAIN_LIST_LIMIT);
 
-  domainList.splice(-1, 0, ...data.domains);
-
-  if (!data.nextPageToken) {
-    return domainList;
-  }
-
-  if (data.nextPageToken) {
-    setTimeout(
-      () =>
-        fetchDomainListNextPage({
-          ctx,
-          nextPageToken: data.nextPageToken,
-          domainList,
-        }),
-      DOMAIN_LIST_DELAY_MS
-    );
-  }
-};
-
-module.exports = fetchDomainListNextPage;
+export default filterTopDomainList;

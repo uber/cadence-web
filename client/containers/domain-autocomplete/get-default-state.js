@@ -21,9 +21,10 @@
 
 const getDefaultState = (state = {}) => ({
   isLoading: false,
-  recentResults: [],
-  results: [],
+  domainList: [],
   search: '',
+  visitedDomainList:
+    JSON.tryParse(localStorage.getItem('recent-domains')) || [],
   ...state,
 });
 
