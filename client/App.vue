@@ -71,7 +71,6 @@ export default {
     const environmentList = ENVIRONMENT_LIST;
 
     return {
-      autocompleteFocus: false,
       environment: {
         list: getEnvironmentList({
           environmentList,
@@ -160,11 +159,6 @@ export default {
     },
     onEditDomainClick() {
       this.isEditingDomain = !this.isEditingDomain;
-
-      if (this.isEditingDomain) {
-        this.autocompleteFocus = true;
-        setTimeout(() => (this.autocompleteFocus = false));
-      }
     },
     onEnvironmentSelectChange(environment) {
       if (environment === this.environment.value) {
@@ -294,7 +288,7 @@ export default {
                 {{ $route.params.domain }}
               </a>
               <domain-autocomplete
-                :focus="autocompleteFocus"
+                :focus="true"
                 height="slim"
                 v-if="isEditingDomain"
                 width="500px"

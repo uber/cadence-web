@@ -35,7 +35,7 @@ export default {
 
 <template>
   <section class="domain-search">
-    <domain-autocomplete />
+    <domain-autocomplete :focus="true" />
   </section>
 </template>
 
