@@ -32,6 +32,9 @@ export default {
       type: String,
       default: 'Start typing to search.',
     },
+    focus: {
+      type: Boolean,
+    },
     height: {
       type: String,
       default: 'normal',
@@ -52,12 +55,31 @@ export default {
       type: String,
     },
   },
+  mounted() {
+    const { focus } = this;
+
+    if (focus) {
+      this.focusAutocomplete();
+    }
+  },
   methods: {
+    focusAutocomplete() {
+      const { autocomplete } = this.$refs;
+
+      autocomplete.searchEl.focus();
+    },
     onSelectChange(...args) {
       this.$emit('change', ...args);
     },
     onSelectSearch(...args) {
       this.$emit('search', ...args);
+    },
+  },
+  watch: {
+    focus(focus) {
+      if (focus) {
+        this.focusAutocomplete();
+      }
     },
   },
 };
@@ -72,6 +94,7 @@ export default {
       :multiple="multiple"
       :options="options"
       :placeholder="placeholder"
+      ref="autocomplete"
       :searchable="true"
       @input="onSelectChange"
       @search="onSelectSearch"

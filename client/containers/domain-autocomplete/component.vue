@@ -44,6 +44,9 @@ export default {
     domain: {
       type: String,
     },
+    focus: {
+      type: Boolean,
+    },
     height: {
       type: String,
     },
@@ -78,6 +81,7 @@ export default {
       <flex-grid-item grow="1" margin="10px">
         <autocomplete
           empty-hint="Start typing to search for a domain."
+          :focus="focus"
           :height="height"
           :is-loading="isLoading"
           :options="domainList"
