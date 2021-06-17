@@ -19,6 +19,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const delay = time => new Promise(resolve => setTimeout(() => resolve(), time));
+const delay = time => new Promise(resolve => setTimeout(resolve, time));
 
 module.exports = delay;
