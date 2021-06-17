@@ -298,8 +298,8 @@ export default {
             <flex-grid-item>
               <button-icon
                 color="primary"
-                :icon="`${isEditingDomain ? 'icon_delete' : 'icon_edit'}`"
-                size="14px"
+                :icon="`${isEditingDomain ? 'icon_delete' : 'icon_search'}`"
+                size="18px"
                 width="22px"
                 @click="onEditDomainClick"
               />
