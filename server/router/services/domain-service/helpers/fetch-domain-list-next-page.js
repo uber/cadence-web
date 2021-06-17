@@ -33,6 +33,8 @@ const fetchDomainListNextPage = async ({
       : undefined,
   });
 
+  console.log('data = ', JSON.stringify(data));
+
   domainList.splice(-1, 0, ...data.domains);
 
   if (!data.nextPageToken) {
