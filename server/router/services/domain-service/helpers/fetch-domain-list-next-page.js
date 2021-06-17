@@ -20,6 +20,7 @@
 // THE SOFTWARE.
 
 const { DOMAIN_LIST_DELAY_MS, DOMAIN_LIST_PAGE_SIZE } = require('../constants');
+const { delay } = require('../../../helpers');
 
 const fetchDomainListNextPage = async ({
   ctx,
@@ -33,8 +34,6 @@ const fetchDomainListNextPage = async ({
       : undefined,
   });
 
-  console.log('data = ', JSON.stringify(data));
-
   domainList.splice(-1, 0, ...data.domains);
 
   if (!data.nextPageToken) {
@@ -42,15 +41,13 @@ const fetchDomainListNextPage = async ({
   }
 
   if (data.nextPageToken) {
-    setTimeout(
-      () =>
-        fetchDomainListNextPage({
-          ctx,
-          nextPageToken: data.nextPageToken,
-          domainList,
-        }),
-      DOMAIN_LIST_DELAY_MS
-    );
+    await delay(DOMAIN_LIST_DELAY_MS);
+
+    return fetchDomainListNextPage({
+      ctx,
+      nextPageToken: data.nextPageToken,
+      domainList,
+    });
   }
 };
 
