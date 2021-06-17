@@ -81,7 +81,7 @@ export default {
           origin,
         }),
       },
-      isEditingDomain: false,
+      isSearchingDomain: false,
       newsLastUpdated: localStorage.getItem(LOCAL_STORAGE_NEWS_LAST_VIEWED_AT),
       newsItems: [],
       logo,
@@ -155,10 +155,10 @@ export default {
       }
     },
     onDomainAutocompleteChange() {
-      this.isEditingDomain = false;
+      this.isSearchingDomain = false;
     },
     onEditDomainClick() {
-      this.isEditingDomain = !this.isEditingDomain;
+      this.isSearchingDomain = !this.isSearchingDomain;
     },
     onEnvironmentSelectChange(environment) {
       if (environment === this.environment.value) {
@@ -283,14 +283,14 @@ export default {
                     `/domains/${$route.params.domain}/workflows`,
                 }"
                 :href="`/domains/${$route.params.domain}/workflows`"
-                v-if="!isEditingDomain"
+                v-if="!isSearchingDomain"
               >
                 {{ $route.params.domain }}
               </a>
               <domain-autocomplete
                 :focus="true"
                 height="slim"
-                v-if="isEditingDomain"
+                v-if="isSearchingDomain"
                 width="500px"
                 @onChange="onDomainAutocompleteChange"
               />
@@ -298,7 +298,7 @@ export default {
             <flex-grid-item>
               <button-icon
                 color="primary"
-                :icon="`${isEditingDomain ? 'icon_delete' : 'icon_search'}`"
+                :icon="`${isSearchingDomain ? 'icon_delete' : 'icon_search'}`"
                 size="18px"
                 width="22px"
                 @click="onEditDomainClick"
@@ -425,15 +425,16 @@ header.top-bar
   }
 
   .environment-select {
-    .dropdown-toggle {
+    .vs__dropdown-toggle {
       border-color: transparent;
     }
 
-    .open-indicator:before {
-      border-color: uber-blue;
+    .vs__open-indicator {
+      height: 10px;
+      fill: uber-blue;
     }
 
-    .selected-tag {
+    .vs__selected {
       color: white;
       font-weight: bold;
     }
