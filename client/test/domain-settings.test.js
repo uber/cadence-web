@@ -24,7 +24,7 @@ describe('Domain Settings', () => {
     const [testEl, scenario] = new Scenario(mochaTest)
       .withDomain('ci-test')
       .startingAt('/domains/ci-test/config')
-      .withNewsFeed()
+      .withEmptyNewsFeed()
       .withDomainDescription('ci-test', desc)
       .go();
 

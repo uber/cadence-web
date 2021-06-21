@@ -104,7 +104,7 @@ export default {
       const { domain } = this;
 
       try {
-        const response = await this.$http(
+        const response = await this.$httpService.get(
           `/api/domains/${domain}/authorization`
         );
 
@@ -131,7 +131,7 @@ export default {
     },
     terminate() {
       this.$modal.hide('confirm-termination');
-      this.$http
+      this.$httpService
         .post(`${this.baseAPIURL}/terminate`, {
           reason: this.terminationReason,
         })

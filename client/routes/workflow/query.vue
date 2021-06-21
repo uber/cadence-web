@@ -54,7 +54,7 @@ export default {
     },
     run() {
       this.running = true;
-      this.$http
+      this.$httpService
         .post(`${this.baseAPIURL}/query/${this.queryName}`)
         .then(
           ({ queryResult }) => {
@@ -71,7 +71,8 @@ export default {
     fetchQueries() {
       this.loading = true;
 
-      return this.$http(`${this.baseAPIURL}/query`)
+      return this.$httpService
+        .get(`${this.baseAPIURL}/query`)
         .then(
           queries => {
             this.queries = queries.filter(query => query !== '__stack_trace');

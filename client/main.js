@@ -58,7 +58,8 @@ import {
   WorkflowPending,
 } from '~containers';
 
-import { http, injectMomentDurationFormat, jsonTryParse } from '~helpers';
+import { injectMomentDurationFormat, jsonTryParse } from '~helpers';
+import { httpService } from '~services';
 
 const routeOpts = {
   mode: 'history',
@@ -327,12 +328,7 @@ promiseFinally.shim();
 Vue.mixin({
   created() {
     this.$moment = moment;
-
-    if (typeof Scenario === 'undefined') {
-      this.$http = http.global;
-    } else if (this.$parent && this.$parent.$http) {
-      this.$http = this.$parent.$http;
-    }
+    this.$httpService = httpService;
   },
 });
 

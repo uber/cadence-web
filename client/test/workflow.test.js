@@ -45,7 +45,7 @@ describe('Workflow', () => {
             value: true,
           },
         ])
-        .withNewsFeed()
+        .withEmptyNewsFeed()
         .withStoreState({
           workflowHistory: {
             graphEnabled: true,

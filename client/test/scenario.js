@@ -28,8 +28,8 @@ import vueModal from 'vue-js-modal';
 import deepmerge from 'deepmerge';
 
 import main from '../main';
-import { http } from '../helpers';
 import initStore from '../store';
+import { httpService } from '../services';
 import fixtures from './fixtures';
 
 export default function Scenario(test) {
@@ -57,9 +57,7 @@ Scenario.prototype.isDebuggingJustThisTest = function isDebuggingJustThisTest() 
 };
 
 Scenario.prototype.render = function render(attachToBody) {
-  const $http = http.bind(null, this.api);
-
-  $http.post = http.post.bind(null, this.api);
+  httpService.setFetch(this.api);
 
   this.router = new Router({ ...main.routeOpts, mode: 'abstract' });
   this.router.push(this.initialUrl || '/');
@@ -82,13 +80,6 @@ Scenario.prototype.render = function render(attachToBody) {
     store,
     template: '<App/>',
     components: { App: main.App },
-    mixins: [
-      {
-        created() {
-          this.$http = $http;
-        },
-      },
-    ],
   });
 
   vueModal.rootInstance = this.vm;
@@ -140,6 +131,38 @@ Object.defineProperty(Scenario.prototype, 'location', {
 
 Scenario.prototype.withDomain = function withDomain(domain) {
   this.domain = domain;
+
+  return this;
+};
+
+Scenario.prototype.withDomainSearch = function withDomainSearch() {
+  this.api.getOnce(`/api/domains?querystring=ci-tests`, [
+    {
+      domainInfo: {
+        name: 'ci-tests',
+        status: 'REGISTERED',
+        description: '',
+        ownerEmail: '',
+        data: {},
+        uuid: '1',
+      },
+      configuration: {
+        workflowExecutionRetentionPeriodInDays: 7,
+        emitMetric: true,
+        badBinaries: { binaries: {} },
+        historyArchivalStatus: 'DISABLED',
+        historyArchivalURI: '',
+        visibilityArchivalStatus: 'DISABLED',
+        visibilityArchivalURI: '',
+      },
+      replicationConfiguration: {
+        activeClusterName: 'primary',
+        clusters: [{ clusterName: 'primary' }],
+      },
+      failoverVersion: -24,
+      isGlobalDomain: false,
+    },
+  ]);
 
   return this;
 };
@@ -230,6 +253,18 @@ Scenario.prototype.withNewsFeed = function withNewsFeed() {
         date_modified: '2019-02-26T00:00:00.000Z',
       },
     ],
+  });
+
+  return this;
+};
+
+Scenario.prototype.withEmptyNewsFeed = function withEmptyNewsFeed() {
+  this.api.getOnce('/feed.json', {
+    version: 'https://jsonfeed.org/version/1',
+    title: '',
+    home_page_url: '/',
+    feed_url: '/feed.json',
+    items: [],
   });
 
   return this;

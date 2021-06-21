@@ -216,7 +216,7 @@ export default {
       const query = includeStatus ? queryWithStatus : queryWithoutStatus;
 
       try {
-        const res = await this.$http(url, { query });
+        const res = await this.$httpService.get(url, { query });
 
         workflows = res.executions;
 
@@ -234,7 +234,7 @@ export default {
 
       this.loading = true;
 
-      return this.$http(`/api/domains/${domain}`).then(r => {
+      return this.$httpService.get(`/api/domains/${domain}`).then(r => {
         this.maxRetentionDays =
           Number(r.configuration.workflowExecutionRetentionPeriodInDays) || 30;
         this.loading = false;

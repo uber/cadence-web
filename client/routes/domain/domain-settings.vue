@@ -36,7 +36,8 @@ export default {
     'detail-list': DetailList,
   },
   created() {
-    this.$http(`/api/domains/${this.domain}`)
+    this.$httpService
+      .get(`/api/domains/${this.domain}`)
       .then(
         r => {
           const domainConfig = mapDomainDescription(r);

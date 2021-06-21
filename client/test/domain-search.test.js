@@ -19,9 +19,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-describe('Domain list', () => {
+describe('Domain search', () => {
   it('should show a header bar without a breadcrumb or domain changer', async function test() {
-    const [testEl] = new Scenario(this.test).withNewsFeed().go();
+    const [testEl] = new Scenario(this.test).withEmptyNewsFeed().go();
 
     const headerBar = await testEl.waitUntilExists('header.top-bar');
 
@@ -32,92 +32,56 @@ describe('Domain list', () => {
     headerBar.should.not.contain('nav').and.not.contain('div.domain');
   });
 
-  it('should validate the existance of domains as the user types', async function test() {
-    const [testEl, scenario] = new Scenario(this.test).withNewsFeed().go();
+  it('should show a list of domains when the user types', async function() {
+    const [testEl] = new Scenario(this.test)
+      .withEmptyNewsFeed()
+      .withDomainSearch()
+      .go();
 
-    const domainNav = await testEl.waitUntilExists(
-      'section.domain-search .domain-navigation'
+    const domainInput = await testEl.waitUntilExists(
+      'section.domain-search .domain-autocomplete input'
     );
-    const domainInput = domainNav.querySelector('input');
 
     domainInput.value.should.be.empty;
-    domainNav.should.have
-      .class('validation-unknown')
-      .and.not.have.class('.validation-valid');
-    domainNav.should.not.have.descendant('ul.recent-domains');
 
-    scenario.api.getOnce('/api/domains/ci-', 404);
-    domainInput.input('ci-');
-
-    await retry(() => domainNav.should.have.class('validation-invalid'));
-
-    await Promise.delay(50);
-
-    domainInput.trigger('keydown', { code: 13, keyCode: 13, key: 'Enter' });
-    await Promise.delay(50);
-
-    scenario.withDomainDescription('ci-tests');
     domainInput.input('ci-tests');
 
-    await retry(() => domainNav.should.have.class('validation-valid'));
+    // wait until results load
+    await testEl.waitUntilExists(
+      'section.domain-search .domain-autocomplete ul.vs__dropdown-menu li.vs__dropdown-option'
+    );
+
+    const domainAutocompleteList = await testEl.waitUntilExists(
+      'section.domain-search .domain-autocomplete ul.vs__dropdown-menu'
+    );
+
+    const domainListItem = domainAutocompleteList.querySelector('li');
+
+    domainListItem.should.have.trimmed.text('cadence-tests - Local - primary');
   });
 
-  it('should render the details of a valid domain', async function test() {
-    const [testEl, scenario] = new Scenario(this.test).withNewsFeed().go();
+  it('should go to the workflows of the domain requested when selected', async function test() {
+    const [testEl, scenario] = new Scenario(this.test)
+      .withEmptyNewsFeed()
+      .withDomainSearch()
+      .go();
 
     const domainInput = await testEl.waitUntilExists(
       'section.domain-search .domain-navigation input'
     );
 
-    scenario.withDomainDescription('ci-tests');
     domainInput.input('ci-tests');
 
-    const descriptionEl = await testEl.waitUntilExists(
-      'section.domain-search .domain-description'
+    // wait until results load
+    await testEl.waitUntilExists(
+      'section.domain-search .domain-autocomplete ul.vs__dropdown-menu li.vs__dropdown-option'
     );
 
-    descriptionEl.should.have
-      .descendant('span.domain-name')
-      .with.text('ci-tests');
-    descriptionEl
-      .textNodes('dl.details dt')
-      .should.deep.equal([
-        'description',
-        'owner',
-        'Global?',
-        'Retention Period',
-        'Emit Metrics',
-        'History Archival',
-        'Visibility Archival',
-        'Failover Version',
-        'clusters',
-      ]);
-    descriptionEl
-      .textNodes('dl.details dd')
-      .should.deep.equal([
-        'A cool domain',
-        'ci-test@uber.com',
-        'No',
-        '21 days',
-        'Yes',
-        'Enabled',
-        'Disabled',
-        '0',
-        'ci-test-cluster (active)',
-      ]);
-  });
-
-  it('should go to the workflows of the domain requested when entered', async function test() {
-    const [testEl, scenario] = new Scenario(this.test).withNewsFeed().go();
-
-    const domainInput = await testEl.waitUntilExists(
-      'section.domain-search .domain-navigation input'
+    const domainAutocompleteList = await testEl.waitUntilExists(
+      'section.domain-search .domain-autocomplete ul.vs__dropdown-menu'
     );
 
-    scenario.withDomainDescription('ci-tests');
-    domainInput.input('ci-tests');
-
-    await testEl.waitUntilExists('.domain-navigation.validation-valid');
+    const domainListItem = domainAutocompleteList.querySelectorAll('li');
 
     scenario
       .withDomain('ci-tests')
@@ -125,7 +89,7 @@ describe('Domain list', () => {
       .withWorkflows({ status: 'closed', startTimeOffset: 30 })
       .withDomainDescription('ci-tests');
 
-    domainInput.trigger('keydown', { code: 13, keyCode: 13, key: 'Enter' });
+    domainListItem.click();
 
     await testEl.waitUntilExists('section.workflow-list');
     const headerBar = testEl.querySelector('header.top-bar');
@@ -138,7 +102,7 @@ describe('Domain list', () => {
   });
 
   it('should activate the change-domain button when the domain is valid and navigate to it', async function test() {
-    const [testEl, scenario] = new Scenario(this.test).withNewsFeed().go();
+    const [testEl, scenario] = new Scenario(this.test).withEmptyNewsFeed().go();
 
     const domainNav = await testEl.waitUntilExists(
       'section.domain-search .domain-navigation'
@@ -184,7 +148,7 @@ describe('Domain list', () => {
       'recent-domains',
       JSON.stringify(['demo', 'ci-tests'])
     );
-    const [testEl, scenario] = new Scenario(this.test).withNewsFeed().go();
+    const [testEl, scenario] = new Scenario(this.test).withEmptyNewsFeed().go();
 
     const recentDomains = await testEl.waitUntilExists(
       '.domain-navigation ul.recent-domains'
@@ -211,7 +175,7 @@ describe('Domain list', () => {
       'recent-domains',
       JSON.stringify(['demo', 'ci-tests'])
     );
-    const [testEl, scenario] = new Scenario(this.test).withNewsFeed().go();
+    const [testEl, scenario] = new Scenario(this.test).withEmptyNewsFeed().go();
 
     const recentDomains = await testEl.waitUntilExists(
       '.domain-navigation ul.recent-domains'

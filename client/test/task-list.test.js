@@ -26,7 +26,7 @@ describe('Task List', () => {
     const [testEl, scenario] = new Scenario(mochaTest)
       .withDomain('ci-test')
       .startingAt('/domains/ci-test/task-lists/ci_task_list')
-      .withNewsFeed()
+      .withEmptyNewsFeed()
       .withTaskListPollers('ci_task_list', pollers)
       .go();
 

@@ -33,7 +33,7 @@ export default {
   },
   props: ['domain', 'taskList'],
   async created() {
-    const partitions = await this.$http(
+    const partitions = await this.$httpService.get(
       `/api/domains/${this.domain}/task-lists/${this.taskList}/partitions`
     );
 

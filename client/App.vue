@@ -133,7 +133,7 @@ export default {
   methods: {
     async fetchLatestNewsItems() {
       const { newsLastUpdated } = this;
-      const response = await this.$http('/feed.json');
+      const response = await this.$httpService.get('/feed.json');
 
       this.newsItems = getLatestNewsItems({ newsLastUpdated, response });
     },

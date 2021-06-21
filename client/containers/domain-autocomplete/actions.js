@@ -38,15 +38,14 @@ import {
 } from './getter-types';
 import { DEBOUNCE_WAIT } from './constants';
 import { updateVisitedDomainList } from './helpers';
-import { http } from '~helpers';
+import { httpService } from '~services';
 
 const actions = {
   [DOMAIN_AUTOCOMPLETE_FETCH_DOMAIN_LIST]: debounce(
     async ({ commit, getters }) => {
       const search = getters[DOMAIN_AUTOCOMPLETE_SEARCH];
 
-      const domainList = await http(
-        window.fetch,
+      const domainList = await httpService.get(
         `/api/domains?querystring=${search}`
       );
 
