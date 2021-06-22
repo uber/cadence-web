@@ -34,12 +34,36 @@ export default {
   timeBasis,
   featureFlags: [
     {
+      key: 'domainAuthorization',
+      value: false,
+    },
+    {
+      key: 'domainAutocomplete',
+      value: true,
+    },
+    {
+      key: 'domainMetrics',
+      value: false,
+    },
+    {
       key: 'environmentSelect',
       value: false,
     },
     {
-      key: 'domainAuthorization',
+      key: 'taskListMetrics',
       value: false,
+    },
+    {
+      key: 'taskListPartition',
+      value: false,
+    },
+    {
+      key: 'workflowGraph',
+      value: true,
+    },
+    {
+      key: 'workflowListIsCron',
+      value: true,
     },
     {
       key: 'workflowTerminate',

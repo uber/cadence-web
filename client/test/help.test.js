@@ -23,6 +23,7 @@ describe('Help', () => {
   async function helpTest(mochaTest) {
     const [testEl, scenario] = new Scenario(mochaTest)
       .startingAt('/help')
+      .withFeatureFlags()
       .withEmptyNewsFeed()
       .go();
 

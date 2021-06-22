@@ -27,6 +27,7 @@ describe('Workflow list', () => {
     const [testEl, scenario] = new Scenario(mochaTest)
       .withDomain('ci-test')
       .startingAt('/domains/ci-test/workflows')
+      .withFeatureFlags()
       .withEmptyNewsFeed()
       .withWorkflows({ status: 'open', query, workflows })
       .withWorkflows({
@@ -178,6 +179,7 @@ describe('Workflow list', () => {
       .startingAt(
         '/domains/ci-test/workflows?status=FAILED&range=last-24-hours'
       )
+      .withFeatureFlags()
       .withEmptyNewsFeed()
       .withWorkflows({
         status: 'closed',
@@ -335,6 +337,7 @@ describe('Workflow list', () => {
     const [testEl] = new Scenario(this.test)
       .withDomain('ci-test')
       .startingAt('/domains/ci-test/workflows?status=FAILED&workflowName=demo')
+      .withFeatureFlags()
       .withEmptyNewsFeed()
       .withWorkflows({
         status: 'closed',
@@ -364,6 +367,7 @@ describe('Workflow list', () => {
       .startingAt(
         '/domains/ci-test/workflows?status=FAILED&queryString=demo&filterMode=advanced'
       )
+      .withFeatureFlags()
       .withEmptyNewsFeed()
       .withWorkflows({
         status: 'list',
