@@ -21,7 +21,10 @@
 
 describe('Domain search', () => {
   it('should show a header bar without a breadcrumb or domain changer', async function test() {
-    const [testEl] = new Scenario(this.test).withEmptyNewsFeed().go();
+    const [testEl] = new Scenario(this.test)
+      .withFeatureFlags()
+      .withEmptyNewsFeed()
+      .go();
 
     const headerBar = await testEl.waitUntilExists('header.top-bar');
 
@@ -34,6 +37,7 @@ describe('Domain search', () => {
 
   it('should show a list of domains when the user types', async function() {
     const [testEl] = new Scenario(this.test)
+      .withFeatureFlags()
       .withEmptyNewsFeed()
       .withDomainSearch()
       .go();
@@ -62,6 +66,7 @@ describe('Domain search', () => {
 
   it('should go to the workflows of the domain requested when selected', async function test() {
     const [testEl, scenario] = new Scenario(this.test)
+      .withFeatureFlags()
       .withEmptyNewsFeed()
       .withDomainSearch()
       .go();
@@ -84,6 +89,7 @@ describe('Domain search', () => {
     const domainListItem = domainAutocompleteList.querySelectorAll('li');
 
     scenario
+      .withFeatureFlags()
       .withDomain('ci-tests')
       .withWorkflows({ status: 'open' })
       .withWorkflows({ status: 'closed', startTimeOffset: 30 })
@@ -102,7 +108,10 @@ describe('Domain search', () => {
   });
 
   it('should activate the change-domain button when the domain is valid and navigate to it', async function test() {
-    const [testEl, scenario] = new Scenario(this.test).withEmptyNewsFeed().go();
+    const [testEl, scenario] = new Scenario(this.test)
+      .withFeatureFlags()
+      .withEmptyNewsFeed()
+      .go();
 
     const domainNav = await testEl.waitUntilExists(
       'section.domain-search .domain-navigation'
@@ -148,7 +157,10 @@ describe('Domain search', () => {
       'recent-domains',
       JSON.stringify(['demo', 'ci-tests'])
     );
-    const [testEl, scenario] = new Scenario(this.test).withEmptyNewsFeed().go();
+    const [testEl, scenario] = new Scenario(this.test)
+      .withFeatureFlags()
+      .withEmptyNewsFeed()
+      .go();
 
     const recentDomains = await testEl.waitUntilExists(
       '.domain-navigation ul.recent-domains'
@@ -175,7 +187,10 @@ describe('Domain search', () => {
       'recent-domains',
       JSON.stringify(['demo', 'ci-tests'])
     );
-    const [testEl, scenario] = new Scenario(this.test).withEmptyNewsFeed().go();
+    const [testEl, scenario] = new Scenario(this.test)
+      .withFeatureFlags()
+      .withEmptyNewsFeed()
+      .go();
 
     const recentDomains = await testEl.waitUntilExists(
       '.domain-navigation ul.recent-domains'

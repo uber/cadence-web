@@ -218,7 +218,7 @@ Scenario.prototype.withDomainDescription = function withDomainDescription(
 };
 
 Scenario.prototype.withFeatureFlags = function withFeatureFlags(
-  featureFlags = []
+  featureFlags = JSON.parse(JSON.stringify(fixtures.featureFlags))
 ) {
   featureFlags.forEach(({ key, value }) => {
     this.api.getOnce(`/api/feature-flags/${key}`, {

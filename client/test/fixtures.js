@@ -32,6 +32,20 @@ const timelineVarietyStart = moment(timeBasis).subtract(5, 'hours');
 
 export default {
   timeBasis,
+  featureFlags: [
+    {
+      key: 'environmentSelect',
+      value: false,
+    },
+    {
+      key: 'domainAuthorization',
+      value: false,
+    },
+    {
+      key: 'workflowTerminate',
+      value: true,
+    },
+  ],
   workflows: {
     open: [
       {
