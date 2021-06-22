@@ -31,7 +31,45 @@ const exampleTimeoutStart = moment(timeBasis).subtract(2, 'hours');
 const timelineVarietyStart = moment(timeBasis).subtract(5, 'hours');
 
 export default {
-  timeBasis,
+  cluster: {
+    supportedClientVersions: { goSdk: '1.7.0', javaSdk: '1.4.0' },
+    membershipInfo: null,
+    persistenceInfo: {
+      historyStore: { backend: 'cassandra', settings: null, features: null },
+      visibilityStore: {
+        backend: 'elasticsearch',
+        settings: null,
+        features: [{ key: 'advancedVisibilityEnabled', enabled: true }],
+      },
+    },
+  },
+  domainSearch: [
+    {
+      domainInfo: {
+        name: 'ci-tests',
+        status: 'REGISTERED',
+        description: '',
+        ownerEmail: '',
+        data: {},
+        uuid: '1',
+      },
+      configuration: {
+        workflowExecutionRetentionPeriodInDays: 7,
+        emitMetric: true,
+        badBinaries: { binaries: {} },
+        historyArchivalStatus: 'DISABLED',
+        historyArchivalURI: '',
+        visibilityArchivalStatus: 'DISABLED',
+        visibilityArchivalURI: '',
+      },
+      replicationConfiguration: {
+        activeClusterName: 'primary',
+        clusters: [{ clusterName: 'primary' }],
+      },
+      failoverVersion: -24,
+      isGlobalDomain: false,
+    },
+  ],
   featureFlags: [
     {
       key: 'domainAuthorization',
@@ -70,68 +108,6 @@ export default {
       value: true,
     },
   ],
-  workflows: {
-    open: [
-      {
-        execution: {
-          workflowId: 'github.com/uber/cadence-web/email-daily-summaries-2',
-          runId: 'ef2c889e-e709-4d50-99ee-3748dfa0a101',
-        },
-        type: {
-          name: 'email-daily-summaries',
-        },
-        startTime: moment(timeBasis)
-          .subtract(3, 'minutes')
-          .toISOString(),
-      },
-      {
-        execution: {
-          workflowId: 'github.com/uber/cadence-web/example-1',
-          runId: 'db8da3c0-b7d3-48b7-a9b3-b6f566e58207',
-        },
-        type: {
-          name: 'example',
-        },
-        startTime: moment(timeBasis)
-          .subtract(20, 'seconds')
-          .toISOString(),
-      },
-    ],
-    closed: [
-      {
-        execution: {
-          workflowId: 'email-daily-summaries',
-          runId: '51ccc0d1-6ffe-4a7a-a89f-6b5154df86f7',
-        },
-        type: {
-          name: 'github.com/uber/cadence-web/email-daily-summaries-1',
-        },
-        closeStatus: 'COMPLETED',
-        startTime: emailRun1Start.toISOString(),
-        closeTime: moment(timeBasis)
-          .subtract(2, 'minutes')
-          .subtract(1, 'day')
-          .toISOString(),
-      },
-    ],
-    list: [
-      {
-        execution: {
-          workflowId: 'email-daily-summaries',
-          runId: '51ccc0d1-6ffe-4a7a-a89f-6b5154df86f7',
-        },
-        type: {
-          name: 'github.com/uber/cadence-web/email-daily-summaries-1',
-        },
-        closeStatus: 'COMPLETED',
-        startTime: emailRun1Start.toISOString(),
-        closeTime: moment(timeBasis)
-          .subtract(2, 'minutes')
-          .subtract(1, 'day')
-          .toISOString(),
-      },
-    ],
-  },
   history: {
     emailRun1: [
       {
@@ -637,6 +613,69 @@ export default {
           },
           decisionTaskCompletedEventId: 11,
         },
+      },
+    ],
+  },
+  timeBasis,
+  workflows: {
+    open: [
+      {
+        execution: {
+          workflowId: 'github.com/uber/cadence-web/email-daily-summaries-2',
+          runId: 'ef2c889e-e709-4d50-99ee-3748dfa0a101',
+        },
+        type: {
+          name: 'email-daily-summaries',
+        },
+        startTime: moment(timeBasis)
+          .subtract(3, 'minutes')
+          .toISOString(),
+      },
+      {
+        execution: {
+          workflowId: 'github.com/uber/cadence-web/example-1',
+          runId: 'db8da3c0-b7d3-48b7-a9b3-b6f566e58207',
+        },
+        type: {
+          name: 'example',
+        },
+        startTime: moment(timeBasis)
+          .subtract(20, 'seconds')
+          .toISOString(),
+      },
+    ],
+    closed: [
+      {
+        execution: {
+          workflowId: 'email-daily-summaries',
+          runId: '51ccc0d1-6ffe-4a7a-a89f-6b5154df86f7',
+        },
+        type: {
+          name: 'github.com/uber/cadence-web/email-daily-summaries-1',
+        },
+        closeStatus: 'COMPLETED',
+        startTime: emailRun1Start.toISOString(),
+        closeTime: moment(timeBasis)
+          .subtract(2, 'minutes')
+          .subtract(1, 'day')
+          .toISOString(),
+      },
+    ],
+    list: [
+      {
+        execution: {
+          workflowId: 'email-daily-summaries',
+          runId: '51ccc0d1-6ffe-4a7a-a89f-6b5154df86f7',
+        },
+        type: {
+          name: 'github.com/uber/cadence-web/email-daily-summaries-1',
+        },
+        closeStatus: 'COMPLETED',
+        startTime: emailRun1Start.toISOString(),
+        closeTime: moment(timeBasis)
+          .subtract(2, 'minutes')
+          .subtract(1, 'day')
+          .toISOString(),
       },
     ],
   },

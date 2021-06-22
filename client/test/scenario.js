@@ -30,7 +30,7 @@ import deepmerge from 'deepmerge';
 import main from '../main';
 import initStore from '../store';
 import { httpService } from '../services';
-import fixtures from './fixtures';
+import { getFixture } from './helpers';
 
 export default function Scenario(test) {
   // eslint-disable-next-line no-param-reassign
@@ -129,6 +129,12 @@ Object.defineProperty(Scenario.prototype, 'location', {
   },
 });
 
+Scenario.prototype.withCluster = function withCluster() {
+  this.api.getOnce(`/api/cluster`, getFixture('cluster'));
+
+  return this;
+};
+
 Scenario.prototype.withDomain = function withDomain(domain) {
   this.domain = domain;
 
@@ -136,33 +142,10 @@ Scenario.prototype.withDomain = function withDomain(domain) {
 };
 
 Scenario.prototype.withDomainSearch = function withDomainSearch() {
-  this.api.getOnce(`/api/domains?querystring=ci-tests`, [
-    {
-      domainInfo: {
-        name: 'ci-tests',
-        status: 'REGISTERED',
-        description: '',
-        ownerEmail: '',
-        data: {},
-        uuid: '1',
-      },
-      configuration: {
-        workflowExecutionRetentionPeriodInDays: 7,
-        emitMetric: true,
-        badBinaries: { binaries: {} },
-        historyArchivalStatus: 'DISABLED',
-        historyArchivalURI: '',
-        visibilityArchivalStatus: 'DISABLED',
-        visibilityArchivalURI: '',
-      },
-      replicationConfiguration: {
-        activeClusterName: 'primary',
-        clusters: [{ clusterName: 'primary' }],
-      },
-      failoverVersion: -24,
-      isGlobalDomain: false,
-    },
-  ]);
+  this.api.getOnce(
+    `/api/domains?querystring=ci-tests`,
+    getFixture('domainSearch')
+  );
 
   return this;
 };
@@ -218,7 +201,7 @@ Scenario.prototype.withDomainDescription = function withDomainDescription(
 };
 
 Scenario.prototype.withFeatureFlags = function withFeatureFlags(
-  featureFlags = JSON.parse(JSON.stringify(fixtures.featureFlags))
+  featureFlags = getFixture('featureFlags')
 ) {
   featureFlags.forEach(({ key, value }) => {
     this.api.getOnce(`/api/feature-flags/${key}`, {
@@ -284,7 +267,7 @@ Scenario.prototype.withWorkflows = function withWorkflows({
 } = {}) {
   if (!workflows) {
     // eslint-disable-next-line no-param-reassign
-    workflows = JSON.parse(JSON.stringify(fixtures.workflows[status]));
+    workflows = getFixture(`workflows.${status}`);
   }
 
   const startTimeDays = startTimeOffset || status === 'open' ? 30 : 21;
@@ -384,9 +367,7 @@ Scenario.prototype.withHistory = function withHistory(
 };
 
 Scenario.prototype.withFullHistory = function withFullHistory(events, options) {
-  const parsedEvents = JSON.parse(
-    JSON.stringify(events || fixtures.history.emailRun1)
-  );
+  const parsedEvents = getFixture('history.emailRun1', events);
   const third = Math.floor(parsedEvents.length / 3);
 
   return this.withHistory(parsedEvents.slice(0, third), true, options)

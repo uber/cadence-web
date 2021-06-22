@@ -20,7 +20,7 @@
 // THE SOFTWARE.
 
 import moment from 'moment';
-import fixtures from './fixtures';
+import { getFixture } from './helpers';
 
 describe('Workflow', () => {
   function workflowTest(mochaTest, options) {
@@ -266,10 +266,10 @@ describe('Workflow', () => {
     it('should show the result of the workflow if completed', async function test() {
       const [summaryEl] = await summaryTest(this.test);
       const resultsEl = await summaryEl.waitUntilExists('.workflow-result pre');
+      const historyFixture = getFixture('history.emailRun1');
 
       JSON.parse(resultsEl.textContent).should.deep.equal(
-        fixtures.history.emailRun1[fixtures.history.emailRun1.length - 1]
-          .details.result
+        historyFixture[historyFixture.length - 1].details.result
       );
       resultsEl
         .textNodes('.token.string')
@@ -282,7 +282,7 @@ describe('Workflow', () => {
 
     it('should show the failure result from a failed workflow', async function test() {
       const [summaryEl] = await summaryTest(this.test, {
-        events: fixtures.history.exampleTimeout,
+        events: getFixture('history.exampleTimeout'),
       });
       const resultsEl = await summaryEl.waitUntilExists('.workflow-result pre');
 
@@ -538,7 +538,7 @@ describe('Workflow', () => {
 
       async function compactViewTest(mochaTest) {
         const [summaryEl, scenario] = await historyTest(mochaTest, {
-          events: fixtures.history.timelineVariety,
+          events: getFixture('history.timelineVariety'),
           query: 'format=compact&graphView=timeline',
           attach: true,
         });
@@ -707,7 +707,7 @@ describe('Workflow', () => {
 
       it('should show event details on initial load, and allow dismissal', async function test() {
         const [summaryEl] = await historyTest(this.test, {
-          events: fixtures.history.timelineVariety,
+          events: getFixture('history.timelineVariety'),
           query: 'format=compact&eventId=8',
           attach: true,
         });
@@ -760,7 +760,7 @@ describe('Workflow', () => {
           historyEl
             .textNodes('.table .vue-recycle-scroller__item-view .td.col-time')
             .should.deep.equal([
-              moment(fixtures.history.emailRun1[0].timestamp).format(
+              moment(getFixture('history.emailRun1')[0].timestamp).format(
                 'MMM D, YYYY h:mm:ss A'
               ),
               '',
@@ -788,13 +788,11 @@ describe('Workflow', () => {
 
         tsEl.trigger('click');
         await retry(() =>
-          historyEl
-            .textNodes('.td.col-time')
-            .should.deep.equal(
-              fixtures.history.emailRun1
-                .filter((_value, index) => index < 6)
-                .map(e => moment(e.timestamp).format('MMM D, YYYY h:mm:ss A'))
-            )
+          historyEl.textNodes('.td.col-time').should.deep.equal(
+            getFixture('history.emailRun1')
+              .filter((_value, index) => index < 6)
+              .map(e => moment(e.timestamp).format('MMM D, YYYY h:mm:ss A'))
+          )
         );
         localStorage
           .getItem('ci-test:history-ts-col-format')
@@ -806,13 +804,11 @@ describe('Workflow', () => {
         const [historyEl] = await historyTest(this.test);
 
         await retry(() =>
-          historyEl
-            .textNodes('.td.col-time')
-            .should.deep.equal(
-              fixtures.history.emailRun1
-                .filter((_value, index) => index < 6)
-                .map(e => moment(e.timestamp).format('MMM D, YYYY h:mm:ss A'))
-            )
+          historyEl.textNodes('.td.col-time').should.deep.equal(
+            getFixture('history.emailRun1')
+              .filter((_value, index) => index < 6)
+              .map(e => moment(e.timestamp).format('MMM D, YYYY h:mm:ss A'))
+          )
         );
       });
 
@@ -822,7 +818,7 @@ describe('Workflow', () => {
           '.results .tr:first-child .td:nth-child(4)'
         );
         const inputPreText = JSON.stringify(
-          fixtures.history.emailRun1[0].details.input,
+          getFixture('history.emailRun1')[0].details.input,
           null,
           2
         );
@@ -925,7 +921,7 @@ describe('Workflow', () => {
 
           ddTextNodes[0].should.equal('6m');
           ddTextNodes[1].should.equalIgnoreSpaces(
-            JSON.stringify(fixtures.history.emailRun1[0].details.input)
+            JSON.stringify(getFixture('history.emailRun1')[0].details.input)
           );
           ddTextNodes[2].should.equal('email-daily-summaries');
         });
@@ -1055,7 +1051,7 @@ describe('Workflow', () => {
           '.results .tr:first-child .td:nth-child(4)'
         );
         const inputPreText = JSON.stringify(
-          fixtures.history.emailRun1[0].details.input,
+          getFixture('history.emailRun1')[0].details.input,
           null,
           2
         );
@@ -1208,7 +1204,7 @@ describe('Workflow', () => {
     async function queryTest(mochaTest, query) {
       const [scenario] = workflowTest(mochaTest, { view: 'query' });
 
-      scenario.withHistory(fixtures.history.emailRun1).withQuery(query);
+      scenario.withHistory(getFixture('history.emailRun1')).withQuery(query);
 
       const queryEl = await scenario
         .render()

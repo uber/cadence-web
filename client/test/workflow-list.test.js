@@ -20,13 +20,14 @@
 // THE SOFTWARE.
 
 import moment from 'moment';
-import fixtures from './fixtures';
+import { getFixture } from './helpers';
 
 describe('Workflow list', () => {
   async function workflowsTest(mochaTest, workflows, query, domainDesc) {
     const [testEl, scenario] = new Scenario(mochaTest)
       .withDomain('ci-test')
       .startingAt('/domains/ci-test/workflows')
+      .withCluster()
       .withFeatureFlags()
       .withEmptyNewsFeed()
       .withWorkflows({ status: 'open', query, workflows })
@@ -111,10 +112,10 @@ describe('Workflow list', () => {
     resultsEl
       .textNodes('.row > .col-start')
       .should.deep.equal([
-        ...fixtures.workflows.open.map(wf =>
+        ...getFixture('workflows.open').map(wf =>
           moment(wf.startTime).format('MMM D, YYYY h:mm:ss A')
         ),
-        ...fixtures.workflows.closed.map(wf =>
+        ...getFixture('workflows.closed').map(wf =>
           moment(wf.startTime).format('MMM D, YYYY h:mm:ss A')
         ),
       ]);
@@ -123,7 +124,7 @@ describe('Workflow list', () => {
       .should.deep.equal([
         '',
         '',
-        ...fixtures.workflows.closed.map(wf =>
+        ...getFixture('workflows.closed').map(wf =>
           moment(wf.closeTime).format('MMM D, YYYY h:mm:ss A')
         ),
       ]);
@@ -179,6 +180,7 @@ describe('Workflow list', () => {
       .startingAt(
         '/domains/ci-test/workflows?status=FAILED&range=last-24-hours'
       )
+      .withCluster()
       .withFeatureFlags()
       .withEmptyNewsFeed()
       .withWorkflows({
@@ -337,6 +339,7 @@ describe('Workflow list', () => {
     const [testEl] = new Scenario(this.test)
       .withDomain('ci-test')
       .startingAt('/domains/ci-test/workflows?status=FAILED&workflowName=demo')
+      .withCluster()
       .withFeatureFlags()
       .withEmptyNewsFeed()
       .withWorkflows({
@@ -367,6 +370,7 @@ describe('Workflow list', () => {
       .startingAt(
         '/domains/ci-test/workflows?status=FAILED&queryString=demo&filterMode=advanced'
       )
+      .withCluster()
       .withFeatureFlags()
       .withEmptyNewsFeed()
       .withWorkflows({
