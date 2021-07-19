@@ -1122,24 +1122,6 @@ describe('Workflow', () => {
   });
 
   describe('Stack Trace', () => {
-    async function historyTest(mochaTest, o) {
-      const [scenario, opts] = workflowTest(mochaTest, {
-        view: 'history',
-        ...o,
-      });
-
-      scenario.withFullHistory(opts.events);
-
-      const historyEl = await scenario
-        .render(opts.attach)
-        .waitUntilExists('section.history');
-
-      // Note: allow time for API requests to be sent and recieved by test.
-      await Promise.delay(400);
-
-      return [historyEl, scenario];
-    }
-
     it('should also show a stack trace tab for running workflows', async function test() {
       const [, scenario] = await summaryTest(this.test);
 
