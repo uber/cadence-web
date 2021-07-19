@@ -67,6 +67,7 @@ document.title = 'Cadence Tests';
 const chai = require('chai');
 
 window.chai = chai;
+window.expect = chai.expect;
 
 chai.should();
 chai.use(require('chai-dom'));

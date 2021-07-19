@@ -81,6 +81,13 @@ export default {
         this.focusAutocomplete();
       }
     },
+    options(options) {
+      const { autocomplete } = this.$refs;
+
+      if (options && options.length) {
+        autocomplete.open = true;
+      }
+    },
   },
 };
 </script>

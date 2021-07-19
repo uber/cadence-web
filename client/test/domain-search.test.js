@@ -46,14 +46,10 @@ describe('Domain search', () => {
       'section.domain-search .domain-autocomplete input'
     );
 
-    domainInput.value.should.be.empty;
-
     domainInput.input('ci-tests');
 
-    // wait until results load
-    await testEl.waitUntilExists(
-      'section.domain-search .domain-autocomplete ul.vs__dropdown-menu li.vs__dropdown-option'
-    );
+    // wait for debounce & request to finish
+    await Promise.delay(200);
 
     const domainAutocompleteList = await testEl.waitUntilExists(
       'section.domain-search .domain-autocomplete ul.vs__dropdown-menu'
@@ -61,7 +57,7 @@ describe('Domain search', () => {
 
     const domainListItem = domainAutocompleteList.querySelector('li');
 
-    domainListItem.should.have.trimmed.text('cadence-tests - Local - primary');
+    domainListItem.should.have.trimmed.text('ci-tests - Local - primary');
   });
 
   it('should go to the workflows of the domain requested when selected', async function test() {

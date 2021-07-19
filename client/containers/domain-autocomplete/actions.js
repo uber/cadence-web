@@ -56,6 +56,10 @@ const actions = {
     DEBOUNCE_WAIT
   ),
   [DOMAIN_AUTOCOMPLETE_ON_CHANGE]: ({ commit, dispatch, getters }, payload) => {
+    if (!payload) {
+      return;
+    }
+
     const { value } = payload;
 
     // Add domain to visited domains if not already contained in visited domain list.
