@@ -46,6 +46,7 @@ describe('Domain search', () => {
       'section.domain-search .domain-autocomplete input'
     );
 
+    domainInput.trigger('focus');
     domainInput.input('ci-tests');
 
     // wait for debounce & request to finish
@@ -62,36 +63,33 @@ describe('Domain search', () => {
 
   it('should go to the workflows of the domain requested when selected', async function test() {
     const [testEl, scenario] = new Scenario(this.test)
-      .withFeatureFlags()
-      .withEmptyNewsFeed()
+      .withCluster()
+      .withDomain('ci-tests')
+      .withDomainDescription('ci-tests')
       .withDomainSearch()
+      .withEmptyNewsFeed()
+      .withFeatureFlags()
+      .withWorkflows({ status: 'open' })
+      .withWorkflows({ status: 'closed', startTimeOffset: 30 })
       .go();
 
     const domainInput = await testEl.waitUntilExists(
-      'section.domain-search .domain-navigation input'
+      'section.domain-search .domain-autocomplete input'
     );
 
+    domainInput.trigger('focus');
     domainInput.input('ci-tests');
 
-    // wait until results load
-    await testEl.waitUntilExists(
-      'section.domain-search .domain-autocomplete ul.vs__dropdown-menu li.vs__dropdown-option'
-    );
+    // wait for debounce & request to finish
+    await Promise.delay(200);
 
     const domainAutocompleteList = await testEl.waitUntilExists(
       'section.domain-search .domain-autocomplete ul.vs__dropdown-menu'
     );
 
-    const domainListItem = domainAutocompleteList.querySelectorAll('li');
+    const domainListItem = domainAutocompleteList.querySelector('li');
 
-    scenario
-      .withFeatureFlags()
-      .withDomain('ci-tests')
-      .withWorkflows({ status: 'open' })
-      .withWorkflows({ status: 'closed', startTimeOffset: 30 })
-      .withDomainDescription('ci-tests');
-
-    domainListItem.click();
+    domainListItem.trigger('mousedown');
 
     await testEl.waitUntilExists('section.workflow-list');
     const headerBar = testEl.querySelector('header.top-bar');
@@ -100,40 +98,31 @@ describe('Domain search', () => {
       .descendant('.workflows')
       .that.contains.text('ci-test');
     scenario.location.should.contain('/domains/ci-tests/workflows');
-    localStorage.getItem('recent-domains').should.equal('["ci-tests"]');
   });
 
-  it('should activate the change-domain button when the domain is valid and navigate to it', async function test() {
+  it('should enable the change-domain button when a domain is typed and navigate to it when clicked', async function test() {
     const [testEl, scenario] = new Scenario(this.test)
-      .withFeatureFlags()
+      .withCluster()
+      .withDomain('ci-tests')
+      .withDomainDescription('ci-tests')
+      .withDomainSearch()
       .withEmptyNewsFeed()
+      .withFeatureFlags()
+      .withWorkflows({ status: 'open' })
+      .withWorkflows({ status: 'closed', startTimeOffset: 30 })
       .go();
 
     const domainNav = await testEl.waitUntilExists(
-      'section.domain-search .domain-navigation'
+      'section.domain-search .domain-autocomplete'
     );
     const domainInput = domainNav.querySelector('input');
-    const changeDomain = domainNav.querySelector('a.change-domain');
 
-    changeDomain.should.have.attr('href', '');
-    scenario.api.getOnce('/api/domains/ci-', 404);
-    domainInput.input('ci-');
-
-    await retry(() => domainNav.should.have.class('validation-invalid'));
-    changeDomain.should.have.attr('href', '');
-
-    await Promise.delay(50);
-
-    scenario.withDomainDescription('ci-tests');
+    domainInput.trigger('focus');
     domainInput.input('ci-tests');
 
-    await testEl.waitUntilExists('.domain-navigation.validation-valid');
-    changeDomain.should.have.attr('href', '#');
-    scenario
-      .withDomain('ci-tests')
-      .withDomainDescription('ci-tests')
-      .withWorkflows({ status: 'open' })
-      .withWorkflows({ status: 'closed', startTimeOffset: 30 });
+    const changeDomain = await testEl.waitUntilExists('a.navigate-to-domain');
+
+    changeDomain.should.have.attr('href', '/domains/ci-tests');
     changeDomain.trigger('click');
 
     await testEl.waitUntilExists('section.workflow-list');
@@ -143,77 +132,39 @@ describe('Domain search', () => {
       .descendant('.workflows')
       .that.contains.text('ci-test');
     scenario.location.should.contain('/domains/ci-tests/workflows');
-    localStorage.getItem('recent-domains').should.equal('["ci-tests"]');
-
-    await Promise.delay(100);
   });
 
   it('should show recent domains with links to them', async function test() {
     localStorage.setItem(
       'recent-domains',
-      JSON.stringify(['demo', 'ci-tests'])
+      JSON.stringify(['ci-tests', 'demo'])
     );
     const [testEl, scenario] = new Scenario(this.test)
-      .withFeatureFlags()
-      .withEmptyNewsFeed()
-      .go();
-
-    const recentDomains = await testEl.waitUntilExists(
-      '.domain-navigation ul.recent-domains'
-    );
-
-    recentDomains.should.have
-      .descendant('h3')
-      .with.trimmed.text('Recent Domains');
-    recentDomains.textNodes('li a').should.deep.equal(['demo', 'ci-tests']);
-
-    recentDomains.querySelectorAll('li a')[1].trigger('click');
-    scenario
+      .withCluster()
       .withDomain('ci-tests')
       .withDomainDescription('ci-tests')
-      .withWorkflows({ status: 'open' })
-      .withWorkflows({ status: 'closed', startTimeOffset: 30 });
-
-    await testEl.waitUntilExists('section.workflow-list');
-    localStorage.getItem('recent-domains').should.equal('["ci-tests","demo"]');
-  });
-
-  it('should show a description of recent domains when hovered', async function test() {
-    localStorage.setItem(
-      'recent-domains',
-      JSON.stringify(['demo', 'ci-tests'])
-    );
-    const [testEl, scenario] = new Scenario(this.test)
-      .withFeatureFlags()
+      .withDomainSearch()
       .withEmptyNewsFeed()
+      .withFeatureFlags()
+      .withWorkflows({ status: 'open' })
+      .withWorkflows({ status: 'closed', startTimeOffset: 30 })
       .go();
 
+    const domainInput = await testEl.waitUntilExists(
+      'section.domain-search .domain-autocomplete input'
+    );
+
+    domainInput.trigger('focus');
+
     const recentDomains = await testEl.waitUntilExists(
-      '.domain-navigation ul.recent-domains'
+      'section.domain-search .domain-autocomplete ul.vs__dropdown-menu'
     );
 
-    scenario.withDomainDescription('demo', {
-      domainInfo: { description: 'demo playground' },
-      configuration: { workflowExecutionRetentionPeriodInDays: 3 },
-    });
-    recentDomains.querySelectorAll('li a')[0].trigger('mouseover');
+    recentDomains.textNodes('li').should.deep.equal(['ci-tests', 'demo']);
 
-    const descriptionEl = await testEl.waitUntilExists(
-      'section.domain-search .domain-description'
-    );
+    recentDomains.querySelectorAll('li')[0].trigger('mousedown');
 
-    descriptionEl
-      .textNodes('dl.details dd')
-      .should.deep.equal([
-        'demo playground',
-        'ci-test@uber.com',
-        'No',
-        '3 days',
-        'Yes',
-        'Enabled',
-        'Disabled',
-        '0',
-        'ci-test-cluster (active)',
-      ]);
+    await testEl.waitUntilExists('section.workflow-list');
+    scenario.location.should.contain('/domains/ci-tests/workflows');
   });
 });
