@@ -62,7 +62,7 @@ describe('Workflow list', () => {
     const resultsEl = workflowsEl.querySelector('section.workflow-grid');
 
     workflowsEl
-      .querySelector('[data-cy="status-filter"] .selected-tag')
+      .querySelector('[data-cy="status-filter"] .vs__selected')
       .should.contain.text('All');
 
     await resultsEl.waitUntilExists('.workflow-grid.ready');
@@ -248,7 +248,7 @@ describe('Workflow list', () => {
     );
 
     await retry(() =>
-      statusEl.querySelector('.selected-tag').should.have.trimmed.text('All')
+      statusEl.querySelector('.vs__selected').should.have.trimmed.text('All')
     );
 
     scenario.withWorkflows({
@@ -360,7 +360,7 @@ describe('Workflow list', () => {
       .querySelector('header.filters input[name="workflowName"]')
       .value.should.equal('demo');
     workflowsEl
-      .querySelector('header.filters [data-cy="status-filter"] .selected-tag')
+      .querySelector('header.filters [data-cy="status-filter"] .vs__selected')
       .should.have.trimmed.text('Failed');
   });
 

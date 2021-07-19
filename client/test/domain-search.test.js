@@ -166,5 +166,8 @@ describe('Domain search', () => {
 
     await testEl.waitUntilExists('section.workflow-list');
     scenario.location.should.contain('/domains/ci-tests/workflows');
+
+    // Note: delay needed otherwise test leaks into other tests.
+    await Promise.delay(200);
   });
 });

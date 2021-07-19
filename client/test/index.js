@@ -132,10 +132,10 @@ HTMLInputElement.prototype.input = function input(text) {
 HTMLElement.prototype.selectItem = async function selectItem(text) {
   const openDropdown = new MouseEvent('mousedown');
 
-  this.querySelector('.dropdown-toggle').dispatchEvent(openDropdown);
+  this.querySelector('.vs__dropdown-toggle').dispatchEvent(openDropdown);
 
   const itemToClick = Array.from(
-    await this.waitUntilAllExist('ul.dropdown-menu li a')
+    await this.waitUntilAllExist('ul.vs__dropdown-menu li')
   ).find(a => a.innerText.trim() === text);
   const selectedItem = new MouseEvent('mousedown');
 
@@ -145,11 +145,11 @@ HTMLElement.prototype.selectItem = async function selectItem(text) {
 HTMLElement.prototype.selectOptions = async function selectOptions() {
   const openDropdown = new MouseEvent('mousedown');
 
-  this.querySelector('.dropdown-toggle').dispatchEvent(openDropdown);
+  this.querySelector('.vs__dropdown-toggle').dispatchEvent(openDropdown);
 
-  await this.waitUntilAllExist('ul.dropdown-menu li a');
+  await this.waitUntilAllExist('ul.vs__dropdown-menu li');
 
-  return this.textNodes('ul.dropdown-menu li a');
+  return this.textNodes('ul.vs__dropdown-menu li');
 };
 
 require('./scenario');
