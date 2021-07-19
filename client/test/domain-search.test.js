@@ -168,6 +168,6 @@ describe('Domain search', () => {
     scenario.location.should.contain('/domains/ci-tests/workflows');
 
     // Note: delay needed otherwise test leaks into other tests.
-    await Promise.delay(200);
+    await Promise.delay(500);
   });
 });
