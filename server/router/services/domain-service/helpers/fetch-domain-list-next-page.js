@@ -34,21 +34,19 @@ const fetchDomainListNextPage = async ({
       : undefined,
   });
 
-  domainList.splice(-1, 0, ...data.domains);
+  domainList.splice(domainList.length, 0, ...data.domains);
 
   if (!data.nextPageToken) {
     return domainList;
   }
 
-  if (data.nextPageToken) {
-    await delay(DOMAIN_LIST_DELAY_MS);
+  await delay(DOMAIN_LIST_DELAY_MS);
 
-    return fetchDomainListNextPage({
-      ctx,
-      nextPageToken: data.nextPageToken,
-      domainList,
-    });
-  }
+  return fetchDomainListNextPage({
+    ctx,
+    nextPageToken: data.nextPageToken,
+    domainList,
+  });
 };
 
 module.exports = fetchDomainListNextPage;
