@@ -35,17 +35,8 @@ describe('Workflow', () => {
       new Scenario(mochaTest)
         .withDomain('ci-test')
         .withDomainAuthorization('ci-test', true)
-        .withFeatureFlags([
-          {
-            key: 'domainAuthorization',
-            value: false,
-          },
-          {
-            key: 'workflowTerminate',
-            value: true,
-          },
-        ])
-        .withNewsFeed()
+        .withFeatureFlags()
+        .withEmptyNewsFeed()
         .withStoreState({
           workflowHistory: {
             graphEnabled: true,
@@ -1270,6 +1261,7 @@ describe('Workflow', () => {
       const [queryEl, scenario] = await queryTest(this.test);
 
       await queryEl.waitUntilExists('.query-name .dropdown');
+
       const runButton = queryEl.querySelector('a.run');
 
       await retry(() => runButton.should.have.attr('href', '#'));
