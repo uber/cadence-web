@@ -31,69 +31,83 @@ const exampleTimeoutStart = moment(timeBasis).subtract(2, 'hours');
 const timelineVarietyStart = moment(timeBasis).subtract(5, 'hours');
 
 export default {
-  timeBasis,
-  workflows: {
-    open: [
-      {
-        execution: {
-          workflowId: 'github.com/uber/cadence-web/email-daily-summaries-2',
-          runId: 'ef2c889e-e709-4d50-99ee-3748dfa0a101',
-        },
-        type: {
-          name: 'email-daily-summaries',
-        },
-        startTime: moment(timeBasis)
-          .subtract(3, 'minutes')
-          .toISOString(),
+  cluster: {
+    supportedClientVersions: { goSdk: '1.7.0', javaSdk: '1.4.0' },
+    membershipInfo: null,
+    persistenceInfo: {
+      historyStore: { backend: 'cassandra', settings: null, features: null },
+      visibilityStore: {
+        backend: 'elasticsearch',
+        settings: null,
+        features: [{ key: 'advancedVisibilityEnabled', enabled: true }],
       },
-      {
-        execution: {
-          workflowId: 'github.com/uber/cadence-web/example-1',
-          runId: 'db8da3c0-b7d3-48b7-a9b3-b6f566e58207',
-        },
-        type: {
-          name: 'example',
-        },
-        startTime: moment(timeBasis)
-          .subtract(20, 'seconds')
-          .toISOString(),
-      },
-    ],
-    closed: [
-      {
-        execution: {
-          workflowId: 'email-daily-summaries',
-          runId: '51ccc0d1-6ffe-4a7a-a89f-6b5154df86f7',
-        },
-        type: {
-          name: 'github.com/uber/cadence-web/email-daily-summaries-1',
-        },
-        closeStatus: 'COMPLETED',
-        startTime: emailRun1Start.toISOString(),
-        closeTime: moment(timeBasis)
-          .subtract(2, 'minutes')
-          .subtract(1, 'day')
-          .toISOString(),
-      },
-    ],
-    list: [
-      {
-        execution: {
-          workflowId: 'email-daily-summaries',
-          runId: '51ccc0d1-6ffe-4a7a-a89f-6b5154df86f7',
-        },
-        type: {
-          name: 'github.com/uber/cadence-web/email-daily-summaries-1',
-        },
-        closeStatus: 'COMPLETED',
-        startTime: emailRun1Start.toISOString(),
-        closeTime: moment(timeBasis)
-          .subtract(2, 'minutes')
-          .subtract(1, 'day')
-          .toISOString(),
-      },
-    ],
+    },
   },
+  domainSearch: [
+    {
+      domainInfo: {
+        name: 'ci-tests',
+        status: 'REGISTERED',
+        description: '',
+        ownerEmail: '',
+        data: {},
+        uuid: '1',
+      },
+      configuration: {
+        workflowExecutionRetentionPeriodInDays: 7,
+        emitMetric: true,
+        badBinaries: { binaries: {} },
+        historyArchivalStatus: 'DISABLED',
+        historyArchivalURI: '',
+        visibilityArchivalStatus: 'DISABLED',
+        visibilityArchivalURI: '',
+      },
+      replicationConfiguration: {
+        activeClusterName: 'primary',
+        clusters: [{ clusterName: 'primary' }],
+      },
+      failoverVersion: -24,
+      isGlobalDomain: false,
+    },
+  ],
+  featureFlags: [
+    {
+      key: 'domainAuthorization',
+      value: false,
+    },
+    {
+      key: 'domainAutocomplete',
+      value: true,
+    },
+    {
+      key: 'domainMetrics',
+      value: false,
+    },
+    {
+      key: 'environmentSelect',
+      value: false,
+    },
+    {
+      key: 'taskListMetrics',
+      value: false,
+    },
+    {
+      key: 'taskListPartition',
+      value: false,
+    },
+    {
+      key: 'workflowGraph',
+      value: true,
+    },
+    {
+      key: 'workflowListIsCron',
+      value: true,
+    },
+    {
+      key: 'workflowTerminate',
+      value: true,
+    },
+  ],
   history: {
     emailRun1: [
       {
@@ -599,6 +613,101 @@ export default {
           },
           decisionTaskCompletedEventId: 11,
         },
+      },
+    ],
+  },
+  newsFeed: {
+    simple: {
+      version: 'https://jsonfeed.org/version/1',
+      title: '',
+      home_page_url: '/',
+      feed_url: '/feed.json',
+      items: [
+        {
+          id: '/_news/2019/05/05/writing-a-vuepress-theme-2/',
+          url: '/_news/2019/05/05/writing-a-vuepress-theme-2/',
+          title: 'Writing a VuePress theme',
+          summary: 'To write a theme, create a .vuepress/theme directory ...',
+          date_modified: '2019-05-06T00:00:00.000Z',
+        },
+        {
+          id: '/_news/2019/02/25/markdown-slot-3/',
+          url: '/_news/2019/02/25/markdown-slot-3/',
+          title: 'Markdown Slot',
+          summary:
+            'VuePress implements a content distribution API for Markdown...',
+          date_modified: '2019-02-26T00:00:00.000Z',
+        },
+      ],
+    },
+    empty: {
+      version: 'https://jsonfeed.org/version/1',
+      title: '',
+      home_page_url: '/',
+      feed_url: '/feed.json',
+      items: [],
+    },
+  },
+  timeBasis,
+  workflows: {
+    open: [
+      {
+        execution: {
+          workflowId: 'github.com/uber/cadence-web/email-daily-summaries-2',
+          runId: 'ef2c889e-e709-4d50-99ee-3748dfa0a101',
+        },
+        type: {
+          name: 'email-daily-summaries',
+        },
+        startTime: moment(timeBasis)
+          .subtract(3, 'minutes')
+          .toISOString(),
+      },
+      {
+        execution: {
+          workflowId: 'github.com/uber/cadence-web/example-1',
+          runId: 'db8da3c0-b7d3-48b7-a9b3-b6f566e58207',
+        },
+        type: {
+          name: 'example',
+        },
+        startTime: moment(timeBasis)
+          .subtract(20, 'seconds')
+          .toISOString(),
+      },
+    ],
+    closed: [
+      {
+        execution: {
+          workflowId: 'email-daily-summaries',
+          runId: '51ccc0d1-6ffe-4a7a-a89f-6b5154df86f7',
+        },
+        type: {
+          name: 'github.com/uber/cadence-web/email-daily-summaries-1',
+        },
+        closeStatus: 'COMPLETED',
+        startTime: emailRun1Start.toISOString(),
+        closeTime: moment(timeBasis)
+          .subtract(2, 'minutes')
+          .subtract(1, 'day')
+          .toISOString(),
+      },
+    ],
+    list: [
+      {
+        execution: {
+          workflowId: 'email-daily-summaries',
+          runId: '51ccc0d1-6ffe-4a7a-a89f-6b5154df86f7',
+        },
+        type: {
+          name: 'github.com/uber/cadence-web/email-daily-summaries-1',
+        },
+        closeStatus: 'COMPLETED',
+        startTime: emailRun1Start.toISOString(),
+        closeTime: moment(timeBasis)
+          .subtract(2, 'minutes')
+          .subtract(1, 'day')
+          .toISOString(),
       },
     ],
   },

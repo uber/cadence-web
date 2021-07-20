@@ -20,7 +20,7 @@
 // THE SOFTWARE.
 
 import moment from 'moment';
-import fixtures from './fixtures';
+import { getFixture } from './helpers';
 
 describe('Workflow list', () => {
   async function workflowsTest(mochaTest, workflows, query, domainDesc) {
@@ -110,10 +110,10 @@ describe('Workflow list', () => {
     resultsEl
       .textNodes('.row > .col-start')
       .should.deep.equal([
-        ...fixtures.workflows.open.map(wf =>
+        ...getFixture('workflows.open').map(wf =>
           moment(wf.startTime).format('MMM D, YYYY h:mm:ss A')
         ),
-        ...fixtures.workflows.closed.map(wf =>
+        ...getFixture('workflows.closed').map(wf =>
           moment(wf.startTime).format('MMM D, YYYY h:mm:ss A')
         ),
       ]);
@@ -122,7 +122,7 @@ describe('Workflow list', () => {
       .should.deep.equal([
         '',
         '',
-        ...fixtures.workflows.closed.map(wf =>
+        ...getFixture('workflows.closed').map(wf =>
           moment(wf.closeTime).format('MMM D, YYYY h:mm:ss A')
         ),
       ]);
