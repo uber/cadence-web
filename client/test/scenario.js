@@ -141,15 +141,6 @@ Scenario.prototype.withDomain = function withDomain(domain) {
   return this;
 };
 
-Scenario.prototype.withDomainSearch = function withDomainSearch() {
-  this.api.getOnce(
-    `/api/domains?querystring=ci-tests`,
-    getFixture('domainSearch')
-  );
-
-  return this;
-};
-
 Scenario.prototype.withDomainAuthorization = function withDomainAuthorization(
   domain,
   authorization
@@ -200,6 +191,15 @@ Scenario.prototype.withDomainDescription = function withDomainDescription(
   return this;
 };
 
+Scenario.prototype.withDomainSearch = function withDomainSearch() {
+  this.api.getOnce(
+    `/api/domains?querystring=ci-tests`,
+    getFixture('domainSearch')
+  );
+
+  return this;
+};
+
 Scenario.prototype.withFeatureFlags = function withFeatureFlags(
   featureFlags = getFixture('featureFlags')
 ) {
@@ -214,41 +214,13 @@ Scenario.prototype.withFeatureFlags = function withFeatureFlags(
 };
 
 Scenario.prototype.withNewsFeed = function withNewsFeed() {
-  this.api.getOnce('/feed.json', {
-    version: 'https://jsonfeed.org/version/1',
-    title: '',
-    home_page_url: '/',
-    feed_url: '/feed.json',
-    items: [
-      {
-        id: '/_news/2019/05/05/writing-a-vuepress-theme-2/',
-        url: '/_news/2019/05/05/writing-a-vuepress-theme-2/',
-        title: 'Writing a VuePress theme',
-        summary: 'To write a theme, create a .vuepress/theme directory ...',
-        date_modified: '2019-05-06T00:00:00.000Z',
-      },
-      {
-        id: '/_news/2019/02/25/markdown-slot-3/',
-        url: '/_news/2019/02/25/markdown-slot-3/',
-        title: 'Markdown Slot',
-        summary:
-          'VuePress implements a content distribution API for Markdown...',
-        date_modified: '2019-02-26T00:00:00.000Z',
-      },
-    ],
-  });
+  this.api.getOnce('/feed.json', getFixture('newsFeed.simple'));
 
   return this;
 };
 
 Scenario.prototype.withEmptyNewsFeed = function withEmptyNewsFeed() {
-  this.api.getOnce('/feed.json', {
-    version: 'https://jsonfeed.org/version/1',
-    title: '',
-    home_page_url: '/',
-    feed_url: '/feed.json',
-    items: [],
-  });
+  this.api.getOnce('/feed.json', getFixture('newsFeed.empty'));
 
   return this;
 };
@@ -262,14 +234,9 @@ Scenario.prototype.withStoreState = function withStoreState(state = {}) {
 Scenario.prototype.withWorkflows = function withWorkflows({
   status,
   query,
-  workflows,
+  workflows = getFixture(`workflows.${status}`),
   startTimeOffset,
 } = {}) {
-  if (!workflows) {
-    // eslint-disable-next-line no-param-reassign
-    workflows = getFixture(`workflows.${status}`);
-  }
-
   const startTimeDays = startTimeOffset || status === 'open' ? 30 : 21;
   const baseUrl = `/api/domains/${this.domain}/workflows/${status}`;
   const queryString = qs.stringify(
