@@ -35,17 +35,8 @@ describe('Workflow', () => {
       new Scenario(mochaTest)
         .withDomain('ci-test')
         .withDomainAuthorization('ci-test', true)
-        .withFeatureFlags([
-          {
-            key: 'domainAuthorization',
-            value: false,
-          },
-          {
-            key: 'workflowTerminate',
-            value: true,
-          },
-        ])
-        .withNewsFeed()
+        .withFeatureFlags()
+        .withEmptyNewsFeed()
         .withStoreState({
           workflowHistory: {
             graphEnabled: true,
@@ -78,6 +69,9 @@ describe('Workflow', () => {
     const summaryEl = await scenario
       .render(opts.attach)
       .waitUntilExists('section.execution section.workflow-summary dl');
+
+    // Note: allow time for API requests to be sent and recieved by test.
+    await Promise.delay(150);
 
     return [summaryEl.parentElement, scenario];
   }
@@ -341,6 +335,8 @@ describe('Workflow', () => {
           history: { delay: 500 },
         });
 
+        await Promise.delay(500);
+
         const terminateEl = await summaryEl.waitUntilExists(
           'aside.actions button'
         );
@@ -368,6 +364,8 @@ describe('Workflow', () => {
         const [summaryEl, scenario] = await summaryTest(this.test, {
           history: { delay: 250 },
         });
+
+        await Promise.delay(250);
 
         const terminateEl = await summaryEl.waitUntilExists(
           'aside.actions button'
@@ -400,6 +398,8 @@ describe('Workflow', () => {
           history: { delay: 250 },
         });
 
+        await Promise.delay(250);
+
         const terminateEl = await summaryEl.waitUntilExists(
           'aside.actions button'
         );
@@ -424,6 +424,8 @@ describe('Workflow', () => {
         const [summaryEl] = await summaryTest(this.test, {
           history: { delay: 250 },
         });
+
+        await Promise.delay(250);
 
         const terminateEl = await summaryEl.waitUntilExists(
           'aside.actions button'
@@ -450,6 +452,8 @@ describe('Workflow', () => {
           history: { delay: 250 },
         });
 
+        await Promise.delay(250);
+
         await retry(() =>
           summaryEl.should.have
             .descendant('.workflow-status dd')
@@ -472,6 +476,9 @@ describe('Workflow', () => {
       const historyEl = await scenario
         .render(opts.attach)
         .waitUntilExists('section.history');
+
+      // Note: allow time for API requests to be sent and recieved by test.
+      await Promise.delay(400);
 
       return [historyEl, scenario];
     }
@@ -1157,6 +1164,10 @@ describe('Workflow', () => {
             `Stack trace at ${moment().format('MMM D, YYYY h:mm:ss A')}`
           )
       );
+
+      // Note: allow time for API requests to be sent and recieved by test.
+      await Promise.delay(400);
+
       stackTraceEl
         .querySelector('pre')
         .should.have.text('goroutine 1:\n\tat foo.go:56');
@@ -1192,6 +1203,9 @@ describe('Workflow', () => {
         .render()
         .waitUntilExists('section.stack-trace');
 
+      // Note: allow time for API requests to be sent and recieved by test.
+      await Promise.delay(400);
+
       await retry(() =>
         stackTraceEl
           .querySelector('pre')
@@ -1219,6 +1233,9 @@ describe('Workflow', () => {
         .render()
         .waitUntilExists('section.execution section.query');
 
+      // Note: allow time for API requests to be sent and recieved by test.
+      await Promise.delay(400);
+
       return [queryEl, scenario];
     }
 
@@ -1230,7 +1247,7 @@ describe('Workflow', () => {
       ]);
 
       const queryDropdown = await queryEl.waitUntilExists(
-        '.query-name .dropdown'
+        '.query-name .select-input'
       );
       const options = await queryDropdown.selectOptions();
 
@@ -1254,7 +1271,7 @@ describe('Workflow', () => {
     it('should run a query and show the result', async function test() {
       const [queryEl, scenario] = await queryTest(this.test);
 
-      await queryEl.waitUntilExists('.query-name .dropdown');
+      await queryEl.waitUntilExists('.query-name .select-input');
       const runButton = queryEl.querySelector('a.run');
 
       await retry(() => runButton.should.have.attr('href', '#'));
@@ -1269,7 +1286,7 @@ describe('Workflow', () => {
     it('should show an error if there was an error running the query', async function test() {
       const [queryEl, scenario] = await queryTest(this.test);
 
-      await queryEl.waitUntilExists('.query-name .dropdown');
+      await queryEl.waitUntilExists('.query-name .select-input');
       const runButton = queryEl.querySelector('a.run');
 
       await retry(() => runButton.should.have.attr('href', '#'));

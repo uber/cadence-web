@@ -27,7 +27,9 @@ describe('Workflow list', () => {
     const [testEl, scenario] = new Scenario(mochaTest)
       .withDomain('ci-test')
       .startingAt('/domains/ci-test/workflows')
-      .withNewsFeed()
+      .withCluster()
+      .withFeatureFlags()
+      .withEmptyNewsFeed()
       .withWorkflows({ status: 'open', query, workflows })
       .withWorkflows({
         status: 'closed',
@@ -60,7 +62,7 @@ describe('Workflow list', () => {
     const resultsEl = workflowsEl.querySelector('section.workflow-grid');
 
     workflowsEl
-      .querySelector('[data-cy="status-filter"] .selected-tag')
+      .querySelector('[data-cy="status-filter"] .vs__selected')
       .should.contain.text('All');
 
     await resultsEl.waitUntilExists('.workflow-grid.ready');
@@ -178,7 +180,9 @@ describe('Workflow list', () => {
       .startingAt(
         '/domains/ci-test/workflows?status=FAILED&range=last-24-hours'
       )
-      .withNewsFeed()
+      .withCluster()
+      .withFeatureFlags()
+      .withEmptyNewsFeed()
       .withWorkflows({
         status: 'closed',
         query: {
@@ -244,7 +248,7 @@ describe('Workflow list', () => {
     );
 
     await retry(() =>
-      statusEl.querySelector('.selected-tag').should.have.trimmed.text('All')
+      statusEl.querySelector('.vs__selected').should.have.trimmed.text('All')
     );
 
     scenario.withWorkflows({
@@ -335,7 +339,9 @@ describe('Workflow list', () => {
     const [testEl] = new Scenario(this.test)
       .withDomain('ci-test')
       .startingAt('/domains/ci-test/workflows?status=FAILED&workflowName=demo')
-      .withNewsFeed()
+      .withCluster()
+      .withFeatureFlags()
+      .withEmptyNewsFeed()
       .withWorkflows({
         status: 'closed',
         query: {
@@ -354,7 +360,7 @@ describe('Workflow list', () => {
       .querySelector('header.filters input[name="workflowName"]')
       .value.should.equal('demo');
     workflowsEl
-      .querySelector('header.filters [data-cy="status-filter"] .selected-tag')
+      .querySelector('header.filters [data-cy="status-filter"] .vs__selected')
       .should.have.trimmed.text('Failed');
   });
 
@@ -364,7 +370,9 @@ describe('Workflow list', () => {
       .startingAt(
         '/domains/ci-test/workflows?status=FAILED&queryString=demo&filterMode=advanced'
       )
-      .withNewsFeed()
+      .withCluster()
+      .withFeatureFlags()
+      .withEmptyNewsFeed()
       .withWorkflows({
         status: 'list',
         query: {

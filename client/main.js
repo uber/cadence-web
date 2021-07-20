@@ -34,7 +34,7 @@ import snapscroll from './directives/snapscroll';
 
 import App from './App';
 import Domain from './routes/domain';
-import DomainList from './routes/domain-list';
+import DomainSearch from './routes/domain-search';
 import DomainMetrics from './routes/domain/domain-metrics';
 import DomainSettings from './routes/domain/domain-settings';
 import Help from './routes/help';
@@ -58,7 +58,8 @@ import {
   WorkflowPending,
 } from '~containers';
 
-import { http, injectMomentDurationFormat, jsonTryParse } from '~helpers';
+import { injectMomentDurationFormat, jsonTryParse } from '~helpers';
+import { httpService } from '~services';
 
 const routeOpts = {
   mode: 'history',
@@ -69,10 +70,10 @@ const routeOpts = {
       component: Root,
       children: [
         {
-          name: 'domain-list',
+          name: 'domain-search',
           path: '/domains',
           components: {
-            'domain-list': DomainList,
+            'domain-search': DomainSearch,
           },
         },
         {
@@ -327,12 +328,7 @@ promiseFinally.shim();
 Vue.mixin({
   created() {
     this.$moment = moment;
-
-    if (typeof Scenario === 'undefined') {
-      this.$http = http.global;
-    } else if (this.$parent && this.$parent.$http) {
-      this.$http = this.$parent.$http;
-    }
+    this.$httpService = httpService;
   },
 });
 

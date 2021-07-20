@@ -45,7 +45,7 @@ export default {
         :exact="true"
         icon="icon_search"
         label="Domains"
-        :to="{ name: 'domain-list' }"
+        :to="{ name: 'domain-search' }"
       />
       <navigation-link
         label="News"
@@ -55,7 +55,7 @@ export default {
       <navigation-link label="Help" icon="icon_help" :to="{ name: 'help' }" />
     </navigation-bar>
     <router-view
-      name="domain-list"
+      name="domain-search"
       @onNotification="onNotification"
       @onWorkflowHistoryEventParamToggle="onWorkflowHistoryEventParamToggle"
     />

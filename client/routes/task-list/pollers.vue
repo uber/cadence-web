@@ -50,9 +50,8 @@ export default {
     },
   },
   created() {
-    this.$http(
-      `/api/domains/${this.domain}/task-lists/${this.taskList}/pollers`
-    )
+    this.$httpService
+      .get(`/api/domains/${this.domain}/task-lists/${this.taskList}/pollers`)
       .then(
         p => {
           this.pollers = Object.keys(p).map(identity => ({

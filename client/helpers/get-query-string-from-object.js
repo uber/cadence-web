@@ -29,6 +29,10 @@ const getQueryStringFromObject = (params = {}) => {
   return (
     '?' +
     paramKeys
+      .filter(
+        queryName =>
+          params[queryName] !== null && params[queryName] !== undefined
+      )
       .map(
         queryName =>
           encodeURIComponent(queryName) +

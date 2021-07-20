@@ -19,6 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+export { default as combine } from './combine';
 export { default as getDatetimeFormattedString } from './get-datetime-formatted-string';
 export { default as getEndTimeIsoString } from './get-end-time-iso-string';
 export { default as getEnvironment } from './get-environment';
@@ -31,7 +32,6 @@ export { default as getLatestNewsItems } from './get-latest-news-items';
 export { default as getQueryStringFromObject } from './get-query-string-from-object';
 export { default as getStartTimeIsoString } from './get-start-time-iso-string';
 export { default as getStringElipsis } from './get-string-elipsis';
-export { default as http } from './http';
 export { default as injectMomentDurationFormat } from './inject-moment-duration-format';
 export { default as jsonTryParse } from './json-try-parse';
 export { default as mapDomainDescription } from './map-domain-description';

@@ -64,7 +64,7 @@ export default {
     getStackTrace() {
       this.loading = true;
 
-      return this.$http
+      return this.$httpService
         .post(`${this.baseAPIURL}/query/__stack_trace`)
         .then(({ queryResult }) => {
           this.stackTrace = getQueryResult(queryResult);

@@ -19,6 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+export { default as Autocomplete } from './autocomplete';
 export { default as BarLoader } from './bar-loader';
 export { default as ButtonFill } from './button-fill';
 export { default as ButtonGroup } from './button-group';
@@ -27,7 +28,6 @@ export { default as Copy } from './copy';
 export { default as DataViewer } from './data-viewer';
 export { default as DateRangePicker } from './date-range-picker';
 export { default as DetailList } from './detail-list';
-export { default as DomainNavigation } from './domain-navigation';
 export { default as ErrorMessage } from './error-message';
 export { default as FeatureFlag } from './feature-flag';
 export { default as FlexGrid } from './flex-grid';

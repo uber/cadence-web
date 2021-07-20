@@ -26,6 +26,13 @@ export {
   mutations as clusterMutations,
 } from './cluster';
 export {
+  actions as domainAutocompleteActions,
+  container as DomainAutocomplete,
+  getDefaultState as getDomainAutocompleteDefaultState,
+  getters as domainAutocompleteGetters,
+  mutations as domainAutocompleteMutations,
+} from './domain-autocomplete';
+export {
   getDefaultState as getGraphDefaultState,
   getters as graphGetters,
   mutations as graphMutations,

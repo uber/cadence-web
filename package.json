@@ -80,7 +80,7 @@
     "vue-loader": "^13.0.1",
     "vue-prism-component": "^1.0.1",
     "vue-router": "^3.0.1",
-    "vue-select": "nathanboktae/vue-select#after2.4",
+    "vue-select": "^3.11.2",
     "vue-split-panel": "^1.0.4",
     "vue-style-loader": "^3.1.2",
     "vue-template-compiler": "^2.5.2",

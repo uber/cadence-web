@@ -19,7 +19,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const clusterClearCacheHandler = clusterService => async ctx =>
-  (ctx.body = await clusterService.clearCache(ctx));
+const delay = time => new Promise(resolve => setTimeout(resolve, time));
 
-module.exports = clusterClearCacheHandler;
+module.exports = delay;

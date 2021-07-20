@@ -110,11 +110,6 @@ export default {
     'workflow-grid': WorkflowGrid,
   },
   computed: {
-    endTime() {
-      const { endTime, range } = this.$route.query;
-
-      return getEndTimeIsoString(range, endTime);
-    },
     formattedResults() {
       const { dateFormat, results, timeFormat, timezone } = this;
 
@@ -128,6 +123,15 @@ export default {
       }
 
       return getStartTimeIsoString(range, startTime);
+    },
+    endTime() {
+      const { range, endTime } = this.$route.query;
+
+      if (this.range && this.range.endTime) {
+        return getEndTimeIsoString(null, this.range.endTime.toISOString());
+      }
+
+      return getEndTimeIsoString(range, endTime);
     },
     range() {
       const { maxRetentionDays, minStartDate, state } = this;
@@ -212,7 +216,7 @@ export default {
       const query = includeStatus ? queryWithStatus : queryWithoutStatus;
 
       try {
-        const res = await this.$http(url, { query });
+        const res = await this.$httpService.get(url, { query });
 
         workflows = res.executions;
 
@@ -230,7 +234,7 @@ export default {
 
       this.loading = true;
 
-      return this.$http(`/api/domains/${domain}`).then(r => {
+      return this.$httpService.get(`/api/domains/${domain}`).then(r => {
         this.maxRetentionDays =
           Number(r.configuration.workflowExecutionRetentionPeriodInDays) || 30;
         this.loading = false;
@@ -408,6 +412,12 @@ export default {
           newCriteria.workflowId !== oldCriteria.workflowId ||
           newCriteria.workflowName !== oldCriteria.workflowName)
       ) {
+        this.refreshWorkflows();
+      }
+    },
+    async domain(newDomain, oldDomain) {
+      if (newDomain && oldDomain && newDomain !== oldDomain) {
+        await this.fetchDomain();
         this.refreshWorkflows();
       }
     },

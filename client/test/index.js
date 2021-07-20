@@ -67,6 +67,7 @@ document.title = 'Cadence Tests';
 const chai = require('chai');
 
 window.chai = chai;
+window.expect = chai.expect;
 
 chai.should();
 chai.use(require('chai-dom'));
@@ -131,10 +132,10 @@ HTMLInputElement.prototype.input = function input(text) {
 HTMLElement.prototype.selectItem = async function selectItem(text) {
   const openDropdown = new MouseEvent('mousedown');
 
-  this.querySelector('.dropdown-toggle').dispatchEvent(openDropdown);
+  this.querySelector('.vs__dropdown-toggle').dispatchEvent(openDropdown);
 
   const itemToClick = Array.from(
-    await this.waitUntilAllExist('ul.dropdown-menu li a')
+    await this.waitUntilAllExist('ul.vs__dropdown-menu li')
   ).find(a => a.innerText.trim() === text);
   const selectedItem = new MouseEvent('mousedown');
 
@@ -144,18 +145,18 @@ HTMLElement.prototype.selectItem = async function selectItem(text) {
 HTMLElement.prototype.selectOptions = async function selectOptions() {
   const openDropdown = new MouseEvent('mousedown');
 
-  this.querySelector('.dropdown-toggle').dispatchEvent(openDropdown);
+  this.querySelector('.vs__dropdown-toggle').dispatchEvent(openDropdown);
 
-  await this.waitUntilAllExist('ul.dropdown-menu li a');
+  await this.waitUntilAllExist('ul.vs__dropdown-menu li');
 
-  return this.textNodes('ul.dropdown-menu li a');
+  return this.textNodes('ul.vs__dropdown-menu li');
 };
 
 require('./scenario');
 
 mocha.checkLeaks();
 
-require('./domain-list.test');
+require('./domain-search.test');
 require('./help.test');
 require('./workflow-list.test');
 require('./workflow.test');
