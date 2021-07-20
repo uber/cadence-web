@@ -19,24 +19,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-class ClusterService {
-  constructor(cacheManager) {
-    this.cacheManager = cacheManager;
-  }
+const clearCacheHandler = cacheManager => async ctx => {
+  cacheManager.clearCache();
+  ctx.body = { success: true };
+};
 
-  fetch(ctx) {
-    return async () => {
-      const cluster = await ctx.cadence.describeCluster();
-
-      return { ...cluster, membershipInfo: null };
-    };
-  }
-
-  getCluster(ctx) {
-    const { cacheManager, fetch } = this;
-
-    return cacheManager.get(fetch(ctx));
-  }
-}
-
-module.exports = ClusterService;
+module.exports = clearCacheHandler;
