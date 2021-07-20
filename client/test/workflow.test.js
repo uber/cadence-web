@@ -1221,7 +1221,7 @@ describe('Workflow', () => {
       ]);
 
       const queryDropdown = await queryEl.waitUntilExists(
-        '.query-name .dropdown'
+        '.query-name .select-input'
       );
       const options = await queryDropdown.selectOptions();
 
@@ -1245,7 +1245,7 @@ describe('Workflow', () => {
     it('should run a query and show the result', async function test() {
       const [queryEl, scenario] = await queryTest(this.test);
 
-      await queryEl.waitUntilExists('.query-name .dropdown');
+      await queryEl.waitUntilExists('.query-name .select-input');
       const runButton = queryEl.querySelector('a.run');
 
       await retry(() => runButton.should.have.attr('href', '#'));
@@ -1260,8 +1260,7 @@ describe('Workflow', () => {
     it('should show an error if there was an error running the query', async function test() {
       const [queryEl, scenario] = await queryTest(this.test);
 
-      await queryEl.waitUntilExists('.query-name .dropdown');
-
+      await queryEl.waitUntilExists('.query-name .select-input');
       const runButton = queryEl.querySelector('a.run');
 
       await retry(() => runButton.should.have.attr('href', '#'));
