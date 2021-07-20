@@ -25,6 +25,10 @@ import { FeatureFlagService } from '~services';
 export default {
   name: 'feature-flag',
   props: {
+    allowDisabled: {
+      type: Boolean,
+      default: false,
+    },
     display: {
       type: String,
       validator: value => ['inline', 'inline-block'].includes(value),
@@ -49,6 +53,7 @@ export default {
   data() {
     return {
       isFeatureFlagEnabled: false,
+      isLoading: true,
     };
   },
   async mounted() {
@@ -59,6 +64,7 @@ export default {
       name,
       params,
     });
+    this.isLoading = false;
   },
 };
 </script>
@@ -66,11 +72,17 @@ export default {
 <template>
   <div
     class="feature-flag"
-    :class="{ [display]: display }"
+    :class="{
+      [display]: display,
+      enabled: isFeatureFlagEnabled,
+      disabled: !isFeatureFlagEnabled,
+    }"
     :style="{ flexGrow: grow, marginRight: margin, maxWidth: width }"
-    v-if="isFeatureFlagEnabled"
+    v-if="!isLoading && (isFeatureFlagEnabled || allowDisabled)"
   >
-    <slot></slot>
+    <slot v-if="isFeatureFlagEnabled"></slot>
+    <slot name="enabled" v-if="isFeatureFlagEnabled"></slot>
+    <slot name="disabled" v-if="!isFeatureFlagEnabled"></slot>
   </div>
 </template>
 
