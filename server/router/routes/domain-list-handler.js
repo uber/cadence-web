@@ -19,13 +19,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const domainListHandler = async ctx => {
-  ctx.body = await ctx.cadence.listDomains({
-    pageSize: 50,
-    nextPageToken: ctx.query.nextPageToken
-      ? Buffer.from(ctx.query.nextPageToken, 'base64')
-      : undefined,
-  });
+const domainListHandler = domainService => async ctx => {
+  ctx.body = await domainService.searchDomains(ctx);
 };
 
 module.exports = domainListHandler;
