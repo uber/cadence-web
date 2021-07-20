@@ -20,7 +20,6 @@
 // THE SOFTWARE.
 
 const ONE_HOUR_IN_MILLISECONDS = 60 * 60 * 1000;
-const CLUSTER_CACHE_TTL = ONE_HOUR_IN_MILLISECONDS;
 const STATE_TO_FILTER_BY_MAP = {
   all: 'StartTime',
   closed: 'CloseTime',
@@ -28,6 +27,6 @@ const STATE_TO_FILTER_BY_MAP = {
 };
 
 module.exports = {
-  CLUSTER_CACHE_TTL,
+  ONE_HOUR_IN_MILLISECONDS,
   STATE_TO_FILTER_BY_MAP,
 };

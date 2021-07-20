@@ -19,110 +19,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import clusterService from './cluster-service';
+import ClusterService from './cluster-service';
 
 describe('clusterService', () => {
+  let clusterService;
+
+  beforeEach(() => {
+    const cacheManagerMock = {
+      get: callback => callback(),
+    };
+
+    clusterService = new ClusterService(cacheManagerMock);
+  });
+
   describe('getCluster', () => {
-    beforeEach(() => {
-      clusterService.clearCache();
-    });
+    it('should return data from ctx.cadence.describeCluster.', async () => {
+      const cluster = {
+        persistenceInfo: {},
+        membershipInfo: null,
+        version: 1,
+      };
 
-    describe('cache = null', () => {
-      it('should return data from ctx.cadence.describeCluster.', async () => {
-        const cluster = {
-          persistenceInfo: {},
-          membershipInfo: null,
-          version: 1,
-        };
+      const ctx = {
+        cadence: {
+          describeCluster: jest.fn().mockImplementation(() => cluster),
+        },
+      };
 
-        const ctx = {
-          cadence: {
-            describeCluster: jest.fn().mockImplementation(() => cluster),
-          },
-        };
+      const data = await clusterService.getCluster(ctx);
 
-        const data = await clusterService.getCluster(ctx);
-
-        expect(data).toEqual(cluster);
-      });
-    });
-
-    describe('cache is set', () => {
-      it('should return cache on the second attempt.', async () => {
-        const clusterCache = {
-          persistenceInfo: {},
-          membershipInfo: null,
-          version: 1,
-        };
-
-        const ctx = {
-          cadence: {
-            describeCluster: jest.fn().mockImplementation(() => clusterCache),
-          },
-        };
-
-        const data = await clusterService.getCluster(ctx);
-
-        expect(data).toEqual(clusterCache);
-
-        const clusterUpdated = {
-          persistenceInfo: {},
-          membershipInfo: null,
-          version: 2,
-        };
-
-        ctx.cadence.describeCluster.mockImplementation(() => clusterUpdated);
-
-        const updatedData = await clusterService.getCluster(ctx);
-
-        expect(updatedData).toEqual(clusterCache);
-      });
-
-      describe('and time passes over CLUSTER_CACHE_TTL', () => {
-        it('should return data from ctx.cadence.describeCluster.', async () => {
-          const clusterCache = {
-            persistenceInfo: {},
-            membershipInfo: null,
-            version: 1,
-          };
-
-          const ctx = {
-            cadence: {
-              describeCluster: jest.fn().mockImplementation(() => clusterCache),
-            },
-          };
-
-          // set current time
-          jest
-            .spyOn(Date, 'now')
-            .mockImplementation(() =>
-              new Date(Date.UTC(2020, 2, 10)).getTime()
-            );
-
-          const data = await clusterService.getCluster(ctx);
-
-          expect(data).toEqual(clusterCache);
-
-          const clusterUpdated = {
-            persistenceInfo: {},
-            membershipInfo: null,
-            version: 2,
-          };
-
-          ctx.cadence.describeCluster.mockImplementation(() => clusterUpdated);
-
-          // set current time to an hour into the future
-          jest
-            .spyOn(Date, 'now')
-            .mockImplementation(() =>
-              new Date(Date.UTC(2020, 2, 10, 2)).getTime()
-            );
-
-          const updatedData = await clusterService.getCluster(ctx);
-
-          expect(updatedData).toEqual(clusterUpdated);
-        });
-      });
+      expect(data).toEqual(cluster);
     });
   });
 });

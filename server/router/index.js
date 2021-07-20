@@ -22,7 +22,7 @@
 const Router = require('koa-router');
 
 const {
-  clusterClearCacheHandler,
+  clearCacheHandler,
   clusterHandler,
   domainAuthorizationHandler,
   domainHandler,
@@ -42,18 +42,23 @@ const {
   workflowSignalHandler,
   workflowTerminateHandler,
 } = require('./routes');
-const { clusterService } = require('./services');
-
+const { ClusterService, DomainService } = require('./services');
+const { CacheManager } = require('./managers');
 const { listWorkflows } = require('./helpers');
 
 const router = new Router();
 
+const clusterCacheManager = new CacheManager();
+const clusterService = new ClusterService(clusterCacheManager);
+
+const domainCacheManager = new CacheManager();
+const domainService = new DomainService(domainCacheManager);
+
 router.get('/api/cluster', clusterHandler(clusterService));
+router.delete('/api/cluster/cache', clearCacheHandler(clusterCacheManager));
 
-router.delete('/api/cluster/cache', clusterClearCacheHandler(clusterService));
-
-router.get('/api/domains', domainListHandler);
-
+router.get('/api/domains', domainListHandler(domainService));
+router.delete('/api/domains/cache', clearCacheHandler(domainCacheManager));
 router.get('/api/domains/:domain', domainHandler);
 
 /**

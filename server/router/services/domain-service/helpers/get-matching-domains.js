@@ -19,24 +19,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-class ClusterService {
-  constructor(cacheManager) {
-    this.cacheManager = cacheManager;
+const { DOMAIN_LIST_SEARCH_SIZE } = require('../constants');
+
+const getMatchingDomains = ({ domainList, querystring }) => {
+  if (!querystring) {
+    return domainList.slice(0, DOMAIN_LIST_SEARCH_SIZE);
   }
 
-  fetch(ctx) {
-    return async () => {
-      const cluster = await ctx.cadence.describeCluster();
+  const matchedDomainList = [];
 
-      return { ...cluster, membershipInfo: null };
-    };
+  for (let i = 0; i < domainList.length; i++) {
+    if (matchedDomainList.length === DOMAIN_LIST_SEARCH_SIZE) {
+      return matchedDomainList;
+    }
+
+    const domain = domainList[i];
+
+    if (domain.domainInfo.name.indexOf(querystring) !== -1) {
+      matchedDomainList.push(domain);
+    }
   }
 
-  getCluster(ctx) {
-    const { cacheManager, fetch } = this;
+  return matchedDomainList;
+};
 
-    return cacheManager.get(fetch(ctx));
-  }
-}
-
-module.exports = ClusterService;
+module.exports = getMatchingDomains;

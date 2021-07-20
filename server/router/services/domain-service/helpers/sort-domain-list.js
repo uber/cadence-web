@@ -19,24 +19,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-class ClusterService {
-  constructor(cacheManager) {
-    this.cacheManager = cacheManager;
-  }
+const sortDomainList = domainList =>
+  domainList.sort((domainA, domainB) => {
+    const domainNameA = domainA.domainInfo.name;
+    const domainNameB = domainB.domainInfo.name;
 
-  fetch(ctx) {
-    return async () => {
-      const cluster = await ctx.cadence.describeCluster();
+    if (domainNameA < domainNameB) {
+      return -1;
+    }
 
-      return { ...cluster, membershipInfo: null };
-    };
-  }
+    if (domainNameA > domainNameB) {
+      return 1;
+    }
 
-  getCluster(ctx) {
-    const { cacheManager, fetch } = this;
+    return 0;
+  });
 
-    return cacheManager.get(fetch(ctx));
-  }
-}
-
-module.exports = ClusterService;
+module.exports = sortDomainList;

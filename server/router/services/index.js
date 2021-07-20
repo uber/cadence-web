@@ -19,8 +19,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const clusterService = require('./cluster-service');
+const ClusterService = require('./cluster-service');
+const DomainService = require('./domain-service');
 
 module.exports = {
-  clusterService,
+  ClusterService,
+  DomainService,
 };
