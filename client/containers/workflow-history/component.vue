@@ -55,7 +55,7 @@ export default {
         'true',
       scrolledToEventOnInit: false,
       splitEnabled: false,
-      eventType: '',
+      eventType: 'All',
       eventTypes: [
         { value: 'All', label: 'All' },
         { value: 'Decision', label: 'Decision' },
@@ -450,7 +450,7 @@ export default {
                   label="Type"
                   min-width="150px"
                   :options="eventTypes"
-                  value="All"
+                  :value="eventType"
                   @change="setEventType"
                 />
               </div>
