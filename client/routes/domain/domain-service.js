@@ -24,7 +24,7 @@ import { httpService } from '~services';
 export default () => {
   return {
     getDomainSettings: domainName => {
-      return httpService(window.fetch, `/api/domains/${domainName}`);
+      return httpService.get(`/api/domains/${domainName}`);
     },
   };
 };
