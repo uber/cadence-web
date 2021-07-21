@@ -23,55 +23,89 @@
 import VueSelect from 'vue-select';
 
 export default {
+  name: 'autocomplete',
   components: {
     'v-select': VueSelect,
   },
-  name: 'select-input',
   props: {
-    backgroundColor: {
+    emptyHint: {
       type: String,
-      default: 'white',
+      default: 'Start typing to search.',
     },
-    disabled: {
+    focus: {
       type: Boolean,
     },
-    label: {
+    height: {
       type: String,
+      default: 'normal',
+      validator: value => ['normal', 'slim'].indexOf(value) !== -1,
     },
-    maxWidth: {
-      type: String,
+    isLoading: {
+      type: Boolean,
     },
-    name: {
-      type: String,
+    multiple: {
+      type: Boolean,
+      default: false,
     },
     options: {
       type: Array,
       default: () => [],
     },
-    value: {
-      type: [Boolean, Number, Object, String],
+    placeholder: {
+      type: String,
     },
   },
+  mounted() {
+    const { focus } = this;
+
+    if (focus) {
+      this.focusAutocomplete();
+    }
+  },
   methods: {
+    focusAutocomplete() {
+      const { autocomplete } = this.$refs;
+
+      autocomplete.searchEl.focus();
+    },
     onSelectChange(...args) {
       this.$emit('change', ...args);
+    },
+    onSelectSearch(...args) {
+      this.$emit('search', ...args);
+    },
+  },
+  watch: {
+    focus(focus) {
+      if (focus) {
+        this.focusAutocomplete();
+      }
     },
   },
 };
 </script>
 
 <template>
-  <div class="select-input field" :style="{ maxWidth }">
+  <div class="autocomplete" :class="{ [height]: height }">
     <v-select
-      :disabled="disabled"
-      :inputId="name"
+      :clear-search-on-blur="() => false"
+      :filterable="false"
+      :loading="isLoading"
+      :multiple="multiple"
       :options="options"
-      :searchable="false"
-      :style="{ maxWidth }"
-      :value="value"
+      :placeholder="placeholder"
+      ref="autocomplete"
+      :searchable="true"
       @input="onSelectChange"
-    />
-    <label :for="name" :style="{ backgroundColor }">{{ label }}</label>
+      @search="onSelectSearch"
+    >
+      <template v-slot:no-options="{ search, searching }">
+        <template v-if="searching">
+          No results found for <em>"{{ search }}"</em>.
+        </template>
+        <em class="empty-hint" v-else>{{ emptyHint }}</em>
+      </template>
+    </v-select>
   </div>
 </template>
 
@@ -79,44 +113,65 @@ export default {
 @require "../styles/definitions"
 @require "../styles/base.styl"
 
-.select-input {
-  label {
-    top: -4px !important;
-    left: 6px !important;
-    color: black !important;
-    transform: scale(0.8);
+.autocomplete {
+  width: 100%;
+
+  &.normal .v-select  {
+    input[type=search], input[type=search]:focus {
+      height: 42px;
+      line-height: 24px;
+      padding: 8px 18px;
+    }
+  }
+
+  &.slim .v-select {
+    input[type=search], input[type=search]:focus {
+      height: 26px;
+      line-height: 20px;
+      padding: 8px 18px;
+    }
+  }
+
+  .empty-hint {
+    opacity: 0.5;
   }
 
   .v-select {
+    background-color: white;
     color: text-color;
     font-family: inherit;
-    width: 100%;
-
-    &.disabled .vs__dropdown-toggle input {
-      background-color: transparent;
-    }
-
-    input {
-      left: 0;
-      position: absolute !important;
-    }
 
     .vs__dropdown-toggle {
-      border-radius: 0;
       border: input-border;
-      padding: 4px;
-      position: relative;
-      white-space: nowrap;
+      border-radius: 0;
+
+      &.vs__open {
+        border-color: uber-blue;
+      }
+
+      .vs__clear {
+        bottom: 6px;
+        right: 12px;
+      }
     }
 
-    span.vs__selected {
-      height: 28px;
-      position: relative !important;
-      one-liner-ellipsis();
+    input[type=search]::placeholder {
+      color: uber-white-120
     }
 
-    .vs__dropdown-toggle button.vs__clear {
-      display: none;
+    .vs__open-indicator {
+      display: none !important;
+    }
+
+    .vs__selected {
+      height: 42px;
+      line-height: 24px;
+      margin: 0;
+      padding: 8px 18px;
+    }
+
+    .vs__spinner {
+      top: 9px;
     }
 
     ul.vs__dropdown-menu {
@@ -130,15 +185,11 @@ export default {
         line-height: 2.5em;
         transition: none;
 
-        &:nth-child(2n) {
-          background: none;
-        }
-
         &.vs__dropdown-option--highlight {
           background-color: uber-blue;
         }
 
-        .vs__active {
+        .vs__active > a {
           color: #333;
           background: rgba(50, 50, 50, .1);
         }
