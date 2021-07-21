@@ -29,6 +29,7 @@ import {
 import { NOTIFICATION_TYPE_ERROR } from '~constants';
 import { getErrorMessage } from '~helpers';
 import { NavigationBar, NavigationLink } from '~components';
+import { httpService } from '~services';
 
 export default {
   data() {
@@ -169,7 +170,7 @@ export default {
       this.history.loading = true;
       this.pqu = pagedHistoryUrl;
 
-      return this.$httpService
+      return httpService
         .get(pagedHistoryUrl)
         .then(res => {
           // eslint-disable-next-line no-underscore-dangle
@@ -249,7 +250,7 @@ export default {
         return Promise.reject('task list name is required');
       }
 
-      this.$httpService
+      httpService
         .get(
           `/api/domains/${this.$route.params.domain}/task-lists/${taskListName}`
         )
@@ -278,7 +279,7 @@ export default {
 
       this.wfLoading = true;
 
-      return this.$httpService
+      return httpService
         .get(baseAPIURL)
         .then(
           wf => {

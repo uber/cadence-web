@@ -19,8 +19,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+import httpService from './http-service';
 import { getQueryStringFromObject } from '~helpers';
-import { httpService } from '~services';
 
 const URL_BASE = '/api/feature-flags/';
 

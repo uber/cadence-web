@@ -22,6 +22,7 @@
 
 import { getQueryResult } from './helpers';
 import { SelectInput } from '~components';
+import { httpService } from '~services';
 
 export default {
   components: {
@@ -54,7 +55,7 @@ export default {
     },
     run() {
       this.running = true;
-      this.$httpService
+      httpService
         .post(`${this.baseAPIURL}/query/${this.queryName}`)
         .then(
           ({ queryResult }) => {
@@ -71,7 +72,7 @@ export default {
     fetchQueries() {
       this.loading = true;
 
-      return this.$httpService
+      return httpService
         .get(`${this.baseAPIURL}/query`)
         .then(
           queries => {

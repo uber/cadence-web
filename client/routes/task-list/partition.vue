@@ -22,6 +22,7 @@
 
 import PartitionTable from './components/partition-table';
 import { FlexGrid, FlexGridItem } from '~components';
+import { httpService } from '~services';
 
 export default {
   name: 'partition',
@@ -33,7 +34,7 @@ export default {
   },
   props: ['domain', 'taskList'],
   async created() {
-    const partitions = await this.$httpService.get(
+    const partitions = await httpService.get(
       `/api/domains/${this.domain}/task-lists/${this.taskList}/partitions`
     );
 
