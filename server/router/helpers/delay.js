@@ -19,14 +19,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-<<<<<<< HEAD:server/router/helpers/delay.js
 const delay = time => new Promise(resolve => setTimeout(resolve, time));
 
 module.exports = delay;
-=======
-const CacheManager = require('./cache-manager');
-
-module.exports = {
-  CacheManager,
-};
->>>>>>> master:server/router/managers/index.js
