@@ -19,14 +19,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-<<<<<<< HEAD:server/router/helpers/delay.js
-const delay = time => new Promise(resolve => setTimeout(resolve, time));
+import get from 'lodash.get';
+import fixtures from '../fixtures';
 
-module.exports = delay;
-=======
-const CacheManager = require('./cache-manager');
+const getFixture = (fixturePath, fixtureOverride) =>
+  JSON.parse(JSON.stringify(fixtureOverride || get(fixtures, fixturePath)));
 
-module.exports = {
-  CacheManager,
-};
->>>>>>> master:server/router/managers/index.js
+export default getFixture;

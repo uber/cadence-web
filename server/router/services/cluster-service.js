@@ -24,7 +24,7 @@ class ClusterService {
     this.cacheManager = cacheManager;
   }
 
-  fetch(ctx) {
+  fetchClusterCallback(ctx) {
     return async () => {
       const cluster = await ctx.cadence.describeCluster();
 
@@ -33,9 +33,9 @@ class ClusterService {
   }
 
   getCluster(ctx) {
-    const { cacheManager, fetch } = this;
+    const { cacheManager, fetchClusterCallback } = this;
 
-    return cacheManager.get(fetch(ctx));
+    return cacheManager.get(fetchClusterCallback(ctx));
   }
 }
 

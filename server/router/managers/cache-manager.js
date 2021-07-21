@@ -19,10 +19,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const { ONE_HOUR_IN_MILLISECONDS } = require('../constants');
-
 class CacheManager {
-  constructor(cacheTimeLimit = ONE_HOUR_IN_MILLISECONDS) {
+  constructor(cacheTimeLimit) {
+    if (!cacheTimeLimit) {
+      throw new Error('CacheManager expects cacheTimeLimit to be passed.');
+    }
+
     this.cache = null;
     this.cacheExpiryDateTime = null;
     this.cacheTimeLimit = cacheTimeLimit;
