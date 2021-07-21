@@ -52,6 +52,7 @@ import {
   WorkflowGrid,
 } from '~components';
 import { getEndTimeIsoString, getStartTimeIsoString } from '~helpers';
+import { httpService } from '~services';
 
 export default {
   props: [
@@ -212,7 +213,7 @@ export default {
       const query = includeStatus ? queryWithStatus : queryWithoutStatus;
 
       try {
-        const res = await this.$http(url, { query });
+        const res = await httpService.get(url, { query });
 
         workflows = res.executions;
 
@@ -230,7 +231,7 @@ export default {
 
       this.loading = true;
 
-      return this.$http(`/api/domains/${domain}`).then(r => {
+      return httpService.get(`/api/domains/${domain}`).then(r => {
         this.maxRetentionDays =
           Number(r.configuration.workflowExecutionRetentionPeriodInDays) || 30;
         this.loading = false;

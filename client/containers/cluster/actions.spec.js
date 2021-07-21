@@ -27,15 +27,15 @@ import {
   CLUSTER_FETCH_SUCCESS,
 } from './mutation-types';
 import { canFetchCluster } from './helpers';
-import { http } from '~helpers';
+import { httpService } from '~services';
 
 jest.mock('./helpers', () => ({
   canFetchCluster: jest.fn(),
 }));
 
-jest.mock('~helpers', () => ({
-  http: {
-    global: jest.fn(),
+jest.mock('~services', () => ({
+  httpService: {
+    get: jest.fn(),
   },
 }));
 
@@ -72,7 +72,7 @@ describe('cluster actions', () => {
 
       describe('when API throws an error', () => {
         beforeEach(() => {
-          http.global.mockImplementation(() => {
+          httpService.get.mockImplementation(() => {
             throw new Error();
           });
         });
@@ -96,7 +96,7 @@ describe('cluster actions', () => {
         };
 
         beforeEach(() => {
-          http.global.mockImplementation(() => cluster);
+          httpService.get.mockImplementation(() => cluster);
         });
 
         it('should commit CLUSTER_FETCH_SUCCESS with cluster', async () => {

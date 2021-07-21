@@ -29,6 +29,7 @@ import {
 import { NOTIFICATION_TYPE_ERROR } from '~constants';
 import { getErrorMessage } from '~helpers';
 import { NavigationBar, NavigationLink } from '~components';
+import { httpService } from '~services';
 
 export default {
   data() {
@@ -169,7 +170,8 @@ export default {
       this.history.loading = true;
       this.pqu = pagedHistoryUrl;
 
-      return this.$http(pagedHistoryUrl)
+      return httpService
+        .get(pagedHistoryUrl)
         .then(res => {
           // eslint-disable-next-line no-underscore-dangle
           if (this._isDestroyed || this.pqu !== pagedHistoryUrl) {
@@ -248,9 +250,10 @@ export default {
         return Promise.reject('task list name is required');
       }
 
-      this.$http(
-        `/api/domains/${this.$route.params.domain}/task-lists/${taskListName}`
-      )
+      httpService
+        .get(
+          `/api/domains/${this.$route.params.domain}/task-lists/${taskListName}`
+        )
         .then(
           taskList => {
             this.taskList = { name: taskListName, ...taskList };
@@ -276,7 +279,8 @@ export default {
 
       this.wfLoading = true;
 
-      return this.$http(baseAPIURL)
+      return httpService
+        .get(baseAPIURL)
         .then(
           wf => {
             this.$emit('setWorkflow', wf);

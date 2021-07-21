@@ -53,6 +53,7 @@ import {
   parseStringToBoolean,
   workflowHistoryEventHighlightListAddOrUpdate,
 } from '~helpers';
+import { httpService } from '~services';
 
 export default {
   components: {
@@ -131,7 +132,7 @@ export default {
   methods: {
     async fetchLatestNewsItems() {
       const { newsLastUpdated } = this;
-      const response = await this.$http('/feed.json');
+      const response = await httpService.get('/feed.json');
 
       this.newsItems = getLatestNewsItems({ newsLastUpdated, response });
     },
