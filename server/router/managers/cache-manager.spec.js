@@ -19,6 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+import { ONE_HOUR_IN_MILLISECONDS } from '../constants';
 import CacheManager from './cache-manager';
 
 describe('cacheManager', () => {
@@ -26,7 +27,7 @@ describe('cacheManager', () => {
     let cacheManager;
 
     beforeEach(() => {
-      cacheManager = new CacheManager();
+      cacheManager = new CacheManager(ONE_HOUR_IN_MILLISECONDS);
     });
 
     describe('cache = null', () => {
@@ -68,7 +69,7 @@ describe('cacheManager', () => {
         expect(data2.foo).toEqual(undefined);
       });
 
-      describe('and time passes over CLUSTER_CACHE_TTL', () => {
+      describe('and time passes over ONE_HOUR_IN_MILLISECONDS', () => {
         it('should call the second fetchCallback and return data.', async () => {
           const mockData = {
             hello: 'world',

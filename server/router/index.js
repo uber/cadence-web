@@ -42,13 +42,14 @@ const {
   workflowSignalHandler,
   workflowTerminateHandler,
 } = require('./routes');
-const { ClusterService } = require('./services');
-const { CacheManager } = require('./managers');
+const { ONE_HOUR_IN_MILLISECONDS } = require('./constants');
 const { listWorkflows } = require('./helpers');
+const { CacheManager } = require('./managers');
+const { ClusterService } = require('./services');
 
 const router = new Router();
 
-const clusterCacheManager = new CacheManager();
+const clusterCacheManager = new CacheManager(ONE_HOUR_IN_MILLISECONDS);
 const clusterService = new ClusterService(clusterCacheManager);
 
 router.get('/api/cluster', clusterHandler(clusterService));
