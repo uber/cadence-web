@@ -19,8 +19,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const ClusterService = require('./cluster-service');
-
-module.exports = {
-  ClusterService,
+const clearCacheHandler = cacheManager => async ctx => {
+  cacheManager.clearCache();
+  ctx.body = { success: true };
 };
+
+module.exports = clearCacheHandler;

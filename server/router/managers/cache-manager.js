@@ -19,8 +19,42 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const ClusterService = require('./cluster-service');
+class CacheManager {
+  constructor(cacheTimeLimit) {
+    if (!cacheTimeLimit) {
+      throw new Error('CacheManager expects cacheTimeLimit to be passed.');
+    }
 
-module.exports = {
-  ClusterService,
-};
+    this.cache = null;
+    this.cacheExpiryDateTime = null;
+    this.cacheTimeLimit = cacheTimeLimit;
+  }
+
+  clearCache() {
+    this.cache = null;
+    this.cacheExpiryDateTime = null;
+  }
+
+  async get(fetchCallback) {
+    const { cache, cacheExpiryDateTime } = this;
+
+    if (cacheExpiryDateTime && Date.now() < cacheExpiryDateTime) {
+      return cache;
+    }
+
+    const data = await fetchCallback();
+
+    this.setCache(data);
+
+    return data;
+  }
+
+  setCache(data) {
+    const { cacheTimeLimit } = this;
+
+    this.cache = data;
+    this.cacheExpiryDateTime = Date.now() + cacheTimeLimit;
+  }
+}
+
+module.exports = CacheManager;
