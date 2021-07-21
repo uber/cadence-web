@@ -20,3 +20,4 @@
 // THE SOFTWARE.
 
 export { default as FeatureFlagService } from './feature-flag-service';
+export { default as httpService } from './http-service';
