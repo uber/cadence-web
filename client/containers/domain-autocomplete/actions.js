@@ -34,7 +34,7 @@ import {
 } from './mutation-types';
 import {
   DOMAIN_AUTOCOMPLETE_VISITED_DOMAIN_LIST,
-  DOMAIN_AUTOCOMPLETE_SEARCH,
+  DOMAIN_AUTOCOMPLETE_SEARCH_URL,
 } from './getter-types';
 import { DEBOUNCE_WAIT } from './constants';
 import { updateVisitedDomainList } from './helpers';
@@ -43,11 +43,9 @@ import { httpService } from '~services';
 const actions = {
   [DOMAIN_AUTOCOMPLETE_FETCH_DOMAIN_LIST]: debounce(
     async ({ commit, getters }) => {
-      const search = getters[DOMAIN_AUTOCOMPLETE_SEARCH];
+      const searchUrl = getters[DOMAIN_AUTOCOMPLETE_SEARCH_URL];
 
-      const domainList = await httpService.get(
-        `/api/domains?querystring=${search}`
-      );
+      const domainList = await httpService.get(searchUrl);
 
       commit(DOMAIN_AUTOCOMPLETE_SET_IS_LOADING, false);
 

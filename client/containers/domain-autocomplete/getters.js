@@ -27,6 +27,7 @@ import {
   DOMAIN_AUTOCOMPLETE_IS_LOADING,
   DOMAIN_AUTOCOMPLETE_NAVIGATE_TO_DOMAIN_URL,
   DOMAIN_AUTOCOMPLETE_SEARCH,
+  DOMAIN_AUTOCOMPLETE_SEARCH_URL,
   DOMAIN_AUTOCOMPLETE_VISITED_DOMAIN_LIST,
 } from './getter-types';
 import {
@@ -75,6 +76,8 @@ const getters = {
   },
   [DOMAIN_AUTOCOMPLETE_SEARCH]: state =>
     get(state, statePrefix('search')) || '',
+  [DOMAIN_AUTOCOMPLETE_SEARCH_URL]: (_, getters) =>
+    `/api/domains?querystring=${getters[DOMAIN_AUTOCOMPLETE_SEARCH]}`,
   [DOMAIN_AUTOCOMPLETE_VISITED_DOMAIN_LIST]: state =>
     sortDomainList(get(state, statePrefix('visitedDomainList')) || []),
 };
