@@ -19,20 +19,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const buildQueryString = require('./build-query-string');
-const delay = require('./delay');
-const isAdvancedVisibilityEnabled = require('./is-advanced-visibility-enabled');
-const listWorkflows = require('./list-workflows');
-const mapHistoryResponse = require('./map-history-response');
-const momentToLong = require('./moment-to-long');
-const replacer = require('./replacer');
+const { getDomainList, getMatchingDomains } = require('./helpers');
 
-module.exports = {
-  buildQueryString,
-  delay,
-  isAdvancedVisibilityEnabled,
-  listWorkflows,
-  mapHistoryResponse,
-  momentToLong,
-  replacer,
-};
+class DomainService {
+  constructor(cacheManager) {
+    this.cacheManager = cacheManager;
+  }
+
+  async searchDomains(ctx) {
+    const { cacheManager } = this;
+    const { querystring } = ctx.query;
+
+    const domainList = await getDomainList({ cacheManager, ctx });
+
+    return getMatchingDomains({ domainList, querystring });
+  }
+}
+
+module.exports = DomainService;

@@ -45,18 +45,23 @@ const {
 const { ONE_HOUR_IN_MILLISECONDS } = require('./constants');
 const { listWorkflows } = require('./helpers');
 const { CacheManager } = require('./managers');
-const { ClusterService } = require('./services');
+const { ClusterService, DomainService } = require('./services');
 
 const router = new Router();
 
 const clusterCacheManager = new CacheManager(ONE_HOUR_IN_MILLISECONDS);
 const clusterService = new ClusterService(clusterCacheManager);
 
+const domainCacheManager = new CacheManager(ONE_HOUR_IN_MILLISECONDS);
+const domainService = new DomainService(domainCacheManager);
+
 router.get('/api/cluster', clusterHandler(clusterService));
 
 router.delete('/api/cluster/cache', clearCacheHandler(clusterCacheManager));
 
-router.get('/api/domains', domainListHandler);
+router.get('/api/domains', domainListHandler(domainService));
+
+router.delete('/api/domains/cache', clearCacheHandler(domainCacheManager));
 
 router.get('/api/domains/:domain', domainHandler);
 

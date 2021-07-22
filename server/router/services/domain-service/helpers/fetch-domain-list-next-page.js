@@ -19,20 +19,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const buildQueryString = require('./build-query-string');
-const delay = require('./delay');
-const isAdvancedVisibilityEnabled = require('./is-advanced-visibility-enabled');
-const listWorkflows = require('./list-workflows');
-const mapHistoryResponse = require('./map-history-response');
-const momentToLong = require('./moment-to-long');
-const replacer = require('./replacer');
+const { DOMAIN_LIST_DELAY_MS, DOMAIN_LIST_PAGE_SIZE } = require('../constants');
+const { delay } = require('../../../helpers');
 
-module.exports = {
-  buildQueryString,
-  delay,
-  isAdvancedVisibilityEnabled,
-  listWorkflows,
-  mapHistoryResponse,
-  momentToLong,
-  replacer,
+const fetchDomainListNextPage = async ({
+  ctx,
+  domainList = [],
+  nextPageToken = '',
+}) => {
+  const data = await ctx.cadence.listDomains({
+    pageSize: DOMAIN_LIST_PAGE_SIZE,
+    nextPageToken: nextPageToken
+      ? Buffer.from(encodeURIComponent(nextPageToken), 'base64')
+      : undefined,
+  });
+
+  domainList.splice(domainList.length, 0, ...data.domains);
+
+  if (!data.nextPageToken) {
+    return domainList;
+  }
+
+  await delay(DOMAIN_LIST_DELAY_MS);
+
+  return fetchDomainListNextPage({
+    ctx,
+    nextPageToken: data.nextPageToken,
+    domainList,
+  });
 };
+
+module.exports = fetchDomainListNextPage;

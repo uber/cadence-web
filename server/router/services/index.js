@@ -20,7 +20,9 @@
 // THE SOFTWARE.
 
 const ClusterService = require('./cluster-service');
+const DomainService = require('./domain-service');
 
 module.exports = {
   ClusterService,
+  DomainService,
 };
