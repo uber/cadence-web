@@ -65,11 +65,11 @@ export default {
     <v-select
       :disabled="disabled"
       :inputId="name"
-      :on-change="onSelectChange"
       :options="options"
       :searchable="false"
       :style="{ maxWidth }"
       :value="value"
+      @input="onSelectChange"
     />
     <label :for="name" :style="{ backgroundColor }">{{ label }}</label>
   </div>
@@ -87,15 +87,12 @@ export default {
     transform: scale(0.8);
   }
 
-  .dropdown {
-    width: 100%;
-  }
-
   .v-select {
     color: text-color;
     font-family: inherit;
+    width: 100%;
 
-    &.disabled .dropdown-toggle input {
+    &.disabled .vs__dropdown-toggle input {
       background-color: transparent;
     }
 
@@ -104,7 +101,7 @@ export default {
       position: absolute !important;
     }
 
-    .dropdown-toggle {
+    .vs__dropdown-toggle {
       border-radius: 0;
       border: input-border;
       padding: 4px;
@@ -112,22 +109,17 @@ export default {
       white-space: nowrap;
     }
 
-    .open-indicator {
-      height 24px
-    }
-
-    span.selected-tag {
+    span.vs__selected {
       height: 28px;
-      margin-right: 25px;
       position: relative !important;
       one-liner-ellipsis();
     }
 
-    .dropdown-toggle button.clear {
+    .vs__dropdown-toggle button.vs__clear {
       display: none;
     }
 
-    ul.dropdown-menu {
+    ul.vs__dropdown-menu {
       max-height: initial !important;
       overflow: auto;
       border: input-border;
@@ -135,20 +127,18 @@ export default {
       padding: 0;
 
       li {
-        a {
-          line-height: 2.5em;
-          transition: none;
-        }
+        line-height: 2.5em;
+        transition: none;
 
         &:nth-child(2n) {
           background: none;
         }
 
-        &.highlight > a {
+        &.vs__dropdown-option--highlight {
           background-color: uber-blue;
         }
 
-        .active > a {
+        .vs__active {
           color: #333;
           background: rgba(50, 50, 50, .1);
         }
