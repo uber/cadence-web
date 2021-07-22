@@ -159,6 +159,7 @@ export default {
     },
     fetchHistoryPage(pagedHistoryUrl) {
       if (
+        this._isDestroyed ||
         !pagedHistoryUrl ||
         this.fetchHistoryPageRetryCount >= RETRY_COUNT_MAX
       ) {
@@ -168,28 +169,25 @@ export default {
       }
 
       this.history.loading = true;
-      this.pqu = pagedHistoryUrl;
 
       return httpService
         .get(pagedHistoryUrl)
         .then(res => {
           // eslint-disable-next-line no-underscore-dangle
-          if (this._isDestroyed || this.pqu !== pagedHistoryUrl) {
+          if (this._isDestroyed) {
             return null;
           }
 
-          if (res.nextPageToken && this.npt === res.nextPageToken) {
+          if (res.nextPageToken && this.nextPageToken === res.nextPageToken) {
             // nothing happened, and same query is still valid, so let's long pool again
-            return this.fetch(pagedHistoryUrl);
+            return this.fetchHistoryPage(pagedHistoryUrl);
           }
 
           if (res.nextPageToken) {
             this.isWorkflowRunning = JSON.parse(
               atob(res.nextPageToken)
             ).IsWorkflowRunning;
-            setTimeout(() => {
-              this.nextPageToken = res.nextPageToken;
-            });
+            this.nextPageToken = res.nextPageToken;
           } else {
             this.isWorkflowRunning = false;
           }
@@ -221,7 +219,7 @@ export default {
           console.error(error);
 
           // eslint-disable-next-line no-underscore-dangle
-          if (this._isDestroyed || this.pqu !== pagedHistoryUrl) {
+          if (this._isDestroyed) {
             return;
           }
 
@@ -238,7 +236,7 @@ export default {
         })
         .finally(() => {
           // eslint-disable-next-line no-underscore-dangle
-          if (this._isDestroyed || this.pqu !== pagedHistoryUrl) {
+          if (this._isDestroyed || !this.isWorkflowRunning) {
             this.history.loading = false;
           }
         });
@@ -324,7 +322,10 @@ export default {
 </script>
 
 <template>
-  <section class="execution" :class="{ loading: wfLoading }">
+  <section
+    class="execution"
+    :class="{ loading: wfLoading, ready: !wfLoading && !history.loading }"
+  >
     <navigation-bar>
       <navigation-link
         id="nav-link-summary"

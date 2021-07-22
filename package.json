@@ -121,6 +121,7 @@
     "jest-useragent-mock": "^0.1.1",
     "mocha": "^4.0.1",
     "mocha-chrome": "^1.1.0",
+    "mockdate": "^3.0.5",
     "moment-timezone": "^0.5.32",
     "nathanboktae-browser-test-utils": "^0.1.0",
     "node-abort-controller": "^1.0.4",
