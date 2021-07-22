@@ -19,20 +19,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const buildQueryString = require('./build-query-string');
-const delay = require('./delay');
-const isAdvancedVisibilityEnabled = require('./is-advanced-visibility-enabled');
-const listWorkflows = require('./list-workflows');
-const mapHistoryResponse = require('./map-history-response');
-const momentToLong = require('./moment-to-long');
-const replacer = require('./replacer');
+import sortDomainList from './sort-domain-list';
 
-module.exports = {
-  buildQueryString,
-  delay,
-  isAdvancedVisibilityEnabled,
-  listWorkflows,
-  mapHistoryResponse,
-  momentToLong,
-  replacer,
-};
+describe('sortDomainList', () => {
+  const createDomain = name => ({
+    domainInfo: {
+      name,
+    },
+  });
+
+  it('should sort domainNames alphabetically.', () => {
+    const domain1 = createDomain('domain1');
+    const domain2 = createDomain('domain2');
+    const domain3 = createDomain('domain3');
+
+    const output = sortDomainList([domain3, domain2, domain1]);
+
+    expect(output).toEqual([domain1, domain2, domain3]);
+  });
+});

@@ -19,20 +19,42 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const buildQueryString = require('./build-query-string');
-const delay = require('./delay');
-const isAdvancedVisibilityEnabled = require('./is-advanced-visibility-enabled');
-const listWorkflows = require('./list-workflows');
-const mapHistoryResponse = require('./map-history-response');
-const momentToLong = require('./moment-to-long');
-const replacer = require('./replacer');
+class CacheManager {
+  constructor(cacheTimeLimit) {
+    if (!cacheTimeLimit) {
+      throw new Error('CacheManager expects cacheTimeLimit to be passed.');
+    }
 
-module.exports = {
-  buildQueryString,
-  delay,
-  isAdvancedVisibilityEnabled,
-  listWorkflows,
-  mapHistoryResponse,
-  momentToLong,
-  replacer,
-};
+    this.cache = null;
+    this.cacheExpiryDateTime = null;
+    this.cacheTimeLimit = cacheTimeLimit;
+  }
+
+  clearCache() {
+    this.cache = null;
+    this.cacheExpiryDateTime = null;
+  }
+
+  async get(fetchCallback) {
+    const { cache, cacheExpiryDateTime } = this;
+
+    if (cacheExpiryDateTime && Date.now() < cacheExpiryDateTime) {
+      return cache;
+    }
+
+    const data = await fetchCallback();
+
+    this.setCache(data);
+
+    return data;
+  }
+
+  setCache(data) {
+    const { cacheTimeLimit } = this;
+
+    this.cache = data;
+    this.cacheExpiryDateTime = Date.now() + cacheTimeLimit;
+  }
+}
+
+module.exports = CacheManager;

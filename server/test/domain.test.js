@@ -59,7 +59,7 @@ describe('Describe Domain', function() {
       .get('/api/domains')
       .expect(200)
       .expect('Content-Type', /json/)
-      .expect({ domains, nextPageToken: null });
+      .expect(domains);
   });
 
   it('should describe the domain', async function() {

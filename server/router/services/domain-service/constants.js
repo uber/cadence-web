@@ -19,20 +19,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const buildQueryString = require('./build-query-string');
-const delay = require('./delay');
-const isAdvancedVisibilityEnabled = require('./is-advanced-visibility-enabled');
-const listWorkflows = require('./list-workflows');
-const mapHistoryResponse = require('./map-history-response');
-const momentToLong = require('./moment-to-long');
-const replacer = require('./replacer');
+const DOMAIN_LIST_DELAY_MS = 100;
+const DOMAIN_LIST_PAGE_SIZE = 100;
+const DOMAIN_LIST_SEARCH_SIZE = 10;
 
 module.exports = {
-  buildQueryString,
-  delay,
-  isAdvancedVisibilityEnabled,
-  listWorkflows,
-  mapHistoryResponse,
-  momentToLong,
-  replacer,
+  DOMAIN_LIST_DELAY_MS,
+  DOMAIN_LIST_PAGE_SIZE,
+  DOMAIN_LIST_SEARCH_SIZE,
 };

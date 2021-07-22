@@ -19,20 +19,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const buildQueryString = require('./build-query-string');
-const delay = require('./delay');
-const isAdvancedVisibilityEnabled = require('./is-advanced-visibility-enabled');
-const listWorkflows = require('./list-workflows');
-const mapHistoryResponse = require('./map-history-response');
-const momentToLong = require('./moment-to-long');
-const replacer = require('./replacer');
+const { DOMAIN_LIST_SEARCH_SIZE } = require('../constants');
 
-module.exports = {
-  buildQueryString,
-  delay,
-  isAdvancedVisibilityEnabled,
-  listWorkflows,
-  mapHistoryResponse,
-  momentToLong,
-  replacer,
+const getMatchingDomains = ({ domainList, querystring }) => {
+  if (!querystring) {
+    return domainList.slice(0, DOMAIN_LIST_SEARCH_SIZE);
+  }
+
+  const matchedDomainList = [];
+
+  for (let i = 0; i < domainList.length; i++) {
+    if (matchedDomainList.length === DOMAIN_LIST_SEARCH_SIZE) {
+      return matchedDomainList;
+    }
+
+    const domain = domainList[i];
+
+    if (domain.domainInfo.name.indexOf(querystring) !== -1) {
+      matchedDomainList.push(domain);
+    }
+  }
+
+  return matchedDomainList;
 };
+
+module.exports = getMatchingDomains;

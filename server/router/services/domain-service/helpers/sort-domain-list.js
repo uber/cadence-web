@@ -19,20 +19,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const buildQueryString = require('./build-query-string');
-const delay = require('./delay');
-const isAdvancedVisibilityEnabled = require('./is-advanced-visibility-enabled');
-const listWorkflows = require('./list-workflows');
-const mapHistoryResponse = require('./map-history-response');
-const momentToLong = require('./moment-to-long');
-const replacer = require('./replacer');
+const sortDomainList = domainList =>
+  domainList.sort((domainA, domainB) => {
+    const domainNameA = domainA.domainInfo.name;
+    const domainNameB = domainB.domainInfo.name;
 
-module.exports = {
-  buildQueryString,
-  delay,
-  isAdvancedVisibilityEnabled,
-  listWorkflows,
-  mapHistoryResponse,
-  momentToLong,
-  replacer,
-};
+    if (domainNameA < domainNameB) {
+      return -1;
+    }
+
+    if (domainNameA > domainNameB) {
+      return 1;
+    }
+
+    return 0;
+  });
+
+module.exports = sortDomainList;
