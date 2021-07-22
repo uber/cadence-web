@@ -4,10 +4,6 @@
     "value": true
   },
   {
-    "key": "domainAutocomplete",
-    "value": true
-  },
-  {
     "key": "domainMetrics",
     "value": false
   },
