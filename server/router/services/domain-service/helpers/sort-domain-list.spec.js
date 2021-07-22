@@ -19,34 +19,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const { DOMAIN_LIST_DELAY_MS, DOMAIN_LIST_PAGE_SIZE } = require('../constants');
-const { delay } = require('../../../helpers');
+import sortDomainList from './sort-domain-list';
 
-const fetchDomainListNextPage = async ({
-  ctx,
-  domainList = [],
-  nextPageToken = '',
-}) => {
-  const data = await ctx.cadence.listDomains({
-    pageSize: DOMAIN_LIST_PAGE_SIZE,
-    nextPageToken: nextPageToken
-      ? Buffer.from(encodeURIComponent(nextPageToken), 'base64')
-      : undefined,
+describe('sortDomainList', () => {
+  const createDomain = name => ({
+    domainInfo: {
+      name,
+    },
   });
 
-  domainList.splice(domainList.length, 0, ...data.domains);
+  it('should sort domainNames alphabetically.', () => {
+    const domain1 = createDomain('domain1');
+    const domain2 = createDomain('domain2');
+    const domain3 = createDomain('domain3');
 
-  if (!data.nextPageToken) {
-    return domainList;
-  }
+    const output = sortDomainList([domain3, domain2, domain1]);
 
-  await delay(DOMAIN_LIST_DELAY_MS);
-
-  return fetchDomainListNextPage({
-    ctx,
-    nextPageToken: data.nextPageToken,
-    domainList,
+    expect(output).toEqual([domain1, domain2, domain3]);
   });
-};
-
-module.exports = fetchDomainListNextPage;
+});
