@@ -29,12 +29,6 @@ export default {
     'flex-grid-item': FlexGridItem,
     autocomplete: Autocomplete,
   },
-  computed: {
-    // TODO - convert to getter...
-    domainUrl() {
-      return `/domains${this.search && '/' + this.search}`;
-    },
-  },
   data() {
     return {
       value: undefined,
@@ -43,6 +37,10 @@ export default {
   props: {
     domain: {
       type: String,
+    },
+    domainList: {
+      type: Array,
+      default: () => [],
     },
     focus: {
       type: Boolean,
@@ -53,14 +51,13 @@ export default {
     isLoading: {
       type: Boolean,
     },
-    width: {
+    navigateToDomainUrl: {
       type: String,
     },
-    domainList: {
-      type: Array,
-      default: () => [],
-    },
     search: {
+      type: String,
+    },
+    width: {
       type: String,
     },
   },
@@ -92,8 +89,12 @@ export default {
         />
       </flex-grid-item>
       <flex-grid-item width="32px">
-        <span class="navigate-to-domain disabled" v-if="!search" />
-        <a class="navigate-to-domain" :href="domainUrl" v-if="search" />
+        <span class="navigate-to-domain disabled" v-if="!navigateToDomainUrl" />
+        <a
+          class="navigate-to-domain"
+          :href="navigateToDomainUrl"
+          v-if="navigateToDomainUrl"
+        />
       </flex-grid-item>
     </flex-grid>
   </div>

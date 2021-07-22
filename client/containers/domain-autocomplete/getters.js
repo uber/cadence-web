@@ -25,6 +25,7 @@ import {
   DOMAIN_AUTOCOMPLETE_DOMAIN_LIST,
   DOMAIN_AUTOCOMPLETE_FILTERED_VISITED_DOMAIN_LIST,
   DOMAIN_AUTOCOMPLETE_IS_LOADING,
+  DOMAIN_AUTOCOMPLETE_NAVIGATE_TO_DOMAIN_URL,
   DOMAIN_AUTOCOMPLETE_SEARCH,
   DOMAIN_AUTOCOMPLETE_VISITED_DOMAIN_LIST,
 } from './getter-types';
@@ -54,6 +55,8 @@ const getters = {
       formatDomainList
     );
   },
+  [DOMAIN_AUTOCOMPLETE_DOMAIN_LIST]: state =>
+    sortDomainList(get(state, statePrefix('domainList')) || []),
   [DOMAIN_AUTOCOMPLETE_FILTERED_VISITED_DOMAIN_LIST]: (_, getters) =>
     filterVisitedDomainList({
       visitedDomainList: getters[DOMAIN_AUTOCOMPLETE_VISITED_DOMAIN_LIST],
@@ -61,12 +64,19 @@ const getters = {
     }),
   [DOMAIN_AUTOCOMPLETE_IS_LOADING]: state =>
     get(state, statePrefix('isLoading')) || false,
-  [DOMAIN_AUTOCOMPLETE_VISITED_DOMAIN_LIST]: state =>
-    sortDomainList(get(state, statePrefix('visitedDomainList')) || []),
-  [DOMAIN_AUTOCOMPLETE_DOMAIN_LIST]: state =>
-    sortDomainList(get(state, statePrefix('domainList')) || []),
+  [DOMAIN_AUTOCOMPLETE_NAVIGATE_TO_DOMAIN_URL]: (_, getters) => {
+    const search = getters[DOMAIN_AUTOCOMPLETE_SEARCH];
+
+    if (!search) {
+      return '';
+    }
+
+    return `/domains/${search}`;
+  },
   [DOMAIN_AUTOCOMPLETE_SEARCH]: state =>
     get(state, statePrefix('search')) || '',
+  [DOMAIN_AUTOCOMPLETE_VISITED_DOMAIN_LIST]: state =>
+    sortDomainList(get(state, statePrefix('visitedDomainList')) || []),
 };
 
 export default getters;
