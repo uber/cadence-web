@@ -19,11 +19,32 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Component from './component';
-import getDefaultState from './get-default-state';
-import connector from './connector';
-import mutations from './mutations';
+import {
+  DOMAIN_AUTOCOMPLETE_ON_MOUNTED,
+  DOMAIN_AUTOCOMPLETE_SET_DOMAIN_LIST,
+  DOMAIN_AUTOCOMPLETE_SET_IS_LOADING,
+  DOMAIN_AUTOCOMPLETE_SET_SEARCH,
+  DOMAIN_AUTOCOMPLETE_SET_VISITED_DOMAIN_LIST,
+} from './mutation-types';
 
-const container = connector(Component);
+const mutations = {
+  [DOMAIN_AUTOCOMPLETE_ON_MOUNTED]: state => {
+    state.domainAutocomplete.isLoading = false;
+    state.domainAutocomplete.domainList = [];
+    state.domainAutocomplete.search = '';
+  },
+  [DOMAIN_AUTOCOMPLETE_SET_DOMAIN_LIST]: (state, payload) => {
+    state.domainAutocomplete.domainList = payload;
+  },
+  [DOMAIN_AUTOCOMPLETE_SET_IS_LOADING]: (state, payload) => {
+    state.domainAutocomplete.isLoading = payload;
+  },
+  [DOMAIN_AUTOCOMPLETE_SET_VISITED_DOMAIN_LIST]: (state, payload) => {
+    state.domainAutocomplete.visitedDomainList = payload;
+  },
+  [DOMAIN_AUTOCOMPLETE_SET_SEARCH]: (state, payload) => {
+    state.domainAutocomplete.search = payload;
+  },
+};
 
-export { container, getDefaultState, mutations };
+export default mutations;

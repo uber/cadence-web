@@ -32,6 +32,7 @@ import {
 
   // domain autocomplete
   getDomainAutocompleteDefaultState,
+  domainAutocompleteMutations,
 
   // graph
   getGraphDefaultState,
@@ -102,6 +103,7 @@ const getStoreConfig = ({ router, state }) => {
     },
     mutations: {
       ...clusterMutations,
+      ...domainAutocompleteMutations,
       ...graphMutations,
       ...settingsWorkflowHistoryMutations,
       ...workflowMutations,

@@ -20,6 +20,7 @@
 // THE SOFTWARE.
 
 import { connect } from 'vuex-connect';
+import { DOMAIN_AUTOCOMPLETE_ON_MOUNTED } from './mutation-types';
 
 const actionsToEvents = {
   // TODO - updated in future PR
@@ -30,7 +31,7 @@ const gettersToProps = {
 };
 
 const lifecycle = {
-  // TODO - updated in future PR
+  mounted: ({ commit }) => commit(DOMAIN_AUTOCOMPLETE_ON_MOUNTED),
 };
 
 export default connect({
