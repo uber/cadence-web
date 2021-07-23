@@ -27,3 +27,4 @@ export { default as formatDomainList } from './format-domain-list';
 export { default as sortDomainList } from './sort-domain-list';
 export { default as statePrefix } from './state-prefix';
 export { default as typePrefix } from './type-prefix';
+export { default as updateVisitedDomainList } from './update-visited-domain-list';
