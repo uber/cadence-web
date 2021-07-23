@@ -28,6 +28,7 @@ export {
 export {
   container as DomainAutocomplete,
   getDefaultState as getDomainAutocompleteDefaultState,
+  mutations as domainAutocompleteMutations,
 } from './domain-autocomplete';
 export {
   getDefaultState as getGraphDefaultState,

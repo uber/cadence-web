@@ -19,11 +19,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Component from './component';
-import getDefaultState from './get-default-state';
-import connector from './connector';
-import mutations from './mutations';
+import { typePrefix } from './helpers';
 
-const container = connector(Component);
-
-export { container, getDefaultState, mutations };
+export const DOMAIN_AUTOCOMPLETE_ON_MOUNTED = typePrefix('ON_MOUNTED');
+export const DOMAIN_AUTOCOMPLETE_SET_IS_LOADING = typePrefix('SET_IS_LOADING');
+export const DOMAIN_AUTOCOMPLETE_SET_DOMAIN_LIST = typePrefix(
+  'SET_DOMAIN_LIST'
+);
+export const DOMAIN_AUTOCOMPLETE_SET_SEARCH = typePrefix('SET_SEARCH');
+export const DOMAIN_AUTOCOMPLETE_SET_VISITED_DOMAIN_LIST = typePrefix(
+  'SET_VISITED_DOMAIN_LIST'
+);
