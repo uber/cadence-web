@@ -32,6 +32,7 @@ import {
 
   // domain autocomplete
   getDomainAutocompleteDefaultState,
+  domainAutocompleteGetters,
 
   // graph
   getGraphDefaultState,
@@ -93,6 +94,7 @@ const getStoreConfig = ({ router, state }) => {
     },
     getters: {
       ...clusterGetters,
+      ...domainAutocompleteGetters,
       ...graphGetters,
       ...routeGetters,
       ...settingsWorkflowHistoryGetters,

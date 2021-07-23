@@ -21,8 +21,9 @@
 
 import Component from './component';
 import getDefaultState from './get-default-state';
+import getters from './getters';
 import connector from './connector';
 
 const container = connector(Component);
 
-export { container, getDefaultState };
+export { container, getDefaultState, getters };

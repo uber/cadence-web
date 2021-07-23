@@ -19,33 +19,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { connect } from 'vuex-connect';
-import { ROUTE_PARAMS_DOMAIN } from '../route/getter-types';
-import {
-  DOMAIN_AUTOCOMPLETE_COMBINED_DOMAIN_LIST,
-  DOMAIN_AUTOCOMPLETE_IS_LOADING,
-  DOMAIN_AUTOCOMPLETE_NAVIGATE_TO_DOMAIN_URL,
-  DOMAIN_AUTOCOMPLETE_SEARCH,
-} from './getter-types';
+const formatDomainLabel = domain =>
+  typeof domain === 'string'
+    ? domain
+    : [
+        domain.domainInfo.name,
+        domain.isGlobalDomain ? 'Global' : 'Local',
+        domain.isGlobalDomain === false &&
+          domain.replicationConfiguration.activeClusterName,
+      ]
+        .filter(domain => !!domain)
+        .join(' - ');
 
-const actionsToEvents = {
-  // TODO - updated in future PR
-};
-
-const gettersToProps = {
-  isLoading: DOMAIN_AUTOCOMPLETE_IS_LOADING,
-  domain: ROUTE_PARAMS_DOMAIN,
-  domainList: DOMAIN_AUTOCOMPLETE_COMBINED_DOMAIN_LIST,
-  navigateToDomainUrl: DOMAIN_AUTOCOMPLETE_NAVIGATE_TO_DOMAIN_URL,
-  search: DOMAIN_AUTOCOMPLETE_SEARCH,
-};
-
-const lifecycle = {
-  // TODO - updated in future PR
-};
-
-export default connect({
-  actionsToEvents,
-  gettersToProps,
-  lifecycle,
-});
+export default formatDomainLabel;

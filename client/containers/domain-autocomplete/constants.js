@@ -21,3 +21,4 @@
 
 export const DOMAIN_AUTOCOMPLETE_STATE_PREFIX = 'domainAutocomplete';
 export const DOMAIN_AUTOCOMPLETE_TYPE_PREFIX = 'DOMAIN_AUTOCOMPLETE';
+export const TOP_DOMAIN_LIST_LIMIT = 15;
