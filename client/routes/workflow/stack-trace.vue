@@ -22,6 +22,7 @@
 
 import { getQueryResult } from './helpers';
 import { getDatetimeFormattedString } from '~helpers';
+import { httpService } from '~services';
 
 export default {
   data() {
@@ -64,7 +65,7 @@ export default {
     getStackTrace() {
       this.loading = true;
 
-      return this.$http
+      return httpService
         .post(`${this.baseAPIURL}/query/__stack_trace`)
         .then(({ queryResult }) => {
           this.stackTrace = getQueryResult(queryResult);
