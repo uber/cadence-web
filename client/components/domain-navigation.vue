@@ -25,6 +25,7 @@ import omit from 'lodash-es/omit';
 import { stringify } from 'friendly-querystring';
 import DetailList from './detail-list';
 import { getKeyValuePairs, mapDomainDescription } from '~helpers';
+import { httpService } from '~services';
 
 const validationMessages = {
   valid: d => `${d} exists`,
@@ -100,7 +101,7 @@ export default {
         return Promise.resolve(this.domainDescCache[d]);
       }
 
-      return this.$http(`/api/domains/${d}`).then(r => {
+      return httpService.get(`/api/domains/${d}`).then(r => {
         this.domainDescCache[d] = mapDomainDescription(r);
 
         return this.domainDescCache[d];

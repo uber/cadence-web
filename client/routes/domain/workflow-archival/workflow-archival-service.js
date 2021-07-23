@@ -19,7 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { http } from '~helpers';
+import { httpService } from '~services';
 
 export default ({ domain }) => {
   const requests = {
@@ -37,10 +37,12 @@ export default ({ domain }) => {
 
       requests.fetchArchivalRecords = controller;
 
-      const { executions: results, nextPageToken } = await http(
-        window.fetch,
+      const { executions: results, nextPageToken } = await httpService.get(
         `/api/domains/${domain}/workflows/archived`,
-        { query, signal }
+        {
+          query,
+          signal,
+        }
       );
 
       requests.fetchArchivalRecords = null;

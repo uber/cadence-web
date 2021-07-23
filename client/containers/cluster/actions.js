@@ -27,7 +27,7 @@ import {
   CLUSTER_FETCH_START,
   CLUSTER_FETCH_SUCCESS,
 } from './mutation-types';
-import { http } from '~helpers';
+import { httpService } from '~services';
 
 const actions = {
   [CLUSTER_FETCH]: async ({ commit, getters }) => {
@@ -38,7 +38,7 @@ const actions = {
     commit(CLUSTER_FETCH_START);
 
     try {
-      const cluster = await http.global('/api/cluster');
+      const cluster = await httpService.get('/api/cluster');
 
       commit(CLUSTER_FETCH_SUCCESS, cluster);
     } catch (error) {
