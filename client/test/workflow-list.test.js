@@ -25,9 +25,12 @@ import { getFixture } from './helpers';
 describe('Workflow list', () => {
   async function workflowsTest(mochaTest, workflows, query, domainDesc) {
     const [testEl, scenario] = new Scenario(mochaTest)
-      .withDomain('ci-test')
       .startingAt('/domains/ci-test/workflows')
+      .withCluster()
+      .withDomain('ci-test')
+      .withDomainDescription('ci-test', domainDesc)
       .withEmptyNewsFeed()
+      .withFeatureFlags()
       .withWorkflows({ status: 'open', query, workflows })
       .withWorkflows({
         status: 'closed',
@@ -35,7 +38,6 @@ describe('Workflow list', () => {
         workflows,
         startTimeOffset: 30,
       })
-      .withDomainDescription('ci-test', domainDesc)
       .go();
 
     const workflowList = await testEl.waitUntilExists(
@@ -83,6 +85,7 @@ describe('Workflow list', () => {
         'github.com/uber/cadence-web/example-1',
         'email-daily-summaries',
       ]);
+
     resultsEl
       .textNodes('.row > .col-link')
       .should.deep.equal([
@@ -90,6 +93,7 @@ describe('Workflow list', () => {
         'db8da3c0-b7d3-48b7-a9b3-b6f566e58207',
         '51ccc0d1-6ffe-4a7a-a89f-6b5154df86f7',
       ]);
+
     resultsEl
       .attrValues('.row > .col-link a', 'href')
       .should.deep.equal([
@@ -97,6 +101,7 @@ describe('Workflow list', () => {
         '/domains/ci-test/workflows/github.com%2Fuber%2Fcadence-web%2Fexample-1/db8da3c0-b7d3-48b7-a9b3-b6f566e58207/summary',
         '/domains/ci-test/workflows/email-daily-summaries/51ccc0d1-6ffe-4a7a-a89f-6b5154df86f7/summary',
       ]);
+
     resultsEl
       .textNodes('.row > .col-name')
       .should.deep.equal([
@@ -104,9 +109,11 @@ describe('Workflow list', () => {
         'example',
         'github.com/uber/cadence-web/email-daily-summaries-1',
       ]);
+
     resultsEl
       .textNodes('.row > .col-status')
       .should.deep.equal(['open', 'open', 'completed']);
+
     resultsEl
       .textNodes('.row > .col-start')
       .should.deep.equal([
@@ -117,6 +124,7 @@ describe('Workflow list', () => {
           moment(wf.startTime).format('MMM D, YYYY h:mm:ss A')
         ),
       ]);
+
     resultsEl
       .textNodes('.row > .col-end')
       .should.deep.equal([
@@ -174,11 +182,14 @@ describe('Workflow list', () => {
 
   it('should respect query parameters for range and status', async function test() {
     const [testEl] = new Scenario(this.test)
-      .withDomain('ci-test')
       .startingAt(
         '/domains/ci-test/workflows?status=FAILED&range=last-24-hours'
       )
+      .withCluster()
+      .withDomain('ci-test')
+      .withDomainDescription('ci-test')
       .withEmptyNewsFeed()
+      .withFeatureFlags()
       .withWorkflows({
         status: 'closed',
         query: {
@@ -192,7 +203,6 @@ describe('Workflow list', () => {
           status: 'FAILED',
         },
       })
-      .withDomainDescription('ci-test')
       .go();
 
     await retry(() =>
@@ -333,9 +343,12 @@ describe('Workflow list', () => {
 
   it('should use query parameters from the URL', async function test() {
     const [testEl] = new Scenario(this.test)
-      .withDomain('ci-test')
       .startingAt('/domains/ci-test/workflows?status=FAILED&workflowName=demo')
+      .withCluster()
+      .withDomain('ci-test')
+      .withDomainDescription('ci-test')
       .withEmptyNewsFeed()
+      .withFeatureFlags()
       .withWorkflows({
         status: 'closed',
         query: {
@@ -343,7 +356,6 @@ describe('Workflow list', () => {
           workflowName: 'demo',
         },
       })
-      .withDomainDescription('ci-test')
       .go();
 
     const workflowsEl = await testEl.waitUntilExists(
@@ -360,18 +372,20 @@ describe('Workflow list', () => {
 
   it('should call list API when filterMode = advanced and queryString query params are set', async function test() {
     const [testEl] = new Scenario(this.test)
-      .withDomain('ci-test')
       .startingAt(
         '/domains/ci-test/workflows?status=FAILED&queryString=demo&filterMode=advanced'
       )
+      .withCluster()
+      .withDomain('ci-test')
+      .withDomainDescription('ci-test')
       .withEmptyNewsFeed()
+      .withFeatureFlags()
       .withWorkflows({
         status: 'list',
         query: {
           queryString: 'demo',
         },
       })
-      .withDomainDescription('ci-test')
       .go();
 
     const workflowsEl = await testEl.waitUntilExists(

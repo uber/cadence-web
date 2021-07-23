@@ -24,7 +24,7 @@ import { TERMINATE_DEFAULT_ERROR_MESSAGE } from './constants';
 import { NOTIFICATION_TYPE_ERROR, NOTIFICATION_TYPE_SUCCESS } from '~constants';
 import { getErrorMessage, getDatetimeFormattedString } from '~helpers';
 import { BarLoader, ButtonFill, DataViewer, DetailList } from '~components';
-import { FeatureFlagService } from '~services';
+import { FeatureFlagService, httpService } from '~services';
 
 export default {
   data() {
@@ -104,7 +104,7 @@ export default {
       const { domain } = this;
 
       try {
-        const response = await this.$http(
+        const response = await httpService.get(
           `/api/domains/${domain}/authorization`
         );
 
@@ -131,7 +131,7 @@ export default {
     },
     terminate() {
       this.$modal.hide('confirm-termination');
-      this.$http
+      httpService
         .post(`${this.baseAPIURL}/terminate`, {
           reason: this.terminationReason,
         })

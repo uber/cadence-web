@@ -25,7 +25,6 @@ import infiniteScroll from 'vue-infinite-scroll';
 import vueModal from 'vue-js-modal';
 import vueSplit from 'vue-split-panel';
 import qs from 'friendly-querystring';
-import moment from 'moment';
 import promiseFinally from 'promise.prototype.finally';
 
 import copyButton from './components/copy';
@@ -58,7 +57,7 @@ import {
   WorkflowPending,
 } from '~containers';
 
-import { http, injectMomentDurationFormat, jsonTryParse } from '~helpers';
+import { injectMomentDurationFormat, jsonTryParse } from '~helpers';
 
 const routeOpts = {
   mode: 'history',
@@ -323,18 +322,6 @@ injectMomentDurationFormat();
 JSON.tryParse = jsonTryParse;
 
 promiseFinally.shim();
-
-Vue.mixin({
-  created() {
-    this.$moment = moment;
-
-    if (typeof Scenario === 'undefined') {
-      this.$http = http.global;
-    } else if (this.$parent && this.$parent.$http) {
-      this.$http = this.$parent.$http;
-    }
-  },
-});
 
 Vue.use(Router);
 Vue.use(infiniteScroll);

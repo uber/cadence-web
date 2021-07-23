@@ -28,8 +28,8 @@ import vueModal from 'vue-js-modal';
 import deepmerge from 'deepmerge';
 
 import main from '../main';
-import { http } from '../helpers';
 import initStore from '../store';
+import { httpService } from '../services';
 import { getFixture } from './helpers';
 
 export default function Scenario(test) {
@@ -57,9 +57,7 @@ Scenario.prototype.isDebuggingJustThisTest = function isDebuggingJustThisTest() 
 };
 
 Scenario.prototype.render = function render(attachToBody) {
-  const $http = http.bind(null, this.api);
-
-  $http.post = http.post.bind(null, this.api);
+  httpService.setFetch(this.api);
 
   this.router = new Router({ ...main.routeOpts, mode: 'abstract' });
   this.router.push(this.initialUrl || '/');
@@ -82,13 +80,6 @@ Scenario.prototype.render = function render(attachToBody) {
     store,
     template: '<App/>',
     components: { App: main.App },
-    mixins: [
-      {
-        created() {
-          this.$http = $http;
-        },
-      },
-    ],
   });
 
   vueModal.rootInstance = this.vm;

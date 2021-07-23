@@ -20,8 +20,32 @@
 // THE SOFTWARE.
 
 describe('Domain list', () => {
+  async function domainListTest(mochaTest) {
+    const [testEl, scenario] = new Scenario(mochaTest)
+      .withFeatureFlags()
+      .withNewsFeed()
+      .go();
+
+    return [testEl, scenario];
+  }
+
+  async function domainListToWorkflowListTest(mochaTest) {
+    const [testEl, scenario] = new Scenario(mochaTest)
+      .withCluster()
+      .withDomain('ci-tests')
+      .withDomainDescription('ci-tests') // once for domain-navigation
+      .withDomainDescription('ci-tests') // once for workflow-list screen
+      .withFeatureFlags()
+      .withNewsFeed()
+      .withWorkflows({ status: 'open' })
+      .withWorkflows({ status: 'closed', startTimeOffset: 30 })
+      .go();
+
+    return [testEl, scenario];
+  }
+
   it('should show a header bar without a breadcrumb or domain changer', async function test() {
-    const [testEl] = new Scenario(this.test).withNewsFeed().go();
+    const [testEl] = await domainListTest(this.test);
 
     const headerBar = await testEl.waitUntilExists('header.top-bar');
 
@@ -33,7 +57,7 @@ describe('Domain list', () => {
   });
 
   it('should validate the existance of domains as the user types', async function test() {
-    const [testEl, scenario] = new Scenario(this.test).withNewsFeed().go();
+    const [testEl, scenario] = await domainListTest(this.test);
 
     const domainNav = await testEl.waitUntilExists(
       'section.domain-search .domain-navigation'
@@ -63,7 +87,7 @@ describe('Domain list', () => {
   });
 
   it('should render the details of a valid domain', async function test() {
-    const [testEl, scenario] = new Scenario(this.test).withNewsFeed().go();
+    const [testEl, scenario] = await domainListTest(this.test);
 
     const domainInput = await testEl.waitUntilExists(
       'section.domain-search .domain-navigation input'
@@ -108,26 +132,19 @@ describe('Domain list', () => {
   });
 
   it('should go to the workflows of the domain requested when entered', async function test() {
-    const [testEl, scenario] = new Scenario(this.test).withNewsFeed().go();
+    const [testEl, scenario] = await domainListToWorkflowListTest(this.test);
 
     const domainInput = await testEl.waitUntilExists(
       'section.domain-search .domain-navigation input'
     );
 
-    scenario.withDomainDescription('ci-tests');
     domainInput.input('ci-tests');
 
     await testEl.waitUntilExists('.domain-navigation.validation-valid');
 
-    scenario
-      .withDomain('ci-tests')
-      .withWorkflows({ status: 'open' })
-      .withWorkflows({ status: 'closed', startTimeOffset: 30 })
-      .withDomainDescription('ci-tests');
-
     domainInput.trigger('keydown', { code: 13, keyCode: 13, key: 'Enter' });
 
-    await testEl.waitUntilExists('section.workflow-list');
+    await testEl.waitUntilExists('section.workflow-list.ready');
     const headerBar = testEl.querySelector('header.top-bar');
 
     headerBar.should.have
@@ -138,7 +155,7 @@ describe('Domain list', () => {
   });
 
   it('should activate the change-domain button when the domain is valid and navigate to it', async function test() {
-    const [testEl, scenario] = new Scenario(this.test).withNewsFeed().go();
+    const [testEl, scenario] = await domainListToWorkflowListTest(this.test);
 
     const domainNav = await testEl.waitUntilExists(
       'section.domain-search .domain-navigation'
@@ -155,19 +172,13 @@ describe('Domain list', () => {
 
     await Promise.delay(50);
 
-    scenario.withDomainDescription('ci-tests');
     domainInput.input('ci-tests');
 
     await testEl.waitUntilExists('.domain-navigation.validation-valid');
     changeDomain.should.have.attr('href', '#');
-    scenario
-      .withDomain('ci-tests')
-      .withDomainDescription('ci-tests')
-      .withWorkflows({ status: 'open' })
-      .withWorkflows({ status: 'closed', startTimeOffset: 30 });
     changeDomain.trigger('click');
 
-    await testEl.waitUntilExists('section.workflow-list');
+    await testEl.waitUntilExists('section.workflow-list.ready');
     const headerBar = testEl.querySelector('header.top-bar');
 
     headerBar.should.have
@@ -184,7 +195,8 @@ describe('Domain list', () => {
       'recent-domains',
       JSON.stringify(['demo', 'ci-tests'])
     );
-    const [testEl, scenario] = new Scenario(this.test).withNewsFeed().go();
+
+    const [testEl] = await domainListToWorkflowListTest(this.test);
 
     const recentDomains = await testEl.waitUntilExists(
       '.domain-navigation ul.recent-domains'
@@ -196,13 +208,8 @@ describe('Domain list', () => {
     recentDomains.textNodes('li a').should.deep.equal(['demo', 'ci-tests']);
 
     recentDomains.querySelectorAll('li a')[1].trigger('click');
-    scenario
-      .withDomain('ci-tests')
-      .withDomainDescription('ci-tests')
-      .withWorkflows({ status: 'open' })
-      .withWorkflows({ status: 'closed', startTimeOffset: 30 });
 
-    await testEl.waitUntilExists('section.workflow-list');
+    await testEl.waitUntilExists('section.workflow-list.ready');
     localStorage.getItem('recent-domains').should.equal('["ci-tests","demo"]');
   });
 
@@ -211,7 +218,8 @@ describe('Domain list', () => {
       'recent-domains',
       JSON.stringify(['demo', 'ci-tests'])
     );
-    const [testEl, scenario] = new Scenario(this.test).withNewsFeed().go();
+
+    const [testEl, scenario] = await domainListTest(this.test);
 
     const recentDomains = await testEl.waitUntilExists(
       '.domain-navigation ul.recent-domains'
