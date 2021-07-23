@@ -19,34 +19,32 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { connect } from 'vuex-connect';
-import { ROUTE_PARAMS_DOMAIN } from '../route/getter-types';
 import {
-  DOMAIN_AUTOCOMPLETE_COMBINED_DOMAIN_LIST,
-  DOMAIN_AUTOCOMPLETE_IS_LOADING,
-  DOMAIN_AUTOCOMPLETE_NAVIGATE_TO_DOMAIN_URL,
-  DOMAIN_AUTOCOMPLETE_SEARCH,
-} from './getter-types';
-import { DOMAIN_AUTOCOMPLETE_ON_MOUNTED } from './mutation-types';
+  DOMAIN_AUTOCOMPLETE_ON_MOUNTED,
+  DOMAIN_AUTOCOMPLETE_SET_DOMAIN_LIST,
+  DOMAIN_AUTOCOMPLETE_SET_IS_LOADING,
+  DOMAIN_AUTOCOMPLETE_SET_SEARCH,
+  DOMAIN_AUTOCOMPLETE_SET_VISITED_DOMAIN_LIST,
+} from './mutation-types';
 
-const actionsToEvents = {
-  // TODO - updated in future PR
+const mutations = {
+  [DOMAIN_AUTOCOMPLETE_ON_MOUNTED]: state => {
+    state.domainAutocomplete.isLoading = false;
+    state.domainAutocomplete.domainList = [];
+    state.domainAutocomplete.search = '';
+  },
+  [DOMAIN_AUTOCOMPLETE_SET_DOMAIN_LIST]: (state, payload) => {
+    state.domainAutocomplete.domainList = payload;
+  },
+  [DOMAIN_AUTOCOMPLETE_SET_IS_LOADING]: (state, payload) => {
+    state.domainAutocomplete.isLoading = payload;
+  },
+  [DOMAIN_AUTOCOMPLETE_SET_VISITED_DOMAIN_LIST]: (state, payload) => {
+    state.domainAutocomplete.visitedDomainList = payload;
+  },
+  [DOMAIN_AUTOCOMPLETE_SET_SEARCH]: (state, payload) => {
+    state.domainAutocomplete.search = payload;
+  },
 };
 
-const gettersToProps = {
-  isLoading: DOMAIN_AUTOCOMPLETE_IS_LOADING,
-  domain: ROUTE_PARAMS_DOMAIN,
-  domainList: DOMAIN_AUTOCOMPLETE_COMBINED_DOMAIN_LIST,
-  navigateToDomainUrl: DOMAIN_AUTOCOMPLETE_NAVIGATE_TO_DOMAIN_URL,
-  search: DOMAIN_AUTOCOMPLETE_SEARCH,
-};
-
-const lifecycle = {
-  mounted: ({ commit }) => commit(DOMAIN_AUTOCOMPLETE_ON_MOUNTED),
-};
-
-export default connect({
-  actionsToEvents,
-  gettersToProps,
-  lifecycle,
-});
+export default mutations;
