@@ -19,6 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+import MockDate from 'mockdate';
 import moment from 'moment';
 import { getFixture } from './helpers';
 
@@ -59,18 +60,25 @@ describe('Workflow', () => {
     ];
   }
 
-  async function summaryTest(mochaTest, options = {}) {
+  async function summaryTest(mochaTest, options = {}, loading) {
     const [scenario, opts] = workflowTest(mochaTest, {
       view: 'summary',
       ...options,
     });
 
     scenario.withFullHistory(opts.events, options.history);
+
     const summaryEl = await scenario
       .render(opts.attach)
-      .waitUntilExists('section.execution section.workflow-summary dl');
+      .waitUntilExists(`section.execution.${loading ? 'loading' : 'ready'}`);
+
+    await summaryEl.waitUntilExists('section.workflow-summary dl');
 
     return [summaryEl.parentElement, scenario];
+  }
+
+  async function waitUntilCompleted(element) {
+    return element.waitUntilExists('section.execution.ready');
   }
 
   const closedWorkflowExecution = {
@@ -84,35 +92,47 @@ describe('Workflow', () => {
 
   describe('Workflow Statistics', () => {
     it('should show statistics from the workflow', async function test() {
-      return summaryTest(this.test).then(([summaryEl]) => {
-        summaryEl
-          .querySelector('.workflow-id dd')
-          .should.have.text('email-daily-summaries');
-        summaryEl.querySelector('.run-id dd').should.have.text('emailRun1');
-        summaryEl.querySelector('.history-length dd').should.have.text('14');
-        summaryEl
-          .querySelector('.workflow-name dd')
-          .should.have.text('CIDemoWorkflow');
-        summaryEl
-          .querySelector('.task-list dd a[href]')
-          .should.contain.text('ci_task_list')
-          .and.have.attr('href', '/domains/ci-test/task-lists/ci_task_list');
-        summaryEl.querySelector('.started-at dd').should.have.text(
-          moment()
-            .startOf('hour')
-            .subtract(2, 'minutes')
-            .format('MMM D, YYYY h:mm:ss A')
-        );
-        summaryEl.should.not.have.descendant('.close-time');
-        summaryEl.should.not.have.descendant('.pending-activities');
-        summaryEl.should.not.have.descendant('.parent-workflow');
-        summaryEl
-          .querySelector('.workflow-status dd')
-          .should.contain.text('running');
-        summaryEl
-          .querySelector('.workflow-status loader.bar')
-          .should.not.have.property('display', 'none');
-      });
+      const [summaryEl] = await summaryTest(this.test, {}, true);
+
+      summaryEl
+        .querySelector('.workflow-id dd')
+        .should.have.text('email-daily-summaries');
+
+      summaryEl.querySelector('.run-id dd').should.have.text('emailRun1');
+
+      summaryEl.querySelector('.history-length dd').should.have.text('14');
+
+      summaryEl
+        .querySelector('.workflow-name dd')
+        .should.have.text('CIDemoWorkflow');
+
+      summaryEl
+        .querySelector('.task-list dd a[href]')
+        .should.contain.text('ci_task_list')
+        .and.have.attr('href', '/domains/ci-test/task-lists/ci_task_list');
+
+      summaryEl.querySelector('.started-at dd').should.have.text(
+        moment()
+          .startOf('hour')
+          .subtract(2, 'minutes')
+          .format('MMM D, YYYY h:mm:ss A')
+      );
+
+      summaryEl.should.not.have.descendant('.close-time');
+
+      summaryEl.should.not.have.descendant('.pending-activities');
+
+      summaryEl.should.not.have.descendant('.parent-workflow');
+
+      summaryEl
+        .querySelector('.workflow-status dd')
+        .should.contain.text('running');
+
+      summaryEl
+        .querySelector('.workflow-status loader.bar')
+        .should.not.have.property('display', 'none');
+
+      await waitUntilCompleted(summaryEl);
     });
   });
 
@@ -328,9 +348,13 @@ describe('Workflow', () => {
 
     describe('Actions', () => {
       it('should offer the user to terminate a running workflow, prompting the user for a termination reason', async function test() {
-        const [summaryEl] = await summaryTest(this.test, {
-          history: { delay: 500 },
-        });
+        const [summaryEl] = await summaryTest(
+          this.test,
+          {
+            history: { delay: 500 },
+          },
+          true
+        );
 
         const terminateEl = await summaryEl.waitUntilExists(
           'aside.actions button'
@@ -353,12 +377,18 @@ describe('Workflow', () => {
           .contain('button[name="button-terminate"]')
           .and.contain('button[name="button-cancel"]')
           .and.contain('input[placeholder="Reason"]');
+
+        await waitUntilCompleted(summaryEl);
       });
 
       it('should terminate the workflow with the provided reason', async function test() {
-        const [summaryEl, scenario] = await summaryTest(this.test, {
-          history: { delay: 250 },
-        });
+        const [summaryEl, scenario] = await summaryTest(
+          this.test,
+          {
+            history: { delay: 250 },
+          },
+          true
+        );
 
         const terminateEl = await summaryEl.waitUntilExists(
           'aside.actions button'
@@ -384,12 +414,18 @@ describe('Workflow', () => {
         await retry(() =>
           summaryEl.should.not.contain('[data-modal="confirm-termination"]')
         );
+
+        await waitUntilCompleted(summaryEl);
       });
 
       it('should terminate the workflow without a reason', async function test() {
-        const [summaryEl, scenario] = await summaryTest(this.test, {
-          history: { delay: 250 },
-        });
+        const [summaryEl, scenario] = await summaryTest(
+          this.test,
+          {
+            history: { delay: 250 },
+          },
+          true
+        );
 
         const terminateEl = await summaryEl.waitUntilExists(
           'aside.actions button'
@@ -409,12 +445,18 @@ describe('Workflow', () => {
         await retry(() =>
           summaryEl.should.not.contain('[data-modal="confirm-termination"]')
         );
+
+        await waitUntilCompleted(summaryEl);
       });
 
       it('should allow the user to cancel the termination prompt, doing nothing', async function test() {
-        const [summaryEl] = await summaryTest(this.test, {
-          history: { delay: 250 },
-        });
+        const [summaryEl] = await summaryTest(
+          this.test,
+          {
+            history: { delay: 250 },
+          },
+          true
+        );
 
         const terminateEl = await summaryEl.waitUntilExists(
           'aside.actions button'
@@ -432,7 +474,8 @@ describe('Workflow', () => {
         await retry(() =>
           summaryEl.should.not.contain('[data-modal="confirm-termination"]')
         );
-        await Promise.delay(200);
+
+        await waitUntilCompleted(summaryEl);
       });
 
       it('should not offer the user the ability to terminate completed workflows', async function test() {
@@ -462,7 +505,7 @@ describe('Workflow', () => {
 
       const historyEl = await scenario
         .render(opts.attach)
-        .waitUntilExists('section.history');
+        .waitUntilExists('section.execution.ready');
 
       return [historyEl, scenario];
     }
@@ -521,7 +564,6 @@ describe('Workflow', () => {
     });
 
     describe('Compact View', function describeTest() {
-      this.timeout(4000);
       let prevPollInterval;
       let prevRetryAttempts;
 
@@ -1106,6 +1148,14 @@ describe('Workflow', () => {
   });
 
   describe('Stack Trace', () => {
+    before(() => {
+      MockDate.set(new Date());
+    });
+
+    after(() => {
+      MockDate.reset();
+    });
+
     it('should also show a stack trace tab for running workflows', async function test() {
       const [, scenario] = await summaryTest(this.test);
 
@@ -1137,16 +1187,15 @@ describe('Workflow', () => {
           queryResult: 'goroutine 1:\n\tat foo.go:56',
         });
 
+      const stackTraceTime = moment().format('MMM D, YYYY h:mm:ss A');
       const stackTraceEl = await scenario
         .render()
-        .waitUntilExists('section.stack-trace');
+        .waitUntilExists('section.execution.ready section.stack-trace');
 
       await retry(() =>
         stackTraceEl
           .querySelector('header span')
-          .should.contain.text(
-            `Stack trace at ${moment().format('MMM D, YYYY h:mm:ss A')}`
-          )
+          .should.contain.text(`Stack trace at ${stackTraceTime}`)
       );
       stackTraceEl
         .querySelector('pre')
@@ -1181,7 +1230,7 @@ describe('Workflow', () => {
 
       const stackTraceEl = await scenario
         .render()
-        .waitUntilExists('section.stack-trace');
+        .waitUntilExists('section.execution.ready section.stack-trace');
 
       await retry(() =>
         stackTraceEl
@@ -1208,7 +1257,7 @@ describe('Workflow', () => {
 
       const queryEl = await scenario
         .render()
-        .waitUntilExists('section.execution section.query');
+        .waitUntilExists('section.execution.ready section.query');
 
       return [queryEl, scenario];
     }

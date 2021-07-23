@@ -19,12 +19,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { http } from '~helpers';
+import { httpService } from '~services';
 
 export default () => {
   return {
     getDomainSettings: domainName => {
-      return http(window.fetch, `/api/domains/${domainName}`);
+      return httpService.get(`/api/domains/${domainName}`);
     },
   };
 };

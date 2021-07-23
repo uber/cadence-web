@@ -22,6 +22,7 @@
 
 import { getKeyValuePairs, mapDomainDescription } from '~helpers';
 import { DetailList } from '~components';
+import { httpService } from '~services';
 
 export default {
   data() {
@@ -36,7 +37,8 @@ export default {
     'detail-list': DetailList,
   },
   created() {
-    this.$http(`/api/domains/${this.domain}`)
+    httpService
+      .get(`/api/domains/${this.domain}`)
       .then(
         r => {
           const domainConfig = mapDomainDescription(r);

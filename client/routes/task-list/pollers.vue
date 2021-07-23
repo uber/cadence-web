@@ -21,6 +21,7 @@
 // THE SOFTWARE.
 
 import { getDatetimeFormattedString } from '~helpers';
+import { httpService } from '~services';
 
 export default {
   props: ['dateFormat', 'domain', 'taskList', 'timeFormat', 'timezone'],
@@ -50,9 +51,8 @@ export default {
     },
   },
   created() {
-    this.$http(
-      `/api/domains/${this.domain}/task-lists/${this.taskList}/pollers`
-    )
+    httpService
+      .get(`/api/domains/${this.domain}/task-lists/${this.taskList}/pollers`)
       .then(
         p => {
           this.pollers = Object.keys(p).map(identity => ({
