@@ -19,7 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const combineDomainList = ({ visitedDomainList, domainList }) => {
+const combineDomainList = ({ domainList, visitedDomainList }) => {
   const domainListUuidList = domainList.map(domain => domain.domainInfo.uuid);
   const domainNameList = domainList.map(domain => domain.domainInfo.name);
 

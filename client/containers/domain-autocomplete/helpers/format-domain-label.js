@@ -25,8 +25,7 @@ const formatDomainLabel = domain =>
     : [
         domain.domainInfo.name,
         domain.isGlobalDomain ? 'Global' : 'Local',
-        domain.isGlobalDomain === false &&
-          domain.replicationConfiguration.activeClusterName,
+        domain.replicationConfiguration.activeClusterName,
       ]
         .filter(domain => !!domain)
         .join(' - ');

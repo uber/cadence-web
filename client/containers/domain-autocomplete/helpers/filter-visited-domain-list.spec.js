@@ -19,14 +19,49 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const filterVisitedDomainList = ({ search, visitedDomainList }) =>
-  !search
-    ? visitedDomainList
-    : visitedDomainList.filter(domain => {
-        const domainName =
-          typeof domain === 'string' ? domain : domain.domainInfo.name;
+import filterVisitedDomainList from './filter-visited-domain-list';
 
-        return domainName.indexOf(search) !== -1;
-      });
+describe('filterVisitedDomainList', () => {
+  let visitedDomainList;
 
-export default filterVisitedDomainList;
+  beforeEach(() => {
+    visitedDomainList = [
+      'domain1',
+      {
+        domainInfo: {
+          name: 'domain2',
+          uuid: 2,
+        },
+      },
+      'other',
+    ];
+  });
+
+  describe('when search = ""', () => {
+    const search = '';
+
+    it('should return all of visitedDomainList.', () => {
+      const output = filterVisitedDomainList({ search, visitedDomainList });
+
+      expect(output).toEqual(visitedDomainList);
+    });
+  });
+
+  describe('when search = "domain"', () => {
+    const search = 'domain';
+
+    it('should only return domains which match search from visitedDomainList', () => {
+      const output = filterVisitedDomainList({ search, visitedDomainList });
+
+      expect(output).toEqual([
+        'domain1',
+        {
+          domainInfo: {
+            name: 'domain2',
+            uuid: 2,
+          },
+        },
+      ]);
+    });
+  });
+});
