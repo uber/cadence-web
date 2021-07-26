@@ -19,34 +19,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { connect } from 'vuex-connect';
-import { ROUTE_PARAMS_DOMAIN } from '../route/getter-types';
-import {
-  DOMAIN_AUTOCOMPLETE_COMBINED_DOMAIN_LIST,
-  DOMAIN_AUTOCOMPLETE_IS_LOADING,
-  DOMAIN_AUTOCOMPLETE_NAVIGATE_TO_DOMAIN_URL,
-  DOMAIN_AUTOCOMPLETE_SEARCH,
-} from './getter-types';
-import { DOMAIN_AUTOCOMPLETE_ON_MOUNTED } from './mutation-types';
+const filterVisitedDomainList = ({ search, visitedDomainList }) =>
+  !search
+    ? visitedDomainList
+    : visitedDomainList.filter(domain => {
+        const domainName =
+          typeof domain === 'string' ? domain : domain.domainInfo.name;
 
-const actionsToEvents = {
-  // TODO - updated in future PR
-};
+        return domainName.indexOf(search) !== -1;
+      });
 
-const gettersToProps = {
-  isLoading: DOMAIN_AUTOCOMPLETE_IS_LOADING,
-  domain: ROUTE_PARAMS_DOMAIN,
-  domainList: DOMAIN_AUTOCOMPLETE_COMBINED_DOMAIN_LIST,
-  navigateToDomainUrl: DOMAIN_AUTOCOMPLETE_NAVIGATE_TO_DOMAIN_URL,
-  search: DOMAIN_AUTOCOMPLETE_SEARCH,
-};
-
-const lifecycle = {
-  mounted: ({ commit }) => commit(DOMAIN_AUTOCOMPLETE_ON_MOUNTED),
-};
-
-export default connect({
-  actionsToEvents,
-  gettersToProps,
-  lifecycle,
-});
+export default filterVisitedDomainList;

@@ -19,34 +19,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { connect } from 'vuex-connect';
-import { ROUTE_PARAMS_DOMAIN } from '../route/getter-types';
-import {
-  DOMAIN_AUTOCOMPLETE_COMBINED_DOMAIN_LIST,
-  DOMAIN_AUTOCOMPLETE_IS_LOADING,
-  DOMAIN_AUTOCOMPLETE_NAVIGATE_TO_DOMAIN_URL,
-  DOMAIN_AUTOCOMPLETE_SEARCH,
-} from './getter-types';
-import { DOMAIN_AUTOCOMPLETE_ON_MOUNTED } from './mutation-types';
+const sortDomainList = domainList =>
+  domainList.sort((domainA, domainB) => {
+    const domainNameA =
+      typeof domainA === 'string' ? domainA : domainA.domainInfo.name;
+    const domainNameB =
+      typeof domainB === 'string' ? domainB : domainB.domainInfo.name;
 
-const actionsToEvents = {
-  // TODO - updated in future PR
-};
+    if (domainNameA < domainNameB) {
+      return -1;
+    }
 
-const gettersToProps = {
-  isLoading: DOMAIN_AUTOCOMPLETE_IS_LOADING,
-  domain: ROUTE_PARAMS_DOMAIN,
-  domainList: DOMAIN_AUTOCOMPLETE_COMBINED_DOMAIN_LIST,
-  navigateToDomainUrl: DOMAIN_AUTOCOMPLETE_NAVIGATE_TO_DOMAIN_URL,
-  search: DOMAIN_AUTOCOMPLETE_SEARCH,
-};
+    if (domainNameA > domainNameB) {
+      return 1;
+    }
 
-const lifecycle = {
-  mounted: ({ commit }) => commit(DOMAIN_AUTOCOMPLETE_ON_MOUNTED),
-};
+    return 0;
+  });
 
-export default connect({
-  actionsToEvents,
-  gettersToProps,
-  lifecycle,
-});
+export default sortDomainList;

@@ -19,34 +19,49 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { connect } from 'vuex-connect';
-import { ROUTE_PARAMS_DOMAIN } from '../route/getter-types';
-import {
-  DOMAIN_AUTOCOMPLETE_COMBINED_DOMAIN_LIST,
-  DOMAIN_AUTOCOMPLETE_IS_LOADING,
-  DOMAIN_AUTOCOMPLETE_NAVIGATE_TO_DOMAIN_URL,
-  DOMAIN_AUTOCOMPLETE_SEARCH,
-} from './getter-types';
-import { DOMAIN_AUTOCOMPLETE_ON_MOUNTED } from './mutation-types';
+import filterVisitedDomainList from './filter-visited-domain-list';
 
-const actionsToEvents = {
-  // TODO - updated in future PR
-};
+describe('filterVisitedDomainList', () => {
+  let visitedDomainList;
 
-const gettersToProps = {
-  isLoading: DOMAIN_AUTOCOMPLETE_IS_LOADING,
-  domain: ROUTE_PARAMS_DOMAIN,
-  domainList: DOMAIN_AUTOCOMPLETE_COMBINED_DOMAIN_LIST,
-  navigateToDomainUrl: DOMAIN_AUTOCOMPLETE_NAVIGATE_TO_DOMAIN_URL,
-  search: DOMAIN_AUTOCOMPLETE_SEARCH,
-};
+  beforeEach(() => {
+    visitedDomainList = [
+      'domain1',
+      {
+        domainInfo: {
+          name: 'domain2',
+          uuid: 2,
+        },
+      },
+      'other',
+    ];
+  });
 
-const lifecycle = {
-  mounted: ({ commit }) => commit(DOMAIN_AUTOCOMPLETE_ON_MOUNTED),
-};
+  describe('when search = ""', () => {
+    const search = '';
 
-export default connect({
-  actionsToEvents,
-  gettersToProps,
-  lifecycle,
+    it('should return all of visitedDomainList.', () => {
+      const output = filterVisitedDomainList({ search, visitedDomainList });
+
+      expect(output).toEqual(visitedDomainList);
+    });
+  });
+
+  describe('when search = "domain"', () => {
+    const search = 'domain';
+
+    it('should only return domains which match search from visitedDomainList', () => {
+      const output = filterVisitedDomainList({ search, visitedDomainList });
+
+      expect(output).toEqual([
+        'domain1',
+        {
+          domainInfo: {
+            name: 'domain2',
+            uuid: 2,
+          },
+        },
+      ]);
+    });
+  });
 });

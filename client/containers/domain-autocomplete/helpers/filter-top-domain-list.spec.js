@@ -19,34 +19,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { connect } from 'vuex-connect';
-import { ROUTE_PARAMS_DOMAIN } from '../route/getter-types';
-import {
-  DOMAIN_AUTOCOMPLETE_COMBINED_DOMAIN_LIST,
-  DOMAIN_AUTOCOMPLETE_IS_LOADING,
-  DOMAIN_AUTOCOMPLETE_NAVIGATE_TO_DOMAIN_URL,
-  DOMAIN_AUTOCOMPLETE_SEARCH,
-} from './getter-types';
-import { DOMAIN_AUTOCOMPLETE_ON_MOUNTED } from './mutation-types';
+import { TOP_DOMAIN_LIST_LIMIT } from '../constants';
+import filterTopDomainList from './filter-top-domain-list';
 
-const actionsToEvents = {
-  // TODO - updated in future PR
-};
+describe('filterTopDomainList', () => {
+  const createDomainList = size => {
+    const newDomainList = [];
 
-const gettersToProps = {
-  isLoading: DOMAIN_AUTOCOMPLETE_IS_LOADING,
-  domain: ROUTE_PARAMS_DOMAIN,
-  domainList: DOMAIN_AUTOCOMPLETE_COMBINED_DOMAIN_LIST,
-  navigateToDomainUrl: DOMAIN_AUTOCOMPLETE_NAVIGATE_TO_DOMAIN_URL,
-  search: DOMAIN_AUTOCOMPLETE_SEARCH,
-};
+    for (let i = 1; i < size + 1; i++) {
+      newDomainList.push(`domain${i}`);
+    }
 
-const lifecycle = {
-  mounted: ({ commit }) => commit(DOMAIN_AUTOCOMPLETE_ON_MOUNTED),
-};
+    return newDomainList;
+  };
 
-export default connect({
-  actionsToEvents,
-  gettersToProps,
-  lifecycle,
+  describe('when domainList is greater than TOP_DOMAIN_LIST_LIMIT', () => {
+    let domainList;
+
+    beforeEach(() => {
+      domainList = createDomainList(TOP_DOMAIN_LIST_LIMIT * 2);
+    });
+
+    it('should return only the first domains of size = TOP_DOMAIN_LIST_LIMIT', () => {
+      const output = filterTopDomainList(domainList);
+
+      expect(output.length).toEqual(TOP_DOMAIN_LIST_LIMIT);
+      expect(output[0]).toEqual('domain1');
+      expect(output[output.length - 1]).toEqual(
+        `domain${TOP_DOMAIN_LIST_LIMIT}`
+      );
+    });
+  });
 });

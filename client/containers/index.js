@@ -28,6 +28,7 @@ export {
 export {
   container as DomainAutocomplete,
   getDefaultState as getDomainAutocompleteDefaultState,
+  getters as domainAutocompleteGetters,
   mutations as domainAutocompleteMutations,
 } from './domain-autocomplete';
 export {
