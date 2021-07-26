@@ -111,19 +111,28 @@ export default {
     'workflow-grid': WorkflowGrid,
   },
   computed: {
-    formattedResults() {
-      const { dateFormat, results, timeFormat, timezone } = this;
+    criteria() {
+      const {
+        endTime,
+        filterMode,
+        isCron,
+        queryString,
+        startTime,
+        statusName: status,
+        workflowId,
+        workflowName,
+      } = this;
 
-      return getFormattedResults({ dateFormat, results, timeFormat, timezone });
-    },
-    startTime() {
-      const { range, startTime } = this.$route.query;
-
-      if (this.range && this.range.startTime) {
-        return getStartTimeIsoString(null, this.range.startTime.toISOString());
-      }
-
-      return getStartTimeIsoString(range, startTime);
+      return getCriteria({
+        endTime,
+        filterMode,
+        isCron,
+        queryString,
+        startTime,
+        status,
+        workflowId,
+        workflowName,
+      });
     },
     endTime() {
       const { range, endTime } = this.$route.query;
@@ -133,6 +142,14 @@ export default {
       }
 
       return getEndTimeIsoString(range, endTime);
+    },
+    formattedResults() {
+      const { dateFormat, results, timeFormat, timezone } = this;
+
+      return getFormattedResults({ dateFormat, results, timeFormat, timezone });
+    },
+    minStartDate() {
+      return this.getMinStartDate();
     },
     range() {
       const { maxRetentionDays, minStartDate, state } = this;
@@ -164,31 +181,14 @@ export default {
           }
         : query.range;
     },
-    criteria() {
-      const {
-        endTime,
-        filterMode,
-        isCron,
-        queryString,
-        startTime,
-        statusName: status,
-        workflowId,
-        workflowName,
-      } = this;
+    startTime() {
+      const { range, startTime } = this.$route.query;
 
-      return getCriteria({
-        endTime,
-        filterMode,
-        isCron,
-        queryString,
-        startTime,
-        status,
-        workflowId,
-        workflowName,
-      });
-    },
-    minStartDate() {
-      return this.getMinStartDate();
+      if (this.range && this.range.startTime) {
+        return getStartTimeIsoString(null, this.range.startTime.toISOString());
+      }
+
+      return getStartTimeIsoString(range, startTime);
     },
   },
   methods: {
@@ -327,6 +327,18 @@ export default {
         statusName,
       });
     },
+    isRouteRangeValid(minStartDate) {
+      const { now } = this;
+      const { endTime, range, startTime } = this.$route.query || {};
+
+      return isRouteRangeValid({
+        endTime,
+        minStartDate,
+        now,
+        range,
+        startTime,
+      });
+    },
     refreshWorkflows: debounce(
       function refreshWorkflows() {
         this.clearState();
@@ -352,17 +364,16 @@ export default {
         this.$emit('onFilterChange', { status: status.value });
       }
     },
-    isRouteRangeValid(minStartDate) {
-      const { now } = this;
-      const { endTime, range, startTime } = this.$route.query || {};
+    onFilterModeClick() {
+      this.clearState();
+      this.$emit('onFilterModeClick');
+    },
+    onWorkflowGridScroll(startIndex, endIndex) {
+      if (!this.npt && !this.nptAlt) {
+        return;
+      }
 
-      return isRouteRangeValid({
-        endTime,
-        minStartDate,
-        now,
-        range,
-        startTime,
-      });
+      return this.fetchWorkflowList();
     },
     setRange(range) {
       const query = { ...this.$route.query };
@@ -387,17 +398,6 @@ export default {
       this.$router.replace({ query });
 
       return query;
-    },
-    onFilterModeClick() {
-      this.clearState();
-      this.$emit('onFilterModeClick');
-    },
-    onWorkflowGridScroll(startIndex, endIndex) {
-      if (!this.npt && !this.nptAlt) {
-        return;
-      }
-
-      return this.fetchWorkflowList();
     },
   },
   watch: {
