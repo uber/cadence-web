@@ -68,8 +68,8 @@ describe('Domain search', () => {
     domainInput.trigger('focus');
     domainInput.input('ci-tests');
 
-    // wait for debounce & request to finish
-    await Promise.delay(200);
+    await testEl.waitUntilExists('section.domain-search .autocomplete.loading');
+    await testEl.waitUntilExists('section.domain-search .autocomplete.ready');
 
     const domainAutocompleteList = await testEl.waitUntilExists(
       'section.domain-search .domain-autocomplete ul.vs__dropdown-menu'
@@ -90,8 +90,8 @@ describe('Domain search', () => {
     domainInput.trigger('focus');
     domainInput.input('ci-tests');
 
-    // wait for debounce & request to finish
-    await Promise.delay(200);
+    await testEl.waitUntilExists('section.domain-search .autocomplete.loading');
+    await testEl.waitUntilExists('section.domain-search .autocomplete.ready');
 
     const domainAutocompleteList = await testEl.waitUntilExists(
       'section.domain-search .domain-autocomplete ul.vs__dropdown-menu'
@@ -121,8 +121,8 @@ describe('Domain search', () => {
     domainInput.trigger('focus');
     domainInput.input('ci-tests');
 
-    // wait for debounce & request to finish
-    await Promise.delay(200);
+    await testEl.waitUntilExists('section.domain-search .autocomplete.loading');
+    await testEl.waitUntilExists('section.domain-search .autocomplete.ready');
 
     const changeDomain = await testEl.waitUntilExists('a.navigate-to-domain');
 
