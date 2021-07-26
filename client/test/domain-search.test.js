@@ -121,6 +121,9 @@ describe('Domain search', () => {
     domainInput.trigger('focus');
     domainInput.input('ci-tests');
 
+    // wait for debounce & request to finish
+    await Promise.delay(200);
+
     const changeDomain = await testEl.waitUntilExists('a.navigate-to-domain');
 
     changeDomain.should.have.attr('href', '/domains/ci-tests');

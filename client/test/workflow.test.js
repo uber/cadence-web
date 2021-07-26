@@ -74,9 +74,6 @@ describe('Workflow', () => {
 
     await summaryEl.waitUntilExists('section.workflow-summary dl');
 
-    // Note: allow time for API requests to be sent and recieved by test.
-    await Promise.delay(150);
-
     return [summaryEl.parentElement, scenario];
   }
 
@@ -359,8 +356,6 @@ describe('Workflow', () => {
           true
         );
 
-        await Promise.delay(500);
-
         const terminateEl = await summaryEl.waitUntilExists(
           'aside.actions button'
         );
@@ -394,8 +389,6 @@ describe('Workflow', () => {
           },
           true
         );
-
-        await Promise.delay(250);
 
         const terminateEl = await summaryEl.waitUntilExists(
           'aside.actions button'
@@ -434,8 +427,6 @@ describe('Workflow', () => {
           true
         );
 
-        await Promise.delay(250);
-
         const terminateEl = await summaryEl.waitUntilExists(
           'aside.actions button'
         );
@@ -467,8 +458,6 @@ describe('Workflow', () => {
           true
         );
 
-        await Promise.delay(250);
-
         const terminateEl = await summaryEl.waitUntilExists(
           'aside.actions button'
         );
@@ -495,8 +484,6 @@ describe('Workflow', () => {
           history: { delay: 250 },
         });
 
-        await Promise.delay(250);
-
         await retry(() =>
           summaryEl.should.have
             .descendant('.workflow-status dd')
@@ -519,9 +506,6 @@ describe('Workflow', () => {
       const historyEl = await scenario
         .render(opts.attach)
         .waitUntilExists('section.execution.ready');
-
-      // Note: allow time for API requests to be sent and recieved by test.
-      await Promise.delay(400);
 
       return [historyEl, scenario];
     }
@@ -1214,9 +1198,6 @@ describe('Workflow', () => {
           .should.contain.text(`Stack trace at ${stackTraceTime}`)
       );
 
-      // Note: allow time for API requests to be sent and recieved by test.
-      await Promise.delay(400);
-
       stackTraceEl
         .querySelector('pre')
         .should.have.text('goroutine 1:\n\tat foo.go:56');
@@ -1252,9 +1233,6 @@ describe('Workflow', () => {
         .render()
         .waitUntilExists('section.execution.ready section.stack-trace');
 
-      // Note: allow time for API requests to be sent and recieved by test.
-      await Promise.delay(400);
-
       await retry(() =>
         stackTraceEl
           .querySelector('pre')
@@ -1281,9 +1259,6 @@ describe('Workflow', () => {
       const queryEl = await scenario
         .render()
         .waitUntilExists('section.execution.ready section.query');
-
-      // Note: allow time for API requests to be sent and recieved by test.
-      await Promise.delay(400);
 
       return [queryEl, scenario];
     }

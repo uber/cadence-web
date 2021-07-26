@@ -173,7 +173,10 @@ describe('Workflow list', () => {
         },
         workflows: [],
       });
+
     wfIdEl.input('1234');
+
+    await workflowsEl.waitUntilExists('section.workflow-list.ready');
 
     await retry(() =>
       workflowsEl.textNodes('.row > .col-name').should.deep.equal(['demo'])
