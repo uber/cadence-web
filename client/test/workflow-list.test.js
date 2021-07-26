@@ -40,11 +40,9 @@ describe('Workflow list', () => {
       })
       .go();
 
-    const workflowList = await testEl.waitUntilExists(
-      'section.workflow-list.ready'
-    );
+    await testEl.waitUntilExists('section.workflow-list.ready');
 
-    return [workflowList, scenario];
+    return [testEl, scenario];
   }
 
   const demoWf = [
