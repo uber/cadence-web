@@ -19,35 +19,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+import { VISITED_DOMAIN_LIST_LIMIT } from '../constants';
+
 const updateVisitedDomainList = ({ value, visitedDomainList }) => {
   const name = typeof value === 'string' ? value : value.domainInfo.name;
   const uuid = typeof value === 'string' ? null : value.domainInfo.uuid;
 
-  const matchedDomainIndex = visitedDomainList.findIndex(visitedDomain =>
-    typeof visitedDomain === 'string'
-      ? visitedDomain === name
-      : visitedDomain.domainInfo.uuid === uuid
+  const matchedDomainIndex = visitedDomainList.findIndex(domain =>
+    typeof domain === 'string'
+      ? domain === name
+      : domain.domainInfo.uuid === uuid
   );
 
   if (matchedDomainIndex === -1) {
+    if (visitedDomainList.length >= VISITED_DOMAIN_LIST_LIMIT) {
+      [...visitedDomainList.slice(1), value];
+    }
+
     return [...visitedDomainList, value];
   }
 
-  if (!uuid) {
-    return null;
-  }
-
-  const matchedDomain = visitedDomainList[matchedDomainIndex];
-
-  if (typeof matchedDomain === 'string') {
-    return [
-      ...visitedDomainList.slice(0, matchedDomainIndex),
-      value,
-      ...visitedDomainList.slice(matchedDomainIndex + 1),
-    ];
-  }
-
-  return null;
+  return [
+    ...visitedDomainList.slice(0, matchedDomainIndex),
+    ...visitedDomainList.slice(matchedDomainIndex + 1),
+    value,
+  ];
 };
 
 export default updateVisitedDomainList;
