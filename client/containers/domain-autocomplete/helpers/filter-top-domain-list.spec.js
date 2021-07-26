@@ -19,14 +19,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const filterVisitedDomainList = ({ search, visitedDomainList }) =>
-  !search
-    ? visitedDomainList
-    : visitedDomainList.filter(domain => {
-        const domainName =
-          typeof domain === 'string' ? domain : domain.domainInfo.name;
+import { TOP_DOMAIN_LIST_LIMIT } from '../constants';
+import filterTopDomainList from './filter-top-domain-list';
 
-        return domainName.indexOf(search) !== -1;
-      });
+describe('filterTopDomainList', () => {
+  const createDomainList = size => {
+    const newDomainList = [];
 
-export default filterVisitedDomainList;
+    for (let i = 1; i < size + 1; i++) {
+      newDomainList.push(`domain${i}`);
+    }
+
+    return newDomainList;
+  };
+
+  describe('when domainList is greater than TOP_DOMAIN_LIST_LIMIT', () => {
+    let domainList;
+
+    beforeEach(() => {
+      domainList = createDomainList(TOP_DOMAIN_LIST_LIMIT * 2);
+    });
+
+    it('should return only the first domains of size = TOP_DOMAIN_LIST_LIMIT', () => {
+      const output = filterTopDomainList(domainList);
+
+      expect(output.length).toEqual(TOP_DOMAIN_LIST_LIMIT);
+      expect(output[0]).toEqual('domain1');
+      expect(output[output.length - 1]).toEqual(
+        `domain${TOP_DOMAIN_LIST_LIMIT}`
+      );
+    });
+  });
+});

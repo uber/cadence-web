@@ -19,14 +19,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const filterVisitedDomainList = ({ search, visitedDomainList }) =>
-  !search
-    ? visitedDomainList
-    : visitedDomainList.filter(domain => {
-        const domainName =
-          typeof domain === 'string' ? domain : domain.domainInfo.name;
+import sortDomainList from './sort-domain-list';
 
-        return domainName.indexOf(search) !== -1;
-      });
+describe('sortDomainList', () => {
+  const createDomainObject = domainName => ({
+    domainInfo: {
+      name: domainName,
+    },
+  });
 
-export default filterVisitedDomainList;
+  describe('when passed an unsorted domainList', () => {
+    it('should return an alphabetically sorted domainList', () => {
+      const domainA = 'domainA';
+      const domainB = 'domainB';
+      const domainC = 'domainC';
+      const domainD = createDomainObject('domainD');
+      const domainE = createDomainObject('domainE');
+      const domainF = createDomainObject('domainF');
+
+      const domainList = [domainF, domainD, domainB, domainE, domainA, domainC];
+
+      const output = sortDomainList(domainList);
+
+      expect(output).toEqual([
+        domainA,
+        domainB,
+        domainC,
+        domainD,
+        domainE,
+        domainF,
+      ]);
+    });
+  });
+});
