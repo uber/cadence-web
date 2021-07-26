@@ -19,6 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+<<<<<<< HEAD:client/containers/domain-autocomplete/helpers/update-visited-domain-list.js
 const updateVisitedDomainList = ({ value, visitedDomainList }) => {
   const name = typeof value === 'string' ? value : value.domainInfo.name;
   const uuid = typeof value === 'string' ? null : value.domainInfo.uuid;
@@ -51,3 +52,25 @@ const updateVisitedDomainList = ({ value, visitedDomainList }) => {
 };
 
 export default updateVisitedDomainList;
+=======
+import { connect } from 'vuex-connect';
+import { DOMAIN_AUTOCOMPLETE_ON_MOUNTED } from './mutation-types';
+
+const actionsToEvents = {
+  // TODO - updated in future PR
+};
+
+const gettersToProps = {
+  // TODO - updated in future PR
+};
+
+const lifecycle = {
+  mounted: ({ commit }) => commit(DOMAIN_AUTOCOMPLETE_ON_MOUNTED),
+};
+
+export default connect({
+  actionsToEvents,
+  gettersToProps,
+  lifecycle,
+});
+>>>>>>> master:client/containers/domain-autocomplete/connector.js

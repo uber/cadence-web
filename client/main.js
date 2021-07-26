@@ -25,7 +25,6 @@ import infiniteScroll from 'vue-infinite-scroll';
 import vueModal from 'vue-js-modal';
 import vueSplit from 'vue-split-panel';
 import qs from 'friendly-querystring';
-import moment from 'moment';
 import promiseFinally from 'promise.prototype.finally';
 
 import copyButton from './components/copy';
@@ -323,12 +322,6 @@ injectMomentDurationFormat();
 JSON.tryParse = jsonTryParse;
 
 promiseFinally.shim();
-
-Vue.mixin({
-  created() {
-    this.$moment = moment;
-  },
-});
 
 Vue.use(Router);
 Vue.use(infiniteScroll);
