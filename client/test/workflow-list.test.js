@@ -40,11 +40,9 @@ describe('Workflow list', () => {
       })
       .go();
 
-    const workflowList = await testEl.waitUntilExists(
-      'section.workflow-list.ready'
-    );
+    await testEl.waitUntilExists('section.workflow-list.ready');
 
-    return [workflowList, scenario];
+    return [testEl, scenario];
   }
 
   const demoWf = [
@@ -173,7 +171,10 @@ describe('Workflow list', () => {
         },
         workflows: [],
       });
+
     wfIdEl.input('1234');
+
+    await workflowsEl.waitUntilExists('section.workflow-list.ready');
 
     await retry(() =>
       workflowsEl.textNodes('.row > .col-name').should.deep.equal(['demo'])
