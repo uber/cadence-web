@@ -24,6 +24,7 @@ export { default as filterTopDomainList } from './filter-top-domain-list';
 export { default as filterVisitedDomainList } from './filter-visited-domain-list';
 export { default as formatDomainLabel } from './format-domain-label';
 export { default as formatDomainList } from './format-domain-list';
+export { default as migrateRecentDomains } from './migrate-recent-domains';
 export { default as sortDomainList } from './sort-domain-list';
 export { default as statePrefix } from './state-prefix';
 export { default as typePrefix } from './type-prefix';

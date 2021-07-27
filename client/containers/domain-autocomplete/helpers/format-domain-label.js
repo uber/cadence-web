@@ -19,15 +19,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+import get from 'lodash.get';
+
 const formatDomainLabel = domain =>
-  typeof domain === 'string'
-    ? domain
-    : [
-        domain.domainInfo.name,
-        domain.isGlobalDomain ? 'Global' : 'Local',
-        domain.replicationConfiguration.activeClusterName,
-      ]
-        .filter(domain => !!domain)
-        .join(' - ');
+  [
+    domain.domainInfo.name,
+    domain.isGlobalDomain !== undefined &&
+      (domain.isGlobalDomain ? 'Global' : 'Local'),
+    get(domain, 'replicationConfiguration.activeClusterName'),
+  ]
+    .filter(substring => !!substring)
+    .join(' - ');
 
 export default formatDomainLabel;
