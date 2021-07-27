@@ -31,7 +31,7 @@ import {
   NotificationBar,
   SelectInput,
 } from '~components';
-import { SettingsModal } from '~containers';
+import { DomainAutocomplete, SettingsModal } from '~containers';
 import {
   DATE_FORMAT_MMM_D_YYYY,
   DATE_FORMAT_OPTIONS,
@@ -58,6 +58,7 @@ import { httpService } from '~services';
 export default {
   components: {
     'button-icon': ButtonIcon,
+    'domain-autocomplete': DomainAutocomplete,
     'feature-flag': FeatureFlag,
     'flex-grid': FlexGrid,
     'flex-grid-item': FlexGridItem,
@@ -81,6 +82,7 @@ export default {
           origin,
         }),
       },
+      isSearchingDomain: false,
       newsLastUpdated: localStorage.getItem(LOCAL_STORAGE_NEWS_LAST_VIEWED_AT),
       newsItems: [],
       logo,
@@ -152,6 +154,12 @@ export default {
           this.$router.push(href);
         }
       }
+    },
+    onDomainAutocompleteChange() {
+      this.isSearchingDomain = false;
+    },
+    onEditDomainClick() {
+      this.isSearchingDomain = !this.isSearchingDomain;
     },
     onEnvironmentSelectChange(environment) {
       if (environment === this.environment.value) {
@@ -266,16 +274,38 @@ export default {
         </feature-flag>
 
         <flex-grid-item v-if="$route.params.domain" margin="15px">
-          <a
-            class="workflows"
-            :class="{
-              'router-link-active':
-                $route.path === `/domains/${$route.params.domain}/workflows`,
-            }"
-            :href="`/domains/${$route.params.domain}/workflows`"
-          >
-            {{ $route.params.domain }}
-          </a>
+          <flex-grid align-items="center">
+            <flex-grid-item>
+              <a
+                class="workflows"
+                :class="{
+                  'router-link-active':
+                    $route.path ===
+                    `/domains/${$route.params.domain}/workflows`,
+                }"
+                :href="`/domains/${$route.params.domain}/workflows`"
+                v-if="!isSearchingDomain"
+              >
+                {{ $route.params.domain }}
+              </a>
+              <domain-autocomplete
+                :focus="true"
+                height="slim"
+                v-if="isSearchingDomain"
+                width="500px"
+                @onChange="onDomainAutocompleteChange"
+              />
+            </flex-grid-item>
+            <flex-grid-item>
+              <button-icon
+                color="primary"
+                :icon="`${isSearchingDomain ? 'icon_delete' : 'icon_search'}`"
+                size="18px"
+                width="22px"
+                @click="onEditDomainClick"
+              />
+            </flex-grid-item>
+          </flex-grid>
         </flex-grid-item>
 
         <flex-grid-item v-if="$route.params.workflowId">
