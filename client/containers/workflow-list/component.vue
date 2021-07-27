@@ -111,8 +111,35 @@ export default {
     'workflow-grid': WorkflowGrid,
   },
   computed: {
+    criteria() {
+      const {
+        endTime,
+        filterMode,
+        isCron,
+        queryString,
+        startTime,
+        statusName: status,
+        workflowId,
+        workflowName,
+      } = this;
+
+      return getCriteria({
+        endTime,
+        filterMode,
+        isCron,
+        queryString,
+        startTime,
+        status,
+        workflowId,
+        workflowName,
+      });
+    },
     endTime() {
-      const { endTime, range } = this.$route.query;
+      const { range, endTime } = this.$route.query;
+
+      if (this.range && this.range.endTime) {
+        return getEndTimeIsoString(null, this.range.endTime.toISOString());
+      }
 
       return getEndTimeIsoString(range, endTime);
     },
@@ -121,14 +148,8 @@ export default {
 
       return getFormattedResults({ dateFormat, results, timeFormat, timezone });
     },
-    startTime() {
-      const { range, startTime } = this.$route.query;
-
-      if (this.range && this.range.startTime) {
-        return getStartTimeIsoString(null, this.range.startTime.toISOString());
-      }
-
-      return getStartTimeIsoString(range, startTime);
+    minStartDate() {
+      return this.getMinStartDate();
     },
     range() {
       const { maxRetentionDays, minStartDate, state } = this;
@@ -160,31 +181,14 @@ export default {
           }
         : query.range;
     },
-    criteria() {
-      const {
-        endTime,
-        filterMode,
-        isCron,
-        queryString,
-        startTime,
-        statusName: status,
-        workflowId,
-        workflowName,
-      } = this;
+    startTime() {
+      const { range, startTime } = this.$route.query;
 
-      return getCriteria({
-        endTime,
-        filterMode,
-        isCron,
-        queryString,
-        startTime,
-        status,
-        workflowId,
-        workflowName,
-      });
-    },
-    minStartDate() {
-      return this.getMinStartDate();
+      if (this.range && this.range.startTime) {
+        return getStartTimeIsoString(null, this.range.startTime.toISOString());
+      }
+
+      return getStartTimeIsoString(range, startTime);
     },
   },
   methods: {
@@ -323,6 +327,18 @@ export default {
         statusName,
       });
     },
+    isRouteRangeValid(minStartDate) {
+      const { now } = this;
+      const { endTime, range, startTime } = this.$route.query || {};
+
+      return isRouteRangeValid({
+        endTime,
+        minStartDate,
+        now,
+        range,
+        startTime,
+      });
+    },
     refreshWorkflows: debounce(
       function refreshWorkflows() {
         this.clearState();
@@ -348,17 +364,16 @@ export default {
         this.$emit('onFilterChange', { status: status.value });
       }
     },
-    isRouteRangeValid(minStartDate) {
-      const { now } = this;
-      const { endTime, range, startTime } = this.$route.query || {};
+    onFilterModeClick() {
+      this.clearState();
+      this.$emit('onFilterModeClick');
+    },
+    onWorkflowGridScroll(startIndex, endIndex) {
+      if (!this.npt && !this.nptAlt) {
+        return;
+      }
 
-      return isRouteRangeValid({
-        endTime,
-        minStartDate,
-        now,
-        range,
-        startTime,
-      });
+      return this.fetchWorkflowList();
     },
     setRange(range) {
       const query = { ...this.$route.query };
@@ -384,17 +399,6 @@ export default {
 
       return query;
     },
-    onFilterModeClick() {
-      this.clearState();
-      this.$emit('onFilterModeClick');
-    },
-    onWorkflowGridScroll(startIndex, endIndex) {
-      if (!this.npt && !this.nptAlt) {
-        return;
-      }
-
-      return this.fetchWorkflowList();
-    },
   },
   watch: {
     criteria(newCriteria, oldCriteria) {
@@ -409,6 +413,12 @@ export default {
           newCriteria.workflowId !== oldCriteria.workflowId ||
           newCriteria.workflowName !== oldCriteria.workflowName)
       ) {
+        this.refreshWorkflows();
+      }
+    },
+    async domain(newDomain, oldDomain) {
+      if (newDomain && oldDomain && newDomain !== oldDomain) {
+        await this.fetchDomain();
         this.refreshWorkflows();
       }
     },
