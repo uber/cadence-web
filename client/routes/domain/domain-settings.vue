@@ -75,7 +75,36 @@ export default {
 <style lang="stylus">
 @require "../../styles/definitions.styl"
 
-section.domain-settings
-  .foobar
-    display none
+section.domain-settings.domain-description {
+  flex: 1 1 60%;
+  padding: layout-spacing-small;
+
+  &.pending dl.details {
+    opacity: 0.2;
+  }
+
+  span.domain-name {
+    display: inline-block;
+    font-size: 18px;
+    padding: inline-spacing-small;
+    font-family: monospace-font-family;
+  }
+
+  dl.details {
+    & > div {
+      display: block;
+      padding: inline-spacing-small;
+    }
+
+    dt, dd {
+      line-height: 1.5em;
+    }
+
+    dt {
+      text-transform: uppercase;
+      font-family: primary-font-family;
+      font-weight: 200;
+    }
+  }
+}
 </style>
