@@ -19,11 +19,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const migrateRecentDomains = (recentDomains = []) =>
-  recentDomains.map(domainName => ({
-    domainInfo: {
-      name: domainName,
-    },
-  }));
+const migrateRecentDomains = recentDomains =>
+  (recentDomains &&
+    recentDomains.map(domainName => ({
+      domainInfo: {
+        name: domainName,
+      },
+    }))) ||
+  [];
 
 export default migrateRecentDomains;
