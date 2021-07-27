@@ -59,8 +59,6 @@ const actions = {
     }
 
     const { value } = payload;
-
-    // Add domain to visited domains if not already contained in visited domain list.
     const visitedDomainList = getters[DOMAIN_AUTOCOMPLETE_VISITED_DOMAIN_LIST];
 
     const updatedVisitedDomainList = updateVisitedDomainList({
@@ -68,12 +66,10 @@ const actions = {
       visitedDomainList,
     });
 
-    if (updatedVisitedDomainList) {
-      commit(
-        DOMAIN_AUTOCOMPLETE_SET_VISITED_DOMAIN_LIST,
-        updatedVisitedDomainList
-      );
-    }
+    commit(
+      DOMAIN_AUTOCOMPLETE_SET_VISITED_DOMAIN_LIST,
+      updatedVisitedDomainList
+    );
 
     const domainName =
       typeof value === 'string' ? value : value.domainInfo.name;
