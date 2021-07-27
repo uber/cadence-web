@@ -19,13 +19,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export { default as combineDomainList } from './combine-domain-list';
-export { default as filterTopDomainList } from './filter-top-domain-list';
-export { default as filterVisitedDomainList } from './filter-visited-domain-list';
-export { default as formatDomainLabel } from './format-domain-label';
-export { default as formatDomainList } from './format-domain-list';
-export { default as migrateRecentDomains } from './migrate-recent-domains';
-export { default as sortDomainList } from './sort-domain-list';
-export { default as statePrefix } from './state-prefix';
-export { default as typePrefix } from './type-prefix';
-export { default as updateVisitedDomainList } from './update-visited-domain-list';
+import migrateRecentDomains from './migrate-recent-domains';
+
+describe('migrateRecentDomains', () => {
+  describe('when passed recentDomains array strings', () => {
+    it('should format to array objects.', () => {
+      const recentDomains = ['domainA', 'domainB', 'domainC'];
+      const output = migrateRecentDomains(recentDomains);
+
+      expect(output).toEqual([
+        {
+          domainInfo: {
+            name: 'domainA',
+          },
+        },
+        {
+          domainInfo: {
+            name: 'domainB',
+          },
+        },
+        {
+          domainInfo: {
+            name: 'domainC',
+          },
+        },
+      ]);
+    });
+  });
+});
