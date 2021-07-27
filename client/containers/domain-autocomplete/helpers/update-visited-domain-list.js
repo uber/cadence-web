@@ -19,13 +19,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import actions from './actions';
-import Component from './component';
-import getDefaultState from './get-default-state';
-import getters from './getters';
-import connector from './connector';
-import mutations from './mutations';
+import { VISITED_DOMAIN_LIST_LIMIT } from '../constants';
 
-const container = connector(Component);
+const updateVisitedDomainList = ({ value, visitedDomainList }) => {
+  const name = typeof value === 'string' ? value : value.domainInfo.name;
+  const uuid = typeof value === 'string' ? null : value.domainInfo.uuid;
 
-export { actions, container, getDefaultState, getters, mutations };
+  const matchedDomainIndex = visitedDomainList.findIndex(domain =>
+    typeof domain === 'string'
+      ? domain === name
+      : domain.domainInfo.uuid === uuid
+  );
+
+  if (matchedDomainIndex === -1) {
+    const visitedDomainListExceededLimit =
+      visitedDomainList.length - VISITED_DOMAIN_LIST_LIMIT + 1;
+
+    return [
+      ...(visitedDomainListExceededLimit >= 1
+        ? visitedDomainList.slice(visitedDomainListExceededLimit)
+        : visitedDomainList),
+      value,
+    ];
+  }
+
+  return [
+    ...visitedDomainList.slice(0, matchedDomainIndex),
+    ...visitedDomainList.slice(matchedDomainIndex + 1),
+    value,
+  ];
+};
+
+export default updateVisitedDomainList;

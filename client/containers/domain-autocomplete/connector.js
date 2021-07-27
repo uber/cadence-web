@@ -22,6 +22,10 @@
 import { connect } from 'vuex-connect';
 import { ROUTE_PARAMS_DOMAIN } from '../route/getter-types';
 import {
+  DOMAIN_AUTOCOMPLETE_ON_CHANGE,
+  DOMAIN_AUTOCOMPLETE_ON_SEARCH,
+} from './action-types';
+import {
   DOMAIN_AUTOCOMPLETE_COMBINED_DOMAIN_LIST,
   DOMAIN_AUTOCOMPLETE_IS_LOADING,
   DOMAIN_AUTOCOMPLETE_NAVIGATE_TO_DOMAIN_URL,
@@ -30,7 +34,8 @@ import {
 import { DOMAIN_AUTOCOMPLETE_ON_MOUNTED } from './mutation-types';
 
 const actionsToEvents = {
-  // TODO - updated in future PR
+  onChange: DOMAIN_AUTOCOMPLETE_ON_CHANGE,
+  onSearch: DOMAIN_AUTOCOMPLETE_ON_SEARCH,
 };
 
 const gettersToProps = {
