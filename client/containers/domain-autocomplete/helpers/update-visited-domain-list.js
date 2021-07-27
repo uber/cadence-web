@@ -32,11 +32,15 @@ const updateVisitedDomainList = ({ value, visitedDomainList }) => {
   );
 
   if (matchedDomainIndex === -1) {
-    if (visitedDomainList.length >= VISITED_DOMAIN_LIST_LIMIT) {
-      [...visitedDomainList.slice(1), value];
-    }
+    const visitedDomainListExceededLimit =
+      visitedDomainList.length - VISITED_DOMAIN_LIST_LIMIT + 1;
 
-    return [...visitedDomainList, value];
+    return [
+      ...(visitedDomainListExceededLimit >= 1
+        ? visitedDomainList.slice(visitedDomainListExceededLimit)
+        : visitedDomainList),
+      value,
+    ];
   }
 
   return [
