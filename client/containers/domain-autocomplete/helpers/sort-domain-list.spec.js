@@ -30,9 +30,9 @@ describe('sortDomainList', () => {
 
   describe('when passed an unsorted domainList', () => {
     it('should return an alphabetically sorted domainList', () => {
-      const domainA = 'domainA';
-      const domainB = 'domainB';
-      const domainC = 'domainC';
+      const domainA = createDomainObject('domainA');
+      const domainB = createDomainObject('domainB');
+      const domainC = createDomainObject('domainC');
       const domainD = createDomainObject('domainD');
       const domainE = createDomainObject('domainE');
       const domainF = createDomainObject('domainF');

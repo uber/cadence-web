@@ -21,10 +21,8 @@
 
 const sortDomainList = domainList =>
   domainList.sort((domainA, domainB) => {
-    const domainNameA =
-      typeof domainA === 'string' ? domainA : domainA.domainInfo.name;
-    const domainNameB =
-      typeof domainB === 'string' ? domainB : domainB.domainInfo.name;
+    const domainNameA = domainA.domainInfo.name;
+    const domainNameB = domainB.domainInfo.name;
 
     if (domainNameA < domainNameB) {
       return -1;

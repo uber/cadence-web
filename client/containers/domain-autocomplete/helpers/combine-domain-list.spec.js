@@ -24,14 +24,22 @@ import combineDomainList from './combine-domain-list';
 describe('combineDomainList', () => {
   describe('when passed domainList & visitedDomainList', () => {
     const visitedDomainList = [
-      'domain1',
+      {
+        domainInfo: {
+          name: 'domain1',
+        },
+      },
       {
         domainInfo: {
           name: 'domain2',
           uuid: 2,
         },
       },
-      'domain3',
+      {
+        domainInfo: {
+          name: 'domain3',
+        },
+      },
       {
         domainInfo: {
           name: 'domain4',
@@ -83,7 +91,11 @@ describe('combineDomainList', () => {
             uuid: 2,
           },
         },
-        'domain3',
+        {
+          domainInfo: {
+            name: 'domain3',
+          },
+        },
         {
           domainInfo: {
             name: 'domain4',

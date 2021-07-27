@@ -26,8 +26,8 @@ const combineDomainList = ({ domainList, visitedDomainList }) => {
   return [
     ...domainList,
     ...visitedDomainList.filter(domain =>
-      typeof domain === 'string'
-        ? domainNameList.indexOf(domain) === -1
+      domain.domainInfo.uuid === undefined
+        ? domainNameList.indexOf(domain.domainInfo.name) === -1
         : domainListUuidList.indexOf(domain.domainInfo.uuid) === -1
     ),
   ];

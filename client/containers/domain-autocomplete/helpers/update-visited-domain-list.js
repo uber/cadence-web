@@ -22,13 +22,11 @@
 import { VISITED_DOMAIN_LIST_LIMIT } from '../constants';
 
 const updateVisitedDomainList = ({ value, visitedDomainList }) => {
-  const name = typeof value === 'string' ? value : value.domainInfo.name;
-  const uuid = typeof value === 'string' ? null : value.domainInfo.uuid;
+  const name = value.domainInfo.name;
+  const uuid = value.domainInfo.uuid || null;
 
-  const matchedDomainIndex = visitedDomainList.findIndex(domain =>
-    typeof domain === 'string'
-      ? domain === name
-      : domain.domainInfo.uuid === uuid
+  const matchedDomainIndex = visitedDomainList.findIndex(
+    domain => domain.domainInfo.uuid === uuid || domain.domainInfo.name === name
   );
 
   if (matchedDomainIndex === -1) {
