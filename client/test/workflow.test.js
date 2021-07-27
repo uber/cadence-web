@@ -1197,6 +1197,7 @@ describe('Workflow', () => {
           .querySelector('header span')
           .should.contain.text(`Stack trace at ${stackTraceTime}`)
       );
+
       stackTraceEl
         .querySelector('pre')
         .should.have.text('goroutine 1:\n\tat foo.go:56');
