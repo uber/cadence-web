@@ -71,10 +71,7 @@ const actions = {
       updatedVisitedDomainList
     );
 
-    const domainName =
-      typeof value === 'string' ? value : value.domainInfo.name;
-
-    dispatch(ROUTE_PUSH, `/domains/${domainName}`);
+    dispatch(ROUTE_PUSH, `/domains/${value.domainInfo.name}`);
   },
   [DOMAIN_AUTOCOMPLETE_ON_SEARCH]: async ({ commit, dispatch }, payload) => {
     commit(DOMAIN_AUTOCOMPLETE_SET_SEARCH, payload);
