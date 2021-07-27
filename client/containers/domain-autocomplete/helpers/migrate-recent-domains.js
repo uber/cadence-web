@@ -19,18 +19,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const combineDomainList = ({ domainList, visitedDomainList }) => {
-  const domainListUuidList = domainList.map(domain => domain.domainInfo.uuid);
-  const domainNameList = domainList.map(domain => domain.domainInfo.name);
+const migrateRecentDomains = recentDomains =>
+  (recentDomains &&
+    recentDomains.map(domainName => ({
+      domainInfo: {
+        name: domainName,
+      },
+    }))) ||
+  [];
 
-  return [
-    ...domainList,
-    ...visitedDomainList.filter(domain =>
-      domain.domainInfo.uuid === undefined
-        ? domainNameList.indexOf(domain.domainInfo.name) === -1
-        : domainListUuidList.indexOf(domain.domainInfo.uuid) === -1
-    ),
-  ];
-};
-
-export default combineDomainList;
+export default migrateRecentDomains;

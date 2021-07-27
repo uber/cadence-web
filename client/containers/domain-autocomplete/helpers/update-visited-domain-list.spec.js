@@ -24,7 +24,11 @@ import updateVisitedDomainList from './update-visited-domain-list';
 
 describe('updateVisitedDomainList', () => {
   const getVisitedDomainList = () => [
-    'domainString',
+    {
+      domainInfo: {
+        name: 'domainString',
+      },
+    },
     {
       domainInfo: {
         uuid: 2,

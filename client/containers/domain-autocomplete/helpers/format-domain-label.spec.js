@@ -22,8 +22,12 @@
 import formatDomainLabel from './format-domain-label';
 
 describe('formatDomainLabel', () => {
-  describe('when passed domain string', () => {
-    const domain = 'domainName';
+  describe('when passed domain object with only name defined', () => {
+    const domain = {
+      domainInfo: {
+        name: 'domainName',
+      },
+    };
 
     it('should render only the domainName.', () => {
       const output = formatDomainLabel(domain);

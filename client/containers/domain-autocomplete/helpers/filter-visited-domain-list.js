@@ -22,11 +22,8 @@
 const filterVisitedDomainList = ({ search, visitedDomainList }) =>
   !search
     ? visitedDomainList
-    : visitedDomainList.filter(domain => {
-        const domainName =
-          typeof domain === 'string' ? domain : domain.domainInfo.name;
-
-        return domainName.indexOf(search) !== -1;
-      });
+    : visitedDomainList.filter(
+        domain => domain.domainInfo.name.indexOf(search) !== -1
+      );
 
 export default filterVisitedDomainList;

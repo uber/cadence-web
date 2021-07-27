@@ -26,14 +26,22 @@ describe('filterVisitedDomainList', () => {
 
   beforeEach(() => {
     visitedDomainList = [
-      'domain1',
+      {
+        domainInfo: {
+          name: 'domain1',
+        },
+      },
       {
         domainInfo: {
           name: 'domain2',
           uuid: 2,
         },
       },
-      'other',
+      {
+        domainInfo: {
+          name: 'other',
+        },
+      },
     ];
   });
 
@@ -54,7 +62,11 @@ describe('filterVisitedDomainList', () => {
       const output = filterVisitedDomainList({ search, visitedDomainList });
 
       expect(output).toEqual([
-        'domain1',
+        {
+          domainInfo: {
+            name: 'domain1',
+          },
+        },
         {
           domainInfo: {
             name: 'domain2',

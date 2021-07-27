@@ -19,18 +19,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const combineDomainList = ({ domainList, visitedDomainList }) => {
-  const domainListUuidList = domainList.map(domain => domain.domainInfo.uuid);
-  const domainNameList = domainList.map(domain => domain.domainInfo.name);
+import migrateRecentDomains from './migrate-recent-domains';
 
-  return [
-    ...domainList,
-    ...visitedDomainList.filter(domain =>
-      domain.domainInfo.uuid === undefined
-        ? domainNameList.indexOf(domain.domainInfo.name) === -1
-        : domainListUuidList.indexOf(domain.domainInfo.uuid) === -1
-    ),
-  ];
-};
+describe('migrateRecentDomains', () => {
+  describe('when passed recentDomains array strings', () => {
+    it('should format to array objects.', () => {
+      const recentDomains = ['domainA', 'domainB', 'domainC'];
+      const output = migrateRecentDomains(recentDomains);
 
-export default combineDomainList;
+      expect(output).toEqual([
+        {
+          domainInfo: {
+            name: 'domainA',
+          },
+        },
+        {
+          domainInfo: {
+            name: 'domainB',
+          },
+        },
+        {
+          domainInfo: {
+            name: 'domainC',
+          },
+        },
+      ]);
+    });
+  });
+});
