@@ -28,7 +28,7 @@ const formatDomainLabel = domain =>
       (domain.isGlobalDomain ? 'Global' : 'Local'),
     get(domain, 'replicationConfiguration.activeClusterName'),
   ]
-    .filter(entry => !!entry)
+    .filter(substring => !!substring)
     .join(' - ');
 
 export default formatDomainLabel;
