@@ -332,6 +332,7 @@ export default {
   </main>
 </template>
 
+<style src="vue-select/dist/vue-select.css"></style>
 <style src="vue-virtual-scroller/dist/vue-virtual-scroller.css"></style>
 <style src="vue2-datepicker/index.css"></style>
 <style lang="stylus">
@@ -395,15 +396,16 @@ header.top-bar
   }
 
   .environment-select {
-    .dropdown-toggle {
+    .vs__dropdown-toggle {
       border-color: transparent;
     }
 
-    .open-indicator:before {
-      border-color: uber-blue;
+    .vs__open-indicator {
+      height: 10px;
+      fill: uber-blue;
     }
 
-    .selected-tag {
+    .vs__selected {
       color: white;
       font-weight: bold;
     }

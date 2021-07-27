@@ -86,7 +86,10 @@ export default {
 </script>
 
 <template>
-  <div class="autocomplete" :class="{ [height]: height }">
+  <div
+    class="autocomplete"
+    :class="{ [height]: height, loading: isLoading, ready: !isLoading }"
+  >
     <v-select
       :clear-search-on-blur="() => false"
       :filterable="false"
