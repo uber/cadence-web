@@ -35,6 +35,7 @@ import {
   filterVisitedDomainList,
   filterTopDomainList,
   formatDomainList,
+  formatVisitedDomainList,
   sortDomainList,
   statePrefix,
 } from './helpers';
@@ -79,7 +80,10 @@ const getters = {
   [DOMAIN_AUTOCOMPLETE_SEARCH_URL]: (_, getters) =>
     `/api/domains?querystring=${getters[DOMAIN_AUTOCOMPLETE_SEARCH]}`,
   [DOMAIN_AUTOCOMPLETE_VISITED_DOMAIN_LIST]: state =>
-    sortDomainList(get(state, statePrefix('visitedDomainList')) || []),
+    combine(get(state, statePrefix('visitedDomainList')) || [])(
+      formatVisitedDomainList,
+      sortDomainList
+    ),
 };
 
 export default getters;

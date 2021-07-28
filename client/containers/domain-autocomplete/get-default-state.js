@@ -19,13 +19,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { migrateRecentDomains } from './helpers';
+import { formatVisitedDomainList } from './helpers';
 
 const getDefaultState = (state = {}) => ({
   isLoading: false,
   domainList: [],
   search: '',
-  visitedDomainList: migrateRecentDomains(
+  visitedDomainList: formatVisitedDomainList(
     JSON.tryParse(localStorage.getItem('recent-domains'))
   ),
   ...state,

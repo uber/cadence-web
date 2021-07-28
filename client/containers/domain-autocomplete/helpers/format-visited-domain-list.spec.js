@@ -19,13 +19,43 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const migrateRecentDomains = recentDomains =>
-  (recentDomains &&
-    recentDomains.map(domainName => ({
-      domainInfo: {
-        name: domainName,
-      },
-    }))) ||
-  [];
+import formatVisitedDomainList from './format-visited-domain-list';
 
-export default migrateRecentDomains;
+describe('formatVisitedDomainList', () => {
+  describe('when passed domainList array of strings', () => {
+    it('should format to array objects.', () => {
+      const recentDomains = ['domainA', 'domainB', 'domainC'];
+      const output = formatVisitedDomainList(recentDomains);
+
+      expect(output).toEqual([
+        {
+          domainInfo: {
+            name: 'domainA',
+          },
+        },
+        {
+          domainInfo: {
+            name: 'domainB',
+          },
+        },
+        {
+          domainInfo: {
+            name: 'domainC',
+          },
+        },
+      ]);
+    });
+  });
+
+  describe('when passed domainList array of objects', () => {
+    it('should not change the array.', () => {
+      // TODO
+    });
+  });
+
+  describe('when passed domainList array of mixed strings and objects', () => {
+    it('should only change the strings to objects and leave the rest.', () => {
+      // TODO
+    });
+  });
+});

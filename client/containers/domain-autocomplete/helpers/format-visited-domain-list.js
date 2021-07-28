@@ -19,31 +19,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import migrateRecentDomains from './migrate-recent-domains';
+const formatVisitedDomainList = domainList =>
+  (domainList &&
+    domainList.map(domain => {
+      if (typeof domain === 'string') {
+        return {
+          domainInfo: {
+            name: domain,
+          },
+        };
+      }
 
-describe('migrateRecentDomains', () => {
-  describe('when passed recentDomains array strings', () => {
-    it('should format to array objects.', () => {
-      const recentDomains = ['domainA', 'domainB', 'domainC'];
-      const output = migrateRecentDomains(recentDomains);
+      return domain;
+    })) ||
+  [];
 
-      expect(output).toEqual([
-        {
-          domainInfo: {
-            name: 'domainA',
-          },
-        },
-        {
-          domainInfo: {
-            name: 'domainB',
-          },
-        },
-        {
-          domainInfo: {
-            name: 'domainC',
-          },
-        },
-      ]);
-    });
-  });
-});
+export default formatVisitedDomainList;
