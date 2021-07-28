@@ -35,6 +35,7 @@ import {
   getDomainAutocompleteDefaultState,
   domainAutocompleteGetters,
   domainAutocompleteMutations,
+  domainAutocompleteReducer,
 
   // graph
   getGraphDefaultState,
@@ -84,6 +85,10 @@ const getStoreConfig = ({ router, state }) => {
   const initialState = getDefaultState(state);
 
   const vuexLocal = new VuexPersistence({
+    reducer: state => ({
+      ...state,
+      domainAutocomplete: domainAutocompleteReducer(state),
+    }),
     storage: window.localStorage,
   });
 
