@@ -19,19 +19,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const migrateRecentDomains = domainList =>
-  (domainList &&
-    domainList.map(domain => {
-      if (typeof domain === 'string') {
-        return {
-          domainInfo: {
-            name: domain,
-          },
-        };
-      }
+import { migrateRecentDomains } from './helpers';
 
-      return domain;
-    })) ||
-  [];
+const reducer = state => ({
+  ...state.domainAutocomplete,
+  visitedDomainList: migrateRecentDomains(
+    state.domainAutocomplete.visitedDomainList
+  ),
+});
 
-export default migrateRecentDomains;
+export default reducer;
