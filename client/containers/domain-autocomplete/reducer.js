@@ -22,10 +22,8 @@
 import { migrateRecentDomains } from './helpers';
 
 const reducer = state => ({
-  ...state.domainAutocomplete,
-  visitedDomainList: migrateRecentDomains(
-    state.domainAutocomplete.visitedDomainList
-  ),
+  ...state,
+  visitedDomainList: migrateRecentDomains(state.visitedDomainList),
 });
 
 export default reducer;
