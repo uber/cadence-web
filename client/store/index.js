@@ -85,10 +85,18 @@ const getStoreConfig = ({ router, state }) => {
   const initialState = getDefaultState(state);
 
   const vuexLocal = new VuexPersistence({
-    reducer: state => ({
-      ...state,
-      domainAutocomplete: domainAutocompleteReducer(state),
-    }),
+    restoreState: key => {
+      const state = JSON.tryParse(localStorage.getItem(key));
+
+      if (!state) {
+        return;
+      }
+
+      return {
+        ...state,
+        domainAutocomplete: domainAutocompleteReducer(state.domainAutocomplete),
+      };
+    },
     storage: window.localStorage,
   });
 
