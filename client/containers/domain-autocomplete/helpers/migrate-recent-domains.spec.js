@@ -22,10 +22,10 @@
 import migrateRecentDomains from './migrate-recent-domains';
 
 describe('migrateRecentDomains', () => {
-  describe('when passed recentDomains array strings', () => {
+  describe('when passed domainList array of strings', () => {
     it('should format to array objects.', () => {
-      const recentDomains = ['domainA', 'domainB', 'domainC'];
-      const output = migrateRecentDomains(recentDomains);
+      const domainList = ['domainA', 'domainB', 'domainC'];
+      const output = migrateRecentDomains(domainList);
 
       expect(output).toEqual([
         {
@@ -36,6 +36,94 @@ describe('migrateRecentDomains', () => {
         {
           domainInfo: {
             name: 'domainB',
+          },
+        },
+        {
+          domainInfo: {
+            name: 'domainC',
+          },
+        },
+      ]);
+    });
+  });
+
+  describe('when passed domainList array of objects', () => {
+    it('should not change the array.', () => {
+      const domainList = [
+        {
+          domainInfo: {
+            name: 'domainA',
+            uuid: 1,
+          },
+        },
+        {
+          domainInfo: {
+            name: 'domainB',
+            uuid: 2,
+          },
+        },
+        {
+          domainInfo: {
+            name: 'domainC',
+            uuid: 2,
+          },
+        },
+      ];
+      const output = migrateRecentDomains(domainList);
+
+      expect(output).toEqual([
+        {
+          domainInfo: {
+            name: 'domainA',
+            uuid: 1,
+          },
+        },
+        {
+          domainInfo: {
+            name: 'domainB',
+            uuid: 2,
+          },
+        },
+        {
+          domainInfo: {
+            name: 'domainC',
+            uuid: 2,
+          },
+        },
+      ]);
+    });
+  });
+
+  describe('when passed domainList array of mixed strings and objects', () => {
+    it('should only change the strings to objects and leave the rest.', () => {
+      const domainList = [
+        {
+          domainInfo: {
+            name: 'domainA',
+            uuid: 1,
+          },
+        },
+        {
+          domainInfo: {
+            name: 'domainB',
+            uuid: 2,
+          },
+        },
+        'domainC',
+      ];
+      const output = migrateRecentDomains(domainList);
+
+      expect(output).toEqual([
+        {
+          domainInfo: {
+            name: 'domainA',
+            uuid: 1,
+          },
+        },
+        {
+          domainInfo: {
+            name: 'domainB',
+            uuid: 2,
           },
         },
         {

@@ -31,6 +31,7 @@ export {
   getDefaultState as getDomainAutocompleteDefaultState,
   getters as domainAutocompleteGetters,
   mutations as domainAutocompleteMutations,
+  reducer as domainAutocompleteReducer,
 } from './domain-autocomplete';
 export {
   getDefaultState as getGraphDefaultState,

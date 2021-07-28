@@ -25,7 +25,8 @@ import getDefaultState from './get-default-state';
 import getters from './getters';
 import connector from './connector';
 import mutations from './mutations';
+import reducer from './reducer';
 
 const container = connector(Component);
 
-export { actions, container, getDefaultState, getters, mutations };
+export { actions, container, getDefaultState, getters, mutations, reducer };
