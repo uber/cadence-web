@@ -86,12 +86,8 @@ const getStoreConfig = ({ router, state }) => {
 
   const vuexLocal = new VuexPersistence({
     reducer: state => ({
-      cluster: state.cluster,
+      ...state,
       domainAutocomplete: domainAutocompleteReducer(state),
-      graph: state.graph,
-      settingsWorkflowHistory: state.settingsWorkflowHistory,
-      workflow: state.workflow,
-      workflowHistory: state.workflowHistory,
     }),
     storage: window.localStorage,
   });
