@@ -92,9 +92,15 @@ const getStoreConfig = ({ router, state }) => {
         return;
       }
 
+      const domainAutocomplete = domainAutocompleteReducer(
+        state.domainAutocomplete
+      );
+
       return {
         ...state,
-        domainAutocomplete: domainAutocompleteReducer(state.domainAutocomplete),
+        ...(domainAutocomplete && {
+          domainAutocomplete,
+        }),
       };
     },
     storage: window.localStorage,

@@ -21,9 +21,10 @@
 
 import { migrateRecentDomains } from './helpers';
 
-const reducer = state => ({
-  ...state,
-  visitedDomainList: migrateRecentDomains(state.visitedDomainList),
-});
+const reducer = state =>
+  state && {
+    ...state,
+    visitedDomainList: migrateRecentDomains(state.visitedDomainList),
+  };
 
 export default reducer;
