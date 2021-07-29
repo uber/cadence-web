@@ -25,7 +25,7 @@ const isAdvancedVisibilityEnabled = require('./is-advanced-visibility-enabled');
 const momentToLong = require('./moment-to-long');
 
 async function listWorkflows({ clusterService, state }, ctx) {
-  const { query = {} } = ctx;
+  const { params = {}, query = {} } = ctx;
   const startTime = moment(query.startTime || NaN);
   const endTime = moment(query.endTime || NaN);
 
@@ -69,7 +69,16 @@ async function listWorkflows({ clusterService, state }, ctx) {
 
   const requestApi = advancedVisibility ? 'listWorkflows' : state + 'Workflows';
 
-  ctx.body = await ctx.cadence[requestApi](requestArgs);
+  const workflowListResponse = await ctx.cadence[requestApi](requestArgs);
+
+  workflowListResponse.executions = workflowListResponse.executions.map(
+    execution => ({
+      ...execution,
+      domainName: params.domain,
+    })
+  );
+
+  ctx.body = workflowListResponse;
 }
 
 module.exports = listWorkflows;
