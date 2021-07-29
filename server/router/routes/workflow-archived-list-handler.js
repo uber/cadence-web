@@ -40,19 +40,19 @@ const workflowArchivedListHandler = async ctx => {
     queryString = buildQueryString(startTime, endTime, query);
   }
 
-  const archivedWorkflowResponse = await ctx.cadence.archivedWorkflows({
+  const archivedWorkflowsResponse = await ctx.cadence.archivedWorkflows({
     query: queryString,
     nextPageToken: nextPageToken
       ? Buffer.from(nextPageToken, 'base64')
       : undefined,
   });
 
-  archivedWorkflowResponse.executions = injectDomainIntoWorkflowList(
+  archivedWorkflowsResponse.executions = injectDomainIntoWorkflowList(
     params.domain,
-    archivedWorkflowResponse
+    archivedWorkflowsResponse
   );
 
-  ctx.body = archivedWorkflowResponse;
+  ctx.body = archivedWorkflowsResponse;
 };
 
 module.exports = workflowArchivedListHandler;
