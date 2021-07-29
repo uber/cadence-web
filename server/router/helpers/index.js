@@ -21,6 +21,7 @@
 
 const buildQueryString = require('./build-query-string');
 const delay = require('./delay');
+const injectDomainIntoWorkflowList = require('./inject-domain-into-workflow-list');
 const isAdvancedVisibilityEnabled = require('./is-advanced-visibility-enabled');
 const listWorkflows = require('./list-workflows');
 const mapHistoryResponse = require('./map-history-response');
@@ -30,6 +31,7 @@ const replacer = require('./replacer');
 module.exports = {
   buildQueryString,
   delay,
+  injectDomainIntoWorkflowList,
   isAdvancedVisibilityEnabled,
   listWorkflows,
   mapHistoryResponse,

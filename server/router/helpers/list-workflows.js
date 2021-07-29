@@ -21,6 +21,7 @@
 
 const moment = require('moment');
 const buildQueryString = require('./build-query-string');
+const injectDomainIntoWorkflowList = require('./inject-domain-into-workflow-list');
 const isAdvancedVisibilityEnabled = require('./is-advanced-visibility-enabled');
 const momentToLong = require('./moment-to-long');
 
@@ -71,11 +72,9 @@ async function listWorkflows({ clusterService, state }, ctx) {
 
   const workflowListResponse = await ctx.cadence[requestApi](requestArgs);
 
-  workflowListResponse.executions = workflowListResponse.executions.map(
-    execution => ({
-      ...execution,
-      domainName: params.domain,
-    })
+  workflowListResponse.executions = injectDomainIntoWorkflowList(
+    params.domain,
+    workflowListResponse
   );
 
   ctx.body = workflowListResponse;

@@ -20,7 +20,10 @@
 // THE SOFTWARE.
 
 const moment = require('moment');
-const { buildQueryString } = require('../helpers');
+const {
+  buildQueryString,
+  injectDomainIntoWorkflowList,
+} = require('../helpers');
 
 const workflowArchivedListHandler = async ctx => {
   const { nextPageToken, ...query } = ctx.query || {};
@@ -44,11 +47,9 @@ const workflowArchivedListHandler = async ctx => {
       : undefined,
   });
 
-  archivedWorkflowResponse.executions = archivedWorkflowResponse.executions.map(
-    execution => ({
-      ...execution,
-      domainName: params.domain,
-    })
+  archivedWorkflowResponse.executions = injectDomainIntoWorkflowList(
+    params.domain,
+    archivedWorkflowResponse
   );
 
   ctx.body = archivedWorkflowResponse;
