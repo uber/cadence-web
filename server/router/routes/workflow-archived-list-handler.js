@@ -24,6 +24,7 @@ const { buildQueryString } = require('../helpers');
 
 const workflowArchivedListHandler = async ctx => {
   const { nextPageToken, ...query } = ctx.query || {};
+  const { params = {} } = ctx;
   let queryString;
 
   if (query.queryString) {
@@ -36,12 +37,21 @@ const workflowArchivedListHandler = async ctx => {
     queryString = buildQueryString(startTime, endTime, query);
   }
 
-  ctx.body = await ctx.cadence.archivedWorkflows({
+  const archivedWorkflowResponse = await ctx.cadence.archivedWorkflows({
     query: queryString,
     nextPageToken: nextPageToken
       ? Buffer.from(nextPageToken, 'base64')
       : undefined,
   });
+
+  archivedWorkflowResponse.executions = archivedWorkflowResponse.executions.map(
+    execution => ({
+      ...execution,
+      domainName: params.domain,
+    })
+  );
+
+  ctx.body = archivedWorkflowResponse;
 };
 
 module.exports = workflowArchivedListHandler;

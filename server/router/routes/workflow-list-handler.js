@@ -21,13 +21,23 @@
 
 const workflowListHandler = async ctx => {
   const q = ctx.query || {};
+  const { params = {} } = ctx;
 
-  ctx.body = await ctx.cadence.listWorkflows({
+  const listWorkflowsResponse = await ctx.cadence.listWorkflows({
     query: q.queryString || undefined,
     nextPageToken: q.nextPageToken
       ? Buffer.from(q.nextPageToken, 'base64')
       : undefined,
   });
+
+  listWorkflowsResponse.executions = listWorkflowsResponse.executions.map(
+    execution => ({
+      ...execution,
+      domainName: params.domain,
+    })
+  );
+
+  ctx.body = listWorkflowsResponse;
 };
 
 module.exports = workflowListHandler;
