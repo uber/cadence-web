@@ -28,6 +28,7 @@ export default ({ dateFormat, results, timeFormat, timezone }) =>
         ({
           closeStatus,
           closeTime,
+          domainName,
           execution: { runId, workflowId },
           startTime,
           type: { name },
@@ -39,6 +40,7 @@ export default ({ dateFormat, results, timeFormat, timezone }) =>
             timeFormat,
             timezone,
           }),
+          domainName,
           runId,
           startTime: getDatetimeFormattedString({
             date: startTime,
