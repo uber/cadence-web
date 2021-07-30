@@ -652,6 +652,7 @@ export default {
   workflows: {
     open: [
       {
+        domainName: 'ci-test',
         execution: {
           workflowId: 'github.com/uber/cadence-web/email-daily-summaries-2',
           runId: 'ef2c889e-e709-4d50-99ee-3748dfa0a101',
@@ -664,6 +665,7 @@ export default {
           .toISOString(),
       },
       {
+        domainName: 'ci-test',
         execution: {
           workflowId: 'github.com/uber/cadence-web/example-1',
           runId: 'db8da3c0-b7d3-48b7-a9b3-b6f566e58207',
@@ -678,6 +680,7 @@ export default {
     ],
     closed: [
       {
+        domainName: 'ci-test',
         execution: {
           workflowId: 'email-daily-summaries',
           runId: '51ccc0d1-6ffe-4a7a-a89f-6b5154df86f7',
@@ -695,6 +698,7 @@ export default {
     ],
     list: [
       {
+        domainName: 'ci-test',
         execution: {
           workflowId: 'email-daily-summaries',
           runId: '51ccc0d1-6ffe-4a7a-a89f-6b5154df86f7',
