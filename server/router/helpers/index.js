@@ -20,6 +20,7 @@
 // THE SOFTWARE.
 
 const buildQueryString = require('./build-query-string');
+const combine = require('./combine');
 const delay = require('./delay');
 const isAdvancedVisibilityEnabled = require('./is-advanced-visibility-enabled');
 const listWorkflows = require('./list-workflows');
@@ -29,6 +30,7 @@ const replacer = require('./replacer');
 
 module.exports = {
   buildQueryString,
+  combine,
   delay,
   isAdvancedVisibilityEnabled,
   listWorkflows,

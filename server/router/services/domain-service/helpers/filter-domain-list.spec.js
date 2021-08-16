@@ -19,15 +19,38 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const { combine } = require('../../../helpers');
-const fetchDomainListNextPage = require('./fetch-domain-list-next-page');
-const filterDomainList = require('./filter-domain-list');
-const sortDomainList = require('./sort-domain-list');
+import filterDomainList from './filter-domain-list';
 
-const fetchDomainList = ctx => async () => {
-  const domainList = await fetchDomainListNextPage({ ctx });
+describe('filterDomainList', () => {
+  describe('when a registered domain is in domainList', () => {
+    const domainList = [
+      {
+        domainInfo: {
+          status: 'REGISTERED',
+        },
+      },
+    ];
 
-  return combine(domainList)(filterDomainList, sortDomainList);
-};
+    it('should return this domain in the returned list.', () => {
+      const output = filterDomainList(domainList);
 
-module.exports = fetchDomainList;
+      expect(output.length).toEqual(1);
+    });
+  });
+
+  describe('when a deprecated domain is in the domainList', () => {
+    const domainList = [
+      {
+        domainInfo: {
+          status: 'DEPRECATED',
+        },
+      },
+    ];
+
+    it('should not return this domain in the returned list.', () => {
+      const output = filterDomainList(domainList);
+
+      expect(output.length).toEqual(0);
+    });
+  });
+});

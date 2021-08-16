@@ -19,15 +19,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const { combine } = require('../../../helpers');
-const fetchDomainListNextPage = require('./fetch-domain-list-next-page');
-const filterDomainList = require('./filter-domain-list');
-const sortDomainList = require('./sort-domain-list');
+const { DOMAIN_STATUS_REGISTERED } = require('../constants');
 
-const fetchDomainList = ctx => async () => {
-  const domainList = await fetchDomainListNextPage({ ctx });
+const filterDomainList = domainList =>
+  domainList.filter(
+    domain => domain.domainInfo.status === DOMAIN_STATUS_REGISTERED
+  );
 
-  return combine(domainList)(filterDomainList, sortDomainList);
-};
-
-module.exports = fetchDomainList;
+module.exports = filterDomainList;
