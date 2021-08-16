@@ -21,6 +21,7 @@
 
 const fetchDomainListNextPage = require('./fetch-domain-list-next-page');
 const fetchDomainList = require('./fetch-domain-list');
+const filterDomainList = require('./filter-domain-list');
 const getDomainList = require('./get-domain-list');
 const getMatchingDomains = require('./get-matching-domains');
 const sortDomainList = require('./sort-domain-list');
@@ -28,6 +29,7 @@ const sortDomainList = require('./sort-domain-list');
 module.exports = {
   fetchDomainListNextPage,
   fetchDomainList,
+  filterDomainList,
   getDomainList,
   getMatchingDomains,
   sortDomainList,
