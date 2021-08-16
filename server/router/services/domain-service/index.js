@@ -28,9 +28,13 @@ class DomainService {
 
   async searchDomains(ctx) {
     const { cacheManager } = this;
-    const { querystring } = ctx.query;
+    const { all, querystring } = ctx.query;
 
     const domainList = await getDomainList({ cacheManager, ctx });
+
+    if (all) {
+      return domainList;
+    }
 
     return getMatchingDomains({ domainList, querystring });
   }
