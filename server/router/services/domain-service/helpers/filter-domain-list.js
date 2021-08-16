@@ -19,7 +19,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+const { WORKFLOW_STATUS_REGISTERED } = require('../constants');
+
 const filterDomainList = domainList =>
-  domainList.filter(domain => domain.domainInfo.status === 'REGISTERED');
+  domainList.filter(
+    domain => domain.domainInfo.status === WORKFLOW_STATUS_REGISTERED
+  );
 
 module.exports = filterDomainList;
