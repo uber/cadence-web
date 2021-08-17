@@ -19,20 +19,50 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const { DOMAIN_LIST_DELAY_MS, DOMAIN_LIST_PAGE_SIZE } = require('../constants');
+const {
+  DOMAIN_LIST_DELAY_MS,
+  DOMAIN_LIST_PAGE_SIZE,
+  DOMAIN_LIST_RETRY_MAX,
+} = require('../constants');
 const { delay } = require('../../../helpers');
 
 const fetchDomainListNextPage = async ({
   ctx,
   domainList = [],
   nextPageToken = '',
+  retryCount = 0,
 }) => {
-  const data = await ctx.cadence.listDomains({
-    pageSize: DOMAIN_LIST_PAGE_SIZE,
-    nextPageToken: nextPageToken
-      ? Buffer.from(encodeURIComponent(nextPageToken), 'base64')
-      : undefined,
-  });
+  let data;
+
+  if (retryCount >= DOMAIN_LIST_RETRY_MAX) {
+    return domainList;
+  }
+
+  try {
+    data = await ctx.cadence.listDomains({
+      pageSize: DOMAIN_LIST_PAGE_SIZE,
+      nextPageToken: nextPageToken
+        ? Buffer.from(encodeURIComponent(nextPageToken), 'base64')
+        : undefined,
+    });
+  } catch (error) {
+    console.log(
+      `fetchDomainListNextPage retry: ${retryCount} error: ${error.toString()}`
+    );
+
+    await delay(DOMAIN_LIST_DELAY_MS);
+
+    return fetchDomainListNextPage({
+      ctx,
+      nextPageToken,
+      domainList,
+      retryCount: retryCount + 1,
+    });
+  }
+
+  console.log(
+    `fetchDomainListNextPage returned ${data.domains.length} entries and a nextPageToken = "${data.nextPageToken}" with a page size = ${DOMAIN_LIST_PAGE_SIZE}.`
+  );
 
   domainList.splice(domainList.length, 0, ...data.domains);
 

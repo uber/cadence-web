@@ -19,24 +19,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const buildQueryString = require('./build-query-string');
-const combine = require('./combine');
-const delay = require('./delay');
-const injectDomainIntoWorkflowList = require('./inject-domain-into-workflow-list');
-const isAdvancedVisibilityEnabled = require('./is-advanced-visibility-enabled');
-const listWorkflows = require('./list-workflows');
-const mapHistoryResponse = require('./map-history-response');
-const momentToLong = require('./moment-to-long');
-const replacer = require('./replacer');
+const { DOMAIN_STATUS_REGISTERED } = require('../constants');
 
-module.exports = {
-  buildQueryString,
-  combine,
-  delay,
-  injectDomainIntoWorkflowList,
-  isAdvancedVisibilityEnabled,
-  listWorkflows,
-  mapHistoryResponse,
-  momentToLong,
-  replacer,
-};
+const filterDomainList = domainList =>
+  domainList.filter(
+    domain => domain.domainInfo.status === DOMAIN_STATUS_REGISTERED
+  );
+
+module.exports = filterDomainList;

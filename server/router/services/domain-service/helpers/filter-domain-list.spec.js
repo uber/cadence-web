@@ -19,24 +19,38 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const buildQueryString = require('./build-query-string');
-const combine = require('./combine');
-const delay = require('./delay');
-const injectDomainIntoWorkflowList = require('./inject-domain-into-workflow-list');
-const isAdvancedVisibilityEnabled = require('./is-advanced-visibility-enabled');
-const listWorkflows = require('./list-workflows');
-const mapHistoryResponse = require('./map-history-response');
-const momentToLong = require('./moment-to-long');
-const replacer = require('./replacer');
+import filterDomainList from './filter-domain-list';
 
-module.exports = {
-  buildQueryString,
-  combine,
-  delay,
-  injectDomainIntoWorkflowList,
-  isAdvancedVisibilityEnabled,
-  listWorkflows,
-  mapHistoryResponse,
-  momentToLong,
-  replacer,
-};
+describe('filterDomainList', () => {
+  describe('when a registered domain is in domainList', () => {
+    const domainList = [
+      {
+        domainInfo: {
+          status: 'REGISTERED',
+        },
+      },
+    ];
+
+    it('should return this domain in the returned list.', () => {
+      const output = filterDomainList(domainList);
+
+      expect(output.length).toEqual(1);
+    });
+  });
+
+  describe('when a deprecated domain is in the domainList', () => {
+    const domainList = [
+      {
+        domainInfo: {
+          status: 'DEPRECATED',
+        },
+      },
+    ];
+
+    it('should not return this domain in the returned list.', () => {
+      const output = filterDomainList(domainList);
+
+      expect(output.length).toEqual(0);
+    });
+  });
+});

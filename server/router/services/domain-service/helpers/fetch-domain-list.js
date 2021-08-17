@@ -19,13 +19,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+const { combine } = require('../../../helpers');
 const fetchDomainListNextPage = require('./fetch-domain-list-next-page');
+const filterDomainList = require('./filter-domain-list');
 const sortDomainList = require('./sort-domain-list');
 
 const fetchDomainList = ctx => async () => {
   const domainList = await fetchDomainListNextPage({ ctx });
 
-  return sortDomainList(domainList);
+  return combine(domainList)(filterDomainList, sortDomainList);
 };
 
 module.exports = fetchDomainList;
