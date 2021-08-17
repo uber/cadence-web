@@ -20,10 +20,14 @@
 // THE SOFTWARE.
 
 const moment = require('moment');
-const { buildQueryString } = require('../helpers');
+const {
+  buildQueryString,
+  injectDomainIntoWorkflowList,
+} = require('../helpers');
 
 const workflowArchivedListHandler = async ctx => {
   const { nextPageToken, ...query } = ctx.query || {};
+  const { params = {} } = ctx;
   let queryString;
 
   if (query.queryString) {
@@ -36,12 +40,19 @@ const workflowArchivedListHandler = async ctx => {
     queryString = buildQueryString(startTime, endTime, query);
   }
 
-  ctx.body = await ctx.cadence.archivedWorkflows({
+  const archivedWorkflowsResponse = await ctx.cadence.archivedWorkflows({
     query: queryString,
     nextPageToken: nextPageToken
       ? Buffer.from(nextPageToken, 'base64')
       : undefined,
   });
+
+  archivedWorkflowsResponse.executions = injectDomainIntoWorkflowList(
+    params.domain,
+    archivedWorkflowsResponse
+  );
+
+  ctx.body = archivedWorkflowsResponse;
 };
 
 module.exports = workflowArchivedListHandler;

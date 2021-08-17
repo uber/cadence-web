@@ -19,15 +19,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+const { injectDomainIntoWorkflowList } = require('../helpers');
+
 const workflowListHandler = async ctx => {
   const q = ctx.query || {};
+  const { params = {} } = ctx;
 
-  ctx.body = await ctx.cadence.listWorkflows({
+  const listWorkflowsResponse = await ctx.cadence.listWorkflows({
     query: q.queryString || undefined,
     nextPageToken: q.nextPageToken
       ? Buffer.from(q.nextPageToken, 'base64')
       : undefined,
   });
+
+  listWorkflowsResponse.executions = injectDomainIntoWorkflowList(
+    params.domain,
+    listWorkflowsResponse
+  );
+
+  ctx.body = listWorkflowsResponse;
 };
 
 module.exports = workflowListHandler;

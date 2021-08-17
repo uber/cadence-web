@@ -31,6 +31,7 @@ describe('Listing Workflows', function() {
       startTime: dateToLong('2017-11-10T21:30:00.000Z'),
       closeTime: null,
       closeStatus: null,
+      domainName: 'canary',
       historyLength: null,
       isCron: null,
       autoResetPoints: null,
