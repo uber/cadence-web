@@ -20,6 +20,7 @@
 // THE SOFTWARE.
 
 const path = require('path');
+const process = require('process');
 const Koa = require('koa');
 const koaBodyparser = require('koa-bodyparser');
 const koaCompress = require('koa-compress');
@@ -66,6 +67,10 @@ app.init = function({
   if (useWebpack) {
     compiler = webpack(app.webpackConfig);
   }
+
+  process.on('unhandledRejection', (reason, promise) => {
+    console.log('Unhandled Rejection at:', promise, 'reason:', reason);
+  });
 
   app
     .use(async (ctx, next) => {
