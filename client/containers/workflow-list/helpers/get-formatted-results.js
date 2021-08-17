@@ -27,6 +27,7 @@ const getFormattedResults = ({ dateFormat, results, timeFormat, timezone }) =>
     const status = (result.closeStatus || STATUS_OPEN).toLowerCase();
 
     return {
+      domainName: result.domainName,
       endTime: result.closeTime
         ? getDatetimeFormattedString({
             date: result.closeTime,

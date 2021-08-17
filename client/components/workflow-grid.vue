@@ -82,7 +82,11 @@ export default {
           <router-link
             :to="{
               name: 'workflow/summary',
-              params: { runId: item.runId, workflowId: item.workflowId },
+              params: {
+                domain: item.domainName,
+                runId: item.runId,
+                workflowId: item.workflowId,
+              },
             }"
             data-cy="workflow-link"
             >{{ item.runId }}

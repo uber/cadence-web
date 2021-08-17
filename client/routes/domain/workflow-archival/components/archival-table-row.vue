@@ -25,6 +25,7 @@ export default {
   props: [
     'closeStatus',
     'closeTime',
+    'domainName',
     'runId',
     'startTime',
     'workflowId',
@@ -43,6 +44,7 @@ export default {
         :to="{
           name: 'workflow/summary',
           params: {
+            domain: domainName,
             runId: runId,
             workflowId: workflowId,
           },

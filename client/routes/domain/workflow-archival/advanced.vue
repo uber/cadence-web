@@ -189,6 +189,7 @@ export default pagedGrid({
           v-for="result in formattedResults"
           :close-status="result.closeStatus"
           :close-time="result.closeTime"
+          :domain-name="result.domainName"
           :key="result.runId"
           :run-id="result.runId"
           :start-time="result.startTime"
