@@ -30,6 +30,7 @@ const fetchDomainListNextPage = async ({
   ctx,
   domainList = [],
   nextPageToken = '',
+  pageSize = DOMAIN_LIST_PAGE_SIZE,
   retryCount = 0,
 }) => {
   let data;
@@ -40,14 +41,16 @@ const fetchDomainListNextPage = async ({
 
   try {
     data = await ctx.cadence.listDomains({
-      pageSize: DOMAIN_LIST_PAGE_SIZE,
+      pageSize,
       nextPageToken: nextPageToken
         ? Buffer.from(encodeURIComponent(nextPageToken), 'base64')
         : undefined,
     });
   } catch (error) {
     console.log(
-      `fetchDomainListNextPage retry: ${retryCount} error: ${error.toString()}`
+      `fetchDomainListNextPage retry: ${retryCount} error: ${(error &&
+        error.message) ||
+        error}`
     );
 
     await delay(DOMAIN_LIST_DELAY_MS);
@@ -56,12 +59,13 @@ const fetchDomainListNextPage = async ({
       ctx,
       nextPageToken,
       domainList,
+      pageSize,
       retryCount: retryCount + 1,
     });
   }
 
   console.log(
-    `fetchDomainListNextPage returned ${data.domains.length} entries and a nextPageToken = "${data.nextPageToken}" with a page size = ${DOMAIN_LIST_PAGE_SIZE}.`
+    `fetchDomainListNextPage returned ${data.domains.length} entries and a nextPageToken = "${data.nextPageToken}" with a page size = ${pageSize}.`
   );
 
   domainList.splice(domainList.length, 0, ...data.domains);
@@ -76,6 +80,7 @@ const fetchDomainListNextPage = async ({
     ctx,
     nextPageToken: data.nextPageToken,
     domainList,
+    pageSize,
   });
 };
 

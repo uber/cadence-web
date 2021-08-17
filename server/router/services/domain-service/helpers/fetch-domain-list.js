@@ -24,8 +24,8 @@ const fetchDomainListNextPage = require('./fetch-domain-list-next-page');
 const filterDomainList = require('./filter-domain-list');
 const sortDomainList = require('./sort-domain-list');
 
-const fetchDomainList = ctx => async () => {
-  const domainList = await fetchDomainListNextPage({ ctx });
+const fetchDomainList = ({ ctx, pageSize }) => async () => {
+  const domainList = await fetchDomainListNextPage({ ctx, pageSize });
 
   return combine(domainList)(filterDomainList, sortDomainList);
 };
