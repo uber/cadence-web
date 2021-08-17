@@ -46,7 +46,7 @@ const fetchDomainListNextPage = async ({
         : undefined,
     });
   } catch (error) {
-    console.error(
+    console.log(
       `fetchDomainListNextPage retry: ${retryCount} error: ${error.toString()}`
     );
 
@@ -59,6 +59,10 @@ const fetchDomainListNextPage = async ({
       retryCount: retryCount + 1,
     });
   }
+
+  console.log(
+    `fetchDomainListNextPage returned ${data.domains.length} entries and a nextPageToken = "${data.nextPageToken}" with a page size = ${DOMAIN_LIST_PAGE_SIZE}.`
+  );
 
   domainList.splice(domainList.length, 0, ...data.domains);
 
