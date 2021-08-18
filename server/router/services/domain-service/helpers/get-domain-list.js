@@ -21,7 +21,7 @@
 
 const fetchDomainList = require('./fetch-domain-list');
 
-const getDomainList = ({ cacheManager, ctx, pageSize }) =>
-  cacheManager.get(fetchDomainList({ ctx, pageSize }));
+const getDomainList = ({ cacheManager, ctx, delayTime, pageSize }) =>
+  cacheManager.get(fetchDomainList({ ctx, delayTime, pageSize }));
 
 module.exports = getDomainList;

@@ -28,6 +28,7 @@ const { delay } = require('../../../helpers');
 
 const fetchDomainListNextPage = async ({
   ctx,
+  delayTime = DOMAIN_LIST_DELAY_MS,
   domainList = [],
   nextPageToken = '',
   pageSize = DOMAIN_LIST_PAGE_SIZE,
@@ -53,10 +54,11 @@ const fetchDomainListNextPage = async ({
         error}`
     );
 
-    await delay(DOMAIN_LIST_DELAY_MS);
+    await delay(delayTime);
 
     return fetchDomainListNextPage({
       ctx,
+      delayTime,
       nextPageToken,
       domainList,
       pageSize,
@@ -65,7 +67,7 @@ const fetchDomainListNextPage = async ({
   }
 
   console.log(
-    `fetchDomainListNextPage returned ${data.domains.length} entries and a nextPageToken = "${data.nextPageToken}" with a page size = ${pageSize}.`
+    `fetchDomainListNextPage returned ${data.domains.length} entries and a nextPageToken = "${data.nextPageToken}" with a page size = ${pageSize} and delayTime = ${delayTime}ms.`
   );
 
   domainList.splice(domainList.length, 0, ...data.domains);
@@ -74,10 +76,11 @@ const fetchDomainListNextPage = async ({
     return domainList;
   }
 
-  await delay(DOMAIN_LIST_DELAY_MS);
+  await delay(delayTime);
 
   return fetchDomainListNextPage({
     ctx,
+    delayTime,
     nextPageToken: data.nextPageToken,
     domainList,
     pageSize,
