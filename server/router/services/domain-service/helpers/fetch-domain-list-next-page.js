@@ -70,8 +70,7 @@ const fetchDomainListNextPage = async ({
 
   domainList.splice(domainList.length, 0, ...data.domains);
 
-  // nextPageToken is base64 string which needs a looser type check than triple equals
-  if (data.nextPageToken == '' || data.nextPageToken === null) {
+  if (!data.nextPageToken) {
     return domainList;
   }
 
