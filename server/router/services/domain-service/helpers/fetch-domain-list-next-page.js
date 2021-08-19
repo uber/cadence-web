@@ -65,11 +65,7 @@ const fetchDomainListNextPage = async ({
   }
 
   console.log(
-    `fetchDomainListNextPage returned ${
-      data.domains.length
-    } entries and a nextPageToken = "${
-      data.nextPageToken
-    }" typeof npt = ${typeof data.nextPageToken} with a page size = ${pageSize} and delayTime = ${delayTime}ms.`
+    `fetchDomainListNextPage returned ${data.domains.length} entries and a nextPageToken = "${data.nextPageToken}" with a page size = ${pageSize} and delayTime = ${delayTime}ms.`
   );
 
   domainList.splice(domainList.length, 0, ...data.domains);
