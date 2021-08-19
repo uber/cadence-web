@@ -65,13 +65,17 @@ const fetchDomainListNextPage = async ({
   }
 
   console.log(
-    `fetchDomainListNextPage returned ${data.domains.length} entries and a nextPageToken = "${data.nextPageToken}" with a page size = ${pageSize} and delayTime = ${delayTime}ms.`
+    `fetchDomainListNextPage returned ${
+      data.domains.length
+    } entries and a nextPageToken = "${
+      data.nextPageToken
+    }" typeof npt = ${typeof data.nextPageToken} with a page size = ${pageSize} and delayTime = ${delayTime}ms.`
   );
 
   domainList.splice(domainList.length, 0, ...data.domains);
 
   // nextPageToken is base64 string which needs a looser type check than triple equals
-  if (data.nextPageToken == '') {
+  if (data.nextPageToken == '' || data.nextPageToken === null) {
     return domainList;
   }
 
