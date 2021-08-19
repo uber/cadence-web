@@ -21,7 +21,7 @@
 
 describe('Describe Domain', function() {
   it('should list domains', async function() {
-    const domains = [
+    const responseDomains = [
       {
         domainInfo: {
           name: 'ci-test-domain',
@@ -49,17 +49,42 @@ describe('Describe Domain', function() {
       },
     ];
 
+    const expectedDomains = [
+      {
+        domainInfo: {
+          name: 'ci-test-domain',
+          status: 'REGISTERED',
+          description: 'domain for running CI tests',
+          ownerEmail: 'cadence-dev@uber.com',
+        },
+        isGlobalDomain: false,
+        failoverVersion: {
+          isLosslessNumber: true,
+          type: 'LosslessNumber',
+          value: '0',
+        },
+        configuration: {
+          emitMetric: false,
+          workflowExecutionRetentionPeriodInDays: 14,
+        },
+        replicationConfiguration: {
+          activeClusterName: 'ci-cluster',
+          clusters: [],
+        },
+      },
+    ];
+
     this.test.ListDomains = ({ listRequest }) => {
       should.not.exist(listRequest.nextPageToken);
 
-      return { domains };
+      return { domains: responseDomains };
     };
 
     return request()
       .get('/api/domains')
       .expect(200)
       .expect('Content-Type', /json/)
-      .expect(domains);
+      .expect(expectedDomains);
   });
 
   it('should describe the domain', async function() {
