@@ -42,6 +42,7 @@ describe('fetchDomainListNextPage', () => {
       const domains = ['domain1', 'domain2'];
       const domainResponse = {
         domains,
+        nextPageToken: null,
       };
 
       const ctx = getMockContext(domainResponse);
