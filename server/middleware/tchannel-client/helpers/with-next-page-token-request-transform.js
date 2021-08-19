@@ -19,7 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const withNextPageTokenRequest = body => {
+const withNextPageTokenRequestTransform = body => {
   if (!body || typeof body !== 'object') {
     return body;
   }
@@ -33,4 +33,4 @@ const withNextPageTokenRequest = body => {
   return body;
 };
 
-module.exports = withNextPageTokenRequest;
+module.exports = withNextPageTokenRequestTransform;

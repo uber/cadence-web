@@ -19,10 +19,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const combine = data => (...callbacks) =>
-  callbacks.reduce(
-    (accumulator, callback) => (accumulator = callback(accumulator)),
-    data
-  );
+const combine = require('./combine');
 
-module.exports = combine;
+module.exports = {
+  combine,
+};

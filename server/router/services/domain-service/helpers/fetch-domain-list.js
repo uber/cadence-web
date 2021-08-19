@@ -19,7 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const { combine } = require('../../../helpers');
+const { combine } = require('../../../../helpers');
 const fetchDomainListNextPage = require('./fetch-domain-list-next-page');
 const filterDomainList = require('./filter-domain-list');
 const sortDomainList = require('./sort-domain-list');
@@ -31,7 +31,7 @@ const fetchDomainList = ({ ctx, delayTime, pageSize }) => async () => {
     pageSize,
   });
 
-  return combine(domainList)(filterDomainList, sortDomainList);
+  return combine(filterDomainList, sortDomainList)(domainList);
 };
 
 module.exports = fetchDomainList;

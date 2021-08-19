@@ -29,7 +29,7 @@ const makeRequest = require('./make-request');
 const uiTransform = require('./ui-transform');
 const withDomainPagingAndWorkflowExecution = require('./with-domain-paging-and-workflow-execution');
 const withDomainPaging = require('./with-domain-paging');
-const withNextPageTokenRequest = require('./with-next-page-token-request');
+const withNextPageTokenRequestTransform = require('./with-next-page-token-request-transform');
 const withNextPageTokenResponse = require('./with-next-page-token-response');
 const withVerboseWorkflowExecution = require('./with-verbose-workflow-execution');
 const withWorkflowExecution = require('./with-workflow-execution');
@@ -45,7 +45,7 @@ module.exports = {
   uiTransform,
   withDomainPagingAndWorkflowExecution,
   withDomainPaging,
-  withNextPageTokenRequest,
+  withNextPageTokenRequestTransform,
   withNextPageTokenResponse,
   withVerboseWorkflowExecution,
   withWorkflowExecution,

@@ -19,10 +19,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const combine = (...callbacks) => data =>
-  callbacks.reduce(
-    (accumulator, callback) => (accumulator = callback(accumulator)),
-    data
-  );
+const withLong = item => {
+  if (!item || typeof item !== 'object') {
+    return item;
+  }
 
-export default combine;
+  Object.entries(item).forEach(([subkey, subvalue]) => {
+    if (subvalue && typeof subvalue.unsigned === 'boolean') {
+      item[subkey] = new losslessJSON.LosslessNumber(
+        Long.fromValue(subvalue).toString()
+      );
+    }
+  });
+};
+
+module.exports = withLong;
