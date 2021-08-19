@@ -43,9 +43,7 @@ const fetchDomainListNextPage = async ({
   try {
     data = await ctx.cadence.listDomains({
       pageSize,
-      nextPageToken: nextPageToken
-        ? Buffer.from(encodeURIComponent(nextPageToken), 'base64')
-        : undefined,
+      nextPageToken,
     });
   } catch (error) {
     console.log(
@@ -72,7 +70,8 @@ const fetchDomainListNextPage = async ({
 
   domainList.splice(domainList.length, 0, ...data.domains);
 
-  if (!data.nextPageToken) {
+  // nextPageToken is base64 string which needs a looser type check than triple equals
+  if (data.nextPageToken == '') {
     return domainList;
   }
 

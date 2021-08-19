@@ -28,6 +28,8 @@ const {
   makeChannels,
   makeRequest,
   withDomainPaging,
+  withNextPageTokenRequest,
+  withNextPageTokenResponse,
   withWorkflowExecution,
   withVerboseWorkflowExecution,
   withDomainPagingAndWorkflowExecution,
@@ -89,6 +91,8 @@ const tchannelClient = ({ peers, requestConfig }) =>
       listDomains: request({
         method: 'ListDomains',
         requestName: 'list',
+        bodyTransform: withNextPageTokenRequest,
+        responseTransform: withNextPageTokenResponse,
       }),
       listTaskListPartitions: request({
         method: 'ListTaskListPartitions',
