@@ -91,7 +91,6 @@ const tchannelClient = ({ peers, requestConfig }) =>
         method: 'ListDomains',
         requestName: 'list',
         bodyTransform: withNextPageTokenRequestTransform,
-        responseTransform: cliTransform,
       }),
       listTaskListPartitions: request({
         method: 'ListTaskListPartitions',

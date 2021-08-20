@@ -30,7 +30,7 @@ const fetchDomainListNextPage = async ({
   ctx,
   delayTime = DOMAIN_LIST_DELAY_MS,
   domainList = [],
-  nextPageToken = '',
+  nextPageToken,
   pageSize = DOMAIN_LIST_PAGE_SIZE,
   retryCount = 0,
 }) => {
