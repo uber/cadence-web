@@ -23,15 +23,16 @@
 
 const TChannel = require('tchannel');
 
+const { combine } = require('../../helpers');
+
 const {
   cliTransform,
   makeChannels,
   makeRequest,
   withDomainPaging,
-  withNextPageTokenRequestTransform,
+  withNextPageTokenBodyTransform,
   withWorkflowExecution,
   withVerboseWorkflowExecution,
-  withDomainPagingAndWorkflowExecution,
 } = require('./helpers');
 
 const tchannelClient = ({ peers, requestConfig }) =>
@@ -51,12 +52,18 @@ const tchannelClient = ({ peers, requestConfig }) =>
       archivedWorkflows: request({
         method: 'ListArchivedWorkflowExecutions',
         requestName: 'list',
-        bodyTransform: withDomainPaging(ctx),
+        bodyTransform: combine(
+          withDomainPaging(ctx),
+          withNextPageTokenBodyTransform
+        ),
       }),
       closedWorkflows: request({
         method: 'ListClosedWorkflowExecutions',
         requestName: 'list',
-        bodyTransform: withDomainPaging(ctx),
+        bodyTransform: combine(
+          withDomainPaging(ctx),
+          withNextPageTokenBodyTransform
+        ),
       }),
       describeCluster: request({
         channelName: 'admin',
@@ -79,18 +86,25 @@ const tchannelClient = ({ peers, requestConfig }) =>
       exportHistory: request({
         method: 'GetWorkflowExecutionHistory',
         requestName: 'get',
-        bodyTransform: withDomainPagingAndWorkflowExecution(ctx),
+        bodyTransform: combine(
+          withDomainPaging(ctx),
+          withWorkflowExecution(ctx),
+          withNextPageTokenBodyTransform
+        ),
         responseTransform: cliTransform,
       }),
       getHistory: request({
         method: 'GetWorkflowExecutionHistory',
         requestName: 'get',
-        bodyTransform: withDomainPagingAndWorkflowExecution(ctx),
+        bodyTransform: combine(
+          withDomainPaging(ctx),
+          withWorkflowExecution(ctx),
+          withNextPageTokenBodyTransform
+        ),
       }),
       listDomains: request({
         method: 'ListDomains',
         requestName: 'list',
-        bodyTransform: withNextPageTokenRequestTransform,
       }),
       listTaskListPartitions: request({
         method: 'ListTaskListPartitions',
@@ -98,12 +112,18 @@ const tchannelClient = ({ peers, requestConfig }) =>
       listWorkflows: request({
         method: 'ListWorkflowExecutions',
         requestName: 'list',
-        bodyTransform: withDomainPaging(ctx),
+        bodyTransform: combine(
+          withDomainPaging(ctx),
+          withNextPageTokenBodyTransform
+        ),
       }),
       openWorkflows: request({
         method: 'ListOpenWorkflowExecutions',
         requestName: 'list',
-        bodyTransform: withDomainPaging(ctx),
+        bodyTransform: combine(
+          withDomainPaging(ctx),
+          withNextPageTokenBodyTransform
+        ),
       }),
       queryWorkflow: request({
         method: 'QueryWorkflow',

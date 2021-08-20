@@ -35,8 +35,7 @@ const workflowExportHandler = async ctx => {
       (nextPageToken ? ',' : '[') +
         page.history.events.map(losslessJSON.stringify).join(',')
     );
-    nextPageToken =
-      page.nextPageToken && Buffer.from(page.nextPageToken, 'base64');
+    nextPageToken = page.nextPageToken;
   } while (nextPageToken);
 
   ctx.res.write(']');

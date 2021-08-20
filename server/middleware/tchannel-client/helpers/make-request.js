@@ -23,13 +23,14 @@ const formatBody = require('./format-body');
 const formatMethod = require('./format-method');
 const formatRequestName = require('./format-request-name');
 const uiTransform = require('./ui-transform');
+const withNextPageTokenBodyTransform = require('./with-next-page-token-body-transform');
 
 const makeRequest = ({ authTokenHeaders, channels, ctx, requestConfig }) => ({
-  bodyTransform,
+  bodyTransform = withNextPageTokenBodyTransform,
   channelName = 'cadence',
   method,
   requestName,
-  responseTransform,
+  responseTransform = uiTransform,
   serviceName = 'WorkflowService',
 }) => body =>
   new Promise((resolve, reject) => {
@@ -50,7 +51,7 @@ const makeRequest = ({ authTokenHeaders, channels, ctx, requestConfig }) => ({
             if (error) {
               reject(error);
             } else if (response.ok) {
-              resolve((responseTransform || uiTransform)(response.body));
+              resolve(responseTransform(response.body));
             } else {
               ctx.throw(
                 response.typeName === 'entityNotExistError' ? 404 : 400,

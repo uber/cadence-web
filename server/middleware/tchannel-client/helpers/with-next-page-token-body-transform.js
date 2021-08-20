@@ -19,10 +19,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const withDomainPaging = require('./with-domain-paging');
-const withWorkflowExecution = require('./with-workflow-execution');
+const withNextPageTokenBodyTransform = body => {
+  if (!body || typeof body !== 'object') {
+    return body;
+  }
 
-const withDomainPagingAndWorkflowExecution = ctx => body =>
-  Object.assign(withDomainPaging(ctx)(body), withWorkflowExecution(ctx)(body));
+  const { nextPageToken } = body;
 
-module.exports = withDomainPagingAndWorkflowExecution;
+  body.nextPageToken = nextPageToken
+    ? Buffer.from(nextPageToken, 'base64')
+    : undefined;
+
+  return body;
+};
+
+module.exports = withNextPageTokenBodyTransform;

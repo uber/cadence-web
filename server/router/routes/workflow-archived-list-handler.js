@@ -42,9 +42,7 @@ const workflowArchivedListHandler = async ctx => {
 
   const archivedWorkflowsResponse = await ctx.cadence.archivedWorkflows({
     query: queryString,
-    nextPageToken: nextPageToken
-      ? Buffer.from(nextPageToken, 'base64')
-      : undefined,
+    nextPageToken,
   });
 
   archivedWorkflowsResponse.executions = injectDomainIntoWorkflowList(

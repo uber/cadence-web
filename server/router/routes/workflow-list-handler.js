@@ -27,9 +27,7 @@ const workflowListHandler = async ctx => {
 
   const listWorkflowsResponse = await ctx.cadence.listWorkflows({
     query: q.queryString || undefined,
-    nextPageToken: q.nextPageToken
-      ? Buffer.from(q.nextPageToken, 'base64')
-      : undefined,
+    nextPageToken: q.nextPageToken,
   });
 
   listWorkflowsResponse.executions = injectDomainIntoWorkflowList(

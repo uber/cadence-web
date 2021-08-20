@@ -47,8 +47,6 @@ async function listWorkflows({ clusterService, state }, ctx) {
   const earliestTime = momentToLong(startTime);
   const latestTime = momentToLong(endTime);
   const { nextPageToken, status, workflowId, workflowName } = query;
-  const nextPageTokenBuffer =
-    nextPageToken && Buffer.from(nextPageToken, 'base64');
 
   const requestArgs = advancedVisibility
     ? {
@@ -65,7 +63,7 @@ async function listWorkflows({ clusterService, state }, ctx) {
         ...(workflowName && { typeFilter: { name: workflowName } }),
         ...(workflowId && { executionFilter: { workflowId } }),
         ...(status && { statusFilter: status }),
-        ...(nextPageTokenBuffer && { nextPageToken: nextPageTokenBuffer }),
+        nextPageToken,
       };
 
   const requestApi = advancedVisibility ? 'listWorkflows' : state + 'Workflows';
