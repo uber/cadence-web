@@ -25,9 +25,7 @@ const workflowHistoryHandler = async ctx => {
   const q = ctx.query || {};
 
   ctx.body = await ctx.cadence.getHistory({
-    nextPageToken: q.nextPageToken
-      ? Buffer.from(q.nextPageToken, 'base64')
-      : undefined,
+    nextPageToken: q.nextPageToken,
     waitForNewEvent: 'waitForNewEvent' in q ? true : undefined,
   });
 

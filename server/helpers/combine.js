@@ -25,4 +25,4 @@ const combine = (...callbacks) => data =>
     data
   );
 
-export default combine;
+module.exports = combine;

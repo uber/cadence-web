@@ -30,7 +30,7 @@ const fetchDomainListNextPage = async ({
   ctx,
   delayTime = DOMAIN_LIST_DELAY_MS,
   domainList = [],
-  nextPageToken = '',
+  nextPageToken,
   pageSize = DOMAIN_LIST_PAGE_SIZE,
   retryCount = 0,
 }) => {
@@ -43,9 +43,7 @@ const fetchDomainListNextPage = async ({
   try {
     data = await ctx.cadence.listDomains({
       pageSize,
-      nextPageToken: nextPageToken
-        ? Buffer.from(encodeURIComponent(nextPageToken), 'base64')
-        : undefined,
+      nextPageToken,
     });
   } catch (error) {
     console.log(
@@ -65,10 +63,6 @@ const fetchDomainListNextPage = async ({
       retryCount: retryCount + 1,
     });
   }
-
-  console.log(
-    `fetchDomainListNextPage returned ${data.domains.length} entries and a nextPageToken = "${data.nextPageToken}" with a page size = ${pageSize} and delayTime = ${delayTime}ms.`
-  );
 
   domainList.splice(domainList.length, 0, ...data.domains);
 

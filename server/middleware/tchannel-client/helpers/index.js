@@ -27,8 +27,8 @@ const lookupAsync = require('./lookup-async');
 const makeChannels = require('./make-channels');
 const makeRequest = require('./make-request');
 const uiTransform = require('./ui-transform');
-const withDomainPagingAndWorkflowExecution = require('./with-domain-paging-and-workflow-execution');
 const withDomainPaging = require('./with-domain-paging');
+const withNextPageTokenBodyTransform = require('./with-next-page-token-body-transform');
 const withVerboseWorkflowExecution = require('./with-verbose-workflow-execution');
 const withWorkflowExecution = require('./with-workflow-execution');
 
@@ -41,8 +41,8 @@ module.exports = {
   makeChannels,
   makeRequest,
   uiTransform,
-  withDomainPagingAndWorkflowExecution,
   withDomainPaging,
+  withNextPageTokenBodyTransform,
   withVerboseWorkflowExecution,
   withWorkflowExecution,
 };

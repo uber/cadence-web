@@ -50,11 +50,11 @@ const getters = {
       domainList,
     });
 
-    return combine(combinedDomainList)(
+    return combine(
       sortDomainList,
       filterTopDomainList,
       formatDomainList
-    );
+    )(combinedDomainList);
   },
   [DOMAIN_AUTOCOMPLETE_DOMAIN_LIST]: state =>
     sortDomainList(get(state, statePrefix('domainList')) || []),
