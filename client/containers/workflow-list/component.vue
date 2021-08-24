@@ -51,7 +51,7 @@ import {
   TextInput,
   WorkflowGrid,
 } from '~components';
-import { getEndTimeIsoString, getStartTimeIsoString } from '~helpers';
+import { delay, getEndTimeIsoString, getStartTimeIsoString } from '~helpers';
 import { httpService } from '~services';
 
 export default {
@@ -76,6 +76,7 @@ export default {
   ],
   data() {
     return {
+      abortController: undefined,
       isCronList: IS_CRON_LIST,
       loading: false,
       results: [],
@@ -207,9 +208,6 @@ export default {
         return { workflows, nextPageToken };
       }
 
-      this.loading = true;
-      this.error = undefined;
-
       const includeStatus = ![STATUS_ALL, STATUS_OPEN, STATUS_CLOSED].includes(
         queryWithStatus.status
       );
@@ -217,18 +215,38 @@ export default {
       const query = includeStatus ? queryWithStatus : queryWithoutStatus;
 
       try {
-        const res = await httpService.get(url, { query });
+        if (this.abortController) {
+          this.abortController.abort();
+          await delay();
+        }
 
-        workflows = res.executions;
+        this.error = undefined;
+        this.loading = true;
 
-        nextPageToken = res.nextPageToken;
-      } catch (e) {
-        this.error = (e.json && e.json.message) || e.status || e.message;
+        this.abortController = new AbortController();
+        const { signal } = this.abortController;
+
+        const request = await httpService.get(url, { query, signal });
+
+        this.abortController = undefined;
+
+        workflows = request.executions;
+
+        nextPageToken = request.nextPageToken;
+      } catch (error) {
+        if (error.name === 'AbortError') {
+          return { status: 'aborted' };
+        }
+
+        this.error =
+          (error.json && error.json.message) || error.status || error.message;
+
+        return { status: 'error' };
+      } finally {
+        this.loading = false;
       }
 
-      this.loading = false;
-
-      return { workflows, nextPageToken };
+      return { status: 'success', workflows, nextPageToken };
     },
     fetchDomain() {
       const { domain, now } = this;
@@ -284,10 +302,14 @@ export default {
           query.queryString = decodeURI(query.queryString);
         }
 
-        const { workflows: wfs, nextPageToken } = await this.fetch(
+        const { status, workflows: wfs, nextPageToken } = await this.fetch(
           this.fetchWorkflowListUrl,
           query
         );
+
+        if (status !== 'success') {
+          return;
+        }
 
         workflows = wfs;
         this.npt = nextPageToken;
@@ -296,20 +318,33 @@ export default {
         const queryOpen = { ...this.criteria, nextPageToken: this.npt };
         const queryClosed = { ...this.criteria, nextPageToken: this.nptAlt };
 
-        const { workflows: wfsOpen, nextPageToken: nptOpen } = await this.fetch(
+        const {
+          status: openStatus,
+          workflows: wfsOpen,
+          nextPageToken: nptOpen,
+        } = await this.fetch(
           `/api/domains/${domain}/workflows/open`,
           queryOpen
         );
 
+        if (openStatus !== 'success') {
+          return;
+        }
+
         this.npt = nptOpen;
 
         const {
+          status: closedStatus,
           workflows: wfsClosed,
           nextPageToken: nptClosed,
         } = await this.fetch(
           `/api/domains/${domain}/workflows/closed`,
           queryClosed
         );
+
+        if (closedStatus !== 'success') {
+          return;
+        }
 
         this.nptAlt = nptClosed;
 
