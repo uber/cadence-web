@@ -100,52 +100,56 @@ const routeOpts = {
     },
     {
       name: 'domain',
-      path: '/domains/:domain',
-      redirect: '/domains/:domain/workflows',
+      path: '/domains/:domain/:activeStatus(active|passive)?',
+      redirect: '/domains/:domain/:activeStatus(active|passive)?/workflows',
       component: Domain,
       props: ({ params }) => ({
+        activeStatus: params.activeStatus,
         domain: params.domain,
       }),
       children: [
         {
           name: 'workflow-list',
-          path: '/domains/:domain/workflows',
+          path: '/domains/:domain/:activeStatus(active|passive)?/workflows',
           components: {
             'workflow-list': WorkflowList,
           },
         },
         {
           name: 'domain-metrics',
-          path: '/domains/:domain/metrics',
+          path: '/domains/:domain/:activeStatus(active|passive)?/metrics',
           components: {
             'domain-metrics': DomainMetrics,
           },
         },
         {
           name: 'domain-settings',
-          path: '/domains/:domain/settings',
+          path: '/domains/:domain/:activeStatus(active|passive)?/settings',
           components: {
             'domain-settings': DomainSettings,
           },
         },
         {
           name: 'workflow-archival',
-          path: '/domains/:domain/archival',
-          redirect: '/domains/:domain/archival/basic',
+          path: '/domains/:domain/:activeStatus(active|passive)?/archival',
+          redirect:
+            '/domains/:domain/:activeStatus(active|passive)?/archival/basic',
           components: {
             'workflow-archival': WorkflowArchival,
           },
           children: [
             {
               name: 'workflow-archival-advanced',
-              path: '/domains/:domain/archival/advanced',
+              path:
+                '/domains/:domain/:activeStatus(active|passive)?/archival/advanced',
               components: {
                 'workflow-archival-advanced': WorkflowArchivalAdvanced,
               },
             },
             {
               name: 'workflow-archival-basic',
-              path: '/domains/:domain/archival/basic',
+              path:
+                '/domains/:domain/:activeStatus(active|passive)?/archival/basic',
               components: {
                 'workflow-archival-basic': WorkflowArchivalBasic,
               },
@@ -156,9 +160,11 @@ const routeOpts = {
     },
     {
       name: 'workflow',
-      path: '/domains/:domain/workflows/:workflowId/:runId',
+      path:
+        '/domains/:domain/:activeStatus(active|passive)?/workflows/:workflowId/:runId',
       component: Workflow,
       props: ({ params }) => ({
+        activeStatus: params.activeStatus,
         displayWorkflowId: params.workflowId,
         domain: params.domain,
         runId: params.runId,
@@ -167,7 +173,8 @@ const routeOpts = {
       children: [
         {
           name: 'workflow/summary',
-          path: '/domains/:domain/workflows/:workflowId/:runId/summary',
+          path:
+            '/domains/:domain/:activeStatus(active|passive)?/workflows/:workflowId/:runId/summary',
           components: {
             summary: WorkflowSummary,
           },
@@ -180,12 +187,14 @@ const routeOpts = {
         },
         {
           name: 'workflow/history',
-          path: '/domains/:domain/workflows/:workflowId/:runId/history',
+          path:
+            '/domains/:domain/:activeStatus(active|passive)?/workflows/:workflowId/:runId/history',
           components: {
             history: WorkflowHistory,
           },
           props: {
             history: ({ params, query }) => ({
+              activeStatus: params.activeStatus,
               domain: params.domain,
               eventId: Number(query.eventId) || undefined,
               format: query.format || 'grid',
@@ -198,21 +207,24 @@ const routeOpts = {
         },
         {
           name: 'workflow/pending',
-          path: '/domains/:domain/workflows/:workflowId/:runId/pending',
+          path:
+            '/domains/:domain/:activeStatus(active|passive)?/workflows/:workflowId/:runId/pending',
           components: {
             pending: WorkflowPending,
           },
         },
         {
           name: 'workflow/stack-trace',
-          path: '/domains/:domain/workflows/:workflowId/:runId/stack-trace',
+          path:
+            '/domains/:domain/:activeStatus(active|passive)?/workflows/:workflowId/:runId/stack-trace',
           components: {
             stacktrace: StackTrace,
           },
         },
         {
           name: 'workflow/query',
-          path: '/domains/:domain/workflows/:workflowId/:runId/query',
+          path:
+            '/domains/:domain/:activeStatus(active|passive)?/workflows/:workflowId/:runId/query',
           components: {
             query: Query,
           },
@@ -221,31 +233,37 @@ const routeOpts = {
     },
     {
       name: 'task-list',
-      path: '/domains/:domain/task-lists/:taskList',
-      redirect: '/domains/:domain/task-lists/:taskList/pollers',
+      path:
+        '/domains/:domain/:activeStatus(active|passive)?/task-lists/:taskList',
+      redirect:
+        '/domains/:domain/:activeStatus(active|passive)?/task-lists/:taskList/pollers',
       component: TaskList,
       props: ({ params }) => ({
+        activeStatus: params.activeStatus,
         domain: params.domain,
         taskList: params.taskList,
       }),
       children: [
         {
           name: 'task-list/pollers',
-          path: '/domains/:domain/task-lists/:taskList/pollers',
+          path:
+            '/domains/:domain/:activeStatus(active|passive)?/task-lists/:taskList/pollers',
           components: {
             pollers: TaskListPollers,
           },
         },
         {
           name: 'task-list/partition',
-          path: '/domains/:domain/task-lists/:taskList/partition',
+          path:
+            '/domains/:domain/:activeStatus(active|passive)?/task-lists/:taskList/partition',
           components: {
             partition: TaskListPartition,
           },
         },
         {
           name: 'task-list/metrics',
-          path: '/domains/:domain/task-lists/:taskList/metrics',
+          path:
+            '/domains/:domain/:activeStatus(active|passive)?/task-lists/:taskList/metrics',
           components: {
             partition: TaskListMetrics,
           },
@@ -262,11 +280,11 @@ const routeOpts = {
     },
     {
       name: 'domain-config-redirect',
-      path: '/domains/:domain/config',
-      redirect: '/domains/:domain/settings',
+      path: '/domains/:domain/:activeStatus(active|passive)?/config',
+      redirect: '/domains/:domain/:activeStatus(active|passive)?/settings',
     },
     {
-      path: '/domains/:domain/history',
+      path: '/domains/:domain/:activeStatus(active|passive)?/history',
       redirect: ({ params, query }) => {
         if (!query.runId || !query.workflowId) {
           return {
@@ -278,6 +296,7 @@ const routeOpts = {
         const { runId, workflowId, ...queryWhitelist } = query;
 
         const newParams = {
+          activeStatus: params.activeStatus,
           runId,
           workflowId,
           domain: params.domain,
