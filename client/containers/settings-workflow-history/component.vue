@@ -159,7 +159,7 @@ export default {
   <div class="settings-workflow-history">
     <div class="content">
       <div class="content-item">
-        <feature-flag name="workflowGraph">
+        <feature-flag :cache="true" name="workflowGraph">
           <settings-toggle
             label="Enable history graph"
             name="graphEnabled"

@@ -1,7 +1,7 @@
 [
   {
     "key": "crossRegion",
-    "value": true
+    "value": false
   },
   {
     "key": "crossRegion.activeStatusTag",

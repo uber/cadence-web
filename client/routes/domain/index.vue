@@ -45,7 +45,7 @@ export default {
         icon="icon_settings"
         :to="{ name: 'domain-settings' }"
       />
-      <feature-flag display="inline" name="domainMetrics">
+      <feature-flag :cache="true" display="inline" name="domainMetrics">
         <navigation-link
           label="Metrics"
           icon="icon_chart"

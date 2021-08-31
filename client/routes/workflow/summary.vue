@@ -24,7 +24,7 @@ import { TERMINATE_DEFAULT_ERROR_MESSAGE } from './constants';
 import { NOTIFICATION_TYPE_ERROR, NOTIFICATION_TYPE_SUCCESS } from '~constants';
 import { getErrorMessage, getDatetimeFormattedString } from '~helpers';
 import { BarLoader, ButtonFill, DataViewer, DetailList } from '~components';
-import { FeatureFlagService, httpService } from '~services';
+import { featureFlagService, httpService } from '~services';
 
 export default {
   data() {
@@ -56,9 +56,8 @@ export default {
     'detail-list': DetailList,
   },
   async mounted() {
-    this.featureFlagService = new FeatureFlagService();
-    this.isWorkflowTerminateFeatureFlagEnabled = await this.featureFlagService.isFeatureFlagEnabled(
-      { name: 'workflowTerminate' }
+    this.isWorkflowTerminateFeatureFlagEnabled = await featureFlagService.isFeatureFlagEnabled(
+      { cache: true, name: 'workflowTerminate' }
     );
     this.initAuthorization();
   },
@@ -117,8 +116,8 @@ export default {
       }
     },
     async initAuthorization() {
-      const isDomainAuthorizationFeatureFlagEnabled = await this.featureFlagService.isFeatureFlagEnabled(
-        { name: 'domainAuthorization' }
+      const isDomainAuthorizationFeatureFlagEnabled = await featureFlagService.isFeatureFlagEnabled(
+        { cache: true, name: 'domainAuthorization' }
       );
 
       if (isDomainAuthorizationFeatureFlagEnabled) {

@@ -262,7 +262,7 @@ export default {
           </a>
         </flex-grid-item>
 
-        <feature-flag name="environmentSelect">
+        <feature-flag :cache="true" name="environmentSelect">
           <flex-grid-item>
             <select-input
               class="environment-select"
@@ -305,6 +305,12 @@ export default {
                 @click="onEditDomainClick"
               />
             </flex-grid-item>
+            <feature-flag
+              :cache="true"
+              name="crossRegion,crossRegion.activeStatusTag"
+            >
+              <flex-grid-item>Active</flex-grid-item>
+            </feature-flag>
           </flex-grid>
         </flex-grid-item>
 

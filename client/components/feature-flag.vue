@@ -20,12 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { FeatureFlagService } from '~services';
+import { featureFlagService } from '~services';
 
 export default {
   name: 'feature-flag',
   props: {
     allowDisabled: {
+      type: Boolean,
+      default: false,
+    },
+    cache: {
       type: Boolean,
       default: false,
     },
@@ -57,10 +61,10 @@ export default {
     };
   },
   async mounted() {
-    const { name, params } = this;
-    const featureFlagService = new FeatureFlagService();
+    const { cache, name, params } = this;
 
     this.isFeatureFlagEnabled = await featureFlagService.isFeatureFlagEnabled({
+      cache,
       name,
       params,
     });

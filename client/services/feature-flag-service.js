@@ -20,17 +20,48 @@
 // THE SOFTWARE.
 
 import httpService from './http-service';
+import { ONE_HOUR_IN_MILLISECONDS } from '~constants';
 import { getQueryStringFromObject } from '~helpers';
+import { CacheManager } from '~managers';
 
 const URL_BASE = '/api/feature-flags/';
 
 class FeatureFlagService {
-  async isFeatureFlagEnabled({ name = '', params = {} }) {
+  constructor() {
+    this.cacheManager = new CacheManager(ONE_HOUR_IN_MILLISECONDS);
+  }
+
+  async isFeatureFlagEnabled({ cache = false, name = '', params = {} }) {
+    const hasMultipleFlags = name.includes(',');
+
+    if (hasMultipleFlags) {
+      const nameParts = name.split(',');
+      let value;
+
+      for (const namePart of nameParts) {
+        value = await this.isFeatureFlagEnabled({
+          cache,
+          name: namePart,
+          params,
+        });
+
+        if (!value) {
+          return value;
+        }
+      }
+
+      return value;
+    }
+
     const queryParams = getQueryStringFromObject(params);
     const url = [URL_BASE, name, queryParams].join('');
 
-    return (await httpService.get(url)).value;
+    const getValue = async () => (await httpService.get(url)).value;
+
+    return cache ? this.cacheManager.get(name, getValue) : getValue();
   }
 }
 
-export default FeatureFlagService;
+const featureFlagService = new FeatureFlagService();
+
+export default featureFlagService;
