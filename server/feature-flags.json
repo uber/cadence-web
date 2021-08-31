@@ -4,6 +4,17 @@
     "value": true
   },
   {
+    "key": "crossRegionOrigin",
+    "value": "http://localhost:8088"
+  },
+  {
+    "key": "crossRegionClusterToDomainMap",
+    "value": {
+      "primary": "http://localhost:8089",
+      "secondary": "http://localhost:8090"
+    }
+  },
+  {
     "key": "domainAuthorization",
     "value": true
   },
