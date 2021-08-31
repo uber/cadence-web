@@ -4,19 +4,16 @@
     "value": true
   },
   {
-    "key": "crossRegionClusterToDomainMap",
-    "value": {
-      "primary": "http://localhost:8089",
-      "secondary": "http://localhost:8090"
-    }
-  },
-  {
-    "key": "crossRegionOrigin",
-    "value": "http://localhost:8088"
-  },
-  {
-    "key": "crossRegionTag",
+    "key": "crossRegion.activeStatusTag",
     "value": true
+  },
+  {
+    "key": "crossRegion.allowedCrossOrigin",
+    "value": true
+  },
+  {
+    "key": "crossRegion.clusterToRegionalDomainUrl",
+    "value": "http://localhost:8089"
   },
   {
     "key": "domainAuthorization",
