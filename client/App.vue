@@ -23,6 +23,7 @@
 import { version } from '../package.json';
 import logo from './assets/logo.svg';
 import {
+  ActiveStatus,
   ButtonIcon,
   FeatureFlag,
   FlexGrid,
@@ -57,6 +58,7 @@ import { httpService } from '~services';
 
 export default {
   components: {
+    'active-status': ActiveStatus,
     'button-icon': ButtonIcon,
     'domain-autocomplete': DomainAutocomplete,
     'feature-flag': FeatureFlag,
@@ -309,7 +311,12 @@ export default {
               :cache="true"
               name="crossRegion,crossRegion.activeStatusTag"
             >
-              <flex-grid-item>Active</flex-grid-item>
+              <flex-grid-item>
+                <active-status
+                  :active-status="$route.params.activeStatus"
+                  :domain="$route.params.domain"
+                />
+              </flex-grid-item>
             </feature-flag>
           </flex-grid>
         </flex-grid-item>

@@ -19,6 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+export { default as ActiveStatus } from './active-status';
 export { default as Autocomplete } from './autocomplete';
 export { default as BarLoader } from './bar-loader';
 export { default as ButtonFill } from './button-fill';

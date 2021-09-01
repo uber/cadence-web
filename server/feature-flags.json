@@ -1,7 +1,7 @@
 [
   {
     "key": "crossRegion",
-    "value": false
+    "value": true
   },
   {
     "key": "crossRegion.activeStatusTag",
@@ -13,7 +13,7 @@
   },
   {
     "key": "crossRegion.clusterToRegionalDomainUrl",
-    "value": "http://localhost:8089"
+    "value": "http://localhost:8088"
   },
   {
     "key": "domainAuthorization",
