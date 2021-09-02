@@ -83,24 +83,27 @@ class HttpService {
     );
   }
 
-  async request(baseUrl, options = {}) {
+  async request(baseUrl, { activeStatus, domain, query, ...options } = {}) {
     const fetch = this.fetchOverride ? this.fetchOverride : window.fetch;
-    const queryString = getQueryStringFromObject(options.query);
+    const queryString = getQueryStringFromObject(query);
     const pathname = queryString ? `${baseUrl}${queryString}` : baseUrl;
-    const origin = options.activeStatus
-      ? await this.getRegionalOrigin(options)
+    const origin = activeStatus
+      ? await this.getRegionalOrigin({ activeStatus, domain })
       : '';
 
     const url = `${origin}${pathname}`;
-
-    return fetch(url, {
+    const requestOptions = {
       ...DEFAULT_FETCH_OPTIONS,
-      ...(options.activeStatus && {
+      ...options,
+      ...(origin && {
         credentials: 'include',
         mode: 'cors',
       }),
-      ...options,
-    }).then(this.handleResponse);
+    };
+
+    console.log('making request:', url, requestOptions);
+
+    return fetch(url, requestOptions).then(this.handleResponse);
   }
 
   requestWithBody(url, body, options = {}) {
