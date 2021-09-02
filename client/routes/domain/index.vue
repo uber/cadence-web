@@ -23,7 +23,7 @@
 import { FeatureFlag, NavigationBar, NavigationLink } from '~components';
 
 export default {
-  props: ['dateFormat', 'domain', 'timeFormat', 'timezone'],
+  props: ['activeStatus', 'dateFormat', 'domain', 'timeFormat', 'timezone'],
   components: {
     'feature-flag': FeatureFlag,
     'navigation-bar': NavigationBar,
@@ -60,6 +60,7 @@ export default {
     </navigation-bar>
     <router-view
       name="workflow-list"
+      :active-status="activeStatus"
       :date-format="dateFormat"
       :domain="domain"
       :time-format="timeFormat"
@@ -69,6 +70,7 @@ export default {
     <router-view name="domain-metrics" :domain="domain" />
     <router-view
       name="workflow-archival"
+      :active-status="activeStatus"
       :date-format="dateFormat"
       :domain="domain"
       :time-format="timeFormat"

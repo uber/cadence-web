@@ -22,11 +22,11 @@
 
 import {
   getActiveStatusFromDomainUrls,
-  getClustersFromDomainConfig,
   getDomainUrlsFromClusters,
   getHrefFromDomainUrls,
   getHrefFromLocation,
 } from './helpers';
+import { getClustersFromDomainConfig } from '~helpers';
 import { featureFlagService, httpService } from '~services';
 
 export default {
@@ -54,10 +54,7 @@ export default {
   async mounted() {
     const { activeStatus, domain } = this;
 
-    // TODO - look at using vuex store to store this info to reduce duplicate http requests?
     const config = await httpService.get(`/api/domains/${domain}`);
-
-    console.log('config = ', config);
 
     const { activeCluster, passiveCluster } = getClustersFromDomainConfig(
       config

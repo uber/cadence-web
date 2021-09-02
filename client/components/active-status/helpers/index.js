@@ -20,7 +20,6 @@
 // THE SOFTWARE.
 
 export { default as getActiveStatusFromDomainUrls } from './get-active-status-from-domain-urls';
-export { default as getClustersFromDomainConfig } from './get-clusters-from-domain-config';
 export { default as getDomainUrlsFromClusters } from './get-domain-urls-from-clusters';
 export { default as getHrefFromDomainUrls } from './get-href-from-domain-urls';
 export { default as getHrefFromLocation } from './get-href-from-location';
