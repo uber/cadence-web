@@ -24,9 +24,9 @@ const getClustersFromDomainConfig = config => {
     activeClusterName: activeCluster,
     clusters,
   } = config.replicationConfiguration;
-  const passiveCluster = clusters.find(
-    ({ clusterName }) => clusterName !== activeCluster
-  );
+  const passiveCluster = clusters
+    .map(({ clusterName }) => clusterName)
+    .find(clusterName => clusterName !== activeCluster);
 
   return {
     activeCluster,
