@@ -29,7 +29,7 @@ import { CacheManager } from '~managers';
 const DEFAULT_FETCH_OPTIONS = {
   credentials: 'same-origin',
   headers: {
-    Accepts: 'application/json',
+    Accept: 'application/json',
   },
 };
 
