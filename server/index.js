@@ -94,6 +94,12 @@ app.init = function({
         filter: contentType => !contentType.startsWith('text/event-stream'),
       })
     )
+    // this doesn't work
+    //.use(async function(ctx) {
+    //   ctx.authTokenHeaders = {
+    //     'token-name': ctx.headers['token-injected'],
+    //   };
+    // })
     .use(tchannelClient({ peers, requestConfig }))
     .use(
       useWebpack
