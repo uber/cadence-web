@@ -19,8 +19,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export { default as getActiveStatusFromDomainUrls } from './get-active-status-from-domain-urls';
-export { default as getClusterFromClusterList } from './get-cluster-from-cluster-list';
-export { default as getDomainUrlsFromClusters } from './get-domain-urls-from-clusters';
-export { default as getHrefFromDomainUrls } from './get-href-from-domain-urls';
-export { default as getHrefFromLocation } from './get-href-from-location';
+import isFeatureFlagEnabled from './is-feature-flag-enabled';
+
+// This helper is simply an alias for isFeatureFlagEnabled
+// see is-feature-flag-enabled.js for required dependencies and options
+const getConfiguration = dependencies => options => {
+  return isFeatureFlagEnabled(dependencies)(options);
+};
+
+export default getConfiguration;

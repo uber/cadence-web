@@ -19,9 +19,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+import { getConfiguration } from './feature-flag-service/helpers';
 import { ONE_HOUR_IN_MILLISECONDS } from '~constants';
 import {
-  getClustersFromDomainConfig,
+  getClusterListFromDomainConfig,
   getQueryStringFromObject,
 } from '~helpers';
 import { CacheManager } from '~managers';
@@ -36,7 +37,13 @@ const DEFAULT_FETCH_OPTIONS = {
 class HttpService {
   constructor() {
     this.origin = window.location.origin;
-    this.cacheManager = new CacheManager(ONE_HOUR_IN_MILLISECONDS);
+    const cacheManager = new CacheManager(ONE_HOUR_IN_MILLISECONDS);
+
+    this.cacheManager = cacheManager;
+    this.getConfiguration = getConfiguration({
+      cacheManager,
+      httpService: this,
+    });
   }
 
   handleResponse(response) {
@@ -51,45 +58,44 @@ class HttpService {
   async getDomainConfig({ domain }) {
     const fetch = this.fetchOverride ? this.fetchOverride : window.fetch;
 
+    // TODO - Need to figure out how to handle in global URL mode how to fetch both regions domain configs for local domains.
+
     return fetch(`/api/domains/${domain}`, DEFAULT_FETCH_OPTIONS).then(
       this.handleResponse
     );
   }
 
-  async getFeatureFlag({ name, params }) {
-    const queryParams = getQueryStringFromObject(params);
-    const url = `/api/feature-flags/${name}${queryParams}`;
+  async getRegionalOrigin({ cluster, domain }) {
+    // TODO - will this result in a circular dependency mess?
+    const clusterOriginList = await this.getConfiguration({
+      cache: true,
+      name: 'crossRegion.clusterOriginList',
+    });
 
-    return (await fetch(url, DEFAULT_FETCH_OPTIONS).then(this.handleResponse))
-      .value;
-  }
-
-  async getRegionalOrigin({ activeStatus, domain }) {
     const config = await this.cacheManager.get(domain, () =>
-      this.getDomainConfig({ domain })
+      this.getDomainConfig({ cluster, domain })
     );
 
-    const { activeCluster, passiveCluster } = getClustersFromDomainConfig(
-      config
-    );
+    // TODO - how to handle if cluster = "active" and the domain is a local domain is multiple clusters - fail the request or throw error? just pick one of them?
 
-    const cluster = activeStatus === 'active' ? activeCluster : passiveCluster;
+    const { activeCluster } = getClusterListFromDomainConfig({
+      clusterOriginList,
+      config,
+    });
 
-    return (
-      (await this.getFeatureFlag({
-        name: 'crossRegion.clusterToRegionalDomainUrl',
-        params: { cluster },
-      })) || ''
-    );
+    const clusterName = cluster === 'active' ? activeCluster : cluster;
+
+    // TODO - Figure out what to do here...
   }
 
-  async request(baseUrl, { activeStatus, domain, query, ...options } = {}) {
+  async request(baseUrl, { cluster, domain, query, ...options } = {}) {
     const fetch = this.fetchOverride ? this.fetchOverride : window.fetch;
     const queryString = getQueryStringFromObject(query);
     const pathname = queryString ? `${baseUrl}${queryString}` : baseUrl;
-    const origin = activeStatus
-      ? await this.getRegionalOrigin({ activeStatus, domain })
-      : '';
+    const origin =
+      cluster && domain
+        ? await this.getRegionalOrigin({ cluster, domain })
+        : '';
 
     const url = `${origin}${pathname}`;
     const requestOptions = {

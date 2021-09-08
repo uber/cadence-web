@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021 Uber Technologies Inc.
+// Copyright (c) 2021 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,49 +19,41 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import httpService from './http-service';
-import { ONE_HOUR_IN_MILLISECONDS } from '~constants';
+import { URL_BASE } from '../constants';
 import { getQueryStringFromObject } from '~helpers';
-import { CacheManager } from '~managers';
 
-const URL_BASE = '/api/feature-flags/';
+const isFeatureFlagEnabled = ({ cacheManager, httpService }) => async ({
+  cache = false,
+  name = '',
+  params = {},
+}) => {
+  const hasMultipleFlags = name.includes(',');
 
-class FeatureFlagService {
-  constructor() {
-    this.cacheManager = new CacheManager(ONE_HOUR_IN_MILLISECONDS);
-  }
+  if (hasMultipleFlags) {
+    const nameParts = name.split(',');
+    let value;
 
-  async isFeatureFlagEnabled({ cache = false, name = '', params = {} }) {
-    const hasMultipleFlags = name.includes(',');
+    for (const namePart of nameParts) {
+      value = await isFeatureFlagEnabled({
+        cache,
+        name: namePart,
+        params,
+      });
 
-    if (hasMultipleFlags) {
-      const nameParts = name.split(',');
-      let value;
-
-      for (const namePart of nameParts) {
-        value = await this.isFeatureFlagEnabled({
-          cache,
-          name: namePart,
-          params,
-        });
-
-        if (!value) {
-          return value;
-        }
+      if (!value) {
+        return value;
       }
-
-      return value;
     }
 
-    const queryParams = getQueryStringFromObject(params);
-    const url = [URL_BASE, name, queryParams].join('');
-
-    const getValue = async () => (await httpService.get(url)).value;
-
-    return cache ? this.cacheManager.get(name, getValue) : getValue();
+    return value;
   }
-}
 
-const featureFlagService = new FeatureFlagService();
+  const queryParams = getQueryStringFromObject(params);
+  const url = [URL_BASE, name, queryParams].join('');
 
-export default featureFlagService;
+  const getValue = async () => (await httpService.get(url)).value;
+
+  return cache ? cacheManager.get(name, getValue) : getValue();
+};
+
+export default isFeatureFlagEnabled;

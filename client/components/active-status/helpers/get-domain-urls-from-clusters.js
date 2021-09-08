@@ -19,29 +19,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const getDomainUrlsFromClusters = async ({
-  activeCluster,
-  featureFlagService,
-  passiveCluster,
-}) => {
-  const [activeUrl, passiveUrl] = await Promise.all([
-    featureFlagService.isFeatureFlagEnabled({
-      cache: false,
-      name: 'crossRegion.clusterToRegionalDomainUrl',
-      params: { cluster: activeCluster },
-    }),
-    passiveCluster &&
-      featureFlagService.isFeatureFlagEnabled({
-        cache: false,
-        name: 'crossRegion.clusterToRegionalDomainUrl',
-        params: { cluster: passiveCluster },
-      }),
-  ]);
+const getDomainUrlsFromClusters = async ({ featureFlagService }) => {
+  // TODO - Do we need this helper still?
 
-  return {
-    activeUrl,
-    passiveUrl,
-  };
+  const clusterOriginList =
+    (await featureFlagService.getConfiguration({
+      cache: true,
+      name: 'crossRegion.clusterOriginList',
+    })) || [];
+
+  // return {
+  //   activeUrl,
+  //   passiveUrl,
+  // };
 };
 
 export default getDomainUrlsFromClusters;

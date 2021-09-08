@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Uber Technologies Inc.
+// Copyright (c) 2017-2021 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,19 +19,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const getClustersFromDomainConfig = config => {
-  const {
-    activeClusterName: activeCluster,
-    clusters,
-  } = config.replicationConfiguration;
-  const passiveCluster = clusters
-    .map(({ clusterName }) => clusterName)
-    .find(clusterName => clusterName !== activeCluster);
+import httpService from '../http-service';
+import { getConfiguration, isFeatureFlagEnabled } from './helpers';
+import { ONE_HOUR_IN_MILLISECONDS } from '~constants';
+import { CacheManager } from '~managers';
 
-  return {
-    activeCluster,
-    passiveCluster,
-  };
-};
+class FeatureFlagService {
+  constructor() {
+    const cacheManager = new CacheManager(ONE_HOUR_IN_MILLISECONDS);
 
-export default getClustersFromDomainConfig;
+    // see helper method definitions for method arguments
+    this.isFeatureFlagEnabled = isFeatureFlagEnabled({
+      cacheManager,
+      httpService,
+    });
+
+    this.getConfiguration = getConfiguration({
+      cacheManager,
+      httpService,
+    });
+  }
+}
+
+const featureFlagService = new FeatureFlagService();
+
+export default featureFlagService;

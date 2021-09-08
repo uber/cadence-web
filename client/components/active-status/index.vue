@@ -22,19 +22,19 @@
 
 import {
   getActiveStatusFromDomainUrls,
+  getClusterFromClusterList,
   getDomainUrlsFromClusters,
   getHrefFromDomainUrls,
   getHrefFromLocation,
 } from './helpers';
-import { getClustersFromDomainConfig } from '~helpers';
+import { getClusterListFromDomainConfig } from '~helpers';
 import { featureFlagService, httpService } from '~services';
 
 export default {
   name: 'active-status',
   props: {
-    activeStatus: {
+    clusterName: {
       type: String,
-      validator: value => ['active', 'passive'].includes(value),
     },
     domain: {
       type: String,
@@ -42,63 +42,109 @@ export default {
   },
   data() {
     return {
-      computedActiveStatus: undefined,
-      href: undefined,
+      cluster: undefined,
+      clusterList: [],
+      path: this.$route.path,
     };
   },
   computed: {
-    tag() {
-      return this.href ? 'a' : 'span';
+    computedActiveStatus() {
+      const { cluster } = this;
+
+      return cluster.active ? 'active' : 'passive';
+    },
+    computedCluster() {
+      const { clusterName, computedClusterList: clusterList } = this;
+      const { location } = window;
+
+      return getClusterFromClusterList({
+        clusterName,
+        clusterList,
+        location,
+      });
+    },
+    computedClusterList() {
+      const { clusterName, clusterList, path } = this;
+
+      // TODO - Finish off mapping href path to clusterList here...
+
+      return clusterList.map(() => {});
+    },
+    computedClusterName() {
+      const { cluster } = this;
+
+      return cluster.clusterName;
+    },
+    computedDisplayText() {
+      const { computedActiveStatus, computedClusterName } = this;
+
+      return [computedActiveStatus, computedClusterName]
+        .filter(item => !!item)
+        .join(' - ');
+    },
+    computedHref() {
+      const { cluster, clusterList } = this;
+
+      if (clusterList !== 2 || !cluster) {
+        return;
+      }
+
+      const { clusterName } = cluster;
+
+      const altCluster = clusterList.find(
+        ({ clusterName: matchClusterName }) => clusterName !== matchClusterName
+      );
+
+      return altCluster.origin;
+    },
+    computedTag() {
+      const { clusterList, computedHref } = this;
+
+      switch (clusterList.length) {
+        case 0:
+        case 1:
+          return 'span';
+        case 2:
+          return (computedHref && 'a') || 'span';
+        // case >= 3
+        default:
+          return 'select-input';
+      }
     },
   },
   async mounted() {
-    const { activeStatus, domain } = this;
+    const { clusterName, domain } = this;
+    const { location } = window;
 
     const config = await httpService.get(`/api/domains/${domain}`);
 
-    const { activeCluster, passiveCluster } = getClustersFromDomainConfig(
-      config
-    );
+    const clusterOriginList =
+      (await featureFlagService.getConfiguration({
+        cache: true,
+        name: 'crossRegion.clusterOriginList',
+      })) || [];
 
-    if (activeStatus) {
-      this.initWithActiveStatus({ activeCluster, passiveCluster });
-    } else {
-      this.initWithoutActiveStatus({ activeCluster, passiveCluster });
+    this.clusterList = await getClusterListFromDomainConfig({
+      clusterOriginList,
+      config,
+    });
+
+    if (clusterName) {
+      const activeClusterOption = this.clusterList
+        .filter(({ active }) => active)
+        .map(cluster => ({
+          ...cluster,
+          displayName: 'active',
+        }))[0];
+
+      if (activeClusterOption) {
+        this.clusterList.unshift(activeClusterOption);
+      }
     }
   },
-  methods: {
-    initWithActiveStatus({ activeCluster, passiveCluster }) {
-      const { activeStatus } = this;
-      const { location } = window;
-
-      this.href = getHrefFromLocation({
-        activeStatus,
-        location,
-        passiveCluster,
-      });
-
-      this.computedActiveStatus = activeStatus;
-    },
-    async initWithoutActiveStatus({ activeCluster, passiveCluster }) {
-      const { activeUrl, passiveUrl } = await getDomainUrlsFromClusters({
-        activeCluster,
-        featureFlagService,
-        passiveCluster,
-      });
-
-      const activeStatus = await getActiveStatusFromDomainUrls({
-        activeUrl,
-        location,
-      });
-
-      this.href = getHrefFromDomainUrls({
-        activeStatus,
-        activeUrl,
-        location,
-        passiveUrl,
-      });
-
-      this.computedActiveStatus = activeStatus;
+  watch: {
+    $route({ path }) {
+      this.path = path;
     },
   },
 };
@@ -110,11 +156,11 @@ export default {
     :class="{
       [computedActiveStatus]: computedActiveStatus,
     }"
-    :href="href"
-    :is="tag"
-    v-if="computedActiveStatus"
+    :href="computedHref"
+    :is="computedTag"
+    v-if="cluster"
   >
-    {{ computedActiveStatus }}
+    {{ computedDisplayText }}
   </component>
 </template>
 

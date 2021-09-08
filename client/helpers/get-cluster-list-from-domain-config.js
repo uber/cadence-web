@@ -19,8 +19,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export { default as getActiveStatusFromDomainUrls } from './get-active-status-from-domain-urls';
-export { default as getClusterFromClusterList } from './get-cluster-from-cluster-list';
-export { default as getDomainUrlsFromClusters } from './get-domain-urls-from-clusters';
-export { default as getHrefFromDomainUrls } from './get-href-from-domain-urls';
-export { default as getHrefFromLocation } from './get-href-from-location';
+const getClusterListFromDomainConfig = ({ clusterOriginList = [], config }) => {
+  const { activeClusterName, clusters } = config.replicationConfiguration;
+
+  const clusterList = clusterOriginList
+    .filter(({ clusterName }) =>
+      clusters.find(
+        ({ clusterName: domainClusterName }) =>
+          clusterName === domainClusterName
+      )
+    )
+    .map(cluster => ({
+      ...cluster,
+      active: cluster.clusterName === activeClusterName,
+      displayName: cluster.clusterName,
+    }));
+
+  return clusterList;
+};
+
+export default getClusterListFromDomainConfig;

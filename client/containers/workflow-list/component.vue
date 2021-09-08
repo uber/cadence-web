@@ -56,7 +56,7 @@ import { httpService } from '~services';
 
 export default {
   props: [
-    'activeStatus',
+    'cluster',
     'dateFormat',
     'domain',
     'fetchWorkflowListUrl',
@@ -202,7 +202,7 @@ export default {
       this.results = [];
     },
     async fetch(url, queryWithStatus) {
-      const { domain, activeStatus } = this;
+      const { cluster, domain } = this;
 
       let workflows = [];
       let nextPageToken = '';
@@ -230,7 +230,7 @@ export default {
         const { signal } = this.abortController;
 
         const request = await httpService.get(url, {
-          activeStatus,
+          cluster,
           domain,
           query,
           signal,

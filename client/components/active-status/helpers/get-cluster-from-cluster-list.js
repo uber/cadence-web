@@ -19,8 +19,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export { default as getActiveStatusFromDomainUrls } from './get-active-status-from-domain-urls';
-export { default as getClusterFromClusterList } from './get-cluster-from-cluster-list';
-export { default as getDomainUrlsFromClusters } from './get-domain-urls-from-clusters';
-export { default as getHrefFromDomainUrls } from './get-href-from-domain-urls';
-export { default as getHrefFromLocation } from './get-href-from-location';
+const getClusterFromClusterList = ({ clusterName, clusterList, location }) => {
+  const { origin } = location;
+  const matchParamName = clusterName ? 'displayName' : 'origin';
+  const matchValue = clusterName || origin;
+
+  // const cluster = clusterList.find(
+  //   ({ displayName: matchedClusterName }) => matchedClusterName === clusterName
+  // );
+
+  // const cluster = clusterList.find(
+  //   ({ origin: matchedOrigin }) => matchedOrigin === origin
+  // );
+
+  const cluster = clusterList.find(
+    ({ [matchParamName]: paramValue }) => paramValue === matchValue
+  );
+
+  if (!cluster) {
+    throw new Error(
+      `Could not find cluster "${matchValue}" in crossRegion.clusterOriginList configuration.`
+    );
+  }
+
+  return cluster;
+};
+
+export default getClusterFromClusterList;

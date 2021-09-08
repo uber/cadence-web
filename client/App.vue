@@ -313,7 +313,7 @@ export default {
             >
               <flex-grid-item>
                 <active-status
-                  :active-status="$route.params.activeStatus"
+                  :cluster-name="$route.params.clusterName"
                   :domain="$route.params.domain"
                 />
               </flex-grid-item>

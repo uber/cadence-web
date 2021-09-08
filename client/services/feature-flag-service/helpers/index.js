@@ -19,8 +19,5 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export { default as getActiveStatusFromDomainUrls } from './get-active-status-from-domain-urls';
-export { default as getClusterFromClusterList } from './get-cluster-from-cluster-list';
-export { default as getDomainUrlsFromClusters } from './get-domain-urls-from-clusters';
-export { default as getHrefFromDomainUrls } from './get-href-from-domain-urls';
-export { default as getHrefFromLocation } from './get-href-from-location';
+export { default as getConfiguration } from './get-configuration';
+export { default as isFeatureFlagEnabled } from './is-feature-flag-enabled';
