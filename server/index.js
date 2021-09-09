@@ -28,6 +28,7 @@ const koaSend = require('koa-send');
 const koaStatic = require('koa-static');
 const koaWebpack = require('koa-webpack');
 const webpack = require('webpack');
+const jwt = require('jsonwebtoken');
 
 const webpackConfig = require('../webpack.config');
 const tchannelClient = require('./middleware/tchannel-client');
@@ -95,16 +96,21 @@ app.init = function({
       })
     )
     .use(async function(ctx, next) {
-      //ctx.authTokenHeaders = { 'token-name': ctx.headers['token-injected'] };
       if (
         process.env.ENABLE_AUTH &&
         process.env.AUTH_TYPE === 'ADMIN_JWT' &&
         process.env.AUTH_ADMIN_JWT_PRIVATE_KEY
       ) {
         ctx.authTokenHeaders = ctx.authTokenHeaders || {};
-        ctx.authTokenHeaders['cadence-authorization'] = '1234';
-        // TODO use auth0 library to create an admin token like https://github.com/uber/cadence-java-client/blob/master/src/main/java/com/uber/cadence/serviceclient/auth/AdminJwtAuthorizationProvider.java
-        console.log(ctx, 'hahahahah');
+        const token = jwt.sign(
+          { admin: true, ttl: 10 },
+          process.env.AUTH_ADMIN_JWT_PRIVATE_KEY,
+          {
+            algorithm: 'RS256',
+          }
+        );
+
+        ctx.authTokenHeaders['cadence-authorization'] = token;
       }
 
       await next();
