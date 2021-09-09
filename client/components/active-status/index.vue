@@ -84,19 +84,18 @@ export default {
     },
     computedHref() {
       // TODO - perhaps move to helper?
-      const { computedCluster, computedClusterList } = this;
+      const { computedClusterList, computedClusterName } = this;
 
-      if (computedClusterList !== 2 || !computedCluster) {
+      if (computedClusterList.length !== 2 || !computedClusterName) {
         return;
       }
 
-      const { clusterName } = computedCluster;
-
       const altCluster = computedClusterList.find(
-        ({ clusterName: matchClusterName }) => clusterName !== matchClusterName
+        ({ clusterName: matchClusterName }) =>
+          computedClusterName !== matchClusterName
       );
 
-      return altCluster.origin;
+      return altCluster.href;
     },
     computedTag() {
       // TODO - perhaps move to helper?
