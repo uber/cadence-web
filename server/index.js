@@ -55,7 +55,7 @@ app.init = function({
   serviceName = process.env.CADENCE_TCHANNEL_SERVICE || SERVICE_NAME_DEFAULT,
   timeout = REQUEST_TIMEOUT_DEFAULT,
   useWebpack = process.env.NODE_ENV !== 'production',
-  enableAuth = process.env.ENABLE_AUTH === 'enabled',
+  enableAuth = process.env.ENABLE_AUTH === 'true',
   authType = process.env.AUTH_TYPE,
   authAdminJwtPrivateKey = process.env.AUTH_ADMIN_JWT_PRIVATE_KEY,
 } = {}) {
