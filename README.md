@@ -22,7 +22,7 @@ Set these environment variables if you need to change their defaults
 | CADENCE_EXTERNAL_SCRIPTS     | Addtional JavaScript tags to serve in the UI  |                |
 | ENABLE_AUTH          | Enable auth feature                                | false             |
 | AUTH_TYPE          | concurrently supports ADMIN_JWT                      | ''                |
-| AUTH_ADMIN_JWT_PRIVATE_KEY          | JWT signing private key for ADMIN_JWT type  | 8088      |
+| AUTH_ADMIN_JWT_PRIVATE_KEY          | JWT signing private key for ADMIN_JWT type  | ''        |
 
 ### Running locally
 
