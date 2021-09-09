@@ -55,6 +55,9 @@ app.init = function({
   serviceName = process.env.CADENCE_TCHANNEL_SERVICE || SERVICE_NAME_DEFAULT,
   timeout = REQUEST_TIMEOUT_DEFAULT,
   useWebpack = process.env.NODE_ENV !== 'production',
+  enableAuth = process.env.ENABLE_AUTH === 'enabled',
+  authType = process.env.AUTH_TYPE,
+  authAdminJwtPrivateKey = process.env.AUTH_ADMIN_JWT_PRIVATE_KEY,
 } = {}) {
   const requestConfig = {
     retryFlags,
@@ -96,15 +99,11 @@ app.init = function({
       })
     )
     .use(async function(ctx, next) {
-      if (
-        process.env.ENABLE_AUTH &&
-        process.env.AUTH_TYPE === 'ADMIN_JWT' &&
-        process.env.AUTH_ADMIN_JWT_PRIVATE_KEY
-      ) {
+      if (enableAuth && authType === 'ADMIN_JWT' && authAdminJwtPrivateKey) {
         ctx.authTokenHeaders = ctx.authTokenHeaders || {};
         const token = jwt.sign(
           { admin: true, ttl: 10 },
-          process.env.AUTH_ADMIN_JWT_PRIVATE_KEY,
+          authAdminJwtPrivateKey,
           {
             algorithm: 'RS256',
           }
