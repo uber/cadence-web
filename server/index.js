@@ -94,12 +94,20 @@ app.init = function({
         filter: contentType => !contentType.startsWith('text/event-stream'),
       })
     )
-    // this doesn't work
-    //.use(async function(ctx) {
-    //   ctx.authTokenHeaders = {
-    //     'token-name': ctx.headers['token-injected'],
-    //   };
-    // })
+    .use(async function(ctx, next) {
+      //ctx.authTokenHeaders = { 'token-name': ctx.headers['token-injected'] };
+      if (
+        process.env.ENABLE_AUTH &&
+        process.env.AUTH_TYPE === 'ADMIN_JWT' &&
+        process.env.AUTH_ADMIN_JWT_PRIVATE_KEY
+      ) {
+        ctx.authTokenHeaders['cadence-authorization'] = '1234';
+        // TODO use auth0 library to create an admin token like https://github.com/uber/cadence-java-client/blob/master/src/main/java/com/uber/cadence/serviceclient/auth/AdminJwtAuthorizationProvider.java
+        console.log(ctx, 'hahahahah');
+      }
+
+      await next();
+    })
     .use(tchannelClient({ peers, requestConfig }))
     .use(
       useWebpack

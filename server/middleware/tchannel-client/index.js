@@ -39,15 +39,6 @@ const tchannelClient = ({ peers, requestConfig }) =>
   async function(ctx, next) {
     const { authTokenHeaders = {} } = ctx;
 
-    if (
-      process.env.ENABLE_AUTH &&
-      process.env.AUTH_TYPE === 'ADMIN_JWT' &&
-      process.env.AUTH_ADMIN_JWT_PRIVATE_KEY
-    ) {
-      authTokenHeaders['cadence-authorization'] = '1234';
-      // TODO use auth0 library to create an admin token like https://github.com/uber/cadence-java-client/blob/master/src/main/java/com/uber/cadence/serviceclient/auth/AdminJwtAuthorizationProvider.java
-    }
-
     const client = TChannel();
     const channels = await makeChannels({ client, peers });
     const request = makeRequest({
