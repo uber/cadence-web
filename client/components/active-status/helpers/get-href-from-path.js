@@ -19,19 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const getHrefFromDomainUrls = ({
-  activeStatus,
-  activeUrl,
-  location,
-  passiveUrl,
-}) => {
-  const { pathname, search } = location;
+const getHrefFromPath = ({ clusterName, origin, path }) => cluster =>
+  `${origin}${path.replace(clusterName, cluster.displayName)}`;
 
-  const hrefOrigin = activeStatus === 'active' ? passiveUrl : activeUrl;
-
-  return (
-    hrefOrigin && [hrefOrigin, pathname, search].filter(part => !!part).join('')
-  );
-};
-
-export default getHrefFromDomainUrls;
+export default getHrefFromPath;

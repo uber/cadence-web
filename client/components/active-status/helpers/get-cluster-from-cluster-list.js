@@ -19,25 +19,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const getClusterFromClusterList = ({ clusterName, clusterList, location }) => {
-  const { origin } = location;
+const getClusterFromClusterList = ({ clusterList, clusterName, origin }) => {
   const matchParamName = clusterName ? 'displayName' : 'origin';
   const matchValue = clusterName || origin;
-
-  // const cluster = clusterList.find(
-  //   ({ displayName: matchedClusterName }) => matchedClusterName === clusterName
-  // );
-
-  // const cluster = clusterList.find(
-  //   ({ origin: matchedOrigin }) => matchedOrigin === origin
-  // );
 
   const cluster = clusterList.find(
     ({ [matchParamName]: paramValue }) => paramValue === matchValue
   );
 
   if (!cluster) {
-    throw new Error(
+    console.warn(
       `Could not find cluster "${matchValue}" in crossRegion.clusterOriginList configuration.`
     );
   }

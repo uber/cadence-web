@@ -20,13 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import {
-  getActiveStatusFromDomainUrls,
-  getClusterFromClusterList,
-  getDomainUrlsFromClusters,
-  getHrefFromDomainUrls,
-  getHrefFromLocation,
-} from './helpers';
+import { getClusterFromClusterList, getClusterListWithHref } from './helpers';
 import { getClusterListFromDomainConfig } from '~helpers';
 import { featureFlagService, httpService } from '~services';
 
@@ -42,38 +36,44 @@ export default {
   },
   data() {
     return {
-      cluster: undefined,
       clusterList: [],
       path: this.$route.path,
     };
   },
+  mounted() {
+    this.init(this);
+  },
   computed: {
     computedActiveStatus() {
-      const { cluster } = this;
+      const { computedCluster } = this;
 
-      return cluster.active ? 'active' : 'passive';
+      return computedCluster.active ? 'active' : 'passive';
     },
     computedCluster() {
       const { clusterName, computedClusterList: clusterList } = this;
-      const { location } = window;
+      const { origin } = window.location;
 
       return getClusterFromClusterList({
-        clusterName,
         clusterList,
-        location,
+        clusterName,
+        origin,
       });
     },
     computedClusterList() {
       const { clusterName, clusterList, path } = this;
+      const { origin } = window.location;
 
-      // TODO - Finish off mapping href path to clusterList here...
-
-      return clusterList.map(() => {});
+      return getClusterListWithHref({
+        clusterName,
+        clusterList,
+        origin,
+        path,
+      });
     },
     computedClusterName() {
-      const { cluster } = this;
+      const { computedCluster } = this;
 
-      return cluster.clusterName;
+      return computedCluster.clusterName;
     },
     computedDisplayText() {
       const { computedActiveStatus, computedClusterName } = this;
@@ -83,24 +83,26 @@ export default {
         .join(' - ');
     },
     computedHref() {
-      const { cluster, clusterList } = this;
+      // TODO - perhaps move to helper?
+      const { computedCluster, computedClusterList } = this;
 
-      if (clusterList !== 2 || !cluster) {
+      if (computedClusterList !== 2 || !computedCluster) {
         return;
       }
 
-      const { clusterName } = cluster;
+      const { clusterName } = computedCluster;
 
-      const altCluster = clusterList.find(
+      const altCluster = computedClusterList.find(
         ({ clusterName: matchClusterName }) => clusterName !== matchClusterName
       );
 
       return altCluster.origin;
     },
     computedTag() {
-      const { clusterList, computedHref } = this;
+      // TODO - perhaps move to helper?
+      const { computedClusterList, computedHref } = this;
 
-      switch (clusterList.length) {
+      switch (computedClusterList.length) {
         case 0:
         case 1:
           return 'span';
@@ -112,35 +114,38 @@ export default {
       }
     },
   },
-  async mounted() {
-    const { clusterName, domain } = this;
-    const { location } = window;
+  methods: {
+    async init(context) {
+      const { clusterName, domain } = context;
 
-    const config = await httpService.get(`/api/domains/${domain}`);
+      const config = await httpService.get(`/api/domains/${domain}`);
 
-    const clusterOriginList =
-      (await featureFlagService.getConfiguration({
-        cache: true,
-        name: 'crossRegion.clusterOriginList',
-      })) || [];
+      const clusterOriginList =
+        (await featureFlagService.getConfiguration({
+          cache: true,
+          name: 'crossRegion.clusterOriginList',
+        })) || [];
 
-    this.clusterList = await getClusterListFromDomainConfig({
-      clusterOriginList,
-      config,
-    });
+      const clusterList = await getClusterListFromDomainConfig({
+        clusterOriginList,
+        config,
+      });
 
-    if (clusterName) {
-      const activeClusterOption = this.clusterList
-        .filter(({ active }) => active)
-        .map(cluster => ({
-          ...cluster,
-          displayName: 'active',
-        }))[0];
+      if (clusterName) {
+        const activeClusterOption = clusterList
+          .filter(({ active }) => active)
+          .map(cluster => ({
+            ...cluster,
+            displayName: 'active',
+          }))[0];
 
-      if (activeClusterOption) {
-        this.clusterList.unshift(activeClusterOption);
+        if (activeClusterOption) {
+          clusterList.unshift(activeClusterOption);
+        }
       }
-    }
+
+      this.clusterList = clusterList;
+    },
   },
   watch: {
     $route({ path }) {
@@ -158,7 +163,7 @@ export default {
     }"
     :href="computedHref"
     :is="computedTag"
-    v-if="cluster"
+    v-if="computedCluster"
   >
     {{ computedDisplayText }}
   </component>

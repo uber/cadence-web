@@ -19,9 +19,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const getHrefFromLocation = ({ activeStatus, location, passiveCluster }) =>
-  activeStatus === 'active'
-    ? passiveCluster && location.href.replace('active', 'passive')
-    : location.href.replace('passive', 'active');
+const getHrefFromCluster = ({ path }) => ({ origin }) => `${origin}${path}`;
 
-export default getHrefFromLocation;
+export default getHrefFromCluster;

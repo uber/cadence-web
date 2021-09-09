@@ -19,10 +19,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const getActiveStatusFromDomainUrls = ({ activeUrl, location }) => {
-  const { origin } = location;
+import getHrefFromCluster from './get-href-from-cluster';
+import getHrefFromPath from './get-href-from-path';
 
-  return activeUrl === origin ? 'active' : 'passive';
+const getClusterListWithHref = ({ clusterName, clusterList, origin, path }) => {
+  const getHref = clusterName
+    ? getHrefFromPath({ clusterName, origin, path })
+    : getHrefFromCluster({ path });
+
+  return clusterList.map(cluster => ({
+    ...cluster,
+    href: getHref(cluster),
+  }));
 };
 
-export default getActiveStatusFromDomainUrls;
+export default getClusterListWithHref;
