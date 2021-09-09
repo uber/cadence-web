@@ -101,6 +101,7 @@ app.init = function({
         process.env.AUTH_TYPE === 'ADMIN_JWT' &&
         process.env.AUTH_ADMIN_JWT_PRIVATE_KEY
       ) {
+        ctx.authTokenHeaders = ctx.authTokenHeaders || {};
         ctx.authTokenHeaders['cadence-authorization'] = '1234';
         // TODO use auth0 library to create an admin token like https://github.com/uber/cadence-java-client/blob/master/src/main/java/com/uber/cadence/serviceclient/auth/AdminJwtAuthorizationProvider.java
         console.log(ctx, 'hahahahah');
