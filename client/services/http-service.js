@@ -55,46 +55,45 @@ class HttpService {
         );
   }
 
-  async getDomainConfig({ domain }) {
+  async getDomainConfig({ clusterOriginList, domain }) {
     const fetch = this.fetchOverride ? this.fetchOverride : window.fetch;
 
     // TODO - Need to figure out how to handle in global URL mode how to fetch both regions domain configs for local domains.
+    // do we try to merge both configs into one?
 
     return fetch(`/api/domains/${domain}`, DEFAULT_FETCH_OPTIONS).then(
       this.handleResponse
     );
   }
 
-  async getRegionalOrigin({ cluster, domain }) {
-    // TODO - will this result in a circular dependency mess?
+  async getRegionalOrigin({ clusterName, domain }) {
     const clusterOriginList = await this.getConfiguration({
       cache: true,
       name: 'crossRegion.clusterOriginList',
     });
 
     const config = await this.cacheManager.get(domain, () =>
-      this.getDomainConfig({ cluster, domain })
+      this.getDomainConfig({ clusterOriginList, domain })
     );
 
-    // TODO - how to handle if cluster = "active" and the domain is a local domain is multiple clusters - fail the request or throw error? just pick one of them?
-
-    const { activeCluster } = getClusterListFromDomainConfig({
+    const clusterList = getClusterListFromDomainConfig({
+      clusterName,
       clusterOriginList,
       config,
     });
 
-    const clusterName = cluster === 'active' ? activeCluster : cluster;
+    const cluster = clusterList.find(({ label }) => label === clusterName);
 
-    // TODO - Figure out what to do here...
+    return cluster && cluster.origin;
   }
 
-  async request(baseUrl, { cluster, domain, query, ...options } = {}) {
+  async request(baseUrl, { clusterName, domain, query, ...options } = {}) {
     const fetch = this.fetchOverride ? this.fetchOverride : window.fetch;
     const queryString = getQueryStringFromObject(query);
     const pathname = queryString ? `${baseUrl}${queryString}` : baseUrl;
     const origin =
-      cluster && domain
-        ? await this.getRegionalOrigin({ cluster, domain })
+      clusterName && domain
+        ? await this.getRegionalOrigin({ clusterName, domain })
         : '';
 
     const url = `${origin}${pathname}`;
@@ -106,8 +105,6 @@ class HttpService {
         mode: 'cors',
       }),
     };
-
-    console.log('making request:', url, requestOptions);
 
     return fetch(url, requestOptions).then(this.handleResponse);
   }

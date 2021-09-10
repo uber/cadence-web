@@ -19,7 +19,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const getClusterListFromDomainConfig = ({ clusterOriginList = [], config }) => {
+const getClusterListFromDomainConfig = ({
+  clusterName,
+  clusterOriginList = [],
+  config,
+}) => {
   const { activeClusterName, clusters } = config.replicationConfiguration;
 
   const clusterList = clusterOriginList
@@ -34,6 +38,19 @@ const getClusterListFromDomainConfig = ({ clusterOriginList = [], config }) => {
       active: cluster.clusterName === activeClusterName,
       label: cluster.clusterName,
     }));
+
+  if (clusterName) {
+    const activeClusterOption = clusterList
+      .filter(({ active }) => active)
+      .map(cluster => ({
+        ...cluster,
+        label: 'active',
+      }))[0];
+
+    if (activeClusterOption) {
+      clusterList.unshift(activeClusterOption);
+    }
+  }
 
   return clusterList;
 };

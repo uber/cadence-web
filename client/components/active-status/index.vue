@@ -130,22 +130,10 @@ export default {
         })) || [];
 
       const clusterList = await getClusterListFromDomainConfig({
+        clusterName,
         clusterOriginList,
         config,
       });
-
-      if (clusterName) {
-        const activeClusterOption = clusterList
-          .filter(({ active }) => active)
-          .map(cluster => ({
-            ...cluster,
-            label: 'active',
-          }))[0];
-
-        if (activeClusterOption) {
-          clusterList.unshift(activeClusterOption);
-        }
-      }
 
       this.clusterList = clusterList;
     },

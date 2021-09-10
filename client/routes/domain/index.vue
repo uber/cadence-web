@@ -66,8 +66,16 @@ export default {
       :time-format="timeFormat"
       :timezone="timezone"
     />
-    <router-view name="domain-settings" :domain="domain" />
-    <router-view name="domain-metrics" :domain="domain" />
+    <router-view
+      name="domain-settings"
+      :cluster-name="clusterName"
+      :domain="domain"
+    />
+    <router-view
+      name="domain-metrics"
+      :cluster-name="clusterName"
+      :domain="domain"
+    />
     <router-view
       name="workflow-archival"
       :cluster-name="clusterName"

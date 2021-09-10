@@ -56,7 +56,7 @@ import { httpService } from '~services';
 
 export default {
   props: [
-    'cluster',
+    'clusterName',
     'dateFormat',
     'domain',
     'fetchWorkflowListUrl',
@@ -202,7 +202,7 @@ export default {
       this.results = [];
     },
     async fetch(url, queryWithStatus) {
-      const { cluster, domain } = this;
+      const { clusterName, domain } = this;
 
       let workflows = [];
       let nextPageToken = '';
@@ -230,7 +230,7 @@ export default {
         const { signal } = this.abortController;
 
         const request = await httpService.get(url, {
-          cluster,
+          clusterName,
           domain,
           query,
           signal,
@@ -257,32 +257,35 @@ export default {
       return { status: 'success', workflows, nextPageToken };
     },
     fetchDomain() {
-      const { domain, now } = this;
+      const { clusterName, domain, now } = this;
 
       this.loading = true;
 
-      return httpService.get(`/api/domains/${domain}`).then(r => {
-        this.maxRetentionDays =
-          Number(r.configuration.workflowExecutionRetentionPeriodInDays) || 30;
-        this.loading = false;
+      return httpService
+        .get(`/api/domains/${domain}`, { clusterName })
+        .then(r => {
+          this.maxRetentionDays =
+            Number(r.configuration.workflowExecutionRetentionPeriodInDays) ||
+            30;
+          this.loading = false;
 
-        const minStartDate = this.getMinStartDate();
+          const minStartDate = this.getMinStartDate();
 
-        if (!this.isRouteRangeValid(minStartDate)) {
-          const prevRange = localStorage.getItem(
-            `${domain}:workflows-time-range`
-          );
+          if (!this.isRouteRangeValid(minStartDate)) {
+            const prevRange = localStorage.getItem(
+              `${domain}:workflows-time-range`
+            );
 
-          if (
-            prevRange &&
-            isRangeValid({ minStartDate, now, range: prevRange })
-          ) {
-            this.setRange(prevRange);
-          } else {
-            this.setRange(`last-${Math.min(30, this.maxRetentionDays)}-days`);
+            if (
+              prevRange &&
+              isRangeValid({ minStartDate, now, range: prevRange })
+            ) {
+              this.setRange(prevRange);
+            } else {
+              this.setRange(`last-${Math.min(30, this.maxRetentionDays)}-days`);
+            }
           }
-        }
-      });
+        });
     },
     async fetchWorkflowList() {
       if (!this.criteria || this.loading) {
