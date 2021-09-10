@@ -278,18 +278,16 @@ export default {
         <flex-grid-item v-if="$route.params.domain" margin="15px">
           <flex-grid align-items="center">
             <flex-grid-item>
-              <a
+              <router-link
                 class="workflows"
-                :class="{
-                  'router-link-active':
-                    $route.path ===
-                    `/domains/${$route.params.domain}/workflows`,
+                :to="{
+                  name: 'workflow-list',
+                  params: { clusterName: $route.params.clusterName },
                 }"
-                :href="`/domains/${$route.params.domain}/workflows`"
                 v-if="!isSearchingDomain"
               >
                 {{ $route.params.domain }}
-              </a>
+              </router-link>
               <domain-autocomplete
                 :focus="true"
                 height="slim"

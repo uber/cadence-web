@@ -23,7 +23,7 @@
 import { FeatureFlag, NavigationBar, NavigationLink } from '~components';
 
 export default {
-  props: ['cluster', 'dateFormat', 'domain', 'timeFormat', 'timezone'],
+  props: ['clusterName', 'dateFormat', 'domain', 'timeFormat', 'timezone'],
   components: {
     'feature-flag': FeatureFlag,
     'navigation-bar': NavigationBar,
@@ -38,29 +38,29 @@ export default {
       <navigation-link
         icon="icon_search"
         label="Workflows"
-        :to="{ name: 'workflow-list' }"
+        :to="{ name: 'workflow-list', params: { clusterName } }"
       />
       <navigation-link
         label="Settings"
         icon="icon_settings"
-        :to="{ name: 'domain-settings' }"
+        :to="{ name: 'domain-settings', params: { clusterName } }"
       />
       <feature-flag :cache="true" display="inline" name="domainMetrics">
         <navigation-link
           label="Metrics"
           icon="icon_chart"
-          :to="{ name: 'domain-metrics' }"
+          :to="{ name: 'domain-metrics', params: { clusterName } }"
         />
       </feature-flag>
       <navigation-link
         label="Archival"
         icon="icon_trip-history"
-        :to="{ name: 'workflow-archival' }"
+        :to="{ name: 'workflow-archival', params: { clusterName } }"
       />
     </navigation-bar>
     <router-view
       name="workflow-list"
-      :cluster="cluster"
+      :cluster-name="clusterName"
       :date-format="dateFormat"
       :domain="domain"
       :time-format="timeFormat"
@@ -70,7 +70,7 @@ export default {
     <router-view name="domain-metrics" :domain="domain" />
     <router-view
       name="workflow-archival"
-      :cluster="cluster"
+      :cluster-name="clusterName"
       :date-format="dateFormat"
       :domain="domain"
       :time-format="timeFormat"
