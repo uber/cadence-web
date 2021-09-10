@@ -19,7 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const getHrefFromPath = ({ clusterName, origin, path }) => cluster =>
-  `${origin}${path.replace(clusterName, cluster.label)}`;
+const getHrefFromPath = ({ clusterName, origin, path }) => ({ label }) =>
+  `${origin}${path.replace(clusterName, label)}`;
 
 export default getHrefFromPath;

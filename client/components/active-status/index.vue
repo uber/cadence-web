@@ -110,7 +110,7 @@ export default {
         case 1:
           return 'span';
         case 2:
-          return (computedHref && 'a') || 'span';
+          return computedHref ? 'a' : 'span';
         // case >= 3
         default:
           return 'select-input';
