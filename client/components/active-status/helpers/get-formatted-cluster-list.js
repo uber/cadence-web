@@ -22,7 +22,12 @@
 import getHrefFromCluster from './get-href-from-cluster';
 import getHrefFromPath from './get-href-from-path';
 
-const getClusterListWithHref = ({ clusterName, clusterList, origin, path }) => {
+const getFormattedClusterList = ({
+  clusterName,
+  clusterList,
+  origin,
+  path,
+}) => {
   const getHref = clusterName
     ? getHrefFromPath({ clusterName, origin, path })
     : getHrefFromCluster({ path });
@@ -33,4 +38,4 @@ const getClusterListWithHref = ({ clusterName, clusterList, origin, path }) => {
   }));
 };
 
-export default getClusterListWithHref;
+export default getFormattedClusterList;

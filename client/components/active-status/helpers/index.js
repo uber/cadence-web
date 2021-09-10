@@ -20,6 +20,6 @@
 // THE SOFTWARE.
 
 export { default as getClusterFromClusterList } from './get-cluster-from-cluster-list';
-export { default as getClusterListWithHref } from './get-cluster-list-with-href';
+export { default as getFormattedClusterList } from './get-formatted-cluster-list';
 export { default as getHrefFromCluster } from './get-href-from-cluster';
 export { default as getHrefFromPath } from './get-href-from-path';

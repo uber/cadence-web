@@ -32,7 +32,7 @@ const getClusterListFromDomainConfig = ({ clusterOriginList = [], config }) => {
     .map(cluster => ({
       ...cluster,
       active: cluster.clusterName === activeClusterName,
-      displayName: cluster.clusterName,
+      label: cluster.clusterName,
     }));
 
   return clusterList;

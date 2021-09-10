@@ -20,7 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { getClusterFromClusterList, getClusterListWithHref } from './helpers';
+import SelectInput from '../select-input';
+import { getClusterFromClusterList, getFormattedClusterList } from './helpers';
 import { getClusterListFromDomainConfig } from '~helpers';
 import { featureFlagService, httpService } from '~services';
 
@@ -33,6 +34,9 @@ export default {
     domain: {
       type: String,
     },
+  },
+  components: {
+    'select-input': SelectInput,
   },
   data() {
     return {
@@ -63,7 +67,7 @@ export default {
       const { clusterName, clusterList, path } = this;
       const { origin } = window.location;
 
-      return getClusterListWithHref({
+      return getFormattedClusterList({
         clusterName,
         clusterList,
         origin,
@@ -135,7 +139,7 @@ export default {
           .filter(({ active }) => active)
           .map(cluster => ({
             ...cluster,
-            displayName: 'active',
+            label: 'active',
           }))[0];
 
         if (activeClusterOption) {
@@ -144,6 +148,9 @@ export default {
       }
 
       this.clusterList = clusterList;
+    },
+    onClusterChange(cluster) {
+      window.location = cluster.href;
     },
   },
   watch: {
@@ -162,7 +169,12 @@ export default {
     }"
     :href="computedHref"
     :is="computedTag"
+    :label="computedDisplayText"
+    name="activeStatus"
+    :options="computedClusterList"
+    :value="computedCluster"
     v-if="computedCluster"
+    @change="onClusterChange"
   >
     {{ computedDisplayText }}
   </component>
@@ -182,6 +194,39 @@ export default {
 
   &.passive {
     background-color: uber-blue;
+  }
+
+  &.select-input {
+    label {
+      background-color: transparent !important;
+      color: white !important;
+      cursor: pointer;
+      left: auto !important;
+      padding: 0;
+      pointer-events: initial;
+      position: relative !important;
+      top: auto !important;
+      transform: none;
+    }
+
+    .v-select {
+      left: -10px;
+      top: 7px;
+      width: 0 !important;
+
+      .vs__dropdown-toggle {
+        border: none;
+        padding: 0;
+      }
+    }
+
+    .vs__selected {
+      display: none;
+    }
+
+    .vs__actions {
+      display: none;
+    }
   }
 }
 </style>

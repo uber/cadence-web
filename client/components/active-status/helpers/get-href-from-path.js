@@ -20,6 +20,6 @@
 // THE SOFTWARE.
 
 const getHrefFromPath = ({ clusterName, origin, path }) => cluster =>
-  `${origin}${path.replace(clusterName, cluster.displayName)}`;
+  `${origin}${path.replace(clusterName, cluster.label)}`;
 
 export default getHrefFromPath;
