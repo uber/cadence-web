@@ -20,6 +20,10 @@
 // THE SOFTWARE.
 
 const getClusterFromClusterList = ({ clusterList, clusterName, origin }) => {
+  if (!clusterList) {
+    return;
+  }
+
   const matchParamName = clusterName ? 'label' : 'origin';
   const matchValue = clusterName || origin;
 

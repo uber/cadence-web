@@ -28,6 +28,10 @@ const getFormattedClusterList = ({
   origin,
   path,
 }) => {
+  if (!clusterList) {
+    return;
+  }
+
   const getHref = clusterName
     ? getHrefFromPath({ clusterName, origin, path })
     : getHrefFromCluster({ path });

@@ -55,6 +55,7 @@ import { delay, getEndTimeIsoString, getStartTimeIsoString } from '~helpers';
 import { httpService } from '~services';
 
 export default {
+  name: 'workflow-list',
   props: [
     'clusterName',
     'dateFormat',
@@ -256,36 +257,44 @@ export default {
 
       return { status: 'success', workflows, nextPageToken };
     },
-    fetchDomain() {
+    async fetchDomain() {
       const { clusterName, domain, now } = this;
 
       this.loading = true;
 
-      return httpService
-        .get(`/api/domains/${domain}`, { clusterName })
-        .then(r => {
-          this.maxRetentionDays =
-            Number(r.configuration.workflowExecutionRetentionPeriodInDays) ||
-            30;
-          this.loading = false;
-
-          const minStartDate = this.getMinStartDate();
-
-          if (!this.isRouteRangeValid(minStartDate)) {
-            const prevRange = localStorage.getItem(
-              `${domain}:workflows-time-range`
-            );
-
-            if (
-              prevRange &&
-              isRangeValid({ minStartDate, now, range: prevRange })
-            ) {
-              this.setRange(prevRange);
-            } else {
-              this.setRange(`last-${Math.min(30, this.maxRetentionDays)}-days`);
-            }
-          }
+      try {
+        const domainInfo = await httpService.get(`/api/domains/${domain}`, {
+          clusterName,
         });
+
+        this.maxRetentionDays =
+          Number(
+            domainInfo.configuration.workflowExecutionRetentionPeriodInDays
+          ) || 30;
+        this.loading = false;
+
+        const minStartDate = this.getMinStartDate();
+
+        if (!this.isRouteRangeValid(minStartDate)) {
+          const prevRange = localStorage.getItem(
+            `${domain}:workflows-time-range`
+          );
+
+          if (
+            prevRange &&
+            isRangeValid({ minStartDate, now, range: prevRange })
+          ) {
+            this.setRange(prevRange);
+          } else {
+            this.setRange(`last-${Math.min(30, this.maxRetentionDays)}-days`);
+          }
+        }
+      } catch (error) {
+        this.error =
+          (error.json && error.json.message) || error.status || error.message;
+      } finally {
+        this.loading = false;
+      }
     },
     async fetchWorkflowList() {
       if (!this.criteria || this.loading) {

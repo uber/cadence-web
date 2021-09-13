@@ -120,15 +120,12 @@ export default {
   methods: {
     async init(context) {
       const { clusterName, domain } = context;
-
       const config = await httpService.get(`/api/domains/${domain}`);
-
       const clusterOriginList =
         (await featureFlagService.getConfiguration({
           cache: true,
           name: 'crossRegion.clusterOriginList',
         })) || [];
-
       const clusterList = await getClusterListFromDomainConfig({
         clusterName,
         clusterOriginList,
