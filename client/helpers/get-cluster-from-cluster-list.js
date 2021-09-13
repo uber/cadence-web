@@ -19,13 +19,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const getClusterFromClusterList = ({ clusterList, clusterName, origin }) => {
-  if (!clusterList) {
+const getClusterFromClusterList = ({
+  allowedCrossOrigin,
+  clusterList,
+  clusterName,
+  origin,
+}) => {
+  if (!clusterList || allowedCrossOrigin === undefined) {
     return;
   }
 
-  const matchParamName = clusterName ? 'label' : 'origin';
-  const matchValue = clusterName || origin;
+  const matchParamName = allowedCrossOrigin ? 'label' : 'origin';
+  const matchValue = allowedCrossOrigin ? clusterName || 'active' : origin;
 
   const cluster = clusterList.find(
     ({ [matchParamName]: paramValue }) => paramValue === matchValue

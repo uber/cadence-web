@@ -23,17 +23,19 @@ import getHrefFromCluster from './get-href-from-cluster';
 import getHrefFromPath from './get-href-from-path';
 
 const getFormattedClusterList = ({
+  allowedCrossOrigin,
   clusterName,
   clusterList,
+  domain,
   origin,
   path,
 }) => {
-  if (!clusterList) {
+  if (!clusterList || allowedCrossOrigin === undefined) {
     return;
   }
 
-  const getHref = clusterName
-    ? getHrefFromPath({ clusterName, origin, path })
+  const getHref = allowedCrossOrigin
+    ? getHrefFromPath({ clusterName, domain, origin, path })
     : getHrefFromCluster({ path });
 
   return clusterList.map(cluster => ({

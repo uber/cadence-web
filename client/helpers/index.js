@@ -21,6 +21,7 @@
 
 export { default as combine } from './combine';
 export { default as delay } from './delay';
+export { default as getClusterFromClusterList } from './get-cluster-from-cluster-list';
 export { default as getClusterListFromDomainConfig } from './get-cluster-list-from-domain-config';
 export { default as getDatetimeFormattedString } from './get-datetime-formatted-string';
 export { default as getEndTimeIsoString } from './get-end-time-iso-string';

@@ -21,8 +21,11 @@
 // THE SOFTWARE.
 
 import SelectInput from '../select-input';
-import { getClusterFromClusterList, getFormattedClusterList } from './helpers';
-import { getClusterListFromDomainConfig } from '~helpers';
+import { getFormattedClusterList } from './helpers';
+import {
+  getClusterFromClusterList,
+  getClusterListFromDomainConfig,
+} from '~helpers';
 import { featureFlagService, httpService } from '~services';
 
 export default {
@@ -40,8 +43,9 @@ export default {
   },
   data() {
     return {
+      allowedCrossOrigin: undefined,
       clusterList: undefined,
-      path: this.$route.path,
+      path: this.$route.fullPath,
     };
   },
   mounted() {
@@ -54,22 +58,35 @@ export default {
       return computedCluster.active ? 'active' : 'passive';
     },
     computedCluster() {
-      const { clusterName, computedClusterList: clusterList } = this;
+      const {
+        allowedCrossOrigin,
+        clusterName,
+        computedClusterList: clusterList,
+      } = this;
       const { origin } = window.location;
 
       return getClusterFromClusterList({
+        allowedCrossOrigin,
         clusterList,
         clusterName,
         origin,
       });
     },
     computedClusterList() {
-      const { clusterName, clusterList, path } = this;
+      const {
+        allowedCrossOrigin,
+        clusterName,
+        clusterList,
+        domain,
+        path,
+      } = this;
       const { origin } = window.location;
 
       return getFormattedClusterList({
+        allowedCrossOrigin,
         clusterName,
         clusterList,
+        domain,
         origin,
         path,
       });
@@ -86,32 +103,15 @@ export default {
         .filter(item => !!item)
         .join(' - ');
     },
-    computedHref() {
-      // TODO - perhaps move to helper?
-      const { computedClusterList, computedClusterName } = this;
-
-      if (computedClusterList.length !== 2 || !computedClusterName) {
-        return;
-      }
-
-      const altCluster = computedClusterList.find(
-        ({ clusterName: matchClusterName }) =>
-          computedClusterName !== matchClusterName
-      );
-
-      return altCluster.href;
-    },
     computedTag() {
       // TODO - perhaps move to helper?
-      const { computedClusterList, computedHref } = this;
+      const { computedClusterList } = this;
 
       switch (computedClusterList.length) {
         case 0:
         case 1:
           return 'span';
-        case 2:
-          return computedHref ? 'a' : 'span';
-        // case >= 3
+        // case >= 2
         default:
           return 'select-input';
       }
@@ -121,17 +121,27 @@ export default {
     async init(context) {
       const { clusterName, domain } = context;
       const config = await httpService.get(`/api/domains/${domain}`);
+      const allowedCrossOrigin = await featureFlagService.isFeatureFlagEnabled({
+        cache: true,
+        name: 'crossRegion,crossRegion.allowedCrossOrigin',
+      });
+
       const clusterOriginList =
-        (await featureFlagService.getConfiguration({
-          cache: true,
-          name: 'crossRegion.clusterOriginList',
-        })) || [];
+        (allowedCrossOrigin &&
+          (await featureFlagService.getConfiguration({
+            cache: true,
+            name: 'crossRegion.clusterOriginList',
+          }))) ||
+        [];
+
       const clusterList = await getClusterListFromDomainConfig({
+        allowedCrossOrigin,
         clusterName,
         clusterOriginList,
         config,
       });
 
+      this.allowedCrossOrigin = allowedCrossOrigin;
       this.clusterList = clusterList;
     },
     onClusterChange(cluster) {
@@ -139,8 +149,8 @@ export default {
     },
   },
   watch: {
-    $route({ path }) {
-      this.path = path;
+    $route({ fullPath }) {
+      this.path = fullPath;
     },
   },
 };
@@ -152,7 +162,6 @@ export default {
     :class="{
       [computedActiveStatus]: computedActiveStatus,
     }"
-    :href="computedHref"
     :is="computedTag"
     :label="computedDisplayText"
     name="activeStatus"

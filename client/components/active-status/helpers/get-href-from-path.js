@@ -19,7 +19,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const getHrefFromPath = ({ clusterName, origin, path }) => ({ label }) =>
-  `${origin}${path.replace(clusterName, label)}`;
+const getHrefFromPath = ({ clusterName, domain, origin, path }) => ({
+  label,
+}) => {
+  const replaceKey = `/domains/${domain}/${
+    clusterName ? clusterName + '/' : ''
+  }`;
+  const replaceValue = `/domains/${domain}/${
+    label === 'active' ? '' : label + '/'
+  }`;
+
+  return `${origin}${path.replace(replaceKey, replaceValue)}`;
+};
 
 export default getHrefFromPath;

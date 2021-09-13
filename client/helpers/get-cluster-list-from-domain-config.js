@@ -20,7 +20,7 @@
 // THE SOFTWARE.
 
 const getClusterListFromDomainConfig = ({
-  clusterName,
+  allowedCrossOrigin,
   clusterOriginList = [],
   config,
 }) => {
@@ -42,7 +42,7 @@ const getClusterListFromDomainConfig = ({
       label: cluster.clusterName,
     }));
 
-  if (clusterName && isGlobalDomain) {
+  if (allowedCrossOrigin && isGlobalDomain) {
     const activeClusterOption = clusterList
       .filter(({ active }) => active)
       .map(cluster => ({

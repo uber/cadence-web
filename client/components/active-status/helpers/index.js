@@ -19,7 +19,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export { default as getClusterFromClusterList } from './get-cluster-from-cluster-list';
 export { default as getFormattedClusterList } from './get-formatted-cluster-list';
 export { default as getHrefFromCluster } from './get-href-from-cluster';
 export { default as getHrefFromPath } from './get-href-from-path';

@@ -19,9 +19,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { getConfiguration } from './feature-flag-service/helpers';
+import {
+  getConfiguration,
+  isFeatureFlagEnabled,
+} from './feature-flag-service/helpers';
 import { ONE_HOUR_IN_MILLISECONDS } from '~constants';
 import {
+  getClusterFromClusterList,
   getClusterListFromDomainConfig,
   getQueryStringFromObject,
 } from '~helpers';
@@ -41,6 +45,10 @@ class HttpService {
 
     this.cacheManager = cacheManager;
     this.getConfiguration = getConfiguration({
+      cacheManager,
+      httpService: this,
+    });
+    this.isFeatureFlagEnabled = isFeatureFlagEnabled({
       cacheManager,
       httpService: this,
     });
@@ -66,7 +74,19 @@ class HttpService {
     );
   }
 
-  async getRegionalOrigin({ clusterName, domain }) {
+  async getRegionalOrigin({ clusterName, domain, origin }) {
+    const allowedCrossOrigin = this.isFeatureFlagEnabled({
+      cache: true,
+      name: 'crossRegion,crossRegion.allowedCrossOrigin',
+      params: {
+        origin,
+      },
+    });
+
+    if (!allowedCrossOrigin) {
+      return '';
+    }
+
     const clusterOriginList = await this.getConfiguration({
       cache: true,
       name: 'crossRegion.clusterOriginList',
@@ -77,24 +97,32 @@ class HttpService {
     );
 
     const clusterList = getClusterListFromDomainConfig({
+      allowedCrossOrigin,
       clusterName,
       clusterOriginList,
       config,
     });
 
-    const cluster = clusterList.find(({ label }) => label === clusterName);
+    const cluster = getClusterFromClusterList({
+      allowedCrossOrigin,
+      clusterList,
+      clusterName,
+    });
 
-    return cluster && cluster.origin;
+    return (cluster && cluster.origin) || '';
   }
 
   async request(baseUrl, { clusterName, domain, query, ...options } = {}) {
     const fetch = this.fetchOverride ? this.fetchOverride : window.fetch;
     const queryString = getQueryStringFromObject(query);
     const pathname = queryString ? `${baseUrl}${queryString}` : baseUrl;
-    const origin =
-      clusterName && domain
-        ? await this.getRegionalOrigin({ clusterName, domain })
-        : '';
+    const origin = domain
+      ? await this.getRegionalOrigin({
+          clusterName,
+          domain,
+          origin: window.location.origin,
+        })
+      : '';
 
     const url = `${origin}${pathname}`;
     const requestOptions = {
