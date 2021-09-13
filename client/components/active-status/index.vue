@@ -40,7 +40,7 @@ export default {
   },
   data() {
     return {
-      clusterList: [],
+      clusterList: undefined,
       path: this.$route.path,
     };
   },
