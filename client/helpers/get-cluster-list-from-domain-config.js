@@ -24,7 +24,10 @@ const getClusterListFromDomainConfig = ({
   clusterOriginList = [],
   config,
 }) => {
-  const { activeClusterName, clusters } = config.replicationConfiguration;
+  const {
+    isGlobalDomain,
+    replicationConfiguration: { activeClusterName, clusters },
+  } = config;
 
   const clusterList = clusterOriginList
     .filter(({ clusterName }) =>
@@ -39,7 +42,7 @@ const getClusterListFromDomainConfig = ({
       label: cluster.clusterName,
     }));
 
-  if (clusterName) {
+  if (clusterName && isGlobalDomain) {
     const activeClusterOption = clusterList
       .filter(({ active }) => active)
       .map(cluster => ({
