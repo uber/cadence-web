@@ -66,12 +66,22 @@ class HttpService {
   async getDomainConfig({ clusterOriginList, domain }) {
     const fetch = this.fetchOverride ? this.fetchOverride : window.fetch;
 
+    const fetchList = clusterOriginList.map(({ origin }) => () =>
+      fetch(`${origin}/api/domains/${domain}`, DEFAULT_FETCH_OPTIONS).then(
+        this.handleResponse
+      )
+    );
+
+    const domainConfigList = await (await Promise.all(fetchList)).filter(
+      response => !!response
+    );
+
+    console.log('domainConfigList = ', domainConfigList);
+
     // TODO - Need to figure out how to handle in global URL mode how to fetch both regions domain configs for local domains.
     // do we try to merge both configs into one?
 
-    return fetch(`/api/domains/${domain}`, DEFAULT_FETCH_OPTIONS).then(
-      this.handleResponse
-    );
+    return domainConfigList[0];
   }
 
   async getRegionalOrigin({ clusterName, domain, origin }) {

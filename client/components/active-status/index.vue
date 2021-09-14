@@ -46,6 +46,7 @@ export default {
       allowedCrossOrigin: undefined,
       cluster: undefined,
       clusterList: undefined,
+      clusterOriginList: undefined,
     };
   },
   mounted() {
@@ -55,34 +56,48 @@ export default {
     computedClass() {
       const { cluster } = this;
 
-      return cluster.isActive ? 'active' : 'passive';
+      return cluster && cluster.isActive ? 'active' : 'passive';
     },
     computedLabel() {
       const { cluster } = this;
 
-      return cluster.label;
+      return cluster && cluster.label;
     },
     computedTag() {
       const { clusterList } = this;
 
-      return clusterList.length === 0 ? 'span' : 'select-input';
+      return clusterList && clusterList.length === 0 ? 'span' : 'select-input';
     },
   },
   methods: {
+    clearState() {
+      this.clusterList = undefined;
+      this.cluster = undefined;
+    },
     async init(context) {
-      const { clusterName, domain } = context;
-      const { origin } = window.location;
-      const config = await httpService.get(`/api/domains/${domain}`);
-      const allowedCrossOrigin = await featureFlagService.isFeatureFlagEnabled({
+      this.allowedCrossOrigin = await featureFlagService.isFeatureFlagEnabled({
         cache: true,
         name: 'crossRegion.allowedCrossOrigin',
       });
 
-      const clusterOriginList =
+      this.clusterOriginList =
         (await featureFlagService.getConfiguration({
           cache: true,
           name: 'crossRegion.clusterOriginList',
         })) || [];
+
+      this.initDomainClusterConfig(context);
+    },
+    async initDomainClusterConfig(context) {
+      const {
+        allowedCrossOrigin,
+        clusterName,
+        clusterOriginList,
+        domain,
+      } = context;
+      const { origin } = window.location;
+
+      const config = await httpService.get(`/api/domains/${domain}`);
 
       const clusterList = await getClusterListFromDomainConfig({
         clusterOriginList,
@@ -103,7 +118,6 @@ export default {
         origin,
       });
 
-      this.allowedCrossOrigin = allowedCrossOrigin;
       this.clusterList = filteredClusterList;
       this.cluster = cluster;
     },
@@ -123,6 +137,12 @@ export default {
         origin,
         path,
       });
+    },
+  },
+  watch: {
+    domain() {
+      this.clearState();
+      this.initDomainClusterConfig(this);
     },
   },
 };
