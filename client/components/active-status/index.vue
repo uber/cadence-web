@@ -47,6 +47,7 @@ export default {
       cluster: undefined,
       clusterList: undefined,
       clusterOriginList: undefined,
+      isGlobalDomain: undefined,
     };
   },
   mounted() {
@@ -73,6 +74,7 @@ export default {
     clearState() {
       this.clusterList = undefined;
       this.cluster = undefined;
+      this.isGlobalDomain = undefined;
     },
     async init(context) {
       const { origin } = window.location;
@@ -137,6 +139,7 @@ export default {
         origin,
       });
 
+      this.isGlobalDomain = domainConfigList[0].isGlobalDomain;
       this.clusterList = filteredClusterList;
       this.cluster = cluster;
     },
@@ -145,6 +148,7 @@ export default {
         allowedCrossOrigin,
         clusterName,
         domain,
+        isGlobalDomain,
         $route: { fullPath: path },
       } = this;
 
@@ -153,6 +157,7 @@ export default {
         cluster,
         clusterName,
         domain,
+        isGlobalDomain,
         origin,
         path,
       });

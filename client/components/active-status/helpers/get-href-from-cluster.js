@@ -24,6 +24,7 @@ const getHrefFromCluster = ({
   cluster: { isActive, clusterName: clusterNamePath, origin: clusterOrigin },
   clusterName,
   domain,
+  isGlobalDomain,
   origin,
   path,
 }) => {
@@ -35,7 +36,7 @@ const getHrefFromCluster = ({
     clusterName ? clusterName + '/' : ''
   }`;
   const replaceValue = `/domains/${domain}/${
-    isActive ? '' : clusterNamePath + '/'
+    isGlobalDomain && isActive ? '' : clusterNamePath + '/'
   }`;
 
   return `${origin}${path.replace(replaceKey, replaceValue)}`;
