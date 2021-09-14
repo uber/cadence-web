@@ -75,7 +75,7 @@ class HttpService {
   }
 
   async getRegionalOrigin({ clusterName, domain, origin }) {
-    const allowedCrossOrigin = this.isFeatureFlagEnabled({
+    const allowedCrossOrigin = await this.isFeatureFlagEnabled({
       cache: true,
       name: 'crossRegion,crossRegion.allowedCrossOrigin',
       params: {
