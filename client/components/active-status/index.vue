@@ -24,7 +24,7 @@ import SelectInput from '../select-input';
 import { getFilteredClusterList, getHrefFromCluster } from './helpers';
 import {
   getClusterFromClusterList,
-  getClusterListFromDomainConfig,
+  getClusterListFromDomainConfigList,
 } from '~helpers';
 import { featureFlagService, httpService } from '~services';
 
@@ -91,20 +91,37 @@ export default {
 
       this.initDomainClusterConfig(context);
     },
+    // TODO - code is kind of duplicated in httpService
+    async getDomainConfigList({ clusterOriginList, domain }) {
+      const fetchList = clusterOriginList.map(
+        ({ clusterName, origin }) => async () => {
+          try {
+            const domainConfig = await httpService.get(
+              `${origin}/api/domains/${domain}`
+            );
+
+            return domainConfig;
+          } catch (error) {
+            console.warn(
+              `Unable to resolve domain configuration for domain = "${domain}" and cluster = "${clusterName}".`
+            );
+          }
+        }
+      );
+
+      return (await Promise.all(fetchList.map(callback => callback()))).filter(
+        response => !!response
+      );
+    },
     async initDomainClusterConfig(context) {
-      const {
-        allowedCrossOrigin,
-        clusterName,
-        clusterOriginList,
-        domain,
-      } = context;
+      const { allowedCrossOrigin, clusterName, clusterOriginList } = context;
       const { origin } = window.location;
 
-      const config = await httpService.get(`/api/domains/${domain}`);
+      const domainConfigList = await context.getDomainConfigList(context);
 
-      const clusterList = await getClusterListFromDomainConfig({
+      const clusterList = await getClusterListFromDomainConfigList({
         clusterOriginList,
-        config,
+        domainConfigList,
       });
 
       const cluster = getClusterFromClusterList({

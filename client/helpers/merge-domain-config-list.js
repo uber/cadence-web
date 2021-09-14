@@ -19,29 +19,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const getClusterListFromDomainConfig = ({ clusterOriginList = [], config }) => {
-  const {
-    replicationConfiguration: { activeClusterName, clusters },
-  } = config;
+const mergeDomainConfigList = domainConfigList =>
+  domainConfigList.reduce(
+    (
+      accumulator,
+      { replicationConfiguration: { activeClusterName, clusters } }
+    ) => {
+      if (!accumulator.activeClusterNames.includes(activeClusterName)) {
+        accumulator.activeClusterNames.push(activeClusterName);
+      }
 
-  const clusterList = clusterOriginList
-    .filter(({ clusterName }) =>
-      clusters.find(
-        ({ clusterName: domainClusterName }) =>
-          clusterName === domainClusterName
-      )
-    )
-    .map(cluster => {
-      const isActive = cluster.clusterName === activeClusterName;
+      const nonDupeClusters = clusters.filter(
+        ({ clusterName: matchClusterName }) =>
+          !accumulator.clusters.find(
+            ({ clusterName }) => clusterName === matchClusterName
+          )
+      );
 
-      return {
-        ...cluster,
-        isActive,
-        label: `${isActive ? 'active' : 'passive'} - ${cluster.clusterName}`,
-      };
-    });
+      if (nonDupeClusters.length) {
+        accumulator.clusters.push(...nonDupeClusters);
+      }
 
-  return clusterList;
-};
+      return accumulator;
+    },
+    { activeClusterNames: [], clusters: [] }
+  );
 
-export default getClusterListFromDomainConfig;
+export default mergeDomainConfigList;

@@ -26,7 +26,7 @@ import {
 import { ONE_HOUR_IN_MILLISECONDS } from '~constants';
 import {
   getClusterFromClusterList,
-  getClusterListFromDomainConfig,
+  getClusterListFromDomainConfigList,
   getQueryStringFromObject,
 } from '~helpers';
 import { CacheManager } from '~managers';
@@ -63,7 +63,8 @@ class HttpService {
         );
   }
 
-  async getDomainConfig({ clusterOriginList, domain }) {
+  // TODO - code is kind of duplicated in activeStatus
+  async getDomainConfigList({ clusterOriginList, domain }) {
     const fetch = this.fetchOverride ? this.fetchOverride : window.fetch;
 
     const fetchList = clusterOriginList.map(
@@ -83,20 +84,9 @@ class HttpService {
       }
     );
 
-    const domainConfigList = await (
-      await Promise.all(fetchList.map(callback => callback()))
-    ).filter(response => !!response);
-
-    if (domainConfigList.length <= 1) {
-      return domainConfigList[0];
-    }
-
-    console.log('domainConfigList = ', domainConfigList);
-
-    // TODO - Need to figure out how to handle in global URL mode how to fetch both regions domain configs for local domains.
-    // do we try to merge both configs into one?
-
-    return domainConfigList[0];
+    return (await Promise.all(fetchList.map(callback => callback()))).filter(
+      response => !!response
+    );
   }
 
   async getRegionalOrigin({ clusterName, domain, origin }) {
@@ -117,13 +107,13 @@ class HttpService {
       name: 'crossRegion.clusterOriginList',
     });
 
-    const config = await this.cacheManager.get(domain, () =>
-      this.getDomainConfig({ clusterOriginList, domain })
+    const domainConfigList = await this.cacheManager.get(domain, () =>
+      this.getDomainConfigList({ clusterOriginList, domain })
     );
 
-    const clusterList = getClusterListFromDomainConfig({
+    const clusterList = getClusterListFromDomainConfigList({
       clusterOriginList,
-      config,
+      domainConfigList,
     });
 
     const cluster = getClusterFromClusterList({
