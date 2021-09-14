@@ -24,26 +24,21 @@ const getFilteredClusterList = ({
   clusterName,
   clusterList,
   origin,
-}) => {
-  if (!allowedCrossOrigin) {
-    return clusterList.filter(cluster => cluster.origin !== origin);
-  }
+}) =>
+  clusterList.filter(
+    allowedCrossOrigin
+      ? cluster => {
+          if (cluster.clusterName === clusterName) {
+            return false;
+          }
 
-  const filteredClusterList = clusterList.filter(cluster => {
-    if (cluster.clusterName === clusterName) {
-      return false;
-    }
+          if (cluster.isActive && !clusterName) {
+            return false;
+          }
 
-    if (cluster.isActive && !clusterName) {
-      return false;
-    }
-
-    return true;
-  });
-
-  console.log('filteredClusterList = ', filteredClusterList);
-
-  return filteredClusterList;
-};
+          return true;
+        }
+      : cluster => cluster.origin !== origin
+  );
 
 export default getFilteredClusterList;
