@@ -75,9 +75,12 @@ export default {
       this.cluster = undefined;
     },
     async init(context) {
+      const { origin } = window.location;
+
       this.allowedCrossOrigin = await featureFlagService.isFeatureFlagEnabled({
         cache: true,
         name: 'crossRegion.allowedCrossOrigin',
+        params: { origin },
       });
 
       this.clusterOriginList =
