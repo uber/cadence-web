@@ -66,15 +66,30 @@ class HttpService {
   async getDomainConfig({ clusterOriginList, domain }) {
     const fetch = this.fetchOverride ? this.fetchOverride : window.fetch;
 
-    const fetchList = clusterOriginList.map(({ origin }) => () =>
-      fetch(`${origin}/api/domains/${domain}`, DEFAULT_FETCH_OPTIONS).then(
-        this.handleResponse
-      )
+    const fetchList = clusterOriginList.map(
+      ({ clusterName, origin }) => async () => {
+        try {
+          const domainConfig = await fetch(
+            `${origin}/api/domains/${domain}`,
+            DEFAULT_FETCH_OPTIONS
+          ).then(this.handleResponse);
+
+          return domainConfig;
+        } catch (error) {
+          console.warn(
+            `Unable to resolve domain configuration for domain = "${domain}" and cluster = "${clusterName}".`
+          );
+        }
+      }
     );
 
-    const domainConfigList = await (await Promise.all(fetchList)).filter(
-      response => !!response
-    );
+    const domainConfigList = await (
+      await Promise.all(fetchList.map(callback => callback()))
+    ).filter(response => !!response);
+
+    if (domainConfigList.length <= 1) {
+      return domainConfigList[0];
+    }
 
     console.log('domainConfigList = ', domainConfigList);
 

@@ -9,7 +9,7 @@
   },
   {
     "key": "crossRegion.allowedCrossOrigin",
-    "value": false
+    "value": true
   },
   {
     "key": "crossRegion.clusterOriginList",
