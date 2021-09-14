@@ -34,7 +34,7 @@ const isFeatureFlagEnabled = ({ cacheManager, httpService }) => async ({
     let value;
 
     for (const namePart of nameParts) {
-      value = await isFeatureFlagEnabled({
+      value = await isFeatureFlagEnabled({ cacheManager, httpService })({
         cache,
         name: namePart,
         params,

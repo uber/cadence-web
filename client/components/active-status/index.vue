@@ -75,16 +75,14 @@ export default {
       const config = await httpService.get(`/api/domains/${domain}`);
       const allowedCrossOrigin = await featureFlagService.isFeatureFlagEnabled({
         cache: true,
-        name: 'crossRegion,crossRegion.allowedCrossOrigin',
+        name: 'crossRegion.allowedCrossOrigin',
       });
 
       const clusterOriginList =
-        (allowedCrossOrigin &&
-          (await featureFlagService.getConfiguration({
-            cache: true,
-            name: 'crossRegion.clusterOriginList',
-          }))) ||
-        [];
+        (await featureFlagService.getConfiguration({
+          cache: true,
+          name: 'crossRegion.clusterOriginList',
+        })) || [];
 
       const clusterList = await getClusterListFromDomainConfig({
         clusterOriginList,
