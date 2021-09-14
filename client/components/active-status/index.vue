@@ -93,21 +93,20 @@ export default {
     },
     // TODO - code is kind of duplicated in httpService
     async getDomainConfigList({ clusterOriginList, domain }) {
-      const fetchList = clusterOriginList.map(
-        ({ clusterName, origin }) => async () => {
-          try {
-            const domainConfig = await httpService.get(
-              `${origin}/api/domains/${domain}`
-            );
+      const fetchList = clusterOriginList.map(({ clusterName }) => async () => {
+        try {
+          const domainConfig = await httpService.get(`/api/domains/${domain}`, {
+            clusterName,
+            domain,
+          });
 
-            return domainConfig;
-          } catch (error) {
-            console.warn(
-              `Unable to resolve domain configuration for domain = "${domain}" and cluster = "${clusterName}".`
-            );
-          }
+          return domainConfig;
+        } catch (error) {
+          console.warn(
+            `Unable to resolve domain configuration for domain = "${domain}" and cluster = "${clusterName}".`
+          );
         }
-      );
+      });
 
       return (await Promise.all(fetchList.map(callback => callback()))).filter(
         response => !!response

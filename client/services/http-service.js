@@ -66,14 +66,24 @@ class HttpService {
   // TODO - code is kind of duplicated in activeStatus
   async getDomainConfigList({ clusterOriginList, domain }) {
     const fetch = this.fetchOverride ? this.fetchOverride : window.fetch;
+    const { origin } = window.location;
 
     const fetchList = clusterOriginList.map(
-      ({ clusterName, origin }) => async () => {
+      ({ clusterName, origin: clusterOrigin }) => async () => {
         try {
-          const domainConfig = await fetch(
-            `${origin}/api/domains/${domain}`,
-            DEFAULT_FETCH_OPTIONS
-          ).then(this.handleResponse);
+          const url = `${clusterOrigin}/api/domains/${domain}`;
+
+          const requestOptions = {
+            ...DEFAULT_FETCH_OPTIONS,
+            ...(clusterOrigin !== origin && {
+              credentials: 'include',
+              mode: 'cors',
+            }),
+          };
+
+          const domainConfig = await fetch(url, requestOptions).then(
+            this.handleResponse
+          );
 
           return domainConfig;
         } catch (error) {
