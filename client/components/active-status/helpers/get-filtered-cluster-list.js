@@ -19,17 +19,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const getHrefFromPath = ({ clusterName, domain, origin, path }) => ({
-  label,
+const getFilteredClusterList = ({
+  allowedCrossOrigin,
+  clusterName,
+  clusterList,
+  origin,
 }) => {
-  const replaceKey = `/domains/${domain}/${
-    clusterName ? clusterName + '/' : ''
-  }`;
-  const replaceValue = `/domains/${domain}/${
-    label === 'active' ? '' : label + '/'
-  }`;
+  if (!allowedCrossOrigin) {
+    return clusterList.filter(cluster => cluster.origin !== origin);
+  }
 
-  return `${origin}${path.replace(replaceKey, replaceValue)}`;
+  const filteredClusterList = clusterList.filter(cluster => {
+    if (cluster.clusterName === clusterName) {
+      return false;
+    }
+
+    if (cluster.isActive && !clusterName) {
+      return false;
+    }
+
+    return true;
+  });
+
+  console.log('filteredClusterList = ', filteredClusterList);
+
+  return filteredClusterList;
 };
 
-export default getHrefFromPath;
+export default getFilteredClusterList;

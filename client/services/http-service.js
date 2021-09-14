@@ -97,8 +97,6 @@ class HttpService {
     );
 
     const clusterList = getClusterListFromDomainConfig({
-      allowedCrossOrigin,
-      clusterName,
       clusterOriginList,
       config,
     });

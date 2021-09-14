@@ -29,8 +29,16 @@ const getClusterFromClusterList = ({
     return;
   }
 
-  const matchParamName = allowedCrossOrigin ? 'label' : 'origin';
-  const matchValue = allowedCrossOrigin ? clusterName || 'active' : origin;
+  const matchParamName = allowedCrossOrigin
+    ? clusterName
+      ? 'clusterName'
+      : 'isActive'
+    : 'origin';
+  const matchValue = allowedCrossOrigin
+    ? clusterName
+      ? clusterName
+      : true
+    : origin;
 
   const cluster = clusterList.find(
     ({ [matchParamName]: paramValue }) => paramValue === matchValue
@@ -38,7 +46,7 @@ const getClusterFromClusterList = ({
 
   if (!cluster) {
     console.warn(
-      `Could not find cluster "${matchValue}" in crossRegion.clusterOriginList configuration.`
+      `Could not find cluster "${matchParamName}:${matchValue}" in crossRegion.clusterOriginList configuration.`
     );
   }
 

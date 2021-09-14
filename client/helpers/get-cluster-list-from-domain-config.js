@@ -19,13 +19,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const getClusterListFromDomainConfig = ({
-  allowedCrossOrigin,
-  clusterOriginList = [],
-  config,
-}) => {
+const getClusterListFromDomainConfig = ({ clusterOriginList = [], config }) => {
   const {
-    isGlobalDomain,
     replicationConfiguration: { activeClusterName, clusters },
   } = config;
 
@@ -36,24 +31,15 @@ const getClusterListFromDomainConfig = ({
           clusterName === domainClusterName
       )
     )
-    .map(cluster => ({
-      ...cluster,
-      active: cluster.clusterName === activeClusterName,
-      label: cluster.clusterName,
-    }));
+    .map(cluster => {
+      const isActive = cluster.clusterName === activeClusterName;
 
-  if (allowedCrossOrigin && isGlobalDomain) {
-    const activeClusterOption = clusterList
-      .filter(({ active }) => active)
-      .map(cluster => ({
+      return {
         ...cluster,
-        label: 'active',
-      }))[0];
-
-    if (activeClusterOption) {
-      clusterList.unshift(activeClusterOption);
-    }
-  }
+        isActive,
+        label: `${isActive ? 'active' : 'passive'} - ${cluster.clusterName}`,
+      };
+    });
 
   return clusterList;
 };

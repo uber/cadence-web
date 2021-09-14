@@ -19,6 +19,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const getHrefFromCluster = ({ path }) => ({ origin }) => `${origin}${path}`;
+const getHrefFromCluster = ({
+  allowedCrossOrigin,
+  cluster: { isActive, clusterName: clusterNamePath, origin: clusterOrigin },
+  clusterName,
+  domain,
+  origin,
+  path,
+}) => {
+  if (!allowedCrossOrigin) {
+    return `${clusterOrigin}${path}`;
+  }
+
+  const replaceKey = `/domains/${domain}/${
+    clusterName ? clusterName + '/' : ''
+  }`;
+  const replaceValue = `/domains/${domain}/${
+    isActive ? '' : clusterNamePath + '/'
+  }`;
+
+  return `${origin}${path.replace(replaceKey, replaceValue)}`;
+};
 
 export default getHrefFromCluster;

@@ -21,7 +21,7 @@
 // THE SOFTWARE.
 
 import SelectInput from '../select-input';
-import { getFormattedClusterList } from './helpers';
+import { getFilteredClusterList, getHrefFromCluster } from './helpers';
 import {
   getClusterFromClusterList,
   getClusterListFromDomainConfig,
@@ -44,82 +44,34 @@ export default {
   data() {
     return {
       allowedCrossOrigin: undefined,
+      cluster: undefined,
       clusterList: undefined,
-      path: this.$route.fullPath,
     };
   },
   mounted() {
     this.init(this);
   },
   computed: {
-    computedActiveStatus() {
-      const { computedCluster } = this;
+    computedClass() {
+      const { cluster } = this;
 
-      return computedCluster.active ? 'active' : 'passive';
+      return cluster.isActive ? 'active' : 'passive';
     },
-    computedCluster() {
-      const {
-        allowedCrossOrigin,
-        clusterName,
-        computedClusterList: clusterList,
-      } = this;
-      const { origin } = window.location;
+    computedLabel() {
+      const { cluster } = this;
 
-      return getClusterFromClusterList({
-        allowedCrossOrigin,
-        clusterList,
-        clusterName,
-        origin,
-      });
-    },
-    computedClusterList() {
-      const {
-        allowedCrossOrigin,
-        clusterName,
-        clusterList,
-        domain,
-        path,
-      } = this;
-      const { origin } = window.location;
-
-      return getFormattedClusterList({
-        allowedCrossOrigin,
-        clusterName,
-        clusterList,
-        domain,
-        origin,
-        path,
-      });
-    },
-    computedClusterName() {
-      const { computedCluster } = this;
-
-      return computedCluster.clusterName;
-    },
-    computedDisplayText() {
-      const { computedActiveStatus, computedClusterName } = this;
-
-      return [computedActiveStatus, computedClusterName]
-        .filter(item => !!item)
-        .join(' - ');
+      return cluster.label;
     },
     computedTag() {
-      // TODO - perhaps move to helper?
-      const { computedClusterList } = this;
+      const { clusterList } = this;
 
-      switch (computedClusterList.length) {
-        case 0:
-        case 1:
-          return 'span';
-        // case >= 2
-        default:
-          return 'select-input';
-      }
+      return clusterList.length === 0 ? 'span' : 'select-input';
     },
   },
   methods: {
     async init(context) {
       const { clusterName, domain } = context;
+      const { origin } = window.location;
       const config = await httpService.get(`/api/domains/${domain}`);
       const allowedCrossOrigin = await featureFlagService.isFeatureFlagEnabled({
         cache: true,
@@ -135,22 +87,44 @@ export default {
         [];
 
       const clusterList = await getClusterListFromDomainConfig({
-        allowedCrossOrigin,
-        clusterName,
         clusterOriginList,
         config,
       });
 
+      const cluster = getClusterFromClusterList({
+        allowedCrossOrigin,
+        clusterList,
+        clusterName,
+        origin,
+      });
+
+      const filteredClusterList = getFilteredClusterList({
+        allowedCrossOrigin,
+        clusterName,
+        clusterList,
+        origin,
+      });
+
       this.allowedCrossOrigin = allowedCrossOrigin;
-      this.clusterList = clusterList;
+      this.clusterList = filteredClusterList;
+      this.cluster = cluster;
     },
     onClusterChange(cluster) {
-      window.location = cluster.href;
-    },
-  },
-  watch: {
-    $route({ fullPath }) {
-      this.path = fullPath;
+      const {
+        allowedCrossOrigin,
+        clusterName,
+        domain,
+        $route: { fullPath: path },
+      } = this;
+
+      window.location = getHrefFromCluster({
+        allowedCrossOrigin,
+        cluster,
+        clusterName,
+        domain,
+        origin,
+        path,
+      });
     },
   },
 };
@@ -160,17 +134,16 @@ export default {
   <component
     class="active-status"
     :class="{
-      [computedActiveStatus]: computedActiveStatus,
+      [computedClass]: computedClass,
     }"
     :is="computedTag"
-    :label="computedDisplayText"
     name="activeStatus"
-    :options="computedClusterList"
-    :value="computedCluster"
-    v-if="computedCluster"
+    :options="clusterList"
+    :value="cluster"
+    v-if="cluster"
     @change="onClusterChange"
   >
-    {{ computedDisplayText }}
+    {{ computedLabel }}
   </component>
 </template>
 
@@ -191,35 +164,37 @@ export default {
   }
 
   &.select-input {
-    label {
-      background-color: transparent !important;
-      color: white !important;
-      cursor: pointer;
-      left: auto !important;
-      padding: 0;
-      pointer-events: initial;
-      position: relative !important;
-      top: auto !important;
-      transform: none;
-    }
+    padding: 0;
 
     .v-select {
-      left: -10px;
-      top: 7px;
-      width: 0 !important;
-
       .vs__dropdown-toggle {
         border: none;
         padding: 0;
       }
-    }
 
-    .vs__selected {
-      display: none;
+      span.vs__selected {
+        color: white;
+        margin: 0;
+        padding: 0;
+      }
     }
 
     .vs__actions {
-      display: none;
+      height: 24px;
+      padding-top: 3px;
+    }
+
+    .vs__dropdown-option {
+      padding: 0 10px;
+    }
+
+    .vs__open-indicator {
+      fill: white;
+      height: 10px;
+    }
+
+    .vs__selected-options {
+      padding: 0 4px 0 8px;
     }
   }
 }
