@@ -65,9 +65,12 @@ export default {
       return cluster && cluster.label;
     },
     computedTag() {
-      const { clusterList } = this;
+      const { clusterList, isGlobalDomain, workflowId } = this;
 
-      return clusterList && clusterList.length === 0 ? 'span' : 'select-input';
+      return (clusterList && clusterList.length === 0) ||
+        (!isGlobalDomain && workflowId)
+        ? 'span'
+        : 'select-input';
     },
   },
   methods: {

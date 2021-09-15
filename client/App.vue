@@ -313,6 +313,7 @@ export default {
                 <active-status
                   :cluster-name="$route.params.clusterName"
                   :domain="$route.params.domain"
+                  :workflow-id="$route.params.workflowId"
                 />
               </flex-grid-item>
             </feature-flag>
