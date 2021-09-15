@@ -38,7 +38,7 @@ import {
 } from './getter-types';
 import { DEBOUNCE_WAIT } from './constants';
 import { updateVisitedDomainList } from './helpers';
-import { httpService } from '~services';
+import { featureFlagService, httpService } from '~services';
 
 const actions = {
   [DOMAIN_AUTOCOMPLETE_FETCH_DOMAIN_LIST]: debounce(
@@ -53,13 +53,19 @@ const actions = {
     },
     DEBOUNCE_WAIT
   ),
-  [DOMAIN_AUTOCOMPLETE_ON_CHANGE]: ({ commit, dispatch, getters }, payload) => {
+  [DOMAIN_AUTOCOMPLETE_ON_CHANGE]: async (
+    { commit, dispatch, getters },
+    payload
+  ) => {
     if (!payload) {
       return;
     }
 
+    const { origin } = window.location;
     const { value } = payload;
     const visitedDomainList = getters[DOMAIN_AUTOCOMPLETE_VISITED_DOMAIN_LIST];
+    const dispatchToGlobalRoute = () =>
+      dispatch(ROUTE_PUSH, `/domains/${value.domainInfo.name}`);
 
     const updatedVisitedDomainList = updateVisitedDomainList({
       value,
@@ -71,7 +77,27 @@ const actions = {
       updatedVisitedDomainList
     );
 
-    dispatch(ROUTE_PUSH, `/domains/${value.domainInfo.name}`);
+    if (value.isGlobalDomain) {
+      return dispatchToGlobalRoute();
+    }
+
+    // TODO - Need to move feature flag service to vuex store and use getter instead.
+    const allowedCrossOrigin = await featureFlagService.isFeatureFlagEnabled({
+      cache: true,
+      name: 'crossRegion,crossRegion.allowedCrossOrigin',
+      params: {
+        origin,
+      },
+    });
+
+    if (!allowedCrossOrigin) {
+      return dispatchToGlobalRoute();
+    }
+
+    dispatch(
+      ROUTE_PUSH,
+      `/domains/${value.domainInfo.name}/${value.replicationConfiguration.activeClusterName}`
+    );
   },
   [DOMAIN_AUTOCOMPLETE_ON_SEARCH]: async ({ commit, dispatch }, payload) => {
     commit(DOMAIN_AUTOCOMPLETE_SET_SEARCH, payload);
