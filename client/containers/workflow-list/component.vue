@@ -147,9 +147,15 @@ export default {
       return getEndTimeIsoString(range, endTime);
     },
     formattedResults() {
-      const { dateFormat, results, timeFormat, timezone } = this;
+      const { clusterName, dateFormat, results, timeFormat, timezone } = this;
 
-      return getFormattedResults({ dateFormat, results, timeFormat, timezone });
+      return getFormattedResults({
+        clusterName,
+        dateFormat,
+        results,
+        timeFormat,
+        timezone,
+      });
     },
     minStartDate() {
       return this.getMinStartDate();

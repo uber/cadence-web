@@ -37,6 +37,9 @@ export default {
     domain: {
       type: String,
     },
+    workflowId: {
+      type: String,
+    },
   },
   components: {
     'select-input': SelectInput,

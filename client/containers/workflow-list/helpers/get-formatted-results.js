@@ -22,11 +22,18 @@
 import { STATUS_OPEN } from '../constants';
 import { getDatetimeFormattedString } from '~helpers';
 
-const getFormattedResults = ({ dateFormat, results, timeFormat, timezone }) =>
+const getFormattedResults = ({
+  clusterName,
+  dateFormat,
+  results,
+  timeFormat,
+  timezone,
+}) =>
   results.map(result => {
     const status = (result.closeStatus || STATUS_OPEN).toLowerCase();
 
     return {
+      clusterName: clusterName,
       domainName: result.domainName,
       endTime: result.closeTime
         ? getDatetimeFormattedString({
