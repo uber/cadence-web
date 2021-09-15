@@ -149,6 +149,12 @@ export default function(historyEvents) {
           .duration(e.details.startToFireTimeoutSeconds, 'seconds')
           .format()})`,
       });
+    } else if (e.eventType === WORKFLOW_EVENT_TYPE.TimerCanceled) {
+      const timerStartedEvent = hash[`timer${e.details.timerId}`];
+
+      if (timerStartedEvent) {
+        timerStartedEvent.eventIds.push(e.eventId);
+      }
     } else if (e.eventType === WORKFLOW_EVENT_TYPE.TimerFired) {
       const timerStartedEvent = hash[`timer${e.details.timerId}`];
 
