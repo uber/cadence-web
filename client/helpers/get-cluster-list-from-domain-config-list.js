@@ -25,9 +25,11 @@ const getClusterListFromDomainConfigList = ({
   clusterOriginList = [],
   domainConfigList = [],
 }) => {
-  const { activeClusterNames, clusters } = mergeDomainConfigList(
-    domainConfigList
-  );
+  const {
+    activeClusterNames,
+    isGlobalDomain,
+    clusters,
+  } = mergeDomainConfigList(domainConfigList);
 
   const clusterList = clusterOriginList
     .filter(({ clusterName }) =>
@@ -38,11 +40,12 @@ const getClusterListFromDomainConfigList = ({
     )
     .map(cluster => {
       const isActive = activeClusterNames.includes(cluster.clusterName);
+      const label = !isGlobalDomain ? 'local' : isActive ? 'active' : 'passive';
 
       return {
         ...cluster,
         isActive,
-        label: `${isActive ? 'active' : 'passive'} - ${cluster.clusterName}`,
+        label: `${label} - ${cluster.clusterName}`,
       };
     });
 

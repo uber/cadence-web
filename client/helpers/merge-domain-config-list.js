@@ -23,8 +23,13 @@ const mergeDomainConfigList = domainConfigList =>
   domainConfigList.reduce(
     (
       accumulator,
-      { replicationConfiguration: { activeClusterName, clusters } }
+      {
+        isGlobalDomain,
+        replicationConfiguration: { activeClusterName, clusters },
+      }
     ) => {
+      accumulator.isGlobalDomain = isGlobalDomain;
+
       if (!accumulator.activeClusterNames.includes(activeClusterName)) {
         accumulator.activeClusterNames.push(activeClusterName);
       }
@@ -42,7 +47,7 @@ const mergeDomainConfigList = domainConfigList =>
 
       return accumulator;
     },
-    { activeClusterNames: [], clusters: [] }
+    { activeClusterNames: [], clusters: [], isGlobalDomain: undefined }
   );
 
 export default mergeDomainConfigList;
