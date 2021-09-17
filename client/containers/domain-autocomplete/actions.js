@@ -73,7 +73,26 @@ const actions = {
         )
       )
         .filter(result => !!result)
-        .flat();
+        .flat()
+        .reduce(
+          (accumulator, domain) => {
+            const domainName = domain.domainInfo.name;
+
+            if (
+              !domain.isGlobalDomain ||
+              !accumulator.domainNameList.includes(domainName)
+            ) {
+              if (domain.isGlobalDomain) {
+                accumulator.domainNameList.push(domainName);
+              }
+
+              accumulator.result.push(domain);
+            }
+
+            return accumulator;
+          },
+          { domainNameList: [], result: [] }
+        ).result;
 
       commit(DOMAIN_AUTOCOMPLETE_SET_IS_LOADING, false);
       commit(DOMAIN_AUTOCOMPLETE_SET_DOMAIN_LIST, domainList);
