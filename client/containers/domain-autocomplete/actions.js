@@ -51,7 +51,7 @@ const actions = {
       const clusterOriginList =
         getters[DOMAIN_AUTOCOMPLETE_CLUSTER_ORIGIN_LIST];
 
-      const resultSet = await (
+      const domainList = await (
         await Promise.all(
           clusterOriginList.map(async ({ clusterName = '', origin }) => {
             try {
@@ -65,12 +65,11 @@ const actions = {
             }
           })
         )
-      ).filter(result => !!result);
-
-      const domainList = [].concat(...resultSet);
+      )
+        .filter(result => !!result)
+        .flat();
 
       commit(DOMAIN_AUTOCOMPLETE_SET_IS_LOADING, false);
-
       commit(DOMAIN_AUTOCOMPLETE_SET_DOMAIN_LIST, domainList);
     },
     DEBOUNCE_WAIT
