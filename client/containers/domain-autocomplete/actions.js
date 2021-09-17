@@ -55,7 +55,13 @@ const actions = {
         await Promise.all(
           clusterOriginList.map(async ({ clusterName = '', origin }) => {
             try {
-              const result = await httpService.get(`${origin}${searchUrl}`);
+              const result = await httpService.get(
+                `${origin}${searchUrl}`,
+                origin && {
+                  credentials: 'include',
+                  mode: 'cors',
+                }
+              );
 
               return result;
             } catch (error) {
