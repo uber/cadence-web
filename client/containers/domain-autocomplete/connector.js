@@ -23,6 +23,7 @@ import { connect } from 'vuex-connect';
 import { ROUTE_PARAMS_DOMAIN } from '../route/getter-types';
 import {
   DOMAIN_AUTOCOMPLETE_ON_CHANGE,
+  DOMAIN_AUTOCOMPLETE_ON_MOUNT,
   DOMAIN_AUTOCOMPLETE_ON_SEARCH,
 } from './action-types';
 import {
@@ -47,7 +48,10 @@ const gettersToProps = {
 };
 
 const lifecycle = {
-  mounted: ({ commit }) => commit(DOMAIN_AUTOCOMPLETE_ON_MOUNTED),
+  mounted: ({ dispatch, commit }) => {
+    commit(DOMAIN_AUTOCOMPLETE_ON_MOUNTED);
+    dispatch(DOMAIN_AUTOCOMPLETE_ON_MOUNT);
+  },
 };
 
 export default connect({

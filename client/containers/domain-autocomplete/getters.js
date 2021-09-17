@@ -21,6 +21,8 @@
 
 import { get } from 'lodash-es';
 import {
+  DOMAIN_AUTOCOMPLETE_ALLOWED_CROSS_ORIGIN,
+  DOMAIN_AUTOCOMPLETE_CLUSTER_ORIGIN_LIST,
   DOMAIN_AUTOCOMPLETE_COMBINED_DOMAIN_LIST,
   DOMAIN_AUTOCOMPLETE_DOMAIN_LIST,
   DOMAIN_AUTOCOMPLETE_FILTERED_VISITED_DOMAIN_LIST,
@@ -41,6 +43,19 @@ import {
 import { combine } from '~helpers';
 
 const getters = {
+  [DOMAIN_AUTOCOMPLETE_ALLOWED_CROSS_ORIGIN]: state =>
+    get(state, statePrefix('allowedCrossOrigin')),
+  [DOMAIN_AUTOCOMPLETE_CLUSTER_ORIGIN_LIST]: (state, getters) => {
+    const allowedCrossOrigin =
+      getters[DOMAIN_AUTOCOMPLETE_ALLOWED_CROSS_ORIGIN];
+    const clusterOriginList = get(state, statePrefix('clusterOriginList'));
+
+    if (!allowedCrossOrigin) {
+      return [{ origin: '' }];
+    }
+
+    return clusterOriginList;
+  },
   [DOMAIN_AUTOCOMPLETE_COMBINED_DOMAIN_LIST]: (_, getters) => {
     const visitedDomainList =
       getters[DOMAIN_AUTOCOMPLETE_FILTERED_VISITED_DOMAIN_LIST];

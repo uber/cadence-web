@@ -126,7 +126,7 @@ export default {
 
       const domainConfigList = await context.getDomainConfigList(context);
 
-      const clusterList = await getClusterListFromDomainConfigList({
+      const clusterList = getClusterListFromDomainConfigList({
         clusterOriginList,
         domainConfigList,
       });

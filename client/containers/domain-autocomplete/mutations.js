@@ -21,6 +21,7 @@
 
 import {
   DOMAIN_AUTOCOMPLETE_ON_MOUNTED,
+  DOMAIN_AUTOCOMPLETE_SET_CONFIG,
   DOMAIN_AUTOCOMPLETE_SET_DOMAIN_LIST,
   DOMAIN_AUTOCOMPLETE_SET_IS_LOADING,
   DOMAIN_AUTOCOMPLETE_SET_SEARCH,
@@ -32,6 +33,13 @@ const mutations = {
     state.domainAutocomplete.isLoading = false;
     state.domainAutocomplete.domainList = [];
     state.domainAutocomplete.search = '';
+  },
+  [DOMAIN_AUTOCOMPLETE_SET_CONFIG]: (
+    state,
+    { allowedCrossOrigin, clusterOriginList }
+  ) => {
+    state.domainAutocomplete.allowedCrossOrigin = allowedCrossOrigin;
+    state.domainAutocomplete.clusterOriginList = clusterOriginList;
   },
   [DOMAIN_AUTOCOMPLETE_SET_DOMAIN_LIST]: (state, payload) => {
     state.domainAutocomplete.domainList = payload;

@@ -21,6 +21,12 @@
 
 import { typePrefix } from './helpers';
 
+export const DOMAIN_AUTOCOMPLETE_ALLOWED_CROSS_ORIGIN = typePrefix(
+  'ALLOWED_CROSS_ORIGIN'
+);
+export const DOMAIN_AUTOCOMPLETE_CLUSTER_ORIGIN_LIST = typePrefix(
+  'CLUSTER_ORIGIN_LIST'
+);
 export const DOMAIN_AUTOCOMPLETE_COMBINED_DOMAIN_LIST = typePrefix(
   'COMBINED_DOMAIN_LIST'
 );
