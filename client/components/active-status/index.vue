@@ -28,6 +28,7 @@ import {
 } from '~helpers';
 import { featureFlagService, httpService } from '~services';
 
+// TODO - move to container instead of global component.
 export default {
   name: 'active-status',
   props: {
@@ -74,6 +75,11 @@ export default {
         (!isGlobalDomain && workflowId)
         ? 'span'
         : 'select-input';
+    },
+    watchProps() {
+      const { clusterName, domain } = this;
+
+      return { clusterName, domain };
     },
   },
   methods: {
@@ -158,6 +164,7 @@ export default {
         $route: { fullPath: path },
       } = this;
 
+      // TODO - If origin doesn't change, then we should use vue router instead for navigation.
       window.location = getHrefFromCluster({
         allowedCrossOrigin,
         cluster,
@@ -170,7 +177,8 @@ export default {
     },
   },
   watch: {
-    domain() {
+    watchProps(props) {
+      console.log('watchProps fired:', props);
       this.clearState();
       this.initDomainClusterConfig(this);
     },
