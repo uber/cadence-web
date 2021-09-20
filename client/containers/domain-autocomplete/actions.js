@@ -41,7 +41,10 @@ import {
   DOMAIN_AUTOCOMPLETE_VISITED_DOMAIN_LIST,
 } from './getter-types';
 import { DEBOUNCE_WAIT } from './constants';
-import { updateVisitedDomainList } from './helpers';
+import {
+  updateVisitedDomainList,
+  filterDuplicatesFromDomainList,
+} from './helpers';
 import { featureFlagService, httpService } from '~services';
 
 const actions = {
@@ -51,48 +54,31 @@ const actions = {
       const clusterOriginList =
         getters[DOMAIN_AUTOCOMPLETE_CLUSTER_ORIGIN_LIST];
 
-      const domainList = await (
-        await Promise.all(
-          clusterOriginList.map(async ({ clusterName = '', origin }) => {
-            try {
-              const result = await httpService.get(
-                `${origin}${searchUrl}`,
-                origin && {
-                  credentials: 'include',
-                  mode: 'cors',
-                }
-              );
-
-              return result;
-            } catch (error) {
-              console.warn(
-                `Failed to fetch result from cluster "${clusterName}" with origin "${origin}"`
-              );
+      const fetchDomainForOrigin = async ({ clusterName = '', origin }) => {
+        try {
+          const result = await httpService.get(
+            `${origin}${searchUrl}`,
+            origin && {
+              credentials: 'include',
+              mode: 'cors',
             }
-          })
-        )
-      )
-        .filter(result => !!result)
-        .flat()
-        .reduce(
-          (accumulator, domain) => {
-            const domainName = domain.domainInfo.name;
+          );
 
-            if (
-              !domain.isGlobalDomain ||
-              !accumulator.domainNameList.includes(domainName)
-            ) {
-              if (domain.isGlobalDomain) {
-                accumulator.domainNameList.push(domainName);
-              }
+          return result;
+        } catch (error) {
+          console.warn(
+            `Failed to fetch result from cluster "${clusterName}" with origin "${origin}"`
+          );
+        }
+      };
 
-              accumulator.result.push(domain);
-            }
+      const domainListSet = await Promise.all(
+        clusterOriginList.map(fetchDomainForOrigin)
+      );
 
-            return accumulator;
-          },
-          { domainNameList: [], result: [] }
-        ).result;
+      const domainList = filterDuplicatesFromDomainList(
+        domainListSet.filter(result => !!result).flat()
+      );
 
       commit(DOMAIN_AUTOCOMPLETE_SET_IS_LOADING, false);
       commit(DOMAIN_AUTOCOMPLETE_SET_DOMAIN_LIST, domainList);
