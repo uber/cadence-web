@@ -110,11 +110,11 @@ const actions = {
       updatedVisitedDomainList
     );
 
-    if (value.isGlobalDomain) {
-      return dispatchToGlobalRoute();
-    }
-
-    if (!allowedCrossOrigin) {
+    if (
+      value.isGlobalDomain ||
+      !allowedCrossOrigin ||
+      !value.replicationConfiguration
+    ) {
       return dispatchToGlobalRoute();
     }
 
