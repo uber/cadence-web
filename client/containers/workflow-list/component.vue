@@ -199,6 +199,11 @@ export default {
 
       return getStartTimeIsoString(range, startTime);
     },
+    crossRegionProps() {
+      const { clusterName, domain } = this;
+
+      return { clusterName, domain };
+    },
   },
   methods: {
     clearState() {
@@ -477,8 +482,14 @@ export default {
         this.refreshWorkflows();
       }
     },
-    async domain(newDomain, oldDomain) {
-      if (newDomain && oldDomain && newDomain !== oldDomain) {
+    async crossRegionProps(
+      { clusterName: newClusterName, domain: newDomain },
+      { clusterName: oldClusterName, domain: oldDomain }
+    ) {
+      if (
+        (newDomain && oldDomain && newDomain !== oldDomain) ||
+        (newClusterName && oldClusterName && newClusterName !== oldClusterName)
+      ) {
         await this.fetchDomain();
         this.refreshWorkflows();
       }

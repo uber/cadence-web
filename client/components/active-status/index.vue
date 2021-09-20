@@ -178,7 +178,6 @@ export default {
   },
   watch: {
     watchProps(props) {
-      console.log('watchProps fired:', props);
       this.clearState();
       this.initDomainClusterConfig(this);
     },
