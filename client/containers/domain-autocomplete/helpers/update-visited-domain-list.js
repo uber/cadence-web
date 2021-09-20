@@ -26,7 +26,9 @@ const updateVisitedDomainList = ({ value, visitedDomainList }) => {
   const uuid = value.domainInfo.uuid || null;
 
   const matchedDomainIndex = visitedDomainList.findIndex(
-    domain => domain.domainInfo.uuid === uuid || domain.domainInfo.name === name
+    domain =>
+      domain.domainInfo.uuid === uuid ||
+      (domain.domainInfo.name === name && domain.isGlobalDomain)
   );
 
   if (matchedDomainIndex === -1) {
