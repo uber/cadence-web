@@ -19,20 +19,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { get } from 'lodash-es';
-import {
-  ROUTE_PARAMS,
-  ROUTE_PARAMS_CLUSTER_NAME,
-  ROUTE_PARAMS_DOMAIN,
-  ROUTE_QUERY,
-} from './getter-types';
+import { typePrefix } from './helpers';
 
-const getters = {
-  [ROUTE_PARAMS]: state => get(state, 'route.params', {}),
-  [ROUTE_PARAMS_CLUSTER_NAME]: (_, getters) =>
-    getters[ROUTE_PARAMS].clusterName,
-  [ROUTE_PARAMS_DOMAIN]: (_, getters) => getters[ROUTE_PARAMS].domain,
-  [ROUTE_QUERY]: state => get(state, 'route.query', {}),
-};
-
-export default getters;
+export const CROSS_REGION = 'CROSS_REGION';
+export const CROSS_REGION_ALLOWED_CROSS_ORIGIN = typePrefix(
+  'ALLOWED_CROSS_ORIGIN'
+);
+export const CROSS_REGION_CLUSTER_ORIGIN_LIST = typePrefix(
+  'CLUSTER_ORIGIN_LIST'
+);
+export const CROSS_REGION_EXPIRY_DATE_TIME = typePrefix('EXPIRY_DATE_TIME');
+export const CROSS_REGION_IS_LOADING = typePrefix('IS_LOADING');
+export const CROSS_REGION_IS_READY = typePrefix('IS_READY');

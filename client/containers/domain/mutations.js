@@ -19,20 +19,32 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { get } from 'lodash-es';
-import {
-  ROUTE_PARAMS,
-  ROUTE_PARAMS_CLUSTER_NAME,
-  ROUTE_PARAMS_DOMAIN,
-  ROUTE_QUERY,
-} from './getter-types';
+import { DOMAIN_FETCH_START } from './mutation-types';
 
-const getters = {
-  [ROUTE_PARAMS]: state => get(state, 'route.params', {}),
-  [ROUTE_PARAMS_CLUSTER_NAME]: (_, getters) =>
-    getters[ROUTE_PARAMS].clusterName,
-  [ROUTE_PARAMS_DOMAIN]: (_, getters) => getters[ROUTE_PARAMS].domain,
-  [ROUTE_QUERY]: state => get(state, 'route.query', {}),
+const mutations = {
+  [DOMAIN_FETCH_START]: (state, { clusterName, domainName }) => {
+    if (!state.domain[domainName]) {
+      state.domain[domainName] = {};
+    }
+
+    const domainNamespace = state.domain[domainName];
+
+    if (domainNamespace.global) {
+      return (domainNamespace.global = {
+        isLoading: true,
+      });
+    }
+
+    if (clusterName) {
+      return (domainNamespace[clusterName] = {
+        isLoading: true,
+      });
+    }
+
+    domainNamespace.loading = {
+      isLoading: true,
+    };
+  },
 };
 
-export default getters;
+export default mutations;

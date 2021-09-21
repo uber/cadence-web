@@ -19,20 +19,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { get } from 'lodash-es';
-import {
-  ROUTE_PARAMS,
-  ROUTE_PARAMS_CLUSTER_NAME,
-  ROUTE_PARAMS_DOMAIN,
-  ROUTE_QUERY,
-} from './getter-types';
+import { typePrefix } from './helpers';
 
-const getters = {
-  [ROUTE_PARAMS]: state => get(state, 'route.params', {}),
-  [ROUTE_PARAMS_CLUSTER_NAME]: (_, getters) =>
-    getters[ROUTE_PARAMS].clusterName,
-  [ROUTE_PARAMS_DOMAIN]: (_, getters) => getters[ROUTE_PARAMS].domain,
-  [ROUTE_QUERY]: state => get(state, 'route.query', {}),
-};
-
-export default getters;
+export const DOMAIN_FETCH = typePrefix('FETCH');

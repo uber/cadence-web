@@ -19,20 +19,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { get } from 'lodash-es';
 import {
-  ROUTE_PARAMS,
-  ROUTE_PARAMS_CLUSTER_NAME,
-  ROUTE_PARAMS_DOMAIN,
-  ROUTE_QUERY,
-} from './getter-types';
+  CROSS_REGION_SET_ALLOWED_CROSS_ORIGIN,
+  CROSS_REGION_SET_CLUSTER_ORIGIN_LIST,
+  CROSS_REGION_SET_CROSS_REGION,
+  CROSS_REGION_SET_EXPIRY_DATE_TIME,
+} from './mutation-types';
 
-const getters = {
-  [ROUTE_PARAMS]: state => get(state, 'route.params', {}),
-  [ROUTE_PARAMS_CLUSTER_NAME]: (_, getters) =>
-    getters[ROUTE_PARAMS].clusterName,
-  [ROUTE_PARAMS_DOMAIN]: (_, getters) => getters[ROUTE_PARAMS].domain,
-  [ROUTE_QUERY]: state => get(state, 'route.query', {}),
+const mutations = {
+  [CROSS_REGION_SET_ALLOWED_CROSS_ORIGIN]: (state, payload) =>
+    (state.crossRegion.allowedCrossOrigin = payload),
+  [CROSS_REGION_SET_CLUSTER_ORIGIN_LIST]: (state, payload) =>
+    (state.crossRegion.clusterOriginList = payload),
+  [CROSS_REGION_SET_CROSS_REGION]: (state, payload) =>
+    (state.crossRegion.crossRegion = payload),
+  [CROSS_REGION_SET_EXPIRY_DATE_TIME]: (state, payload) =>
+    (state.crossRegion.expiryDateTime = payload),
 };
 
-export default getters;
+export default mutations;

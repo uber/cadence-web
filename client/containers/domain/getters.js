@@ -21,18 +21,21 @@
 
 import { get } from 'lodash-es';
 import {
-  ROUTE_PARAMS,
   ROUTE_PARAMS_CLUSTER_NAME,
   ROUTE_PARAMS_DOMAIN,
-  ROUTE_QUERY,
-} from './getter-types';
+} from '../route/getter-types';
+import { DOMAIN_CURRENT, DOMAIN_HASH } from './getter-types';
+import { statePrefix, getDomain } from './helpers';
 
 const getters = {
-  [ROUTE_PARAMS]: state => get(state, 'route.params', {}),
-  [ROUTE_PARAMS_CLUSTER_NAME]: (_, getters) =>
-    getters[ROUTE_PARAMS].clusterName,
-  [ROUTE_PARAMS_DOMAIN]: (_, getters) => getters[ROUTE_PARAMS].domain,
-  [ROUTE_QUERY]: state => get(state, 'route.query', {}),
+  [DOMAIN_CURRENT]: (_, getters) => {
+    const clusterName = getters[ROUTE_PARAMS_CLUSTER_NAME];
+    const domainName = getters[ROUTE_PARAMS_DOMAIN];
+    const domainHash = getters[DOMAIN_HASH];
+
+    return getDomain({ clusterName, domainHash, domainName });
+  },
+  [DOMAIN_HASH]: state => get(state, statePrefix('domainHash')),
 };
 
 export default getters;

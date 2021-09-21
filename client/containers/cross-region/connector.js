@@ -19,20 +19,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { get } from 'lodash-es';
-import {
-  ROUTE_PARAMS,
-  ROUTE_PARAMS_CLUSTER_NAME,
-  ROUTE_PARAMS_DOMAIN,
-  ROUTE_QUERY,
-} from './getter-types';
+import { connect } from 'vuex-connect';
+import { CROSS_REGION_FETCH } from './action-types';
+import { CROSS_REGION_IS_LOADING, CROSS_REGION_IS_READY } from './getter-types';
 
-const getters = {
-  [ROUTE_PARAMS]: state => get(state, 'route.params', {}),
-  [ROUTE_PARAMS_CLUSTER_NAME]: (_, getters) =>
-    getters[ROUTE_PARAMS].clusterName,
-  [ROUTE_PARAMS_DOMAIN]: (_, getters) => getters[ROUTE_PARAMS].domain,
-  [ROUTE_QUERY]: state => get(state, 'route.query', {}),
+const gettersToProps = {
+  isLoading: CROSS_REGION_IS_LOADING,
+  isReady: CROSS_REGION_IS_READY,
 };
 
-export default getters;
+const lifecycle = {
+  mounted: ({ dispatch }) => {
+    dispatch(CROSS_REGION_FETCH);
+  },
+};
+
+export default connect({
+  gettersToProps,
+  lifecycle,
+});

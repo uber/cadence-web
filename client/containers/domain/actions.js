@@ -19,20 +19,39 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { get } from 'lodash-es';
 import {
-  ROUTE_PARAMS,
   ROUTE_PARAMS_CLUSTER_NAME,
   ROUTE_PARAMS_DOMAIN,
-  ROUTE_QUERY,
-} from './getter-types';
+} from '../route/getter-types';
+import { DOMAIN_FETCH } from './action-types';
+import { DOMAIN_CURRENT } from './getter-types';
+import { DOMAIN_FETCH_START } from './mutation-types';
+import { hasExpired } from '~helpers';
 
-const getters = {
-  [ROUTE_PARAMS]: state => get(state, 'route.params', {}),
-  [ROUTE_PARAMS_CLUSTER_NAME]: (_, getters) =>
-    getters[ROUTE_PARAMS].clusterName,
-  [ROUTE_PARAMS_DOMAIN]: (_, getters) => getters[ROUTE_PARAMS].domain,
-  [ROUTE_QUERY]: state => get(state, 'route.query', {}),
+const actions = {
+  [DOMAIN_FETCH]: ({ commit, getters }) => {
+    const clusterName = getters[ROUTE_PARAMS_CLUSTER_NAME];
+    const domainName = getters[ROUTE_PARAMS_DOMAIN];
+    const currentDomain = getters[DOMAIN_CURRENT];
+
+    if (!domainName) {
+      return;
+    }
+
+    const shouldFetch =
+      !currentDomain ||
+      (!currentDomain.isLoading &&
+        (!currentDomain.value || hasExpired(currentDomain.expiryDateTime)));
+
+    if (!shouldFetch) {
+      return;
+    }
+
+    commit(DOMAIN_FETCH_START, { clusterName, domainName });
+
+    // TODO - perform fetch...
+    // Need crossRegion vuex store and get origin from there...
+  },
 };
 
-export default getters;
+export default actions;

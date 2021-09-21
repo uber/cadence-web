@@ -20,19 +20,29 @@
 // THE SOFTWARE.
 
 import { get } from 'lodash-es';
+import { statePrefix } from './helpers';
 import {
-  ROUTE_PARAMS,
-  ROUTE_PARAMS_CLUSTER_NAME,
-  ROUTE_PARAMS_DOMAIN,
-  ROUTE_QUERY,
+  CROSS_REGION,
+  CROSS_REGION_ALLOWED_CROSS_ORIGIN,
+  CROSS_REGION_CLUSTER_ORIGIN_LIST,
+  CROSS_REGION_EXPIRY_DATE_TIME,
+  CROSS_REGION_IS_LOADING,
+  CROSS_REGION_IS_READY,
 } from './getter-types';
+import { hasExpired } from '~helpers';
 
 const getters = {
-  [ROUTE_PARAMS]: state => get(state, 'route.params', {}),
-  [ROUTE_PARAMS_CLUSTER_NAME]: (_, getters) =>
-    getters[ROUTE_PARAMS].clusterName,
-  [ROUTE_PARAMS_DOMAIN]: (_, getters) => getters[ROUTE_PARAMS].domain,
-  [ROUTE_QUERY]: state => get(state, 'route.query', {}),
+  [CROSS_REGION]: state => get(state, statePrefix('crossRegion')),
+  [CROSS_REGION_ALLOWED_CROSS_ORIGIN]: state =>
+    get(state, statePrefix('allowedCrossOrigin')),
+  [CROSS_REGION_CLUSTER_ORIGIN_LIST]: state =>
+    get(state, statePrefix('clusterOriginList')),
+  [CROSS_REGION_EXPIRY_DATE_TIME]: state =>
+    get(state, statePrefix('expiryDateTime')),
+  [CROSS_REGION_IS_LOADING]: (_, getters) =>
+    hasExpired(getters[CROSS_REGION_EXPIRY_DATE_TIME]),
+  [CROSS_REGION_IS_READY]: (_, getters) =>
+    !hasExpired(getters[CROSS_REGION_EXPIRY_DATE_TIME]),
 };
 
 export default getters;

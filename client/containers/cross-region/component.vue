@@ -1,3 +1,4 @@
+<script>
 // Copyright (c) 2021 Uber Technologies Inc.
 //
 //
@@ -19,20 +20,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { get } from 'lodash-es';
-import {
-  ROUTE_PARAMS,
-  ROUTE_PARAMS_CLUSTER_NAME,
-  ROUTE_PARAMS_DOMAIN,
-  ROUTE_QUERY,
-} from './getter-types';
-
-const getters = {
-  [ROUTE_PARAMS]: state => get(state, 'route.params', {}),
-  [ROUTE_PARAMS_CLUSTER_NAME]: (_, getters) =>
-    getters[ROUTE_PARAMS].clusterName,
-  [ROUTE_PARAMS_DOMAIN]: (_, getters) => getters[ROUTE_PARAMS].domain,
-  [ROUTE_QUERY]: state => get(state, 'route.query', {}),
+export default {
+  name: 'cross-region',
+  props: {
+    isLoading: {
+      type: Boolean,
+    },
+    isReady: {
+      type: Boolean,
+    },
+  },
 };
-
-export default getters;
+</script>
+<template>
+  <section class="cross-region" :class="{ loading: isLoading }">
+    <slot v-if="isReady"></slot>
+  </section>
+</template>
