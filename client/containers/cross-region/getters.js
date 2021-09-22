@@ -41,8 +41,7 @@ const getters = {
     get(state, statePrefix('expiryDateTime')),
   [CROSS_REGION_IS_LOADING]: (_, getters) =>
     hasExpired(getters[CROSS_REGION_EXPIRY_DATE_TIME]),
-  [CROSS_REGION_IS_READY]: (_, getters) =>
-    !hasExpired(getters[CROSS_REGION_EXPIRY_DATE_TIME]),
+  [CROSS_REGION_IS_READY]: (_, getters) => !getters[CROSS_REGION_IS_LOADING],
 };
 
 export default getters;

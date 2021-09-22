@@ -29,9 +29,7 @@ const gettersToProps = {
 };
 
 const lifecycle = {
-  mounted: ({ dispatch }) => {
-    dispatch(CROSS_REGION_FETCH);
-  },
+  mounted: ({ dispatch }) => dispatch(CROSS_REGION_FETCH),
 };
 
 export default connect({

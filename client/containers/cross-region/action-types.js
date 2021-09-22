@@ -19,6 +19,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { typePrefix } from '../domain/helpers';
+import { typePrefix } from './helpers';
 
 export const CROSS_REGION_FETCH = typePrefix('FETCH');

@@ -21,4 +21,4 @@
 
 import { typePrefix } from './helpers';
 
-export const DOMAIN_FETCH_START = typePrefix('FETCH_START');
+export const DOMAIN_SET_DOMAIN = typePrefix('SET_DOMAIN');

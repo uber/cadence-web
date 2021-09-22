@@ -24,8 +24,20 @@ import {
   ROUTE_PARAMS_CLUSTER_NAME,
   ROUTE_PARAMS_DOMAIN,
 } from '../route/getter-types';
-import { DOMAIN_CURRENT, DOMAIN_HASH } from './getter-types';
-import { statePrefix, getDomain } from './helpers';
+import {
+  CROSS_REGION_ALLOWED_CROSS_ORIGIN,
+  CROSS_REGION_CLUSTER_ORIGIN_LIST,
+  CROSS_REGION,
+} from '../cross-region/getter-types';
+import {
+  DOMAIN_CROSS_ORIGIN,
+  DOMAIN_CURRENT,
+  DOMAIN_HASH,
+  DOMAIN_IS_LOADING,
+  DOMAIN_IS_READY,
+} from './getter-types';
+import { statePrefix, getDomain, getCrossOrigin } from './helpers';
+import { hasExpired } from '~helpers';
 
 const getters = {
   [DOMAIN_CURRENT]: (_, getters) => {
@@ -36,6 +48,25 @@ const getters = {
     return getDomain({ clusterName, domainHash, domainName });
   },
   [DOMAIN_HASH]: state => get(state, statePrefix('domainHash')),
+  [DOMAIN_IS_LOADING]: (_, getters) =>
+    getters[ROUTE_PARAMS_DOMAIN] &&
+    hasExpired(get(getters[DOMAIN_CURRENT], 'expiryDateTime')),
+  [DOMAIN_IS_READY]: (_, getters) => !getters[DOMAIN_IS_LOADING],
+  [DOMAIN_CROSS_ORIGIN]: (_, getters) => {
+    const allowedCrossOrigin = getters[CROSS_REGION_ALLOWED_CROSS_ORIGIN];
+    const clusterName = getters[ROUTE_PARAMS_CLUSTER_NAME];
+    const clusterOriginList = getters[CROSS_REGION_CLUSTER_ORIGIN_LIST];
+    const crossRegion = getters[CROSS_REGION];
+    const domain = getters[DOMAIN_CURRENT];
+
+    return getCrossOrigin({
+      allowedCrossOrigin,
+      clusterName,
+      clusterOriginList,
+      crossRegion,
+      domain,
+    });
+  },
 };
 
 export default getters;

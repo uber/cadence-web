@@ -23,34 +23,43 @@ import {
   ROUTE_PARAMS_CLUSTER_NAME,
   ROUTE_PARAMS_DOMAIN,
 } from '../route/getter-types';
+import {
+  CROSS_REGION_ALLOWED_CROSS_ORIGIN,
+  CROSS_REGION_CLUSTER_ORIGIN_LIST,
+} from '../cross-region/getter-types';
 import { DOMAIN_FETCH } from './action-types';
-import { DOMAIN_CURRENT } from './getter-types';
-import { DOMAIN_FETCH_START } from './mutation-types';
-import { hasExpired } from '~helpers';
+import { DOMAIN_IS_READY } from './getter-types';
+import { DOMAIN_SET_DOMAIN } from './mutation-types';
+import { httpService } from '~services';
+import { getExpiryDateTimeFromNow } from '~helpers';
 
 const actions = {
-  [DOMAIN_FETCH]: ({ commit, getters }) => {
+  [DOMAIN_FETCH]: async ({ commit, getters }) => {
     const clusterName = getters[ROUTE_PARAMS_CLUSTER_NAME];
     const domainName = getters[ROUTE_PARAMS_DOMAIN];
-    const currentDomain = getters[DOMAIN_CURRENT];
+    const ready = getters[DOMAIN_IS_READY];
+    const allowedCrossOrigin = getters[CROSS_REGION_ALLOWED_CROSS_ORIGIN];
+    const clusterOriginList = getters[CROSS_REGION_CLUSTER_ORIGIN_LIST];
 
-    if (!domainName) {
+    if (ready) {
       return;
     }
 
-    const shouldFetch =
-      !currentDomain ||
-      (!currentDomain.isLoading &&
-        (!currentDomain.value || hasExpired(currentDomain.expiryDateTime)));
+    const cluster =
+      allowedCrossOrigin &&
+      clusterName &&
+      clusterOriginList &&
+      clusterOriginList.find(
+        ({ clusterName: matchClusterName }) => matchClusterName === clusterName
+      );
+    const origin = (cluster && cluster.origin) || '';
+    const domain = await httpService.get(`${origin}/api/domains/${domainName}`);
 
-    if (!shouldFetch) {
-      return;
-    }
+    domain.expiryDateTime = getExpiryDateTimeFromNow();
 
-    commit(DOMAIN_FETCH_START, { clusterName, domainName });
+    commit(DOMAIN_SET_DOMAIN, domain);
 
-    // TODO - perform fetch...
-    // Need crossRegion vuex store and get origin from there...
+    // TODO - For local domains, should we fetch other clusters here also???
   },
 };
 

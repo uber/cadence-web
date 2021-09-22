@@ -19,6 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+export { default as getCrossOrigin } from './get-cross-origin';
 export { default as getDomain } from './get-domain';
 export { default as statePrefix } from './state-prefix';
 export { default as typePrefix } from './type-prefix';

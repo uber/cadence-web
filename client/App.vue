@@ -32,7 +32,12 @@ import {
   NotificationBar,
   SelectInput,
 } from '~components';
-import { CrossRegion, DomainAutocomplete, SettingsModal } from '~containers';
+import {
+  CrossRegion,
+  Domain,
+  DomainAutocomplete,
+  SettingsModal,
+} from '~containers';
 import {
   DATE_FORMAT_MMM_D_YYYY,
   DATE_FORMAT_OPTIONS,
@@ -61,6 +66,7 @@ export default {
     'active-status': ActiveStatus,
     'button-icon': ButtonIcon,
     'cross-region': CrossRegion,
+    domain: Domain,
     'domain-autocomplete': DomainAutocomplete,
     'feature-flag': FeatureFlag,
     'flex-grid': FlexGrid,
@@ -342,19 +348,21 @@ export default {
       </flex-grid>
     </header>
     <cross-region>
-      <router-view
-        :date-format="settings.dateFormat"
-        :time-format="settings.timeFormat"
-        :timezone="settings.timezone"
-        :workflow-history-event-highlight-list="
-          settings.workflowHistoryEventHighlightList
-        "
-        :workflow-history-event-highlight-list-enabled="
-          settings.workflowHistoryEventHighlightListEnabled
-        "
-        @onWorkflowHistoryEventParamToggle="onWorkflowHistoryEventParamToggle"
-        @onNotification="onNotification"
-      ></router-view>
+      <domain>
+        <router-view
+          :date-format="settings.dateFormat"
+          :time-format="settings.timeFormat"
+          :timezone="settings.timezone"
+          :workflow-history-event-highlight-list="
+            settings.workflowHistoryEventHighlightList
+          "
+          :workflow-history-event-highlight-list-enabled="
+            settings.workflowHistoryEventHighlightListEnabled
+          "
+          @onWorkflowHistoryEventParamToggle="onWorkflowHistoryEventParamToggle"
+          @onNotification="onNotification"
+        ></router-view>
+      </domain>
     </cross-region>
     <modals-container />
     <v-dialog />

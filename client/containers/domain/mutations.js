@@ -19,31 +19,41 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { DOMAIN_FETCH_START } from './mutation-types';
+import { DOMAIN_SET_DOMAIN } from './mutation-types';
 
 const mutations = {
-  [DOMAIN_FETCH_START]: (state, { clusterName, domainName }) => {
-    if (!state.domain[domainName]) {
-      state.domain[domainName] = {};
+  [DOMAIN_SET_DOMAIN]: (state, domain) => {
+    const {
+      domainInfo: { name: domainName },
+      isGlobalDomain,
+      replicationConfiguration: { activeClusterName },
+    } = domain;
+
+    if (!state.domain.domainHash[domainName]) {
+      state.domain.domainHash[domainName] = {};
     }
 
-    const domainNamespace = state.domain[domainName];
+    const domainNamespace = state.domain.domainHash[domainName];
 
-    if (domainNamespace.global) {
-      return (domainNamespace.global = {
-        isLoading: true,
-      });
+    if (isGlobalDomain) {
+      return (domainNamespace.global = domain);
     }
 
-    if (clusterName) {
-      return (domainNamespace[clusterName] = {
-        isLoading: true,
-      });
+    if (!domainNamespace.local) {
+      return (domainNamespace.local = [domain]);
     }
 
-    domainNamespace.loading = {
-      isLoading: true,
-    };
+    const matchIndex = domainNamespace.local.findIndex(
+      ({
+        replicationConfiguration: { activeClusterName: matchActiveClusterName },
+      }) => matchActiveClusterName === activeClusterName
+    );
+
+    if (matchIndex === -1) {
+      return domainNamespace.local.push(domain);
+    }
+
+    domainNamespace.local.splice(matchIndex, 1, domain);
   },
 };
 

@@ -36,6 +36,12 @@ import {
   crossRegionGetters,
   crossRegionMutations,
 
+  // domain
+  domainActions,
+  getDomainDefaultState,
+  domainGetters,
+  domainMutations,
+
   // domain autocomplete
   domainAutocompleteActions,
   getDomainAutocompleteDefaultState,
@@ -77,6 +83,7 @@ import {
 const getDefaultState = (state = {}) => ({
   cluster: getClusterDefaultState(state.cluster),
   crossRegion: getCrossRegionDefaultState(state.crossRegion),
+  domain: getDomainDefaultState(state.domain),
   domainAutocomplete: getDomainAutocompleteDefaultState(
     state.domainAutocomplete
   ),
@@ -117,6 +124,7 @@ const getStoreConfig = ({ router, state }) => {
     actions: {
       ...clusterActions,
       ...crossRegionActions,
+      ...domainActions,
       ...domainAutocompleteActions,
       ...routeActionCreator(router),
       ...workflowListActions,
@@ -125,6 +133,7 @@ const getStoreConfig = ({ router, state }) => {
     getters: {
       ...clusterGetters,
       ...crossRegionGetters,
+      ...domainGetters,
       ...domainAutocompleteGetters,
       ...graphGetters,
       ...routeGetters,
@@ -136,6 +145,7 @@ const getStoreConfig = ({ router, state }) => {
     mutations: {
       ...clusterMutations,
       ...crossRegionMutations,
+      ...domainMutations,
       ...domainAutocompleteMutations,
       ...graphMutations,
       ...settingsWorkflowHistoryMutations,

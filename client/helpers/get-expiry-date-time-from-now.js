@@ -20,9 +20,9 @@
 // THE SOFTWARE.
 
 import moment from 'moment';
-import { ONE_HOUR_IN_MILLISECONDS } from '../../../constants';
+import { ONE_HOUR_IN_MILLISECONDS } from '../constants';
 
-const getExpiryDateTimeFromNow = () =>
+const getExpiryDateTimeFromNow = (time = ONE_HOUR_IN_MILLISECONDS) =>
   moment()
     .add(ONE_HOUR_IN_MILLISECONDS)
     .toISOString();

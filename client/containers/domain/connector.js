@@ -19,31 +19,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const getDomain = ({ clusterName, domainHash, domainName }) => {
-  if (!domainName) {
-    return;
-  }
+import { connect } from 'vuex-connect';
+import { DOMAIN_FETCH } from './action-types';
+import { DOMAIN_IS_LOADING, DOMAIN_IS_READY } from './getter-types';
 
-  const domainNamespace = domainHash[domainName];
-
-  if (!domainNamespace) {
-    return;
-  }
-
-  if (domainNamespace.global) {
-    return domainNamespace.global;
-  }
-
-  if (domainNamespace.local) {
-    if (clusterName) {
-      return domainNamespace.local.find(
-        ({ replicationConfiguration: { activeClusterName } }) =>
-          activeClusterName === clusterName
-      );
-    }
-
-    return domainNamespace.local[0];
-  }
+const gettersToProps = {
+  isLoading: DOMAIN_IS_LOADING,
+  isReady: DOMAIN_IS_READY,
 };
 
-export default getDomain;
+const lifecycle = {
+  mounted: ({ dispatch }) => dispatch(DOMAIN_FETCH),
+};
+
+export default connect({
+  gettersToProps,
+  lifecycle,
+});

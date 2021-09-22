@@ -27,7 +27,7 @@ import {
   CROSS_REGION_SET_CROSS_REGION,
   CROSS_REGION_SET_EXPIRY_DATE_TIME,
 } from './mutation-types';
-import { getExpiryDateTimeFromNow } from './helpers';
+import { getExpiryDateTimeFromNow } from '~helpers';
 import { featureFlagService } from '~services';
 
 const actions = {

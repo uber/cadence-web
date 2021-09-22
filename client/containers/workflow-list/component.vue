@@ -67,6 +67,7 @@ export default {
     'filterModeButtonLabel',
     'isCron',
     'isCronInputVisible',
+    'origin',
     'queryString',
     'state',
     'status',
@@ -214,8 +215,6 @@ export default {
       this.results = [];
     },
     async fetch(url, queryWithStatus) {
-      const { clusterName, domain } = this;
-
       let workflows = [];
       let nextPageToken = '';
 
@@ -241,9 +240,7 @@ export default {
         this.abortController = new AbortController();
         const { signal } = this.abortController;
 
-        const request = await httpService.get(url, {
-          clusterName,
-          domain,
+        const request = await httpService.get(`${origin}${url}`, {
           query,
           signal,
         });
@@ -269,14 +266,14 @@ export default {
       return { status: 'success', workflows, nextPageToken };
     },
     async fetchDomain() {
-      const { clusterName, domain, now } = this;
+      const { domain, now } = this;
 
       this.loading = true;
 
       try {
-        const domainInfo = await httpService.get(`/api/domains/${domain}`, {
-          clusterName,
-        });
+        const domainInfo = await httpService.get(
+          `${origin}/api/domains/${domain}`
+        );
 
         this.maxRetentionDays =
           Number(

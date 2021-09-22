@@ -1,3 +1,4 @@
+<script>
 // Copyright (c) 2021 Uber Technologies Inc.
 //
 //
@@ -19,31 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const getDomain = ({ clusterName, domainHash, domainName }) => {
-  if (!domainName) {
-    return;
-  }
-
-  const domainNamespace = domainHash[domainName];
-
-  if (!domainNamespace) {
-    return;
-  }
-
-  if (domainNamespace.global) {
-    return domainNamespace.global;
-  }
-
-  if (domainNamespace.local) {
-    if (clusterName) {
-      return domainNamespace.local.find(
-        ({ replicationConfiguration: { activeClusterName } }) =>
-          activeClusterName === clusterName
-      );
-    }
-
-    return domainNamespace.local[0];
-  }
+export default {
+  name: 'domain',
+  props: {
+    isLoading: {
+      type: Boolean,
+    },
+    isReady: {
+      type: Boolean,
+    },
+  },
+  watch: {
+    isLoading() {
+      this.$emit('change');
+    },
+  },
 };
-
-export default getDomain;
+</script>
+<template>
+  <section class="domain" :class="{ loading: isLoading }">
+    <slot v-if="isReady"></slot>
+  </section>
+</template>

@@ -107,17 +107,16 @@ export default {
     },
     // TODO - code is kind of duplicated in httpService
     async getDomainConfigList({ clusterOriginList, domain }) {
-      const fetchList = clusterOriginList.map(({ clusterName }) => async () => {
+      const fetchList = clusterOriginList.map(({ origin }) => async () => {
         try {
-          const domainConfig = await httpService.get(`/api/domains/${domain}`, {
-            clusterName,
-            domain,
-          });
+          const domainConfig = await httpService.get(
+            `${origin}/api/domains/${domain}`
+          );
 
           return domainConfig;
         } catch (error) {
           console.warn(
-            `Unable to resolve domain configuration for domain = "${domain}" and cluster = "${clusterName}".`
+            `Unable to resolve domain configuration for domain = "${domain}" and origin = "${origin}".`
           );
         }
       });

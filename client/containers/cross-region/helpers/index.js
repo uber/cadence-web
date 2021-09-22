@@ -19,6 +19,5 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export { default as getExpiryDateTimeFromNow } from './get-expiry-date-time-from-now';
 export { default as statePrefix } from './state-prefix';
 export { default as typePrefix } from './type-prefix';

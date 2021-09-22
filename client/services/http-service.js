@@ -19,17 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import {
-  getConfiguration,
-  isFeatureFlagEnabled,
-} from './feature-flag-service/helpers';
-import { ONE_HOUR_IN_MILLISECONDS } from '~constants';
-import {
-  getClusterFromClusterList,
-  getClusterListFromDomainConfigList,
-  getQueryStringFromObject,
-} from '~helpers';
-import { CacheManager } from '~managers';
+import { getQueryStringFromObject } from '~helpers';
 
 const DEFAULT_FETCH_OPTIONS = {
   credentials: 'same-origin',
@@ -39,21 +29,6 @@ const DEFAULT_FETCH_OPTIONS = {
 };
 
 class HttpService {
-  constructor() {
-    this.origin = window.location.origin;
-    const cacheManager = new CacheManager(ONE_HOUR_IN_MILLISECONDS);
-
-    this.cacheManager = cacheManager;
-    this.getConfiguration = getConfiguration({
-      cacheManager,
-      httpService: this,
-    });
-    this.isFeatureFlagEnabled = isFeatureFlagEnabled({
-      cacheManager,
-      httpService: this,
-    });
-  }
-
   handleResponse(response) {
     return response.status >= 200 && response.status < 300
       ? response.json().catch(() => {})
@@ -63,95 +38,16 @@ class HttpService {
         );
   }
 
-  // TODO - code is kind of duplicated in activeStatus
-  async getDomainConfigList({ clusterOriginList, domain }) {
-    const fetch = this.fetchOverride ? this.fetchOverride : window.fetch;
-    const { origin } = window.location;
-
-    const fetchList = clusterOriginList.map(
-      ({ clusterName, origin: clusterOrigin }) => async () => {
-        try {
-          const url = `${clusterOrigin}/api/domains/${domain}`;
-
-          const requestOptions = {
-            ...DEFAULT_FETCH_OPTIONS,
-            ...(clusterOrigin !== origin && {
-              credentials: 'include',
-              mode: 'cors',
-            }),
-          };
-
-          const domainConfig = await fetch(url, requestOptions).then(
-            this.handleResponse
-          );
-
-          return domainConfig;
-        } catch (error) {
-          console.warn(
-            `Unable to resolve domain configuration for domain = "${domain}" and cluster = "${clusterName}".`
-          );
-        }
-      }
-    );
-
-    return (await Promise.all(fetchList.map(callback => callback()))).filter(
-      response => !!response
-    );
-  }
-
-  async getRegionalOrigin({ clusterName, domain, origin }) {
-    const allowedCrossOrigin = await this.isFeatureFlagEnabled({
-      cache: true,
-      name: 'crossRegion,crossRegion.allowedCrossOrigin',
-      params: {
-        origin,
-      },
-    });
-
-    if (!allowedCrossOrigin) {
-      return '';
-    }
-
-    const clusterOriginList = await this.getConfiguration({
-      cache: true,
-      name: 'crossRegion.clusterOriginList',
-    });
-
-    const domainConfigList = await this.cacheManager.get(domain, () =>
-      this.getDomainConfigList({ clusterOriginList, domain })
-    );
-
-    const clusterList = getClusterListFromDomainConfigList({
-      clusterOriginList,
-      domainConfigList,
-    });
-
-    const cluster = getClusterFromClusterList({
-      allowedCrossOrigin,
-      clusterList,
-      clusterName,
-    });
-
-    return (cluster && cluster.origin) || '';
-  }
-
-  async request(baseUrl, { clusterName, domain, query, ...options } = {}) {
+  async request(baseUrl, { query, ...options } = {}) {
     const fetch = this.fetchOverride ? this.fetchOverride : window.fetch;
     const queryString = getQueryStringFromObject(query);
-    const pathname = queryString ? `${baseUrl}${queryString}` : baseUrl;
-    const origin = domain
-      ? await this.getRegionalOrigin({
-          clusterName,
-          domain,
-          origin: window.location.origin,
-        })
-      : '';
+    const url = queryString ? `${baseUrl}${queryString}` : baseUrl;
+    const isCrossOrigin = baseUrl.startsWith('http');
 
-    const url = `${origin}${pathname}`;
     const requestOptions = {
       ...DEFAULT_FETCH_OPTIONS,
       ...options,
-      ...(origin && {
+      ...(isCrossOrigin && {
         credentials: 'include',
         mode: 'cors',
       }),
