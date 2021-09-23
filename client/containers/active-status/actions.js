@@ -24,9 +24,8 @@ import {
   ROUTE_PARAMS_CLUSTER_NAME,
   ROUTE_PARAMS_DOMAIN,
 } from '../route/getter-types';
-import { ROUTE_PUSH } from '../route/action-types';
 import { ACTIVE_STATUS_ON_CHANGE } from './action-types';
-import { getLocationFromCluster } from './helpers';
+import { getHrefFromCluster } from './helpers';
 
 const actions = {
   [ACTIVE_STATUS_ON_CHANGE]: ({ dispatch, getters }, cluster) => {
@@ -35,7 +34,7 @@ const actions = {
     const domainName = getters[ROUTE_PARAMS_DOMAIN];
     const { origin, pathname } = window.location;
 
-    const location = getLocationFromCluster({
+    const href = getHrefFromCluster({
       allowedCrossOrigin,
       cluster,
       clusterName,
@@ -44,11 +43,7 @@ const actions = {
       pathname,
     });
 
-    if (location.origin === origin) {
-      dispatch(ROUTE_PUSH, location.pathname);
-    } else {
-      window.location = location.href;
-    }
+    window.location = href;
   },
 };
 

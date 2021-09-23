@@ -20,6 +20,6 @@
 // THE SOFTWARE.
 
 export { default as getFilteredClusterList } from './get-filtered-cluster-list';
-export { default as getLocationFromCluster } from './get-location-from-cluster';
+export { default as getHrefFromCluster } from './get-href-from-cluster';
 export { default as statePrefix } from './state-prefix';
 export { default as typePrefix } from './type-prefix';

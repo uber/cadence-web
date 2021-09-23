@@ -19,7 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const getLocationFromCluster = ({
+const getHrefFromCluster = ({
   allowedCrossOrigin,
   cluster: {
     isActive,
@@ -33,11 +33,7 @@ const getLocationFromCluster = ({
   pathname,
 }) => {
   if (!allowedCrossOrigin) {
-    return {
-      href: `${clusterOrigin}${pathname}`,
-      origin: clusterOrigin,
-      pathname: pathname,
-    };
+    return `${clusterOrigin}${pathname}`;
   }
 
   const replaceKey = `/domains/${domainName}/${
@@ -49,11 +45,7 @@ const getLocationFromCluster = ({
 
   const newPathname = pathname.replace(replaceKey, replaceValue);
 
-  return {
-    href: `${origin}${newPathname}`,
-    origin,
-    pathname: newPathname,
-  };
+  return `${origin}${newPathname}`;
 };
 
-export default getLocationFromCluster;
+export default getHrefFromCluster;
