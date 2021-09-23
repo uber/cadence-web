@@ -22,7 +22,6 @@
 import { connect } from 'vuex-connect';
 import { CLUSTER_FETCH } from '../cluster/action-types';
 import { CLUSTER_ADVANCED_VISIBILITY_ENABLED } from '../cluster/getter-types';
-import { DOMAIN_CROSS_ORIGIN } from '../domain/getter-types';
 import {
   WORKFLOW_LIST_ON_FILTER_CHANGE,
   WORKFLOW_LIST_ON_FILTER_MODE_CLICK,
@@ -54,7 +53,6 @@ const gettersToProps = {
   filterModeButtonLabel: WORKFLOW_LIST_FILTER_MODE_BUTTON_LABEL,
   isCron: WORKFLOW_LIST_IS_CRON,
   isCronInputVisible: CLUSTER_ADVANCED_VISIBILITY_ENABLED,
-  origin: DOMAIN_CROSS_ORIGIN,
   queryString: WORKFLOW_LIST_QUERY_STRING,
   state: WORKFLOW_LIST_STATE,
   status: WORKFLOW_LIST_STATUS,

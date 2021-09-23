@@ -20,27 +20,39 @@
 // THE SOFTWARE.
 
 import { connect } from 'vuex-connect';
-import { ROUTE_PARAMS_DOMAIN } from '../route/getter-types';
-import { DOMAIN_FETCH } from './action-types';
+import {
+  ROUTE_PARAMS_CLUSTER_NAME,
+  ROUTE_PARAMS_DOMAIN,
+} from '../route/getter-types';
+import {
+  DOMAIN_FETCH,
+  DOMAIN_ON_MOUNT,
+  DOMAIN_CHANGE_ORIGIN,
+} from './action-types';
 import {
   DOMAIN_ERROR,
   DOMAIN_IS_LOADING,
   DOMAIN_IS_READY,
+  DOMAIN_CROSS_ORIGIN,
 } from './getter-types';
 
 const actionsToEvents = {
-  change: DOMAIN_FETCH,
+  onClusterChange: DOMAIN_FETCH,
+  onDomainChange: DOMAIN_FETCH,
+  onOriginChange: DOMAIN_CHANGE_ORIGIN,
 };
 
 const gettersToProps = {
+  clusterName: ROUTE_PARAMS_CLUSTER_NAME,
   domainName: ROUTE_PARAMS_DOMAIN,
   error: DOMAIN_ERROR,
   isLoading: DOMAIN_IS_LOADING,
   isReady: DOMAIN_IS_READY,
+  origin: DOMAIN_CROSS_ORIGIN,
 };
 
 const lifecycle = {
-  mounted: ({ dispatch }) => dispatch(DOMAIN_FETCH),
+  mounted: ({ dispatch }) => dispatch(DOMAIN_ON_MOUNT),
 };
 
 export default connect({

@@ -67,7 +67,6 @@ export default {
     'filterModeButtonLabel',
     'isCron',
     'isCronInputVisible',
-    'origin',
     'queryString',
     'state',
     'status',
@@ -240,7 +239,7 @@ export default {
         this.abortController = new AbortController();
         const { signal } = this.abortController;
 
-        const request = await httpService.get(`${origin}${url}`, {
+        const request = await httpService.get(url, {
           query,
           signal,
         });
@@ -271,9 +270,7 @@ export default {
       this.loading = true;
 
       try {
-        const domainInfo = await httpService.get(
-          `${origin}/api/domains/${domain}`
-        );
+        const domainInfo = await httpService.get(`/api/domains/${domain}`);
 
         this.maxRetentionDays =
           Number(
@@ -479,17 +476,9 @@ export default {
         this.refreshWorkflows();
       }
     },
-    async crossRegionProps(
-      { clusterName: newClusterName, domain: newDomain },
-      { clusterName: oldClusterName, domain: oldDomain }
-    ) {
-      if (
-        (newDomain && oldDomain && newDomain !== oldDomain) ||
-        (newClusterName && oldClusterName && newClusterName !== oldClusterName)
-      ) {
-        await this.fetchDomain();
-        this.refreshWorkflows();
-      }
+    async crossRegionProps() {
+      await this.fetchDomain();
+      this.refreshWorkflows();
     },
   },
 };

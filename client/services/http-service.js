@@ -29,6 +29,10 @@ const DEFAULT_FETCH_OPTIONS = {
 };
 
 class HttpService {
+  constructor() {
+    this.origin = window.location.origin;
+  }
+
   handleResponse(response) {
     return response.status >= 200 && response.status < 300
       ? response.json().catch(() => {})
@@ -39,10 +43,13 @@ class HttpService {
   }
 
   async request(baseUrl, { query, ...options } = {}) {
+    const { origin } = this;
     const fetch = this.fetchOverride ? this.fetchOverride : window.fetch;
     const queryString = getQueryStringFromObject(query);
-    const url = queryString ? `${baseUrl}${queryString}` : baseUrl;
-    const isCrossOrigin = baseUrl.startsWith('http');
+    const path = queryString ? `${baseUrl}${queryString}` : baseUrl;
+    const hasOrigin = baseUrl.startsWith('http');
+    const url = hasOrigin ? path : `${origin}${path}`;
+    const isCrossOrigin = !url.startsWith(window.location.origin);
 
     const requestOptions = {
       ...DEFAULT_FETCH_OPTIONS,
@@ -94,6 +101,10 @@ class HttpService {
 
   setFetch(fetch) {
     this.fetchOverride = fetch;
+  }
+
+  setOrigin(origin) {
+    this.origin = origin;
   }
 }
 

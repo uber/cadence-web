@@ -25,6 +25,9 @@ import { ErrorMessage } from '~components';
 export default {
   name: 'domain',
   props: {
+    clusterName: {
+      type: String,
+    },
     domainName: {
       type: String,
     },
@@ -37,13 +40,22 @@ export default {
     isReady: {
       type: Boolean,
     },
+    origin: {
+      type: String,
+    },
   },
   components: {
     'error-message': ErrorMessage,
   },
   watch: {
+    clusterName() {
+      this.$emit('onClusterChange');
+    },
     domainName() {
-      this.$emit('change');
+      this.$emit('onDomainChange');
+    },
+    origin() {
+      this.$emit('onOriginChange');
     },
   },
 };

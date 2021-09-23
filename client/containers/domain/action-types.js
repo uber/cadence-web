@@ -21,4 +21,6 @@
 
 import { typePrefix } from './helpers';
 
+export const DOMAIN_CHANGE_ORIGIN = typePrefix('CHANGE_ORIGIN');
 export const DOMAIN_FETCH = typePrefix('FETCH');
+export const DOMAIN_ON_MOUNT = typePrefix('ON_MOUNT');

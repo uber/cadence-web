@@ -33,7 +33,7 @@ const getCrossOrigin = ({
     !clusterOriginList ||
     !clusterOriginList.length
   ) {
-    return '';
+    return window.location.origin;
   }
 
   const {
@@ -55,8 +55,7 @@ const getCrossOrigin = ({
   );
   const origin =
     (matchedClusterOrigin && matchedClusterOrigin.origin) ||
-    (matchedActiveClusterOrigin && matchedActiveClusterOrigin.origin) ||
-    '';
+    (matchedActiveClusterOrigin && matchedActiveClusterOrigin.origin);
 
   if (!origin) {
     console.warn(
@@ -64,7 +63,7 @@ const getCrossOrigin = ({
     );
   }
 
-  return origin;
+  return origin || window.location.origin;
 };
 
 export default getCrossOrigin;

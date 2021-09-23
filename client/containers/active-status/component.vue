@@ -20,18 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-// import
-// getFilteredClusterList,
-// getHrefFromCluster,
-// './helpers';
 import { SelectInput } from '~components';
-// import {
-//   getClusterFromClusterList,
-//   getClusterListFromDomainConfigList,
-// } from '~helpers';
-// import { featureFlagService, httpService } from '~services';
 
-// TODO - move to container instead of global component.
 export default {
   name: 'active-status',
   props: {
@@ -53,137 +43,15 @@ export default {
     tag: {
       type: String,
     },
-
-    // TODO - old - eventually remove
-    // clusterName: {
-    //   type: String,
-    // },
-    // domain: {
-    //   type: String,
-    // },
-    // workflowId: {
-    //   type: String,
-    // },
   },
   components: {
     'select-input': SelectInput,
   },
-  // data() {
-  //   return {
-  // allowedCrossOrigin: undefined,
-  // cluster: undefined,
-  // clusterList: undefined,
-  // clusterOriginList: undefined,
-  // isGlobalDomain: undefined,
-  // };
-  // },
-  // mounted() {
-  //   this.init(this);
-  // },
-  // computed: {
-  // computedClass() {
-  //   const { cluster } = this;
-  //   return cluster && cluster.isActive ? 'active' : 'passive';
-  // },
-  // computedLabel() {
-  //   const { cluster } = this;
-  //   return cluster && cluster.label;
-  // },
-  // computedTag() {
-  //   const { clusterList, cluster, workflowId } = this;
-  //   const { isGlobalDomain } = cluster;
-  //   return (clusterList && clusterList.length === 0) ||
-  //     (!isGlobalDomain && workflowId)
-  //     ? 'span'
-  //     : 'select-input';
-  // },
-  // watchProps() {
-  //   const { clusterName, domain } = this;
-  //   return { clusterName, domain };
-  // },
-  // },
   methods: {
     onClusterChange(cluster) {
       this.$emit('change', cluster);
     },
-    // clearState() {
-    //   this.clusterList = undefined;
-    //   this.cluster = undefined;
-    //   this.isGlobalDomain = undefined;
-    // },
-    // async init(context) {
-    //   const { origin } = window.location;
-
-    //   this.allowedCrossOrigin = await featureFlagService.isFeatureFlagEnabled({
-    //     cache: true,
-    //     name: 'crossRegion.allowedCrossOrigin',
-    //     params: { origin },
-    //   });
-
-    //   this.clusterOriginList =
-    //     (await featureFlagService.getConfiguration({
-    //       cache: true,
-    //       name: 'crossRegion.clusterOriginList',
-    //     })) || [];
-
-    //   this.initDomainClusterConfig(context);
-    // },
-    // TODO - code is kind of duplicated in httpService
-    // async getDomainConfigList({ clusterOriginList, domain }) {
-    //   const fetchList = clusterOriginList.map(({ origin }) => async () => {
-    //     try {
-    //       const domainConfig = await httpService.get(
-    //         `${origin}/api/domains/${domain}`
-    //       );
-
-    //       return domainConfig;
-    //     } catch (error) {
-    //       console.warn(
-    //         `Unable to resolve domain configuration for domain = "${domain}" and origin = "${origin}".`
-    //       );
-    //     }
-    //   });
-
-    //   return (await Promise.all(fetchList.map(callback => callback()))).filter(
-    //     response => !!response
-    //   );
-    // },
-    // async initDomainClusterConfig(context) {
-    //   const { allowedCrossOrigin, clusterName, clusterOriginList } = context;
-    //   const { origin } = window.location;
-
-    //   const domainConfigList = await context.getDomainConfigList(context);
-
-    //   const clusterList = getClusterListFromDomainConfigList({
-    //     clusterOriginList,
-    //     domainConfigList,
-    //   });
-
-    //   const cluster = getClusterFromClusterList({
-    //     allowedCrossOrigin,
-    //     clusterList,
-    //     clusterName,
-    //     origin,
-    //   });
-
-    //   const filteredClusterList = getFilteredClusterList({
-    //     allowedCrossOrigin,
-    //     clusterName,
-    //     clusterList,
-    //     origin,
-    //   });
-
-    //   this.isGlobalDomain = domainConfigList[0].isGlobalDomain;
-    //   this.clusterList = filteredClusterList;
-    //   this.cluster = cluster;
-    // },
   },
-  // watch: {
-  // watchProps(props) {
-  //   this.clearState();
-  //   this.initDomainClusterConfig(this);
-  // },
-  // },
 };
 </script>
 

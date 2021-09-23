@@ -27,8 +27,12 @@ import {
   CROSS_REGION_ALLOWED_CROSS_ORIGIN,
   CROSS_REGION_CLUSTER_ORIGIN_LIST,
 } from '../cross-region/getter-types';
-import { DOMAIN_FETCH } from './action-types';
-import { DOMAIN_IS_READY } from './getter-types';
+import {
+  DOMAIN_CHANGE_ORIGIN,
+  DOMAIN_FETCH,
+  DOMAIN_ON_MOUNT,
+} from './action-types';
+import { DOMAIN_CROSS_ORIGIN, DOMAIN_IS_READY } from './getter-types';
 import {
   DOMAIN_RESET_STATE,
   DOMAIN_SET_DOMAIN,
@@ -107,6 +111,15 @@ const actions = {
         error: `An error occurred while trying to fetch domain "${domainName}". Please check the domain is correct and try again.`,
       });
     }
+  },
+  [DOMAIN_ON_MOUNT]: ({ dispatch }) => {
+    dispatch(DOMAIN_CHANGE_ORIGIN);
+    dispatch(DOMAIN_FETCH);
+  },
+  [DOMAIN_CHANGE_ORIGIN]: ({ getters }) => {
+    const origin = getters[DOMAIN_CROSS_ORIGIN];
+
+    httpService.setOrigin(origin);
   },
 };
 
