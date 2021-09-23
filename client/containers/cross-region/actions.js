@@ -54,7 +54,7 @@ const actions = {
       return;
     }
 
-    const origin = window.location;
+    const { origin } = window.location;
     const [allowedCrossOrigin, clusterOriginList] = await Promise.all([
       featureFlagService.isFeatureFlagEnabled({
         cache: true,
