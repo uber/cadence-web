@@ -21,6 +21,7 @@
 
 import { typePrefix } from './helpers';
 
+export const CROSS_REGION_RESET_STATE = typePrefix('RESET_STATE');
 export const CROSS_REGION_SET_ALLOWED_CROSS_ORIGIN = typePrefix(
   'SET_ALLOWED_CROSS_ORIGIN'
 );

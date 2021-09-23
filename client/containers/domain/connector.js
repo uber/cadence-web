@@ -20,10 +20,21 @@
 // THE SOFTWARE.
 
 import { connect } from 'vuex-connect';
+import { ROUTE_PARAMS_DOMAIN } from '../route/getter-types';
 import { DOMAIN_FETCH } from './action-types';
-import { DOMAIN_IS_LOADING, DOMAIN_IS_READY } from './getter-types';
+import {
+  DOMAIN_ERROR,
+  DOMAIN_IS_LOADING,
+  DOMAIN_IS_READY,
+} from './getter-types';
+
+const actionsToEvents = {
+  change: DOMAIN_FETCH,
+};
 
 const gettersToProps = {
+  domainName: ROUTE_PARAMS_DOMAIN,
+  error: DOMAIN_ERROR,
   isLoading: DOMAIN_IS_LOADING,
   isReady: DOMAIN_IS_READY,
 };
@@ -33,6 +44,7 @@ const lifecycle = {
 };
 
 export default connect({
+  actionsToEvents,
   gettersToProps,
   lifecycle,
 });

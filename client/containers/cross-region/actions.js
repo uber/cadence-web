@@ -22,6 +22,7 @@
 import { CROSS_REGION_FETCH } from './action-types';
 import { CROSS_REGION_IS_READY } from './getter-types';
 import {
+  CROSS_REGION_RESET_STATE,
   CROSS_REGION_SET_ALLOWED_CROSS_ORIGIN,
   CROSS_REGION_SET_CLUSTER_ORIGIN_LIST,
   CROSS_REGION_SET_CROSS_REGION,
@@ -37,6 +38,8 @@ const actions = {
     if (ready) {
       return;
     }
+
+    commit(CROSS_REGION_RESET_STATE);
 
     const crossRegion = await featureFlagService.isFeatureFlagEnabled({
       cache: true,

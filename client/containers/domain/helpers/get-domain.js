@@ -19,13 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const getDomain = ({ clusterName, domainHash, domainName }) => {
-  if (!domainName) {
-    return;
-  }
-
-  const domainNamespace = domainHash[domainName];
-
+const getDomain = ({ clusterName, domainNamespace }) => {
   if (!domainNamespace) {
     return;
   }

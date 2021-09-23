@@ -32,9 +32,11 @@ import {
 import {
   DOMAIN_CROSS_ORIGIN,
   DOMAIN_CURRENT,
+  DOMAIN_ERROR,
   DOMAIN_HASH,
   DOMAIN_IS_LOADING,
   DOMAIN_IS_READY,
+  DOMAIN_NAMESPACE,
 } from './getter-types';
 import { statePrefix, getDomain, getCrossOrigin } from './helpers';
 import { hasExpired } from '~helpers';
@@ -42,16 +44,28 @@ import { hasExpired } from '~helpers';
 const getters = {
   [DOMAIN_CURRENT]: (_, getters) => {
     const clusterName = getters[ROUTE_PARAMS_CLUSTER_NAME];
+    const domainNamespace = getters[DOMAIN_NAMESPACE];
+
+    return getDomain({ clusterName, domainNamespace });
+  },
+  [DOMAIN_NAMESPACE]: (_, getters) => {
     const domainName = getters[ROUTE_PARAMS_DOMAIN];
     const domainHash = getters[DOMAIN_HASH];
 
-    return getDomain({ clusterName, domainHash, domainName });
+    return domainHash[domainName];
+  },
+  [DOMAIN_ERROR]: (_, getters) => {
+    const domainNamespace = getters[DOMAIN_NAMESPACE];
+
+    return domainNamespace && domainNamespace.error;
   },
   [DOMAIN_HASH]: state => get(state, statePrefix('domainHash')),
   [DOMAIN_IS_LOADING]: (_, getters) =>
     getters[ROUTE_PARAMS_DOMAIN] &&
+    !getters[DOMAIN_ERROR] &&
     hasExpired(get(getters[DOMAIN_CURRENT], 'expiryDateTime')),
-  [DOMAIN_IS_READY]: (_, getters) => !getters[DOMAIN_IS_LOADING],
+  [DOMAIN_IS_READY]: (_, getters) =>
+    !getters[DOMAIN_IS_LOADING] && !getters[DOMAIN_ERROR],
   [DOMAIN_CROSS_ORIGIN]: (_, getters) => {
     const allowedCrossOrigin = getters[CROSS_REGION_ALLOWED_CROSS_ORIGIN];
     const clusterName = getters[ROUTE_PARAMS_CLUSTER_NAME];

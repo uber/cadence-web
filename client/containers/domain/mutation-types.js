@@ -21,4 +21,6 @@
 
 import { typePrefix } from './helpers';
 
+export const DOMAIN_RESET_STATE = typePrefix('RESET_STATE');
 export const DOMAIN_SET_DOMAIN = typePrefix('SET_DOMAIN');
+export const DOMAIN_SET_ERROR = typePrefix('SET_ERROR');

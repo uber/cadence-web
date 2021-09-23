@@ -19,22 +19,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { get } from 'lodash-es';
-import {
-  ROUTE_PARAMS,
-  ROUTE_PARAMS_CLUSTER_NAME,
-  ROUTE_PARAMS_DOMAIN,
-  ROUTE_PARAMS_WORKFLOW_ID,
-  ROUTE_QUERY,
-} from './getter-types';
+import { typePrefix } from './helpers';
 
-const getters = {
-  [ROUTE_PARAMS]: state => get(state, 'route.params', {}),
-  [ROUTE_PARAMS_CLUSTER_NAME]: (_, getters) =>
-    getters[ROUTE_PARAMS].clusterName,
-  [ROUTE_PARAMS_DOMAIN]: (_, getters) => getters[ROUTE_PARAMS].domain,
-  [ROUTE_PARAMS_WORKFLOW_ID]: (_, getters) => getters[ROUTE_PARAMS].workflowId,
-  [ROUTE_QUERY]: state => get(state, 'route.query', {}),
-};
-
-export default getters;
+export const ACTIVE_STATUS_CLASSNAME = typePrefix('CLASSNAME');
+export const ACTIVE_STATUS_CLUSTER = typePrefix('CLUSTER');
+export const ACTIVE_STATUS_CLUSTER_LIST = typePrefix('CLUSTER_LIST');
+export const ACTIVE_STATUS_LABEL = typePrefix('LABEL');
+export const ACTIVE_STATUS_SELECT_LIST = typePrefix('SELECT_LIST');
+export const ACTIVE_STATUS_TAG = typePrefix('TAG');

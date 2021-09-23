@@ -23,6 +23,8 @@ import { typePrefix } from './helpers';
 
 export const DOMAIN_CROSS_ORIGIN = typePrefix('CROSS_ORIGIN');
 export const DOMAIN_CURRENT = typePrefix('CURRENT');
+export const DOMAIN_ERROR = typePrefix('ERROR');
 export const DOMAIN_HASH = typePrefix('HASH');
 export const DOMAIN_IS_LOADING = typePrefix('IS_LOADING');
 export const DOMAIN_IS_READY = typePrefix('IS_READY');
+export const DOMAIN_NAMESPACE = typePrefix('NAMESPACE');

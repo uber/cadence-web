@@ -19,9 +19,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { DOMAIN_SET_DOMAIN } from './mutation-types';
+import {
+  DOMAIN_RESET_STATE,
+  DOMAIN_SET_DOMAIN,
+  DOMAIN_SET_ERROR,
+} from './mutation-types';
 
 const mutations = {
+  [DOMAIN_RESET_STATE]: (state, domainName) => {
+    state.domain.domainHash = {
+      ...state.domain.domainHash,
+      [domainName]: {},
+    };
+  },
   [DOMAIN_SET_DOMAIN]: (state, domain) => {
     const {
       domainInfo: { name: domainName },
@@ -29,31 +39,55 @@ const mutations = {
       replicationConfiguration: { activeClusterName },
     } = domain;
 
-    if (!state.domain.domainHash[domainName]) {
-      state.domain.domainHash[domainName] = {};
-    }
-
-    const domainNamespace = state.domain.domainHash[domainName];
-
     if (isGlobalDomain) {
-      return (domainNamespace.global = domain);
+      return (state.domain.domainHash = {
+        ...state.domain.domainHash,
+        [domainName]: {
+          global: domain,
+        },
+      });
     }
 
-    if (!domainNamespace.local) {
-      return (domainNamespace.local = [domain]);
+    if (!state.domain.domainHash[domainName].local) {
+      return (state.domain.domainHash = {
+        ...state.domain.domainHash,
+        [domainName]: {
+          local: [domain],
+        },
+      });
     }
 
-    const matchIndex = domainNamespace.local.findIndex(
+    const matchIndex = state.domain.domainHash[domainName].local.findIndex(
       ({
         replicationConfiguration: { activeClusterName: matchActiveClusterName },
       }) => matchActiveClusterName === activeClusterName
     );
 
     if (matchIndex === -1) {
-      return domainNamespace.local.push(domain);
+      return (state.domain.domainHash = {
+        ...state.domain.domainHash,
+        [domainName]: {
+          local: [...state.domain.domainHash[domainName].local, domain],
+        },
+      });
     }
 
-    domainNamespace.local.splice(matchIndex, 1, domain);
+    state.domain.domainHash[domainName].local.splice(matchIndex, 1, domain);
+
+    state.domain.domainHash = {
+      ...state.domain.domainHash,
+      [domainName]: {
+        local: [...state.domain.domainHash[domainName].local],
+      },
+    };
+  },
+  [DOMAIN_SET_ERROR]: (state, { domainName, error }) => {
+    state.domain.domainHash = {
+      ...state.domain.domainHash,
+      [domainName]: {
+        error,
+      },
+    };
   },
 };
 

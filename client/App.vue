@@ -23,7 +23,6 @@
 import { version } from '../package.json';
 import logo from './assets/logo.svg';
 import {
-  ActiveStatus,
   ButtonIcon,
   FeatureFlag,
   FlexGrid,
@@ -33,6 +32,7 @@ import {
   SelectInput,
 } from '~components';
 import {
+  ActiveStatus,
   CrossRegion,
   Domain,
   DomainAutocomplete,

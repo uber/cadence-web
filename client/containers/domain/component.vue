@@ -20,9 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+import { ErrorMessage } from '~components';
+
 export default {
   name: 'domain',
   props: {
+    domainName: {
+      type: String,
+    },
+    error: {
+      type: String,
+    },
     isLoading: {
       type: Boolean,
     },
@@ -30,8 +38,11 @@ export default {
       type: Boolean,
     },
   },
+  components: {
+    'error-message': ErrorMessage,
+  },
   watch: {
-    isLoading() {
+    domainName() {
       this.$emit('change');
     },
   },
@@ -40,5 +51,6 @@ export default {
 <template>
   <section class="domain" :class="{ loading: isLoading }">
     <slot v-if="isReady"></slot>
+    <error-message :error="error" />
   </section>
 </template>

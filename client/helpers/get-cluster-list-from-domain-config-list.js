@@ -45,6 +45,7 @@ const getClusterListFromDomainConfigList = ({
       return {
         ...cluster,
         isActive,
+        isGlobalDomain,
         label: `${label} - ${cluster.clusterName}`,
       };
     });

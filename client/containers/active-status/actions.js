@@ -19,22 +19,37 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { get } from 'lodash-es';
+import { CROSS_REGION_ALLOWED_CROSS_ORIGIN } from '../cross-region/getter-types';
 import {
-  ROUTE_PARAMS,
   ROUTE_PARAMS_CLUSTER_NAME,
   ROUTE_PARAMS_DOMAIN,
-  ROUTE_PARAMS_WORKFLOW_ID,
-  ROUTE_QUERY,
-} from './getter-types';
+} from '../route/getter-types';
+import { ROUTE_PUSH } from '../route/action-types';
+import { ACTIVE_STATUS_ON_CHANGE } from './action-types';
+import { getLocationFromCluster } from './helpers';
 
-const getters = {
-  [ROUTE_PARAMS]: state => get(state, 'route.params', {}),
-  [ROUTE_PARAMS_CLUSTER_NAME]: (_, getters) =>
-    getters[ROUTE_PARAMS].clusterName,
-  [ROUTE_PARAMS_DOMAIN]: (_, getters) => getters[ROUTE_PARAMS].domain,
-  [ROUTE_PARAMS_WORKFLOW_ID]: (_, getters) => getters[ROUTE_PARAMS].workflowId,
-  [ROUTE_QUERY]: state => get(state, 'route.query', {}),
+const actions = {
+  [ACTIVE_STATUS_ON_CHANGE]: ({ dispatch, getters }, cluster) => {
+    const allowedCrossOrigin = getters[CROSS_REGION_ALLOWED_CROSS_ORIGIN];
+    const clusterName = getters[ROUTE_PARAMS_CLUSTER_NAME];
+    const domainName = getters[ROUTE_PARAMS_DOMAIN];
+    const { origin, pathname } = window.location;
+
+    const location = getLocationFromCluster({
+      allowedCrossOrigin,
+      cluster,
+      clusterName,
+      domainName,
+      origin,
+      pathname,
+    });
+
+    if (location.origin === origin) {
+      dispatch(ROUTE_PUSH, location.pathname);
+    } else {
+      window.location = location.href;
+    }
+  },
 };
 
-export default getters;
+export default actions;

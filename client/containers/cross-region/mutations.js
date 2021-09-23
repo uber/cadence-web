@@ -24,9 +24,16 @@ import {
   CROSS_REGION_SET_CLUSTER_ORIGIN_LIST,
   CROSS_REGION_SET_CROSS_REGION,
   CROSS_REGION_SET_EXPIRY_DATE_TIME,
+  CROSS_REGION_RESET_STATE,
 } from './mutation-types';
+import getDefaultState from './get-default-state';
 
 const mutations = {
+  [CROSS_REGION_RESET_STATE]: (state, payload) => {
+    const defaultState = getDefaultState();
+
+    state.crossRegion = defaultState;
+  },
   [CROSS_REGION_SET_ALLOWED_CROSS_ORIGIN]: (state, payload) =>
     (state.crossRegion.allowedCrossOrigin = payload),
   [CROSS_REGION_SET_CLUSTER_ORIGIN_LIST]: (state, payload) =>

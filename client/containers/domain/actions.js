@@ -29,7 +29,11 @@ import {
 } from '../cross-region/getter-types';
 import { DOMAIN_FETCH } from './action-types';
 import { DOMAIN_IS_READY } from './getter-types';
-import { DOMAIN_SET_DOMAIN } from './mutation-types';
+import {
+  DOMAIN_RESET_STATE,
+  DOMAIN_SET_DOMAIN,
+  DOMAIN_SET_ERROR,
+} from './mutation-types';
 import { httpService } from '~services';
 import { getExpiryDateTimeFromNow } from '~helpers';
 
@@ -45,6 +49,8 @@ const actions = {
       return;
     }
 
+    commit(DOMAIN_RESET_STATE, domainName);
+
     const cluster =
       allowedCrossOrigin &&
       clusterName &&
@@ -53,13 +59,54 @@ const actions = {
         ({ clusterName: matchClusterName }) => matchClusterName === clusterName
       );
     const origin = (cluster && cluster.origin) || '';
-    const domain = await httpService.get(`${origin}/api/domains/${domainName}`);
 
-    domain.expiryDateTime = getExpiryDateTimeFromNow();
+    try {
+      const domain = await httpService.get(
+        `${origin}/api/domains/${domainName}`
+      );
 
-    commit(DOMAIN_SET_DOMAIN, domain);
+      if (allowedCrossOrigin && !domain.isGlobalDomain) {
+        const fetchList = clusterOriginList
+          .filter(
+            ({ clusterName }) =>
+              clusterName !== domain.replicationConfiguration.activeClusterName
+          )
+          .map(({ origin }) => async () => {
+            try {
+              const domainConfig = await httpService.get(
+                `${origin}/api/domains/${domainName}`
+              );
 
-    // TODO - For local domains, should we fetch other clusters here also???
+              return domainConfig;
+            } catch (error) {
+              console.warn(
+                `Unable to resolve domain configuration for domain = "${domainName}" and origin = "${origin}".`
+              );
+            }
+          });
+
+        const domainList = (
+          await Promise.all(fetchList.map(callback => callback()))
+        ).filter(response => !!response);
+
+        domainList.forEach(localDomain => {
+          localDomain.expiryDateTime = getExpiryDateTimeFromNow();
+          commit(DOMAIN_SET_DOMAIN, localDomain);
+        });
+      }
+
+      domain.expiryDateTime = getExpiryDateTimeFromNow();
+      commit(DOMAIN_SET_DOMAIN, domain);
+    } catch (error) {
+      console.warn(
+        `Failed to fetch domain configuration for "${domainName}" from "${origin}".`
+      );
+      console.warn(error);
+      commit(DOMAIN_SET_ERROR, {
+        domainName,
+        error: `An error occurred while trying to fetch domain "${domainName}". Please check the domain is correct and try again.`,
+      });
+    }
   },
 };
 

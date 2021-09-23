@@ -19,22 +19,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { get } from 'lodash-es';
+import { connect } from 'vuex-connect';
+import { DOMAIN_IS_READY } from '../domain/getter-types';
 import {
-  ROUTE_PARAMS,
-  ROUTE_PARAMS_CLUSTER_NAME,
-  ROUTE_PARAMS_DOMAIN,
-  ROUTE_PARAMS_WORKFLOW_ID,
-  ROUTE_QUERY,
+  ACTIVE_STATUS_CLUSTER,
+  ACTIVE_STATUS_SELECT_LIST,
+  ACTIVE_STATUS_CLASSNAME,
+  ACTIVE_STATUS_LABEL,
+  ACTIVE_STATUS_TAG,
 } from './getter-types';
+import { ACTIVE_STATUS_ON_CHANGE } from './action-types';
 
-const getters = {
-  [ROUTE_PARAMS]: state => get(state, 'route.params', {}),
-  [ROUTE_PARAMS_CLUSTER_NAME]: (_, getters) =>
-    getters[ROUTE_PARAMS].clusterName,
-  [ROUTE_PARAMS_DOMAIN]: (_, getters) => getters[ROUTE_PARAMS].domain,
-  [ROUTE_PARAMS_WORKFLOW_ID]: (_, getters) => getters[ROUTE_PARAMS].workflowId,
-  [ROUTE_QUERY]: state => get(state, 'route.query', {}),
+const actionsToEvents = {
+  change: ACTIVE_STATUS_ON_CHANGE,
 };
 
-export default getters;
+const gettersToProps = {
+  classname: ACTIVE_STATUS_CLASSNAME,
+  cluster: ACTIVE_STATUS_CLUSTER,
+  selectList: ACTIVE_STATUS_SELECT_LIST,
+  isReady: DOMAIN_IS_READY,
+  label: ACTIVE_STATUS_LABEL,
+  tag: ACTIVE_STATUS_TAG,
+};
+
+export default connect({
+  actionsToEvents,
+  gettersToProps,
+});

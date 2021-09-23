@@ -19,5 +19,5 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export { default as getFilteredClusterList } from './get-filtered-cluster-list';
-export { default as getHrefFromCluster } from './get-href-from-cluster';
+export const ACTIVE_STATUS_STATE_PREFIX = 'activeStatus';
+export const ACTIVE_STATUS_TYPE_PREFIX = 'ACTIVE_STATUS';
