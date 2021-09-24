@@ -51,6 +51,7 @@ const actions = {
   [DOMAIN_AUTOCOMPLETE_FETCH_DOMAIN_LIST]: debounce(
     async ({ commit, getters }) => {
       const searchUrl = getters[DOMAIN_AUTOCOMPLETE_SEARCH_URL];
+      const allowedCrossOrigin = getters[CROSS_REGION_ALLOWED_CROSS_ORIGIN];
       const clusterOriginList = getters[CROSS_REGION_CLUSTER_ORIGIN_LIST];
 
       const fetchDomainForOrigin = async ({ clusterName = '', origin }) => {
@@ -71,7 +72,7 @@ const actions = {
         }
       };
 
-      if (clusterOriginList) {
+      if (allowedCrossOrigin && clusterOriginList) {
         const domainListSet = await Promise.all(
           clusterOriginList.map(fetchDomainForOrigin)
         );
