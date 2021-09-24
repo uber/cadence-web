@@ -366,8 +366,8 @@ export default {
 <style src="vue-virtual-scroller/dist/vue-virtual-scroller.css"></style>
 <style src="vue2-datepicker/index.css"></style>
 <style lang="stylus">
-@import "https://d1a3f4spazzrp4.cloudfront.net/uber-fonts/4.0.0/superfine.css"
-@import "https://d1a3f4spazzrp4.cloudfront.net/uber-icons/3.14.0/uber-icons.css"
+@import "./assets/uber-fonts/superfine.css"
+@import "./assets/uber-icons/uber-icons.css"
 @require "./styles/definitions"
 @require "./styles/reset"
 
