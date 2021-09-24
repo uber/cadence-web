@@ -65,7 +65,7 @@ export default {
     name="activeStatus"
     :options="selectList"
     :value="cluster"
-    v-if="isReady"
+    v-if="isReady && cluster"
     @change="onClusterChange"
   >
     {{ label }}

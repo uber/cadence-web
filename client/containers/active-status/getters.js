@@ -107,7 +107,7 @@ const getters = {
     const selectList = getters[ACTIVE_STATUS_SELECT_LIST];
     const workflowId = getters[ROUTE_PARAMS_WORKFLOW_ID];
 
-    if (!isReady) {
+    if (!isReady || !cluster) {
       return 'span';
     }
 

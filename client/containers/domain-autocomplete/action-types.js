@@ -25,5 +25,4 @@ export const DOMAIN_AUTOCOMPLETE_FETCH_DOMAIN_LIST = typePrefix(
   'FETCH_DOMAIN_LIST'
 );
 export const DOMAIN_AUTOCOMPLETE_ON_CHANGE = typePrefix('ON_CHANGE');
-export const DOMAIN_AUTOCOMPLETE_ON_MOUNT = typePrefix('ON_MOUNT');
 export const DOMAIN_AUTOCOMPLETE_ON_SEARCH = typePrefix('ON_SEARCH');
