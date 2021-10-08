@@ -28,6 +28,7 @@ const koaSend = require('koa-send');
 const koaStatic = require('koa-static');
 const koaWebpack = require('koa-webpack');
 const webpack = require('webpack');
+const jwt = require('jsonwebtoken');
 
 const webpackConfig = require('../webpack.config');
 const tchannelClient = require('./middleware/tchannel-client');
@@ -54,6 +55,9 @@ app.init = function({
   serviceName = process.env.CADENCE_TCHANNEL_SERVICE || SERVICE_NAME_DEFAULT,
   timeout = REQUEST_TIMEOUT_DEFAULT,
   useWebpack = process.env.NODE_ENV !== 'production',
+  enableAuth = process.env.ENABLE_AUTH === 'true',
+  authType = process.env.AUTH_TYPE,
+  authAdminJwtPrivateKey = process.env.AUTH_ADMIN_JWT_PRIVATE_KEY,
 } = {}) {
   const requestConfig = {
     retryFlags,
@@ -94,6 +98,22 @@ app.init = function({
         filter: contentType => !contentType.startsWith('text/event-stream'),
       })
     )
+    .use(async function(ctx, next) {
+      if (enableAuth && authType === 'ADMIN_JWT' && authAdminJwtPrivateKey) {
+        ctx.authTokenHeaders = ctx.authTokenHeaders || {};
+        const token = jwt.sign(
+          { admin: true, ttl: 10 },
+          authAdminJwtPrivateKey,
+          {
+            algorithm: 'RS256',
+          }
+        );
+
+        ctx.authTokenHeaders['cadence-authorization'] = token;
+      }
+
+      await next();
+    })
     .use(tchannelClient({ peers, requestConfig }))
     .use(
       useWebpack

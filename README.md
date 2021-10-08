@@ -19,7 +19,10 @@ Set these environment variables if you need to change their defaults
 | CADENCE_TCHANNEL_PEERS    | Comma-delmited list of tchannel peers         | 127.0.0.1:7933    |
 | CADENCE_TCHANNEL_SERVICE  | Name of the cadence tchannel service to call  | cadence-frontend  |
 | CADENCE_WEB_PORT          | HTTP port to serve on                         | 8088              |
-| CADENCE_EXTERNAL_SCRIPTS     | Addtional JavaScript tags to serve in the UI  |                   |
+| CADENCE_EXTERNAL_SCRIPTS     | Addtional JavaScript tags to serve in the UI  |                |
+| ENABLE_AUTH          | Enable auth feature                                | false             |
+| AUTH_TYPE          | concurrently supports ADMIN_JWT                      | ''                |
+| AUTH_ADMIN_JWT_PRIVATE_KEY          | JWT signing private key for ADMIN_JWT type  | ''        |
 
 ### Running locally
 
