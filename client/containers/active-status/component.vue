@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { SelectInput } from '~components';
+import { FeatureFlag, SelectInput } from '~components';
 
 export default {
   name: 'active-status',
@@ -48,6 +48,7 @@ export default {
     },
   },
   components: {
+    'feature-flag': FeatureFlag,
     'select-input': SelectInput,
   },
   methods: {
