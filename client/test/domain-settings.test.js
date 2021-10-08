@@ -23,7 +23,7 @@ describe('Domain Settings', () => {
   async function domainConfigTest(mochaTest, desc) {
     const [testEl, scenario] = new Scenario(mochaTest)
       .withDomain('ci-test')
-      .startingAt('/domains/ci-test/config')
+      .startingAt('/domains/ci-test/settings')
       .withFeatureFlags()
       .withEmptyNewsFeed()
       .withDomainDescription('ci-test', desc)
