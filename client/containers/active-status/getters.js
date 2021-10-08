@@ -38,11 +38,11 @@ import {
   ACTIVE_STATUS_SELECT_LIST,
   ACTIVE_STATUS_TAG,
 } from './getter-types';
-import { getFilteredClusterList } from './helpers';
 import {
   getClusterFromClusterList,
   getClusterListFromDomainConfigList,
-} from '~helpers';
+  getFilteredClusterList,
+} from './helpers';
 
 const getters = {
   [ACTIVE_STATUS_CLASSNAME]: (_, getters) => {
