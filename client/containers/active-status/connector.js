@@ -21,6 +21,7 @@
 
 import { connect } from 'vuex-connect';
 import { DOMAIN_IS_READY } from '../domain/getter-types';
+import { CROSS_REGION } from '../cross-region/getter-types';
 import {
   ACTIVE_STATUS_CLUSTER,
   ACTIVE_STATUS_SELECT_LIST,
@@ -37,6 +38,7 @@ const actionsToEvents = {
 const gettersToProps = {
   classname: ACTIVE_STATUS_CLASSNAME,
   cluster: ACTIVE_STATUS_CLUSTER,
+  crossRegion: CROSS_REGION,
   selectList: ACTIVE_STATUS_SELECT_LIST,
   isReady: DOMAIN_IS_READY,
   label: ACTIVE_STATUS_LABEL,

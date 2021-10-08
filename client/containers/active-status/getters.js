@@ -26,6 +26,7 @@ import {
   ROUTE_PARAMS_DOMAIN,
 } from '../route/getter-types';
 import {
+  CROSS_REGION,
   CROSS_REGION_ALLOWED_CROSS_ORIGIN,
   CROSS_REGION_CLUSTER_ORIGIN_LIST,
 } from '../cross-region/getter-types';
@@ -64,13 +65,14 @@ const getters = {
   },
   [ACTIVE_STATUS_CLUSTER_LIST]: (_, getters) => {
     const clusterOriginList = getters[CROSS_REGION_CLUSTER_ORIGIN_LIST];
+    const crossRegion = getters[CROSS_REGION];
     const domainHash = getters[DOMAIN_HASH];
     const domainName = getters[ROUTE_PARAMS_DOMAIN];
     const isReady = getters[DOMAIN_IS_READY];
 
     const domainNamespace = domainHash[domainName];
 
-    if (!isReady) {
+    if (!crossRegion || !isReady) {
       return [];
     }
 

@@ -25,9 +25,9 @@ import {
   ROUTE_PARAMS_DOMAIN,
 } from '../route/getter-types';
 import {
+  CROSS_REGION,
   CROSS_REGION_ALLOWED_CROSS_ORIGIN,
   CROSS_REGION_CLUSTER_ORIGIN_LIST,
-  CROSS_REGION,
 } from '../cross-region/getter-types';
 import {
   DOMAIN_CROSS_ORIGIN,
@@ -61,6 +61,7 @@ const getters = {
   },
   [DOMAIN_HASH]: state => get(state, statePrefix('domainHash')),
   [DOMAIN_IS_LOADING]: (_, getters) =>
+    getters[CROSS_REGION] &&
     getters[ROUTE_PARAMS_DOMAIN] &&
     !getters[DOMAIN_ERROR] &&
     hasExpired(get(getters[DOMAIN_CURRENT], 'expiryDateTime')),

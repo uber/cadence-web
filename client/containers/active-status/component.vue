@@ -28,6 +28,9 @@ export default {
     classname: {
       type: String,
     },
+    crossRegion: {
+      type: Boolean,
+    },
     cluster: {
       type: Object,
     },
@@ -56,20 +59,26 @@ export default {
 </script>
 
 <template>
-  <component
-    class="active-status"
-    :class="{
-      [classname]: classname,
-    }"
-    :is="tag"
-    name="activeStatus"
-    :options="selectList"
-    :value="cluster"
-    v-if="isReady && cluster"
-    @change="onClusterChange"
+  <feature-flag
+    :cache="true"
+    name="crossRegion.activeStatusTag"
+    v-if="crossRegion"
   >
-    {{ label }}
-  </component>
+    <component
+      class="active-status"
+      :class="{
+        [classname]: classname,
+      }"
+      :is="tag"
+      name="activeStatus"
+      :options="selectList"
+      :value="cluster"
+      v-if="isReady && cluster"
+      @change="onClusterChange"
+    >
+      {{ label }}
+    </component>
+  </feature-flag>
 </template>
 
 <style lang="stylus">

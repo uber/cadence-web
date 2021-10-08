@@ -312,18 +312,13 @@ export default {
                 @click="onEditDomainClick"
               />
             </flex-grid-item>
-            <feature-flag
-              :cache="true"
-              name="crossRegion,crossRegion.activeStatusTag"
-            >
-              <flex-grid-item>
-                <active-status
-                  :cluster-name="$route.params.clusterName"
-                  :domain="$route.params.domain"
-                  :workflow-id="$route.params.workflowId"
-                />
-              </flex-grid-item>
-            </feature-flag>
+            <flex-grid-item>
+              <active-status
+                :cluster-name="$route.params.clusterName"
+                :domain="$route.params.domain"
+                :workflow-id="$route.params.workflowId"
+              />
+            </flex-grid-item>
           </flex-grid>
         </flex-grid-item>
 
