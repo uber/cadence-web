@@ -540,7 +540,6 @@ export default {
             />
           </flex-grid-item>
           <feature-flag
-            :cache="true"
             grow="1"
             margin="5px"
             name="workflowListIsCron"

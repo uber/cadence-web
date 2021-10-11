@@ -29,10 +29,6 @@ export default {
       type: Boolean,
       default: false,
     },
-    cache: {
-      type: Boolean,
-      default: false,
-    },
     display: {
       type: String,
       validator: value => ['inline', 'inline-block'].includes(value),
@@ -61,10 +57,9 @@ export default {
     };
   },
   async mounted() {
-    const { cache, name, params } = this;
+    const { name, params } = this;
 
     this.isFeatureFlagEnabled = await featureFlagService.isFeatureFlagEnabled({
-      cache,
       name,
       params,
     });

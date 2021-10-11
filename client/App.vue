@@ -271,7 +271,7 @@ export default {
           </a>
         </flex-grid-item>
 
-        <feature-flag :cache="true" name="environmentSelect">
+        <feature-flag name="environmentSelect">
           <flex-grid-item>
             <select-input
               class="environment-select"

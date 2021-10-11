@@ -380,7 +380,7 @@ export default {
         </div>
       </div>
       <div class="actions">
-        <feature-flag :cache="true" name="workflowGraph" v-if="graphEnabled">
+        <feature-flag name="workflowGraph" v-if="graphEnabled">
           <a href="#" @click.prevent="toggleShowDagGraph()"
             >{{ graphView === GRAPH_VIEW_DAG ? 'hide' : 'show' }} graph</a
           >
@@ -414,7 +414,6 @@ export default {
         :size="splitSizeSet[0]"
       >
         <feature-flag
-          :cache="true"
           name="workflowGraph"
           v-if="graphEnabled && graphView === GRAPH_VIEW_DAG && events.length"
         >

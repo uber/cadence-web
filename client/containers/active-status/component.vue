@@ -60,11 +60,7 @@ export default {
 </script>
 
 <template>
-  <feature-flag
-    :cache="true"
-    name="crossRegion.activeStatusTag"
-    v-if="crossRegion"
-  >
+  <feature-flag name="crossRegion.activeStatusTag" v-if="crossRegion">
     <component
       class="active-status"
       :class="{
