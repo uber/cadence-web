@@ -28,6 +28,5 @@ export const CROSS_REGION_ALLOWED_CROSS_ORIGIN = typePrefix(
 export const CROSS_REGION_CLUSTER_ORIGIN_LIST = typePrefix(
   'CLUSTER_ORIGIN_LIST'
 );
-export const CROSS_REGION_EXPIRY_DATE_TIME = typePrefix('EXPIRY_DATE_TIME');
 export const CROSS_REGION_IS_LOADING = typePrefix('IS_LOADING');
 export const CROSS_REGION_IS_READY = typePrefix('IS_READY');

@@ -23,7 +23,7 @@ import {
   CROSS_REGION_SET_ALLOWED_CROSS_ORIGIN,
   CROSS_REGION_SET_CLUSTER_ORIGIN_LIST,
   CROSS_REGION_SET_CROSS_REGION,
-  CROSS_REGION_SET_EXPIRY_DATE_TIME,
+  CROSS_REGION_SET_IS_READY,
   CROSS_REGION_RESET_STATE,
 } from './mutation-types';
 import getDefaultState from './get-default-state';
@@ -40,8 +40,8 @@ const mutations = {
     (state.crossRegion.clusterOriginList = payload),
   [CROSS_REGION_SET_CROSS_REGION]: (state, payload) =>
     (state.crossRegion.crossRegion = payload),
-  [CROSS_REGION_SET_EXPIRY_DATE_TIME]: (state, payload) =>
-    (state.crossRegion.expiryDateTime = payload),
+  [CROSS_REGION_SET_IS_READY]: (state, payload) =>
+    (state.crossRegion.isReady = payload),
 };
 
 export default mutations;

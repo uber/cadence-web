@@ -29,6 +29,4 @@ export const CROSS_REGION_SET_CLUSTER_ORIGIN_LIST = typePrefix(
   'SET_CLUSTER_ORIGIN_LIST'
 );
 export const CROSS_REGION_SET_CROSS_REGION = typePrefix('SET_CROSS_REGION');
-export const CROSS_REGION_SET_EXPIRY_DATE_TIME = typePrefix(
-  'SET_EXPIRY_DATE_TIME'
-);
+export const CROSS_REGION_SET_IS_READY = typePrefix('SET_IS_READY');

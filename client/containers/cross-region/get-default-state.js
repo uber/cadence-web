@@ -23,7 +23,7 @@ const getDefaultState = (state = {}) => ({
   allowedCrossOrigin: undefined,
   clusterOriginList: undefined,
   crossRegion: undefined,
-  expiryDateTime: undefined,
+  isReady: false,
   ...state,
 });
 

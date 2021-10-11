@@ -57,7 +57,7 @@ export default {
   },
   async mounted() {
     this.isWorkflowTerminateFeatureFlagEnabled = await featureFlagService.isFeatureFlagEnabled(
-      { cache: true, name: 'workflowTerminate' }
+      { name: 'workflowTerminate' }
     );
     this.initAuthorization();
   },
@@ -117,7 +117,7 @@ export default {
     },
     async initAuthorization() {
       const isDomainAuthorizationFeatureFlagEnabled = await featureFlagService.isFeatureFlagEnabled(
-        { cache: true, name: 'domainAuthorization' }
+        { name: 'domainAuthorization' }
       );
 
       if (isDomainAuthorizationFeatureFlagEnabled) {

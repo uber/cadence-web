@@ -25,11 +25,9 @@ import {
   CROSS_REGION,
   CROSS_REGION_ALLOWED_CROSS_ORIGIN,
   CROSS_REGION_CLUSTER_ORIGIN_LIST,
-  CROSS_REGION_EXPIRY_DATE_TIME,
   CROSS_REGION_IS_LOADING,
   CROSS_REGION_IS_READY,
 } from './getter-types';
-import { hasExpired } from '~helpers';
 
 const getters = {
   [CROSS_REGION]: state => get(state, statePrefix('crossRegion')),
@@ -37,11 +35,8 @@ const getters = {
     get(state, statePrefix('allowedCrossOrigin')),
   [CROSS_REGION_CLUSTER_ORIGIN_LIST]: state =>
     get(state, statePrefix('clusterOriginList')),
-  [CROSS_REGION_EXPIRY_DATE_TIME]: state =>
-    get(state, statePrefix('expiryDateTime')),
-  [CROSS_REGION_IS_LOADING]: (_, getters) =>
-    hasExpired(getters[CROSS_REGION_EXPIRY_DATE_TIME]),
-  [CROSS_REGION_IS_READY]: (_, getters) => !getters[CROSS_REGION_IS_LOADING],
+  [CROSS_REGION_IS_LOADING]: (_, getters) => !getters[CROSS_REGION_IS_READY],
+  [CROSS_REGION_IS_READY]: state => get(state, statePrefix('isReady')),
 };
 
 export default getters;

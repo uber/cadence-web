@@ -26,9 +26,8 @@ import {
   CROSS_REGION_SET_ALLOWED_CROSS_ORIGIN,
   CROSS_REGION_SET_CLUSTER_ORIGIN_LIST,
   CROSS_REGION_SET_CROSS_REGION,
-  CROSS_REGION_SET_EXPIRY_DATE_TIME,
+  CROSS_REGION_SET_IS_READY,
 } from './mutation-types';
-import { getExpiryDateTimeFromNow } from '~helpers';
 import { featureFlagService } from '~services';
 
 const actions = {
@@ -42,14 +41,13 @@ const actions = {
     commit(CROSS_REGION_RESET_STATE);
 
     const crossRegion = await featureFlagService.isFeatureFlagEnabled({
-      cache: true,
       name: 'crossRegion',
     });
 
     commit(CROSS_REGION_SET_CROSS_REGION, crossRegion);
 
     if (!crossRegion) {
-      commit(CROSS_REGION_SET_EXPIRY_DATE_TIME, getExpiryDateTimeFromNow());
+      commit(CROSS_REGION_SET_IS_READY, true);
 
       return;
     }
@@ -57,21 +55,19 @@ const actions = {
     const { origin } = window.location;
     const [allowedCrossOrigin, clusterOriginList] = await Promise.all([
       featureFlagService.isFeatureFlagEnabled({
-        cache: true,
         name: 'crossRegion.allowedCrossOrigin',
         params: {
           origin,
         },
       }),
       featureFlagService.getConfiguration({
-        cache: true,
         name: 'crossRegion.clusterOriginList',
       }),
     ]);
 
     commit(CROSS_REGION_SET_ALLOWED_CROSS_ORIGIN, allowedCrossOrigin);
     commit(CROSS_REGION_SET_CLUSTER_ORIGIN_LIST, clusterOriginList);
-    commit(CROSS_REGION_SET_EXPIRY_DATE_TIME, getExpiryDateTimeFromNow());
+    commit(CROSS_REGION_SET_IS_READY, true);
   },
 };
 
