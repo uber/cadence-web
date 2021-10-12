@@ -21,26 +21,46 @@
 
 import { getQueryStringFromObject } from '~helpers';
 
-class HttpService {
-  request(baseUrl, options = {}) {
-    const fetch = this.fetchOverride ? this.fetchOverride : window.fetch;
-    const queryString = getQueryStringFromObject(options.query);
-    const url = queryString ? `${baseUrl}${queryString}` : baseUrl;
+const DEFAULT_FETCH_OPTIONS = {
+  credentials: 'same-origin',
+  headers: {
+    Accept: 'application/json',
+  },
+};
 
-    return fetch(url, {
-      credentials: 'same-origin',
-      headers: {
-        Accepts: 'application/json',
-      },
+class HttpService {
+  constructor() {
+    this.origin = window.location.origin;
+  }
+
+  handleResponse(response) {
+    return response.status >= 200 && response.status < 300
+      ? response.json().catch(() => {})
+      : response.json().then(
+          json => Promise.reject(Object.assign(response, { json })),
+          () => Promise.reject(response)
+        );
+  }
+
+  async request(baseUrl, { query, ...options } = {}) {
+    const { origin } = this;
+    const fetch = this.fetchOverride ? this.fetchOverride : window.fetch;
+    const queryString = getQueryStringFromObject(query);
+    const path = queryString ? `${baseUrl}${queryString}` : baseUrl;
+    const hasOrigin = baseUrl.startsWith('http');
+    const url = hasOrigin ? path : `${origin}${path}`;
+    const isCrossOrigin = !url.startsWith(window.location.origin);
+
+    const requestOptions = {
+      ...DEFAULT_FETCH_OPTIONS,
       ...options,
-    }).then(response =>
-      response.status >= 200 && response.status < 300
-        ? response.json().catch(() => {})
-        : response.json().then(
-            json => Promise.reject(Object.assign(response, { json })),
-            () => Promise.reject(response)
-          )
-    );
+      ...(isCrossOrigin && {
+        credentials: 'include',
+        mode: 'cors',
+      }),
+    };
+
+    return fetch(url, requestOptions).then(this.handleResponse);
   }
 
   requestWithBody(url, body, options = {}) {
@@ -81,6 +101,10 @@ class HttpService {
 
   setFetch(fetch) {
     this.fetchOverride = fetch;
+  }
+
+  setOrigin(origin) {
+    this.origin = origin;
   }
 }
 
