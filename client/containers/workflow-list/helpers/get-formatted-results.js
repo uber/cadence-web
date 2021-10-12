@@ -33,7 +33,7 @@ const getFormattedResults = ({
     const status = (result.closeStatus || STATUS_OPEN).toLowerCase();
 
     return {
-      clusterName: clusterName,
+      clusterName,
       domainName: result.domainName,
       endTime: result.closeTime
         ? getDatetimeFormattedString({
