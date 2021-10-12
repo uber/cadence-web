@@ -29,7 +29,6 @@ module.exports = {
           '~constants': './client/constants',
           '~containers': './client/containers',
           '~helpers': './client/helpers',
-          '~managers': './client/managers',
           '~services': './client/services',
           '~test': './test/helpers',
         },
