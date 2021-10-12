@@ -31,6 +31,12 @@ class FeatureFlagService {
 
     return (await httpService.get(url)).value;
   }
+
+  getConfiguration(args) {
+    return this.isFeatureFlagEnabled(args);
+  }
 }
 
-export default FeatureFlagService;
+const featureFlagService = new FeatureFlagService();
+
+export default featureFlagService;
