@@ -43,6 +43,9 @@ export default {
       type: Number,
       default: 0,
     },
+    params: {
+      type: Object,
+    },
     to: {
       type: [String, Object],
     },
@@ -56,6 +59,7 @@ export default {
     :class="icon"
     :exact="exact"
     :id="id"
+    :params="params"
     :to="to"
   >
     <span>{{ label }}</span>

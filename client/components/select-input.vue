@@ -121,7 +121,8 @@ export default {
 
     ul.vs__dropdown-menu {
       max-height: initial !important;
-      overflow: auto;
+      overflow-x: hidden;
+      overflow-y: auto;
       border: input-border;
       box-shadow: none;
       padding: 0;
