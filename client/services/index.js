@@ -19,5 +19,5 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export { default as FeatureFlagService } from './feature-flag-service';
+export { default as featureFlagService } from './feature-flag-service';
 export { default as httpService } from './http-service';
