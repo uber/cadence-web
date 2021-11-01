@@ -19,4 +19,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-// describe();
+import MockDate from 'mockdate';
+import getExpiryDateTimeFromNow from './get-expiry-date-time-from-now';
+
+describe('getExpiryDateTimeFromNow', () => {
+  beforeEach(() => {
+    MockDate.set(new Date('2020-01-01T00:00:00.000Z'));
+  });
+
+  afterEach(() => {
+    MockDate.reset();
+  });
+
+  it('should return a date 1 hour in the future', () => {
+    const output = getExpiryDateTimeFromNow();
+
+    expect(output).toEqual('2020-01-01T01:00:00.000Z');
+  });
+});
