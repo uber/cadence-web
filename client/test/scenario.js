@@ -48,6 +48,7 @@ export default function Scenario(test) {
 
     mocha.throwError(new Error(msg));
   });
+  this.origin = window.location.origin;
 }
 
 Scenario.prototype.isDebuggingJustThisTest = function isDebuggingJustThisTest() {
@@ -130,7 +131,9 @@ Object.defineProperty(Scenario.prototype, 'location', {
 });
 
 Scenario.prototype.withCluster = function withCluster() {
-  this.api.getOnce(`/api/cluster`, getFixture('cluster'));
+  const { origin } = this;
+
+  this.api.getOnce(`${origin}/api/cluster`, getFixture('cluster'));
 
   return this;
 };
@@ -145,7 +148,9 @@ Scenario.prototype.withDomainAuthorization = function withDomainAuthorization(
   domain,
   authorization
 ) {
-  this.api.getOnce(`/api/domains/${domain}/authorization`, {
+  const { origin } = this;
+
+  this.api.getOnce(`${origin}/api/domains/${domain}/authorization`, {
     authorization,
   });
 
@@ -156,8 +161,10 @@ Scenario.prototype.withDomainDescription = function withDomainDescription(
   domain,
   domainDesc
 ) {
+  const { origin } = this;
+
   this.api.getOnce(
-    `/api/domains/${domain}`,
+    `${origin}/api/domains/${domain}`,
     deepmerge(
       {
         domainInfo: {
@@ -192,8 +199,10 @@ Scenario.prototype.withDomainDescription = function withDomainDescription(
 };
 
 Scenario.prototype.withDomainSearch = function withDomainSearch() {
+  const { origin } = this;
+
   this.api.getOnce(
-    `/api/domains?querystring=ci-tests`,
+    `${origin}/api/domains?querystring=ci-tests`,
     getFixture('domainSearch')
   );
 
@@ -203,8 +212,10 @@ Scenario.prototype.withDomainSearch = function withDomainSearch() {
 Scenario.prototype.withFeatureFlags = function withFeatureFlags(
   featureFlags = getFixture('featureFlags')
 ) {
+  const { origin } = this;
+
   featureFlags.forEach(({ key, value }) => {
-    this.api.getOnce(`/api/feature-flags/${key}`, {
+    this.api.getOnce(`${origin}/api/feature-flags/${key}`, {
       key,
       value,
     });
@@ -214,13 +225,17 @@ Scenario.prototype.withFeatureFlags = function withFeatureFlags(
 };
 
 Scenario.prototype.withNewsFeed = function withNewsFeed() {
-  this.api.getOnce('/feed.json', getFixture('newsFeed.simple'));
+  const { origin } = this;
+
+  this.api.getOnce(`${origin}/feed.json`, getFixture('newsFeed.simple'));
 
   return this;
 };
 
 Scenario.prototype.withEmptyNewsFeed = function withEmptyNewsFeed() {
-  this.api.getOnce('/feed.json', getFixture('newsFeed.empty'));
+  const { origin } = this;
+
+  this.api.getOnce(`${origin}/feed.json`, getFixture('newsFeed.empty'));
 
   return this;
 };
@@ -238,7 +253,8 @@ Scenario.prototype.withWorkflows = function withWorkflows({
   startTimeOffset,
 } = {}) {
   const startTimeDays = startTimeOffset || status === 'open' ? 30 : 21;
-  const baseUrl = `/api/domains/${this.domain}/workflows/${status}`;
+  const { origin } = this;
+  const baseUrl = `${origin}/api/domains/${this.domain}/workflows/${status}`;
   const queryString = qs.stringify(
     status === 'list'
       ? query
@@ -264,7 +280,9 @@ Scenario.prototype.withWorkflows = function withWorkflows({
 };
 
 Scenario.prototype.execApiBase = function execApiBase(workflowId, runId) {
-  return `/api/domains/${this.domain}/workflows/${encodeURIComponent(
+  const { domain, origin } = this;
+
+  return `${origin}/api/domains/${domain}/workflows/${encodeURIComponent(
     workflowId || this.workflowId
   )}/${encodeURIComponent(runId || this.runId)}`;
 };
@@ -374,8 +392,10 @@ Scenario.prototype.withTaskListPollers = function withTaskListPollers(
   taskList,
   pollers
 ) {
+  const { domain, origin } = this;
+
   this.api.getOnce(
-    `/api/domains/${this.domain}/task-lists/${taskList}/pollers`,
+    `${origin}/api/domains/${domain}/task-lists/${taskList}/pollers`,
     pollers || {
       node1: {
         lastAccessTime: moment()
@@ -402,7 +422,9 @@ Scenario.prototype.withTaskListPollers = function withTaskListPollers(
 };
 
 Scenario.prototype.withTaskList = function withTaskList(taskList, pollers) {
-  this.api.get(`/api/domains/${this.domain}/task-lists/${taskList}`, {
+  const { domain, origin } = this;
+
+  this.api.get(`${origin}/api/domains/${domain}/task-lists/${taskList}`, {
     pollers: pollers || [
       {
         identity: 'identity1',
