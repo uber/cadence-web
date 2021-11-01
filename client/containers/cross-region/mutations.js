@@ -29,7 +29,7 @@ import {
 import getDefaultState from './get-default-state';
 
 const mutations = {
-  [CROSS_REGION_RESET_STATE]: (state, payload) => {
+  [CROSS_REGION_RESET_STATE]: state => {
     const defaultState = getDefaultState();
 
     state.crossRegion = defaultState;
