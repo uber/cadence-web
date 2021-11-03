@@ -72,6 +72,10 @@ export default {
   ],
   featureFlags: [
     {
+      key: 'crossRegion',
+      value: false,
+    },
+    {
       key: 'domainAuthorization',
       value: false,
     },

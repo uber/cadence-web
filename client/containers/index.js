@@ -26,6 +26,13 @@ export {
   mutations as clusterMutations,
 } from './cluster';
 export {
+  actions as crossRegionActions,
+  container as CrossRegion,
+  getDefaultState as getCrossRegionDefaultState,
+  getters as crossRegionGetters,
+  mutations as crossRegionMutations,
+} from './cross-region';
+export {
   actions as domainActions,
   container as Domain,
   getDefaultState as getDomainDefaultState,

@@ -324,7 +324,10 @@ export default {
 <template>
   <section
     class="execution"
-    :class="{ loading: wfLoading, ready: !wfLoading && !history.loading }"
+    :class="{
+      loading: wfLoading || history.loading,
+      ready: !wfLoading && !history.loading,
+    }"
   >
     <navigation-bar>
       <navigation-link

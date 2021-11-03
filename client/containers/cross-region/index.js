@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021 Uber Technologies Inc.
+// Copyright (c) 2021 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,5 +19,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export { default as featureFlagService } from './feature-flag-service';
-export { default as httpService } from './http-service';
+import actions from './actions';
+import Component from './component';
+import connector from './connector';
+import getDefaultState from './get-default-state';
+import getters from './getters';
+import mutations from './mutations';
+
+const container = connector(Component);
+
+export { actions, container, getDefaultState, getters, mutations };

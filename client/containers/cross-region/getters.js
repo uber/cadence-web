@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021 Uber Technologies Inc.
+// Copyright (c) 2021 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,5 +19,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export { default as featureFlagService } from './feature-flag-service';
-export { default as httpService } from './http-service';
+import { get } from 'lodash-es';
+import { statePrefix } from './helpers';
+import {
+  CROSS_REGION,
+  CROSS_REGION_ALLOWED_CROSS_ORIGIN,
+  CROSS_REGION_CLUSTER_ORIGIN_LIST,
+  CROSS_REGION_IS_LOADING,
+  CROSS_REGION_IS_READY,
+} from './getter-types';
+
+const getters = {
+  [CROSS_REGION]: state => get(state, statePrefix('crossRegion')),
+  [CROSS_REGION_ALLOWED_CROSS_ORIGIN]: state =>
+    get(state, statePrefix('allowedCrossOrigin')),
+  [CROSS_REGION_CLUSTER_ORIGIN_LIST]: state =>
+    get(state, statePrefix('clusterOriginList')),
+  [CROSS_REGION_IS_LOADING]: (_, getters) => !getters[CROSS_REGION_IS_READY],
+  [CROSS_REGION_IS_READY]: state => get(state, statePrefix('isReady')),
+};
+
+export default getters;

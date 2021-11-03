@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021 Uber Technologies Inc.
+// Copyright (c) 2021 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,5 +19,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export { default as featureFlagService } from './feature-flag-service';
-export { default as httpService } from './http-service';
+import { typePrefix } from './helpers';
+
+export const CROSS_REGION_FETCH = typePrefix('FETCH');

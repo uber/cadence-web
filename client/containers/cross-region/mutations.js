@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021 Uber Technologies Inc.
+// Copyright (c) 2021 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,5 +19,29 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export { default as featureFlagService } from './feature-flag-service';
-export { default as httpService } from './http-service';
+import {
+  CROSS_REGION_SET_ALLOWED_CROSS_ORIGIN,
+  CROSS_REGION_SET_CLUSTER_ORIGIN_LIST,
+  CROSS_REGION_SET_CROSS_REGION,
+  CROSS_REGION_SET_IS_READY,
+  CROSS_REGION_RESET_STATE,
+} from './mutation-types';
+import getDefaultState from './get-default-state';
+
+const mutations = {
+  [CROSS_REGION_RESET_STATE]: state => {
+    const defaultState = getDefaultState();
+
+    state.crossRegion = defaultState;
+  },
+  [CROSS_REGION_SET_ALLOWED_CROSS_ORIGIN]: (state, payload) =>
+    (state.crossRegion.allowedCrossOrigin = payload),
+  [CROSS_REGION_SET_CLUSTER_ORIGIN_LIST]: (state, payload) =>
+    (state.crossRegion.clusterOriginList = payload),
+  [CROSS_REGION_SET_CROSS_REGION]: (state, payload) =>
+    (state.crossRegion.crossRegion = payload),
+  [CROSS_REGION_SET_IS_READY]: (state, payload) =>
+    (state.crossRegion.isReady = payload),
+};
+
+export default mutations;

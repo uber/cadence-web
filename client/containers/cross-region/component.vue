@@ -1,4 +1,5 @@
-// Copyright (c) 2017-2021 Uber Technologies Inc.
+<script>
+// Copyright (c) 2021 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,5 +20,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export { default as featureFlagService } from './feature-flag-service';
-export { default as httpService } from './http-service';
+export default {
+  name: 'cross-region',
+  props: {
+    isLoading: {
+      type: Boolean,
+    },
+    isReady: {
+      type: Boolean,
+    },
+  },
+};
+</script>
+<template>
+  <section class="cross-region" :class="{ loading: isLoading }">
+    <slot v-if="isReady"></slot>
+  </section>
+</template>
