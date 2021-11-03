@@ -55,7 +55,9 @@ import { delay, getEndTimeIsoString, getStartTimeIsoString } from '~helpers';
 import { httpService } from '~services';
 
 export default {
+  name: 'workflow-list',
   props: [
+    'clusterName',
     'dateFormat',
     'domain',
     'fetchWorkflowListUrl',
@@ -145,9 +147,15 @@ export default {
       return getEndTimeIsoString(range, endTime);
     },
     formattedResults() {
-      const { dateFormat, results, timeFormat, timezone } = this;
+      const { clusterName, dateFormat, results, timeFormat, timezone } = this;
 
-      return getFormattedResults({ dateFormat, results, timeFormat, timezone });
+      return getFormattedResults({
+        clusterName,
+        dateFormat,
+        results,
+        timeFormat,
+        timezone,
+      });
     },
     minStartDate() {
       return this.getMinStartDate();
@@ -191,6 +199,11 @@ export default {
 
       return getStartTimeIsoString(range, startTime);
     },
+    crossRegionProps() {
+      const { clusterName, domain } = this;
+
+      return { clusterName, domain };
+    },
   },
   methods: {
     clearState() {
@@ -226,7 +239,10 @@ export default {
         this.abortController = new AbortController();
         const { signal } = this.abortController;
 
-        const request = await httpService.get(url, { query, signal });
+        const request = await httpService.get(url, {
+          query,
+          signal,
+        });
 
         this.abortController = undefined;
 
@@ -248,14 +264,18 @@ export default {
 
       return { status: 'success', workflows, nextPageToken };
     },
-    fetchDomain() {
+    async fetchDomain() {
       const { domain, now } = this;
 
       this.loading = true;
 
-      return httpService.get(`/api/domains/${domain}`).then(r => {
+      try {
+        const domainInfo = await httpService.get(`/api/domains/${domain}`);
+
         this.maxRetentionDays =
-          Number(r.configuration.workflowExecutionRetentionPeriodInDays) || 30;
+          Number(
+            domainInfo.configuration.workflowExecutionRetentionPeriodInDays
+          ) || 30;
         this.loading = false;
 
         const minStartDate = this.getMinStartDate();
@@ -274,7 +294,12 @@ export default {
             this.setRange(`last-${Math.min(30, this.maxRetentionDays)}-days`);
           }
         }
-      });
+      } catch (error) {
+        this.error =
+          (error.json && error.json.message) || error.status || error.message;
+      } finally {
+        this.loading = false;
+      }
     },
     async fetchWorkflowList() {
       if (!this.criteria || this.loading) {
@@ -451,11 +476,9 @@ export default {
         this.refreshWorkflows();
       }
     },
-    async domain(newDomain, oldDomain) {
-      if (newDomain && oldDomain && newDomain !== oldDomain) {
-        await this.fetchDomain();
-        this.refreshWorkflows();
-      }
+    async crossRegionProps() {
+      await this.fetchDomain();
+      this.refreshWorkflows();
     },
   },
 };
