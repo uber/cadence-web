@@ -20,6 +20,11 @@
 // THE SOFTWARE.
 
 export {
+  actions as activeStatusActions,
+  container as ActiveStatus,
+  getters as activeStatusGetters,
+} from './active-status';
+export {
   actions as clusterActions,
   getDefaultState as getClusterDefaultState,
   getters as clusterGetters,

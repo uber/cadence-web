@@ -32,6 +32,7 @@ import {
   SelectInput,
 } from '~components';
 import {
+  ActiveStatus,
   CrossRegion,
   Domain,
   DomainAutocomplete,
@@ -62,6 +63,7 @@ import { httpService } from '~services';
 
 export default {
   components: {
+    'active-status': ActiveStatus,
     'button-icon': ButtonIcon,
     'cross-region': CrossRegion,
     domain: Domain,
@@ -283,18 +285,16 @@ export default {
         <flex-grid-item v-if="$route.params.domain" margin="15px">
           <flex-grid align-items="center">
             <flex-grid-item>
-              <a
+              <router-link
                 class="workflows"
-                :class="{
-                  'router-link-active':
-                    $route.path ===
-                    `/domains/${$route.params.domain}/workflows`,
+                :to="{
+                  name: 'workflow-list',
+                  params: { clusterName: $route.params.clusterName },
                 }"
-                :href="`/domains/${$route.params.domain}/workflows`"
                 v-if="!isSearchingDomain"
               >
                 {{ $route.params.domain }}
-              </a>
+              </router-link>
               <domain-autocomplete
                 :focus="true"
                 height="slim"
@@ -310,6 +310,13 @@ export default {
                 size="18px"
                 width="22px"
                 @click="onEditDomainClick"
+              />
+            </flex-grid-item>
+            <flex-grid-item>
+              <active-status
+                :cluster-name="$route.params.clusterName"
+                :domain="$route.params.domain"
+                :workflow-id="$route.params.workflowId"
               />
             </flex-grid-item>
           </flex-grid>
