@@ -26,6 +26,13 @@ export {
   mutations as clusterMutations,
 } from './cluster';
 export {
+  actions as crossRegionActions,
+  container as CrossRegion,
+  getDefaultState as getCrossRegionDefaultState,
+  getters as crossRegionGetters,
+  mutations as crossRegionMutations,
+} from './cross-region';
+export {
   actions as domainAutocompleteActions,
   container as DomainAutocomplete,
   getDefaultState as getDomainAutocompleteDefaultState,

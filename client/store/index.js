@@ -30,6 +30,12 @@ import {
   clusterGetters,
   clusterMutations,
 
+  // cross region
+  crossRegionActions,
+  getCrossRegionDefaultState,
+  crossRegionGetters,
+  crossRegionMutations,
+
   // domain autocomplete
   domainAutocompleteActions,
   getDomainAutocompleteDefaultState,
@@ -70,6 +76,7 @@ import {
 
 const getDefaultState = (state = {}) => ({
   cluster: getClusterDefaultState(state.cluster),
+  crossRegion: getCrossRegionDefaultState(state.crossRegion),
   domainAutocomplete: getDomainAutocompleteDefaultState(
     state.domainAutocomplete
   ),
@@ -92,6 +99,9 @@ const getStoreConfig = ({ router, state }) => {
         return;
       }
 
+      // ensures cross region does not persist to local storage.
+      const crossRegion = getCrossRegionDefaultState();
+
       const domainAutocomplete = domainAutocompleteReducer(
         state.domainAutocomplete
       );
@@ -101,6 +111,7 @@ const getStoreConfig = ({ router, state }) => {
         ...(domainAutocomplete && {
           domainAutocomplete,
         }),
+        crossRegion,
       };
     },
     storage: window.localStorage,
@@ -110,12 +121,14 @@ const getStoreConfig = ({ router, state }) => {
     actions: {
       ...domainAutocompleteActions,
       ...clusterActions,
+      ...crossRegionActions,
       ...routeActionCreator(router),
       ...workflowListActions,
       ...workflowPendingActions,
     },
     getters: {
       ...clusterGetters,
+      ...crossRegionGetters,
       ...domainAutocompleteGetters,
       ...graphGetters,
       ...routeGetters,
@@ -126,6 +139,7 @@ const getStoreConfig = ({ router, state }) => {
     },
     mutations: {
       ...clusterMutations,
+      ...crossRegionMutations,
       ...domainAutocompleteMutations,
       ...graphMutations,
       ...settingsWorkflowHistoryMutations,
