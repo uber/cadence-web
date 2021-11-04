@@ -33,6 +33,10 @@ export {
   mutations as crossRegionMutations,
 } from './cross-region';
 export {
+  getDefaultState as getDomainDefaultState,
+  mutations as domainMutations,
+} from './domain';
+export {
   actions as domainAutocompleteActions,
   container as DomainAutocomplete,
   getDefaultState as getDomainAutocompleteDefaultState,
