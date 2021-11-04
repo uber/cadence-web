@@ -19,8 +19,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export { default as getClusterFromClusterList } from './get-cluster-from-cluster-list';
-export { default as getClusterListFromDomainConfigList } from './get-cluster-list-from-domain-config-list';
-export { default as getFilteredClusterList } from './get-filtered-cluster-list';
-export { default as mergeDomainConfigList } from './merge-domain-config-list';
-export { default as typePrefix } from './type-prefix';
+const mergeDomainConfigList = domainConfigList =>
+  domainConfigList.reduce(
+    (
+      accumulator,
+      {
+        isGlobalDomain,
+        replicationConfiguration: { activeClusterName, clusters },
+      }
+    ) => {
+      accumulator.isGlobalDomain = isGlobalDomain;
+
+      if (!accumulator.activeClusterNames.includes(activeClusterName)) {
+        accumulator.activeClusterNames.push(activeClusterName);
+      }
+
+      const nonDupeClusters = clusters.filter(
+        ({ clusterName: matchClusterName }) =>
+          !accumulator.clusters.find(
+            ({ clusterName }) => clusterName === matchClusterName
+          )
+      );
+
+      if (nonDupeClusters.length) {
+        accumulator.clusters.push(...nonDupeClusters);
+      }
+
+      return accumulator;
+    },
+    { activeClusterNames: [], clusters: [], isGlobalDomain: undefined }
+  );
+
+export default mergeDomainConfigList;
