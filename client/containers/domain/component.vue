@@ -1,3 +1,4 @@
+<script>
 // Copyright (c) 2021 Uber Technologies Inc.
 //
 //
@@ -19,13 +20,49 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import actions from './actions';
-import Component from './component';
-import connector from './connector';
-import getDefaultState from './get-default-state';
-import getters from './getters';
-import mutations from './mutations';
+import { ErrorMessage } from '~components';
 
-const container = connector(Component);
-
-export { actions, container, getDefaultState, getters, mutations };
+export default {
+  name: 'domain',
+  props: {
+    clusterName: {
+      type: String,
+    },
+    domainName: {
+      type: String,
+    },
+    error: {
+      type: String,
+    },
+    isLoading: {
+      type: Boolean,
+    },
+    isReady: {
+      type: Boolean,
+    },
+    origin: {
+      type: String,
+    },
+  },
+  components: {
+    'error-message': ErrorMessage,
+  },
+  watch: {
+    clusterName() {
+      this.$emit('onClusterChange');
+    },
+    domainName() {
+      this.$emit('onDomainChange');
+    },
+    origin() {
+      this.$emit('onOriginChange');
+    },
+  },
+};
+</script>
+<template>
+  <section class="domain" :class="{ loading: isLoading }">
+    <slot v-if="isReady"></slot>
+    <error-message :error="error" />
+  </section>
+</template>

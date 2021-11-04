@@ -33,6 +33,8 @@ export {
   mutations as crossRegionMutations,
 } from './cross-region';
 export {
+  actions as domainActions,
+  container as Domain,
   getDefaultState as getDomainDefaultState,
   getters as domainGetters,
   mutations as domainMutations,
