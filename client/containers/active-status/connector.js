@@ -29,6 +29,11 @@ import {
   ACTIVE_STATUS_LABEL,
   ACTIVE_STATUS_TAG,
 } from './getter-types';
+import { ACTIVE_STATUS_ON_CHANGE } from './action-types';
+
+const actionsToEvents = {
+  change: ACTIVE_STATUS_ON_CHANGE,
+};
 
 const gettersToProps = {
   classname: ACTIVE_STATUS_CLASSNAME,
@@ -41,5 +46,6 @@ const gettersToProps = {
 };
 
 export default connect({
+  actionsToEvents,
   gettersToProps,
 });

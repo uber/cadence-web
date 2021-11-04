@@ -19,7 +19,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export { getters as activeStatusGetters } from './active-status';
+export {
+  actions as activeStatusActions,
+  container as ActiveStatus,
+  getters as activeStatusGetters,
+} from './active-status';
 export {
   actions as clusterActions,
   getDefaultState as getClusterDefaultState,
