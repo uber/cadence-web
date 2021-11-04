@@ -19,5 +19,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export const DOMAIN_STATE_PREFIX = 'domain';
-export const DOMAIN_TYPE_PREFIX = 'DOMAIN';
+import { connect } from 'vuex-connect';
+import {
+  ROUTE_PARAMS_CLUSTER_NAME,
+  ROUTE_PARAMS_DOMAIN,
+} from '../route/getter-types';
+import {
+  DOMAIN_ERROR,
+  DOMAIN_IS_LOADING,
+  DOMAIN_IS_READY,
+  DOMAIN_CROSS_ORIGIN,
+} from './getter-types';
+
+const gettersToProps = {
+  clusterName: ROUTE_PARAMS_CLUSTER_NAME,
+  domainName: ROUTE_PARAMS_DOMAIN,
+  error: DOMAIN_ERROR,
+  isLoading: DOMAIN_IS_LOADING,
+  isReady: DOMAIN_IS_READY,
+  origin: DOMAIN_CROSS_ORIGIN,
+};
+
+export default connect({
+  gettersToProps,
+});

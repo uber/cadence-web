@@ -19,5 +19,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export const DOMAIN_STATE_PREFIX = 'domain';
-export const DOMAIN_TYPE_PREFIX = 'DOMAIN';
+import { DOMAIN_STATE_PREFIX } from '../constants';
+
+const statePrefix = term => `${DOMAIN_STATE_PREFIX}.${term}`;
+
+export default statePrefix;

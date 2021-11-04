@@ -19,5 +19,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export const DOMAIN_STATE_PREFIX = 'domain';
-export const DOMAIN_TYPE_PREFIX = 'DOMAIN';
+const getDomain = ({ clusterName, domainNamespace }) => {
+  if (!domainNamespace) {
+    return;
+  }
+
+  if (domainNamespace.global) {
+    return domainNamespace.global;
+  }
+
+  if (domainNamespace.local) {
+    if (clusterName) {
+      return domainNamespace.local.find(
+        ({ replicationConfiguration: { activeClusterName } }) =>
+          activeClusterName === clusterName
+      );
+    }
+
+    return domainNamespace.local[0];
+  }
+};
+
+export default getDomain;

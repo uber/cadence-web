@@ -38,6 +38,7 @@ import {
 
   // domain
   getDomainDefaultState,
+  domainGetters,
   domainMutations,
 
   // domain autocomplete
@@ -134,6 +135,7 @@ const getStoreConfig = ({ router, state }) => {
     getters: {
       ...clusterGetters,
       ...crossRegionGetters,
+      ...domainGetters,
       ...domainAutocompleteGetters,
       ...graphGetters,
       ...routeGetters,

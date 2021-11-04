@@ -34,6 +34,7 @@ export {
 } from './cross-region';
 export {
   getDefaultState as getDomainDefaultState,
+  getters as domainGetters,
   mutations as domainMutations,
 } from './domain';
 export {
