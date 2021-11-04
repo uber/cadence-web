@@ -25,11 +25,22 @@ import {
   ROUTE_PARAMS_DOMAIN,
 } from '../route/getter-types';
 import {
+  DOMAIN_FETCH,
+  DOMAIN_ON_MOUNT,
+  DOMAIN_CHANGE_ORIGIN,
+} from './action-types';
+import {
   DOMAIN_ERROR,
   DOMAIN_IS_LOADING,
   DOMAIN_IS_READY,
   DOMAIN_CROSS_ORIGIN,
 } from './getter-types';
+
+const actionsToEvents = {
+  onClusterChange: DOMAIN_FETCH,
+  onDomainChange: DOMAIN_FETCH,
+  onOriginChange: DOMAIN_CHANGE_ORIGIN,
+};
 
 const gettersToProps = {
   clusterName: ROUTE_PARAMS_CLUSTER_NAME,
@@ -40,6 +51,12 @@ const gettersToProps = {
   origin: DOMAIN_CROSS_ORIGIN,
 };
 
+const lifecycle = {
+  mounted: ({ dispatch }) => dispatch(DOMAIN_ON_MOUNT),
+};
+
 export default connect({
+  actionsToEvents,
   gettersToProps,
+  lifecycle,
 });

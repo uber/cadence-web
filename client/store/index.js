@@ -37,6 +37,7 @@ import {
   crossRegionMutations,
 
   // domain
+  domainActions,
   getDomainDefaultState,
   domainGetters,
   domainMutations,
@@ -127,6 +128,7 @@ const getStoreConfig = ({ router, state }) => {
     actions: {
       ...clusterActions,
       ...crossRegionActions,
+      ...domainActions,
       ...domainAutocompleteActions,
       ...routeActionCreator(router),
       ...workflowListActions,
