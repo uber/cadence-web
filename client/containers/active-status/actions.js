@@ -19,10 +19,32 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export { default as getClusterFromClusterList } from './get-cluster-from-cluster-list';
-export { default as getClusterListFromDomainConfigList } from './get-cluster-list-from-domain-config-list';
-export { default as getFilteredClusterList } from './get-filtered-cluster-list';
-export { default as getHrefFromCluster } from './get-href-from-cluster';
-export { default as mergeDomainConfigList } from './merge-domain-config-list';
-export { default as statePrefix } from './state-prefix';
-export { default as typePrefix } from './type-prefix';
+import { CROSS_REGION_ALLOWED_CROSS_ORIGIN } from '../cross-region/getter-types';
+import {
+  ROUTE_PARAMS_CLUSTER_NAME,
+  ROUTE_PARAMS_DOMAIN,
+} from '../route/getter-types';
+import { ACTIVE_STATUS_ON_CHANGE } from './action-types';
+import { getHrefFromCluster } from './helpers';
+
+const actions = {
+  [ACTIVE_STATUS_ON_CHANGE]: ({ dispatch, getters }, cluster) => {
+    const allowedCrossOrigin = getters[CROSS_REGION_ALLOWED_CROSS_ORIGIN];
+    const clusterName = getters[ROUTE_PARAMS_CLUSTER_NAME];
+    const domainName = getters[ROUTE_PARAMS_DOMAIN];
+    const { origin, pathname } = window.location;
+
+    const href = getHrefFromCluster({
+      allowedCrossOrigin,
+      cluster,
+      clusterName,
+      domainName,
+      origin,
+      pathname,
+    });
+
+    window.location = href;
+  },
+};
+
+export default actions;
