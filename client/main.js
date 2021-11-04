@@ -100,52 +100,53 @@ const routeOpts = {
     },
     {
       name: 'domain',
-      path: '/domains/:domain',
-      redirect: '/domains/:domain/workflows',
+      path: '/domains/:domain/:clusterName?',
+      redirect: '/domains/:domain/:clusterName?/workflows',
       component: Domain,
       props: ({ params }) => ({
+        clusterName: params.clusterName,
         domain: params.domain,
       }),
       children: [
         {
           name: 'workflow-list',
-          path: '/domains/:domain/workflows',
+          path: '/domains/:domain/:clusterName?/workflows',
           components: {
             'workflow-list': WorkflowList,
           },
         },
         {
           name: 'domain-metrics',
-          path: '/domains/:domain/metrics',
+          path: '/domains/:domain/:clusterName?/metrics',
           components: {
             'domain-metrics': DomainMetrics,
           },
         },
         {
           name: 'domain-settings',
-          path: '/domains/:domain/settings',
+          path: '/domains/:domain/:clusterName?/settings',
           components: {
             'domain-settings': DomainSettings,
           },
         },
         {
           name: 'workflow-archival',
-          path: '/domains/:domain/archival',
-          redirect: '/domains/:domain/archival/basic',
+          path: '/domains/:domain/:clusterName?/archival',
+          redirect: '/domains/:domain/:clusterName?/archival/basic',
           components: {
             'workflow-archival': WorkflowArchival,
           },
           children: [
             {
               name: 'workflow-archival-advanced',
-              path: '/domains/:domain/archival/advanced',
+              path: '/domains/:domain/:clusterName?/archival/advanced',
               components: {
                 'workflow-archival-advanced': WorkflowArchivalAdvanced,
               },
             },
             {
               name: 'workflow-archival-basic',
-              path: '/domains/:domain/archival/basic',
+              path: '/domains/:domain/:clusterName?/archival/basic',
               components: {
                 'workflow-archival-basic': WorkflowArchivalBasic,
               },
@@ -156,9 +157,10 @@ const routeOpts = {
     },
     {
       name: 'workflow',
-      path: '/domains/:domain/workflows/:workflowId/:runId',
+      path: '/domains/:domain/:clusterName?/workflows/:workflowId/:runId',
       component: Workflow,
       props: ({ params }) => ({
+        clusterName: params.clusterName,
         displayWorkflowId: params.workflowId,
         domain: params.domain,
         runId: params.runId,
@@ -167,7 +169,8 @@ const routeOpts = {
       children: [
         {
           name: 'workflow/summary',
-          path: '/domains/:domain/workflows/:workflowId/:runId/summary',
+          path:
+            '/domains/:domain/:clusterName?/workflows/:workflowId/:runId/summary',
           components: {
             summary: WorkflowSummary,
           },
@@ -180,12 +183,14 @@ const routeOpts = {
         },
         {
           name: 'workflow/history',
-          path: '/domains/:domain/workflows/:workflowId/:runId/history',
+          path:
+            '/domains/:domain/:clusterName?/workflows/:workflowId/:runId/history',
           components: {
             history: WorkflowHistory,
           },
           props: {
             history: ({ params, query }) => ({
+              clusterName: params.clusterName,
               domain: params.domain,
               eventId: Number(query.eventId) || undefined,
               format: query.format || 'grid',
@@ -198,21 +203,24 @@ const routeOpts = {
         },
         {
           name: 'workflow/pending',
-          path: '/domains/:domain/workflows/:workflowId/:runId/pending',
+          path:
+            '/domains/:domain/:clusterName?/workflows/:workflowId/:runId/pending',
           components: {
             pending: WorkflowPending,
           },
         },
         {
           name: 'workflow/stack-trace',
-          path: '/domains/:domain/workflows/:workflowId/:runId/stack-trace',
+          path:
+            '/domains/:domain/:clusterName?/workflows/:workflowId/:runId/stack-trace',
           components: {
             stacktrace: StackTrace,
           },
         },
         {
           name: 'workflow/query',
-          path: '/domains/:domain/workflows/:workflowId/:runId/query',
+          path:
+            '/domains/:domain/:clusterName?/workflows/:workflowId/:runId/query',
           components: {
             query: Query,
           },
@@ -221,31 +229,32 @@ const routeOpts = {
     },
     {
       name: 'task-list',
-      path: '/domains/:domain/task-lists/:taskList',
-      redirect: '/domains/:domain/task-lists/:taskList/pollers',
+      path: '/domains/:domain/:clusterName?/task-lists/:taskList',
+      redirect: '/domains/:domain/:clusterName?/task-lists/:taskList/pollers',
       component: TaskList,
       props: ({ params }) => ({
+        clusterName: params.clusterName,
         domain: params.domain,
         taskList: params.taskList,
       }),
       children: [
         {
           name: 'task-list/pollers',
-          path: '/domains/:domain/task-lists/:taskList/pollers',
+          path: '/domains/:domain/:clusterName?/task-lists/:taskList/pollers',
           components: {
             pollers: TaskListPollers,
           },
         },
         {
           name: 'task-list/partition',
-          path: '/domains/:domain/task-lists/:taskList/partition',
+          path: '/domains/:domain/:clusterName?/task-lists/:taskList/partition',
           components: {
             partition: TaskListPartition,
           },
         },
         {
           name: 'task-list/metrics',
-          path: '/domains/:domain/task-lists/:taskList/metrics',
+          path: '/domains/:domain/:clusterName?/task-lists/:taskList/metrics',
           components: {
             partition: TaskListMetrics,
           },
@@ -262,11 +271,11 @@ const routeOpts = {
     },
     {
       name: 'domain-config-redirect',
-      path: '/domains/:domain/config',
-      redirect: '/domains/:domain/settings',
+      path: '/domains/:domain/:clusterName?/config',
+      redirect: '/domains/:domain/:clusterName?/settings',
     },
     {
-      path: '/domains/:domain/history',
+      path: '/domains/:domain/:clusterName?/history',
       redirect: ({ params, query }) => {
         if (!query.runId || !query.workflowId) {
           return {
@@ -278,6 +287,7 @@ const routeOpts = {
         const { runId, workflowId, ...queryWhitelist } = query;
 
         const newParams = {
+          clusterName: params.clusterName,
           runId,
           workflowId,
           domain: params.domain,
