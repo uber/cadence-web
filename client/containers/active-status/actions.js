@@ -19,11 +19,32 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import actions from './actions';
-import Component from './component';
-import connector from './connector';
-import getters from './getters';
+import { CROSS_REGION_ALLOWED_CROSS_ORIGIN } from '../cross-region/getter-types';
+import {
+  ROUTE_PARAMS_CLUSTER_NAME,
+  ROUTE_PARAMS_DOMAIN,
+} from '../route/getter-types';
+import { ACTIVE_STATUS_ON_CHANGE } from './action-types';
+import { getHrefFromCluster } from './helpers';
 
-const container = connector(Component);
+const actions = {
+  [ACTIVE_STATUS_ON_CHANGE]: ({ dispatch, getters }, cluster) => {
+    const allowedCrossOrigin = getters[CROSS_REGION_ALLOWED_CROSS_ORIGIN];
+    const clusterName = getters[ROUTE_PARAMS_CLUSTER_NAME];
+    const domainName = getters[ROUTE_PARAMS_DOMAIN];
+    const { origin, pathname } = window.location;
 
-export { actions, container, getters };
+    const href = getHrefFromCluster({
+      allowedCrossOrigin,
+      cluster,
+      clusterName,
+      domainName,
+      origin,
+      pathname,
+    });
+
+    window.location = href;
+  },
+};
+
+export default actions;

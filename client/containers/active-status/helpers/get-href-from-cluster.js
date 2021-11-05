@@ -19,11 +19,33 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import actions from './actions';
-import Component from './component';
-import connector from './connector';
-import getters from './getters';
+const getHrefFromCluster = ({
+  allowedCrossOrigin,
+  cluster: {
+    isActive,
+    isGlobalDomain,
+    clusterName: clusterNamePath,
+    origin: clusterOrigin,
+  },
+  clusterName,
+  domainName,
+  origin,
+  pathname,
+}) => {
+  if (!allowedCrossOrigin) {
+    return `${clusterOrigin}${pathname}`;
+  }
 
-const container = connector(Component);
+  const replaceKey = `/domains/${domainName}/${
+    clusterName ? clusterName + '/' : ''
+  }`;
+  const replaceValue = `/domains/${domainName}/${
+    isGlobalDomain && isActive ? '' : clusterNamePath + '/'
+  }`;
 
-export { actions, container, getters };
+  const newPathname = pathname.replace(replaceKey, replaceValue);
+
+  return `${origin}${newPathname}`;
+};
+
+export default getHrefFromCluster;

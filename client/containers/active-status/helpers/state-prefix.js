@@ -19,11 +19,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import actions from './actions';
-import Component from './component';
-import connector from './connector';
-import getters from './getters';
+import { ACTIVE_STATUS_STATE_PREFIX } from '../constants';
 
-const container = connector(Component);
+const statePrefix = term => `${ACTIVE_STATUS_STATE_PREFIX}.${term}`;
 
-export { actions, container, getters };
+export default statePrefix;

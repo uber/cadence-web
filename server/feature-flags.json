@@ -4,6 +4,10 @@
     "value": true
   },
   {
+    "key": "crossRegion.activeStatusTag",
+    "value": true
+  },
+  {
     "key": "crossRegion.allowedCrossOrigin",
     "value": true
   },

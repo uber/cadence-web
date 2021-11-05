@@ -25,6 +25,7 @@ import VuexPersistence from 'vuex-persist';
 import { sync } from 'vuex-router-sync';
 import {
   // active status
+  activeStatusActions,
   activeStatusGetters,
 
   // cluster
@@ -129,6 +130,7 @@ const getStoreConfig = ({ router, state }) => {
 
   const storeConfig = {
     actions: {
+      ...activeStatusActions,
       ...clusterActions,
       ...crossRegionActions,
       ...domainActions,

@@ -19,11 +19,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import actions from './actions';
-import Component from './component';
-import connector from './connector';
-import getters from './getters';
+import { typePrefix } from './helpers';
 
-const container = connector(Component);
-
-export { actions, container, getters };
+export const ACTIVE_STATUS_ON_CHANGE = typePrefix('ON_CHANGE');
