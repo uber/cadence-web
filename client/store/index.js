@@ -24,6 +24,9 @@ import Vuex from 'vuex';
 import VuexPersistence from 'vuex-persist';
 import { sync } from 'vuex-router-sync';
 import {
+  // active status
+  activeStatusGetters,
+
   // cluster
   clusterActions,
   getClusterDefaultState,
@@ -135,6 +138,7 @@ const getStoreConfig = ({ router, state }) => {
       ...workflowPendingActions,
     },
     getters: {
+      ...activeStatusGetters,
       ...clusterGetters,
       ...crossRegionGetters,
       ...domainGetters,
