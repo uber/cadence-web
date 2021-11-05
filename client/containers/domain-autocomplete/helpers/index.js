@@ -20,6 +20,7 @@
 // THE SOFTWARE.
 
 export { default as combineDomainList } from './combine-domain-list';
+export { default as filterDuplicatesFromDomainList } from './filter-duplicates-from-domain-list';
 export { default as filterTopDomainList } from './filter-top-domain-list';
 export { default as filterVisitedDomainList } from './filter-visited-domain-list';
 export { default as formatDomainLabel } from './format-domain-label';

@@ -83,6 +83,7 @@ export default {
             :to="{
               name: 'workflow/summary',
               params: {
+                clusterName: item.clusterName,
                 domain: item.domainName,
                 runId: item.runId,
                 workflowId: item.workflowId,

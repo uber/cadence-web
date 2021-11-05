@@ -22,6 +22,10 @@
 import { debounce } from 'lodash-es';
 import { ROUTE_PUSH } from '../route/action-types';
 import {
+  CROSS_REGION_ALLOWED_CROSS_ORIGIN,
+  CROSS_REGION_CLUSTER_ORIGIN_LIST,
+} from '../cross-region/getter-types';
+import {
   DOMAIN_AUTOCOMPLETE_FETCH_DOMAIN_LIST,
   DOMAIN_AUTOCOMPLETE_ON_CHANGE,
   DOMAIN_AUTOCOMPLETE_ON_SEARCH,
@@ -33,33 +37,75 @@ import {
   DOMAIN_AUTOCOMPLETE_SET_VISITED_DOMAIN_LIST,
 } from './mutation-types';
 import {
-  DOMAIN_AUTOCOMPLETE_VISITED_DOMAIN_LIST,
   DOMAIN_AUTOCOMPLETE_SEARCH_URL,
+  DOMAIN_AUTOCOMPLETE_VISITED_DOMAIN_LIST,
 } from './getter-types';
 import { DEBOUNCE_WAIT } from './constants';
-import { updateVisitedDomainList } from './helpers';
+import {
+  updateVisitedDomainList,
+  filterDuplicatesFromDomainList,
+} from './helpers';
 import { httpService } from '~services';
 
 const actions = {
   [DOMAIN_AUTOCOMPLETE_FETCH_DOMAIN_LIST]: debounce(
     async ({ commit, getters }) => {
       const searchUrl = getters[DOMAIN_AUTOCOMPLETE_SEARCH_URL];
+      const allowedCrossOrigin = getters[CROSS_REGION_ALLOWED_CROSS_ORIGIN];
+      const clusterOriginList = getters[CROSS_REGION_CLUSTER_ORIGIN_LIST];
 
-      const domainList = await httpService.get(searchUrl);
+      const fetchDomainForOrigin = async ({ clusterName = '', origin }) => {
+        try {
+          const result = await httpService.get(
+            `${origin}${searchUrl}`,
+            origin && {
+              credentials: 'include',
+              mode: 'cors',
+            }
+          );
 
-      commit(DOMAIN_AUTOCOMPLETE_SET_IS_LOADING, false);
+          return result;
+        } catch (error) {
+          console.warn(
+            `Failed to fetch result from cluster "${clusterName}" with origin "${origin}" with error:`,
+            error
+          );
+        }
+      };
 
-      commit(DOMAIN_AUTOCOMPLETE_SET_DOMAIN_LIST, domainList);
+      if (allowedCrossOrigin && clusterOriginList) {
+        const domainListSet = await Promise.all(
+          clusterOriginList.map(fetchDomainForOrigin)
+        );
+
+        const domainList = filterDuplicatesFromDomainList(
+          domainListSet.filter(result => !!result).flat()
+        );
+
+        commit(DOMAIN_AUTOCOMPLETE_SET_IS_LOADING, false);
+        commit(DOMAIN_AUTOCOMPLETE_SET_DOMAIN_LIST, domainList);
+      } else {
+        const domainList = await fetchDomainForOrigin({ origin: '' });
+
+        commit(DOMAIN_AUTOCOMPLETE_SET_IS_LOADING, false);
+        commit(DOMAIN_AUTOCOMPLETE_SET_DOMAIN_LIST, domainList);
+      }
     },
     DEBOUNCE_WAIT
   ),
-  [DOMAIN_AUTOCOMPLETE_ON_CHANGE]: ({ commit, dispatch, getters }, payload) => {
+  [DOMAIN_AUTOCOMPLETE_ON_CHANGE]: async (
+    { commit, dispatch, getters },
+    payload
+  ) => {
     if (!payload) {
       return;
     }
 
     const { value } = payload;
     const visitedDomainList = getters[DOMAIN_AUTOCOMPLETE_VISITED_DOMAIN_LIST];
+    const allowedCrossOrigin = getters[CROSS_REGION_ALLOWED_CROSS_ORIGIN];
+    const dispatchToGlobalRoute = () =>
+      dispatch(ROUTE_PUSH, `/domains/${value.domainInfo.name}`);
 
     const updatedVisitedDomainList = updateVisitedDomainList({
       value,
@@ -71,7 +117,18 @@ const actions = {
       updatedVisitedDomainList
     );
 
-    dispatch(ROUTE_PUSH, `/domains/${value.domainInfo.name}`);
+    if (
+      value.isGlobalDomain ||
+      !allowedCrossOrigin ||
+      !value.replicationConfiguration
+    ) {
+      return dispatchToGlobalRoute();
+    }
+
+    dispatch(
+      ROUTE_PUSH,
+      `/domains/${value.domainInfo.name}/${value.replicationConfiguration.activeClusterName}`
+    );
   },
   [DOMAIN_AUTOCOMPLETE_ON_SEARCH]: async ({ commit, dispatch }, payload) => {
     commit(DOMAIN_AUTOCOMPLETE_SET_SEARCH, payload);
