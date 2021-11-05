@@ -67,7 +67,8 @@ const actions = {
           return result;
         } catch (error) {
           console.warn(
-            `Failed to fetch result from cluster "${clusterName}" with origin "${origin}"`
+            `Failed to fetch result from cluster "${clusterName}" with origin "${origin}" with error:`,
+            error
           );
         }
       };
