@@ -25,7 +25,6 @@ export { default as getDatetimeFormattedString } from './get-datetime-formatted-
 export { default as getEndTimeIsoString } from './get-end-time-iso-string';
 export { default as getEnvironment } from './get-environment';
 export { default as getEnvironmentList } from './get-environment-list';
-export { default as getEnvironmentLocation } from './get-environment-location';
 export { default as getErrorMessage } from './get-error-message';
 export { default as getExpiryDateTimeFromNow } from './get-expiry-date-time-from-now';
 export { default as getJsonStringObject } from './get-json-string-object';

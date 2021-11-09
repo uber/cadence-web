@@ -54,7 +54,6 @@ import {
 import {
   getEnvironment,
   getEnvironmentList,
-  getEnvironmentLocation,
   getLatestNewsItems,
   parseStringToBoolean,
   workflowHistoryEventHighlightListAddOrUpdate,
@@ -175,13 +174,7 @@ export default {
         return;
       }
 
-      const { pathname, search } = window.location;
-
-      window.location = getEnvironmentLocation({
-        environment,
-        pathname,
-        search,
-      });
+      window.location = environment.value;
     },
     onNewsDismiss() {
       localStorage.setItem(
