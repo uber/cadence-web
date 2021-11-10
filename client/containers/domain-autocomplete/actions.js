@@ -118,9 +118,10 @@ const actions = {
     );
 
     if (
-      value.isGlobalDomain ||
       !allowedCrossOrigin ||
-      !value.replicationConfiguration
+      !value.replicationConfiguration ||
+      (value.isGlobalDomain &&
+        value.replicationConfiguration.clusters.length > 1)
     ) {
       return dispatchToGlobalRoute();
     }
