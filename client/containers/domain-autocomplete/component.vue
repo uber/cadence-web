@@ -51,6 +51,10 @@ export default {
     isLoading: {
       type: Boolean,
     },
+    isMultiSelect: {
+      type: Boolean,
+      default: false,
+    },
     navigateToDomainUrl: {
       type: String,
     },
@@ -62,6 +66,9 @@ export default {
     },
   },
   methods: {
+    onMultiSelectChange(event) {
+      this.$emit('onMultiChange', event.target.checked);
+    },
     onAutocompleteChange(option) {
       this.$emit('onChange', option);
     },
@@ -81,12 +88,25 @@ export default {
           :focus="focus"
           :height="height"
           :is-loading="isLoading"
+          :multiple="isMultiSelect"
           :options="domainList"
           :placeholder="`${domain ? domain : 'cadence-canary'}`"
           :search="search"
           @change="onAutocompleteChange"
           @search="onAutocompleteSearch"
         />
+      </flex-grid-item>
+      <flex-grid-item width="100px" margin="10px">
+        <input
+          class="multi-select-checkbox"
+          :checked="isMultiSelect"
+          id="domain-autocomplete-multi-select"
+          type="checkbox"
+          @change="onMultiSelectChange"
+        />
+        <label class="non-selectable" for="domain-autocomplete-multi-select"
+          >Multi-select</label
+        >
       </flex-grid-item>
       <flex-grid-item width="32px">
         <span class="navigate-to-domain disabled" v-if="!navigateToDomainUrl" />
@@ -124,6 +144,16 @@ export default {
       text-align: center;
       width: 32px;
     }
+  }
+
+  .non-selectable {
+    user-select: none;
+  }
+
+  .multi-select-checkbox {
+    margin-left: 0;
+    margin-right: 5px;
+    vertical-align: top;
   }
 }
 </style>
