@@ -28,10 +28,12 @@ import {
 import {
   DOMAIN_AUTOCOMPLETE_FETCH_DOMAIN_LIST,
   DOMAIN_AUTOCOMPLETE_ON_CHANGE,
+  DOMAIN_AUTOCOMPLETE_ON_MULTI_SELECT_CHANGE,
   DOMAIN_AUTOCOMPLETE_ON_SEARCH,
 } from './action-types';
 import {
   DOMAIN_AUTOCOMPLETE_SET_IS_LOADING,
+  DOMAIN_AUTOCOMPLETE_SET_IS_MULTI_SELECT,
   DOMAIN_AUTOCOMPLETE_SET_DOMAIN_LIST,
   DOMAIN_AUTOCOMPLETE_SET_SEARCH,
   DOMAIN_AUTOCOMPLETE_SET_VISITED_DOMAIN_LIST,
@@ -97,7 +99,8 @@ const actions = {
     { commit, dispatch, getters },
     payload
   ) => {
-    if (!payload) {
+    // TODO - May need different logic here for multi-select...
+    if (!payload || (Array.isArray(payload) && !payload.length)) {
       return;
     }
 
@@ -130,6 +133,9 @@ const actions = {
       ROUTE_PUSH,
       `/domains/${value.domainInfo.name}/${value.replicationConfiguration.activeClusterName}`
     );
+  },
+  [DOMAIN_AUTOCOMPLETE_ON_MULTI_SELECT_CHANGE]: ({ commit }, payload) => {
+    commit(DOMAIN_AUTOCOMPLETE_SET_IS_MULTI_SELECT, payload);
   },
   [DOMAIN_AUTOCOMPLETE_ON_SEARCH]: async ({ commit, dispatch }, payload) => {
     commit(DOMAIN_AUTOCOMPLETE_SET_SEARCH, payload);

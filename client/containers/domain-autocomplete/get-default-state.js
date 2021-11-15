@@ -23,6 +23,7 @@ import { migrateRecentDomains } from './helpers';
 
 const getDefaultState = (state = {}) => ({
   isLoading: false,
+  isMultiSelect: false,
   domainList: [],
   search: '',
   visitedDomainList: migrateRecentDomains(

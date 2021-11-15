@@ -67,12 +67,20 @@ export default {
   },
   methods: {
     onMultiSelectChange(event) {
-      this.$emit('onMultiChange', event.target.checked);
+      console.log('onMultiSelectChange', event.target.checked);
+      this.$emit('onMultiSelectChange', event.target.checked);
     },
     onAutocompleteChange(option) {
+      console.log('onChange', option);
+
+      if (!option || (Array.isArray(option) && !option.length)) {
+        return;
+      }
+
       this.$emit('onChange', option);
     },
     onAutocompleteSearch(search) {
+      console.log('onSearch', search);
       this.$emit('onSearch', search);
     },
   },
