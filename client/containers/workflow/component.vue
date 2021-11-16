@@ -328,9 +328,7 @@ export default {
       loading:
         wfLoading ||
         (history.loading && (!historyEvents || !historyEvents.length)),
-      ready:
-        !wfLoading &&
-        (!history.loading || (historyEvents && historyEvents.length)),
+      ready: !wfLoading && !history.loading,
     }"
   >
     <navigation-bar>
