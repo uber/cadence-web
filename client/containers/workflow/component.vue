@@ -325,7 +325,9 @@ export default {
   <section
     class="execution"
     :class="{
-      loading: wfLoading || history.loading,
+      loading:
+        wfLoading ||
+        (history.loading && (!historyEvents || !historyEvents.length)),
       ready: !wfLoading && !history.loading,
     }"
   >
