@@ -55,6 +55,9 @@ export default {
       type: Boolean,
       default: false,
     },
+    multiValue: {
+      type: Array,
+    },
     navigateToDomainUrl: {
       type: String,
     },
@@ -100,6 +103,7 @@ export default {
           :options="domainList"
           :placeholder="`${domain ? domain : 'cadence-canary'}`"
           :search="search"
+          :value="multiValue"
           @change="onAutocompleteChange"
           @search="onAutocompleteSearch"
         />
