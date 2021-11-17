@@ -60,6 +60,7 @@ export default {
     };
   },
   props: [
+    'clusterName',
     'dateFormat',
     'displayWorkflowId',
     'domain',
@@ -96,6 +97,7 @@ export default {
     },
     historyEvents() {
       const {
+        clusterName,
         dateFormat,
         events,
         timeFormat,
@@ -105,6 +107,7 @@ export default {
       } = this;
 
       return getHistoryEvents({
+        clusterName,
         dateFormat,
         events,
         timeFormat,
@@ -114,9 +117,9 @@ export default {
       });
     },
     historyTimelineEvents() {
-      const { historyEvents } = this;
+      const { clusterName, historyEvents } = this;
 
-      return getHistoryTimelineEvents({ historyEvents });
+      return getHistoryTimelineEvents({ clusterName, historyEvents });
     },
     historyUrl() {
       const historyUrl = `${this.baseAPIURL}/history?waitForNewEvent=true`;
@@ -201,6 +204,7 @@ export default {
           this.events = this.events.concat(events);
 
           this.summary = getSummary({
+            clusterName: this.clusterName,
             events: this.events,
             isWorkflowRunning: this.isWorkflowRunning,
             workflow: this.workflow,
@@ -336,14 +340,20 @@ export default {
         id="nav-link-summary"
         icon="icon_receipt"
         label="Summary"
-        :to="{ name: 'workflow/summary' }"
+        :to="{
+          name: 'workflow/summary',
+          params: { clusterName },
+        }"
         data-cy="summary-link"
       />
       <navigation-link
         id="nav-link-history"
         icon="icon_trip-history"
         label="History"
-        :to="{ name: 'workflow/history' }"
+        :to="{
+          name: 'workflow/history',
+          params: { clusterName },
+        }"
         data-cy="history-link"
       />
       <navigation-link
@@ -351,21 +361,30 @@ export default {
         icon="icon_send"
         label="Pending"
         :notification-count="pendingTaskCount"
-        :to="{ name: 'workflow/pending' }"
+        :to="{
+          name: 'workflow/pending',
+          params: { clusterName },
+        }"
         data-cy="pending-link"
       />
       <navigation-link
         id="nav-link-stack-trace"
         icon="icon_trips"
         label="Stack Trace"
-        :to="{ name: 'workflow/stack-trace' }"
+        :to="{
+          name: 'workflow/stack-trace',
+          params: { clusterName },
+        }"
         data-cy="stack-trace-link"
       />
       <navigation-link
         id="nav-link-query"
         icon="icon_lost"
         label="Query"
-        :to="{ name: 'workflow/query' }"
+        :to="{
+          name: 'workflow/query',
+          params: { clusterName },
+        }"
         data-cy="query-link"
       />
     </navigation-bar>

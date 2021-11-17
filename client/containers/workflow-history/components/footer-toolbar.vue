@@ -25,6 +25,9 @@ import { ButtonFill } from '~components';
 export default {
   name: 'footer-toolbar',
   props: {
+    clusterName: {
+      type: String,
+    },
     pendingTaskCount: {
       type: Number,
       default: 0,
@@ -58,7 +61,10 @@ export default {
       :label="pendingTasksButtonLabel"
       size="small"
       tag="router-link"
-      :to="{ name: 'workflow/pending' }"
+      :to="{
+        name: 'workflow/pending',
+        params: { clusterName },
+      }"
     />
   </div>
 </template>

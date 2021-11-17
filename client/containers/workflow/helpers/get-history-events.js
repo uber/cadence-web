@@ -27,6 +27,7 @@ import getEventFullDetails from './get-event-full-details';
 import getEventSummary from './get-event-summary';
 
 const getHistoryEvents = ({
+  clusterName,
   dateFormat,
   events,
   timeFormat,
@@ -76,7 +77,7 @@ const getHistoryEvents = ({
         workflowHistoryEventHighlightList,
         workflowHistoryEventHighlightListEnabled,
       });
-      const eventSummary = getEventSummary(event);
+      const eventSummary = getEventSummary({ clusterName, event });
       const eventFullDetails = getEventFullDetails({
         event,
         workflowHistoryEventHighlightList,

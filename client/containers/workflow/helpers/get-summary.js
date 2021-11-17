@@ -23,7 +23,7 @@ import getSummaryWorkflowStatus from './get-summary-workflow-status';
 import parentWorkflowLink from './parent-workflow-link';
 import { getJsonStringObject, getKeyValuePairs } from '~helpers';
 
-const getSummary = ({ events, isWorkflowRunning, workflow }) => {
+const getSummary = ({ clusterName, events, isWorkflowRunning, workflow }) => {
   const formattedWorkflow = workflow.pendingActivities
     ? {
         ...workflow,
@@ -64,12 +64,16 @@ const getSummary = ({ events, isWorkflowRunning, workflow }) => {
     : undefined;
 
   const wfStatus = getSummaryWorkflowStatus({
+    clusterName,
     isWorkflowRunning,
     workflow,
     workflowCompletedEvent,
   });
 
-  const parentWorkflowRoute = parentWorkflowLink(firstEvent.details);
+  const parentWorkflowRoute = parentWorkflowLink({
+    clusterName,
+    eventDetails: firstEvent.details,
+  });
 
   return {
     input,

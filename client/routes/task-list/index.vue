@@ -23,7 +23,14 @@
 import { FeatureFlag, NavigationBar, NavigationLink } from '~components';
 
 export default {
-  props: ['dateFormat', 'domain', 'taskList', 'timeFormat', 'timezone'],
+  props: [
+    'clusterName',
+    'dateFormat',
+    'domain',
+    'taskList',
+    'timeFormat',
+    'timezone',
+  ],
   components: {
     'feature-flag': FeatureFlag,
     'navigation-bar': NavigationBar,
@@ -38,20 +45,29 @@ export default {
       <navigation-link
         icon="icon_eta"
         label="Pollers"
-        :to="{ name: 'task-list/pollers' }"
+        :to="{
+          name: 'task-list/pollers',
+          params: { clusterName },
+        }"
       />
       <feature-flag display="inline" name="taskListPartition">
         <navigation-link
           icon="icon_fare-split"
           label="Partition"
-          :to="{ name: 'task-list/partition' }"
+          :to="{
+            name: 'task-list/partition',
+            params: { clusterName },
+          }"
         />
       </feature-flag>
       <feature-flag display="inline" name="taskListMetrics">
         <navigation-link
           icon="icon_chart"
           label="Metrics"
-          :to="{ name: 'task-list/metrics' }"
+          :to="{
+            name: 'task-list/metrics',
+            params: { clusterName },
+          }"
         />
       </feature-flag>
     </navigation-bar>

@@ -25,7 +25,7 @@ import workflowLink from './workflow-link';
 import { WORKFLOW_EVENT_TYPE } from '~constants';
 import { shortName } from '~helpers';
 
-export const summarizeEvents = {
+export const summarizeEvents = ({ clusterName }) => ({
   [WORKFLOW_EVENT_TYPE.ActivityTaskCanceled]: d => ({}),
   [WORKFLOW_EVENT_TYPE.ActivityTaskCancelRequested]: d => ({
     ID: d.activityId,
@@ -141,7 +141,7 @@ export const summarizeEvents = {
       Parent: undefined,
       Workflow: d.workflowType ? shortName(d.workflowType.name) : '',
     };
-    const wfLink = parentWorkflowLink(d);
+    const wfLink = parentWorkflowLink({ clusterName, eventDetails: d });
 
     if (wfLink) {
       summary.Parent = {
@@ -152,4 +152,4 @@ export const summarizeEvents = {
 
     return summary;
   },
-};
+});
