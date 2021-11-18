@@ -19,13 +19,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const getWorkflowLink = ({ domain, runID, workflowID }) =>
+const getWorkflowLink = ({ clusterName, domain, runID, workflowID }) =>
   (domain &&
     runID &&
     workflowID && {
       routeLink: {
         name: 'workflow/summary',
         params: {
+          clusterName,
           domain,
           workflowId: workflowID,
           runId: runID,

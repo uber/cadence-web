@@ -36,6 +36,7 @@ export default {
   },
   props: [
     'baseAPIURL',
+    'clusterName',
     'dateFormat',
     'displayWorkflowId',
     'domain',
@@ -256,6 +257,7 @@ export default {
             :to="{
               name: 'task-list',
               params: {
+                clusterName,
                 taskList: workflow.executionConfiguration.taskList.name,
               },
             }"

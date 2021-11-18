@@ -24,6 +24,7 @@ import getEventKvpsHighlight from './get-event-kvps-highlight';
 import { getKeyValuePairs } from '~helpers';
 
 const getEventFullDetails = ({
+  clusterName,
   event,
   workflowHistoryEventHighlightList,
   workflowHistoryEventHighlightListEnabled,
@@ -43,7 +44,7 @@ const getEventFullDetails = ({
 
   const { kvps, isHighlighted } = getEventKvpsHighlight({
     eventType,
-    kvps: getKeyValuePairs({ item }),
+    kvps: getKeyValuePairs({ clusterName, item }),
     workflowHistoryEventHighlightList,
     workflowHistoryEventHighlightListEnabled,
   });

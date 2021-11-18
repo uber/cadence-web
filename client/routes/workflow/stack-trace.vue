@@ -34,6 +34,7 @@ export default {
   },
   props: [
     'baseAPIURL',
+    'clusterName',
     'dateFormat',
     'isWorkerRunning',
     'taskListName',
@@ -119,6 +120,7 @@ export default {
         :to="{
           name: 'task-list',
           params: {
+            clusterName,
             taskList: taskListName,
           },
         }"

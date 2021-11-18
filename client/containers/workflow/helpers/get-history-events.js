@@ -27,6 +27,7 @@ import getEventFullDetails from './get-event-full-details';
 import getEventSummary from './get-event-summary';
 
 const getHistoryEvents = ({
+  clusterName,
   dateFormat,
   events,
   timeFormat,
@@ -72,12 +73,14 @@ const getHistoryEvents = ({
     })
     .map(event => {
       const details = getEventDetails({
+        clusterName,
         event,
         workflowHistoryEventHighlightList,
         workflowHistoryEventHighlightListEnabled,
       });
-      const eventSummary = getEventSummary(event);
+      const eventSummary = getEventSummary({ clusterName, event });
       const eventFullDetails = getEventFullDetails({
+        clusterName,
         event,
         workflowHistoryEventHighlightList,
         workflowHistoryEventHighlightListEnabled,

@@ -25,55 +25,63 @@ import workflowLink from './workflow-link';
 import { WORKFLOW_EVENT_TYPE } from '~constants';
 import { shortName } from '~helpers';
 
-export const summarizeEvents = {
-  [WORKFLOW_EVENT_TYPE.ActivityTaskCanceled]: d => ({}),
-  [WORKFLOW_EVENT_TYPE.ActivityTaskCancelRequested]: d => ({
-    ID: d.activityId,
+export const summarizeEvents = ({ clusterName }) => ({
+  [WORKFLOW_EVENT_TYPE.ActivityTaskCanceled]: eventDetails => ({}),
+  [WORKFLOW_EVENT_TYPE.ActivityTaskCancelRequested]: eventDetails => ({
+    ID: eventDetails.activityId,
   }),
-  [WORKFLOW_EVENT_TYPE.ActivityTaskCompleted]: d => ({ result: d.result }),
-  [WORKFLOW_EVENT_TYPE.ActivityTaskFailed]: d => ({
-    details: d.details,
-    reason: d.reason,
+  [WORKFLOW_EVENT_TYPE.ActivityTaskCompleted]: eventDetails => ({
+    result: eventDetails.result,
   }),
-  [WORKFLOW_EVENT_TYPE.ActivityTaskScheduled]: d => ({
+  [WORKFLOW_EVENT_TYPE.ActivityTaskFailed]: eventDetails => ({
+    details: eventDetails.details,
+    reason: eventDetails.reason,
+  }),
+  [WORKFLOW_EVENT_TYPE.ActivityTaskScheduled]: eventDetails => ({
     'Close Timeout': moment
-      .duration(d.scheduleToCloseTimeoutSeconds, 'seconds')
+      .duration(eventDetails.scheduleToCloseTimeoutSeconds, 'seconds')
       .format(),
-    ID: d.activityId,
-    input: d.input,
-    Name: shortName(d.activityType.name),
+    ID: eventDetails.activityId,
+    input: eventDetails.input,
+    Name: shortName(eventDetails.activityType.name),
   }),
-  [WORKFLOW_EVENT_TYPE.ActivityTaskStarted]: d => ({
-    attempt: d.attempt,
-    identity: d.identity,
-    requestId: d.requestId,
+  [WORKFLOW_EVENT_TYPE.ActivityTaskStarted]: eventDetails => ({
+    attempt: eventDetails.attempt,
+    identity: eventDetails.identity,
+    requestId: eventDetails.requestId,
   }),
-  [WORKFLOW_EVENT_TYPE.ActivityTaskTimedOut]: d => ({
-    'Timeout Type': d.timeoutType,
+  [WORKFLOW_EVENT_TYPE.ActivityTaskTimedOut]: eventDetails => ({
+    'Timeout Type': eventDetails.timeoutType,
   }),
-  [WORKFLOW_EVENT_TYPE.ChildWorkflowExecutionCompleted]: d => ({
-    result: d.result,
-    Workflow: workflowLink(d, true),
+  [WORKFLOW_EVENT_TYPE.ChildWorkflowExecutionCompleted]: eventDetails => ({
+    result: eventDetails.result,
+    Workflow: workflowLink({ clusterName, eventDetails, short: true }),
   }),
-  [WORKFLOW_EVENT_TYPE.ChildWorkflowExecutionStarted]: d => ({
-    Workflow: workflowLink(d),
+  [WORKFLOW_EVENT_TYPE.ChildWorkflowExecutionStarted]: eventDetails => ({
+    Workflow: workflowLink({ clusterName, eventDetails }),
   }),
-  [WORKFLOW_EVENT_TYPE.DecisionTaskCompleted]: d => ({ identity: d.identity }),
-  [WORKFLOW_EVENT_TYPE.DecisionTaskScheduled]: d => ({
-    Tasklist: d.taskList.name,
-    Timeout: moment.duration(d.startToCloseTimeoutSeconds, 'seconds').format(),
+  [WORKFLOW_EVENT_TYPE.DecisionTaskCompleted]: eventDetails => ({
+    identity: eventDetails.identity,
   }),
-  [WORKFLOW_EVENT_TYPE.DecisionTaskStarted]: d => ({ requestId: d.requestId }),
-  [WORKFLOW_EVENT_TYPE.DecisionTaskTimedOut]: d => ({
-    'Timeout Type': d.timeoutType,
+  [WORKFLOW_EVENT_TYPE.DecisionTaskScheduled]: eventDetails => ({
+    Tasklist: eventDetails.taskList.name,
+    Timeout: moment
+      .duration(eventDetails.startToCloseTimeoutSeconds, 'seconds')
+      .format(),
   }),
-  [WORKFLOW_EVENT_TYPE.ExternalWorkflowExecutionSignaled]: d => ({
-    Workflow: workflowLink(d),
+  [WORKFLOW_EVENT_TYPE.DecisionTaskStarted]: eventDetails => ({
+    requestId: eventDetails.requestId,
   }),
-  [WORKFLOW_EVENT_TYPE.MarkerRecorded]: d => {
-    const details = d.details || {};
+  [WORKFLOW_EVENT_TYPE.DecisionTaskTimedOut]: eventDetails => ({
+    'Timeout Type': eventDetails.timeoutType,
+  }),
+  [WORKFLOW_EVENT_TYPE.ExternalWorkflowExecutionSignaled]: eventDetails => ({
+    Workflow: workflowLink({ clusterName, eventDetails }),
+  }),
+  [WORKFLOW_EVENT_TYPE.MarkerRecorded]: eventDetails => {
+    const details = eventDetails.details || {};
 
-    if (d.markerName === 'LocalActivity') {
+    if (eventDetails.markerName === 'LocalActivity') {
       const la = { 'Local Activity ID': details.ActivityID };
 
       if (details.ErrJSON) {
@@ -91,14 +99,14 @@ export const summarizeEvents = {
       return la;
     }
 
-    if (d.markerName === 'Version') {
+    if (eventDetails.markerName === 'Version') {
       return {
         Details: details[0],
         Version: details[1],
       };
     }
 
-    if (d.markerName === 'SideEffect') {
+    if (eventDetails.markerName === 'SideEffect') {
       if (!Array.isArray(details)) {
         // Java client
         return {
@@ -113,35 +121,37 @@ export const summarizeEvents = {
       };
     }
 
-    return d;
+    return eventDetails;
   },
-  [WORKFLOW_EVENT_TYPE.SignalExternalWorkflowExecutionInitiated]: d => ({
-    input: d.input,
-    signal: d.signalName,
-    Workflow: workflowLink(d),
+  [WORKFLOW_EVENT_TYPE.SignalExternalWorkflowExecutionInitiated]: eventDetails => ({
+    input: eventDetails.input,
+    signal: eventDetails.signalName,
+    Workflow: workflowLink({ clusterName, eventDetails }),
   }),
-  [WORKFLOW_EVENT_TYPE.StartChildWorkflowExecutionInitiated]: d => ({
-    input: d.input,
-    Tasklist: d.taskList.name,
-    Workflow: shortName(d.workflowType.name),
+  [WORKFLOW_EVENT_TYPE.StartChildWorkflowExecutionInitiated]: eventDetails => ({
+    input: eventDetails.input,
+    Tasklist: eventDetails.taskList.name,
+    Workflow: shortName(eventDetails.workflowType.name),
   }),
-  [WORKFLOW_EVENT_TYPE.TimerStarted]: d => ({
+  [WORKFLOW_EVENT_TYPE.TimerStarted]: eventDetails => ({
     'Fire Timeout': moment
-      .duration(d.startToFireTimeoutSeconds, 'seconds')
+      .duration(eventDetails.startToFireTimeoutSeconds, 'seconds')
       .format(),
-    'Timer ID': d.timerId,
+    'Timer ID': eventDetails.timerId,
   }),
-  [WORKFLOW_EVENT_TYPE.WorkflowExecutionStarted]: d => {
+  [WORKFLOW_EVENT_TYPE.WorkflowExecutionStarted]: eventDetails => {
     const summary = {
       'Close Timeout': moment
-        .duration(d.executionStartToCloseTimeoutSeconds, 'seconds')
+        .duration(eventDetails.executionStartToCloseTimeoutSeconds, 'seconds')
         .format(),
-      identity: d.identity,
-      input: d.input,
+      identity: eventDetails.identity,
+      input: eventDetails.input,
       Parent: undefined,
-      Workflow: d.workflowType ? shortName(d.workflowType.name) : '',
+      Workflow: eventDetails.workflowType
+        ? shortName(eventDetails.workflowType.name)
+        : '',
     };
-    const wfLink = parentWorkflowLink(d);
+    const wfLink = parentWorkflowLink({ clusterName, eventDetails });
 
     if (wfLink) {
       summary.Parent = {
@@ -152,4 +162,4 @@ export const summarizeEvents = {
 
     return summary;
   },
-};
+});
