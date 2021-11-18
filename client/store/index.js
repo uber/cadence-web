@@ -110,8 +110,9 @@ const getStoreConfig = ({ router, state }) => {
         return;
       }
 
-      // ensures cross region does not persist to local storage.
+      // ensures these states do not persist to local storage.
       const crossRegion = getCrossRegionDefaultState();
+      const domain = getDomainDefaultState();
 
       const domainAutocomplete = domainAutocompleteReducer(
         state.domainAutocomplete
@@ -119,10 +120,11 @@ const getStoreConfig = ({ router, state }) => {
 
       return {
         ...state,
+        crossRegion,
+        domain,
         ...(domainAutocomplete && {
           domainAutocomplete,
         }),
-        crossRegion,
       };
     },
     storage: window.localStorage,
