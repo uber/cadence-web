@@ -36,6 +36,7 @@ export default {
   },
   props: [
     'baseAPIURL',
+    'clusterName',
     'dateFormat',
     'displayWorkflowId',
     'domain',
