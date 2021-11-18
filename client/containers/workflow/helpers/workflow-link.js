@@ -21,10 +21,10 @@
 
 import { shortName } from '~helpers';
 
-const workflowLink = (d, short) => {
+const workflowLink = ({ clusterName, eventDetails, short }) => {
   const text = [
-    d.workflowType ? shortName(d.workflowType.name) : '',
-    short ? '' : d.workflowExecution.workflowId,
+    eventDetails.workflowType ? shortName(eventDetails.workflowType.name) : '',
+    short ? '' : eventDetails.workflowExecution.workflowId,
   ]
     .filter(x => x)
     .join(' - ');
@@ -33,9 +33,10 @@ const workflowLink = (d, short) => {
     routeLink: {
       name: 'workflow/summary',
       params: {
-        domain: d.domain,
-        workflowId: d.workflowExecution.workflowId,
-        runId: d.workflowExecution.runId,
+        clusterName,
+        domain: eventDetails.domain,
+        workflowId: eventDetails.workflowExecution.workflowId,
+        runId: eventDetails.workflowExecution.runId,
       },
     },
     text,

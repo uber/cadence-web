@@ -23,6 +23,7 @@
 export default {
   name: 'archival-table-row',
   props: [
+    'clusterName',
     'closeStatus',
     'closeTime',
     'domainName',
@@ -44,6 +45,7 @@ export default {
         :to="{
           name: 'workflow/summary',
           params: {
+            clusterName,
             domain: domainName,
             runId: runId,
             workflowId: workflowId,

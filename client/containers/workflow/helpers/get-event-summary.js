@@ -22,7 +22,7 @@
 import { summarizeEvents } from './summarize-events';
 import { getKeyValuePairs } from '~helpers';
 
-const getEventSummary = event => {
+const getEventSummary = ({ clusterName, event }) => {
   if (!event) {
     return event;
   }
@@ -33,14 +33,14 @@ const getEventSummary = event => {
 
   const { eventId, eventType } = event;
 
-  const maps = summarizeEvents;
+  const maps = summarizeEvents({ clusterName });
 
   const item =
     event.eventType in maps
       ? maps[event.eventType](event.details)
       : event.details;
 
-  const kvps = getKeyValuePairs({ item });
+  const kvps = getKeyValuePairs({ clusterName, item });
 
   return {
     ...item,

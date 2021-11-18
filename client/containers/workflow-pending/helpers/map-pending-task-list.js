@@ -28,7 +28,7 @@ import {
 import getWorkflowLink from './get-workflow-link';
 import { getKeyValuePairs } from '~helpers';
 
-const mapPendingTaskItem = domain => item => {
+const mapPendingTaskItem = ({ clusterName, domain }) => item => {
   const { pendingTaskType, runID } = item;
 
   const mappedItem = {
@@ -37,19 +37,22 @@ const mapPendingTaskItem = domain => item => {
       item[PENDING_TASK_TYPE_TO_ID_MAP[pendingTaskType]]
     }`,
     pendingTaskTypeDisplay: PENDING_TASK_TYPE_TO_DISPLAY_MAP[pendingTaskType],
-    ...(runID && { runID: getWorkflowLink({ ...item, domain }) || runID }),
+    ...(runID && {
+      runID: getWorkflowLink({ ...item, clusterName, domain }) || runID,
+    }),
   };
 
   return {
     ...mappedItem,
     kvps: getKeyValuePairs({
+      clusterName,
       excludes: PENDING_TASK_KVPS_EXCLUDE_KEYS,
       item: mappedItem,
     }),
   };
 };
 
-const mapPendingTaskList = ({ domain, pendingTaskList }) =>
-  pendingTaskList.map(mapPendingTaskItem(domain));
+const mapPendingTaskList = ({ clusterName, domain, pendingTaskList }) =>
+  pendingTaskList.map(mapPendingTaskItem({ clusterName, domain }));
 
 export default mapPendingTaskList;

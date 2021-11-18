@@ -22,6 +22,7 @@
 import { WORKFLOW_EVENT_TYPE } from '~constants';
 
 const getSummaryWorkflowStatus = ({
+  clusterName,
   isWorkflowRunning,
   workflow,
   workflowCompletedEvent,
@@ -45,6 +46,7 @@ const getSummaryWorkflowStatus = ({
       to: {
         name: 'workflow/summary',
         params: {
+          clusterName,
           runId: workflowCompletedEvent.details.newExecutionRunId,
         },
       },

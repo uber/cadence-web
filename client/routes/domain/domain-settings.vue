@@ -32,17 +32,19 @@ export default {
       domainConfig: undefined,
     };
   },
-  props: ['domain'],
+  props: ['clusterName', 'domain'],
   components: {
     'detail-list': DetailList,
   },
   created() {
+    const { clusterName } = this;
+
     httpService
       .get(`/api/domains/${this.domain}`)
       .then(
         r => {
           const domainConfig = mapDomainDescription(r);
-          const kvps = getKeyValuePairs({ item: domainConfig });
+          const kvps = getKeyValuePairs({ clusterName, item: domainConfig });
 
           this.domainConfig = { ...domainConfig, kvps };
         },

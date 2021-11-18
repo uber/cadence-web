@@ -39,7 +39,7 @@ export default {
       running: false,
     };
   },
-  props: ['baseAPIURL', 'taskListName', 'isWorkerRunning'],
+  props: ['baseAPIURL', 'clusterName', 'taskListName', 'isWorkerRunning'],
   created() {
     if (!this.isWorkerRunning) {
       return;
@@ -137,6 +137,7 @@ export default {
         :to="{
           name: 'task-list',
           params: {
+            clusterName,
             taskList: taskListName,
           },
         }"

@@ -22,9 +22,9 @@
 import getEventDetails from './get-event-details';
 import mapTimelineEvents from './map-timeline-events';
 
-const getHistoryTimelineEvents = ({ historyEvents }) =>
-  mapTimelineEvents(historyEvents).map(event => {
-    const details = getEventDetails({ event });
+const getHistoryTimelineEvents = ({ clusterName, historyEvents }) =>
+  mapTimelineEvents({ clusterName, historyEvents }).map(event => {
+    const details = getEventDetails({ clusterName, event });
 
     return { ...event, details };
   });

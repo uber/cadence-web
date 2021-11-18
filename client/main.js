@@ -176,6 +176,7 @@ const routeOpts = {
           },
           props: {
             summary: ({ params }) => ({
+              clusterName: params.clusterName,
               runId: params.runId,
               workflowId: encodeURIComponent(params.workflowId),
             }),
@@ -208,6 +209,11 @@ const routeOpts = {
           components: {
             pending: WorkflowPending,
           },
+          props: {
+            pending: ({ params }) => ({
+              clusterName: params.clusterName,
+            }),
+          },
         },
         {
           name: 'workflow/stack-trace',
@@ -216,6 +222,11 @@ const routeOpts = {
           components: {
             stacktrace: StackTrace,
           },
+          props: {
+            stacktrace: ({ params }) => ({
+              clusterName: params.clusterName,
+            }),
+          },
         },
         {
           name: 'workflow/query',
@@ -223,6 +234,11 @@ const routeOpts = {
             '/domains/:domain/:clusterName?/workflows/:workflowId/:runId/query',
           components: {
             query: Query,
+          },
+          props: {
+            query: ({ params }) => ({
+              clusterName: params.clusterName,
+            }),
           },
         },
       ],

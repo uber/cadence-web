@@ -76,6 +76,7 @@ export default {
   },
   props: [
     'baseAPIURL',
+    'clusterName',
     'domain',
     'eventId',
     'events',
@@ -550,7 +551,10 @@ export default {
                 </DynamicScrollerItem>
               </template>
             </DynamicScroller>
-            <footer-toolbar :pending-task-count="pendingTaskCount" />
+            <footer-toolbar
+              :cluster-name="clusterName"
+              :pending-task-count="pendingTaskCount"
+            />
           </div>
           <prism
             class="json"
