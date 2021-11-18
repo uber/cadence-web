@@ -19,7 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { ROUTE_PARAMS, ROUTE_QUERY } from '../route/getter-types';
+import { ROUTE_PARAMS_DOMAIN, ROUTE_QUERY } from '../route/getter-types';
 import {
   PENDING_TASK_TYPE_ACTIVITY,
   PENDING_TASK_TYPE_CHILD_WORKFLOW,
@@ -144,7 +144,7 @@ describe('workflow pending getters', () => {
   describe('when calling getters[WORKFLOW_PENDING_ACTIVE_PENDING_TASK_LIST]', () => {
     describe(
       [
-        'and getters[ROUTE_PARAMS] returns { domain: "samples-domain" } and ',
+        'and getters[ROUTE_PARAMS_DOMAIN] returns "samples-domain" and ',
         'getters[WORKFLOW_PENDING_ACTIVE_FILTER] returns PENDING_TASK_FILTER_ACTIVITIES and ',
         'getters[WORKFLOW_EXECUTION_PENDING_ACTIVITIES] returns a pending activity list',
       ].join(''),
@@ -152,7 +152,7 @@ describe('workflow pending getters', () => {
         it('should return a mapped pending activity list.', () => {
           const getterFns = {
             ...workflowPendingGetterFns,
-            [ROUTE_PARAMS]: () => ({ domain: 'samples-domain' }),
+            [ROUTE_PARAMS_DOMAIN]: () => 'samples-domain',
             [WORKFLOW_PENDING_ACTIVE_FILTER]: () =>
               PENDING_TASK_FILTER_ACTIVITIES,
             [WORKFLOW_EXECUTION_PENDING_ACTIVITIES]: () => [
@@ -185,7 +185,7 @@ describe('workflow pending getters', () => {
 
     describe(
       [
-        'and getters[ROUTE_PARAMS] returns { domain: "samples-domain" } and ',
+        'and getters[ROUTE_PARAMS_DOMAIN] returns "samples-domain" and ',
         'getters[WORKFLOW_PENDING_ACTIVE_FILTER] returns PENDING_TASK_FILTER_CHILDREN and ',
         'getters[WORKFLOW_EXECUTION_PENDING_CHILDREN] returns a pending child workflow list',
       ].join(''),
@@ -193,7 +193,7 @@ describe('workflow pending getters', () => {
         it('should return a mapped pending child workflow list.', () => {
           const getterFns = {
             ...workflowPendingGetterFns,
-            [ROUTE_PARAMS]: () => ({ domain: 'samples-domain' }),
+            [ROUTE_PARAMS_DOMAIN]: () => 'samples-domain',
             [WORKFLOW_PENDING_ACTIVE_FILTER]: () =>
               PENDING_TASK_FILTER_CHILDREN,
             [WORKFLOW_EXECUTION_PENDING_CHILDREN]: () => [
@@ -256,7 +256,7 @@ describe('workflow pending getters', () => {
 
     describe(
       [
-        'and getters[ROUTE_PARAMS] returns { domain: "samples-domain" } and ',
+        'and getters[ROUTE_PARAMS_DOMAIN] returns "samples-domain" and ',
         'getters[WORKFLOW_PENDING_ACTIVE_FILTER] returns PENDING_TASK_FILTER_DECISIONS and ',
         'getters[WORKFLOW_EXECUTION_PENDING_DECISIONS] returns a pending decision list',
       ].join(''),
@@ -264,7 +264,7 @@ describe('workflow pending getters', () => {
         it('should return a mapped pending decision list.', () => {
           const getterFns = {
             ...workflowPendingGetterFns,
-            [ROUTE_PARAMS]: () => ({ domain: 'samples-domain' }),
+            [ROUTE_PARAMS_DOMAIN]: () => 'samples-domain',
             [WORKFLOW_PENDING_ACTIVE_FILTER]: () =>
               PENDING_TASK_FILTER_DECISIONS,
             [WORKFLOW_EXECUTION_PENDING_DECISIONS]: () => [
