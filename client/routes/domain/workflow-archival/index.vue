@@ -26,7 +26,7 @@ import { ArchivalDisabledMessaging } from './components';
 
 export default {
   name: 'workflow-archival',
-  props: ['dateFormat', 'domain', 'timeFormat', 'timezone'],
+  props: ['clusterName', 'dateFormat', 'domain', 'timeFormat', 'timezone'],
   data() {
     return {
       domainSettings: {},
@@ -59,6 +59,7 @@ export default {
     <router-view
       name="workflow-archival-advanced"
       v-if="!loading && isArchivalEnabled"
+      :cluster-name="clusterName"
       :date-format="dateFormat"
       :domain="domain"
       :timeFormat="timeFormat"
@@ -67,6 +68,7 @@ export default {
     <router-view
       name="workflow-archival-basic"
       v-if="!loading && isArchivalEnabled"
+      :cluster-name="clusterName"
       :date-format="dateFormat"
       :domain="domain"
       :timeFormat="timeFormat"
