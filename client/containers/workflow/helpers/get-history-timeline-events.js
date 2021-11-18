@@ -24,7 +24,7 @@ import mapTimelineEvents from './map-timeline-events';
 
 const getHistoryTimelineEvents = ({ clusterName, historyEvents }) =>
   mapTimelineEvents({ clusterName, historyEvents }).map(event => {
-    const details = getEventDetails({ event });
+    const details = getEventDetails({ clusterName, event });
 
     return { ...event, details };
   });

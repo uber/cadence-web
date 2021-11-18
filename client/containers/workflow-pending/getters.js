@@ -19,7 +19,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { ROUTE_PARAMS, ROUTE_QUERY } from '../route/getter-types';
+import {
+  ROUTE_PARAMS_CLUSTER_NAME,
+  ROUTE_PARAMS_DOMAIN,
+  ROUTE_QUERY,
+} from '../route/getter-types';
 
 import { PENDING_TASK_FILTER_TO_EMPTY_MESSAGE_MAP } from './constants';
 import {
@@ -38,12 +42,14 @@ const getters = {
     return PENDING_TASK_FILTER_TO_EMPTY_MESSAGE_MAP[filter] || 'No results';
   },
   [WORKFLOW_PENDING_ACTIVE_PENDING_TASK_LIST]: (_, getters) => {
-    const domain = getters[ROUTE_PARAMS].domain;
+    const clusterName = getters[ROUTE_PARAMS_CLUSTER_NAME];
+    const domain = getters[ROUTE_PARAMS_DOMAIN];
     const filter = getters[WORKFLOW_PENDING_ACTIVE_FILTER];
     const getterType = mapFilterToGetterType(filter);
     const pendingTaskList = getters[getterType] || [];
 
     return mapPendingTaskList({
+      clusterName,
       domain,
       pendingTaskList,
     });

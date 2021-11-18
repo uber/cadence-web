@@ -29,7 +29,7 @@ const getSummary = ({ clusterName, events, isWorkflowRunning, workflow }) => {
         ...workflow,
         pendingActivities: workflow.pendingActivities.map(item => ({
           ...item,
-          kvps: getKeyValuePairs({ item }),
+          kvps: getKeyValuePairs({ clusterName, item }),
         })),
       }
     : workflow;

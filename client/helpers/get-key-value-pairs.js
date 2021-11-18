@@ -23,7 +23,7 @@ import moment from 'moment';
 import getJsonStringObject from './get-json-string-object';
 import { jsonKeys, preKeys } from '~constants';
 
-const getKeyValuePairs = ({ excludes = [], item }) => {
+const getKeyValuePairs = ({ clusterName, excludes = [], item }) => {
   const kvps = [];
   const flatten = (prefix, obj, root) => {
     Object.entries(obj).forEach(([k, value]) => {
@@ -51,6 +51,7 @@ const getKeyValuePairs = ({ excludes = [], item }) => {
           routeLink: {
             name: 'workflow/summary',
             params: {
+              clusterName,
               runId: value,
             },
           },
@@ -62,6 +63,7 @@ const getKeyValuePairs = ({ excludes = [], item }) => {
           routeLink: {
             name: 'workflow/summary',
             params: {
+              clusterName,
               domain: root.parentWorkflowDomain,
               runId: value,
               workflowId: root.parentWorkflowExecution.workflowId,
@@ -75,6 +77,7 @@ const getKeyValuePairs = ({ excludes = [], item }) => {
           routeLink: {
             name: 'workflow/summary',
             params: {
+              clusterName,
               domain: root.domain,
               runId: value,
               workflowId: root.workflowExecution.workflowId,
@@ -88,6 +91,7 @@ const getKeyValuePairs = ({ excludes = [], item }) => {
           routeLink: {
             name: 'task-list',
             params: {
+              clusterName,
               taskList: value,
             },
           },

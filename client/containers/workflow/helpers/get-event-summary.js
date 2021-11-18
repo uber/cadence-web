@@ -40,7 +40,7 @@ const getEventSummary = ({ clusterName, event }) => {
       ? maps[event.eventType](event.details)
       : event.details;
 
-  const kvps = getKeyValuePairs({ item });
+  const kvps = getKeyValuePairs({ clusterName, item });
 
   return {
     ...item,

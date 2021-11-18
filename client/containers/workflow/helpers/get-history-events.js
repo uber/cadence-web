@@ -73,12 +73,14 @@ const getHistoryEvents = ({
     })
     .map(event => {
       const details = getEventDetails({
+        clusterName,
         event,
         workflowHistoryEventHighlightList,
         workflowHistoryEventHighlightListEnabled,
       });
       const eventSummary = getEventSummary({ clusterName, event });
       const eventFullDetails = getEventFullDetails({
+        clusterName,
         event,
         workflowHistoryEventHighlightList,
         workflowHistoryEventHighlightListEnabled,
