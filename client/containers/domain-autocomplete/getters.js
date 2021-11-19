@@ -26,6 +26,7 @@ import {
   DOMAIN_AUTOCOMPLETE_FILTERED_VISITED_DOMAIN_LIST,
   DOMAIN_AUTOCOMPLETE_IS_LOADING,
   DOMAIN_AUTOCOMPLETE_IS_MULTI_SELECT,
+  DOMAIN_AUTOCOMPLETE_MULTI_DOMAIN_SELECTION,
   DOMAIN_AUTOCOMPLETE_NAVIGATE_TO_DOMAIN_URL,
   DOMAIN_AUTOCOMPLETE_SEARCH,
   DOMAIN_AUTOCOMPLETE_SEARCH_URL,
@@ -68,6 +69,10 @@ const getters = {
     get(state, statePrefix('isLoading')) || false,
   [DOMAIN_AUTOCOMPLETE_IS_MULTI_SELECT]: state =>
     get(state, statePrefix('isMultiSelect')) || false,
+  [DOMAIN_AUTOCOMPLETE_MULTI_DOMAIN_SELECTION]: (state, getters) =>
+    getters[DOMAIN_AUTOCOMPLETE_IS_MULTI_SELECT]
+      ? get(state, statePrefix('multiDomainSelection')) || []
+      : null,
   [DOMAIN_AUTOCOMPLETE_NAVIGATE_TO_DOMAIN_URL]: (_, getters) => {
     const search = getters[DOMAIN_AUTOCOMPLETE_SEARCH];
 

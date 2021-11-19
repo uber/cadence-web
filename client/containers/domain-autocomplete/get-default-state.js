@@ -25,6 +25,7 @@ const getDefaultState = (state = {}) => ({
   isLoading: false,
   isMultiSelect: false,
   domainList: [],
+  multiDomainSelection: [],
   search: '',
   visitedDomainList: migrateRecentDomains(
     JSON.tryParse(localStorage.getItem('recent-domains'))

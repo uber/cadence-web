@@ -55,8 +55,8 @@ export default {
       type: Boolean,
       default: false,
     },
-    multiValue: {
-      type: Array,
+    multiDomainSelection: {
+      type: Array || null,
     },
     navigateToDomainUrl: {
       type: String,
@@ -75,11 +75,6 @@ export default {
     },
     onAutocompleteChange(option) {
       console.log('onChange', option);
-
-      if (!option || (Array.isArray(option) && !option.length)) {
-        return;
-      }
-
       this.$emit('onChange', option);
     },
     onAutocompleteSearch(search) {
@@ -103,7 +98,7 @@ export default {
           :options="domainList"
           :placeholder="`${domain ? domain : 'cadence-canary'}`"
           :search="search"
-          :value="multiValue"
+          :value="multiDomainSelection"
           @change="onAutocompleteChange"
           @search="onAutocompleteSearch"
         />

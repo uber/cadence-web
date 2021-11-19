@@ -35,10 +35,12 @@ import {
   DOMAIN_AUTOCOMPLETE_SET_IS_LOADING,
   DOMAIN_AUTOCOMPLETE_SET_IS_MULTI_SELECT,
   DOMAIN_AUTOCOMPLETE_SET_DOMAIN_LIST,
+  DOMAIN_AUTOCOMPLETE_SET_MULTI_DOMAIN_SELECTION,
   DOMAIN_AUTOCOMPLETE_SET_SEARCH,
   DOMAIN_AUTOCOMPLETE_SET_VISITED_DOMAIN_LIST,
 } from './mutation-types';
 import {
+  DOMAIN_AUTOCOMPLETE_IS_MULTI_SELECT,
   DOMAIN_AUTOCOMPLETE_SEARCH_URL,
   DOMAIN_AUTOCOMPLETE_VISITED_DOMAIN_LIST,
 } from './getter-types';
@@ -99,12 +101,19 @@ const actions = {
     { commit, dispatch, getters },
     payload
   ) => {
-    // TODO - May need different logic here for multi-select...
-    if (!payload || (Array.isArray(payload) && !payload.length)) {
+    if (!payload) {
       return;
     }
 
     const { value } = payload;
+    const isMultiSelect = getters[DOMAIN_AUTOCOMPLETE_IS_MULTI_SELECT];
+
+    if (isMultiSelect) {
+      console.log('multi-select = ', payload);
+
+      return commit(DOMAIN_AUTOCOMPLETE_SET_MULTI_DOMAIN_SELECTION, payload);
+    }
+
     const visitedDomainList = getters[DOMAIN_AUTOCOMPLETE_VISITED_DOMAIN_LIST];
     const allowedCrossOrigin = getters[CROSS_REGION_ALLOWED_CROSS_ORIGIN];
     const dispatchToGlobalRoute = () =>

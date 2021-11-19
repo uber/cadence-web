@@ -163,7 +163,11 @@ export default {
         }
       }
     },
-    onDomainAutocompleteChange() {
+    onDomainAutocompleteChange(payload) {
+      if (Array.isArray(payload)) {
+        return;
+      }
+
       this.isSearchingDomain = false;
     },
     onEditDomainClick() {
