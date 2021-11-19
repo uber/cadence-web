@@ -164,7 +164,7 @@ export default {
       }
     },
     onDomainAutocompleteChange(payload) {
-      if (Array.isArray(payload)) {
+      if (!payload || Array.isArray(payload)) {
         return;
       }
 
