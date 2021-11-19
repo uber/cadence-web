@@ -29,6 +29,10 @@ export default {
       type: String,
       default: 'row',
     },
+    flexWrap: {
+      type: String,
+      default: 'wrap',
+    },
     justifyContent: {
       type: String,
     },
@@ -45,6 +49,7 @@ export default {
     :style="{
       'align-items': alignItems,
       'flex-direction': flexDirection,
+      'flex-wrap': flexWrap,
       'justify-content': justifyContent,
       width: width,
     }"
@@ -56,6 +61,5 @@ export default {
 <style lang="stylus">
 .flex-grid {
   display: flex;
-  flex-wrap: wrap;
 }
 </style>

@@ -49,7 +49,7 @@ export default {
 
 <template>
   <flex-grid align-items="center" justify-content="flex-end">
-    <flex-grid-item width="102px">
+    <flex-grid-item max-width="102px">
       <button-fill color="tertiary" label="CANCEL" @click="onCancelClick" />
     </flex-grid-item>
     <flex-grid-item>

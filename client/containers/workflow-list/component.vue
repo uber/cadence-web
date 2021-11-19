@@ -529,7 +529,7 @@ export default {
               @input="onFilterChange"
             />
           </flex-grid-item>
-          <flex-grid-item grow="1" width="160px">
+          <flex-grid-item grow="1" max-width="160px">
             <select-input
               data-cy="status-filter"
               label="Status"
@@ -554,7 +554,7 @@ export default {
               @change="onIsCronChange"
             />
           </feature-flag>
-          <flex-grid-item grow="1" width="105px">
+          <flex-grid-item grow="1" max-width="105px">
             <text-input
               label="Filter by"
               max-width="100%"

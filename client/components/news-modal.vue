@@ -55,7 +55,7 @@ export default {
           <flex-grid-item grow="1">
             <h2>What's new</h2>
           </flex-grid-item>
-          <flex-grid-item width="40px">
+          <flex-grid-item max-width="40px">
             <button-icon
               icon="icon_delete-thin"
               size="30px"
@@ -90,7 +90,7 @@ export default {
               See more news . . .
             </router-link>
           </flex-grid-item>
-          <flex-grid-item width="102px">
+          <flex-grid-item max-width="102px">
             <button-fill label="DISMISS" @click="onDismissClick" />
           </flex-grid-item>
         </flex-grid>

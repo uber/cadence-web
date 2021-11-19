@@ -256,7 +256,7 @@ export default pagedGrid({
             @input="onTextChange"
           />
         </flex-grid-item>
-        <flex-grid-item width="160px">
+        <flex-grid-item max-width="160px">
           <select-input
             label="Status"
             :options="statusList"
@@ -264,10 +264,10 @@ export default pagedGrid({
             @change="onSelectChange"
           />
         </flex-grid-item>
-        <flex-grid-item width="165px">
+        <flex-grid-item max-width="165px">
           <text-input label="Filter by" readonly :value="filterBy" />
         </flex-grid-item>
-        <flex-grid-item width="325px">
+        <flex-grid-item max-width="325px">
           <date-range-picker :date-range="range" @change="onDateRangeChange" />
         </flex-grid-item>
         <flex-grid-item width="120px">

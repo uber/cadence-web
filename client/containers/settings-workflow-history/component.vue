@@ -205,7 +205,7 @@ export default {
             <flex-grid align-items="center">
               <flex-grid-item grow="1">
                 <flex-grid align-items="center">
-                  <flex-grid-item grow="1" width="345px">
+                  <flex-grid-item grow="1" max-width="345px">
                     <select-input
                       :disabled="
                         !modalWorkflowHistoryEventHighlightListEnabled ||

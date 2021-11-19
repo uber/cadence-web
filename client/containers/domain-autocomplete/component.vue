@@ -84,7 +84,7 @@ export default {
 
 <template>
   <div class="domain-autocomplete" :style="{ width }">
-    <flex-grid align-items="center">
+    <flex-grid align-items="center" flex-wrap="nowrap">
       <flex-grid-item grow="1" margin="10px">
         <autocomplete
           empty-hint="Start typing to search for a domain."
