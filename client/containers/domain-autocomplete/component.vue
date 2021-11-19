@@ -100,7 +100,7 @@ export default {
           @search="onAutocompleteSearch"
         />
       </flex-grid-item>
-      <flex-grid-item width="100px" margin="10px">
+      <flex-grid-item min-width="100px" margin="10px">
         <input
           class="multi-select-checkbox"
           :checked="isMultiSelect"

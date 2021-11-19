@@ -22,14 +22,14 @@
 
 export default {
   name: 'flex-grid-item',
-  props: ['grow', 'margin', 'maxWidth', 'width'],
+  props: ['grow', 'margin', 'maxWidth', 'minWidth', 'width'],
 };
 </script>
 
 <template>
   <div
     class="flex-grid-item"
-    :style="{ flexGrow: grow, marginRight: margin, maxWidth, width }"
+    :style="{ flexGrow: grow, marginRight: margin, maxWidth, minWidth, width }"
   >
     <slot></slot>
   </div>
