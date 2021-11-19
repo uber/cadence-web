@@ -109,8 +109,6 @@ const actions = {
     const isMultiSelect = getters[DOMAIN_AUTOCOMPLETE_IS_MULTI_SELECT];
 
     if (isMultiSelect) {
-      console.log('multi-select = ', payload);
-
       return commit(DOMAIN_AUTOCOMPLETE_SET_MULTI_DOMAIN_SELECTION, payload);
     }
 

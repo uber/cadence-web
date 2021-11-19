@@ -70,15 +70,12 @@ export default {
   },
   methods: {
     onMultiSelectChange(event) {
-      console.log('onMultiSelectChange', event.target.checked);
       this.$emit('onMultiSelectChange', event.target.checked);
     },
     onAutocompleteChange(option) {
-      console.log('onChange', option);
       this.$emit('onChange', option);
     },
     onAutocompleteSearch(search) {
-      console.log('onSearch', search);
       this.$emit('onSearch', search);
     },
   },
