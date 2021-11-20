@@ -417,6 +417,7 @@ header.top-bar
     &.logo {
       margin-right: layout-spacing-medium;
       position: relative;
+      vertical-align: middle;
     }
 
   svg
