@@ -260,7 +260,7 @@ export default {
       :type="notification.type"
     />
     <header class="top-bar">
-      <flex-grid align-items="center" width="100%">
+      <flex-grid align-items="baseline" width="100%">
         <flex-grid-item>
           <a href="/domains" class="logo">
             <div v-html="logo"></div>
@@ -280,7 +280,7 @@ export default {
         </feature-flag>
 
         <flex-grid-item v-if="$route.params.domain" margin="15px">
-          <flex-grid align-items="center">
+          <flex-grid align-items="baseline">
             <flex-grid-item>
               <router-link
                 class="workflows"
@@ -319,23 +319,26 @@ export default {
           </flex-grid>
         </flex-grid-item>
 
-        <flex-grid-item v-if="$route.params.workflowId">
-          <span>{{ $route.params.workflowId }}</span>
-        </flex-grid-item>
+        <flex-grid-item v-if="$route.params.workflowId">{{
+          $route.params.workflowId
+        }}</flex-grid-item>
 
-        <flex-grid-item v-if="$route.params.taskList">
-          <span>{{ $route.params.taskList }}</span>
-        </flex-grid-item>
+        <flex-grid-item v-if="$route.params.taskList">{{
+          $route.params.taskList
+        }}</flex-grid-item>
 
         <flex-grid-item grow="1">
-          <button-icon
-            color="primary"
-            icon="icon_settings"
-            label="SETTINGS"
-            size="30px"
-            style="float: right"
-            @click="onSettingsClick"
-          />
+          <flex-grid flex-direction="row-reverse">
+            <flex-grid-item>
+              <button-icon
+                color="primary"
+                icon="icon_settings"
+                label="SETTINGS"
+                size="30px"
+                @click="onSettingsClick"
+              />
+            </flex-grid-item>
+          </flex-grid>
         </flex-grid-item>
       </flex-grid>
     </header>
