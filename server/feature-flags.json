@@ -1,28 +1,19 @@
 [
   {
     "key": "crossRegion",
-    "value": true
+    "value": false
   },
   {
     "key": "crossRegion.activeStatusTag",
-    "value": true
+    "value": false
   },
   {
     "key": "crossRegion.allowedCrossOrigin",
-    "value": true
+    "value": false
   },
   {
     "key": "crossRegion.clusterOriginList",
-    "value": [
-      {
-        "clusterName": "primary",
-        "origin": "http://localhost:8088"
-      },
-      {
-        "clusterName": "secondary",
-        "origin": "http://localhost:8089"
-      }
-    ]
+    "value": []
   },
   {
     "key": "domainAuthorization",
