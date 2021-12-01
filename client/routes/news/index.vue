@@ -161,7 +161,7 @@ export default {
 
 <style lang="stylus">
 section.news {
-  height: 100%;
+  flex: 1;
 
   iframe {
     height: 100%

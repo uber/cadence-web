@@ -39,7 +39,7 @@ export default {
 </script>
 
 <template>
-  <section>
+  <section class="window">
     <navigation-bar>
       <navigation-link
         :exact="true"
@@ -64,4 +64,10 @@ export default {
   </section>
 </template>
 
-<style lang="stylus"></style>
+<style lang="stylus">
+.window {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+</style>
