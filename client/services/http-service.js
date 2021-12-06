@@ -55,7 +55,7 @@ class HttpService {
       ...DEFAULT_FETCH_OPTIONS,
       ...options,
       ...(isCrossOrigin && {
-        credentials: 'include',
+        credentials: 'same-origin',
         mode: 'cors',
       }),
     };
