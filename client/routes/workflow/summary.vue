@@ -132,9 +132,13 @@ export default {
     terminate() {
       this.$modal.hide('confirm-termination');
       httpService
-        .post(`${this.baseAPIURL}/terminate`, {
-          reason: this.terminationReason,
-        })
+        .post(
+          `${this.baseAPIURL}/terminate/${
+            this.terminationReason
+              ? encodeURIComponent(this.terminationReason)
+              : ''
+          }`
+        )
         .then(
           r => {
             this.$emit('onNotification', {

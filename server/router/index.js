@@ -125,7 +125,7 @@ router.post(
 );
 
 router.post(
-  '/api/domains/:domain/workflows/:workflowId/:runId/terminate',
+  '/api/domains/:domain/workflows/:workflowId/:runId/terminate/:reason?',
   workflowTerminateHandler
 );
 
