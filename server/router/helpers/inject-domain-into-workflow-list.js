@@ -19,8 +19,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const injectDomainIntoWorkflowList = (domainName, workflowListResponse) =>
-  workflowListResponse.executions.map(execution => ({
+const injectDomainIntoWorkflowList = (domainName, { executions = [] } = {}) =>
+  executions.map(execution => ({
     ...execution,
     domainName,
   }));
