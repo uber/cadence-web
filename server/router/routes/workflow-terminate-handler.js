@@ -21,7 +21,7 @@
 
 const workflowTerminateHandler = async ctx => {
   ctx.body = await ctx.cadence.terminateWorkflow({
-    reason: ctx.params.reason,
+    reason: ctx.request.body && ctx.request.body.reason,
   });
 };
 
