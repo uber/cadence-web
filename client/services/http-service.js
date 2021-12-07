@@ -69,7 +69,7 @@ class HttpService {
       body: JSON.stringify(body),
       headers: {
         ...options.headers,
-        'Content-Type': 'application/json',
+        ...(body && { 'Content-Type': 'application/json' }),
       },
     });
   }
