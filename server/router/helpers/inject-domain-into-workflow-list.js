@@ -20,9 +20,11 @@
 // THE SOFTWARE.
 
 const injectDomainIntoWorkflowList = (domainName, { executions = [] } = {}) =>
-  executions.map(execution => ({
-    ...execution,
-    domainName,
-  }));
+  !executions
+    ? []
+    : executions.map(execution => ({
+        ...execution,
+        domainName,
+      }));
 
 module.exports = injectDomainIntoWorkflowList;
