@@ -1,5 +1,5 @@
 <script>
-// Copyright (c) 2017-2021 Uber Technologies Inc.
+// Copyright (c) 2017-2022 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -84,8 +84,13 @@ export default {
 
 <template>
   <div class="domain-autocomplete" :style="{ width }">
-    <flex-grid align-items="baseline" flex-wrap="nowrap">
-      <flex-grid-item grow="1" margin="10px">
+    <flex-grid flex-wrap="nowrap">
+      <flex-grid-item
+        :align-self="height === 'slim' ? 'auto' : 'baseline'"
+        grow="1"
+        margin="10px"
+        position="relative"
+      >
         <autocomplete
           empty-hint="Start typing to search for a domain."
           :focus="focus"
@@ -100,7 +105,7 @@ export default {
           @search="onAutocompleteSearch"
         />
       </flex-grid-item>
-      <flex-grid-item min-width="100px" margin="10px">
+      <flex-grid-item align-self="baseline" min-width="100px" margin="10px">
         <input
           class="multi-select-checkbox"
           :checked="isMultiSelect"
@@ -112,7 +117,7 @@ export default {
           >Multi-select</label
         >
       </flex-grid-item>
-      <flex-grid-item width="32px">
+      <flex-grid-item align-self="baseline" width="32px">
         <span class="navigate-to-domain disabled" v-if="!navigateToDomainUrl" />
         <a
           class="navigate-to-domain"

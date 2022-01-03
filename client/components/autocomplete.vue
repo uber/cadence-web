@@ -127,20 +127,25 @@ export default {
     }
   }
 
-  &.slim .v-select {
-    input[type=search], input[type=search]:focus {
-      height: 26px;
-      line-height: 20px;
-      padding: 8px 18px;
-    }
+  &.slim {
+    position: absolute;
+    z-index: 1;
 
-    .vs__deselect {
-      height: 24px;
-    }
+    .v-select {
+      input[type=search], input[type=search]:focus {
+        height: 26px;
+        line-height: 20px;
+        padding: 8px 18px;
+      }
 
-    .vs__selected {
-      min-height: 26px;
-      padding: 0px 10px;
+      .vs__deselect {
+        height: 24px;
+      }
+
+      .vs__selected {
+        min-height: 26px;
+        padding: 0px 10px;
+      }
     }
   }
 

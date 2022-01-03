@@ -1,5 +1,5 @@
 <script>
-// Copyright (c) 2017-2021 Uber Technologies Inc.
+// Copyright (c) 2017-2022 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -22,14 +22,30 @@
 
 export default {
   name: 'flex-grid-item',
-  props: ['grow', 'margin', 'maxWidth', 'minWidth', 'width'],
+  props: [
+    'alignSelf',
+    'grow',
+    'margin',
+    'maxWidth',
+    'minWidth',
+    'position',
+    'width',
+  ],
 };
 </script>
 
 <template>
   <div
     class="flex-grid-item"
-    :style="{ flexGrow: grow, marginRight: margin, maxWidth, minWidth, width }"
+    :style="{
+      alignSelf,
+      flexGrow: grow,
+      marginRight: margin,
+      maxWidth,
+      minWidth,
+      position,
+      width,
+    }"
   >
     <slot></slot>
   </div>
