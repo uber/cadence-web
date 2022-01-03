@@ -1,5 +1,5 @@
 <script>
-// Copyright (c) 2017-2021 Uber Technologies Inc.
+// Copyright (c) 2017-2022 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -144,6 +144,14 @@ export default {
     color: text-color;
     font-family: inherit;
 
+    .vs__actions {
+      min-width: 34px;
+    }
+
+    .vs__deselect {
+      margin-left: 10px;
+    }
+
     .vs__dropdown-toggle {
       border: input-border;
       border-radius: 0;
@@ -167,9 +175,10 @@ export default {
     }
 
     .vs__selected {
-      height: 42px;
-      line-height: 24px;
+      line-height: 20px;
       margin: 0;
+      margin-top: 4px;
+      min-height: 42px;
       padding: 8px 18px;
     }
 
