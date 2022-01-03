@@ -133,6 +133,15 @@ export default {
       line-height: 20px;
       padding: 8px 18px;
     }
+
+    .vs__deselect {
+      height: 24px;
+    }
+
+    .vs__selected {
+      min-height: 26px;
+      padding: 0px 10px;
+    }
   }
 
   .empty-hint {
@@ -149,7 +158,12 @@ export default {
     }
 
     .vs__deselect {
+      align-items: center;
       margin-left: 10px;
+
+      svg {
+        height: 10px;
+      }
     }
 
     .vs__dropdown-toggle {
@@ -179,7 +193,7 @@ export default {
       margin: 0;
       margin-top: 4px;
       min-height: 42px;
-      padding: 8px 18px;
+      padding: 8px 15px;
     }
 
     .vs__spinner {
