@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Uber Technologies Inc.
+// Copyright (c) 2021-2022 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,6 +24,7 @@ import {
   ROUTE_PARAMS_DOMAIN,
 } from '../route/getter-types';
 import {
+  CROSS_REGION,
   CROSS_REGION_ALLOWED_CROSS_ORIGIN,
   CROSS_REGION_CLUSTER_ORIGIN_LIST,
 } from '../cross-region/getter-types';
@@ -46,6 +47,7 @@ const actions = {
     const clusterName = getters[ROUTE_PARAMS_CLUSTER_NAME];
     const domainName = getters[ROUTE_PARAMS_DOMAIN];
     const ready = getters[DOMAIN_IS_READY];
+    const crossRegion = getters[CROSS_REGION];
     const allowedCrossOrigin = getters[CROSS_REGION_ALLOWED_CROSS_ORIGIN];
     const clusterOriginList = getters[CROSS_REGION_CLUSTER_ORIGIN_LIST];
 
@@ -56,6 +58,7 @@ const actions = {
     commit(DOMAIN_RESET_STATE, domainName);
 
     const cluster =
+      crossRegion &&
       allowedCrossOrigin &&
       clusterName &&
       clusterOriginList &&
@@ -69,7 +72,7 @@ const actions = {
         `${origin}/api/domains/${domainName}`
       );
 
-      if (allowedCrossOrigin && !domain.isGlobalDomain) {
+      if (crossRegion && allowedCrossOrigin && !domain.isGlobalDomain) {
         const fetchList = clusterOriginList
           .filter(
             ({ clusterName }) =>

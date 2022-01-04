@@ -54,6 +54,9 @@ export default {
     placeholder: {
       type: String,
     },
+    value: {
+      type: Array,
+    },
   },
   mounted() {
     const { focus } = this;
@@ -99,6 +102,7 @@ export default {
       :placeholder="placeholder"
       ref="autocomplete"
       :searchable="true"
+      :value="value"
       @input="onSelectChange"
       @search="onSelectSearch"
     >

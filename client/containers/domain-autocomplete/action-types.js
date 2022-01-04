@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Uber Technologies Inc.
+// Copyright (c) 2021-2022 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -25,6 +25,7 @@ export const DOMAIN_AUTOCOMPLETE_FETCH_DOMAIN_LIST = typePrefix(
   'FETCH_DOMAIN_LIST'
 );
 export const DOMAIN_AUTOCOMPLETE_ON_CHANGE = typePrefix('ON_CHANGE');
+export const DOMAIN_AUTOCOMPLETE_ON_MOUNT = typePrefix('ON_MOUNT');
 export const DOMAIN_AUTOCOMPLETE_ON_MULTI_SELECT_CHANGE = typePrefix(
   'ON_MULTI_SELECT_CHANGE'
 );

@@ -29,11 +29,6 @@ export default {
     'flex-grid-item': FlexGridItem,
     autocomplete: Autocomplete,
   },
-  data() {
-    return {
-      value: undefined,
-    };
-  },
   props: {
     domain: {
       type: String,

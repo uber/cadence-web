@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Uber Technologies Inc.
+// Copyright (c) 2021-2022 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -61,7 +61,6 @@ const getters = {
   },
   [DOMAIN_HASH]: state => get(state, statePrefix('domainHash')),
   [DOMAIN_IS_LOADING]: (_, getters) =>
-    getters[CROSS_REGION] &&
     getters[ROUTE_PARAMS_DOMAIN] &&
     !getters[DOMAIN_ERROR] &&
     hasExpired(get(getters[DOMAIN_CURRENT], 'expiryDateTime')),

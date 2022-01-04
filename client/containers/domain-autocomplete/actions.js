@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Uber Technologies Inc.
+// Copyright (c) 2021-2022 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -25,13 +25,16 @@ import {
   CROSS_REGION_ALLOWED_CROSS_ORIGIN,
   CROSS_REGION_CLUSTER_ORIGIN_LIST,
 } from '../cross-region/getter-types';
+import { DOMAIN_IS_READY, DOMAIN_CURRENT } from '../domain/getter-types';
 import {
   DOMAIN_AUTOCOMPLETE_FETCH_DOMAIN_LIST,
   DOMAIN_AUTOCOMPLETE_ON_CHANGE,
+  DOMAIN_AUTOCOMPLETE_ON_MOUNT,
   DOMAIN_AUTOCOMPLETE_ON_MULTI_SELECT_CHANGE,
   DOMAIN_AUTOCOMPLETE_ON_SEARCH,
 } from './action-types';
 import {
+  DOMAIN_AUTOCOMPLETE_ON_MOUNTED,
   DOMAIN_AUTOCOMPLETE_SET_IS_LOADING,
   DOMAIN_AUTOCOMPLETE_SET_IS_MULTI_SELECT,
   DOMAIN_AUTOCOMPLETE_SET_DOMAIN_LIST,
@@ -41,13 +44,15 @@ import {
 } from './mutation-types';
 import {
   DOMAIN_AUTOCOMPLETE_IS_MULTI_SELECT,
+  DOMAIN_AUTOCOMPLETE_MULTI_DOMAIN_SELECTION,
   DOMAIN_AUTOCOMPLETE_SEARCH_URL,
   DOMAIN_AUTOCOMPLETE_VISITED_DOMAIN_LIST,
 } from './getter-types';
 import { DEBOUNCE_WAIT } from './constants';
 import {
-  updateVisitedDomainList,
   filterDuplicatesFromDomainList,
+  formatDomainList,
+  updateVisitedDomainList,
 } from './helpers';
 import { httpService } from '~services';
 
@@ -88,11 +93,15 @@ const actions = {
 
         commit(DOMAIN_AUTOCOMPLETE_SET_IS_LOADING, false);
         commit(DOMAIN_AUTOCOMPLETE_SET_DOMAIN_LIST, domainList);
+
+        return domainList;
       } else {
         const domainList = await fetchDomainForOrigin({ origin: '' });
 
         commit(DOMAIN_AUTOCOMPLETE_SET_IS_LOADING, false);
         commit(DOMAIN_AUTOCOMPLETE_SET_DOMAIN_LIST, domainList);
+
+        return domainList;
       }
     },
     DEBOUNCE_WAIT
@@ -107,9 +116,29 @@ const actions = {
 
     const { value } = payload;
     const isMultiSelect = getters[DOMAIN_AUTOCOMPLETE_IS_MULTI_SELECT];
+    const multiDomainSelection =
+      getters[DOMAIN_AUTOCOMPLETE_MULTI_DOMAIN_SELECTION];
 
     if (isMultiSelect) {
-      return commit(DOMAIN_AUTOCOMPLETE_SET_MULTI_DOMAIN_SELECTION, payload);
+      // check if change is an add or remove
+      if (payload.length > multiDomainSelection.length) {
+        // added item
+        const newItem = payload[payload.length - 1];
+
+        // check if item is already selected or not
+        const hasItem = multiDomainSelection.find(
+          item => item.value.domainInfo.uuid === newItem.value.domainInfo.uuid
+        );
+
+        if (!hasItem) {
+          commit(DOMAIN_AUTOCOMPLETE_SET_MULTI_DOMAIN_SELECTION, payload);
+        }
+      } else {
+        // removed item
+        commit(DOMAIN_AUTOCOMPLETE_SET_MULTI_DOMAIN_SELECTION, payload);
+      }
+
+      return;
     }
 
     const visitedDomainList = getters[DOMAIN_AUTOCOMPLETE_VISITED_DOMAIN_LIST];
@@ -141,18 +170,31 @@ const actions = {
       `/domains/${value.domainInfo.name}/${value.replicationConfiguration.activeClusterName}`
     );
   },
+  [DOMAIN_AUTOCOMPLETE_ON_MOUNT]: ({ commit, getters }) => {
+    const ready = getters[DOMAIN_IS_READY];
+    const currentDomain = getters[DOMAIN_CURRENT];
+    const multiDomainSelection =
+      ready && currentDomain ? formatDomainList([currentDomain]) : [];
+
+    // TODO - Need to cater for when domain hasn't loaded yet...
+    // in theory shouldn't happen if done correctly as loading blocks the page (I think)
+    commit(DOMAIN_AUTOCOMPLETE_ON_MOUNTED, { multiDomainSelection });
+  },
   [DOMAIN_AUTOCOMPLETE_ON_MULTI_SELECT_CHANGE]: ({ commit }, payload) => {
     commit(DOMAIN_AUTOCOMPLETE_SET_IS_MULTI_SELECT, payload);
   },
   [DOMAIN_AUTOCOMPLETE_ON_SEARCH]: async ({ commit, dispatch }, payload) => {
     commit(DOMAIN_AUTOCOMPLETE_SET_SEARCH, payload);
 
-    if (payload) {
-      commit(DOMAIN_AUTOCOMPLETE_SET_IS_LOADING, true);
-      dispatch(DOMAIN_AUTOCOMPLETE_FETCH_DOMAIN_LIST);
-    } else {
+    if (!payload) {
       commit(DOMAIN_AUTOCOMPLETE_SET_DOMAIN_LIST, []);
+
+      return [];
     }
+
+    const domainList = await dispatch(DOMAIN_AUTOCOMPLETE_FETCH_DOMAIN_LIST);
+
+    return domainList;
   },
 };
 

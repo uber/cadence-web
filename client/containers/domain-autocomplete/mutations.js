@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Uber Technologies Inc.
+// Copyright (c) 2021-2022 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -30,10 +30,11 @@ import {
 } from './mutation-types';
 
 const mutations = {
-  [DOMAIN_AUTOCOMPLETE_ON_MOUNTED]: state => {
+  [DOMAIN_AUTOCOMPLETE_ON_MOUNTED]: (state, payload) => {
     state.domainAutocomplete.isLoading = false;
     state.domainAutocomplete.domainList = [];
-    state.domainAutocomplete.multiDomainSelection = [];
+    state.domainAutocomplete.multiDomainSelection =
+      payload.multiDomainSelection;
     state.domainAutocomplete.search = '';
   },
   [DOMAIN_AUTOCOMPLETE_SET_DOMAIN_LIST]: (state, payload) => {

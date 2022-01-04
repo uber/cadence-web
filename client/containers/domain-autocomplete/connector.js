@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Uber Technologies Inc.
+// Copyright (c) 2021-2022 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,6 +23,7 @@ import { connect } from 'vuex-connect';
 import { ROUTE_PARAMS_DOMAIN } from '../route/getter-types';
 import {
   DOMAIN_AUTOCOMPLETE_ON_CHANGE,
+  DOMAIN_AUTOCOMPLETE_ON_MOUNT,
   DOMAIN_AUTOCOMPLETE_ON_MULTI_SELECT_CHANGE,
   DOMAIN_AUTOCOMPLETE_ON_SEARCH,
 } from './action-types';
@@ -34,7 +35,6 @@ import {
   DOMAIN_AUTOCOMPLETE_NAVIGATE_TO_DOMAIN_URL,
   DOMAIN_AUTOCOMPLETE_SEARCH,
 } from './getter-types';
-import { DOMAIN_AUTOCOMPLETE_ON_MOUNTED } from './mutation-types';
 
 const actionsToEvents = {
   onChange: DOMAIN_AUTOCOMPLETE_ON_CHANGE,
@@ -53,9 +53,7 @@ const gettersToProps = {
 };
 
 const lifecycle = {
-  mounted: ({ commit }) => {
-    commit(DOMAIN_AUTOCOMPLETE_ON_MOUNTED);
-  },
+  mounted: ({ dispatch }) => dispatch(DOMAIN_AUTOCOMPLETE_ON_MOUNT),
 };
 
 export default connect({
