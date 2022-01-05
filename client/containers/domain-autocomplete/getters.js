@@ -79,13 +79,26 @@ const getters = {
   [DOMAIN_AUTOCOMPLETE_MULTI_SELECT_ENABLED]: state =>
     get(state, statePrefix('multiSelectEnabled')) || false,
   [DOMAIN_AUTOCOMPLETE_NAVIGATE_TO_DOMAIN_URL]: (_, getters) => {
-    const search = getters[DOMAIN_AUTOCOMPLETE_SEARCH];
+    const selectedDomainList =
+      getters[DOMAIN_AUTOCOMPLETE_MULTI_DOMAIN_SELECTION];
 
-    if (!search) {
+    if (!selectedDomainList || !selectedDomainList.length) {
       return '';
     }
 
-    return `/domains/${search}`;
+    const domainListUrl = selectedDomainList
+      .map(domain => domain.value.domainInfo.name)
+      .join(',');
+
+    const dcListUrl = selectedDomainList
+      .map(domain =>
+        domain.value.isGlobalDomain
+          ? 'global'
+          : domain.value.replicationConfiguration.activeClusterName
+      )
+      .join(',');
+
+    return `/domains/${domainListUrl}/${dcListUrl}`;
   },
   [DOMAIN_AUTOCOMPLETE_SEARCH]: state =>
     get(state, statePrefix('search')) || '',
