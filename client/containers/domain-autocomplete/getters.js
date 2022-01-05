@@ -21,6 +21,10 @@
 
 import { get } from 'lodash-es';
 import {
+  CROSS_REGION,
+  CROSS_REGION_ALLOWED_CROSS_ORIGIN,
+} from '../cross-region/getter-types';
+import {
   DOMAIN_AUTOCOMPLETE_COMBINED_DOMAIN_LIST,
   DOMAIN_AUTOCOMPLETE_DOMAIN_LIST,
   DOMAIN_AUTOCOMPLETE_FILTERED_VISITED_DOMAIN_LIST,
@@ -79,6 +83,8 @@ const getters = {
   [DOMAIN_AUTOCOMPLETE_MULTI_SELECT_ENABLED]: state =>
     get(state, statePrefix('multiSelectEnabled')) || false,
   [DOMAIN_AUTOCOMPLETE_NAVIGATE_TO_DOMAIN_URL]: (_, getters) => {
+    const crossRegion = getters[CROSS_REGION];
+    const allowedCrossOrigin = getters[CROSS_REGION_ALLOWED_CROSS_ORIGIN];
     const selectedDomainList =
       getters[DOMAIN_AUTOCOMPLETE_MULTI_DOMAIN_SELECTION];
 
@@ -90,15 +96,19 @@ const getters = {
       .map(domain => domain.value.domainInfo.name)
       .join(',');
 
-    const dcListUrl = selectedDomainList
-      .map(domain =>
-        domain.value.isGlobalDomain
-          ? 'active'
-          : domain.value.replicationConfiguration.activeClusterName
-      )
-      .join(',');
+    const regionListUrl =
+      (crossRegion &&
+        allowedCrossOrigin &&
+        selectedDomainList
+          .map(domain =>
+            domain.value.isGlobalDomain
+              ? ''
+              : domain.value.replicationConfiguration.activeClusterName
+          )
+          .join(',')) ||
+      '';
 
-    return `/domains/${domainListUrl}/${dcListUrl}`;
+    return `/domains/${domainListUrl}${regionListUrl && '/' + regionListUrl}`;
   },
   [DOMAIN_AUTOCOMPLETE_SEARCH]: state =>
     get(state, statePrefix('search')) || '',
