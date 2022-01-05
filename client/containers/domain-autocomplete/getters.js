@@ -96,7 +96,7 @@ const getters = {
       .map(domain => domain.value.domainInfo.name)
       .join(',');
 
-    const regionListUrl =
+    const clusterListUrl =
       (crossRegion &&
         allowedCrossOrigin &&
         selectedDomainList
@@ -108,7 +108,7 @@ const getters = {
           .join(',')) ||
       '';
 
-    return `/domains/${domainListUrl}${regionListUrl && '/' + regionListUrl}`;
+    return `/domains/${domainListUrl}${clusterListUrl && '/' + clusterListUrl}`;
   },
   [DOMAIN_AUTOCOMPLETE_SEARCH]: state =>
     get(state, statePrefix('search')) || '',

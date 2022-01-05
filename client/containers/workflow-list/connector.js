@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Uber Technologies Inc.
+// Copyright (c) 2021-2022 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,6 +23,10 @@ import { connect } from 'vuex-connect';
 import { CLUSTER_FETCH } from '../cluster/action-types';
 import { CLUSTER_ADVANCED_VISIBILITY_ENABLED } from '../cluster/getter-types';
 import {
+  ROUTE_PARAMS_CLUSTER_LIST,
+  ROUTE_PARAMS_DOMAIN_LIST,
+} from '../route/getter-types';
+import {
   WORKFLOW_LIST_ON_FILTER_CHANGE,
   WORKFLOW_LIST_ON_FILTER_MODE_CLICK,
 } from './action-types';
@@ -46,6 +50,8 @@ const actionsToEvents = {
 };
 
 const gettersToProps = {
+  clusterList: ROUTE_PARAMS_CLUSTER_LIST,
+  domainList: ROUTE_PARAMS_DOMAIN_LIST,
   fetchWorkflowListUrl: WORKFLOW_LIST_FETCH_WORKFLOW_LIST_URL,
   filterBy: WORKFLOW_LIST_FILTER_BY,
   filterMode: WORKFLOW_LIST_FILTER_MODE,

@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021 Uber Technologies Inc.
+// Copyright (c) 2017-2022 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -100,53 +100,53 @@ const routeOpts = {
     },
     {
       name: 'domain',
-      path: '/domains/:domain/:clusterName?',
-      redirect: '/domains/:domain/:clusterName?/workflows',
+      path: '/domains/:domainList/:clusterList?',
+      redirect: '/domains/:domainList/:clusterList?/workflows',
       component: Domain,
       props: ({ params }) => ({
-        clusterName: params.clusterName,
-        domain: params.domain,
+        clusterList: params.clusterList,
+        domainList: params.domainList,
       }),
       children: [
         {
           name: 'workflow-list',
-          path: '/domains/:domain/:clusterName?/workflows',
+          path: '/domains/:domainList/:clusterList?/workflows',
           components: {
             'workflow-list': WorkflowList,
           },
         },
         {
           name: 'domain-metrics',
-          path: '/domains/:domain/:clusterName?/metrics',
+          path: '/domains/:domainList/:clusterList?/metrics',
           components: {
             'domain-metrics': DomainMetrics,
           },
         },
         {
           name: 'domain-settings',
-          path: '/domains/:domain/:clusterName?/settings',
+          path: '/domains/:domainList/:clusterList?/settings',
           components: {
             'domain-settings': DomainSettings,
           },
         },
         {
           name: 'workflow-archival',
-          path: '/domains/:domain/:clusterName?/archival',
-          redirect: '/domains/:domain/:clusterName?/archival/basic',
+          path: '/domains/:domainList/:clusterList?/archival',
+          redirect: '/domains/:domainList/:clusterList?/archival/basic',
           components: {
             'workflow-archival': WorkflowArchival,
           },
           children: [
             {
               name: 'workflow-archival-advanced',
-              path: '/domains/:domain/:clusterName?/archival/advanced',
+              path: '/domains/:domainList/:clusterList?/archival/advanced',
               components: {
                 'workflow-archival-advanced': WorkflowArchivalAdvanced,
               },
             },
             {
               name: 'workflow-archival-basic',
-              path: '/domains/:domain/:clusterName?/archival/basic',
+              path: '/domains/:domainList/:clusterList?/archival/basic',
               components: {
                 'workflow-archival-basic': WorkflowArchivalBasic,
               },
@@ -157,10 +157,13 @@ const routeOpts = {
     },
     {
       name: 'workflow',
-      path: '/domains/:domain/:clusterName?/workflows/:workflowId/:runId',
+      path:
+        '/domains/:domainList/:clusterList?/workflows/domain/:domain/:clusterName?/workflow/:workflowId/:runId',
       component: Workflow,
       props: ({ params }) => ({
+        clusterList: params.clusterList,
         clusterName: params.clusterName,
+        domainList: params.domainList,
         displayWorkflowId: params.workflowId,
         domain: params.domain,
         runId: params.runId,
@@ -170,7 +173,7 @@ const routeOpts = {
         {
           name: 'workflow/summary',
           path:
-            '/domains/:domain/:clusterName?/workflows/:workflowId/:runId/summary',
+            '/domains/:domainList/:clusterList?/workflows/domain/:domain/:clusterName?/workflow/:workflowId/:runId/summary',
           components: {
             summary: WorkflowSummary,
           },
@@ -185,7 +188,7 @@ const routeOpts = {
         {
           name: 'workflow/history',
           path:
-            '/domains/:domain/:clusterName?/workflows/:workflowId/:runId/history',
+            '/domains/:domainList/:clusterList?/workflows/domain/:domain/:clusterName?/workflow/:workflowId/:runId/history',
           components: {
             history: WorkflowHistory,
           },
@@ -205,7 +208,7 @@ const routeOpts = {
         {
           name: 'workflow/pending',
           path:
-            '/domains/:domain/:clusterName?/workflows/:workflowId/:runId/pending',
+            '/domains/:domainList/:clusterList?/workflows/domain/:domain/:clusterName?/workflow/:workflowId/:runId/pending',
           components: {
             pending: WorkflowPending,
           },
@@ -218,7 +221,7 @@ const routeOpts = {
         {
           name: 'workflow/stack-trace',
           path:
-            '/domains/:domain/:clusterName?/workflows/:workflowId/:runId/stack-trace',
+            '/domains/:domainList/:clusterList?/workflows/domain/:domain/:clusterName?/workflow/:workflowId/:runId/stack-trace',
           components: {
             stacktrace: StackTrace,
           },
@@ -231,7 +234,7 @@ const routeOpts = {
         {
           name: 'workflow/query',
           path:
-            '/domains/:domain/:clusterName?/workflows/:workflowId/:runId/query',
+            '/domains/:domainList/:clusterList?/workflows/domain/:domain/:clusterName?/workflow/:workflowId/:runId/query',
           components: {
             query: Query,
           },
@@ -245,8 +248,10 @@ const routeOpts = {
     },
     {
       name: 'task-list',
-      path: '/domains/:domain/:clusterName?/task-lists/:taskList',
-      redirect: '/domains/:domain/:clusterName?/task-lists/:taskList/pollers',
+      path:
+        '/domains/:domainList/:clusterList?/task-lists/domain/:domain/:clusterName?/task-list/:taskList',
+      redirect:
+        '/domains/:domainList/:clusterList?/task-lists/domain/:domain/:clusterName?/task-list/:taskList/pollers',
       component: TaskList,
       props: ({ params }) => ({
         clusterName: params.clusterName,
@@ -256,21 +261,24 @@ const routeOpts = {
       children: [
         {
           name: 'task-list/pollers',
-          path: '/domains/:domain/:clusterName?/task-lists/:taskList/pollers',
+          path:
+            '/domains/:domainList/:clusterList?/task-lists/domain/:domain/:clusterName?/task-list/:taskList/pollers',
           components: {
             pollers: TaskListPollers,
           },
         },
         {
           name: 'task-list/partition',
-          path: '/domains/:domain/:clusterName?/task-lists/:taskList/partition',
+          path:
+            '/domains/:domainList/:clusterList?/task-lists/domain/:domain/:clusterName?/task-list/:taskList/partition',
           components: {
             partition: TaskListPartition,
           },
         },
         {
           name: 'task-list/metrics',
-          path: '/domains/:domain/:clusterName?/task-lists/:taskList/metrics',
+          path:
+            '/domains/:domainList/:clusterList?/task-lists/domain/:domain/:clusterName?/task-list/:taskList/metrics',
           components: {
             partition: TaskListMetrics,
           },
@@ -287,11 +295,11 @@ const routeOpts = {
     },
     {
       name: 'domain-config-redirect',
-      path: '/domains/:domain/:clusterName?/config',
-      redirect: '/domains/:domain/:clusterName?/settings',
+      path: '/domains/:domainList/:clusterList?/config',
+      redirect: '/domains/:domainList/:clusterList?/settings',
     },
     {
-      path: '/domains/:domain/:clusterName?/history',
+      path: '/domains/:domainList/:clusterList?/history',
       redirect: ({ params, query }) => {
         if (!query.runId || !query.workflowId) {
           return {

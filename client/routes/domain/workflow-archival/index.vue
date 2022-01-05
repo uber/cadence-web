@@ -1,5 +1,5 @@
 <script>
-// Copyright (c) 2017-2021 Uber Technologies Inc.
+// Copyright (c) 2017-2022 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -26,17 +26,25 @@ import { ArchivalDisabledMessaging } from './components';
 
 export default {
   name: 'workflow-archival',
-  props: ['clusterName', 'dateFormat', 'domain', 'timeFormat', 'timezone'],
+  props: ['clusterList', 'dateFormat', 'domainList', 'timeFormat', 'timezone'],
   data() {
     return {
+      clusterName: undefined,
+      domain: undefined,
       domainSettings: {},
       loading: true,
     };
   },
   async created() {
     const domainService = DomainService();
+    const { clusterList, domainList } = this;
 
-    this.domainSettings = await domainService.getDomainSettings(this.domain);
+    const clusterName = clusterList && clusterList.split(',')[0];
+    const domain = domainList.split(',')[0];
+
+    this.clusterName = clusterName;
+    this.domain = domain;
+    this.domainSettings = await domainService.getDomainSettings(domain);
     this.loading = false;
   },
   computed: {

@@ -1,5 +1,5 @@
 <script>
-// Copyright (c) 2017-2021 Uber Technologies Inc.
+// Copyright (c) 2017-2022 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -27,20 +27,26 @@ import { httpService } from '~services';
 export default {
   data() {
     return {
+      domain: undefined,
       error: undefined,
       loading: true,
       domainConfig: undefined,
     };
   },
-  props: ['clusterName', 'domain'],
+  props: ['clusterList', 'domainList'],
   components: {
     'detail-list': DetailList,
   },
   created() {
-    const { clusterName } = this;
+    const { clusterList, domainList } = this;
+
+    const clusterName = clusterList && clusterList.split(',')[0];
+    const domain = domainList.split(',')[0];
+
+    this.domain = domain;
 
     httpService
-      .get(`/api/domains/${this.domain}`)
+      .get(`/api/domains/${domain}`)
       .then(
         r => {
           const domainConfig = mapDomainDescription(r);

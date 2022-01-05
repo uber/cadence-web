@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Uber Technologies Inc.
+// Copyright (c) 2021-2022 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,7 +20,9 @@
 // THE SOFTWARE.
 
 export const ROUTE_PARAMS = 'ROUTE_PARAMS';
+export const ROUTE_PARAMS_CLUSTER_LIST = 'ROUTE_PARAMS_CLUSTER_LIST';
 export const ROUTE_PARAMS_CLUSTER_NAME = 'ROUTE_PARAMS_CLUSTER_NAME';
 export const ROUTE_PARAMS_DOMAIN = 'ROUTE_PARAMS_DOMAIN';
+export const ROUTE_PARAMS_DOMAIN_LIST = 'ROUTE_PARAMS_DOMAIN_LIST';
 export const ROUTE_PARAMS_WORKFLOW_ID = 'ROUTE_PARAMS_WORKFLOW_ID';
 export const ROUTE_QUERY = 'ROUTE_QUERY';

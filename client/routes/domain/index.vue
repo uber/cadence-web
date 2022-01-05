@@ -1,5 +1,5 @@
 <script>
-// Copyright (c) 2017-2021 Uber Technologies Inc.
+// Copyright (c) 2017-2022 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,7 +23,7 @@
 import { FeatureFlag, NavigationBar, NavigationLink } from '~components';
 
 export default {
-  props: ['clusterName', 'dateFormat', 'domain', 'timeFormat', 'timezone'],
+  props: ['clusterList', 'dateFormat', 'domainList', 'timeFormat', 'timezone'],
   components: {
     'feature-flag': FeatureFlag,
     'navigation-bar': NavigationBar,
@@ -38,49 +38,47 @@ export default {
       <navigation-link
         icon="icon_search"
         label="Workflows"
-        :to="{ name: 'workflow-list', params: { clusterName } }"
+        :to="{ name: 'workflow-list', params: { clusterList } }"
       />
       <navigation-link
         label="Settings"
         icon="icon_settings"
-        :to="{ name: 'domain-settings', params: { clusterName } }"
+        :to="{ name: 'domain-settings', params: { clusterList } }"
       />
       <feature-flag display="inline" name="domainMetrics">
         <navigation-link
           label="Metrics"
           icon="icon_chart"
-          :to="{ name: 'domain-metrics', params: { clusterName } }"
+          :to="{ name: 'domain-metrics', params: { clusterList } }"
         />
       </feature-flag>
       <navigation-link
         label="Archival"
         icon="icon_trip-history"
-        :to="{ name: 'workflow-archival', params: { clusterName } }"
+        :to="{ name: 'workflow-archival', params: { clusterList } }"
       />
     </navigation-bar>
     <router-view
       name="workflow-list"
-      :cluster-name="clusterName"
       :date-format="dateFormat"
-      :domain="domain"
       :time-format="timeFormat"
       :timezone="timezone"
     />
     <router-view
       name="domain-settings"
-      :cluster-name="clusterName"
-      :domain="domain"
+      :cluster-list="clusterList"
+      :domain-list="domainList"
     />
     <router-view
       name="domain-metrics"
-      :cluster-name="clusterName"
-      :domain="domain"
+      :cluster-list="clusterList"
+      :domain-list="domainList"
     />
     <router-view
       name="workflow-archival"
-      :cluster-name="clusterName"
+      :cluster-list="clusterList"
       :date-format="dateFormat"
-      :domain="domain"
+      :domain-list="domainList"
       :time-format="timeFormat"
       :timezone="timezone"
     />

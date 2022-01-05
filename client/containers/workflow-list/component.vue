@@ -1,5 +1,5 @@
 <script>
-// Copyright (c) 2017-2021 Uber Technologies Inc.
+// Copyright (c) 2017-2022 Uber Technologies Inc.
 // Portions of the Software are attributed to Copyright (c) 2020-2021 Temporal Technologies Inc.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -57,9 +57,9 @@ import { httpService } from '~services';
 export default {
   name: 'workflow-list',
   props: [
-    'clusterName',
+    'clusterList',
     'dateFormat',
-    'domain',
+    'domainList',
     'fetchWorkflowListUrl',
     'filterBy',
     'filterMode',
@@ -147,7 +147,10 @@ export default {
       return getEndTimeIsoString(range, endTime);
     },
     formattedResults() {
-      const { clusterName, dateFormat, results, timeFormat, timezone } = this;
+      const { clusterList, dateFormat, results, timeFormat, timezone } = this;
+
+      // TODO - get this to work with multiple clusters...
+      const clusterName = clusterList[0];
 
       return getFormattedResults({
         clusterName,
@@ -200,9 +203,9 @@ export default {
       return getStartTimeIsoString(range, startTime);
     },
     crossRegionProps() {
-      const { clusterName, domain } = this;
+      const { clusterList, domainList } = this;
 
-      return { clusterName, domain };
+      return { clusterList, domainList };
     },
   },
   methods: {
@@ -265,9 +268,12 @@ export default {
       return { status: 'success', workflows, nextPageToken };
     },
     async fetchDomain() {
-      const { domain, now } = this;
+      const { domainList, now } = this;
 
       this.loading = true;
+
+      // TODO - Need to get this to work with multiple domains...
+      const domain = domainList[0];
 
       try {
         const domainInfo = await httpService.get(`/api/domains/${domain}`);
@@ -339,7 +345,11 @@ export default {
         workflows = wfs;
         this.npt = nextPageToken;
       } else {
-        const { domain } = this;
+        const { domainList } = this;
+
+        // TODO - Get this to work with multiple domains...
+        const domain = domainList[0];
+
         const queryOpen = { ...this.criteria, nextPageToken: this.npt };
         const queryClosed = { ...this.criteria, nextPageToken: this.nptAlt };
 
@@ -443,7 +453,13 @@ export default {
           query.range = range;
           delete query.startTime;
           delete query.endTime;
-          localStorage.setItem(`${this.domain}:workflows-time-range`, range);
+          const { domainList } = this;
+
+          // TODO - get this working with multiple domains...
+
+          const domain = domainList[0];
+
+          localStorage.setItem(`${domain}:workflows-time-range`, range);
         } else {
           query.startTime = range.startTime.toISOString();
           query.endTime = range.endTime.toISOString();

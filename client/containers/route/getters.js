@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Uber Technologies Inc.
+// Copyright (c) 2021-2022 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -22,17 +22,37 @@
 import { get } from 'lodash-es';
 import {
   ROUTE_PARAMS,
+  ROUTE_PARAMS_CLUSTER_LIST,
   ROUTE_PARAMS_CLUSTER_NAME,
   ROUTE_PARAMS_DOMAIN,
+  ROUTE_PARAMS_DOMAIN_LIST,
   ROUTE_PARAMS_WORKFLOW_ID,
   ROUTE_QUERY,
 } from './getter-types';
 
 const getters = {
   [ROUTE_PARAMS]: state => get(state, 'route.params', {}),
+  [ROUTE_PARAMS_CLUSTER_LIST]: (_, getters) => {
+    const rawClusterList = getters[ROUTE_PARAMS].clusterList;
+
+    if (!rawClusterList) {
+      return [];
+    }
+
+    return rawClusterList.split(',');
+  },
   [ROUTE_PARAMS_CLUSTER_NAME]: (_, getters) =>
     getters[ROUTE_PARAMS].clusterName,
   [ROUTE_PARAMS_DOMAIN]: (_, getters) => getters[ROUTE_PARAMS].domain,
+  [ROUTE_PARAMS_DOMAIN_LIST]: (_, getters) => {
+    const rawDomainList = getters[ROUTE_PARAMS].domainList;
+
+    if (!rawDomainList) {
+      return [];
+    }
+
+    return rawDomainList.split(',');
+  },
   [ROUTE_PARAMS_WORKFLOW_ID]: (_, getters) => getters[ROUTE_PARAMS].workflowId,
   [ROUTE_QUERY]: state => get(state, 'route.query', {}),
 };
