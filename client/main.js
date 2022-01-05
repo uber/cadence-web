@@ -298,32 +298,6 @@ const routeOpts = {
       path: '/domains/:domainList/:clusterList?/config',
       redirect: '/domains/:domainList/:clusterList?/settings',
     },
-    {
-      path: '/domains/:domainList/:clusterList?/history',
-      redirect: ({ params, query }) => {
-        if (!query.runId || !query.workflowId) {
-          return {
-            name: 'workflow-list',
-            params,
-          };
-        }
-
-        const { runId, workflowId, ...queryWhitelist } = query;
-
-        const newParams = {
-          clusterName: params.clusterName,
-          runId,
-          workflowId,
-          domain: params.domain,
-        };
-
-        return {
-          name: 'workflow/history',
-          params: newParams,
-          query: queryWhitelist,
-        };
-      },
-    },
   ],
   parseQuery: qs.parse.bind(qs),
   stringifyQuery: query => {
