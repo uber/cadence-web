@@ -25,6 +25,7 @@ export default {
   props: [
     'alignSelf',
     'grow',
+    'lineHeight',
     'margin',
     'maxWidth',
     'minWidth',
@@ -40,6 +41,7 @@ export default {
     :style="{
       alignSelf,
       flexGrow: grow,
+      lineHeight,
       marginRight: margin,
       maxWidth,
       minWidth,

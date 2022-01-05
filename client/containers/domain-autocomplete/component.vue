@@ -106,6 +106,7 @@ export default {
       </flex-grid-item>
       <flex-grid-item
         align-self="baseline"
+        line-height="32px"
         min-width="100px"
         margin="10px"
         v-if="multiSelectEnabled"
@@ -121,7 +122,7 @@ export default {
           >Multi-select</label
         >
       </flex-grid-item>
-      <flex-grid-item align-self="baseline" width="32px">
+      <flex-grid-item align-self="baseline" width="32px" v-if="isMultiSelect">
         <span class="navigate-to-domain disabled" v-if="!navigateToDomainUrl" />
         <a
           class="navigate-to-domain"
@@ -166,7 +167,7 @@ export default {
   .multi-select-checkbox {
     margin-left: 0;
     margin-right: 5px;
-    vertical-align: top;
+    vertical-align: baseline;
   }
 }
 </style>
