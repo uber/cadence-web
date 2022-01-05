@@ -20,11 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { Autocomplete, FlexGrid, FlexGridItem } from '~components';
+import { Autocomplete, FeatureFlag, FlexGrid, FlexGridItem } from '~components';
 
 export default {
   name: 'domain-autocomplete',
   components: {
+    'feature-flag': FeatureFlag,
     'flex-grid': FlexGrid,
     'flex-grid-item': FlexGridItem,
     autocomplete: Autocomplete,
@@ -52,6 +53,10 @@ export default {
     },
     multiDomainSelection: {
       type: Array || null,
+    },
+    multiSelectEnabled: {
+      type: Boolean,
+      default: false,
     },
     navigateToDomainUrl: {
       type: String,
@@ -100,7 +105,12 @@ export default {
           @search="onAutocompleteSearch"
         />
       </flex-grid-item>
-      <flex-grid-item align-self="baseline" min-width="100px" margin="10px">
+      <flex-grid-item
+        align-self="baseline"
+        min-width="100px"
+        margin="10px"
+        v-if="multiSelectEnabled"
+      >
         <input
           class="multi-select-checkbox"
           :checked="isMultiSelect"

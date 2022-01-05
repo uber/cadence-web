@@ -35,6 +35,7 @@ const mutations = {
     state.domainAutocomplete.domainList = [];
     state.domainAutocomplete.multiDomainSelection =
       payload.multiDomainSelection;
+    state.domainAutocomplete.multiSelectEnabled = payload.multiSelectEnabled;
     state.domainAutocomplete.search = '';
   },
   [DOMAIN_AUTOCOMPLETE_SET_DOMAIN_LIST]: (state, payload) => {

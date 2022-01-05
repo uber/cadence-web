@@ -20,6 +20,10 @@
     "value": true
   },
   {
+    "key": "domainAutocomplete.multiSelect",
+    "value": true
+  },
+  {
     "key": "domainMetrics",
     "value": false
   },

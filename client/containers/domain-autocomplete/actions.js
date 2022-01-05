@@ -54,7 +54,7 @@ import {
   formatDomainList,
   updateVisitedDomainList,
 } from './helpers';
-import { httpService } from '~services';
+import { featureFlagService, httpService } from '~services';
 
 const actions = {
   [DOMAIN_AUTOCOMPLETE_FETCH_DOMAIN_LIST]: debounce(
@@ -170,15 +170,21 @@ const actions = {
       `/domains/${value.domainInfo.name}/${value.replicationConfiguration.activeClusterName}`
     );
   },
-  [DOMAIN_AUTOCOMPLETE_ON_MOUNT]: ({ commit, getters }) => {
+  [DOMAIN_AUTOCOMPLETE_ON_MOUNT]: async ({ commit, getters }) => {
     const ready = getters[DOMAIN_IS_READY];
     const currentDomain = getters[DOMAIN_CURRENT];
     const multiDomainSelection =
       ready && currentDomain ? formatDomainList([currentDomain]) : [];
+    const multiSelectEnabled = await featureFlagService.isFeatureFlagEnabled({
+      name: 'domainAutocomplete.multiSelect',
+    });
 
     // TODO - Need to cater for when domain hasn't loaded yet...
     // in theory shouldn't happen if done correctly as loading blocks the page (I think)
-    commit(DOMAIN_AUTOCOMPLETE_ON_MOUNTED, { multiDomainSelection });
+    commit(DOMAIN_AUTOCOMPLETE_ON_MOUNTED, {
+      multiDomainSelection,
+      multiSelectEnabled,
+    });
   },
   [DOMAIN_AUTOCOMPLETE_ON_MULTI_SELECT_CHANGE]: ({ commit }, payload) => {
     commit(DOMAIN_AUTOCOMPLETE_SET_IS_MULTI_SELECT, payload);
