@@ -93,7 +93,7 @@ const getters = {
     const dcListUrl = selectedDomainList
       .map(domain =>
         domain.value.isGlobalDomain
-          ? 'global'
+          ? 'active'
           : domain.value.replicationConfiguration.activeClusterName
       )
       .join(',');
