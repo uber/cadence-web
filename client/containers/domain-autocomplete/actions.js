@@ -186,7 +186,22 @@ const actions = {
       multiSelectEnabled,
     });
   },
-  [DOMAIN_AUTOCOMPLETE_ON_MULTI_SELECT_CHANGE]: ({ commit }, payload) => {
+  [DOMAIN_AUTOCOMPLETE_ON_MULTI_SELECT_CHANGE]: (
+    { commit, getters },
+    payload
+  ) => {
+    if (payload) {
+      const ready = getters[DOMAIN_IS_READY];
+      const currentDomain = getters[DOMAIN_CURRENT];
+      const multiDomainSelection =
+        ready && currentDomain ? formatDomainList([currentDomain]) : [];
+
+      commit(
+        DOMAIN_AUTOCOMPLETE_SET_MULTI_DOMAIN_SELECTION,
+        multiDomainSelection
+      );
+    }
+
     commit(DOMAIN_AUTOCOMPLETE_SET_IS_MULTI_SELECT, payload);
   },
   [DOMAIN_AUTOCOMPLETE_ON_SEARCH]: async ({ commit, dispatch }, payload) => {

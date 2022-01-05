@@ -71,6 +71,16 @@ export default {
 
       autocomplete.searchEl.focus();
     },
+    onDeselectChange(deselectedOption) {
+      this.$emit(
+        'change',
+        this.value.filter(
+          option =>
+            option.value.domainInfo.uuid !==
+            deselectedOption.value.domainInfo.uuid
+        )
+      );
+    },
     onSelectChange(...args) {
       this.$emit('change', ...args);
     },
@@ -95,6 +105,7 @@ export default {
   >
     <v-select
       :clear-search-on-blur="() => false"
+      :close-on-select="!multiple"
       :filterable="false"
       :loading="isLoading"
       :multiple="multiple"
@@ -103,7 +114,8 @@ export default {
       ref="autocomplete"
       :searchable="true"
       :value="value"
-      @input="onSelectChange"
+      @option:deselected="onDeselectChange"
+      @option:selected="onSelectChange"
       @search="onSelectSearch"
     >
       <template v-slot:no-options="{ search, searching }">
