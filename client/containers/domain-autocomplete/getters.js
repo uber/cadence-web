@@ -24,6 +24,7 @@ import {
   CROSS_REGION,
   CROSS_REGION_ALLOWED_CROSS_ORIGIN,
 } from '../cross-region/getter-types';
+import { ROUTE_PARAMS_DOMAIN_LIST } from '../route/getter-types';
 import {
   DOMAIN_AUTOCOMPLETE_COMBINED_DOMAIN_LIST,
   DOMAIN_AUTOCOMPLETE_DOMAIN_LIST,
@@ -33,6 +34,7 @@ import {
   DOMAIN_AUTOCOMPLETE_MULTI_DOMAIN_SELECTION,
   DOMAIN_AUTOCOMPLETE_MULTI_SELECT_ENABLED,
   DOMAIN_AUTOCOMPLETE_NAVIGATE_TO_DOMAIN_URL,
+  DOMAIN_AUTOCOMPLETE_PLACEHOLDER,
   DOMAIN_AUTOCOMPLETE_SEARCH,
   DOMAIN_AUTOCOMPLETE_SEARCH_URL,
   DOMAIN_AUTOCOMPLETE_VISITED_DOMAIN_LIST,
@@ -109,6 +111,15 @@ const getters = {
       '';
 
     return `/domains/${domainListUrl}${clusterListUrl && '/' + clusterListUrl}`;
+  },
+  [DOMAIN_AUTOCOMPLETE_PLACEHOLDER]: (_, getters) => {
+    const domainList = getters[ROUTE_PARAMS_DOMAIN_LIST];
+
+    if (!domainList.length) {
+      return 'cadence-canary';
+    }
+
+    return domainList.join(', ');
   },
   [DOMAIN_AUTOCOMPLETE_SEARCH]: state =>
     get(state, statePrefix('search')) || '',

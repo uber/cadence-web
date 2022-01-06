@@ -1,5 +1,5 @@
 <script>
-// Copyright (c) 2017-2021 Uber Technologies Inc.
+// Copyright (c) 2017-2022 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -279,18 +279,18 @@ export default {
           </flex-grid-item>
         </feature-flag>
 
-        <flex-grid-item v-if="$route.params.domain" margin="15px">
+        <flex-grid-item v-if="$route.params.domainList" margin="15px">
           <flex-grid align-items="baseline">
             <flex-grid-item>
               <router-link
                 class="workflows"
                 :to="{
                   name: 'workflow-list',
-                  params: { clusterName: $route.params.clusterName },
+                  params: { clusterList: $route.params.clusterList },
                 }"
                 v-if="!isSearchingDomain"
               >
-                {{ $route.params.domain }}
+                {{ $route.params.domainList }}
               </router-link>
               <domain-autocomplete
                 :focus="true"
@@ -311,8 +311,10 @@ export default {
             </flex-grid-item>
             <flex-grid-item>
               <active-status
+                :cluster-list="$route.params.clusterList"
                 :cluster-name="$route.params.clusterName"
                 :domain="$route.params.domain"
+                :domain-list="$route.params.domainList"
                 :workflow-id="$route.params.workflowId"
               />
             </flex-grid-item>

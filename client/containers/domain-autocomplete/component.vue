@@ -30,10 +30,10 @@ export default {
     autocomplete: Autocomplete,
   },
   props: {
-    domain: {
+    placeholder: {
       type: String,
     },
-    domainList: {
+    domainListOptions: {
       type: Array,
       default: () => [],
     },
@@ -96,8 +96,8 @@ export default {
           :height="height"
           :is-loading="isLoading"
           :multiple="isMultiSelect"
-          :options="domainList"
-          :placeholder="`${domain ? domain : 'cadence-canary'}`"
+          :options="domainListOptions"
+          :placeholder="placeholder"
           :search="search"
           :value="multiDomainSelection"
           @change="onAutocompleteChange"
