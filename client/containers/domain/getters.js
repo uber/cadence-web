@@ -21,8 +21,8 @@
 
 import { get } from 'lodash-es';
 import {
-  ROUTE_PARAMS_CLUSTER_NAME,
-  ROUTE_PARAMS_DOMAIN,
+  ROUTE_PARAMS_CLUSTER_LIST,
+  ROUTE_PARAMS_DOMAIN_LIST,
 } from '../route/getter-types';
 import {
   CROSS_REGION,
@@ -43,13 +43,19 @@ import { hasExpired } from '~helpers';
 
 const getters = {
   [DOMAIN_CURRENT]: (_, getters) => {
-    const clusterName = getters[ROUTE_PARAMS_CLUSTER_NAME];
+    const clusterList = getters[ROUTE_PARAMS_CLUSTER_LIST];
+
+    // TODO - Handle multiple clusters/domains here...
+    const clusterName = clusterList[0];
     const domainNamespace = getters[DOMAIN_NAMESPACE];
 
     return getDomain({ clusterName, domainNamespace });
   },
   [DOMAIN_NAMESPACE]: (_, getters) => {
-    const domainName = getters[ROUTE_PARAMS_DOMAIN];
+    const domainList = getters[ROUTE_PARAMS_DOMAIN_LIST];
+
+    // TODO - Handle multiple domains here...
+    const domainName = domainList[0];
     const domainHash = getters[DOMAIN_HASH];
 
     return domainHash[domainName];
@@ -60,17 +66,31 @@ const getters = {
     return domainNamespace && domainNamespace.error;
   },
   [DOMAIN_HASH]: state => get(state, statePrefix('domainHash')),
-  [DOMAIN_IS_LOADING]: (_, getters) =>
-    getters[ROUTE_PARAMS_DOMAIN] &&
-    !getters[DOMAIN_ERROR] &&
-    hasExpired(get(getters[DOMAIN_CURRENT], 'expiryDateTime')),
+  [DOMAIN_IS_LOADING]: (_, getters) => {
+    const domainList = getters[ROUTE_PARAMS_DOMAIN_LIST];
+
+    // TODO - Handle multiple domains here...
+    const domainName = domainList[0];
+
+    return (
+      domainName &&
+      !getters[DOMAIN_ERROR] &&
+      hasExpired(get(getters[DOMAIN_CURRENT], 'expiryDateTime'))
+    );
+  },
   [DOMAIN_IS_READY]: (_, getters) =>
     !getters[DOMAIN_IS_LOADING] && !getters[DOMAIN_ERROR],
   [DOMAIN_CROSS_ORIGIN]: (_, getters) => {
     const allowedCrossOrigin = getters[CROSS_REGION_ALLOWED_CROSS_ORIGIN];
-    const clusterName = getters[ROUTE_PARAMS_CLUSTER_NAME];
+
+    const clusterList = getters[ROUTE_PARAMS_CLUSTER_LIST];
+
+    // TODO - Handle multiple clusters here...
+    const clusterName = clusterList[0];
     const clusterOriginList = getters[CROSS_REGION_CLUSTER_ORIGIN_LIST];
     const crossRegion = getters[CROSS_REGION];
+
+    // TODO - Handle multiple domains here...
     const domain = getters[DOMAIN_CURRENT];
 
     return getCrossOrigin({

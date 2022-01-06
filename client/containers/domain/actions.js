@@ -20,8 +20,8 @@
 // THE SOFTWARE.
 
 import {
-  ROUTE_PARAMS_CLUSTER_NAME,
-  ROUTE_PARAMS_DOMAIN,
+  ROUTE_PARAMS_CLUSTER_LIST,
+  ROUTE_PARAMS_DOMAIN_LIST,
 } from '../route/getter-types';
 import {
   CROSS_REGION,
@@ -44,8 +44,14 @@ import { getExpiryDateTimeFromNow } from '~helpers';
 
 const actions = {
   [DOMAIN_FETCH]: async ({ commit, getters }) => {
-    const clusterName = getters[ROUTE_PARAMS_CLUSTER_NAME];
-    const domainName = getters[ROUTE_PARAMS_DOMAIN];
+    const clusterList = getters[ROUTE_PARAMS_CLUSTER_LIST];
+
+    // TODO - handle multiple clusters
+    const clusterName = clusterList[0];
+    const domainList = getters[ROUTE_PARAMS_DOMAIN_LIST];
+
+    // TODO - Handle multiple domains
+    const domainName = domainList[0];
     const ready = getters[DOMAIN_IS_READY];
     const crossRegion = getters[CROSS_REGION];
     const allowedCrossOrigin = getters[CROSS_REGION_ALLOWED_CROSS_ORIGIN];
