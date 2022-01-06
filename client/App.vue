@@ -290,7 +290,10 @@ export default {
                 }"
                 v-if="!isSearchingDomain"
               >
-                {{ $route.params.domainList }}
+                {{
+                  $route.params.domainList &&
+                    $route.params.domainList.split(',').join(', ')
+                }}
               </router-link>
               <domain-autocomplete
                 :focus="true"
