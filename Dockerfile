@@ -1,4 +1,4 @@
-FROM node:dubnium-stretch AS BUILD_IMAGE
+FROM node:gallium-bullseye AS BUILD_IMAGE
 
 ### Build step ###
 WORKDIR /usr/build
@@ -13,7 +13,7 @@ RUN npm install --production --unsafe-perm
 RUN npm run build-production
 
 # switch to lite version of node
-FROM node:dubnium-slim
+FROM node:gallium-bullseye-slim
 
 ### Run step ###
 WORKDIR /usr/app
