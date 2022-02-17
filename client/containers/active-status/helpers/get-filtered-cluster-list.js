@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Uber Technologies Inc.
+// Copyright (c) 2021-2022 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -28,16 +28,16 @@ const getFilteredClusterList = ({
   clusterList.filter(
     allowedCrossOrigin
       ? cluster => {
-          if (cluster.clusterName === clusterName) {
-            return false;
-          }
-
-          if (cluster.isActive && !clusterName) {
-            return false;
-          }
-
-          return true;
+        if (cluster.clusterName === clusterName) {
+          return false;
         }
+
+        if (cluster.isActive && !clusterName) {
+          return false;
+        }
+
+        return true;
+      }
       : cluster => cluster.origin !== origin
   );
 

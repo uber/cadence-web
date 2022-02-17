@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Uber Technologies Inc.
+// Copyright (c) 2021-2022 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -50,21 +50,21 @@ async function listWorkflows({ clusterService, state }, ctx) {
 
   const requestArgs = advancedVisibility
     ? {
-        query: buildQueryString(startTime, endTime, {
-          ...query,
-          state,
-        }),
-      }
+      query: buildQueryString(startTime, endTime, {
+        ...query,
+        state,
+      }),
+    }
     : {
-        StartTimeFilter: {
-          earliestTime,
-          latestTime,
-        },
-        ...(workflowName && { typeFilter: { name: workflowName } }),
-        ...(workflowId && { executionFilter: { workflowId } }),
-        ...(status && { statusFilter: status }),
-        nextPageToken,
-      };
+      StartTimeFilter: {
+        earliestTime,
+        latestTime,
+      },
+      ...(workflowName && { typeFilter: { name: workflowName } }),
+      ...(workflowId && { executionFilter: { workflowId } }),
+      ...(status && { statusFilter: status }),
+      nextPageToken,
+    };
 
   const requestApi = advancedVisibility ? 'listWorkflows' : state + 'Workflows';
 

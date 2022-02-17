@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Uber Technologies Inc.
+// Copyright (c) 2021-2022 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -25,7 +25,7 @@ const formatDomainLabel = domain =>
   [
     domain.domainInfo.name,
     domain.isGlobalDomain !== undefined &&
-      (domain.isGlobalDomain ? 'Global' : 'Local'),
+    (domain.isGlobalDomain ? 'Global' : 'Local'),
     get(domain, 'replicationConfiguration.activeClusterName'),
   ]
     .filter(substring => !!substring)

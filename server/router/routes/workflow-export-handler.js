@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Uber Technologies Inc.
+// Copyright (c) 2021-2022 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -33,7 +33,7 @@ const workflowExportHandler = async ctx => {
 
     ctx.res.write(
       (nextPageToken ? ',' : '[') +
-        page.history.events.map(losslessJSON.stringify).join(',')
+      page.history.events.map(losslessJSON.stringify).join(',')
     );
     nextPageToken = page.nextPageToken;
   } while (nextPageToken);

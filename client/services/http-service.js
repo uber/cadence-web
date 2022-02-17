@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Uber Technologies Inc.
+// Copyright (c) 2021-2022 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -35,11 +35,11 @@ class HttpService {
 
   handleResponse(response) {
     return response.status >= 200 && response.status < 300
-      ? response.json().catch(() => {})
+      ? response.json().catch(() => { })
       : response.json().then(
-          json => Promise.reject(Object.assign(response, { json })),
-          () => Promise.reject(response)
-        );
+        json => Promise.reject(Object.assign(response, { json })),
+        () => Promise.reject(response)
+      );
   }
 
   async request(baseUrl, { query, ...options } = {}) {

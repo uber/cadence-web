@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Uber Technologies Inc.
+// Copyright (c) 2021-2022 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -38,10 +38,10 @@ const getHrefFromCluster = ({
 
   const replaceKey = `/domains/${domainName}/${
     clusterName ? clusterName + '/' : ''
-  }`;
+    }`;
   const replaceValue = `/domains/${domainName}/${
     isGlobalDomain && isActive ? '' : clusterNamePath + '/'
-  }`;
+    }`;
 
   const newPathname = pathname.replace(replaceKey, replaceValue);
 

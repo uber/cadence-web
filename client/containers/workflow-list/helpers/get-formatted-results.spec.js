@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Uber Technologies Inc.
+// Copyright (c) 2021-2022 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -92,9 +92,9 @@ describe('getFormattedResults', () => {
 
       expect(output).toEqual([
         {
-          endTime: 'May 19, 2021 06:59:59',
+          endTime: 'May 19, 2021-2022 06:59:59',
           runId: 'run_id_5678',
-          startTime: 'May 15, 2021 07:00:00',
+          startTime: 'May 15, 2021-2022 07:00:00',
           status: 'completed',
           uniqueId: 'run_id_5678-completed',
           workflowId: 'wf_id_1234',

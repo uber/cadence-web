@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021 Uber Technologies Inc.
+// Copyright (c) 2017-2022 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,8 +19,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-describe('Query Workflow', function() {
-  it('should list workflows using a temporary hack of parsing out the available workflows from a NotFoundError', async function() {
+describe('Query Workflow', function () {
+  it('should list workflows using a temporary hack of parsing out the available workflows from a NotFoundError', async function () {
     this.timeout(50000);
     this.test.QueryWorkflow = ({ queryRequest }) => {
       queryRequest.query.queryType.should.equal('__cadence_web_list');
@@ -41,7 +41,7 @@ describe('Query Workflow', function() {
       .expect(['foo', 'bar']);
   });
 
-  it('should forward the query to the workflow', async function() {
+  it('should forward the query to the workflow', async function () {
     this.test.QueryWorkflow = ({ queryRequest }) => {
       queryRequest.should.deep.equal({
         domain: 'canary',
@@ -71,7 +71,7 @@ describe('Query Workflow', function() {
       });
   });
 
-  it('should turn bad requests into 400s', async function() {
+  it('should turn bad requests into 400s', async function () {
     this.test.QueryWorkflow = () => ({
       ok: false,
       body: { message: 'that does not make sense' },

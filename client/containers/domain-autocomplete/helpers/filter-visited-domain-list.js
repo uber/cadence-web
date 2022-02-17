@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Uber Technologies Inc.
+// Copyright (c) 2021-2022 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,7 +23,7 @@ const filterVisitedDomainList = ({ search, visitedDomainList }) =>
   !search
     ? visitedDomainList
     : visitedDomainList.filter(
-        domain => domain.domainInfo.name.indexOf(search) !== -1
-      );
+      domain => domain.domainInfo.name.indexOf(search) !== -1
+    );
 
 export default filterVisitedDomainList;

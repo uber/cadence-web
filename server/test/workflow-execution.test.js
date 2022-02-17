@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021 Uber Technologies Inc.
+// Copyright (c) 2017-2022 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,8 +19,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-describe('Workflow Execution', function() {
-  it('should describe the workflow', async function() {
+describe('Workflow Execution', function () {
+  it('should describe the workflow', async function () {
     this.test.DescribeWorkflowExecution = ({ describeRequest }) => {
       return {
         executionConfiguration: {
@@ -50,7 +50,7 @@ describe('Workflow Execution', function() {
       });
   });
 
-  it('should terminate a workflow', async function() {
+  it('should terminate a workflow', async function () {
     let reason;
 
     this.test.TerminateWorkflowExecution = ({ terminateRequest }) => {
@@ -68,7 +68,7 @@ describe('Workflow Execution', function() {
       .expect(() => reason.should.equal('example reason'));
   });
 
-  it('should signal a workflow without input', async function() {
+  it('should signal a workflow without input', async function () {
     let signal;
 
     this.test.SignalWorkflowExecution = ({ signalRequest }) => {

@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Uber Technologies Inc.
+// Copyright (c) 2021-2022 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -26,8 +26,8 @@ const mapHistoryResponse = history => {
     return history.events.map(e => {
       const attr = e.eventType
         ? e.eventType.charAt(0).toLowerCase() +
-          e.eventType.slice(1) +
-          'EventAttributes'
+        e.eventType.slice(1) +
+        'EventAttributes'
         : '';
 
       const details = e[attr] && JSON.parse(JSON.stringify(e[attr]), replacer);

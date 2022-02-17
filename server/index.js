@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021 Uber Technologies Inc.
+// Copyright (c) 2017-2022 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -46,12 +46,12 @@ const app = new Koa();
 
 app.webpackConfig = webpackConfig;
 
-app.init = function({
+app.init = function ({
   logErrors,
   peers = process.env.CADENCE_TCHANNEL_PEERS || PEERS_DEFAULT,
   retryFlags = REQUEST_RETRY_FLAGS_DEFAULT,
   retryLimit = process.env.CADENCE_TCHANNEL_RETRY_LIMIT ||
-    REQUEST_RETRY_LIMIT_DEFAULT,
+  REQUEST_RETRY_LIMIT_DEFAULT,
   serviceName = process.env.CADENCE_TCHANNEL_SERVICE || SERVICE_NAME_DEFAULT,
   timeout = REQUEST_TIMEOUT_DEFAULT,
   useWebpack = process.env.NODE_ENV !== 'production',
@@ -98,7 +98,7 @@ app.init = function({
         filter: contentType => !contentType.startsWith('text/event-stream'),
       })
     )
-    .use(async function(ctx, next) {
+    .use(async function (ctx, next) {
       if (enableAuth && authType === 'ADMIN_JWT' && authAdminJwtPrivateKey) {
         ctx.authTokenHeaders = ctx.authTokenHeaders || {};
         const token = jwt.sign(
@@ -118,15 +118,15 @@ app.init = function({
     .use(
       useWebpack
         ? koaWebpack({
-            compiler,
-            dev: { stats: { colors: true } },
-            hot: { port: process.env.TEST_RUN ? 8082 : 8081 },
-          })
+          compiler,
+          dev: { stats: { colors: true } },
+          hot: { port: process.env.TEST_RUN ? 8082 : 8081 },
+        })
         : koaStatic(staticRoot)
     )
     .use(router.routes())
     .use(router.allowedMethods())
-    .use(async function(ctx, next) {
+    .use(async function (ctx, next) {
       if (
         ['HEAD', 'GET'].includes(ctx.method) &&
         !ctx.path.startsWith('/api')

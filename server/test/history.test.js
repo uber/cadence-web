@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021 Uber Technologies Inc.
+// Copyright (c) 2017-2022 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -121,8 +121,8 @@ const Long = require('long'),
     },
   ];
 
-describe('Workflow History', function() {
-  it('should forward the request to the cadence frontend with workflowId and runId', function() {
+describe('Workflow History', function () {
+  it('should forward the request to the cadence frontend with workflowId and runId', function () {
     this.test.GetWorkflowExecutionHistory = ({ getRequest }) => {
       getRequest.should.deep.equal({
         HistoryEventFilterType: null,
@@ -149,7 +149,7 @@ describe('Workflow History', function() {
       .expect('Content-Type', /json/);
   });
 
-  it('should forward the nextPageToken', function() {
+  it('should forward the nextPageToken', function () {
     this.test.GetWorkflowExecutionHistory = ({ getRequest }) => {
       getRequest.nextPageToken.toString().should.equal('page2');
 
@@ -173,7 +173,7 @@ describe('Workflow History', function() {
       });
   });
 
-  it('should support long polling by forwarding the waitForNewEvent flag', function() {
+  it('should support long polling by forwarding the waitForNewEvent flag', function () {
     this.test.GetWorkflowExecutionHistory = ({ getRequest }) => {
       getRequest.waitForNewEvent.should.be.true;
 
@@ -195,7 +195,7 @@ describe('Workflow History', function() {
       );
   });
 
-  it('should transform Long numbers to JavaScript numbers, Long dates to ISO date strings, and line-delimited JSON buffers to JSON', function() {
+  it('should transform Long numbers to JavaScript numbers, Long dates to ISO date strings, and line-delimited JSON buffers to JSON', function () {
     this.test.GetWorkflowExecutionHistory = ({ getRequest }) => ({
       history: { events: wfHistoryThrift },
       nextPageToken: new Buffer('page2'),
@@ -212,10 +212,10 @@ describe('Workflow History', function() {
       });
   });
 
-  describe('Export', function() {
+  describe('Export', function () {
     const wfHistoryCliJson = `[{"eventId":1,"timestamp":1510701850351393089,"eventType":"WorkflowExecutionStarted","workflowExecutionStartedEventAttributes":{"workflowType":{"name":"github.com/uber/cadence/demo"},"taskList":{"name":"ci-task-queue"},"input":"eyJlbWFpbHMiOlsiamFuZUBleGFtcGxlLmNvbSIsImJvYkBleGFtcGxlLmNvbSJdLCJpbmNsdWRlRm9vdGVyIjp0cnVlfQ==","executionStartToCloseTimeoutSeconds":1080,"taskStartToCloseTimeoutSeconds":30}},{"eventId":2,"timestamp":1510701850351393089,"eventType":"DecisionTaskScheduled","decisionTaskScheduledEventAttributes":{"taskList":{"name":"canary-task-queue"},"startToCloseTimeoutSeconds":180,"attempt":1}},{"eventId":3,"timestamp":1510701867531262273,"eventType":"DecisionTaskStarted","decisionTaskStartedEventAttributes":{"scheduledEventId":2,"identity":"box1@ci-task-queue","requestId":"fafa095d-b4ca-423a-a812-223e62b5ccf8"}}]`;
 
-    it('should be able to export history in a format compatible with the CLI', function() {
+    it('should be able to export history in a format compatible with the CLI', function () {
       this.test.GetWorkflowExecutionHistory = ({ getRequest }) => ({
         history: { events: wfHistoryThrift },
       });
@@ -226,7 +226,7 @@ describe('Workflow History', function() {
         .expect(wfHistoryCliJson);
     });
 
-    it('should page through all responses', async function() {
+    it('should page through all responses', async function () {
       let calls = 0;
 
       this.test.GetWorkflowExecutionHistory = ({ getRequest }) => {

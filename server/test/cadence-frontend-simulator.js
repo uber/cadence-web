@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021 Uber Technologies Inc.
+// Copyright (c) 2017-2022 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -31,7 +31,7 @@ global.should = require('chai').should();
 
 global.dateToLong = d => Long.fromValue(Number(new Date(d))).mul(1000000);
 
-before(function(done) {
+before(function (done) {
   tchanServer = new TChannel({ serviceName: 'cadence-frontend' });
 
   client = new TChannel();
@@ -102,12 +102,12 @@ before(function(done) {
   global.request = supertest.bind(supertest, app);
 });
 
-after(function() {
+after(function () {
   app.close();
   tchanServer.close();
   client.close();
 });
 
-beforeEach(function() {
+beforeEach(function () {
   currTest = this.currentTest;
 });

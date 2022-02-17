@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Uber Technologies Inc.
+// Copyright (c) 2021-2022 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,7 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const tasklistPollerListHandler = async function(ctx) {
+const tasklistPollerListHandler = async function (ctx) {
   const descTaskList = async taskListType =>
     (
       await ctx.cadence.describeTaskList({
