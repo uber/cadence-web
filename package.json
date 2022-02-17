@@ -109,7 +109,7 @@
     "eslint-plugin-chai-friendly": "^0.5.0",
     "eslint-plugin-cup": "^2.0.2",
     "eslint-plugin-flowtype": "^4.6.0",
-    "eslint-plugin-header": "just-at-uber/eslint-plugin-header#ef55ce547ecb6801da326c75374711f0865a57a6",
+    "eslint-plugin-header": "just-at-uber/eslint-plugin-header#aee6a4610ffc1946b821fe869f0ac6b922df303c",
     "eslint-plugin-import": "^2.20.0",
     "eslint-plugin-jest": "^23.6.0",
     "eslint-plugin-prettier": "^3.1.2",
