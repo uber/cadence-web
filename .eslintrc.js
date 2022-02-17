@@ -32,7 +32,7 @@ module.exports = {
            * // Copyright (c) 2020 Uber Technologies Inc.
            *
            * 2. multi-year span
-           * // Copyright (c) 2017-2021 Uber Technologies Inc.
+           * // Copyright (c) 2017-2022 Uber Technologies Inc.
            *
            * 3. new file from another company referenced
            * // Modifications Copyright (c) 2020 Uber Technologies Inc.
@@ -46,13 +46,13 @@ module.exports = {
            *
            *       In this case it will change header:
            *         from:
-           *           Copyright (c) 2017-2021 Uber Technologies Inc.
+           *           Copyright (c) 2017-2022 Uber Technologies Inc.
            *           Copyright (c) 2020 Uber Technologies Inc.
            *         to:
-           *           Copyright (c) 2021 Uber Technologies Inc.
+           *           Copyright (c) 2022 Uber Technologies Inc.
            *         but should be (respectively):
-           *           Copyright (c) 2017-2021 Uber Technologies Inc.
-           *           Copyright (c) 2020-2021 Uber Technologies Inc.
+           *           Copyright (c) 2017-2022 Uber Technologies Inc.
+           *           Copyright (c) 2020-2022 Uber Technologies Inc.
            *
            *       I have requested for a new feature which allows templates to
            *       use named capture groups in the template. See open issue:
