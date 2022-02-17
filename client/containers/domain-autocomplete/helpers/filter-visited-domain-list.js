@@ -23,7 +23,7 @@ const filterVisitedDomainList = ({ search, visitedDomainList }) =>
   !search
     ? visitedDomainList
     : visitedDomainList.filter(
-      domain => domain.domainInfo.name.indexOf(search) !== -1
-    );
+        domain => domain.domainInfo.name.indexOf(search) !== -1
+      );
 
 export default filterVisitedDomainList;

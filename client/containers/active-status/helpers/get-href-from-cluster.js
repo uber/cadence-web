@@ -38,10 +38,10 @@ const getHrefFromCluster = ({
 
   const replaceKey = `/domains/${domainName}/${
     clusterName ? clusterName + '/' : ''
-    }`;
+  }`;
   const replaceValue = `/domains/${domainName}/${
     isGlobalDomain && isActive ? '' : clusterNamePath + '/'
-    }`;
+  }`;
 
   const newPathname = pathname.replace(replaceKey, replaceValue);
 

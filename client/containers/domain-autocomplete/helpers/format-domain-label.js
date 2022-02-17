@@ -25,7 +25,7 @@ const formatDomainLabel = domain =>
   [
     domain.domainInfo.name,
     domain.isGlobalDomain !== undefined &&
-    (domain.isGlobalDomain ? 'Global' : 'Local'),
+      (domain.isGlobalDomain ? 'Global' : 'Local'),
     get(domain, 'replicationConfiguration.activeClusterName'),
   ]
     .filter(substring => !!substring)

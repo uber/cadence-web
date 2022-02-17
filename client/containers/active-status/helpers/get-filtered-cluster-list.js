@@ -28,16 +28,16 @@ const getFilteredClusterList = ({
   clusterList.filter(
     allowedCrossOrigin
       ? cluster => {
-        if (cluster.clusterName === clusterName) {
-          return false;
-        }
+          if (cluster.clusterName === clusterName) {
+            return false;
+          }
 
-        if (cluster.isActive && !clusterName) {
-          return false;
-        }
+          if (cluster.isActive && !clusterName) {
+            return false;
+          }
 
-        return true;
-      }
+          return true;
+        }
       : cluster => cluster.origin !== origin
   );
 

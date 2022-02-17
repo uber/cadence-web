@@ -35,11 +35,11 @@ class HttpService {
 
   handleResponse(response) {
     return response.status >= 200 && response.status < 300
-      ? response.json().catch(() => { })
+      ? response.json().catch(() => {})
       : response.json().then(
-        json => Promise.reject(Object.assign(response, { json })),
-        () => Promise.reject(response)
-      );
+          json => Promise.reject(Object.assign(response, { json })),
+          () => Promise.reject(response)
+        );
   }
 
   async request(baseUrl, { query, ...options } = {}) {

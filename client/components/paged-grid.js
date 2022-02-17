@@ -21,7 +21,7 @@
 
 import deepmerge from 'deepmerge';
 
-export default function (vue) {
+export default function(vue) {
   return deepmerge(
     {
       computed: {
