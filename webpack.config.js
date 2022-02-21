@@ -3,6 +3,7 @@ const
   webpack = require('webpack'),
   ExtractTextPlugin = require('extract-text-webpack-plugin'),
   HtmlWebpackPlugin = require('html-webpack-plugin'),
+  CompressionPlugin = require("compression-webpack-plugin"),
   extractStylus = 'css-loader?sourceMap!stylus-loader',
   development = !['production', 'ci'].includes(process.env.NODE_ENV)
 
@@ -10,13 +11,17 @@ require('babel-polyfill');
 
 module.exports = {
   devtool: 'source-map',
-  entry: [
-    'babel-polyfill',
-    path.join(__dirname, process.env.TEST_RUN ? 'client/test/index' : 'client/main')
-  ].filter(x => x),
+  entry: {
+    main:[
+      'babel-polyfill',
+      path.join(__dirname, process.env.TEST_RUN ? 'client/test/index' : 'client/main')
+    ].filter(x => x),
+    vendor:["lodash-es","cytoscape","vis-timeline","moment"]
+  },
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: 'cadence.[hash].js',
+    filename: '[name].[hash].js',
+    chunkFilename: '[name].[hash].js',	
     publicPath: '/'
   },
   plugins: [
@@ -25,6 +30,19 @@ module.exports = {
         NODE_ENV: '"production"'
       }
     }),
+    new webpack.optimize.UglifyJsPlugin({
+			compress: {
+			  warnings: false, 
+				unused: true 
+			}
+		}),
+		new webpack.optimize.CommonsChunkPlugin({
+		   name: 'vendor',
+		   minChunks: function (module) {
+			   return module.context && module.context.indexOf('node_modules') !== -1;
+		   },
+		   fileName: '[name].[hash].js',       
+	  }), 
     new ExtractTextPlugin({ filename: development ? 'cadence.css' : 'cadence.[hash].css', allChunks: true }),
     new HtmlWebpackPlugin({
       title: 'Cadence',
@@ -34,7 +52,13 @@ module.exports = {
       template: require('html-webpack-template'),
       lang: 'en-US',
       scripts: (process.env.CADENCE_EXTERNAL_SCRIPTS || '').split(',').filter(x => x)
-    })
+    }),
+    new CompressionPlugin({
+      asset: "[path].gz[query]",
+      algorithm: "gzip",
+      test: /\.(js|html)$/,
+      threshold: 10240,       
+    }) 
   ].filter(x => x),
   module: {
     rules: [
