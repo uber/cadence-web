@@ -31,7 +31,7 @@ global.should = require('chai').should();
 
 global.dateToLong = d => Long.fromValue(Number(new Date(d))).mul(1000000);
 
-before(function(done) {
+before(function (done) {
   tchanServer = new TChannel({ serviceName: 'cadence-frontend' });
 
   client = new TChannel();
@@ -40,11 +40,11 @@ before(function(done) {
   });
   const tchan = TChannelAsThrift({
     channel: cadenceChannel,
-    entryPoint: path.join(__dirname, '../idl/cadence.thrift'),
+    entryPoint: path.join(__dirname, '../idl/thrift/cadence.thrift'),
   });
   const adminTChannel = TChannelAsThrift({
     channel: cadenceChannel,
-    entryPoint: path.join(__dirname, '../idl/admin.thrift'),
+    entryPoint: path.join(__dirname, '../idl/thrift/admin.thrift'),
   });
 
   const handler = serviceName => (ctx, req, head, body, cb) => {
@@ -102,12 +102,12 @@ before(function(done) {
   global.request = supertest.bind(supertest, app);
 });
 
-after(function() {
+after(function () {
   app.close();
   tchanServer.close();
   client.close();
 });
 
-beforeEach(function() {
+beforeEach(function () {
   currTest = this.currentTest;
 });
