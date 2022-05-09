@@ -19,7 +19,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const PEERS_DEFAULT = '127.0.0.1:7933';
+const PEERS_DEFAULT = '127.0.0.1:5437';
+// const PEERS_DEFAULT = '127.0.0.1:7933';
 
 const REQUEST_RETRY_FLAGS_DEFAULT = { onConnectionError: true };
 
@@ -27,9 +28,10 @@ const REQUEST_RETRY_LIMIT_DEFAULT = 3;
 
 const REQUEST_TIMEOUT_DEFAULT = 1000 * 60 * 5;
 
-const SERVICE_NAME_DEFAULT = 'cadence-frontend';
+const SERVICE_NAME_DEFAULT = 'cadence-frontend-staging';
+// const SERVICE_NAME_DEFAULT = 'cadence-frontend';
 
-const TRANSPORT_CLIENT_TYPE_DEFAULT = 'tchannel';  // ['tchannel', 'grpc']
+const TRANSPORT_CLIENT_TYPE_DEFAULT = 'tchannel';  // 'tchannel', 'grpc'
 
 module.exports = {
   PEERS_DEFAULT,
