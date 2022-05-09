@@ -1,34 +1,8 @@
-const get = require('lodash.get');
-const grpc = require('grpc');
-const protoLoader = require('@grpc/proto-loader');
-const path = require('path');
-
-// configuration
-const basePath = path.resolve('./server/idl/proto');
-const ProtobufSchemaDomain = 'uber/cadence/api/v1/service_domain.proto';
-const ProtobufSchemaWorkflow = 'uber/cadence/api/v1/service_workflow.proto';
-
-const ServiceDomain = 'uber.cadence.api.v1.DomainAPI';
+const DomainService = require('./service/DomainService');
 
 const grpcClient = ({ peers, requestConfig }) =>
   async function (ctx, next) {
-    console.log('basePath =', basePath);
-
-    const DomainServiceDefinition = get(
-      grpc.loadPackageDefinition(
-        protoLoader.loadSync(path.join(basePath, ProtobufSchemaDomain), {
-          keepCase: true,
-          longs: String,
-          enums: String,
-          defaults: true,
-          oneofs: true,
-          includeDirs: [basePath],
-        })
-      ),
-      ServiceDomain
-    );
-
-    const domainService = new DomainServiceDefinition(peers, grpc.credentials.createInsecure());
+    const domainService = new DomainService(peers);
 
     console.log('domainService = ', domainService);
 
@@ -43,7 +17,9 @@ const grpcClient = ({ peers, requestConfig }) =>
       describeWorkflow: () => { }, // TODO
       exportHistory: () => { }, // TODO
       getHistory: () => { }, // TODO
-      listDomains: () => { }, // TODO
+      listDomains: async (body) => {
+        ctx.body = await domainService.ListDomains(body);
+      },
       listTaskListPartitions: () => { }, // TODO
       listWorkflows: () => { }, // TODO
       openWorkflows: () => { }, // TODO
@@ -55,9 +31,9 @@ const grpcClient = ({ peers, requestConfig }) =>
 
     try {
       await next();
-      grpc.getClientChannel(domainService).close();
+      domainService.close();
     } catch (e) {
-      grpc.getClientChannel(domainService).close();
+      domainService.close();
       throw e;
     }
   };
