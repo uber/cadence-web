@@ -1,4 +1,5 @@
 const DomainService = require('./service/domain-service');
+const { formatListDomains } = require('./formatter');
 
 const grpcClient = ({ peers, requestConfig }) =>
   async function (ctx, next) {
@@ -18,7 +19,11 @@ const grpcClient = ({ peers, requestConfig }) =>
       exportHistory: () => { }, // TODO
       getHistory: () => { }, // TODO
       listDomains: async (body) => {
-        return await domainService.request({ method: 'listDomains', payload: body });
+        return await domainService.request({
+          formatter: formatListDomains,
+          method: 'listDomains',
+          payload: body,
+        });
       },
       listTaskListPartitions: () => { }, // TODO
       listWorkflows: () => { }, // TODO
