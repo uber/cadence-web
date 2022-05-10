@@ -1,10 +1,7 @@
 const get = require('lodash.get');
 const grpc = require('@grpc/grpc-js');
-// const grpc = require('grpc');
 const protoLoader = require('@grpc/proto-loader');
 const path = require('path');
-// const url = require('url');
-const { formatResponse } = require('../helpers');
 
 const BASE_PATH = path.resolve('./server/idl/proto');
 const MAX_MESSAGE_SIZE = 64 * 1024 * 1024;
@@ -40,27 +37,19 @@ class BaseService {
     deadline.setSeconds(deadline.getSeconds() + 2);
 
     return new Promise((resolve, reject) => {
-      // console.log('this.service.waitForReady called?', method, formatPayload(payload), this.meta());
-      console.log('this.service.waitForReady called?', method, payload, this.meta());
       this.service.waitForReady(deadline, (error) => {
-        console.log('this.service.waitForReady error?', error);
         if (error) {
           return reject(String(error));
         }
 
         deadline.setSeconds(deadline.getSeconds() + 50);
-        console.log('this.service[method] called?');
-        // this.service[method](formatPayload(payload), this.meta(), { deadline }, (error, response) => {
         this.service[method](payload, this.meta(), { deadline }, (error, response) => {
-          console.log('this.service[method] error?', error);
           if (error) {
             return reject(String(error));
           }
 
-          console.log('this.service[method] response:', response);
-          // console.log('this.service[method] response:', formatResponse(response));
+          console.log(`this.service[${method}] response: ${response}`);
           return resolve(response);
-          // return resolve(formatResponse(response));
         });
       });
     });
