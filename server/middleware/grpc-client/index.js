@@ -18,7 +18,7 @@ const grpcClient = ({ peers, requestConfig }) =>
       exportHistory: () => { }, // TODO
       getHistory: () => { }, // TODO
       listDomains: async (body) => {
-        ctx.body = await domainService.request({ method: 'listDomains', payload: body });
+        return await domainService.request({ method: 'listDomains', payload: body });
       },
       listTaskListPartitions: () => { }, // TODO
       listWorkflows: () => { }, // TODO
