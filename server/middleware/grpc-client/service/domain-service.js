@@ -1,5 +1,5 @@
 
-const BaseService = require('./BaseService');
+const BaseService = require('./base-service');
 
 function DomainService({ peers, requestConfig }) {
   return new BaseService({
