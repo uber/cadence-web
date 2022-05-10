@@ -25,7 +25,7 @@ const formatListDomains = (response) => ({
       historyArchivalURI: historyArchivalUri,
       visibilityArchivalStatus,
       visibilityArchivalURI: visibilityArchivalUri,
-      workflowExecutionRetentionPeriodInDays: workflowExecutionRetentionPeriod,
+      workflowExecutionRetentionPeriodInDays: workflowExecutionRetentionPeriod.seconds / (60 * 60 * 24),
     },
     domainInfo: {
       data,
@@ -34,13 +34,6 @@ const formatListDomains = (response) => ({
       ownerEmail,
       status,
       uuid: id,
-    },
-    failoverInfo: {
-      completedShardCount: undefined,
-      failoverExpireTimestamp: undefined,
-      failoverStartTimestamp: undefined,
-      failoverVersion,
-      pendingShards: undefined,
     },
     failoverVersion,
     isGlobalDomain,

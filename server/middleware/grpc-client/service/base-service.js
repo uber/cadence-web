@@ -27,7 +27,7 @@ class BaseService {
       servicePath
     );
 
-    console.log(servicePath, ': ', ServiceDefinition);
+    // console.log(servicePath, ': ', ServiceDefinition);
 
     this.service = new ServiceDefinition(peers, grpc.credentials.createInsecure(), GRPC_OPTIONS);
     this.requestConfig = requestConfig;
@@ -49,7 +49,10 @@ class BaseService {
             return reject(String(error));
           }
 
-          console.log(`this.service[${method}] response: `, response);
+          console.log('raw:');
+          console.dir(response, { depth: 10 });
+          console.log('formatted:');
+          console.dir(formatter(response), { depth: 10 });
           return resolve(formatter(response));
         });
       });
