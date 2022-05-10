@@ -48,7 +48,7 @@ class BaseService {
             return reject(String(error));
           }
 
-          console.log(`this.service[${method}] response: ${response}`);
+          console.log(`this.service[${method}] response: `, response);
           return resolve(response);
         });
       });
