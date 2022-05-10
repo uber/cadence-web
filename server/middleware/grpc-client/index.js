@@ -2,7 +2,7 @@ const DomainService = require('./service/DomainService');
 
 const grpcClient = ({ peers, requestConfig }) =>
   async function (ctx, next) {
-    const domainService = new DomainService(peers);
+    const domainService = new DomainService({ peers, requestConfig });
 
     console.log('domainService = ', domainService);
 
@@ -18,7 +18,7 @@ const grpcClient = ({ peers, requestConfig }) =>
       exportHistory: () => { }, // TODO
       getHistory: () => { }, // TODO
       listDomains: async (body) => {
-        ctx.body = await domainService.ListDomains(body);
+        ctx.body = await domainService.request({ method: 'ListDomains', payload: body });
       },
       listTaskListPartitions: () => { }, // TODO
       listWorkflows: () => { }, // TODO
