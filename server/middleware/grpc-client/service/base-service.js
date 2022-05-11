@@ -49,10 +49,10 @@ class BaseService {
             return reject(String(error));
           }
 
-          console.log('raw:');
-          console.dir(response, { depth: 10 });
-          console.log('formatted:');
-          console.dir(formatter(response), { depth: 10 });
+          // console.log('raw:');
+          // console.dir(response, { depth: 10 });
+          // console.log('formatted:');
+          // console.dir(formatter(response), { depth: 10 });
           return resolve(formatter(response));
         });
       });

@@ -5,7 +5,7 @@ const grpcClient = ({ peers, requestConfig }) =>
   async function (ctx, next) {
     const domainService = new DomainService({ peers, requestConfig });
 
-    console.log('domainService = ', domainService);
+    // console.log('domainService = ', domainService);
 
     ctx.cadence = {
       archivedWorkflows: () => { }, // TODO
@@ -19,11 +19,14 @@ const grpcClient = ({ peers, requestConfig }) =>
       exportHistory: () => { }, // TODO
       getHistory: () => { }, // TODO
       listDomains: async (body) => {
-        return await domainService.request({
+        const response = await domainService.request({
           formatter: formatListDomains,
           method: 'listDomains',
           payload: body,
         });
+        // console.log('response = ');
+        // console.dir(response, { depth: 10 });
+        return response;
       },
       listTaskListPartitions: () => { }, // TODO
       listWorkflows: () => { }, // TODO

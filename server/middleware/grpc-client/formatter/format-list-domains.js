@@ -1,11 +1,10 @@
-const formatListDomains = (response) => ({
-  domains: response.domains.map(({
+const formatListDomains = ({ domains, nextPageToken }) => ({
+  domains: domains.map(({
     activeClusterName,
     badBinaries,
     clusters,
     data,
     description,
-    failoverInfo,
     failoverVersion,
     historyArchivalStatus,
     historyArchivalUri,
@@ -21,9 +20,9 @@ const formatListDomains = (response) => ({
     configuration: {
       badBinaries,
       emitMetric: undefined,
-      historyArchivalStatus,
+      historyArchivalStatus: historyArchivalStatus.replace('ARCHIVAL_STATUS_', ''),
       historyArchivalURI: historyArchivalUri,
-      visibilityArchivalStatus,
+      visibilityArchivalStatus: visibilityArchivalStatus.replace('ARCHIVAL_STATUS_', ''),
       visibilityArchivalURI: visibilityArchivalUri,
       workflowExecutionRetentionPeriodInDays: workflowExecutionRetentionPeriod.seconds / (60 * 60 * 24),
     },
@@ -32,7 +31,7 @@ const formatListDomains = (response) => ({
       description,
       name,
       ownerEmail,
-      status,
+      status: status.replace('DOMAIN_STATUS_', ''),
       uuid: id,
     },
     failoverVersion,
@@ -42,7 +41,7 @@ const formatListDomains = (response) => ({
       clusters,
     }
   })),
-  nextPageToken: response.nextPageToken,
+  nextPageToken,
 });
 
 module.exports = formatListDomains;
