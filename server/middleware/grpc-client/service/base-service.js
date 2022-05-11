@@ -2,7 +2,7 @@ const get = require('lodash.get');
 const grpc = require('@grpc/grpc-js');
 const protoLoader = require('@grpc/proto-loader');
 const path = require('path');
-const { formatDefault } = require('../formatter');
+const { formatDefault } = require('../format');
 
 const BASE_PATH = path.resolve('./server/idl/proto');
 const MAX_MESSAGE_SIZE = 64 * 1024 * 1024;
@@ -33,7 +33,7 @@ class BaseService {
     this.requestConfig = requestConfig;
   }
 
-  async request({ formatter = formatDefault, method, payload }) {
+  async request({ format = formatDefault, method, payload }) {
     const deadline = new Date();
     deadline.setSeconds(deadline.getSeconds() + 2);
 
@@ -52,8 +52,8 @@ class BaseService {
           // console.log('raw:');
           // console.dir(response, { depth: 10 });
           // console.log('formatted:');
-          // console.dir(formatter(response), { depth: 10 });
-          return resolve(formatter(response));
+          // console.dir(format(response), { depth: 10 });
+          return resolve(format(response));
         });
       });
     });

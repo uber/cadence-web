@@ -1,5 +1,5 @@
 const DomainService = require('./service/domain-service');
-const { formatListDomains } = require('./formatter');
+const { formatDomain, formatListDomains } = require('./format');
 
 const grpcClient = ({ peers, requestConfig }) =>
   async function (ctx, next) {
@@ -11,23 +11,20 @@ const grpcClient = ({ peers, requestConfig }) =>
       archivedWorkflows: () => { }, // TODO
       closedWorkflows: () => { }, // TODO
       describeCluster: () => { }, // TODO
-      describeDomain: async (body) => {
-        ctx.body = await domainService.DescribeDomain(body);
-      },
+      describeDomain: (body) => domainService.request({
+        format: formatDomain,
+        method: 'DescribeDomain',
+        payload: body,
+      }),
       describeTaskList: () => { }, // TODO
       describeWorkflow: () => { }, // TODO
       exportHistory: () => { }, // TODO
       getHistory: () => { }, // TODO
-      listDomains: async (body) => {
-        const response = await domainService.request({
-          formatter: formatListDomains,
-          method: 'listDomains',
-          payload: body,
-        });
-        // console.log('response = ');
-        // console.dir(response, { depth: 10 });
-        return response;
-      },
+      listDomains: (body) => domainService.request({
+        format: formatListDomains,
+        method: 'ListDomains',
+        payload: body,
+      }),
       listTaskListPartitions: () => { }, // TODO
       listWorkflows: () => { }, // TODO
       openWorkflows: () => { }, // TODO

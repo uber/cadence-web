@@ -19,7 +19,7 @@ const formatListDomains = ({ domains, nextPageToken }) => ({
   }) => ({
     configuration: {
       badBinaries,
-      emitMetric: undefined,
+      emitMetric: null, // missing from grpc
       historyArchivalStatus: historyArchivalStatus.replace('ARCHIVAL_STATUS_', ''),
       historyArchivalURI: historyArchivalUri,
       visibilityArchivalStatus: visibilityArchivalStatus.replace('ARCHIVAL_STATUS_', ''),
