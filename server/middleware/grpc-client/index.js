@@ -12,7 +12,14 @@ const grpcClient = ({ peers, requestConfig }) =>
     const workflowService = new GRPCService({ peers, requestConfig, ...workflowServiceConfig });
 
     ctx.cadence = {
-      archivedWorkflows: () => { }, // TODO
+      archivedWorkflows: visibilityService.request({
+        formatResponse: formatResponseWorkflowList,
+        method: 'ListArchivedWorkflowExecutions',
+        transform: combine(
+          withDomain(ctx),
+          withPagination(ctx),
+        ),
+      }),
       closedWorkflows: visibilityService.request({
         formatRequest: formatRequestWorkflowList,
         formatResponse: formatResponseWorkflowList,
@@ -22,7 +29,7 @@ const grpcClient = ({ peers, requestConfig }) =>
           withPagination(ctx),
         ),
       }),
-      describeCluster: () => { }, // TODO
+      describeCluster: () => { }, // TODO - need to test in an environment...
       describeDomain: domainService.request({
         formatResponse: formatResponseDomain,
         method: 'DescribeDomain',
