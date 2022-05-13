@@ -1,33 +1,46 @@
-const DomainService = require('./service/domain-service');
-const { formatDomain, formatListDomains } = require('./format');
+const { combine } = require('../../helpers');
+const { domainServiceConfig, visibilityServiceConfig, workflowServiceConfig } = require('./configuration');
+const { formatRequestWorkflowList } = require('./format-request');
+const { formatResponseDomain, formatResponseListDomains, formatResponseWorkflowList } = require('./format-response');
+const GRPCService = require('./grpc-service');
+const { withDomain, withPagination } = require('./transform');
 
 const grpcClient = ({ peers, requestConfig }) =>
   async function (ctx, next) {
-    const domainService = new DomainService({ peers, requestConfig });
-
-    // console.log('domainService = ', domainService);
+    const domainService = new GRPCService({ peers, requestConfig, ...domainServiceConfig });
+    const visibilityService = new GRPCService({ peers, requestConfig, ...visibilityServiceConfig });
+    const workflowService = new GRPCService({ peers, requestConfig, ...workflowServiceConfig });
 
     ctx.cadence = {
       archivedWorkflows: () => { }, // TODO
       closedWorkflows: () => { }, // TODO
       describeCluster: () => { }, // TODO
-      describeDomain: (body) => domainService.request({
-        format: formatDomain,
+      describeDomain: domainService.request({
+        formatResponse: formatResponseDomain,
         method: 'DescribeDomain',
-        payload: body,
       }),
       describeTaskList: () => { }, // TODO
       describeWorkflow: () => { }, // TODO
       exportHistory: () => { }, // TODO
       getHistory: () => { }, // TODO
-      listDomains: (body) => domainService.request({
-        format: formatListDomains,
+      listDomains: domainService.request({
+        formatResponse: formatResponseListDomains,
         method: 'ListDomains',
-        payload: body,
       }),
       listTaskListPartitions: () => { }, // TODO
       listWorkflows: () => { }, // TODO
-      openWorkflows: () => { }, // TODO
+      // listWorkflows: visibilityService.request({
+      //   method: 'ListWorkflowExecutions',
+      // }),
+      openWorkflows: visibilityService.request({
+        formatRequest: formatRequestWorkflowList,
+        formatResponse: formatResponseWorkflowList,
+        method: 'ListOpenWorkflowExecutions',
+        transform: combine(
+          withDomain(ctx),
+          withPagination(ctx),
+        ),
+      }),
       queryWorkflow: () => { }, // TODO
       signalWorkflow: () => { }, // TODO
       startWorkflow: () => { }, // TODO

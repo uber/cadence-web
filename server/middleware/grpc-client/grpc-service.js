@@ -2,7 +2,9 @@ const get = require('lodash.get');
 const grpc = require('@grpc/grpc-js');
 const protoLoader = require('@grpc/proto-loader');
 const path = require('path');
-const { formatDefault } = require('../format');
+const { formatRequestDefault } = require('./format-request');
+const { formatResponseDefault } = require('./format-response');
+const { transformDefault } = require('./transform');
 
 const BASE_PATH = path.resolve('./server/idl/proto');
 const MAX_MESSAGE_SIZE = 64 * 1024 * 1024;
@@ -11,7 +13,7 @@ const GRPC_OPTIONS = {
   'grpc.max_receive_message_length': MAX_MESSAGE_SIZE,
 };
 
-class BaseService {
+class GRPCService {
   constructor({ peers, requestConfig, schemaPath, servicePath }) {
     const ServiceDefinition = get(
       grpc.loadPackageDefinition(
@@ -33,30 +35,36 @@ class BaseService {
     this.requestConfig = requestConfig;
   }
 
-  async request({ format = formatDefault, method, payload }) {
-    const deadline = new Date();
-    deadline.setSeconds(deadline.getSeconds() + 2);
+  request({ formatRequest = formatRequestDefault, formatResponse = formatResponseDefault, method, transform = transformDefault }) {
+    return (payload) => {
+      const deadline = new Date();
+      deadline.setSeconds(deadline.getSeconds() + 2);
 
-    return new Promise((resolve, reject) => {
-      this.service.waitForReady(deadline, (error) => {
-        if (error) {
-          return reject(String(error));
-        }
-
-        deadline.setSeconds(deadline.getSeconds() + 50);
-        this.service[method](payload, this.meta(), { deadline }, (error, response) => {
+      return new Promise((resolve, reject) => {
+        this.service.waitForReady(deadline, (error) => {
           if (error) {
             return reject(String(error));
           }
 
-          // console.log('raw:');
-          // console.dir(response, { depth: 10 });
-          // console.log('formatted:');
-          // console.dir(format(response), { depth: 10 });
-          return resolve(format(response));
+          deadline.setSeconds(deadline.getSeconds() + 50);
+
+          console.log('payload with format & transform:')
+          console.dir(formatRequest(transform(payload)), { depth: 10 });
+
+          this.service[method](formatRequest(transform(payload)), this.meta(), { deadline }, (error, response) => {
+            if (error) {
+              return reject(String(error));
+            }
+
+            // console.log('raw:');
+            // console.dir(response, { depth: 10 });
+            console.log('formatted response:');
+            console.dir(formatResponse(response), { depth: 10 });
+            return resolve(formatResponse(response));
+          });
         });
       });
-    });
+    };
   }
 
   close() {
@@ -72,4 +80,4 @@ class BaseService {
   }
 }
 
-module.exports = BaseService;
+module.exports = GRPCService;
