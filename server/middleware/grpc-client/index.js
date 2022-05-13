@@ -1,7 +1,17 @@
 const { combine } = require('../../helpers');
-const { domainServiceConfig, visibilityServiceConfig, workflowServiceConfig } = require('./configuration');
+const {
+  domainServiceConfig,
+  visibilityServiceConfig,
+  workflowServiceConfig
+} = require('./configuration');
 const { formatRequestWorkflowList } = require('./format-request');
-const { formatResponseDescribeWorkflow, formatResponseDomain, formatResponseListDomains, formatResponseWorkflowList } = require('./format-response');
+const {
+  formatResponseDescribeWorkflow,
+  formatResponseDomain,
+  formatResponseGetHistory,
+  formatResponseListDomains,
+  formatResponseWorkflowList
+} = require('./format-response');
 const GRPCService = require('./grpc-service');
 const { withDomain, withPagination, withWorkflowExecution } = require('./transform');
 
@@ -44,7 +54,15 @@ const grpcClient = ({ peers, requestConfig }) =>
         ),
       }),
       exportHistory: () => { }, // TODO
-      getHistory: () => { }, // TODO
+      getHistory: workflowService.request({
+        formatResponse: formatResponseGetHistory,
+        method: 'GetWorkflowExecutionHistory',
+        transform: combine(
+          withDomain(ctx),
+          withPagination(ctx),
+          withWorkflowExecution(ctx),
+        ),
+      }),
       listDomains: domainService.request({
         formatResponse: formatResponseListDomains,
         method: 'ListDomains',

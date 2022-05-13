@@ -1,3 +1,3 @@
-const formatTimestampToSeconds = timestamp => !timestamp ? 0 : timestamp.seconds;
+const formatTimestampToSeconds = timestamp => !timestamp ? 0 : parseInt(timestamp.seconds);
 
 module.exports = formatTimestampToSeconds;
