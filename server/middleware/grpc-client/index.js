@@ -1,9 +1,9 @@
 const { combine } = require('../../helpers');
 const { domainServiceConfig, visibilityServiceConfig, workflowServiceConfig } = require('./configuration');
 const { formatRequestWorkflowList } = require('./format-request');
-const { formatResponseDomain, formatResponseListDomains, formatResponseWorkflowList } = require('./format-response');
+const { formatResponseDescribeWorkflow, formatResponseDomain, formatResponseListDomains, formatResponseWorkflowList } = require('./format-response');
 const GRPCService = require('./grpc-service');
-const { withDomain, withPagination } = require('./transform');
+const { withDomain, withPagination, withWorkflowExecution } = require('./transform');
 
 const grpcClient = ({ peers, requestConfig }) =>
   async function (ctx, next) {
@@ -35,7 +35,14 @@ const grpcClient = ({ peers, requestConfig }) =>
         method: 'DescribeDomain',
       }),
       describeTaskList: () => { }, // TODO
-      describeWorkflow: () => { }, // TODO
+      describeWorkflow: workflowService.request({
+        formatResponse: formatResponseDescribeWorkflow,
+        method: 'DescribeWorkflowExecution',
+        transform: combine(
+          withDomain(ctx),
+          withWorkflowExecution(ctx),
+        ),
+      }),
       exportHistory: () => { }, // TODO
       getHistory: () => { }, // TODO
       listDomains: domainService.request({
@@ -43,7 +50,7 @@ const grpcClient = ({ peers, requestConfig }) =>
         method: 'ListDomains',
       }),
       listTaskListPartitions: () => { }, // TODO
-      listWorkflows: () => { }, // TODO
+      listWorkflows: () => { }, // TODO - needs describeCluster to be working first.
       // listWorkflows: visibilityService.request({
       //   method: 'ListWorkflowExecutions',
       // }),

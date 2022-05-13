@@ -1,3 +1,4 @@
+const formatCloseStatus = require('./format-close-status');
 const formatTimestampToDatetime = require('./format-timestamp-to-datetime');
 
 const formatResponseWorkflowList = ({ executions, nextPageToken }) => ({
@@ -11,7 +12,7 @@ const formatResponseWorkflowList = ({ executions, nextPageToken }) => ({
     ...execution
   }) => ({
     ...execution,
-    closeStatus: closeStatus === 'WORKFLOW_EXECUTION_CLOSE_STATUS_INVALID' ? null : closeStatus.replace('WORKFLOW_EXECUTION_CLOSE_STATUS_', ''),
+    closeStatus: formatCloseStatus(closeStatus),
     closeTime: formatTimestampToDatetime(closeTime),
     execution: workflowExecution,
     executionTime: formatTimestampToDatetime(executionTime),
