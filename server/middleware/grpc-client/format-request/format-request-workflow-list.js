@@ -1,11 +1,7 @@
 const formatLongToTimestamp = require('./format-long-to-timestamp');
 
 const formatRequestWorkflowList = (payload) => {
-  const { StartTimeFilter: { earliestTime, latestTime }, ...restOfPayload } = payload;
-
-  // TODO - Need to pass other filter parameters
-  // e.g. workflowID, workflowType
-  // not sure how it behaves when both are passed?
+  const { StartTimeFilter: { earliestTime, latestTime }, statusFilter, ...restOfPayload } = payload;
 
   return {
     ...restOfPayload,
@@ -13,10 +9,11 @@ const formatRequestWorkflowList = (payload) => {
       earliestTime: formatLongToTimestamp(earliestTime),
       latestTime: formatLongToTimestamp(latestTime),
     },
-    // executionFilter: {
-    //   workflowId: 'cadence.canary.cron',
-    //   //   runId: '2ba91e9e-53a8-4b52-8fa8-01e403635efe',
-    // },
+    ...(statusFilter && {
+      statusFilter: {
+        status: `WORKFLOW_EXECUTION_CLOSE_STATUS_${statusFilter}`,
+      }
+    }),
   };
 };
 

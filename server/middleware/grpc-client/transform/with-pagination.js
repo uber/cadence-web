@@ -1,7 +1,7 @@
 const withPagination = (ctx) => (payload = {}) => ({
   ...payload,
   nextPageToken: '',
-  pageSize: 100,
+  pageSize: 1000,
 });
 
 module.exports = withPagination;

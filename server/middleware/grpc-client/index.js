@@ -13,7 +13,15 @@ const grpcClient = ({ peers, requestConfig }) =>
 
     ctx.cadence = {
       archivedWorkflows: () => { }, // TODO
-      closedWorkflows: () => { }, // TODO
+      closedWorkflows: visibilityService.request({
+        formatRequest: formatRequestWorkflowList,
+        formatResponse: formatResponseWorkflowList,
+        method: 'ListClosedWorkflowExecutions',
+        transform: combine(
+          withDomain(ctx),
+          withPagination(ctx),
+        ),
+      }),
       describeCluster: () => { }, // TODO
       describeDomain: domainService.request({
         formatResponse: formatResponseDomain,
