@@ -188,15 +188,6 @@ export default {
           Ask a question on Stack Overflow
         </a>
       </div>
-      <div>
-        <a
-          href="https://groups.google.com/d/forum/cadence-discussion"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Join our discussion group
-        </a>
-      </div>
       <div v-if="!hideSlack">
         <a
           href="https://join.slack.com/t/uber-cadence/shared_invite/enQtNDczNTgxMjYxNDEzLTQyYjcxZDM2YTIxMTZkMzQ0NjgxYmI3OWY5ODhiOTliM2I5MzA4NTM4MjU4YzgzZDkwNGEzOTUzNTBlNDk3Yjc"
