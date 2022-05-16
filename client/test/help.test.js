@@ -89,7 +89,6 @@ describe('Help', () => {
       .should.deep.equal([
         'Contact us',
         'Ask a question on Stack Overflow',
-        'Join our discussion group',
         'Join our slack channel',
       ]);
   });
