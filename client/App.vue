@@ -437,6 +437,8 @@ header.top-bar
   }
 
   .environment-select {
+    color: #000;
+
     .vs__dropdown-toggle {
       border-color: transparent;
     }
