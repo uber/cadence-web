@@ -81,8 +81,12 @@ export default {
 <style lang="stylus">
 @require "../../styles/definitions"
 
+span.active-status {
+  color: white;
+}
+
 .active-status {
-  color: white !important;
+  color: #000;
   padding: 5px 10px;
   text-transform: uppercase;
 
