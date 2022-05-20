@@ -2,6 +2,7 @@ const formatCloseStatus = require('./format-close-status');
 const formatHistoryEventDetails = require('./format-history-event-details');
 const formatHistoryEventType = require('./format-history-event-type');
 const formatResponseDefault = require('./format-response-default');
+const formatResponseDescribeTaskList = require('./format-response-describe-task-list');
 const formatResponseDescribeWorkflow = require('./format-response-describe-workflow');
 const formatResponseDomain = require('./format-response-domain');
 const formatResponseGetHistory = require('./format-response-get-history');
@@ -15,6 +16,7 @@ module.exports = {
   formatHistoryEventDetails,
   formatHistoryEventType,
   formatResponseDefault,
+  formatResponseDescribeTaskList,
   formatResponseDescribeWorkflow,
   formatResponseDomain,
   formatResponseGetHistory,

@@ -4,8 +4,12 @@ const {
   visibilityServiceConfig,
   workflowServiceConfig
 } = require('./configuration');
-const { formatRequestWorkflowList } = require('./format-request');
 const {
+  formatRequestDescribeTaskList,
+  formatRequestWorkflowList,
+} = require('./format-request');
+const {
+  formatResponseDescribeTaskList,
   formatResponseDescribeWorkflow,
   formatResponseDomain,
   formatResponseGetHistory,
@@ -44,7 +48,11 @@ const grpcClient = ({ peers, requestConfig }) =>
         formatResponse: formatResponseDomain,
         method: 'DescribeDomain',
       }),
-      describeTaskList: () => { }, // TODO
+      describeTaskList: workflowService.request({
+        formatRequest: formatRequestDescribeTaskList,
+        formatResponse: formatResponseDescribeTaskList,
+        method: 'DescribeTaskList',
+      }),
       describeWorkflow: workflowService.request({
         formatResponse: formatResponseDescribeWorkflow,
         method: 'DescribeWorkflowExecution',
@@ -54,6 +62,8 @@ const grpcClient = ({ peers, requestConfig }) =>
         ),
       }),
       exportHistory: () => { }, // TODO
+
+      // TODO - Need to transform all event types (some currently missing)
       getHistory: workflowService.request({
         formatResponse: formatResponseGetHistory,
         method: 'GetWorkflowExecutionHistory',
