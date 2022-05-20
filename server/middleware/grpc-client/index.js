@@ -6,6 +6,7 @@ const {
 } = require('./configuration');
 const {
   formatRequestDescribeTaskList,
+  formatRequestGetHistory,
   formatRequestWorkflowList,
 } = require('./format-request');
 const {
@@ -65,6 +66,7 @@ const grpcClient = ({ peers, requestConfig }) =>
 
       // TODO - Need to transform all event types (some currently missing)
       getHistory: workflowService.request({
+        formatRequest: formatRequestGetHistory,
         formatResponse: formatResponseGetHistory,
         method: 'GetWorkflowExecutionHistory',
         transform: combine(
