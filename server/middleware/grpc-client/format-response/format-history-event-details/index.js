@@ -4,6 +4,7 @@ const formatActivityTaskStartedEventAttributes = require('./format-activity-task
 const formatDecisionTaskCompletedEventAttributes = require('./format-decision-task-completed-event-attributes');
 const formatDecisionTaskScheduledEventAttributes = require('./format-decision-task-scheduled-event-attributes');
 const formatDecisionTaskStartedEventAttributes = require('./format-decision-task-started-event-attributes');
+const formatWorkflowExecutionCompletedEventAttributes = require('./format-workflow-execution-completed-event-attributes');
 const formatWorkflowExecutionStartedEventAttributes = require('./format-workflow-execution-started-event-attributes');
 
 const AttributesFormatterMap = {
@@ -13,6 +14,7 @@ const AttributesFormatterMap = {
   decisionTaskCompletedEventAttributes: formatDecisionTaskCompletedEventAttributes,
   decisionTaskScheduledEventAttributes: formatDecisionTaskScheduledEventAttributes,
   decisionTaskStartedEventAttributes: formatDecisionTaskStartedEventAttributes,
+  workflowExecutionCompletedEventAttributes: formatWorkflowExecutionCompletedEventAttributes,
   workflowExecutionStartedEventAttributes: formatWorkflowExecutionStartedEventAttributes,
 };
 
