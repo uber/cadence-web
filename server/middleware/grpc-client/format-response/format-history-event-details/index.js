@@ -1,11 +1,13 @@
 const formatActivityTaskScheduledEventAttributes = require('./format-activity-task-scheduled-event-attributes');
+const formatActivityTaskStartedEventAttributes = require('./format-activity-task-started-event-attributes');
 const formatDecisionTaskCompletedEventAttributes = require('./format-decision-task-completed-event-attributes');
 const formatDecisionTaskScheduledEventAttributes = require('./format-decision-task-scheduled-event-attributes');
 const formatDecisionTaskStartedEventAttributes = require('./format-decision-task-started-event-attributes');
 const formatWorkflowExecutionStartedEventAttributes = require('./format-workflow-execution-started-event-attributes');
 
-const FormatAttributesMap = {
+const AttributesFormatterMap = {
   activityTaskScheduledEventAttributes: formatActivityTaskScheduledEventAttributes,
+  activityTaskStartedEventAttributes: formatActivityTaskStartedEventAttributes,
   decisionTaskCompletedEventAttributes: formatDecisionTaskCompletedEventAttributes,
   decisionTaskScheduledEventAttributes: formatDecisionTaskScheduledEventAttributes,
   decisionTaskStartedEventAttributes: formatDecisionTaskStartedEventAttributes,
@@ -15,7 +17,7 @@ const FormatAttributesMap = {
 const formatHistoryEventDetails = ({ attributes, ...event }) => {
   console.log('attributes = ', attributes);
 
-  const formatter = FormatAttributesMap[attributes];
+  const formatter = AttributesFormatterMap[attributes];
   if (formatter) {
     return {
       [attributes]: formatter(event[attributes])
