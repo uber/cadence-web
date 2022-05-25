@@ -48,8 +48,8 @@ class GRPCService {
 
           deadline.setSeconds(deadline.getSeconds() + 50);
 
-          console.log('payload with format & transform:')
-          console.dir(formatRequest(transform(payload)), { depth: 10 });
+          // console.log('payload with format & transform:')
+          // console.dir(formatRequest(transform(payload)), { depth: 10 });
 
           this.service[method](formatRequest(transform(payload)), this.meta(), { deadline }, (error, response) => {
             if (error) {
@@ -58,8 +58,9 @@ class GRPCService {
 
             // console.log('raw:');
             // console.dir(response, { depth: 10 });
-            console.log('formatted response:');
-            console.dir(formatResponse(response), { depth: 10 });
+
+            // console.log('formatted response:');
+            // console.dir(formatResponse(response), { depth: 10 });
             return resolve(formatResponse(response));
           });
         });

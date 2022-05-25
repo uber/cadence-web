@@ -4,7 +4,9 @@ const formatActivityTaskStartedEventAttributes = require('./format-activity-task
 const formatDecisionTaskCompletedEventAttributes = require('./format-decision-task-completed-event-attributes');
 const formatDecisionTaskScheduledEventAttributes = require('./format-decision-task-scheduled-event-attributes');
 const formatDecisionTaskStartedEventAttributes = require('./format-decision-task-started-event-attributes');
+const formatMarkerRecordedEventAttributes = require('./format-marker-recorded-event-attributes');
 const formatWorkflowExecutionCompletedEventAttributes = require('./format-workflow-execution-completed-event-attributes');
+const formatWorkflowExecutionContinuedAsNewEventAttributes = require('./format-workflow-execution-continued-as-new-event-attributes');
 const formatWorkflowExecutionStartedEventAttributes = require('./format-workflow-execution-started-event-attributes');
 
 const AttributesFormatterMap = {
@@ -14,19 +16,20 @@ const AttributesFormatterMap = {
   decisionTaskCompletedEventAttributes: formatDecisionTaskCompletedEventAttributes,
   decisionTaskScheduledEventAttributes: formatDecisionTaskScheduledEventAttributes,
   decisionTaskStartedEventAttributes: formatDecisionTaskStartedEventAttributes,
+  markerRecordedEventAttributes: formatMarkerRecordedEventAttributes,
   workflowExecutionCompletedEventAttributes: formatWorkflowExecutionCompletedEventAttributes,
+  workflowExecutionContinuedAsNewEventAttributes: formatWorkflowExecutionContinuedAsNewEventAttributes,
   workflowExecutionStartedEventAttributes: formatWorkflowExecutionStartedEventAttributes,
 };
 
 const formatHistoryEventDetails = ({ attributes, ...event }) => {
-  console.log('attributes = ', attributes);
-
   const formatter = AttributesFormatterMap[attributes];
   if (formatter) {
     return {
       [attributes]: formatter(event[attributes])
     };
   }
+  console.log('attribute not mapped = ', attributes);
   return event;
 
   /*
@@ -39,34 +42,9 @@ const formatHistoryEventDetails = ({ attributes, ...event }) => {
     //   return event; // TODO
     // }
 
-    case 'activityTaskCompletedEventAttributes': {
-      return event;
-    }
-
     // case 'activityTaskFailedEventAttributes': {
     //   return event; // TODO
     // }
-
-    case 'activityTaskScheduledEventAttributes': {
-      const {
-        heartbeatTimeout,
-        scheduleToCloseTimeout,
-        scheduleToStartTimeout,
-        startToCloseTimeout,
-        ...eventAttributes
-      } = event[attributes];
-
-      return {
-        [attributes]: {
-          ...eventAttributes,
-          heartbeatTimeoutSeconds: formatTimestampToSeconds(heartbeatTimeout),
-          scheduleToCloseTimeoutSeconds: formatTimestampToSeconds(scheduleToCloseTimeout),
-          scheduleToStartTimeoutSeconds: formatTimestampToSeconds(scheduleToStartTimeout),
-          startToCloseTimeoutSeconds: formatTimestampToSeconds(startToCloseTimeout),
-        },
-      };
-    }
-
 
     // case 'activityTaskTimedOutEventAttributes': {
     //   return event; // TODO
@@ -99,10 +77,6 @@ const formatHistoryEventDetails = ({ attributes, ...event }) => {
     // case 'childWorkflowExecutionTimedOutEventAttributes': {
     //   return event; // TODO
     // }
-
-    case 'decisionTaskCompletedEventAttributes': {
-      return event;
-    }
 
     // case 'decisionTaskFailedEventAttributes': {
     //   return event; // TODO
@@ -183,10 +157,6 @@ const formatHistoryEventDetails = ({ attributes, ...event }) => {
     // }
 
     // case 'workflowExecutionCanceledEventAttributes': {
-    //   return event; // TODO
-    // }
-
-    // case 'workflowExecutionCompletedEventAttributes': {
     //   return event; // TODO
     // }
 
