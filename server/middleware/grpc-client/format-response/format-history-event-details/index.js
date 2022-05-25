@@ -1,3 +1,4 @@
+const formatActivityTaskCompletedEventAttributes = require('./format-activity-task-completed-event-attributes');
 const formatActivityTaskScheduledEventAttributes = require('./format-activity-task-scheduled-event-attributes');
 const formatActivityTaskStartedEventAttributes = require('./format-activity-task-started-event-attributes');
 const formatDecisionTaskCompletedEventAttributes = require('./format-decision-task-completed-event-attributes');
@@ -6,6 +7,7 @@ const formatDecisionTaskStartedEventAttributes = require('./format-decision-task
 const formatWorkflowExecutionStartedEventAttributes = require('./format-workflow-execution-started-event-attributes');
 
 const AttributesFormatterMap = {
+  activityTaskCompletedEventAttributes: formatActivityTaskCompletedEventAttributes,
   activityTaskScheduledEventAttributes: formatActivityTaskScheduledEventAttributes,
   activityTaskStartedEventAttributes: formatActivityTaskStartedEventAttributes,
   decisionTaskCompletedEventAttributes: formatDecisionTaskCompletedEventAttributes,
@@ -63,23 +65,6 @@ const formatHistoryEventDetails = ({ attributes, ...event }) => {
       };
     }
 
-    case 'activityTaskStartedEventAttributes': {
-      const {
-        lastFailure: {
-          details: lastFailureDetails,
-          reason: lastFailureReason
-        },
-        ...eventAttributes
-      } = event[attributes];
-
-      return {
-        [attributes]: {
-          ...eventAttributes,
-          lastFailureDetails,
-          lastFailureReason,
-        },
-      };
-    }
 
     // case 'activityTaskTimedOutEventAttributes': {
     //   return event; // TODO
