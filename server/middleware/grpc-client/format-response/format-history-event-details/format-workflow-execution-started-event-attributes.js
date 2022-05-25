@@ -1,12 +1,14 @@
-const formatInput = require('./format-input');
-const formatTimestampToDatetime = require('../format-timestamp-to-datetime');
+const formatPayload = require('./format-payload');
+const formatMemo = require('./format-memo');
 const formatTimestampToSeconds = require('../format-timestamp-to-seconds');
+const formatPrevAutoResetPoints = require('./format-prev-auto-reset-points');
 
 const formatWorkflowExecutionStartedEventAttributes = ({
   continuedFailure,
   executionStartToCloseTimeout,
   firstDecisionTaskBackoff,
   input,
+  memo,
   parentExecutionInfo,
   prevAutoResetPoints,
   taskStartToCloseTimeout,
@@ -17,23 +19,12 @@ const formatWorkflowExecutionStartedEventAttributes = ({
   continuedFailureReason: continuedFailure?.reason ?? null,
   executionStartToCloseTimeoutSeconds: formatTimestampToSeconds(executionStartToCloseTimeout),
   firstDecisionTaskBackoffSeconds: formatTimestampToSeconds(firstDecisionTaskBackoff),
-  input: formatInput(input),
+  input: formatPayload(input),
+  memo: formatMemo(memo),
   parentInitiatedEventId: parentExecutionInfo?.initiatedId ? parseInt(parentExecutionInfo.initiatedId) : null,
   parentWorkflowDomain: parentExecutionInfo?.domainName ?? null,
   parentWorkflowExecution: parentExecutionInfo?.workflowExecution ?? null,
-  prevAutoResetPoints: prevAutoResetPoints?.points
-    ? {
-      points: prevAutoResetPoints.points.map(({
-        createdTime,
-        expiringTime,
-        ...point
-      }) => ({
-        ...point,
-        createdTimeNano: formatTimestampToDatetime(createdTime),
-        expiringTimeNano: formatTimestampToDatetime(expiringTime),
-      }))
-    }
-    : null,
+  prevAutoResetPoints: formatPrevAutoResetPoints(prevAutoResetPoints),
   taskStartToCloseTimeoutSeconds: formatTimestampToSeconds(taskStartToCloseTimeout),
 });
 
