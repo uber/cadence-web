@@ -5,6 +5,7 @@ const formatDecisionTaskCompletedEventAttributes = require('./format-decision-ta
 const formatDecisionTaskScheduledEventAttributes = require('./format-decision-task-scheduled-event-attributes');
 const formatDecisionTaskStartedEventAttributes = require('./format-decision-task-started-event-attributes');
 const formatMarkerRecordedEventAttributes = require('./format-marker-recorded-event-attributes');
+const formatTimerStartedEventAttributes = require('./format-timer-started-event-attributes');
 const formatUpsertWorkflowSearchAttributesEventAttributes = require('./format-upsert-workflow-search-attributes-event-attributes');
 const formatWorkflowExecutionCompletedEventAttributes = require('./format-workflow-execution-completed-event-attributes');
 const formatWorkflowExecutionContinuedAsNewEventAttributes = require('./format-workflow-execution-continued-as-new-event-attributes');
@@ -18,6 +19,7 @@ const AttributesFormatterMap = {
   decisionTaskScheduledEventAttributes: formatDecisionTaskScheduledEventAttributes,
   decisionTaskStartedEventAttributes: formatDecisionTaskStartedEventAttributes,
   markerRecordedEventAttributes: formatMarkerRecordedEventAttributes,
+  timerStartedEventAttributes: formatTimerStartedEventAttributes,
   upsertWorkflowSearchAttributesEventAttributes: formatUpsertWorkflowSearchAttributesEventAttributes,
   workflowExecutionCompletedEventAttributes: formatWorkflowExecutionCompletedEventAttributes,
   workflowExecutionContinuedAsNewEventAttributes: formatWorkflowExecutionContinuedAsNewEventAttributes,
