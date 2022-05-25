@@ -1,8 +1,10 @@
-// const formatTimestampToDatetime = require('./format-timestamp-to-datetime');
-// const formatTimestampToSeconds = require('./format-timestamp-to-seconds');
+const formatDecisionTaskScheduledEventAttributes = require('./format-decision-task-scheduled-event-attributes');
+const formatDecisionTaskStartedEventAttributes = require('./format-decision-task-started-event-attributes');
 const formatWorkflowExecutionStartedEventAttributes = require('./format-workflow-execution-started-event-attributes');
 
 const FormatAttributesMap = {
+  decisionTaskScheduledEventAttributes: formatDecisionTaskScheduledEventAttributes,
+  decisionTaskStartedEventAttributes: formatDecisionTaskStartedEventAttributes,
   workflowExecutionStartedEventAttributes: formatWorkflowExecutionStartedEventAttributes,
 };
 
@@ -112,20 +114,6 @@ const formatHistoryEventDetails = ({ attributes, ...event }) => {
     // case 'decisionTaskFailedEventAttributes': {
     //   return event; // TODO
     // }
-
-    case 'decisionTaskScheduledEventAttributes': {
-      const {
-        startToCloseTimeout,
-        ...eventAttributes
-      } = event[attributes];
-
-      return {
-        [attributes]: {
-          ...eventAttributes,
-          startToCloseTimeoutSeconds: formatTimestampToSeconds(startToCloseTimeout),
-        },
-      };
-    }
 
     case 'decisionTaskStartedEventAttributes': {
       return event;
@@ -237,37 +225,6 @@ const formatHistoryEventDetails = ({ attributes, ...event }) => {
 
     // case 'workflowExecutionSignaledEventAttributes': {
     //   return event; // TODO
-    // }
-
-    // case 'workflowExecutionStartedEventAttributes': {
-      // const {
-      //   executionStartToCloseTimeout,
-      //   firstDecisionTaskBackoff,
-      //   prevAutoResetPoints,
-      //   taskStartToCloseTimeout,
-      //   ...eventAttributes
-      // } = event[attributes];
-      // return {
-      //   [attributes]: {
-      //     ...eventAttributes,
-      //     executionStartToCloseTimeoutSeconds: formatTimestampToSeconds(executionStartToCloseTimeout),
-      //     firstDecisionTaskBackoffSeconds: formatTimestampToSeconds(firstDecisionTaskBackoff),
-      //     ...(prevAutoResetPoints && prevAutoResetPoints.points && {
-      //       prevAutoResetPoints: {
-      //         points: prevAutoResetPoints.points.map(({
-      //           createdTime,
-      //           expiringTime,
-      //           ...point
-      //         }) => ({
-      //           ...point,
-      //           createdTimeNano: formatTimestampToDatetime(createdTime),
-      //           expiringTimeNano: formatTimestampToDatetime(expiringTime),
-      //         }))
-      //       },
-      //     }),
-      //     taskStartToCloseTimeoutSeconds: formatTimestampToSeconds(taskStartToCloseTimeout)
-      //   },
-      // };
     // }
 
     // case 'workflowExecutionTerminatedEventAttributes': {
