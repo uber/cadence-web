@@ -1,8 +1,10 @@
+const formatDecisionTaskCompletedEventAttributes = require('./format-decision-task-completed-event-attributes');
 const formatDecisionTaskScheduledEventAttributes = require('./format-decision-task-scheduled-event-attributes');
 const formatDecisionTaskStartedEventAttributes = require('./format-decision-task-started-event-attributes');
 const formatWorkflowExecutionStartedEventAttributes = require('./format-workflow-execution-started-event-attributes');
 
 const FormatAttributesMap = {
+  decisionTaskCompletedEventAttributes: formatDecisionTaskCompletedEventAttributes,
   decisionTaskScheduledEventAttributes: formatDecisionTaskScheduledEventAttributes,
   decisionTaskStartedEventAttributes: formatDecisionTaskStartedEventAttributes,
   workflowExecutionStartedEventAttributes: formatWorkflowExecutionStartedEventAttributes,
@@ -114,10 +116,6 @@ const formatHistoryEventDetails = ({ attributes, ...event }) => {
     // case 'decisionTaskFailedEventAttributes': {
     //   return event; // TODO
     // }
-
-    case 'decisionTaskStartedEventAttributes': {
-      return event;
-    }
 
     // case 'decisionTaskTimedOutEventAttributes': {
     //   return event; // TODO
