@@ -1,21 +1,21 @@
 const formatPayload = require('./format-payload');
 
-const formatMemo = (memo) => {
-  if (!memo?.fields) {
+const formatPayloadMap = (map, fieldKey) => {
+  if (!map?.[fieldKey]) {
     return null;
   }
 
   return {
-    fields: Object
-      .keys(memo.fields)
+    [fieldKey]: Object
+      .keys(map[fieldKey])
       .map((key) => ({
-        [key]: formatPayload(memo.fields[key]),
+        [key]: formatPayload(map[fieldKey][key]),
       }))
       .reduce((accumulator, value) => ({
         ...accumulator,
         ...value,
       }), {}),
-  }
+  };
 };
 
-module.exports = formatMemo;
+module.exports = formatPayloadMap;

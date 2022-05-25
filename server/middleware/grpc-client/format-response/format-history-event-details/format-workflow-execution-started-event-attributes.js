@@ -1,5 +1,5 @@
 const formatPayload = require('./format-payload');
-const formatMemo = require('./format-memo');
+const formatPayloadMap = require('./format-payload-map');
 const formatTimestampToSeconds = require('../format-timestamp-to-seconds');
 const formatPrevAutoResetPoints = require('./format-prev-auto-reset-points');
 
@@ -11,6 +11,7 @@ const formatWorkflowExecutionStartedEventAttributes = ({
   memo,
   parentExecutionInfo,
   prevAutoResetPoints,
+  searchAttributes,
   taskStartToCloseTimeout,
   ...eventAttributes
 }) => ({
@@ -20,11 +21,12 @@ const formatWorkflowExecutionStartedEventAttributes = ({
   executionStartToCloseTimeoutSeconds: formatTimestampToSeconds(executionStartToCloseTimeout),
   firstDecisionTaskBackoffSeconds: formatTimestampToSeconds(firstDecisionTaskBackoff),
   input: formatPayload(input),
-  memo: formatMemo(memo),
+  memo: formatPayloadMap(memo, 'fields'),
   parentInitiatedEventId: parentExecutionInfo?.initiatedId ? parseInt(parentExecutionInfo.initiatedId) : null,
   parentWorkflowDomain: parentExecutionInfo?.domainName ?? null,
   parentWorkflowExecution: parentExecutionInfo?.workflowExecution ?? null,
   prevAutoResetPoints: formatPrevAutoResetPoints(prevAutoResetPoints),
+  searchAttributes: formatPayloadMap(searchAttributes, 'indexedFields'),
   taskStartToCloseTimeoutSeconds: formatTimestampToSeconds(taskStartToCloseTimeout),
 });
 
