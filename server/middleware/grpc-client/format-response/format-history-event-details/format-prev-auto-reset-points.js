@@ -1,12 +1,14 @@
 const formatTimestampToDatetime = require('../format-timestamp-to-datetime');
 
 const formatPrevAutoResetPoints = prevAutoResetPoints => {
-  if (!prevAutoResetPoints?.points) {
+  const points = prevAutoResetPoints?.points;
+
+  if (!points) {
     return null;
   }
 
   return {
-    points: prevAutoResetPoints.points.map(({
+    points: points.map(({
       createdTime,
       expiringTime,
       ...point

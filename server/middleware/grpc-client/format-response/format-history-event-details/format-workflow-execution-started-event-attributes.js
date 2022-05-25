@@ -1,5 +1,5 @@
-const formatPayload = require('./format-payload');
-const formatPayloadMap = require('./format-payload-map');
+const formatPayload = require('../format-payload');
+const formatPayloadMap = require('../format-payload-map');
 const formatTimestampToSeconds = require('../format-timestamp-to-seconds');
 const formatPrevAutoResetPoints = require('./format-prev-auto-reset-points');
 
