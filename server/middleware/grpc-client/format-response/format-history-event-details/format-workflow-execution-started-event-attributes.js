@@ -1,5 +1,6 @@
-const formatPayload = require('../format-payload');
-const formatPayloadMap = require('../format-payload-map');
+const formatPayload = require('./format-payload');
+const formatPayloadMap = require('./format-payload-map');
+const formatRetryPolicy = require('./format-retry-policy');
 const formatTimestampToSeconds = require('../format-timestamp-to-seconds');
 const formatPrevAutoResetPoints = require('./format-prev-auto-reset-points');
 
@@ -11,6 +12,7 @@ const formatWorkflowExecutionStartedEventAttributes = ({
   memo,
   parentExecutionInfo,
   prevAutoResetPoints,
+  retryPolicy,
   searchAttributes,
   taskStartToCloseTimeout,
   ...eventAttributes
@@ -26,6 +28,7 @@ const formatWorkflowExecutionStartedEventAttributes = ({
   parentWorkflowDomain: parentExecutionInfo?.domainName ?? null,
   parentWorkflowExecution: parentExecutionInfo?.workflowExecution ?? null,
   prevAutoResetPoints: formatPrevAutoResetPoints(prevAutoResetPoints),
+  retryPolicy: formatRetryPolicy(retryPolicy),
   searchAttributes: formatPayloadMap(searchAttributes, 'indexedFields'),
   taskStartToCloseTimeoutSeconds: formatTimestampToSeconds(taskStartToCloseTimeout),
 });
