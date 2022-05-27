@@ -16,6 +16,7 @@ const formatStartChildWorkflowExecutionInitiatedEventAttributes = require('./for
 const formatTimerFiredEventAttributes = require('./format-timer-fired-event-attributes');
 const formatTimerStartedEventAttributes = require('./format-timer-started-event-attributes');
 const formatUpsertWorkflowSearchAttributesEventAttributes = require('./format-upsert-workflow-search-attributes-event-attributes');
+const formatWorkflowExecutionCancelRequestedEventAttributes = require('./format-workflow-execution-cancel-requested-event-attributes');
 const formatWorkflowExecutionCanceledEventAttributes = require('./format-workflow-execution-canceled-event-attributes');
 const formatWorkflowExecutionCompletedEventAttributes = require('./format-workflow-execution-completed-event-attributes');
 const formatWorkflowExecutionContinuedAsNewEventAttributes = require('./format-workflow-execution-continued-as-new-event-attributes');
@@ -41,6 +42,7 @@ const AttributesFormatterMap = {
   timerFiredEventAttributes: formatTimerFiredEventAttributes,
   timerStartedEventAttributes: formatTimerStartedEventAttributes,
   upsertWorkflowSearchAttributesEventAttributes: formatUpsertWorkflowSearchAttributesEventAttributes,
+  workflowExecutionCancelRequestedEventAttributes: formatWorkflowExecutionCancelRequestedEventAttributes,
   workflowExecutionCanceledEventAttributes: formatWorkflowExecutionCanceledEventAttributes,
   workflowExecutionCompletedEventAttributes: formatWorkflowExecutionCompletedEventAttributes,
   workflowExecutionContinuedAsNewEventAttributes: formatWorkflowExecutionContinuedAsNewEventAttributes,
