@@ -16,6 +16,7 @@ const formatStartChildWorkflowExecutionInitiatedEventAttributes = require('./for
 const formatTimerFiredEventAttributes = require('./format-timer-fired-event-attributes');
 const formatTimerStartedEventAttributes = require('./format-timer-started-event-attributes');
 const formatUpsertWorkflowSearchAttributesEventAttributes = require('./format-upsert-workflow-search-attributes-event-attributes');
+const formatWorkflowExecutionCanceledEventAttributes = require('./format-workflow-execution-canceled-event-attributes');
 const formatWorkflowExecutionCompletedEventAttributes = require('./format-workflow-execution-completed-event-attributes');
 const formatWorkflowExecutionContinuedAsNewEventAttributes = require('./format-workflow-execution-continued-as-new-event-attributes');
 const formatWorkflowExecutionSignaledEventAttributes = require('./format-workflow-execution-signaled-event-attributes');
@@ -40,11 +41,59 @@ const AttributesFormatterMap = {
   timerFiredEventAttributes: formatTimerFiredEventAttributes,
   timerStartedEventAttributes: formatTimerStartedEventAttributes,
   upsertWorkflowSearchAttributesEventAttributes: formatUpsertWorkflowSearchAttributesEventAttributes,
+  workflowExecutionCanceledEventAttributes: formatWorkflowExecutionCanceledEventAttributes,
   workflowExecutionCompletedEventAttributes: formatWorkflowExecutionCompletedEventAttributes,
   workflowExecutionContinuedAsNewEventAttributes: formatWorkflowExecutionContinuedAsNewEventAttributes,
   workflowExecutionSignaledEventAttributes: formatWorkflowExecutionSignaledEventAttributes,
   workflowExecutionStartedEventAttributes: formatWorkflowExecutionStartedEventAttributes,
+  // 22
 };
+
+/*
+  EventAttributes:
+  1:  optional WorkflowExecutionStartedEventAttributes workflowExecutionStartedEventAttributes
+  2:  optional WorkflowExecutionCompletedEventAttributes workflowExecutionCompletedEventAttributes
+  3:  optional WorkflowExecutionFailedEventAttributes workflowExecutionFailedEventAttributes
+  4:  optional WorkflowExecutionTimedOutEventAttributes workflowExecutionTimedOutEventAttributes
+  5:  optional DecisionTaskScheduledEventAttributes decisionTaskScheduledEventAttributes
+  6:  optional DecisionTaskStartedEventAttributes decisionTaskStartedEventAttributes
+  7: optional DecisionTaskCompletedEventAttributes decisionTaskCompletedEventAttributes
+  8: optional DecisionTaskTimedOutEventAttributes decisionTaskTimedOutEventAttributes
+  9: optional DecisionTaskFailedEventAttributes decisionTaskFailedEventAttributes
+  10: optional ActivityTaskScheduledEventAttributes activityTaskScheduledEventAttributes
+  11: optional ActivityTaskStartedEventAttributes activityTaskStartedEventAttributes
+  12: optional ActivityTaskCompletedEventAttributes activityTaskCompletedEventAttributes
+  13: optional ActivityTaskFailedEventAttributes activityTaskFailedEventAttributes
+  14: optional ActivityTaskTimedOutEventAttributes activityTaskTimedOutEventAttributes
+  15: optional TimerStartedEventAttributes timerStartedEventAttributes
+  16: optional TimerFiredEventAttributes timerFiredEventAttributes
+  17: optional ActivityTaskCancelRequestedEventAttributes activityTaskCancelRequestedEventAttributes
+  18: optional RequestCancelActivityTaskFailedEventAttributes requestCancelActivityTaskFailedEventAttributes
+  19: optional ActivityTaskCanceledEventAttributes activityTaskCanceledEventAttributes
+  20: optional TimerCanceledEventAttributes timerCanceledEventAttributes
+  21: optional CancelTimerFailedEventAttributes cancelTimerFailedEventAttributes
+  22: optional MarkerRecordedEventAttributes markerRecordedEventAttributes
+  23: optional WorkflowExecutionSignaledEventAttributes workflowExecutionSignaledEventAttributes
+  24: optional WorkflowExecutionTerminatedEventAttributes workflowExecutionTerminatedEventAttributes
+  25: optional WorkflowExecutionCancelRequestedEventAttributes workflowExecutionCancelRequestedEventAttributes
+  26: optional WorkflowExecutionCanceledEventAttributes workflowExecutionCanceledEventAttributes
+  27: optional RequestCancelExternalWorkflowExecutionInitiatedEventAttributes requestCancelExternalWorkflowExecutionInitiatedEventAttributes
+  28: optional RequestCancelExternalWorkflowExecutionFailedEventAttributes requestCancelExternalWorkflowExecutionFailedEventAttributes
+  29: optional ExternalWorkflowExecutionCancelRequestedEventAttributes externalWorkflowExecutionCancelRequestedEventAttributes
+  30: optional WorkflowExecutionContinuedAsNewEventAttributes workflowExecutionContinuedAsNewEventAttributes
+  30: optional StartChildWorkflowExecutionInitiatedEventAttributes startChildWorkflowExecutionInitiatedEventAttributes
+  31: optional StartChildWorkflowExecutionFailedEventAttributes startChildWorkflowExecutionFailedEventAttributes
+  32: optional ChildWorkflowExecutionStartedEventAttributes childWorkflowExecutionStartedEventAttributes
+  33: optional ChildWorkflowExecutionCompletedEventAttributes childWorkflowExecutionCompletedEventAttributes
+  34: optional ChildWorkflowExecutionFailedEventAttributes childWorkflowExecutionFailedEventAttributes
+  35: optional ChildWorkflowExecutionCanceledEventAttributes childWorkflowExecutionCanceledEventAttributes
+  36: optional ChildWorkflowExecutionTimedOutEventAttributes childWorkflowExecutionTimedOutEventAttributes
+  37: optional ChildWorkflowExecutionTerminatedEventAttributes childWorkflowExecutionTerminatedEventAttributes
+  38: optional SignalExternalWorkflowExecutionInitiatedEventAttributes signalExternalWorkflowExecutionInitiatedEventAttributes
+  39: optional SignalExternalWorkflowExecutionFailedEventAttributes signalExternalWorkflowExecutionFailedEventAttributes
+  40: optional ExternalWorkflowExecutionSignaledEventAttributes externalWorkflowExecutionSignaledEventAttributes
+  41: optional UpsertWorkflowSearchAttributesEventAttributes upsertWorkflowSearchAttributesEventAttributes
+*/
 
 const formatHistoryEventDetails = ({ attributes, ...event }) => {
   const formatter = AttributesFormatterMap[attributes];
@@ -55,172 +104,6 @@ const formatHistoryEventDetails = ({ attributes, ...event }) => {
   }
   console.log('attribute not mapped = ', attributes);
   return event;
-
-  /*
-  switch (attributes) {
-    // case 'activityTaskCancelRequestedEventAttributes': {
-    //   return event; // TODO
-    // }
-
-    // case 'activityTaskCanceledEventAttributes': {
-    //   return event; // TODO
-    // }
-
-    // case 'activityTaskFailedEventAttributes': {
-    //   return event; // TODO
-    // }
-
-    // case 'activityTaskTimedOutEventAttributes': {
-    //   return event; // TODO
-    // }
-
-    // case 'cancelTimerFailedEventAttributes': {
-    //   return event; // TODO
-    // }
-
-    // case 'childWorkflowExecutionCanceledEventAttributes': {
-    //   return event; // TODO
-    // }
-
-    // case 'childWorkflowExecutionCompletedEventAttributes': {
-    //   return event; // TODO
-    // }
-
-    // case 'childWorkflowExecutionFailedEventAttributes': {
-    //   return event; // TODO
-    // }
-
-    // case 'childWorkflowExecutionStartedEventAttributes': {
-    //   return event; // TODO
-    // }
-
-    // case 'childWorkflowExecutionTerminatedEventAttributes': {
-    //   return event; // TODO
-    // }
-
-    // case 'childWorkflowExecutionTimedOutEventAttributes': {
-    //   return event; // TODO
-    // }
-
-    // case 'decisionTaskFailedEventAttributes': {
-    //   return event; // TODO
-    // }
-
-    // case 'decisionTaskTimedOutEventAttributes': {
-    //   return event; // TODO
-    // }
-
-    // case 'externalWorkflowExecutionCancelRequestedEventAttributes': {
-    //   return event; // TODO
-    // }
-
-    // case 'externalWorkflowExecutionSignaledEventAttributes': {
-    //   return event; // TODO
-    // }
-
-    case 'markerRecordedEventAttributes': {
-      return event;
-    }
-
-    // case 'requestCancelActivityTaskFailedEventAttributes': {
-    //   return event; // TODO
-    // }
-
-    // case 'requestCancelExternalWorkflowExecutionFailedEventAttributes': {
-    //   return event; // TODO
-    // }
-
-    // case 'requestCancelExternalWorkflowExecutionInitiatedEventAttributes': {
-    //   return event; // TODO
-    // }
-
-    // case 'signalExternalWorkflowExecutionFailedEventAttributes': {
-    //   return event; // TODO
-    // }
-
-    // case 'signalExternalWorkflowExecutionInitiatedEventAttributes': {
-    //   return event; // TODO
-    // }
-
-    // case 'startChildWorkflowExecutionInitiatedEventAttributes': {
-    //   return event; // TODO
-    // }
-
-    // case 'startChildWorkflowExecutionFailedEventAttributes': {
-    //   return event; // TODO
-    // }
-
-    // case 'timerCanceledEventAttributes': {
-    //   return event; // TODO
-    // }
-
-    case 'timerStartedEventAttributes': {
-      const {
-        startToFireTimeout,
-        ...eventAttributes
-      } = event[attributes];
-
-      return {
-        [attributes]: {
-          ...eventAttributes,
-          startToFireTimeoutSeconds: formatTimestampToSeconds(startToFireTimeout),
-        },
-      };
-    }
-
-    case 'timerFiredEventAttributes': {
-      return event;
-    }
-
-    case 'upsertWorkflowSearchAttributesEventAttributes': {
-      return event;
-    }
-
-    // case 'workflowExecutionCancelRequestedEventAttributes': {
-    //   return event; // TODO
-    // }
-
-    // case 'workflowExecutionCanceledEventAttributes': {
-    //   return event; // TODO
-    // }
-
-    case 'workflowExecutionContinuedAsNewEventAttributes': {
-      const {
-        backoffStartInterval,
-        executionStartToCloseTimeout,
-        taskStartToCloseTimeout,
-        ...eventAttributes
-      } = event[attributes];
-
-      return {
-        [attributes]: {
-          ...eventAttributes,
-          backoffStartIntervalSeconds: formatTimestampToSeconds(backoffStartInterval),
-          executionStartToCloseTimeoutSeconds: formatTimestampToSeconds(executionStartToCloseTimeout),
-          taskStartToCloseTimeoutSeconds: formatTimestampToSeconds(taskStartToCloseTimeout),
-        },
-      };
-    }
-
-    // case 'workflowExecutionFailedEventAttributes': {
-    //   return event; // TODO
-    // }
-
-    // case 'workflowExecutionSignaledEventAttributes': {
-    //   return event; // TODO
-    // }
-
-    // case 'workflowExecutionTerminatedEventAttributes': {
-    //   return event; // TODO
-    // }
-
-    // case 'workflowExecutionTimedOutEventAttributes': {
-    //   return event; // TODO
-    // }
-  }
-  */
-  // console.log(`unexpected event attribute "${attributes}". returning non-formatted grpc response event details.`);
-  // return event; // TODO
 };
 
 module.exports = formatHistoryEventDetails;
