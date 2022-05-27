@@ -13,6 +13,7 @@ const formatMarkerRecordedEventAttributes = require('./format-marker-recorded-ev
 const formatRequestCancelExternalWorkflowExecutionInitiatedEventAttributes = require('./format-request-cancel-external-workflow-execution-initiated-event-attributes');
 const formatSignalExternalWorkflowExecutionInitiatedEventAttributes = require('./format-signal-external-workflow-execution-initiated-event-attributes');
 const formatStartChildWorkflowExecutionInitiatedEventAttributes = require('./format-start-child-workflow-execution-initiated-event-attributes');
+const formatTimerCanceledEventAttributes = require('./format-timer-canceled-event-attributes');
 const formatTimerFiredEventAttributes = require('./format-timer-fired-event-attributes');
 const formatTimerStartedEventAttributes = require('./format-timer-started-event-attributes');
 const formatUpsertWorkflowSearchAttributesEventAttributes = require('./format-upsert-workflow-search-attributes-event-attributes');
@@ -39,6 +40,7 @@ const AttributesFormatterMap = {
   requestCancelExternalWorkflowExecutionInitiatedEventAttributes: formatRequestCancelExternalWorkflowExecutionInitiatedEventAttributes,
   signalExternalWorkflowExecutionInitiatedEventAttributes: formatSignalExternalWorkflowExecutionInitiatedEventAttributes,
   startChildWorkflowExecutionInitiatedEventAttributes: formatStartChildWorkflowExecutionInitiatedEventAttributes,
+  timerCanceledEventAttributes: formatTimerCanceledEventAttributes,
   timerFiredEventAttributes: formatTimerFiredEventAttributes,
   timerStartedEventAttributes: formatTimerStartedEventAttributes,
   upsertWorkflowSearchAttributesEventAttributes: formatUpsertWorkflowSearchAttributesEventAttributes,
