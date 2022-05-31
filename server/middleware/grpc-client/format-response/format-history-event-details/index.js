@@ -1,6 +1,7 @@
 const formatActivityTaskCompletedEventAttributes = require('./format-activity-task-completed-event-attributes');
 const formatActivityTaskScheduledEventAttributes = require('./format-activity-task-scheduled-event-attributes');
 const formatActivityTaskStartedEventAttributes = require('./format-activity-task-started-event-attributes');
+const formatActivityTaskTimedOutEventAttributes = require('./format-activity-task-timed-out-event-attributes');
 const formatChildWorkflowExecutionCanceledEventAttributes = require('./format-child-workflow-execution-canceled-event-attributes');
 const formatChildWorkflowExecutionCompletedEventAttributes = require('./format-child-workflow-execution-completed-event-attributes');
 const formatChildWorkflowExecutionStartedEventAttributes = require('./format-child-workflow-execution-started-event-attributes');
@@ -28,6 +29,7 @@ const AttributesFormatterMap = {
   activityTaskCompletedEventAttributes: formatActivityTaskCompletedEventAttributes,
   activityTaskScheduledEventAttributes: formatActivityTaskScheduledEventAttributes,
   activityTaskStartedEventAttributes: formatActivityTaskStartedEventAttributes,
+  activityTaskTimedOutEventAttributes: formatActivityTaskTimedOutEventAttributes,
   childWorkflowExecutionCanceledEventAttributes: formatChildWorkflowExecutionCanceledEventAttributes,
   childWorkflowExecutionCompletedEventAttributes: formatChildWorkflowExecutionCompletedEventAttributes,
   childWorkflowExecutionStartedEventAttributes: formatChildWorkflowExecutionStartedEventAttributes,
