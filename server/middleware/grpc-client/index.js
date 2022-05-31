@@ -80,10 +80,15 @@ const grpcClient = ({ peers, requestConfig }) =>
         method: 'ListDomains',
       }),
       listTaskListPartitions: () => { }, // TODO
-      listWorkflows: () => { }, // TODO - needs describeCluster to be working first.
-      // listWorkflows: visibilityService.request({
-      //   method: 'ListWorkflowExecutions',
-      // }),
+      listWorkflows: visibilityService.request({
+        // formatRequest: formatRequestAdvancedWorkflowList,
+        formatResponse: formatResponseWorkflowList,
+        method: 'ListWorkflowExecutions',
+        transform: combine(
+          withDomain(ctx),
+          withPagination(ctx),
+        ),
+      }),
       openWorkflows: visibilityService.request({
         formatRequest: formatRequestWorkflowList,
         formatResponse: formatResponseWorkflowList,
