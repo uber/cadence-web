@@ -6,6 +6,7 @@ const formatChildWorkflowExecutionCanceledEventAttributes = require('./format-ch
 const formatChildWorkflowExecutionCompletedEventAttributes = require('./format-child-workflow-execution-completed-event-attributes');
 const formatChildWorkflowExecutionStartedEventAttributes = require('./format-child-workflow-execution-started-event-attributes');
 const formatDecisionTaskCompletedEventAttributes = require('./format-decision-task-completed-event-attributes');
+const formatDecisionTaskFailedEventAttributes = require('./format-decision-task-failed-event-attributes');
 const formatDecisionTaskScheduledEventAttributes = require('./format-decision-task-scheduled-event-attributes');
 const formatDecisionTaskStartedEventAttributes = require('./format-decision-task-started-event-attributes');
 const formatExternalWorkflowExecutionCancelRequestedEventAttributes = require('./format-external-workflow-execution-cancel-requested-event-attributes');
@@ -34,6 +35,7 @@ const AttributesFormatterMap = {
   childWorkflowExecutionCompletedEventAttributes: formatChildWorkflowExecutionCompletedEventAttributes,
   childWorkflowExecutionStartedEventAttributes: formatChildWorkflowExecutionStartedEventAttributes,
   decisionTaskCompletedEventAttributes: formatDecisionTaskCompletedEventAttributes,
+  decisionTaskFailedEventAttributes: formatDecisionTaskFailedEventAttributes,
   decisionTaskScheduledEventAttributes: formatDecisionTaskScheduledEventAttributes,
   decisionTaskStartedEventAttributes: formatDecisionTaskStartedEventAttributes,
   externalWorkflowExecutionCancelRequestedEventAttributes: formatExternalWorkflowExecutionCancelRequestedEventAttributes,
