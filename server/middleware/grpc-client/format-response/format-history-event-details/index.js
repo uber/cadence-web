@@ -10,6 +10,7 @@ const formatDecisionTaskCompletedEventAttributes = require('./format-decision-ta
 const formatDecisionTaskFailedEventAttributes = require('./format-decision-task-failed-event-attributes');
 const formatDecisionTaskScheduledEventAttributes = require('./format-decision-task-scheduled-event-attributes');
 const formatDecisionTaskStartedEventAttributes = require('./format-decision-task-started-event-attributes');
+const formatDecisionTaskTimedOutEventAttributes = require('./format-decision-task-timed-out-event-attributes');
 const formatExternalWorkflowExecutionCancelRequestedEventAttributes = require('./format-external-workflow-execution-cancel-requested-event-attributes');
 const formatExternalWorkflowExecutionSignaledEventAttributes = require('./format-external-workflow-execution-signaled-event-attributes');
 const formatMarkerRecordedEventAttributes = require('./format-marker-recorded-event-attributes');
@@ -41,6 +42,7 @@ const AttributesFormatterMap = {
   decisionTaskFailedEventAttributes: formatDecisionTaskFailedEventAttributes,
   decisionTaskScheduledEventAttributes: formatDecisionTaskScheduledEventAttributes,
   decisionTaskStartedEventAttributes: formatDecisionTaskStartedEventAttributes,
+  decisionTaskTimedOutEventAttributes: formatDecisionTaskTimedOutEventAttributes,
   externalWorkflowExecutionCancelRequestedEventAttributes: formatExternalWorkflowExecutionCancelRequestedEventAttributes,
   externalWorkflowExecutionSignaledEventAttributes: formatExternalWorkflowExecutionSignaledEventAttributes,
   markerRecordedEventAttributes: formatMarkerRecordedEventAttributes,
@@ -64,7 +66,11 @@ const AttributesFormatterMap = {
 /*
   EventAttributes remaining to implement:
   2:  optional WorkflowExecutionTimedOutEventAttributes workflowExecutionTimedOutEventAttributes
-  3: optional DecisionTaskTimedOutEventAttributes decisionTaskTimedOutEventAttributes
+      struct WorkflowExecutionTimedOutEventAttributes {
+        10: optional TimeoutType timeoutType
+      }
+      can be skipped
+
   4: optional ActivityTaskCancelRequestedEventAttributes activityTaskCancelRequestedEventAttributes
   5: optional RequestCancelActivityTaskFailedEventAttributes requestCancelActivityTaskFailedEventAttributes
   6: optional ActivityTaskCanceledEventAttributes activityTaskCanceledEventAttributes
