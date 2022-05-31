@@ -24,6 +24,7 @@ const formatWorkflowExecutionCancelRequestedEventAttributes = require('./format-
 const formatWorkflowExecutionCanceledEventAttributes = require('./format-workflow-execution-canceled-event-attributes');
 const formatWorkflowExecutionCompletedEventAttributes = require('./format-workflow-execution-completed-event-attributes');
 const formatWorkflowExecutionContinuedAsNewEventAttributes = require('./format-workflow-execution-continued-as-new-event-attributes');
+const formatWorkflowExecutionFailedEventAttributes = require('./format-workflow-execution-failed-event-attributes');
 const formatWorkflowExecutionSignaledEventAttributes = require('./format-workflow-execution-signaled-event-attributes');
 const formatWorkflowExecutionStartedEventAttributes = require('./format-workflow-execution-started-event-attributes');
 
@@ -54,6 +55,7 @@ const AttributesFormatterMap = {
   workflowExecutionCanceledEventAttributes: formatWorkflowExecutionCanceledEventAttributes,
   workflowExecutionCompletedEventAttributes: formatWorkflowExecutionCompletedEventAttributes,
   workflowExecutionContinuedAsNewEventAttributes: formatWorkflowExecutionContinuedAsNewEventAttributes,
+  workflowExecutionFailedEventAttributes: formatWorkflowExecutionFailedEventAttributes,
   workflowExecutionSignaledEventAttributes: formatWorkflowExecutionSignaledEventAttributes,
   workflowExecutionStartedEventAttributes: formatWorkflowExecutionStartedEventAttributes,
   // 28 total implemented
@@ -61,7 +63,6 @@ const AttributesFormatterMap = {
 
 /*
   EventAttributes remaining to implement:
-  1:  optional WorkflowExecutionFailedEventAttributes workflowExecutionFailedEventAttributes
   2:  optional WorkflowExecutionTimedOutEventAttributes workflowExecutionTimedOutEventAttributes
   3: optional DecisionTaskTimedOutEventAttributes decisionTaskTimedOutEventAttributes
   4: optional ActivityTaskCancelRequestedEventAttributes activityTaskCancelRequestedEventAttributes
