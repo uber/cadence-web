@@ -17,7 +17,7 @@ const formatActivityTaskScheduledEventAttributes = ({
 }) => ({
   ...eventAttributes,
   decisionTaskCompletedEventId: parseInt(decisionTaskCompletedEventId),
-  domain: domain ? domain : null,
+  domain: domain || null,
   header: formatPayloadMap(header, 'fields'),
   heartbeatTimeoutSeconds: formatTimestampToSeconds(heartbeatTimeout),
   input: formatPayload(input),

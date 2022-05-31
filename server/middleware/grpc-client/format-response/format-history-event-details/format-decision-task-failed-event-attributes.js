@@ -6,9 +6,9 @@ const formatDecisionTaskFailedEventAttributes = ({
   ...eventAttributes
 }) => ({
   ...eventAttributes,
-  details: failure.details || null,
+  details: failure?.details || null,
   forkEventVersion: parseInt(forkEventVersion),
-  reason: failure.reason,
+  reason: failure?.reason || '',
   scheduledEventId: parseInt(scheduledEventId),
   startedEventId: parseInt(startedEventId),
 });

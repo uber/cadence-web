@@ -9,8 +9,8 @@ const formatActivityTaskTimedOutEventAttributes = ({
 }) => ({
   ...eventAttributes,
   details: formatPayload(details),
-  lastFailureDetails: lastFailure.details || null,
-  lastFailureReason: lastFailure.reason,
+  lastFailureDetails: lastFailure?.details || null,
+  lastFailureReason: lastFailure?.reason || '',
   scheduledEventId: parseInt(scheduledEventId),
   startedEventId: parseInt(startedEventId),
 });

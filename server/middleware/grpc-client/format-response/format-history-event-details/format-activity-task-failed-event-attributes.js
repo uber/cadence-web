@@ -5,8 +5,8 @@ const formatActivityTaskFailedEventAttributes = ({
   ...eventAttributes
 }) => ({
   ...eventAttributes,
-  details: failure.details || null,
-  reason: failure.reason,
+  details: failure?.details || null,
+  reason: failure?.reason || '',
   scheduledEventId: parseInt(scheduledEventId),
   startedEventId: parseInt(startedEventId),
 });

@@ -5,7 +5,7 @@ const formatDecisionTaskCompletedEventAttributes = ({
   ...eventAttributes
 }) => ({
   ...eventAttributes,
-  executionContext: executionContext ? executionContext : null,
+  executionContext: executionContext || null,
   scheduledEventId: parseInt(scheduledEventId),
   startedEventId: parseInt(startedEventId),
 });

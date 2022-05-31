@@ -1,13 +1,10 @@
 const formatWorkflowExecutionCancelRequestedEventAttributes = ({
-  externalExecutionInfo: {
-    initiatedId,
-    workflowExecution,
-  },
+  externalExecutionInfo,
   ...eventAttributes
 }) => ({
   ...eventAttributes,
-  externalInitiatedEventId: parseInt(initiatedId),
-  externalWorkflowExecution: workflowExecution,
+  externalInitiatedEventId: externalExecutionInfo?.initiatedId ? parseInt(externalExecutionInfo.initiatedId) : null,
+  externalWorkflowExecution: externalExecutionInfo?.workflowExecution,
 });
 
 module.exports = formatWorkflowExecutionCancelRequestedEventAttributes;

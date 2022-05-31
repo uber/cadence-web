@@ -17,7 +17,7 @@ const formatStartChildWorkflowExecutionInitiatedEventAttributes = ({
   ...eventAttributes
 }) => ({
   ...eventAttributes,
-  control: control ? control : null,
+  control: control || null,
   decisionTaskCompletedEventId: parseInt(decisionTaskCompletedEventId),
   delayStartSeconds: formatTimestampToSeconds(delayStart),
   executionStartToCloseTimeoutSeconds: formatTimestampToSeconds(executionStartToCloseTimeout),

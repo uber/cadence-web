@@ -1,14 +1,11 @@
 const formatActivityTaskStartedEventAttributes = ({
-  lastFailure: {
-    details: lastFailureDetails,
-    reason: lastFailureReason,
-  },
+  lastFailure,
   scheduledEventId,
   ...eventAttributes
 }) => ({
   ...eventAttributes,
-  lastFailureDetails: lastFailureDetails ? lastFailureDetails : null,
-  lastFailureReason,
+  lastFailureDetails: lastFailure?.details || null,
+  lastFailureReason: lastFailure?.reason || '',
   scheduledEventId: parseInt(scheduledEventId),
 });
 
