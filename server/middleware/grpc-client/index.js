@@ -65,9 +65,16 @@ const grpcClient = ({ peers, requestConfig }) =>
           withWorkflowExecution(ctx),
         ),
       }),
-
-      exportHistory: () => { }, // TODO
-
+      exportHistory: workflowService.request({
+        formatRequest: formatRequestGetHistory,
+        formatResponse: formatResponseGetHistory,
+        method: 'GetWorkflowExecutionHistory',
+        transform: combine(
+          withDomain(ctx),
+          withPagination(ctx),
+          withWorkflowExecution(ctx),
+        ),
+      }),
       getHistory: workflowService.request({
         formatRequest: formatRequestGetHistory,
         formatResponse: formatResponseGetHistory,
