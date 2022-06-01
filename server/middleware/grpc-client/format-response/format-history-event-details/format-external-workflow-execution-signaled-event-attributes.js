@@ -1,3 +1,5 @@
+const atob = require('atob');
+
 const formatExternalWorkflowExecutionSignaledEventAttributes = ({
   control,
   initiatedEventId,

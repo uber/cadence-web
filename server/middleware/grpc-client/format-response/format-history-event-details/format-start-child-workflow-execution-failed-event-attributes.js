@@ -1,13 +1,15 @@
 const atob = require('atob');
 
-const formatRequestCancelExternalWorkflowExecutionInitiatedEventAttributes = ({
+const formatStartChildWorkflowExecutionFailedEventAttributes = ({
   control,
   decisionTaskCompletedEventId,
+  initiatedEventId,
   ...eventAttributes
 }) => ({
   ...eventAttributes,
   control: control ? parseInt(atob(control)) : null,
   decisionTaskCompletedEventId: parseInt(decisionTaskCompletedEventId),
+  initiatedEventId: parseInt(initiatedEventId),
 });
 
-module.exports = formatRequestCancelExternalWorkflowExecutionInitiatedEventAttributes;
+module.exports = formatStartChildWorkflowExecutionFailedEventAttributes;

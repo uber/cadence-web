@@ -21,6 +21,7 @@ const formatRequestCancelActivityTaskFailedEventAttributes = require('./format-r
 const formatRequestCancelExternalWorkflowExecutionFailedEventAttributes = require('./format-request-cancel-external-workflow-execution-failed-event-attributes');
 const formatRequestCancelExternalWorkflowExecutionInitiatedEventAttributes = require('./format-request-cancel-external-workflow-execution-initiated-event-attributes');
 const formatSignalExternalWorkflowExecutionInitiatedEventAttributes = require('./format-signal-external-workflow-execution-initiated-event-attributes');
+const formatStartChildWorkflowExecutionFailedEventAttributes = require('./format-start-child-workflow-execution-failed-event-attributes');
 const formatStartChildWorkflowExecutionInitiatedEventAttributes = require('./format-start-child-workflow-execution-initiated-event-attributes');
 const formatTimerCanceledEventAttributes = require('./format-timer-canceled-event-attributes');
 const formatTimerFiredEventAttributes = require('./format-timer-fired-event-attributes');
@@ -59,6 +60,7 @@ const AttributesFormatterMap = {
   requestCancelExternalWorkflowExecutionFailedEventAttributes: formatRequestCancelExternalWorkflowExecutionFailedEventAttributes,
   requestCancelExternalWorkflowExecutionInitiatedEventAttributes: formatRequestCancelExternalWorkflowExecutionInitiatedEventAttributes,
   signalExternalWorkflowExecutionInitiatedEventAttributes: formatSignalExternalWorkflowExecutionInitiatedEventAttributes,
+  startChildWorkflowExecutionFailedEventAttributes: formatStartChildWorkflowExecutionFailedEventAttributes,
   startChildWorkflowExecutionInitiatedEventAttributes: formatStartChildWorkflowExecutionInitiatedEventAttributes,
   timerCanceledEventAttributes: formatTimerCanceledEventAttributes,
   timerFiredEventAttributes: formatTimerFiredEventAttributes,
@@ -83,7 +85,6 @@ const AttributesFormatterMap = {
       }
       can be skipped
 
-  10: optional StartChildWorkflowExecutionFailedEventAttributes startChildWorkflowExecutionFailedEventAttributes
   11: optional ChildWorkflowExecutionFailedEventAttributes childWorkflowExecutionFailedEventAttributes
   12: optional ChildWorkflowExecutionTimedOutEventAttributes childWorkflowExecutionTimedOutEventAttributes
   13: optional ChildWorkflowExecutionTerminatedEventAttributes childWorkflowExecutionTerminatedEventAttributes
