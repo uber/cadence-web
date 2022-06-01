@@ -32,6 +32,7 @@ const formatWorkflowExecutionContinuedAsNewEventAttributes = require('./format-w
 const formatWorkflowExecutionFailedEventAttributes = require('./format-workflow-execution-failed-event-attributes');
 const formatWorkflowExecutionSignaledEventAttributes = require('./format-workflow-execution-signaled-event-attributes');
 const formatWorkflowExecutionStartedEventAttributes = require('./format-workflow-execution-started-event-attributes');
+const formatWorkflowExecutionTerminatedEventAttributes = require('./format-workflow-execution-terminated-event-attributes');
 
 const AttributesFormatterMap = {
   activityTaskCancelRequestedEventAttributes: formatActivityTaskCancelRequestedEventAttributes,
@@ -68,6 +69,7 @@ const AttributesFormatterMap = {
   workflowExecutionFailedEventAttributes: formatWorkflowExecutionFailedEventAttributes,
   workflowExecutionSignaledEventAttributes: formatWorkflowExecutionSignaledEventAttributes,
   workflowExecutionStartedEventAttributes: formatWorkflowExecutionStartedEventAttributes,
+  workflowExecutionTerminatedEventAttributes: formatWorkflowExecutionTerminatedEventAttributes,
   // 28 total implemented
 };
 
@@ -79,7 +81,6 @@ const AttributesFormatterMap = {
       }
       can be skipped
 
-  8: optional WorkflowExecutionTerminatedEventAttributes workflowExecutionTerminatedEventAttributes
   9: optional RequestCancelExternalWorkflowExecutionFailedEventAttributes requestCancelExternalWorkflowExecutionFailedEventAttributes
   10: optional StartChildWorkflowExecutionFailedEventAttributes startChildWorkflowExecutionFailedEventAttributes
   11: optional ChildWorkflowExecutionFailedEventAttributes childWorkflowExecutionFailedEventAttributes
