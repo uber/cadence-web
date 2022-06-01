@@ -8,6 +8,7 @@ const formatActivityTaskTimedOutEventAttributes = require('./format-activity-tas
 const formatCancelTimerFailedEventAttributes = require('./format-cancel-timer-failed-event-attributes');
 const formatChildWorkflowExecutionCanceledEventAttributes = require('./format-child-workflow-execution-canceled-event-attributes');
 const formatChildWorkflowExecutionCompletedEventAttributes = require('./format-child-workflow-execution-completed-event-attributes');
+const formatChildWorkflowExecutionFailedEventAttributes = require('./format-child-workflow-execution-failed-event-attributes');
 const formatChildWorkflowExecutionStartedEventAttributes = require('./format-child-workflow-execution-started-event-attributes');
 const formatDecisionTaskCompletedEventAttributes = require('./format-decision-task-completed-event-attributes');
 const formatDecisionTaskFailedEventAttributes = require('./format-decision-task-failed-event-attributes');
@@ -47,6 +48,7 @@ const AttributesFormatterMap = {
   cancelTimerFailedEventAttributes: formatCancelTimerFailedEventAttributes,
   childWorkflowExecutionCanceledEventAttributes: formatChildWorkflowExecutionCanceledEventAttributes,
   childWorkflowExecutionCompletedEventAttributes: formatChildWorkflowExecutionCompletedEventAttributes,
+  childWorkflowExecutionFailedEventAttributes: formatChildWorkflowExecutionFailedEventAttributes,
   childWorkflowExecutionStartedEventAttributes: formatChildWorkflowExecutionStartedEventAttributes,
   decisionTaskCompletedEventAttributes: formatDecisionTaskCompletedEventAttributes,
   decisionTaskFailedEventAttributes: formatDecisionTaskFailedEventAttributes,
@@ -85,7 +87,6 @@ const AttributesFormatterMap = {
       }
       can be skipped
 
-  11: optional ChildWorkflowExecutionFailedEventAttributes childWorkflowExecutionFailedEventAttributes
   12: optional ChildWorkflowExecutionTimedOutEventAttributes childWorkflowExecutionTimedOutEventAttributes
   13: optional ChildWorkflowExecutionTerminatedEventAttributes childWorkflowExecutionTerminatedEventAttributes
   14: optional SignalExternalWorkflowExecutionFailedEventAttributes signalExternalWorkflowExecutionFailedEventAttributes
