@@ -23,6 +23,7 @@ const formatMarkerRecordedEventAttributes = require('./format-marker-recorded-ev
 const formatRequestCancelActivityTaskFailedEventAttributes = require('./format-request-cancel-activity-task-failed-event-attributes');
 const formatRequestCancelExternalWorkflowExecutionFailedEventAttributes = require('./format-request-cancel-external-workflow-execution-failed-event-attributes');
 const formatRequestCancelExternalWorkflowExecutionInitiatedEventAttributes = require('./format-request-cancel-external-workflow-execution-initiated-event-attributes');
+const formatSignalExternalWorkflowExecutionFailedEventAttributes = require('./format-signal-external-workflow-execution-failed-event-attributes');
 const formatSignalExternalWorkflowExecutionInitiatedEventAttributes = require('./format-signal-external-workflow-execution-initiated-event-attributes');
 const formatStartChildWorkflowExecutionFailedEventAttributes = require('./format-start-child-workflow-execution-failed-event-attributes');
 const formatStartChildWorkflowExecutionInitiatedEventAttributes = require('./format-start-child-workflow-execution-initiated-event-attributes');
@@ -65,6 +66,7 @@ const AttributesFormatterMap = {
   requestCancelActivityTaskFailedEventAttributes: formatRequestCancelActivityTaskFailedEventAttributes,
   requestCancelExternalWorkflowExecutionFailedEventAttributes: formatRequestCancelExternalWorkflowExecutionFailedEventAttributes,
   requestCancelExternalWorkflowExecutionInitiatedEventAttributes: formatRequestCancelExternalWorkflowExecutionInitiatedEventAttributes,
+  signalExternalWorkflowExecutionFailedEventAttributes: formatSignalExternalWorkflowExecutionFailedEventAttributes,
   signalExternalWorkflowExecutionInitiatedEventAttributes: formatSignalExternalWorkflowExecutionInitiatedEventAttributes,
   startChildWorkflowExecutionFailedEventAttributes: formatStartChildWorkflowExecutionFailedEventAttributes,
   startChildWorkflowExecutionInitiatedEventAttributes: formatStartChildWorkflowExecutionInitiatedEventAttributes,
@@ -90,10 +92,6 @@ const AttributesFormatterMap = {
         10: optional TimeoutType timeoutType
       }
       can be skipped
-
-  14: optional SignalExternalWorkflowExecutionFailedEventAttributes signalExternalWorkflowExecutionFailedEventAttributes
-
-  14 remaining
 
   41 total
 */
