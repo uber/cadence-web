@@ -15,6 +15,7 @@ const formatDecisionTaskTimedOutEventAttributes = require('./format-decision-tas
 const formatExternalWorkflowExecutionCancelRequestedEventAttributes = require('./format-external-workflow-execution-cancel-requested-event-attributes');
 const formatExternalWorkflowExecutionSignaledEventAttributes = require('./format-external-workflow-execution-signaled-event-attributes');
 const formatMarkerRecordedEventAttributes = require('./format-marker-recorded-event-attributes');
+const formatRequestCancelActivityTaskFailedEventAttributes = require('./format-request-cancel-activity-task-failed-event-attributes');
 const formatRequestCancelExternalWorkflowExecutionInitiatedEventAttributes = require('./format-request-cancel-external-workflow-execution-initiated-event-attributes');
 const formatSignalExternalWorkflowExecutionInitiatedEventAttributes = require('./format-signal-external-workflow-execution-initiated-event-attributes');
 const formatStartChildWorkflowExecutionInitiatedEventAttributes = require('./format-start-child-workflow-execution-initiated-event-attributes');
@@ -48,6 +49,7 @@ const AttributesFormatterMap = {
   externalWorkflowExecutionCancelRequestedEventAttributes: formatExternalWorkflowExecutionCancelRequestedEventAttributes,
   externalWorkflowExecutionSignaledEventAttributes: formatExternalWorkflowExecutionSignaledEventAttributes,
   markerRecordedEventAttributes: formatMarkerRecordedEventAttributes,
+  requestCancelActivityTaskFailedEventAttributes: formatRequestCancelActivityTaskFailedEventAttributes,
   requestCancelExternalWorkflowExecutionInitiatedEventAttributes: formatRequestCancelExternalWorkflowExecutionInitiatedEventAttributes,
   signalExternalWorkflowExecutionInitiatedEventAttributes: formatSignalExternalWorkflowExecutionInitiatedEventAttributes,
   startChildWorkflowExecutionInitiatedEventAttributes: formatStartChildWorkflowExecutionInitiatedEventAttributes,
@@ -73,7 +75,6 @@ const AttributesFormatterMap = {
       }
       can be skipped
 
-  5: optional RequestCancelActivityTaskFailedEventAttributes requestCancelActivityTaskFailedEventAttributes
   6: optional ActivityTaskCanceledEventAttributes activityTaskCanceledEventAttributes
   7: optional CancelTimerFailedEventAttributes cancelTimerFailedEventAttributes
   8: optional WorkflowExecutionTerminatedEventAttributes workflowExecutionTerminatedEventAttributes
