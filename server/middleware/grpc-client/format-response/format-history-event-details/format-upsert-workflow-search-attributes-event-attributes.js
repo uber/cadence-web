@@ -1,4 +1,4 @@
-const formatPayloadMap = require('./format-payload-map');
+const formatPayloadMap = require('../format-payload-map');
 
 const formatUpsertWorkflowSearchAttributesEventAttributes = ({
   decisionTaskCompletedEventId,

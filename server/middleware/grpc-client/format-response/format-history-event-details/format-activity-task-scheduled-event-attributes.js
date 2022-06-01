@@ -1,5 +1,5 @@
 const formatPayload = require('../format-payload');
-const formatPayloadMap = require('./format-payload-map');
+const formatPayloadMap = require('../format-payload-map');
 const formatRetryPolicy = require('./format-retry-policy');
 const formatTimestampToSeconds = require('../format-timestamp-to-seconds');
 
