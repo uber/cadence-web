@@ -1,4 +1,5 @@
 const formatActivityTaskCancelRequestedEventAttributes = require('./format-activity-task-cancel-requested-event-attributes');
+const formatActivityTaskCanceledEventAttributes = require('./format-activity-task-canceled-event-attributes');
 const formatActivityTaskCompletedEventAttributes = require('./format-activity-task-completed-event-attributes');
 const formatActivityTaskFailedEventAttributes = require('./format-activity-task-failed-event-attributes');
 const formatActivityTaskScheduledEventAttributes = require('./format-activity-task-scheduled-event-attributes');
@@ -33,6 +34,7 @@ const formatWorkflowExecutionStartedEventAttributes = require('./format-workflow
 
 const AttributesFormatterMap = {
   activityTaskCancelRequestedEventAttributes: formatActivityTaskCancelRequestedEventAttributes,
+  activityTaskCanceledEventAttributes: formatActivityTaskCanceledEventAttributes,
   activityTaskCompletedEventAttributes: formatActivityTaskCompletedEventAttributes,
   activityTaskFailedEventAttributes: formatActivityTaskFailedEventAttributes,
   activityTaskScheduledEventAttributes: formatActivityTaskScheduledEventAttributes,
@@ -75,7 +77,6 @@ const AttributesFormatterMap = {
       }
       can be skipped
 
-  6: optional ActivityTaskCanceledEventAttributes activityTaskCanceledEventAttributes
   7: optional CancelTimerFailedEventAttributes cancelTimerFailedEventAttributes
   8: optional WorkflowExecutionTerminatedEventAttributes workflowExecutionTerminatedEventAttributes
   9: optional RequestCancelExternalWorkflowExecutionFailedEventAttributes requestCancelExternalWorkflowExecutionFailedEventAttributes
