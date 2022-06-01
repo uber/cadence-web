@@ -1,3 +1,4 @@
+const atob = require('atob');
 const formatPayload = require('./format-payload')
 const formatPayloadMap = require('./format-payload-map');
 const formatRetryPolicy = require('./format-retry-policy');
@@ -17,7 +18,7 @@ const formatStartChildWorkflowExecutionInitiatedEventAttributes = ({
   ...eventAttributes
 }) => ({
   ...eventAttributes,
-  control: control || null,
+  control: control ? parseInt(atob(control)) : null,
   decisionTaskCompletedEventId: parseInt(decisionTaskCompletedEventId),
   delayStartSeconds: formatTimestampToSeconds(delayStart),
   executionStartToCloseTimeoutSeconds: formatTimestampToSeconds(executionStartToCloseTimeout),
