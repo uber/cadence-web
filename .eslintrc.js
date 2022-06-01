@@ -152,6 +152,7 @@ module.exports = {
         'order': ['script', 'template', 'style'],
       }
     ],
+    'vue/multi-word-component-names': 'off',
   },
   settings: {
     'import/resolver': {
