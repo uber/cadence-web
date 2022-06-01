@@ -10,6 +10,7 @@ const formatChildWorkflowExecutionCanceledEventAttributes = require('./format-ch
 const formatChildWorkflowExecutionCompletedEventAttributes = require('./format-child-workflow-execution-completed-event-attributes');
 const formatChildWorkflowExecutionFailedEventAttributes = require('./format-child-workflow-execution-failed-event-attributes');
 const formatChildWorkflowExecutionStartedEventAttributes = require('./format-child-workflow-execution-started-event-attributes');
+const formatChildWorkflowExecutionTimedOutEventAttributes = require('./format-child-workflow-execution-timed-out-event-attributes');
 const formatDecisionTaskCompletedEventAttributes = require('./format-decision-task-completed-event-attributes');
 const formatDecisionTaskFailedEventAttributes = require('./format-decision-task-failed-event-attributes');
 const formatDecisionTaskScheduledEventAttributes = require('./format-decision-task-scheduled-event-attributes');
@@ -50,6 +51,7 @@ const AttributesFormatterMap = {
   childWorkflowExecutionCompletedEventAttributes: formatChildWorkflowExecutionCompletedEventAttributes,
   childWorkflowExecutionFailedEventAttributes: formatChildWorkflowExecutionFailedEventAttributes,
   childWorkflowExecutionStartedEventAttributes: formatChildWorkflowExecutionStartedEventAttributes,
+  childWorkflowExecutionTimedOutEventAttributes: formatChildWorkflowExecutionTimedOutEventAttributes,
   decisionTaskCompletedEventAttributes: formatDecisionTaskCompletedEventAttributes,
   decisionTaskFailedEventAttributes: formatDecisionTaskFailedEventAttributes,
   decisionTaskScheduledEventAttributes: formatDecisionTaskScheduledEventAttributes,
@@ -87,7 +89,6 @@ const AttributesFormatterMap = {
       }
       can be skipped
 
-  12: optional ChildWorkflowExecutionTimedOutEventAttributes childWorkflowExecutionTimedOutEventAttributes
   13: optional ChildWorkflowExecutionTerminatedEventAttributes childWorkflowExecutionTerminatedEventAttributes
   14: optional SignalExternalWorkflowExecutionFailedEventAttributes signalExternalWorkflowExecutionFailedEventAttributes
 
