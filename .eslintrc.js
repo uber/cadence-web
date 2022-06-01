@@ -3,7 +3,6 @@ const currentYear = (new Date()).getFullYear();
 module.exports = {
   extends: [
     'plugin:prettier/recommended',
-    'eslint-config-fusion',
     'plugin:vue/essential',
   ],
   env: {
@@ -15,11 +14,13 @@ module.exports = {
     scenario: true, // mocha
     should: true,   // mocha
   },
+  parserOptions: {
+    ecmaVersion: 2020,
+  },
   plugins: ['jest', 'import', 'eslint-plugin-header'],
   rules: {
     curly: ['error', 'all'],
     'dot-notation': 'error',
-    'flowtype/require-valid-file-annotation': [2, 'never'],
     'header/header': [
       'error',
       'line',
