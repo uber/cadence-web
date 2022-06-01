@@ -1,6 +1,6 @@
 {
   "name": "cadence-web",
-  "version": "3.30.2",
+  "version": "3.30.0",
   "description": "Cadence Web UI",
   "main": "server/index.js",
   "licence": "MIT",
@@ -10,7 +10,9 @@
     "lint": "npm run lint:check -- --fix",
     "lint:check": "eslint --ext .js,.vue client server LICENSE",
     "install": "npm run install:idl && npm run install:news",
-    "install:idl": "napa && rm -rf server/idl && cp -R node_modules/cadence-idl/thrift server/idl",
+    "install:idl": "mkdir server/idl; npm run install:idl:proto; npm run install:idl:thrift",
+    "install:idl:proto": "napa && rm -rf server/idl/proto && cp -R node_modules/cadence-idl/proto server/idl/proto",
+    "install:idl:thrift": "napa && rm -rf server/idl/thrift && cp -R node_modules/cadence-idl/thrift server/idl/thrift",
     "install:news": "cd news && npm install",
     "start": "npm run build && NODE_ENV=production node server.js",
     "test": "mocha server/test && mocha-chrome http://localhost:8090",
@@ -36,6 +38,8 @@
     "@babel/plugin-transform-regenerator": "^7.8.7",
     "@babel/polyfill": "^7.8.3",
     "@babel/preset-env": "^7.8.3",
+    "@grpc/grpc-js": "^1.6.7",
+    "@grpc/proto-loader": "^0.6.12",
     "babel-loader": "^8.0.6",
     "babel-plugin-module-resolver": "^4.0.0",
     "babel-polyfill": "^6.26.0",
@@ -61,8 +65,10 @@
     "koa-static": "^4.0.1",
     "koa-webpack": "^2.0.3",
     "lodash-es": "^4.17.4",
+    "lodash.camelcase": "^4.3.0",
     "lodash.get": "^4.4.2",
     "lodash.isequal": "^4.5.0",
+    "lodash.snakecase": "^4.1.1",
     "long": "^3.2.0",
     "lossless-json": "^1.0.2",
     "moment": "^2.19.1",
@@ -101,8 +107,7 @@
     "chai-dom": "^1.7.0",
     "chai-string": "^1.5.0",
     "chai-things": "^0.2.0",
-    "eslint": "^6.8.0",
-    "eslint-config-fusion": "^6.1.0",
+    "eslint": "^7.32.0",
     "eslint-config-prettier": "^6.9.0",
     "eslint-import-resolver-babel-module": "^5.1.2",
     "eslint-import-resolver-webpack": "^0.12.1",
@@ -131,7 +136,7 @@
     "webpack-hot-client": "^1.3.0"
   },
   "napa": {
-    "cadence-idl": "uber/cadence-idl#7b8bc3ddab745727a22dceb2a39e56776732405d"
+    "cadence-idl": "uber/cadence-idl#7bb6b08083836896e8bbfbb42af4aa8be8aeb7bb"
   },
   "napa-config": {
     "cache": false
