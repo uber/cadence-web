@@ -43,7 +43,7 @@ class GRPCService {
       return new Promise((resolve, reject) => {
         this.service.waitForReady(deadline, (error) => {
           if (error) {
-            return reject(String(error));
+            return reject(error);
           }
 
           deadline.setSeconds(deadline.getSeconds() + 50);
@@ -54,7 +54,7 @@ class GRPCService {
           this.service[method](formatRequest(transform(payload)), this.meta(), { deadline }, (error, response) => {
             if (error) {
               console.log('error:', String(error));
-              return reject(String(error));
+              return reject(error);
             }
 
             console.log('raw:');

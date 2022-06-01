@@ -46,7 +46,7 @@ const grpcClient = ({ peers, requestConfig }) =>
         ),
       }),
 
-      describeCluster: () => { }, // TODO - need to test in an environment...
+      describeCluster: () => { }, // TODO - looks like endpoint is missing from proto
 
       describeDomain: domainService.request({
         formatResponse: formatResponseDomain,
@@ -117,7 +117,6 @@ const grpcClient = ({ peers, requestConfig }) =>
           withWorkflowExecution(ctx),
         ),
       }),
-
       terminateWorkflow: () => { }, // TODO
     };
 
