@@ -64,7 +64,6 @@ const grpcClient = ({ peers, requestConfig }) =>
       }),
       exportHistory: () => { }, // TODO
 
-      // TODO - Need to transform all event types (some currently missing)
       getHistory: workflowService.request({
         formatRequest: formatRequestGetHistory,
         formatResponse: formatResponseGetHistory,
@@ -81,7 +80,6 @@ const grpcClient = ({ peers, requestConfig }) =>
       }),
       listTaskListPartitions: () => { }, // TODO
       listWorkflows: visibilityService.request({
-        // formatRequest: formatRequestAdvancedWorkflowList,
         formatResponse: formatResponseWorkflowList,
         method: 'ListWorkflowExecutions',
         transform: combine(
@@ -98,7 +96,13 @@ const grpcClient = ({ peers, requestConfig }) =>
           withPagination(ctx),
         ),
       }),
-      queryWorkflow: () => { }, // TODO
+      queryWorkflow: workflowService.request({
+        method: 'QueryWorkflow',
+        transform: combine(
+          withDomain(ctx),
+          withWorkflowExecution(ctx),
+        ),
+      }),
       signalWorkflow: () => { }, // TODO
       startWorkflow: () => { }, // TODO
       terminateWorkflow: () => { }, // TODO
