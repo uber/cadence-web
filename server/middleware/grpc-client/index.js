@@ -45,7 +45,9 @@ const grpcClient = ({ peers, requestConfig }) =>
           withPagination(ctx),
         ),
       }),
+
       describeCluster: () => { }, // TODO - need to test in an environment...
+
       describeDomain: domainService.request({
         formatResponse: formatResponseDomain,
         method: 'DescribeDomain',
@@ -63,6 +65,7 @@ const grpcClient = ({ peers, requestConfig }) =>
           withWorkflowExecution(ctx),
         ),
       }),
+
       exportHistory: () => { }, // TODO
 
       getHistory: workflowService.request({
@@ -79,7 +82,9 @@ const grpcClient = ({ peers, requestConfig }) =>
         formatResponse: formatResponseListDomains,
         method: 'ListDomains',
       }),
+
       listTaskListPartitions: () => { }, // TODO
+
       listWorkflows: visibilityService.request({
         formatResponse: formatResponseWorkflowList,
         method: 'ListWorkflowExecutions',
@@ -105,8 +110,7 @@ const grpcClient = ({ peers, requestConfig }) =>
           withWorkflowExecution(ctx),
         ),
       }),
-      signalWorkflow: () => { }, // TODO
-      startWorkflow: () => { }, // TODO
+
       terminateWorkflow: () => { }, // TODO
     };
 
