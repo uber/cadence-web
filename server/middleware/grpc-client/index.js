@@ -117,7 +117,13 @@ const grpcClient = ({ peers, requestConfig }) =>
           withWorkflowExecution(ctx),
         ),
       }),
-      terminateWorkflow: () => { }, // TODO
+      terminateWorkflow: workflowService.request({
+        method: 'TerminateWorkflowExecution',
+        transform: combine(
+          withDomain(ctx),
+          withWorkflowExecution(ctx),
+        ),
+      }),
     };
 
     try {
