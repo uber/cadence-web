@@ -82,19 +82,7 @@ const AttributesFormatterMap = {
   workflowExecutionSignaledEventAttributes: formatWorkflowExecutionSignaledEventAttributes,
   workflowExecutionStartedEventAttributes: formatWorkflowExecutionStartedEventAttributes,
   workflowExecutionTerminatedEventAttributes: formatWorkflowExecutionTerminatedEventAttributes,
-  // 28 total implemented
 };
-
-/*
-  EventAttributes remaining to implement:
-  2:  optional WorkflowExecutionTimedOutEventAttributes workflowExecutionTimedOutEventAttributes
-      struct WorkflowExecutionTimedOutEventAttributes {
-        10: optional TimeoutType timeoutType
-      }
-      can be skipped
-
-  41 total
-*/
 
 const formatHistoryEventDetails = ({ attributes, ...event }) => {
   const formatter = AttributesFormatterMap[attributes];
@@ -103,7 +91,6 @@ const formatHistoryEventDetails = ({ attributes, ...event }) => {
       [attributes]: formatter(event[attributes])
     };
   }
-  console.log('attribute not mapped = ', attributes);
   return event;
 };
 
