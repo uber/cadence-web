@@ -33,7 +33,7 @@
   },
   {
     "key": "taskListPartition",
-    "value": false
+    "value": true
   },
   {
     "key": "workflowGraph",

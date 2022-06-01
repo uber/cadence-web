@@ -82,9 +82,9 @@ const grpcClient = ({ peers, requestConfig }) =>
         formatResponse: formatResponseListDomains,
         method: 'ListDomains',
       }),
-
-      listTaskListPartitions: () => { }, // TODO
-
+      listTaskListPartitions: workflowService.request({
+        method: 'ListTaskListPartitions',
+      }),
       listWorkflows: visibilityService.request({
         formatResponse: formatResponseWorkflowList,
         method: 'ListWorkflowExecutions',
