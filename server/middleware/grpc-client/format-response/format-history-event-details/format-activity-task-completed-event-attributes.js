@@ -1,4 +1,4 @@
-const formatPayload = require('./format-payload');
+const formatPayload = require('../format-payload');
 
 const formatActivityTaskCompletedEventAttributes = ({
   result,

@@ -1,5 +1,5 @@
 const atob = require('atob');
-const formatPayload = require('./format-payload');
+const formatPayload = require('../format-payload');
 
 const formatSignalExternalWorkflowExecutionInitiatedEventAttributes = ({
   control,

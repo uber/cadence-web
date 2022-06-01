@@ -1,4 +1,4 @@
-const formatPayload = require('./format-payload');
+const formatPayload = require('../format-payload');
 const formatPayloadMap = require('./format-payload-map');
 const formatTimestampToSeconds = require('../format-timestamp-to-seconds');
 
