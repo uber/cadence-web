@@ -10,6 +10,7 @@ const formatChildWorkflowExecutionCanceledEventAttributes = require('./format-ch
 const formatChildWorkflowExecutionCompletedEventAttributes = require('./format-child-workflow-execution-completed-event-attributes');
 const formatChildWorkflowExecutionFailedEventAttributes = require('./format-child-workflow-execution-failed-event-attributes');
 const formatChildWorkflowExecutionStartedEventAttributes = require('./format-child-workflow-execution-started-event-attributes');
+const formatChildWorkflowExecutionTerminatedEventAttributes = require('./format-child-workflow-execution-terminated-event-attributes');
 const formatChildWorkflowExecutionTimedOutEventAttributes = require('./format-child-workflow-execution-timed-out-event-attributes');
 const formatDecisionTaskCompletedEventAttributes = require('./format-decision-task-completed-event-attributes');
 const formatDecisionTaskFailedEventAttributes = require('./format-decision-task-failed-event-attributes');
@@ -51,6 +52,7 @@ const AttributesFormatterMap = {
   childWorkflowExecutionCompletedEventAttributes: formatChildWorkflowExecutionCompletedEventAttributes,
   childWorkflowExecutionFailedEventAttributes: formatChildWorkflowExecutionFailedEventAttributes,
   childWorkflowExecutionStartedEventAttributes: formatChildWorkflowExecutionStartedEventAttributes,
+  childWorkflowExecutionTerminatedEventAttributes: formatChildWorkflowExecutionTerminatedEventAttributes,
   childWorkflowExecutionTimedOutEventAttributes: formatChildWorkflowExecutionTimedOutEventAttributes,
   decisionTaskCompletedEventAttributes: formatDecisionTaskCompletedEventAttributes,
   decisionTaskFailedEventAttributes: formatDecisionTaskFailedEventAttributes,
@@ -89,7 +91,6 @@ const AttributesFormatterMap = {
       }
       can be skipped
 
-  13: optional ChildWorkflowExecutionTerminatedEventAttributes childWorkflowExecutionTerminatedEventAttributes
   14: optional SignalExternalWorkflowExecutionFailedEventAttributes signalExternalWorkflowExecutionFailedEventAttributes
 
   14 remaining
