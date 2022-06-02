@@ -105,6 +105,7 @@ export default {
 @require "../../styles/base.styl"
 
 .domain-autocomplete {
+  color: #000;
   width: 100%;
 
   .navigate-to-domain {
