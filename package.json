@@ -16,7 +16,7 @@
     "install:news": "cd news && npm install",
     "start": "npm run build && NODE_ENV=production node server.js",
     "test": "mocha server/test && mocha-chrome http://localhost:8090",
-    "test:unit": "TZ=UTC jest",
+    "test:unit": "TZ=UTC jest --no-watchman",
     "test-server": "CADENCE_WEB_PORT=8090 TEST_RUN=ci node server.js",
     "build": "webpack",
     "build:news": "cd news && npm run build && cp -R blog/.vuepress/dist ../",
