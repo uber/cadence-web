@@ -19,82 +19,89 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const path = require('path'),
-  supertest = require('supertest'),
-  TChannel = require('tchannel'),
-  TChannelAsThrift = require('tchannel/as/thrift'),
-  Long = require('long');
+const path = require('path');
+const supertest = require('supertest');
+const TChannel = require('tchannel');
+const TChannelAsThrift = require('tchannel/as/thrift');
+const Long = require('long');
+const { TRANSPORT_CLIENT_TYPE_DEFAULT } = require('../constants');
 
-let tchanServer, currTest, client, app;
+let server, currTest, client, app;
 
 global.should = require('chai').should();
 
 global.dateToLong = d => Long.fromValue(Number(new Date(d))).mul(1000000);
 
-before(function(done) {
-  tchanServer = new TChannel({ serviceName: 'cadence-frontend' });
+before(function (done) {
+  if (TRANSPORT_CLIENT_TYPE_DEFAULT === 'tchannel') {
+    server = new TChannel({ serviceName: 'cadence-frontend' });
 
-  client = new TChannel();
-  const cadenceChannel = client.makeSubChannel({
-    serviceName: 'cadence-frontend',
-  });
-  const tchan = TChannelAsThrift({
-    channel: cadenceChannel,
-    entryPoint: path.join(__dirname, '../idl/thrift/cadence.thrift'),
-  });
-  const adminTChannel = TChannelAsThrift({
-    channel: cadenceChannel,
-    entryPoint: path.join(__dirname, '../idl/thrift/admin.thrift'),
-  });
+    client = new TChannel();
+    const cadenceChannel = client.makeSubChannel({
+      serviceName: 'cadence-frontend',
+    });
+    const tchan = TChannelAsThrift({
+      channel: cadenceChannel,
+      entryPoint: path.join(__dirname, '../idl/thrift/cadence.thrift'),
+    });
+    const adminTChannel = TChannelAsThrift({
+      channel: cadenceChannel,
+      entryPoint: path.join(__dirname, '../idl/thrift/admin.thrift'),
+    });
 
-  const handler = serviceName => (ctx, req, head, body, cb) => {
-    const mockName = req.endpoint.replace(`${serviceName}::`, '');
+    const handler = serviceName => (ctx, req, head, body, cb) => {
+      const mockName = req.endpoint.replace(`${serviceName}::`, '');
 
-    if (!currTest[mockName]) {
-      throw new Error(`unexpected request to ${req.endpoint}`);
-    }
+      if (!currTest[mockName]) {
+        throw new Error(`unexpected request to ${req.endpoint}`);
+      }
 
-    const bodyMock = currTest[mockName](body, req);
+      const bodyMock = currTest[mockName](body, req);
 
-    if (bodyMock instanceof Error) {
-      cb(bodyMock);
-    } else if (bodyMock && bodyMock.ok === false) {
-      cb(null, bodyMock);
-    } else {
-      cb(null, { ok: true, head, body: bodyMock });
-    }
-  };
+      if (bodyMock instanceof Error) {
+        cb(bodyMock);
+      } else if (bodyMock && bodyMock.ok === false) {
+        cb(null, bodyMock);
+      } else {
+        cb(null, { ok: true, head, body: bodyMock });
+      }
+    };
 
-  [
-    'ListOpenWorkflowExecutions',
-    'ListClosedWorkflowExecutions',
-    'ListWorkflowExecutions',
-    'GetWorkflowExecutionHistory',
-    'QueryWorkflow',
-    'DescribeWorkflowExecution',
-    'TerminateWorkflowExecution',
-    'SignalWorkflowExecution',
-    'ListDomains',
-    'DescribeDomain',
-    'DescribeTaskList',
-  ].forEach(endpoint =>
-    tchan.register(
-      tchanServer,
-      'WorkflowService::' + endpoint,
+    [
+      'ListOpenWorkflowExecutions',
+      'ListClosedWorkflowExecutions',
+      'ListWorkflowExecutions',
+      'GetWorkflowExecutionHistory',
+      'QueryWorkflow',
+      'DescribeWorkflowExecution',
+      'TerminateWorkflowExecution',
+      'SignalWorkflowExecution',
+      'ListDomains',
+      'DescribeDomain',
+      'DescribeTaskList',
+    ].forEach(endpoint =>
+      tchan.register(
+        server,
+        'WorkflowService::' + endpoint,
+        {},
+        handler('WorkflowService')
+      )
+    );
+
+    adminTChannel.register(
+      server,
+      'AdminService::DescribeCluster',
       {},
-      handler('WorkflowService')
-    )
-  );
+      handler('AdminService')
+    );
 
-  adminTChannel.register(
-    tchanServer,
-    'AdminService::DescribeCluster',
-    {},
-    handler('AdminService')
-  );
+    process.env.CADENCE_TCHANNEL_PEERS = '127.0.0.1:11343';
+    server.listen(11343, '127.0.0.1', () => done());
+  } else if (TRANSPORT_CLIENT_TYPE_DEFAULT === 'grpc') {
 
-  process.env.CADENCE_TCHANNEL_PEERS = '127.0.0.1:11343';
-  tchanServer.listen(11343, '127.0.0.1', () => done());
+  } else {
+    throw new Error(`Unsupported client type: "${TRANSPORT_CLIENT_TYPE_DEFAULT}"`);
+  }
 
   app = require('../')
     .init({ useWebpack: false, logErrors: false })
@@ -102,12 +109,12 @@ before(function(done) {
   global.request = supertest.bind(supertest, app);
 });
 
-after(function() {
+after(function () {
   app.close();
-  tchanServer.close();
+  server.close();
   client.close();
 });
 
-beforeEach(function() {
+beforeEach(function () {
   currTest = this.currentTest;
 });
