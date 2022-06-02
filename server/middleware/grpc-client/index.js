@@ -45,9 +45,22 @@ const grpcClient = ({ peers, requestConfig }) =>
           withPagination(ctx),
         ),
       }),
-
-      describeCluster: () => { }, // TODO - looks like endpoint is missing from proto
-
+      describeCluster: () => {
+        // TODO - looks like endpoint is missing from proto.
+        //        will mock response for now until this is addressed in the cadence-idl project.
+        return {
+          persistenceInfo: {
+            visibilityStore: {
+              features: [
+                {
+                  key: "advancedVisibilityEnabled",
+                  enabled: true,
+                }
+              ],
+            },
+          },
+        };
+      },
       describeDomain: domainService.request({
         formatResponse: formatResponseDomain,
         method: 'DescribeDomain',
