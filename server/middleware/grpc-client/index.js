@@ -1,8 +1,29 @@
+// Copyright (c) 2022 Uber Technologies Inc.
+//
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
 const { combine } = require('../../helpers');
 const {
   domainServiceConfig,
   visibilityServiceConfig,
-  workflowServiceConfig
+  workflowServiceConfig,
 } = require('./configuration');
 const {
   formatRequestDescribeTaskList,
@@ -16,34 +37,44 @@ const {
   formatResponseGetHistory,
   formatResponseListDomains,
   formatResponseQueryWorkflow,
-  formatResponseWorkflowList
+  formatResponseWorkflowList,
 } = require('./format-response');
 const GRPCService = require('./grpc-service');
-const { withDomain, withPagination, withWorkflowExecution } = require('./transform');
+const {
+  withDomain,
+  withPagination,
+  withWorkflowExecution,
+} = require('./transform');
 
 const grpcClient = ({ peers, requestConfig }) =>
-  async function (ctx, next) {
-    const domainService = new GRPCService({ peers, requestConfig, ...domainServiceConfig });
-    const visibilityService = new GRPCService({ peers, requestConfig, ...visibilityServiceConfig });
-    const workflowService = new GRPCService({ peers, requestConfig, ...workflowServiceConfig });
+  async function(ctx, next) {
+    const domainService = new GRPCService({
+      peers,
+      requestConfig,
+      ...domainServiceConfig,
+    });
+    const visibilityService = new GRPCService({
+      peers,
+      requestConfig,
+      ...visibilityServiceConfig,
+    });
+    const workflowService = new GRPCService({
+      peers,
+      requestConfig,
+      ...workflowServiceConfig,
+    });
 
     ctx.cadence = {
       archivedWorkflows: visibilityService.request({
         formatResponse: formatResponseWorkflowList,
         method: 'ListArchivedWorkflowExecutions',
-        transform: combine(
-          withDomain(ctx),
-          withPagination(ctx),
-        ),
+        transform: combine(withDomain(ctx), withPagination(ctx)),
       }),
       closedWorkflows: visibilityService.request({
         formatRequest: formatRequestWorkflowList,
         formatResponse: formatResponseWorkflowList,
         method: 'ListClosedWorkflowExecutions',
-        transform: combine(
-          withDomain(ctx),
-          withPagination(ctx),
-        ),
+        transform: combine(withDomain(ctx), withPagination(ctx)),
       }),
       describeCluster: () => {
         // TODO - looks like endpoint is missing from proto.
@@ -53,9 +84,9 @@ const grpcClient = ({ peers, requestConfig }) =>
             visibilityStore: {
               features: [
                 {
-                  key: "advancedVisibilityEnabled",
+                  key: 'advancedVisibilityEnabled',
                   enabled: true,
-                }
+                },
               ],
             },
           },
@@ -73,10 +104,7 @@ const grpcClient = ({ peers, requestConfig }) =>
       describeWorkflow: workflowService.request({
         formatResponse: formatResponseDescribeWorkflow,
         method: 'DescribeWorkflowExecution',
-        transform: combine(
-          withDomain(ctx),
-          withWorkflowExecution(ctx),
-        ),
+        transform: combine(withDomain(ctx), withWorkflowExecution(ctx)),
       }),
       exportHistory: workflowService.request({
         formatRequest: formatRequestGetHistory,
@@ -85,7 +113,7 @@ const grpcClient = ({ peers, requestConfig }) =>
         transform: combine(
           withDomain(ctx),
           withPagination(ctx),
-          withWorkflowExecution(ctx),
+          withWorkflowExecution(ctx)
         ),
       }),
       getHistory: workflowService.request({
@@ -95,7 +123,7 @@ const grpcClient = ({ peers, requestConfig }) =>
         transform: combine(
           withDomain(ctx),
           withPagination(ctx),
-          withWorkflowExecution(ctx),
+          withWorkflowExecution(ctx)
         ),
       }),
       listDomains: domainService.request({
@@ -108,34 +136,22 @@ const grpcClient = ({ peers, requestConfig }) =>
       listWorkflows: visibilityService.request({
         formatResponse: formatResponseWorkflowList,
         method: 'ListWorkflowExecutions',
-        transform: combine(
-          withDomain(ctx),
-          withPagination(ctx),
-        ),
+        transform: combine(withDomain(ctx), withPagination(ctx)),
       }),
       openWorkflows: visibilityService.request({
         formatRequest: formatRequestWorkflowList,
         formatResponse: formatResponseWorkflowList,
         method: 'ListOpenWorkflowExecutions',
-        transform: combine(
-          withDomain(ctx),
-          withPagination(ctx),
-        ),
+        transform: combine(withDomain(ctx), withPagination(ctx)),
       }),
       queryWorkflow: workflowService.request({
         method: 'QueryWorkflow',
         formatResponse: formatResponseQueryWorkflow,
-        transform: combine(
-          withDomain(ctx),
-          withWorkflowExecution(ctx),
-        ),
+        transform: combine(withDomain(ctx), withWorkflowExecution(ctx)),
       }),
       terminateWorkflow: workflowService.request({
         method: 'TerminateWorkflowExecution',
-        transform: combine(
-          withDomain(ctx),
-          withWorkflowExecution(ctx),
-        ),
+        transform: combine(withDomain(ctx), withWorkflowExecution(ctx)),
       }),
     };
 
