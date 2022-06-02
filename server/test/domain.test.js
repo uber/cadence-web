@@ -19,8 +19,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-describe('Describe Domain', function() {
-  it('should list domains', async function() {
+describe('Describe Domain', function () {
+  it('should list domains', async function () {
     const domains = [
       {
         domainInfo: {
@@ -32,6 +32,7 @@ describe('Describe Domain', function() {
           uuid: null,
         },
         isGlobalDomain: false,
+        failoverInfo: null,
         failoverVersion: 0,
         configuration: {
           badBinaries: null,
@@ -62,7 +63,7 @@ describe('Describe Domain', function() {
       .expect(domains);
   });
 
-  it('should describe the domain', async function() {
+  it('should describe the domain', async function () {
     const domainDesc = {
       domainInfo: {
         name: 'test-domain',
@@ -72,6 +73,7 @@ describe('Describe Domain', function() {
         data: {},
         uuid: null,
       },
+      failoverInfo: null,
       failoverVersion: 0,
       isGlobalDomain: true,
       configuration: {
@@ -102,7 +104,7 @@ describe('Describe Domain', function() {
       .expect(domainDesc);
   });
 
-  it('should return 404 if the domain is not found', async function() {
+  it('should return 404 if the domain is not found', async function () {
     this.test.DescribeDomain = ({ describeRequest }) => ({
       ok: false,
       body: { message: `domain "${describeRequest.name}" does not exist` },
