@@ -19,70 +19,73 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+const { TRANSPORT_CLIENT_TYPE_DEFAULT } = require('../constants');
+
 describe('Describe Domain', function () {
   it('should list domains', async function () {
-    const domains = [
-      {
-        domainInfo: {
+    const domains = {
+      'tchannel': [
+        {
+          domainInfo: {
+            name: 'ci-test-domain',
+            status: 'REGISTERED',
+            description: 'domain for running CI tests',
+            ownerEmail: 'cadence-dev@uber.com',
+            data: null,
+            uuid: null,
+          },
+          isGlobalDomain: false,
+          failoverInfo: null,
+          failoverVersion: 0,
+          configuration: {
+            badBinaries: null,
+            emitMetric: false,
+            historyArchivalStatus: null,
+            historyArchivalURI: null,
+            visibilityArchivalStatus: null,
+            visibilityArchivalURI: null,
+            workflowExecutionRetentionPeriodInDays: 14,
+          },
+          replicationConfiguration: {
+            activeClusterName: 'ci-cluster',
+            clusters: [],
+          },
+        }
+      ],
+      'grpc': [
+        {
+          id: '',
           name: 'ci-test-domain',
-          status: 'REGISTERED',
+          status: 'DOMAIN_STATUS_REGISTERED',
           description: 'domain for running CI tests',
           ownerEmail: 'cadence-dev@uber.com',
           data: null,
-          uuid: null,
-        },
-        isGlobalDomain: false,
-        failoverInfo: null,
-        failoverVersion: 0,
-        configuration: {
+          workflowExecutionRetentionPeriod: { seconds: '1209600', nanos: '0' },
           badBinaries: null,
-          emitMetric: false,
-          historyArchivalStatus: null,
-          historyArchivalURI: null,
-          visibilityArchivalStatus: null,
-          visibilityArchivalURI: null,
-          workflowExecutionRetentionPeriodInDays: 14,
-        },
-        replicationConfiguration: {
+          historyArchivalStatus: 'ARCHIVAL_STATUS_INVALID',
+          historyArchivalUri: '',
+          visibilityArchivalStatus: 'ARCHIVAL_STATUS_INVALID',
+          visibilityArchivalUri: '',
           activeClusterName: 'ci-cluster',
           clusters: [],
-        },
-      },
-    ];
-
-    const grpcDomains = [
-      {
-        id: '',
-        name: 'ci-test-domain',
-        status: 'DOMAIN_STATUS_REGISTERED',
-        description: 'domain for running CI tests',
-        ownerEmail: 'cadence-dev@uber.com',
-        data: null,
-        workflowExecutionRetentionPeriod: { seconds: '1209600', nanos: '0' },
-        badBinaries: null,
-        historyArchivalStatus: 'ARCHIVAL_STATUS_INVALID',
-        historyArchivalUri: '',
-        visibilityArchivalStatus: 'ARCHIVAL_STATUS_INVALID',
-        visibilityArchivalUri: '',
-        activeClusterName: 'ci-cluster',
-        clusters: [],
-        failoverVersion: '0',
-        isGlobalDomain: false,
-        failoverInfo: null,
-      }
-    ]
+          failoverVersion: '0',
+          isGlobalDomain: false,
+          failoverInfo: null,
+        }
+      ]
+    };
 
     this.test.ListDomains = ({ listRequest }) => {
       should.not.exist(listRequest.nextPageToken);
 
-      return { domains: grpcDomains };
+      return { domains: domains[TRANSPORT_CLIENT_TYPE_DEFAULT] };
     };
 
     return request()
       .get('/api/domains')
       .expect(200)
       .expect('Content-Type', /json/)
-      .expect(domains);
+      .expect(domains.tchannel);
   });
 
   // it('should describe the domain', async function () {
