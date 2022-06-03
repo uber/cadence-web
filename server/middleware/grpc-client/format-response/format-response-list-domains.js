@@ -19,6 +19,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+const formatEnum = require('./format-enum');
+
 const formatListDomains = ({ domains, nextPageToken }) => ({
   domains: domains.map(
     ({
@@ -27,6 +29,7 @@ const formatListDomains = ({ domains, nextPageToken }) => ({
       clusters,
       data,
       description,
+      failoverInfo,
       failoverVersion,
       historyArchivalStatus,
       historyArchivalUri,
@@ -41,29 +44,24 @@ const formatListDomains = ({ domains, nextPageToken }) => ({
     }) => ({
       configuration: {
         badBinaries,
-        emitMetric: null, // missing from grpc
-        historyArchivalStatus: historyArchivalStatus.replace(
-          'ARCHIVAL_STATUS_',
-          ''
-        ),
-        historyArchivalURI: historyArchivalUri,
-        visibilityArchivalStatus: visibilityArchivalStatus.replace(
-          'ARCHIVAL_STATUS_',
-          ''
-        ),
-        visibilityArchivalURI: visibilityArchivalUri,
+        emitMetric: false, // missing from grpc
+        historyArchivalStatus: formatEnum(historyArchivalStatus, 'ARCHIVAL_STATUS'),
+        historyArchivalURI: historyArchivalUri ? historyArchivalUri : null,
+        visibilityArchivalStatus: formatEnum(visibilityArchivalStatus, 'ARCHIVAL_STATUS'),
+        visibilityArchivalURI: visibilityArchivalUri ? visibilityArchivalUri : null,
         workflowExecutionRetentionPeriodInDays:
           workflowExecutionRetentionPeriod.seconds / (60 * 60 * 24),
       },
       domainInfo: {
-        data,
+        data: Object.keys(data).length ? data : null,
         description,
         name,
         ownerEmail,
-        status: status.replace('DOMAIN_STATUS_', ''),
-        uuid: id,
+        status: formatEnum(status, 'DOMAIN_STATUS'),
+        uuid: id ? id : null,
       },
-      failoverVersion,
+      failoverInfo,
+      failoverVersion: parseInt(failoverVersion),
       isGlobalDomain,
       replicationConfiguration: {
         activeClusterName,

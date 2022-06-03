@@ -2,7 +2,7 @@ const path = require('path');
 const TChannel = require('tchannel');
 const TChannelAsThrift = require('tchannel/as/thrift');
 
-const mockTChannel = () => {
+const mockTChannel = (done) => {
   let currentTest;
 
   const setCurrentTest = (test) => {
@@ -69,6 +69,8 @@ const mockTChannel = () => {
     {},
     handler('AdminService')
   );
+
+  server.listen(11343, '127.0.0.1', () => done());
 
   return {
     client,

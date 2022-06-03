@@ -20,6 +20,7 @@
 // THE SOFTWARE.
 
 const formatCloseStatus = require('./format-close-status');
+const formatEnum = require('./format-enum');
 const formatHistoryEventDetails = require('./format-history-event-details');
 const formatHistoryEventType = require('./format-history-event-type');
 const formatResponseDefault = require('./format-response-default');
@@ -35,6 +36,7 @@ const formatTimestampToSeconds = require('./format-timestamp-to-seconds');
 
 module.exports = {
   formatCloseStatus,
+  formatEnum,
   formatHistoryEventDetails,
   formatHistoryEventType,
   formatResponseDefault,

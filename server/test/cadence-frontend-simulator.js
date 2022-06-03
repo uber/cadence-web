@@ -33,19 +33,18 @@ global.should = require('chai').should();
 global.dateToLong = d => Long.fromValue(Number(new Date(d))).mul(1000000);
 
 before(function (done) {
+  process.env.CADENCE_TCHANNEL_PEERS = '127.0.0.1:11343';
+
   if (TRANSPORT_CLIENT_TYPE_DEFAULT === 'tchannel') {
-    mocks = mockTChannel();
+    mocks = mockTChannel(done);
     client = mocks.client;
     server = mocks.server;
     setCurrentTest = mocks.setCurrentTest;
-
-    process.env.CADENCE_TCHANNEL_PEERS = '127.0.0.1:11343';
-    server.listen(11343, '127.0.0.1', () => done());
   } else if (TRANSPORT_CLIENT_TYPE_DEFAULT === 'grpc') {
-    mocks = mockGRPC();
+    mocks = mockGRPC(done);
     client = mocks.client;
     server = mocks.server;
-
+    setCurrentTest = mocks.setCurrentTest;
   } else {
     throw new Error(`Unsupported client type: "${TRANSPORT_CLIENT_TYPE_DEFAULT}"`);
   }

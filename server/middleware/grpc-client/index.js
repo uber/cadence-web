@@ -47,7 +47,7 @@ const {
 } = require('./transform');
 
 const grpcClient = ({ peers, requestConfig }) =>
-  async function(ctx, next) {
+  async function (ctx, next) {
     const domainService = new GRPCService({
       peers,
       requestConfig,
@@ -158,8 +158,12 @@ const grpcClient = ({ peers, requestConfig }) =>
     try {
       await next();
       domainService.close();
+      visibilityService.close();
+      workflowService.close();
     } catch (e) {
       domainService.close();
+      visibilityService.close();
+      workflowService.close();
       throw e;
     }
   };
