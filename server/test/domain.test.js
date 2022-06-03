@@ -24,7 +24,7 @@ const { TRANSPORT_CLIENT_TYPE_DEFAULT } = require('../constants');
 describe('Describe Domain', function () {
   it('should list domains', async function () {
     const domains = {
-      'tchannel': [
+      tchannel: [
         {
           domainInfo: {
             name: 'ci-test-domain',
@@ -52,7 +52,7 @@ describe('Describe Domain', function () {
           },
         }
       ],
-      'grpc': [
+      grpc: [
         {
           id: '',
           name: 'ci-test-domain',
@@ -88,46 +88,69 @@ describe('Describe Domain', function () {
       .expect(domains.tchannel);
   });
 
-  // it('should describe the domain', async function () {
-  //   const domainDesc = {
-  //     domainInfo: {
-  //       name: 'test-domain',
-  //       status: 'REGISTERED',
-  //       description: 'ci test domain',
-  //       ownerEmail: null,
-  //       data: {},
-  //       uuid: null,
-  //     },
-  //     failoverInfo: null,
-  //     failoverVersion: 0,
-  //     isGlobalDomain: true,
-  //     configuration: {
-  //       badBinaries: null,
-  //       workflowExecutionRetentionPeriodInDays: 14,
-  //       emitMetric: true,
-  //       historyArchivalStatus: null,
-  //       historyArchivalURI: null,
-  //       visibilityArchivalStatus: null,
-  //       visibilityArchivalURI: null,
-  //     },
-  //     replicationConfiguration: {
-  //       activeClusterName: 'ci-cluster',
-  //       clusters: null,
-  //     },
-  //   };
+  it('should describe the domain', async function () {
+    const domainDesc = {
+      tchannel: {
+        domainInfo: {
+          name: 'test-domain',
+          status: 'REGISTERED',
+          description: 'ci test domain',
+          ownerEmail: null,
+          data: null,
+          uuid: null,
+        },
+        failoverInfo: null,
+        failoverVersion: 0,
+        isGlobalDomain: true,
+        configuration: {
+          badBinaries: null,
+          workflowExecutionRetentionPeriodInDays: 14,
+          emitMetric: false,
+          historyArchivalStatus: null,
+          historyArchivalURI: null,
+          visibilityArchivalStatus: null,
+          visibilityArchivalURI: null,
+        },
+        replicationConfiguration: {
+          activeClusterName: 'ci-cluster',
+          clusters: [],
+        },
+      },
+      grpc: {
+        domain: {
+          id: '',
+          name: 'test-domain',
+          status: 'DOMAIN_STATUS_REGISTERED',
+          description: 'ci test domain',
+          ownerEmail: '',
+          data: null,
+          workflowExecutionRetentionPeriod: { seconds: '1209600', nanos: '0' },
+          badBinaries: null,
+          historyArchivalStatus: 'ARCHIVAL_STATUS_INVALID',
+          historyArchivalUri: '',
+          visibilityArchivalStatus: 'ARCHIVAL_STATUS_INVALID',
+          visibilityArchivalUri: '',
+          activeClusterName: 'ci-cluster',
+          clusters: [],
+          failoverVersion: '0',
+          isGlobalDomain: true,
+          failoverInfo: null,
+        }
+      }
+    };
 
-  //   this.test.DescribeDomain = ({ describeRequest }) => {
-  //     describeRequest.name.should.equal('test-domain');
+    this.test.DescribeDomain = ({ describeRequest }) => {
+      describeRequest.name.should.equal('test-domain');
 
-  //     return domainDesc;
-  //   };
+      return domainDesc[TRANSPORT_CLIENT_TYPE_DEFAULT];
+    };
 
-  //   return request()
-  //     .get('/api/domains/test-domain')
-  //     .expect(200)
-  //     .expect('Content-Type', /json/)
-  //     .expect(domainDesc);
-  // });
+    return request()
+      .get('/api/domains/test-domain')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .expect(domainDesc.tchannel);
+  });
 
   // it('should return 404 if the domain is not found', async function () {
   //   this.test.DescribeDomain = ({ describeRequest }) => ({

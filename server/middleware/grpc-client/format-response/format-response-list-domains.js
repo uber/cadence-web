@@ -56,7 +56,7 @@ const formatListDomains = ({ domains, nextPageToken }) => ({
         data: Object.keys(data).length ? data : null,
         description,
         name,
-        ownerEmail,
+        ownerEmail: ownerEmail ? ownerEmail : null,
         status: formatEnum(status, 'DOMAIN_STATUS'),
         uuid: id ? id : null,
       },
