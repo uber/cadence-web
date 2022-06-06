@@ -53,7 +53,7 @@ const formatListDomains = ({ domains, nextPageToken }) => ({
           workflowExecutionRetentionPeriod.seconds / (60 * 60 * 24),
       },
       domainInfo: {
-        data: Object.keys(data).length ? data : null,
+        data: data ? data : null,
         description,
         name,
         ownerEmail: ownerEmail ? ownerEmail : null,
