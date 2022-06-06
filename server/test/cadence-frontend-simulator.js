@@ -26,7 +26,12 @@ const { TRANSPORT_CLIENT_TYPE_DEFAULT } = require('../constants');
 const mockGRPC = require('./mock-grpc');
 const mockTChannel = require('./mock-tchannel');
 
-let server, client, app, setCurrentTest;
+let app;
+let client;
+let closeClient;
+let closeServer;
+let server;
+let setCurrentTest;
 
 global.should = require('chai').should();
 
@@ -35,14 +40,20 @@ global.dateToLong = d => Long.fromValue(Number(new Date(d))).mul(1000000);
 before(function (done) {
   process.env.CADENCE_TCHANNEL_PEERS = '127.0.0.1:11343';
 
+  console.log('TRANSPORT_CLIENT_TYPE_DEFAULT = ', TRANSPORT_CLIENT_TYPE_DEFAULT);
+
   if (TRANSPORT_CLIENT_TYPE_DEFAULT === 'tchannel') {
     mocks = mockTChannel(done);
     client = mocks.client;
+    closeClient = mocks.closeClient;
+    closeServer = mocks.closeServer;
     server = mocks.server;
-    setCurrentTest = mocks.setCurrentTest;
+    setCurrentTest = mocks.setCurrentTest; 1
   } else if (TRANSPORT_CLIENT_TYPE_DEFAULT === 'grpc') {
     mocks = mockGRPC(done);
     client = mocks.client;
+    closeClient = mocks.closeClient;
+    closeServer = mocks.closeServer;
     server = mocks.server;
     setCurrentTest = mocks.setCurrentTest;
   } else {
@@ -57,8 +68,8 @@ before(function (done) {
 
 after(function () {
   app.close();
-  server.close();
-  client.close();
+  closeClient();
+  closeServer();
 });
 
 beforeEach(function () {

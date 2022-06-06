@@ -120,6 +120,14 @@ const mockGRPC = (done) => {
     GRPC_OPTIONS
   );
 
+  const closeClient = () => {
+    grpc.closeClient(client);
+  };
+
+  const closeServer = () => {
+    server.forceShutdown();
+  };
+
 
   // const server = {
   //   close: () => {
@@ -177,6 +185,8 @@ const mockGRPC = (done) => {
 
   return {
     client,
+    closeClient,
+    closeServer,
     server,
     setCurrentTest,
   }

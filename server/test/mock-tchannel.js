@@ -72,8 +72,18 @@ const mockTChannel = (done) => {
 
   server.listen(11343, '127.0.0.1', () => done());
 
+  const closeClient = () => {
+    client.close();
+  };
+
+  const closeServer = () => {
+    server.close();
+  };
+
   return {
     client,
+    closeClient,
+    closeServer,
     server,
     setCurrentTest,
   };
