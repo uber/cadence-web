@@ -108,18 +108,29 @@ describe('Query Workflow', function () {
         queryResult_base64: Buffer.from('foobar').toString('base64'),
       });
   });
-  // it('should turn bad requests into 400s', async function() {
-  //   this.test.QueryWorkflow = () => ({
-  //     ok: false,
-  //     body: { message: 'that does not make sense' },
-  //     typeName: 'badRequestError',
-  //   });
-  //   return request(global.app)
-  //     .post('/api/domains/canary/workflows/ci%2Fdemo/run1/query/state')
-  //     .expect(400)
-  //     .expect('Content-Type', /json/)
-  //     .expect({
-  //       message: 'that does not make sense',
-  //     });
-  // });
+  it('should turn bad requests into 400s', async function () {
+    const message = 'that does not make sense';
+    const response = {
+      tchannel: {
+        ok: false,
+        body: {
+          message,
+        },
+        typeName: 'badRequestError',
+      },
+      grpc: {
+        code: grpc.status.INVALID_ARGUMENT,
+        message,
+      }
+    };
+
+    this.test.QueryWorkflow = () => response[TRANSPORT_CLIENT_TYPE_DEFAULT];
+    return request(global.app)
+      .post('/api/domains/canary/workflows/ci%2Fdemo/run1/query/state')
+      .expect(400)
+      .expect('Content-Type', /json/)
+      .expect({
+        message: 'that does not make sense',
+      });
+  });
 });
