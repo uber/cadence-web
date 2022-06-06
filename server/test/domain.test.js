@@ -154,10 +154,12 @@ describe('Describe Domain', function () {
   });
 
   it('should return 404 if the domain is not found', async function () {
+    console.log('status codes available = ', Object.keys(grpc.status));
+
     this.test.DescribeDomain = ({ describeRequest }) => ({
       ok: false,
       body: {
-        code: TRANSPORT_CLIENT_TYPE_DEFAULT === 'grpc' ? grpc.status.INVALID_ARGUMENT : 404,
+        code: TRANSPORT_CLIENT_TYPE_DEFAULT === 'grpc' ? grpc.status.NOT_FOUND : 404,
         message: `domain "${describeRequest.name}" does not exist`,
       },
       typeName: 'entityNotExistError',
