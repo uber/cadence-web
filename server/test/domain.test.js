@@ -19,6 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+var grpc = require('@grpc/grpc-js');
 const { TRANSPORT_CLIENT_TYPE_DEFAULT } = require('../constants');
 
 describe('Describe Domain', function () {
@@ -155,7 +156,10 @@ describe('Describe Domain', function () {
   it('should return 404 if the domain is not found', async function () {
     this.test.DescribeDomain = ({ describeRequest }) => ({
       ok: false,
-      body: { message: `domain "${describeRequest.name}" does not exist` },
+      body: {
+        code: TRANSPORT_CLIENT_TYPE_DEFAULT === 'grpc' ? grpc.status.INVALID_ARGUMENT : 404,
+        message: `domain "${describeRequest.name}" does not exist`,
+      },
       typeName: 'entityNotExistError',
     });
 
