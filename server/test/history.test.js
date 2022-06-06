@@ -19,133 +19,151 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const Long = require('long'),
-  wfHistoryThrift = [
-    {
-      eventId: new Long(1),
-      timestamp: new Long(800610625, 351737684, false),
-      eventType: 'WorkflowExecutionStarted',
-      workflowExecutionStartedEventAttributes: {
-        attempt: null,
-        workflowType: {
-          name: 'github.com/uber/cadence/demo',
-        },
-        taskList: {
-          name: 'ci-task-queue',
-          kind: null,
-        },
-        identity: null,
-        input: Buffer.from(
-          JSON.stringify({
-            emails: ['jane@example.com', 'bob@example.com'],
-            includeFooter: true,
-          })
-        ),
-        expirationTimestamp: null,
-        continuedExecutionRunId: null,
-        continuedFailureDetails: null,
-        continuedFailureReason: null,
-        cronSchedule: null,
-        firstDecisionTaskBackoffSeconds: null,
-        firstExecutionRunId: null,
-        header: null,
-        initiator: null,
-        lastCompletionResult: null,
-        memo: null,
-        originalExecutionRunId: null,
-        parentInitiatedEventId: null,
-        parentWorkflowDomain: null,
-        parentWorkflowExecution: null,
-        prevAutoResetPoints: null,
-        retryPolicy: null,
-        searchAttributes: null,
-        taskStartToCloseTimeoutSeconds: 30,
-        executionStartToCloseTimeoutSeconds: 1080,
-      },
-    },
-    {
-      eventId: new Long(2),
-      timestamp: new Long(800610625, 351737684, false),
-      eventType: 'DecisionTaskScheduled',
-      decisionTaskScheduledEventAttributes: {
-        startToCloseTimeoutSeconds: 180,
-        attempt: 1,
-        taskList: {
-          name: 'canary-task-queue',
-          kind: null,
-        },
-      },
-    },
-    {
-      eventId: new Long(3),
-      timestamp: new Long(800610625, 351737688, false),
-      eventType: 'DecisionTaskStarted',
-      decisionTaskStartedEventAttributes: {
-        identity: 'box1@ci-task-queue',
-        requestId: 'fafa095d-b4ca-423a-a812-223e62b5ccf8',
-        scheduledEventId: new Long(2),
-      },
-    },
-  ],
-  wfHistoryJson = [
-    {
-      eventId: 1,
-      timestamp: '2017-11-14T23:24:10.351Z',
-      eventType: 'WorkflowExecutionStarted',
-      details: Object.assign(
-        {},
-        wfHistoryThrift[0].workflowExecutionStartedEventAttributes,
-        {
-          input: {
-            emails: ['jane@example.com', 'bob@example.com'],
-            includeFooter: true,
-          },
-        }
-      ),
-    },
-    {
-      eventId: 2,
-      timestamp: '2017-11-14T23:24:10.351Z',
-      eventType: 'DecisionTaskScheduled',
-      details: wfHistoryThrift[1].decisionTaskScheduledEventAttributes,
-    },
-    {
-      eventId: 3,
-      timestamp: '2017-11-14T23:24:27.531Z',
-      eventType: 'DecisionTaskStarted',
-      details: {
-        identity: 'box1@ci-task-queue',
-        requestId: 'fafa095d-b4ca-423a-a812-223e62b5ccf8',
-        scheduledEventId: 2,
-      },
-    },
-  ];
+const Long = require('long');
+const { TRANSPORT_CLIENT_TYPE_DEFAULT } = require('../constants');
 
-describe('Workflow History', function() {
-  // it('should forward the request to the cadence frontend with workflowId and runId', function() {
-  //   this.test.GetWorkflowExecutionHistory = ({ getRequest }) => {
-  //     getRequest.should.deep.equal({
-  //       HistoryEventFilterType: null,
-  //       domain: 'canary',
-  //       execution: {
-  //         workflowId: 'ci/demo',
-  //         runId: 'run1',
-  //       },
-  //       maximumPageSize: 100,
-  //       nextPageToken: null,
-  //       skipArchival: null,
-  //       waitForNewEvent: null,
-  //     });
-  //     return {
-  //       history: { events: wfHistoryThrift },
-  //       nextPageToken: new Buffer('page2'),
-  //     };
-  //   };
-  //   return request()
-  //     .get('/api/domains/canary/workflows/ci%2Fdemo/run1/history')
-  //     .expect(200)
-  //     .expect('Content-Type', /json/);
-  // });
+const wfHistoryThrift = [
+  {
+    eventId: new Long(1),
+    timestamp: new Long(800610625, 351737684, false),
+    eventType: 'WorkflowExecutionStarted',
+    workflowExecutionStartedEventAttributes: {
+      attempt: null,
+      workflowType: {
+        name: 'github.com/uber/cadence/demo',
+      },
+      taskList: {
+        name: 'ci-task-queue',
+        kind: null,
+      },
+      identity: null,
+      input: Buffer.from(
+        JSON.stringify({
+          emails: ['jane@example.com', 'bob@example.com'],
+          includeFooter: true,
+        })
+      ),
+      expirationTimestamp: null,
+      continuedExecutionRunId: null,
+      continuedFailureDetails: null,
+      continuedFailureReason: null,
+      cronSchedule: null,
+      firstDecisionTaskBackoffSeconds: null,
+      firstExecutionRunId: null,
+      header: null,
+      initiator: null,
+      lastCompletionResult: null,
+      memo: null,
+      originalExecutionRunId: null,
+      parentInitiatedEventId: null,
+      parentWorkflowDomain: null,
+      parentWorkflowExecution: null,
+      prevAutoResetPoints: null,
+      retryPolicy: null,
+      searchAttributes: null,
+      taskStartToCloseTimeoutSeconds: 30,
+      executionStartToCloseTimeoutSeconds: 1080,
+    },
+  },
+  {
+    eventId: new Long(2),
+    timestamp: new Long(800610625, 351737684, false),
+    eventType: 'DecisionTaskScheduled',
+    decisionTaskScheduledEventAttributes: {
+      startToCloseTimeoutSeconds: 180,
+      attempt: 1,
+      taskList: {
+        name: 'canary-task-queue',
+        kind: null,
+      },
+    },
+  },
+  {
+    eventId: new Long(3),
+    timestamp: new Long(800610625, 351737688, false),
+    eventType: 'DecisionTaskStarted',
+    decisionTaskStartedEventAttributes: {
+      identity: 'box1@ci-task-queue',
+      requestId: 'fafa095d-b4ca-423a-a812-223e62b5ccf8',
+      scheduledEventId: new Long(2),
+    },
+  },
+];
+const wfHistoryJson = [
+  {
+    eventId: 1,
+    timestamp: '2017-11-14T23:24:10.351Z',
+    eventType: 'WorkflowExecutionStarted',
+    details: Object.assign(
+      {},
+      wfHistoryThrift[0].workflowExecutionStartedEventAttributes,
+      {
+        input: {
+          emails: ['jane@example.com', 'bob@example.com'],
+          includeFooter: true,
+        },
+      }
+    ),
+  },
+  {
+    eventId: 2,
+    timestamp: '2017-11-14T23:24:10.351Z',
+    eventType: 'DecisionTaskScheduled',
+    details: wfHistoryThrift[1].decisionTaskScheduledEventAttributes,
+  },
+  {
+    eventId: 3,
+    timestamp: '2017-11-14T23:24:27.531Z',
+    eventType: 'DecisionTaskStarted',
+    details: {
+      identity: 'box1@ci-task-queue',
+      requestId: 'fafa095d-b4ca-423a-a812-223e62b5ccf8',
+      scheduledEventId: 2,
+    },
+  },
+];
+
+describe('Workflow History', function () {
+  it('should forward the request to the cadence frontend with workflowId and runId', function () {
+    this.test.GetWorkflowExecutionHistory = ({ getRequest }) => {
+      const request = {
+        tchannel: {
+          HistoryEventFilterType: null,
+          domain: 'canary',
+          execution: {
+            workflowId: 'ci/demo',
+            runId: 'run1',
+          },
+          maximumPageSize: 100,
+          nextPageToken: null,
+          skipArchival: null,
+          waitForNewEvent: null,
+        },
+        grpc: {
+          domain: 'canary',
+          workflowExecution: {
+            workflowId: 'ci/demo',
+            runId: 'run1',
+          },
+          pageSize: 1000,
+          nextPageToken: null,
+          waitForNewEvent: null,
+          historyEventFilterType: 'EVENT_FILTER_TYPE_INVALID',
+          skipArchival: null,
+        },
+      };
+
+      getRequest.should.deep.equal(request[TRANSPORT_CLIENT_TYPE_DEFAULT]);
+      return {
+        history: { events: wfHistoryThrift },
+        nextPageToken: new Buffer('page2'),
+      };
+    };
+    return request()
+      .get('/api/domains/canary/workflows/ci%2Fdemo/run1/history')
+      .expect(200)
+      .expect('Content-Type', /json/);
+  });
   // it('should forward the nextPageToken', function() {
   //   this.test.GetWorkflowExecutionHistory = ({ getRequest }) => {
   //     getRequest.nextPageToken.toString().should.equal('page2');
