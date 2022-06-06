@@ -23,8 +23,16 @@ const formatHistoryEventDetails = require('./format-history-event-details');
 const formatHistoryEventType = require('./format-history-event-type');
 const formatTimestampToDatetime = require('./format-timestamp-to-datetime');
 
-const formatResponseGetHistory = ({ history: { events }, ...response }) => ({
+const formatResponseGetHistory = ({
+  archived,
+  history: {
+    events,
+  },
+  rawHistory,
+  ...response
+}) => ({
   ...response,
+  archived: archived || null,
   history: {
     events: events.map(({ eventId, eventTime, ...event }) => ({
       ...event,
@@ -34,6 +42,7 @@ const formatResponseGetHistory = ({ history: { events }, ...response }) => ({
       timestamp: formatTimestampToDatetime(eventTime),
     })),
   },
+  rawHistory: rawHistory?.length ? rawHistory : null,
 });
 
 module.exports = formatResponseGetHistory;

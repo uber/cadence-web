@@ -164,27 +164,32 @@ describe('Workflow History', function () {
       .expect(200)
       .expect('Content-Type', /json/);
   });
-  // it('should forward the nextPageToken', function() {
-  //   this.test.GetWorkflowExecutionHistory = ({ getRequest }) => {
-  //     getRequest.nextPageToken.toString().should.equal('page2');
-  //     return {
-  //       history: { events: [] },
-  //       nextPageToken: new Buffer('page3'),
-  //     };
-  //   };
-  //   return request()
-  //     .get(
-  //       '/api/domains/canary/workflows/ci%2Fdemo/run1/history?nextPageToken=cGFnZTI%3D'
-  //     )
-  //     .expect(200)
-  //     .expect('Content-Type', /json/)
-  //     .expect({
-  //       archived: null,
-  //       history: { events: [] },
-  //       nextPageToken: 'cGFnZTM=',
-  //       rawHistory: null,
-  //     });
-  // });
+  it('should forward the nextPageToken', function () {
+    this.test.GetWorkflowExecutionHistory = ({ getRequest }) => {
+      const requestNextPageToken = {
+        tchannel: 'page2',
+        grpc: 'cGFnZTI=',
+      };
+
+      getRequest.nextPageToken.toString().should.equal(requestNextPageToken[TRANSPORT_CLIENT_TYPE_DEFAULT]);
+      return {
+        history: { events: [] },
+        nextPageToken: new Buffer('page3'),
+      };
+    };
+    return request()
+      .get(
+        '/api/domains/canary/workflows/ci%2Fdemo/run1/history?nextPageToken=cGFnZTI%3D'
+      )
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .expect({
+        archived: null,
+        history: { events: [] },
+        nextPageToken: 'cGFnZTM=',
+        rawHistory: null,
+      });
+  });
   // it('should support long polling by forwarding the waitForNewEvent flag', function() {
   //   this.test.GetWorkflowExecutionHistory = ({ getRequest }) => {
   //     getRequest.waitForNewEvent.should.be.true;
