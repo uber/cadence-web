@@ -115,10 +115,9 @@ const mockGRPC = done => {
     console.dir(bodyMock, { depth: 10 });
 
     if (bodyMock instanceof Error) {
-      console.log('error:', bodyMock);
       callback(bodyMock);
-    } else if (bodyMock && bodyMock.ok === false) {
-      callback(bodyMock.body);
+    } else if (bodyMock && bodyMock.code) {
+      callback(bodyMock);
     } else {
       callback(null, bodyMock);
     }

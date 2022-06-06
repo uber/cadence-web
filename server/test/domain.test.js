@@ -22,8 +22,8 @@
 const grpc = require('@grpc/grpc-js');
 const { TRANSPORT_CLIENT_TYPE_DEFAULT } = require('../constants');
 
-describe('Describe Domain', function() {
-  it('should list domains', async function() {
+describe('Describe Domain', function () {
+  it('should list domains', async function () {
     const domains = {
       tchannel: [
         {
@@ -89,7 +89,7 @@ describe('Describe Domain', function() {
       .expect(domains.tchannel);
   });
 
-  it('should describe the domain', async function() {
+  it('should describe the domain', async function () {
     const domainDesc = {
       tchannel: {
         domainInfo: {
@@ -153,20 +153,27 @@ describe('Describe Domain', function() {
       .expect(domainDesc.tchannel);
   });
 
-  it('should return 404 if the domain is not found', async function() {
-    console.log('status codes available = ', Object.keys(grpc.status));
+  it('should return 404 if the domain is not found', async function () {
+    const errorHandler = ({ describeRequest }) => {
+      const message = `domain "${describeRequest.name}" does not exist`;
+      const error = {
+        tchannel: {
+          ok: false,
+          body: {
+            message,
+          },
+          typeName: 'entityNotExistError',
+        },
+        grpc: {
+          code: grpc.status.NOT_FOUND,
+          message,
+        },
+      };
 
-    this.test.DescribeDomain = ({ describeRequest }) => ({
-      ok: false,
-      body: {
-        code:
-          TRANSPORT_CLIENT_TYPE_DEFAULT === 'grpc'
-            ? grpc.status.NOT_FOUND
-            : 404,
-        message: `domain "${describeRequest.name}" does not exist`,
-      },
-      typeName: 'entityNotExistError',
-    });
+      return error[TRANSPORT_CLIENT_TYPE_DEFAULT];
+    };
+
+    this.test.DescribeDomain = errorHandler;
 
     return request()
       .get('/api/domains/nonexistant')
