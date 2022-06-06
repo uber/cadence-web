@@ -121,7 +121,7 @@ const Long = require('long'),
     },
   ];
 
-describe('Workflow History', function () {
+describe('Workflow History', function() {
   // it('should forward the request to the cadence frontend with workflowId and runId', function() {
   //   this.test.GetWorkflowExecutionHistory = ({ getRequest }) => {
   //     getRequest.should.deep.equal({
@@ -136,29 +136,24 @@ describe('Workflow History', function () {
   //       skipArchival: null,
   //       waitForNewEvent: null,
   //     });
-
   //     return {
   //       history: { events: wfHistoryThrift },
   //       nextPageToken: new Buffer('page2'),
   //     };
   //   };
-
   //   return request()
   //     .get('/api/domains/canary/workflows/ci%2Fdemo/run1/history')
   //     .expect(200)
   //     .expect('Content-Type', /json/);
   // });
-
   // it('should forward the nextPageToken', function() {
   //   this.test.GetWorkflowExecutionHistory = ({ getRequest }) => {
   //     getRequest.nextPageToken.toString().should.equal('page2');
-
   //     return {
   //       history: { events: [] },
   //       nextPageToken: new Buffer('page3'),
   //     };
   //   };
-
   //   return request()
   //     .get(
   //       '/api/domains/canary/workflows/ci%2Fdemo/run1/history?nextPageToken=cGFnZTI%3D'
@@ -172,14 +167,11 @@ describe('Workflow History', function () {
   //       rawHistory: null,
   //     });
   // });
-
   // it('should support long polling by forwarding the waitForNewEvent flag', function() {
   //   this.test.GetWorkflowExecutionHistory = ({ getRequest }) => {
   //     getRequest.waitForNewEvent.should.be.true;
-
   //     return { history: { events: [{ eventId: 1 }] } };
   //   };
-
   //   return request()
   //     .get(
   //       '/api/domains/canary/workflows/ci%2Fdemo/run1/history?waitForNewEvent=true'
@@ -194,13 +186,11 @@ describe('Workflow History', function () {
   //         .expect(200)
   //     );
   // });
-
   // it('should transform Long numbers to JavaScript numbers, Long dates to ISO date strings, and line-delimited JSON buffers to JSON', function() {
   //   this.test.GetWorkflowExecutionHistory = ({ getRequest }) => ({
   //     history: { events: wfHistoryThrift },
   //     nextPageToken: new Buffer('page2'),
   //   });
-
   //   return request()
   //     .get('/api/domains/canary/workflows/ci%2Fdemo/run1/history')
   //     .expect(200)
@@ -211,42 +201,33 @@ describe('Workflow History', function () {
   //       rawHistory: null,
   //     });
   // });
-
   // describe('Export', function() {
   //   const wfHistoryCliJson = `[{"eventId":1,"timestamp":1510701850351393089,"eventType":"WorkflowExecutionStarted","workflowExecutionStartedEventAttributes":{"workflowType":{"name":"github.com/uber/cadence/demo"},"taskList":{"name":"ci-task-queue"},"input":"eyJlbWFpbHMiOlsiamFuZUBleGFtcGxlLmNvbSIsImJvYkBleGFtcGxlLmNvbSJdLCJpbmNsdWRlRm9vdGVyIjp0cnVlfQ==","executionStartToCloseTimeoutSeconds":1080,"taskStartToCloseTimeoutSeconds":30}},{"eventId":2,"timestamp":1510701850351393089,"eventType":"DecisionTaskScheduled","decisionTaskScheduledEventAttributes":{"taskList":{"name":"canary-task-queue"},"startToCloseTimeoutSeconds":180,"attempt":1}},{"eventId":3,"timestamp":1510701867531262273,"eventType":"DecisionTaskStarted","decisionTaskStartedEventAttributes":{"scheduledEventId":2,"identity":"box1@ci-task-queue","requestId":"fafa095d-b4ca-423a-a812-223e62b5ccf8"}}]`;
-
   //   it('should be able to export history in a format compatible with the CLI', function() {
   //     this.test.GetWorkflowExecutionHistory = ({ getRequest }) => ({
   //       history: { events: wfHistoryThrift },
   //     });
-
   //     return request()
   //       .get('/api/domains/canary/workflows/ci%2Fdemo/run1/export')
   //       .expect(200)
   //       .expect(wfHistoryCliJson);
   //   });
-
   //   it('should page through all responses', async function() {
   //     let calls = 0;
-
   //     this.test.GetWorkflowExecutionHistory = ({ getRequest }) => {
   //       if (calls > 0) {
   //         getRequest.nextPageToken.should.be.ok;
   //       } else {
   //         should.not.exist(getRequest.nextPageToken);
   //       }
-
   //       const resp = {
   //         history: { events: [wfHistoryThrift[calls]] },
   //       };
-
   //       if (++calls < wfHistoryThrift.length) {
   //         resp.nextPageToken = new Buffer('page' + calls);
   //       }
-
   //       return resp;
   //     };
-
   //     return request()
   //       .get('/api/domains/canary/workflows/ci%2Fdemo/run1/export')
   //       .expect(200)

@@ -19,12 +19,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-describe('Task List Pollers', function () {
+describe('Task List Pollers', function() {
   // it('should aggregate decision and activity pollers together by instance', function() {
   //   this.test.DescribeTaskList = ({ request }) => {
   //     request.domain.should.equal('canary');
   //     request.taskList.name.should.equal('demo-task-list');
-
   //     return {
   //       pollers:
   //         request.taskListType === 'Activity'
@@ -50,7 +49,6 @@ describe('Task List Pollers', function () {
   //             ],
   //     };
   //   };
-
   //   return request()
   //     .get('/api/domains/canary/task-lists/demo-task-list/pollers')
   //     .expect(200)

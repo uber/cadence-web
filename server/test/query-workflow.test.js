@@ -19,12 +19,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-describe('Query Workflow', function () {
+describe('Query Workflow', function() {
   // it('should list workflows using a temporary hack of parsing out the available workflows from a NotFoundError', async function() {
   //   this.timeout(50000);
   //   this.test.QueryWorkflow = ({ queryRequest }) => {
   //     queryRequest.query.queryType.should.equal('__cadence_web_list');
-
   //     return {
   //       ok: false,
   //       body: {
@@ -33,14 +32,12 @@ describe('Query Workflow', function () {
   //       typeName: 'badRequestError',
   //     };
   //   };
-
   //   return request(global.app)
   //     .get('/api/domains/canary/workflows/ci%2Fdemo/run1/query')
   //     .expect(200)
   //     .expect('Content-Type', /json/)
   //     .expect(['foo', 'bar']);
   // });
-
   // it('should forward the query to the workflow', async function() {
   //   this.test.QueryWorkflow = ({ queryRequest }) => {
   //     queryRequest.should.deep.equal({
@@ -56,10 +53,8 @@ describe('Query Workflow', function () {
   //       queryConsistencyLevel: null,
   //       queryRejectCondition: null,
   //     });
-
   //     return { queryResult: Buffer.from('foobar') };
   //   };
-
   //   return request(global.app)
   //     .post('/api/domains/canary/workflows/ci%2Fdemo/run1/query/state')
   //     .expect(200)
@@ -70,14 +65,12 @@ describe('Query Workflow', function () {
   //       queryResult_base64: Buffer.from('foobar').toString('base64'),
   //     });
   // });
-
   // it('should turn bad requests into 400s', async function() {
   //   this.test.QueryWorkflow = () => ({
   //     ok: false,
   //     body: { message: 'that does not make sense' },
   //     typeName: 'badRequestError',
   //   });
-
   //   return request(global.app)
   //     .post('/api/domains/canary/workflows/ci%2Fdemo/run1/query/state')
   //     .expect(400)

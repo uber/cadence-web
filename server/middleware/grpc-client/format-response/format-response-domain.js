@@ -47,7 +47,10 @@ const formatDomain = ({
     emitMetric: false, // missing from grpc
     historyArchivalStatus: formatEnum(historyArchivalStatus, 'ARCHIVAL_STATUS'),
     historyArchivalURI: historyArchivalUri ? historyArchivalUri : null,
-    visibilityArchivalStatus: formatEnum(visibilityArchivalStatus, 'ARCHIVAL_STATUS'),
+    visibilityArchivalStatus: formatEnum(
+      visibilityArchivalStatus,
+      'ARCHIVAL_STATUS'
+    ),
     visibilityArchivalURI: visibilityArchivalUri ? visibilityArchivalUri : null,
     workflowExecutionRetentionPeriodInDays:
       workflowExecutionRetentionPeriod.seconds / (60 * 60 * 24),

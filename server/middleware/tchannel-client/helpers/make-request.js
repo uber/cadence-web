@@ -33,44 +33,45 @@ const makeRequest = ({ authTokenHeaders, channels, ctx, requestConfig }) => ({
   responseTransform = uiTransform,
   serviceName = 'WorkflowService',
 }) => body =>
-    new Promise((resolve, reject) => {
-      try {
-        channels[channelName].request(requestConfig).send(
-          formatMethod({ method, serviceName }),
-          {
-            ...authTokenHeaders,
-          },
-          {
-            [formatRequestName(requestName)]: formatBody({
-              body,
-              bodyTransform,
-            }),
-          },
-          (error, response) => {
-            try {
-              console.log('makeRequest: error = ');
-              console.dir(error, { depth: 10 });
-              if (error) {
-                console.log('simply reject?');
-                reject(error);
-              } else if (response.ok) {
-                resolve(responseTransform(response.body));
-              } else {
-                console.log('ctx throw?');
-                ctx.throw(
-                  response.typeName === 'entityNotExistError' ? 404 : 400,
-                  null,
-                  response.body || response
-                );
-              }
-            } catch (error) {
+  new Promise((resolve, reject) => {
+    try {
+      channels[channelName].request(requestConfig).send(
+        formatMethod({ method, serviceName }),
+        {
+          ...authTokenHeaders,
+        },
+        {
+          [formatRequestName(requestName)]: formatBody({
+            body,
+            bodyTransform,
+          }),
+        },
+        (error, response) => {
+          try {
+            console.log('makeRequest: error = ');
+            console.dir(error, { depth: 10 });
+
+            if (error) {
+              console.log('simply reject?');
               reject(error);
+            } else if (response.ok) {
+              resolve(responseTransform(response.body));
+            } else {
+              console.log('ctx throw?');
+              ctx.throw(
+                response.typeName === 'entityNotExistError' ? 404 : 400,
+                null,
+                response.body || response
+              );
             }
+          } catch (error) {
+            reject(error);
           }
-        );
-      } catch (error) {
-        reject(error);
-      }
-    });
+        }
+      );
+    } catch (error) {
+      reject(error);
+    }
+  });
 
 module.exports = makeRequest;

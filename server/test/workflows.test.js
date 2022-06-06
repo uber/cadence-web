@@ -19,28 +19,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-describe('Listing Workflows', function () {
+describe('Listing Workflows', function() {
   const demoExecThrift = {
-    execution: {
-      workflowId: 'demo',
-      runId: 'd92bb92c-5f49-487f-80a8-f8f375ba55a8',
+      execution: {
+        workflowId: 'demo',
+        runId: 'd92bb92c-5f49-487f-80a8-f8f375ba55a8',
+      },
+      type: {
+        name: 'github.com/uber/cadence/demo.cronWorkflow',
+      },
+      startTime: dateToLong('2017-11-10T21:30:00.000Z'),
+      closeTime: null,
+      closeStatus: null,
+      domainName: 'canary',
+      historyLength: null,
+      isCron: null,
+      autoResetPoints: null,
+      executionTime: null,
+      memo: null,
+      parentDomainId: null,
+      parentExecution: null,
+      searchAttributes: null,
     },
-    type: {
-      name: 'github.com/uber/cadence/demo.cronWorkflow',
-    },
-    startTime: dateToLong('2017-11-10T21:30:00.000Z'),
-    closeTime: null,
-    closeStatus: null,
-    domainName: 'canary',
-    historyLength: null,
-    isCron: null,
-    autoResetPoints: null,
-    executionTime: null,
-    memo: null,
-    parentDomainId: null,
-    parentExecution: null,
-    searchAttributes: null,
-  },
     demoExecJson = Object.assign({}, demoExecThrift, {
       startTime: '2017-11-10T21:30:00.000Z',
       taskList: null,

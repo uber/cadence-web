@@ -19,7 +19,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-
 const supertest = require('supertest');
 const Long = require('long');
 const { TRANSPORT_CLIENT_TYPE_DEFAULT } = require('../constants');
@@ -35,23 +34,29 @@ global.should = require('chai').should();
 
 global.dateToLong = d => Long.fromValue(Number(new Date(d))).mul(1000000);
 
-before(function (done) {
+before(function(done) {
   process.env.CADENCE_TCHANNEL_PEERS = '127.0.0.1:11343';
 
-  console.log('TRANSPORT_CLIENT_TYPE_DEFAULT = ', TRANSPORT_CLIENT_TYPE_DEFAULT);
+  console.log(
+    'TRANSPORT_CLIENT_TYPE_DEFAULT = ',
+    TRANSPORT_CLIENT_TYPE_DEFAULT
+  );
 
   if (TRANSPORT_CLIENT_TYPE_DEFAULT === 'tchannel') {
     mocks = mockTChannel(done);
     closeClient = mocks.closeClient;
     closeServer = mocks.closeServer;
-    setCurrentTest = mocks.setCurrentTest; 1
+    setCurrentTest = mocks.setCurrentTest;
+    1;
   } else if (TRANSPORT_CLIENT_TYPE_DEFAULT === 'grpc') {
     mocks = mockGRPC(done);
     closeClient = mocks.closeClient;
     closeServer = mocks.closeServer;
     setCurrentTest = mocks.setCurrentTest;
   } else {
-    throw new Error(`Unsupported client type: "${TRANSPORT_CLIENT_TYPE_DEFAULT}"`);
+    throw new Error(
+      `Unsupported client type: "${TRANSPORT_CLIENT_TYPE_DEFAULT}"`
+    );
   }
 
   app = require('../')
@@ -60,12 +65,12 @@ before(function (done) {
   global.request = supertest.bind(supertest, app);
 });
 
-after(function () {
+after(function() {
   app.close();
   closeClient();
   closeServer();
 });
 
-beforeEach(function () {
+beforeEach(function() {
   setCurrentTest(this.currentTest);
 });

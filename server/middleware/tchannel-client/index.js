@@ -36,7 +36,7 @@ const {
 } = require('./helpers');
 
 const tchannelClient = ({ peers, requestConfig }) =>
-  async function (ctx, next) {
+  async function(ctx, next) {
     const { authTokenHeaders = {} } = ctx;
 
     const client = TChannel();

@@ -19,11 +19,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-var grpc = require('@grpc/grpc-js');
+const grpc = require('@grpc/grpc-js');
 const { TRANSPORT_CLIENT_TYPE_DEFAULT } = require('../constants');
 
-describe('Describe Domain', function () {
-  it('should list domains', async function () {
+describe('Describe Domain', function() {
+  it('should list domains', async function() {
     const domains = {
       tchannel: [
         {
@@ -51,7 +51,7 @@ describe('Describe Domain', function () {
             activeClusterName: 'ci-cluster',
             clusters: [],
           },
-        }
+        },
       ],
       grpc: [
         {
@@ -72,8 +72,8 @@ describe('Describe Domain', function () {
           failoverVersion: '0',
           isGlobalDomain: false,
           failoverInfo: null,
-        }
-      ]
+        },
+      ],
     };
 
     this.test.ListDomains = ({ listRequest }) => {
@@ -89,7 +89,7 @@ describe('Describe Domain', function () {
       .expect(domains.tchannel);
   });
 
-  it('should describe the domain', async function () {
+  it('should describe the domain', async function() {
     const domainDesc = {
       tchannel: {
         domainInfo: {
@@ -136,8 +136,8 @@ describe('Describe Domain', function () {
           failoverVersion: '0',
           isGlobalDomain: true,
           failoverInfo: null,
-        }
-      }
+        },
+      },
     };
 
     this.test.DescribeDomain = ({ describeRequest }) => {
@@ -153,13 +153,16 @@ describe('Describe Domain', function () {
       .expect(domainDesc.tchannel);
   });
 
-  it('should return 404 if the domain is not found', async function () {
+  it('should return 404 if the domain is not found', async function() {
     console.log('status codes available = ', Object.keys(grpc.status));
 
     this.test.DescribeDomain = ({ describeRequest }) => ({
       ok: false,
       body: {
-        code: TRANSPORT_CLIENT_TYPE_DEFAULT === 'grpc' ? grpc.status.NOT_FOUND : 404,
+        code:
+          TRANSPORT_CLIENT_TYPE_DEFAULT === 'grpc'
+            ? grpc.status.NOT_FOUND
+            : 404,
         message: `domain "${describeRequest.name}" does not exist`,
       },
       typeName: 'entityNotExistError',

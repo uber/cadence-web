@@ -1,3 +1,24 @@
+// Copyright (c) 2022 Uber Technologies Inc.
+//
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
 const path = require('path');
 const get = require('lodash.get');
 const grpc = require('@grpc/grpc-js');
@@ -29,28 +50,30 @@ const GRPCServiceMock = ({ methods, peers, schemaPath, servicePath }) => {
   return ServiceDefinition;
 };
 
-const formatRequest = (request) => Object
-  .keys(request)
-  .map((key) => {
-    const value = request[key];
-    if (value == '') {
-      return { [key]: null };
-    }
-    return { [key]: value };
-  })
-  .reduce((accumulator, value) => {
-    return {
-      ...accumulator,
-      ...value,
-    };
-  }, {});
+const formatRequest = request =>
+  Object.keys(request)
+    .map(key => {
+      const value = request[key];
 
-const mockGRPC = (done) => {
+      if (value == '') {
+        return { [key]: null };
+      }
+
+      return { [key]: value };
+    })
+    .reduce((accumulator, value) => {
+      return {
+        ...accumulator,
+        ...value,
+      };
+    }, {});
+
+const mockGRPC = done => {
   let currentTest;
 
-  const setCurrentTest = (test) => {
+  const setCurrentTest = test => {
     currentTest = test;
-  }
+  };
 
   const domainServiceConfig = {
     peers,
@@ -88,7 +111,7 @@ const mockGRPC = (done) => {
 
     const bodyMock = currentTest[method]({ [requestName]: request }, null);
 
-    console.log('bodyMock = ')
+    console.log('bodyMock = ');
     console.dir(bodyMock, { depth: 10 });
 
     if (bodyMock instanceof Error) {
@@ -102,15 +125,20 @@ const mockGRPC = (done) => {
   };
 
   const server = new grpc.Server();
+
   server.addService(domainServiceMock.service, {
     ListDomains: handler('ListDomains', 'listRequest'),
     DescribeDomain: handler('DescribeDomain', 'describeRequest'),
   });
 
-  server.bindAsync('127.0.0.1:11343', grpc.ServerCredentials.createInsecure(), () => {
-    server.start();
-    done();
-  });
+  server.bindAsync(
+    '127.0.0.1:11343',
+    grpc.ServerCredentials.createInsecure(),
+    () => {
+      server.start();
+      done();
+    }
+  );
 
   const client = new domainServiceMock(
     peers,
@@ -130,7 +158,7 @@ const mockGRPC = (done) => {
     closeClient,
     closeServer,
     setCurrentTest,
-  }
+  };
 };
 
 module.exports = mockGRPC;
