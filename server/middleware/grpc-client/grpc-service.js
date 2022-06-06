@@ -92,31 +92,32 @@ class GRPCService {
             this.meta(),
             { deadline },
             (error, response) => {
-              if (error) {
-                console.log('error string:', String(error));
-                console.log('raw error = ');
-                console.log(error.code);
-                console.log(error.message);
-                console.log(error.details);
-                // console.dir(error, { depth: 10 });
+              try {
+                if (error) {
+                  console.log('error string:', String(error));
+                  console.log('raw error = ');
+                  console.log(error.code);
+                  console.log(error.message);
+                  console.log(error.details);
+                  // console.dir(error, { depth: 10 });
 
-                return reject({
-                  body: {
-                    message: error.details || error.message,
-                  },
-                  code: GRPC_ERROR_STATUS_TO_HTTP_ERROR_CODE_MAP[error.code] || 500,
-                  ok: false,
-                  typeName: 'entityNotExistError', // TODO - HARDCODED TYPENAME
-                });
+                  return this.ctx.throw(
+                    GRPC_ERROR_STATUS_TO_HTTP_ERROR_CODE_MAP[error.code] || 500,
+                    null,
+                    error.details || error.message || response.body || response
+                  );
+                }
+
+                console.log('raw:');
+                console.dir(response, { depth: 10 });
+
+                console.log('formatted response:');
+                console.dir(formatResponse(response), { depth: 10 });
+
+                return resolve(formatResponse(response));
+              } catch (e) {
+                reject(e);
               }
-
-              console.log('raw:');
-              console.dir(response, { depth: 10 });
-
-              console.log('formatted response:');
-              console.dir(formatResponse(response), { depth: 10 });
-
-              return resolve(formatResponse(response));
             }
           );
         });

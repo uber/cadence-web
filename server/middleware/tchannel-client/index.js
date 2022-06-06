@@ -36,7 +36,7 @@ const {
 } = require('./helpers');
 
 const tchannelClient = ({ peers, requestConfig }) =>
-  async function(ctx, next) {
+  async function (ctx, next) {
     const { authTokenHeaders = {} } = ctx;
 
     const client = TChannel();
@@ -150,6 +150,8 @@ const tchannelClient = ({ peers, requestConfig }) =>
       await next();
       client.close();
     } catch (e) {
+      console.log('error = ');
+      console.dir(e, { depth: 10 });
       client.close();
       throw e;
     }
