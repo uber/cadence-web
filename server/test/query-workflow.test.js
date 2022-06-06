@@ -22,13 +22,14 @@
 const grpc = require('@grpc/grpc-js');
 const { TRANSPORT_CLIENT_TYPE_DEFAULT } = require('../constants');
 
-describe('Query Workflow', function () {
-  it('should list workflows using a temporary hack of parsing out the available workflows from a NotFoundError', async function () {
+describe('Query Workflow', function() {
+  it('should list workflows using a temporary hack of parsing out the available workflows from a NotFoundError', async function() {
     this.timeout(50000);
     this.test.QueryWorkflow = ({ queryRequest }) => {
       queryRequest.query.queryType.should.equal('__cadence_web_list');
       console.log(Object.keys(grpc.status));
-      const message = '__cadence_web_list not found. KnownQueryTypes=[foo bar ]';
+      const message =
+        '__cadence_web_list not found. KnownQueryTypes=[foo bar ]';
       const error = {
         tchannel: {
           ok: false,
@@ -41,10 +42,11 @@ describe('Query Workflow', function () {
           code: grpc.status.INVALID_ARGUMENT,
           message,
         },
-      }
+      };
 
       return error[TRANSPORT_CLIENT_TYPE_DEFAULT];
     };
+
     return request(global.app)
       .get('/api/domains/canary/workflows/ci%2Fdemo/run1/query')
       .expect(200)
