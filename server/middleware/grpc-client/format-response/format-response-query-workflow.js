@@ -24,6 +24,7 @@ const formatPayload = require('./format-payload');
 const formatResponseQueryWorkflow = ({ queryResult, ...response }) => ({
   ...response,
   queryResult: formatPayload(queryResult),
+  queryResult_base64: queryResult?.data || null,
 });
 
 module.exports = formatResponseQueryWorkflow;
