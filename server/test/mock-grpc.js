@@ -93,7 +93,7 @@ const mockGRPC = done => {
 
   const domainServiceMock = GRPCServiceMock(domainServiceConfig);
   // const visibilityServiceMock = GRPCServiceMock(visibilityServiceConfig);
-  // const workflowServiceMock = GRPCServiceMock(workflowServiceConfig);
+  const workflowServiceMock = GRPCServiceMock(workflowServiceConfig);
 
   const handler = (method, requestName) => (call, callback) => {
     console.log('method', method);
@@ -128,6 +128,10 @@ const mockGRPC = done => {
   server.addService(domainServiceMock.service, {
     ListDomains: handler('ListDomains', 'listRequest'),
     DescribeDomain: handler('DescribeDomain', 'describeRequest'),
+  });
+
+  server.addService(workflowServiceMock.service, {
+    QueryWorkflow: handler('QueryWorkflow', 'queryRequest'),
   });
 
   server.bindAsync(
