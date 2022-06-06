@@ -74,17 +74,17 @@ describe('Workflow Execution', function () {
       .expect(204)
       .expect(() => reason.should.equal('example reason'));
   });
-  // it('should signal a workflow without input', async function() {
-  //   let signal;
-  //   this.test.SignalWorkflowExecution = ({ signalRequest }) => {
-  //     signalRequest.workflowExecution.workflowId.should.equal('ci/demo');
-  //     signalRequest.workflowExecution.runId.should.equal('run2');
-  //     signal = signalRequest.signalName;
-  //     return {};
-  //   };
-  //   return request()
-  //     .post('/api/domains/canary/workflows/ci%2Fdemo/run2/signal/firealarm')
-  //     .expect(204)
-  //     .expect(() => signal.should.equal('firealarm'));
-  // });
+  it('should signal a workflow without input', async function () {
+    let signal;
+    this.test.SignalWorkflowExecution = ({ signalRequest }) => {
+      signalRequest.workflowExecution.workflowId.should.equal('ci/demo');
+      signalRequest.workflowExecution.runId.should.equal('run2');
+      signal = signalRequest.signalName;
+      return {};
+    };
+    return request()
+      .post('/api/domains/canary/workflows/ci%2Fdemo/run2/signal/firealarm')
+      .expect(204)
+      .expect(() => signal.should.equal('firealarm'));
+  });
 });

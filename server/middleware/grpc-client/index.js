@@ -37,6 +37,7 @@ const {
   formatResponseGetHistory,
   formatResponseListDomains,
   formatResponseQueryWorkflow,
+  formatResponseSignalWorkflowExecution,
   formatResponseTerminateWorkflowExecution,
   formatResponseWorkflowList,
 } = require('./format-response');
@@ -151,6 +152,11 @@ const grpcClient = ({ peers, requestConfig }) =>
       queryWorkflow: workflowService.request({
         method: 'QueryWorkflow',
         formatResponse: formatResponseQueryWorkflow,
+        transform: combine(withDomain(ctx), withWorkflowExecution(ctx)),
+      }),
+      signalWorkflow: workflowService.request({
+        formatResponse: formatResponseSignalWorkflowExecution,
+        method: 'SignalWorkflowExecution',
         transform: combine(withDomain(ctx), withWorkflowExecution(ctx)),
       }),
       terminateWorkflow: workflowService.request({

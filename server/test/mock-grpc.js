@@ -134,6 +134,7 @@ const mockGRPC = done => {
     DescribeTaskList: handler('DescribeTaskList', 'request'),
     DescribeWorkflowExecution: handler('DescribeWorkflowExecution', 'describeRequest'),
     QueryWorkflow: handler('QueryWorkflow', 'queryRequest'),
+    SignalWorkflowExecution: handler('SignalWorkflowExecution', 'signalRequest'),
     TerminateWorkflowExecution: handler('TerminateWorkflowExecution', 'terminateRequest'),
   });
 
