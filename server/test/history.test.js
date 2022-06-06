@@ -190,25 +190,25 @@ describe('Workflow History', function () {
         rawHistory: null,
       });
   });
-  // it('should support long polling by forwarding the waitForNewEvent flag', function() {
-  //   this.test.GetWorkflowExecutionHistory = ({ getRequest }) => {
-  //     getRequest.waitForNewEvent.should.be.true;
-  //     return { history: { events: [{ eventId: 1 }] } };
-  //   };
-  //   return request()
-  //     .get(
-  //       '/api/domains/canary/workflows/ci%2Fdemo/run1/history?waitForNewEvent=true'
-  //     )
-  //     .expect(200)
-  //     .expect('Content-Type', /json/)
-  //     .then(() =>
-  //       request()
-  //         .get(
-  //           '/api/domains/canary/workflows/ci%2Fdemo/run1/history?waitForNewEvent'
-  //         )
-  //         .expect(200)
-  //     );
-  // });
+  it('should support long polling by forwarding the waitForNewEvent flag', function () {
+    this.test.GetWorkflowExecutionHistory = ({ getRequest }) => {
+      getRequest.waitForNewEvent.should.be.true;
+      return { history: { events: [{ eventId: 1 }] } };
+    };
+    return request()
+      .get(
+        '/api/domains/canary/workflows/ci%2Fdemo/run1/history?waitForNewEvent=true'
+      )
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .then(() =>
+        request()
+          .get(
+            '/api/domains/canary/workflows/ci%2Fdemo/run1/history?waitForNewEvent'
+          )
+          .expect(200)
+      );
+  });
   // it('should transform Long numbers to JavaScript numbers, Long dates to ISO date strings, and line-delimited JSON buffers to JSON', function() {
   //   this.test.GetWorkflowExecutionHistory = ({ getRequest }) => ({
   //     history: { events: wfHistoryThrift },

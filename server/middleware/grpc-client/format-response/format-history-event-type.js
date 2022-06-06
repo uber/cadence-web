@@ -20,9 +20,9 @@
 // THE SOFTWARE.
 
 const formatHistoryEventType = ({ attributes }) =>
-  `${attributes[0].toUpperCase()}${attributes.slice(1)}`.replace(
+  attributes ? `${attributes[0].toUpperCase()}${attributes.slice(1)}`.replace(
     'EventAttributes',
     ''
-  );
+  ) : attributes;
 
 module.exports = formatHistoryEventType;
