@@ -37,6 +37,7 @@ const {
   formatResponseGetHistory,
   formatResponseListDomains,
   formatResponseQueryWorkflow,
+  formatResponseTerminateWorkflowExecution,
   formatResponseWorkflowList,
 } = require('./format-response');
 const GRPCService = require('./grpc-service');
@@ -47,7 +48,7 @@ const {
 } = require('./transform');
 
 const grpcClient = ({ peers, requestConfig }) =>
-  async function(ctx, next) {
+  async function (ctx, next) {
     const domainService = new GRPCService({
       ctx,
       peers,
@@ -153,6 +154,7 @@ const grpcClient = ({ peers, requestConfig }) =>
         transform: combine(withDomain(ctx), withWorkflowExecution(ctx)),
       }),
       terminateWorkflow: workflowService.request({
+        formatResponse: formatResponseTerminateWorkflowExecution,
         method: 'TerminateWorkflowExecution',
         transform: combine(withDomain(ctx), withWorkflowExecution(ctx)),
       }),

@@ -132,7 +132,9 @@ const mockGRPC = done => {
 
   server.addService(workflowServiceMock.service, {
     DescribeTaskList: handler('DescribeTaskList', 'request'),
+    DescribeWorkflowExecution: handler('DescribeWorkflowExecution', 'describeRequest'),
     QueryWorkflow: handler('QueryWorkflow', 'queryRequest'),
+    TerminateWorkflowExecution: handler('TerminateWorkflowExecution', 'terminateRequest'),
   });
 
   server.bindAsync(

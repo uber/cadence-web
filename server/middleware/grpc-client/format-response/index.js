@@ -30,6 +30,7 @@ const formatResponseDomain = require('./format-response-domain');
 const formatResponseGetHistory = require('./format-response-get-history');
 const formatResponseListDomains = require('./format-response-list-domains');
 const formatResponseQueryWorkflow = require('./format-response-query-workflow');
+const formatResponseTerminateWorkflowExecution = require('./format-response-terminate-workflow-execution');
 const formatResponseWorkflowList = require('./format-response-workflow-list');
 const formatTimestampToDatetime = require('./format-timestamp-to-datetime');
 const formatTimestampToSeconds = require('./format-timestamp-to-seconds');
@@ -46,6 +47,7 @@ module.exports = {
   formatResponseGetHistory,
   formatResponseListDomains,
   formatResponseQueryWorkflow,
+  formatResponseTerminateWorkflowExecution,
   formatResponseWorkflowList,
   formatTimestampToDatetime,
   formatTimestampToSeconds,
