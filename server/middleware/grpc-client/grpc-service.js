@@ -33,9 +33,13 @@ const GRPC_OPTIONS = {
   'grpc.max_send_message_length': MAX_MESSAGE_SIZE,
   'grpc.max_receive_message_length': MAX_MESSAGE_SIZE,
 };
+const GRPC_ERROR_STATUS_TO_HTTP_ERROR_CODE_MAP = {
+  [grpc.status.INVALID_ARGUMENT]: 400,
+  [grpc.status.NOT_FOUND]: 404,
+};
 
 class GRPCService {
-  constructor({ peers, requestConfig, schemaPath, servicePath }) {
+  constructor({ ctx, peers, requestConfig, schemaPath, servicePath }) {
     const ServiceDefinition = get(
       grpc.loadPackageDefinition(
         protoLoader.loadSync(path.join(BASE_PATH, schemaPath), {
@@ -52,6 +56,7 @@ class GRPCService {
 
     // console.log(servicePath, ': ', ServiceDefinition);
 
+    this.ctx = ctx;
     this.service = new ServiceDefinition(
       peers,
       grpc.credentials.createInsecure(),
@@ -88,9 +93,21 @@ class GRPCService {
             { deadline },
             (error, response) => {
               if (error) {
-                console.log('error:', String(error));
+                console.log('error string:', String(error));
+                console.log('raw error = ');
+                console.log(error.code);
+                console.log(error.message);
+                console.log(error.details);
+                // console.dir(error, { depth: 10 });
 
-                return reject(error);
+                return reject({
+                  body: {
+                    message: error.details || error.message,
+                  },
+                  code: GRPC_ERROR_STATUS_TO_HTTP_ERROR_CODE_MAP[error.code] || 500,
+                  ok: false,
+                  typeName: 'entityNotExistError', // TODO - HARDCODED TYPENAME
+                });
               }
 
               console.log('raw:');

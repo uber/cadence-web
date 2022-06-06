@@ -93,9 +93,9 @@ const mockGRPC = (done) => {
 
     if (bodyMock instanceof Error) {
       console.log('error:', bodyMock);
-      callback(bodyMock, null);
+      callback(bodyMock);
     } else if (bodyMock && bodyMock.ok === false) {
-      callback(bodyMock.body, null);
+      callback(bodyMock.body);
     } else {
       callback(null, bodyMock);
     }

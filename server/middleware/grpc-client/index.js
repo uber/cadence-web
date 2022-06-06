@@ -49,16 +49,19 @@ const {
 const grpcClient = ({ peers, requestConfig }) =>
   async function (ctx, next) {
     const domainService = new GRPCService({
+      ctx,
       peers,
       requestConfig,
       ...domainServiceConfig,
     });
     const visibilityService = new GRPCService({
+      ctx,
       peers,
       requestConfig,
       ...visibilityServiceConfig,
     });
     const workflowService = new GRPCService({
+      ctx,
       peers,
       requestConfig,
       ...workflowServiceConfig,
@@ -164,6 +167,8 @@ const grpcClient = ({ peers, requestConfig }) =>
       domainService.close();
       visibilityService.close();
       workflowService.close();
+      console.log('recieved error = ');
+      console.dir(e, { depth: 10 });
       throw e;
     }
   };
