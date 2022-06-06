@@ -21,6 +21,7 @@
 
 const supertest = require('supertest');
 const Long = require('long');
+const moment = require('moment');
 const { TRANSPORT_CLIENT_TYPE_DEFAULT } = require('../constants');
 const mockGRPC = require('./mock-grpc');
 const mockTChannel = require('./mock-tchannel');
@@ -34,7 +35,11 @@ global.should = require('chai').should();
 
 global.dateToLong = d => Long.fromValue(Number(new Date(d))).mul(1000000);
 
-before(function(done) {
+global.dateToTimestamp = d => ({
+  seconds: moment(d).unix(),
+});
+
+before(function (done) {
   process.env.CADENCE_TCHANNEL_PEERS = '127.0.0.1:11343';
 
   console.log(
@@ -65,12 +70,12 @@ before(function(done) {
   global.request = supertest.bind(supertest, app);
 });
 
-after(function() {
+after(function () {
   app.close();
   closeClient();
   closeServer();
 });
 
-beforeEach(function() {
+beforeEach(function () {
   setCurrentTest(this.currentTest);
 });

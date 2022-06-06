@@ -131,6 +131,7 @@ const mockGRPC = done => {
   });
 
   server.addService(workflowServiceMock.service, {
+    DescribeTaskList: handler('DescribeTaskList', 'request'),
     QueryWorkflow: handler('QueryWorkflow', 'queryRequest'),
   });
 
