@@ -81,10 +81,8 @@ const mockTChannel = (done) => {
   };
 
   return {
-    client,
     closeClient,
     closeServer,
-    server,
     setCurrentTest,
   };
 };

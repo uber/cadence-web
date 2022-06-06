@@ -109,9 +109,7 @@ const mockGRPC = (done) => {
 
   server.bindAsync('127.0.0.1:11343', grpc.ServerCredentials.createInsecure(), () => {
     server.start();
-    // setTimeout(() => {
     done();
-    // }, 1300);
   });
 
   const client = new domainServiceMock(
@@ -128,66 +126,9 @@ const mockGRPC = (done) => {
     server.forceShutdown();
   };
 
-
-  // const server = {
-  //   close: () => {
-  //     domainServiceMock.close();
-  //   },
-  //   listen: (port, address, callback) => {
-  //     // domainServiceMock.listen(port, address, callback);
-  //   },
-  // };
-
-
-
-  // visibility
-  // [
-  //   'ListOpenWorkflowExecutions',
-  //   'ListClosedWorkflowExecutions',
-  //   'ListWorkflowExecutions',
-  // ].forEach(endpoint =>
-  //   tchan.register(
-  //     server,
-  //     'WorkflowService::' + endpoint,
-  //     {},
-  //     handler('WorkflowService')
-  //   )
-  // );
-
-  // // workflow
-  // [
-  //   'GetWorkflowExecutionHistory',
-  //   'QueryWorkflow',
-  //   'DescribeWorkflowExecution',
-  //   'TerminateWorkflowExecution',
-  //   'DescribeTaskList',
-  // ].forEach(endpoint =>
-  //   tchan.register(
-  //     server,
-  //     'WorkflowService::' + endpoint,
-  //     {},
-  //     handler('WorkflowService')
-  //   )
-  // );
-
-  // // domain
-  // [
-  //   'ListDomains',
-  //   'DescribeDomain',
-  // ].forEach(endpoint =>
-  //   tchan.register(
-  //     server,
-  //     'WorkflowService::' + endpoint,
-  //     {},
-  //     handler('WorkflowService')
-  //   )
-  // );
-
   return {
-    client,
     closeClient,
     closeServer,
-    server,
     setCurrentTest,
   }
 };

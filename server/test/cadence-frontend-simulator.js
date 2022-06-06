@@ -27,10 +27,8 @@ const mockGRPC = require('./mock-grpc');
 const mockTChannel = require('./mock-tchannel');
 
 let app;
-let client;
 let closeClient;
 let closeServer;
-let server;
 let setCurrentTest;
 
 global.should = require('chai').should();
@@ -44,17 +42,13 @@ before(function (done) {
 
   if (TRANSPORT_CLIENT_TYPE_DEFAULT === 'tchannel') {
     mocks = mockTChannel(done);
-    client = mocks.client;
     closeClient = mocks.closeClient;
     closeServer = mocks.closeServer;
-    server = mocks.server;
     setCurrentTest = mocks.setCurrentTest; 1
   } else if (TRANSPORT_CLIENT_TYPE_DEFAULT === 'grpc') {
     mocks = mockGRPC(done);
-    client = mocks.client;
     closeClient = mocks.closeClient;
     closeServer = mocks.closeServer;
-    server = mocks.server;
     setCurrentTest = mocks.setCurrentTest;
   } else {
     throw new Error(`Unsupported client type: "${TRANSPORT_CLIENT_TYPE_DEFAULT}"`);
@@ -73,6 +67,5 @@ after(function () {
 });
 
 beforeEach(function () {
-  // console.log('this.currentTest = ', this.currentTest);
   setCurrentTest(this.currentTest);
 });

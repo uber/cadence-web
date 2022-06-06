@@ -152,19 +152,19 @@ describe('Describe Domain', function () {
       .expect(domainDesc.tchannel);
   });
 
-  // it('should return 404 if the domain is not found', async function () {
-  //   this.test.DescribeDomain = ({ describeRequest }) => ({
-  //     ok: false,
-  //     body: { message: `domain "${describeRequest.name}" does not exist` },
-  //     typeName: 'entityNotExistError',
-  //   });
+  it('should return 404 if the domain is not found', async function () {
+    this.test.DescribeDomain = ({ describeRequest }) => ({
+      ok: false,
+      body: { message: `domain "${describeRequest.name}" does not exist` },
+      typeName: 'entityNotExistError',
+    });
 
-  //   return request()
-  //     .get('/api/domains/nonexistant')
-  //     .expect(404)
-  //     .expect('Content-Type', /json/)
-  //     .expect({
-  //       message: 'domain "nonexistant" does not exist',
-  //     });
-  // });
+    return request()
+      .get('/api/domains/nonexistant')
+      .expect(404)
+      .expect('Content-Type', /json/)
+      .expect({
+        message: 'domain "nonexistant" does not exist',
+      });
+  });
 });
