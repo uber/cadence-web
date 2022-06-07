@@ -19,36 +19,55 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+const formatEnum = require('../format-enum');
 const formatPayload = require('../format-payload');
 const formatPayloadMap = require('../format-payload-map');
+const formatTimestampToDatetime = require('../format-timestamp-to-datetime');
 const formatTimestampToSeconds = require('../format-timestamp-to-seconds');
 const formatRetryPolicy = require('./format-retry-policy');
 const formatPrevAutoResetPoints = require('./format-prev-auto-reset-points');
 
 const formatWorkflowExecutionStartedEventAttributes = ({
+  attempt,
+  continuedExecutionRunId,
   continuedFailure,
+  cronSchedule,
   executionStartToCloseTimeout,
+  expirationTime,
   firstDecisionTaskBackoff,
+  firstExecutionRunId,
+  identity,
+  initiator,
   input,
   memo,
+  originalExecutionRunId,
   parentExecutionInfo,
   prevAutoResetPoints,
   retryPolicy,
   searchAttributes,
+  taskList,
   taskStartToCloseTimeout,
   ...eventAttributes
 }) => ({
   ...eventAttributes,
+  attempt: attempt || null,
+  continuedExecutionRunId: continuedExecutionRunId || null,
   continuedFailureDetails: continuedFailure?.details || null,
   continuedFailureReason: continuedFailure?.reason || null,
+  cronSchedule: cronSchedule || null,
   executionStartToCloseTimeoutSeconds: formatTimestampToSeconds(
     executionStartToCloseTimeout
   ),
+  expirationTimestamp: formatTimestampToDatetime(expirationTime),
   firstDecisionTaskBackoffSeconds: formatTimestampToSeconds(
     firstDecisionTaskBackoff
   ),
+  firstExecutionRunId: firstExecutionRunId || null,
+  identity: identity || null,
+  initiator: formatEnum(initiator, 'CONTINUE_AS_NEW_INITIATOR'),
   input: formatPayload(input),
   memo: formatPayloadMap(memo, 'fields'),
+  originalExecutionRunId: originalExecutionRunId || null,
   parentInitiatedEventId: parentExecutionInfo?.initiatedId
     ? parseInt(parentExecutionInfo.initiatedId)
     : null,
@@ -57,6 +76,10 @@ const formatWorkflowExecutionStartedEventAttributes = ({
   prevAutoResetPoints: formatPrevAutoResetPoints(prevAutoResetPoints),
   retryPolicy: formatRetryPolicy(retryPolicy),
   searchAttributes: formatPayloadMap(searchAttributes, 'indexedFields'),
+  taskList: {
+    kind: formatEnum(taskList?.kind, 'TASK_LIST_KIND'),
+    name: taskList?.name || null,
+  },
   taskStartToCloseTimeoutSeconds: formatTimestampToSeconds(
     taskStartToCloseTimeout
   ),

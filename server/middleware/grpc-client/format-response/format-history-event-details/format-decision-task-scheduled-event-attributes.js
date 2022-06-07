@@ -19,14 +19,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+const formatEnum = require('../format-enum');
 const formatTimestampToSeconds = require('../format-timestamp-to-seconds');
 
 const formatDecisionTaskScheduledEventAttributes = ({
   startToCloseTimeout,
+  taskList,
   ...eventAttributes
 }) => ({
   ...eventAttributes,
   startToCloseTimeoutSeconds: formatTimestampToSeconds(startToCloseTimeout),
+  taskList: {
+    kind: formatEnum(taskList?.kind, 'TASK_LIST_KIND'),
+    name: taskList?.name || null,
+  },
 });
 
 module.exports = formatDecisionTaskScheduledEventAttributes;

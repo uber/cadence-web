@@ -89,6 +89,77 @@ const wfHistoryThrift = [
     },
   },
 ];
+const wfHistoryGrpc = [
+  {
+    eventId: new Long(1),
+    eventTime: { seconds: '1510701850', nanos: '351' },
+    eventType: 'WorkflowExecutionStarted',
+    workflowExecutionStartedEventAttributes: {
+      attempt: null,
+      workflowType: {
+        name: 'github.com/uber/cadence/demo',
+      },
+      taskList: {
+        name: 'ci-task-queue',
+        kind: null,
+      },
+      identity: null,
+      input: {
+        data: btoa(
+          JSON.stringify({
+            emails: ['jane@example.com', 'bob@example.com'],
+            includeFooter: true,
+          })
+        ),
+      },
+      expirationTimestamp: null,
+      continuedExecutionRunId: null,
+      continuedFailure: {
+        details: null,
+        reason: null,
+      },
+      cronSchedule: null,
+      firstDecisionTaskBackoff: null,
+      firstExecutionRunId: null,
+      header: null,
+      initiator: null,
+      lastCompletionResult: null,
+      memo: null,
+      originalExecutionRunId: null,
+      parentInitiatedEventId: null,
+      parentWorkflowDomain: null,
+      parentWorkflowExecution: null,
+      prevAutoResetPoints: null,
+      retryPolicy: null,
+      searchAttributes: null,
+      taskStartToCloseTimeout: { seconds: 30 },
+      executionStartToCloseTimeout: { seconds: 1080 },
+    },
+  },
+  {
+    eventId: new Long(2),
+    eventTime: { seconds: '1510701850', nanos: '351' },
+    eventType: 'DecisionTaskScheduled',
+    decisionTaskScheduledEventAttributes: {
+      startToCloseTimeout: { seconds: 180 },
+      attempt: 1,
+      taskList: {
+        name: 'canary-task-queue',
+        kind: null,
+      },
+    },
+  },
+  {
+    eventId: new Long(3),
+    eventTime: { seconds: '1510701867', nanos: '531' },
+    eventType: 'DecisionTaskStarted',
+    decisionTaskStartedEventAttributes: {
+      identity: 'box1@ci-task-queue',
+      requestId: 'fafa095d-b4ca-423a-a812-223e62b5ccf8',
+      scheduledEventId: new Long(2),
+    },
+  },
+];
 const wfHistoryJson = [
   {
     eventId: 1,
@@ -209,52 +280,60 @@ describe('Workflow History', function () {
           .expect(200)
       );
   });
-  // it('should transform Long numbers to JavaScript numbers, Long dates to ISO date strings, and line-delimited JSON buffers to JSON', function() {
-  //   this.test.GetWorkflowExecutionHistory = ({ getRequest }) => ({
-  //     history: { events: wfHistoryThrift },
-  //     nextPageToken: new Buffer('page2'),
-  //   });
-  //   return request()
-  //     .get('/api/domains/canary/workflows/ci%2Fdemo/run1/history')
-  //     .expect(200)
-  //     .expect({
-  //       archived: null,
-  //       history: { events: wfHistoryJson },
-  //       nextPageToken: 'cGFnZTI=',
-  //       rawHistory: null,
-  //     });
-  // });
-  // describe('Export', function() {
-  //   const wfHistoryCliJson = `[{"eventId":1,"timestamp":1510701850351393089,"eventType":"WorkflowExecutionStarted","workflowExecutionStartedEventAttributes":{"workflowType":{"name":"github.com/uber/cadence/demo"},"taskList":{"name":"ci-task-queue"},"input":"eyJlbWFpbHMiOlsiamFuZUBleGFtcGxlLmNvbSIsImJvYkBleGFtcGxlLmNvbSJdLCJpbmNsdWRlRm9vdGVyIjp0cnVlfQ==","executionStartToCloseTimeoutSeconds":1080,"taskStartToCloseTimeoutSeconds":30}},{"eventId":2,"timestamp":1510701850351393089,"eventType":"DecisionTaskScheduled","decisionTaskScheduledEventAttributes":{"taskList":{"name":"canary-task-queue"},"startToCloseTimeoutSeconds":180,"attempt":1}},{"eventId":3,"timestamp":1510701867531262273,"eventType":"DecisionTaskStarted","decisionTaskStartedEventAttributes":{"scheduledEventId":2,"identity":"box1@ci-task-queue","requestId":"fafa095d-b4ca-423a-a812-223e62b5ccf8"}}]`;
-  //   it('should be able to export history in a format compatible with the CLI', function() {
-  //     this.test.GetWorkflowExecutionHistory = ({ getRequest }) => ({
-  //       history: { events: wfHistoryThrift },
-  //     });
-  //     return request()
-  //       .get('/api/domains/canary/workflows/ci%2Fdemo/run1/export')
-  //       .expect(200)
-  //       .expect(wfHistoryCliJson);
-  //   });
-  //   it('should page through all responses', async function() {
-  //     let calls = 0;
-  //     this.test.GetWorkflowExecutionHistory = ({ getRequest }) => {
-  //       if (calls > 0) {
-  //         getRequest.nextPageToken.should.be.ok;
-  //       } else {
-  //         should.not.exist(getRequest.nextPageToken);
-  //       }
-  //       const resp = {
-  //         history: { events: [wfHistoryThrift[calls]] },
-  //       };
-  //       if (++calls < wfHistoryThrift.length) {
-  //         resp.nextPageToken = new Buffer('page' + calls);
-  //       }
-  //       return resp;
-  //     };
-  //     return request()
-  //       .get('/api/domains/canary/workflows/ci%2Fdemo/run1/export')
-  //       .expect(200)
-  //       .expect(wfHistoryCliJson);
-  //   });
-  // });
+  it('should transform Long numbers to JavaScript numbers, Long dates to ISO date strings, and line-delimited JSON buffers to JSON', function () {
+    const events = {
+      tchannel: wfHistoryThrift,
+      grpc: wfHistoryGrpc,
+    };
+    this.test.GetWorkflowExecutionHistory = ({ getRequest }) => ({
+      history: { events: events[TRANSPORT_CLIENT_TYPE_DEFAULT] },
+      nextPageToken: new Buffer('page2'),
+    });
+    return request()
+      .get('/api/domains/canary/workflows/ci%2Fdemo/run1/history')
+      .expect(200)
+      .expect({
+        archived: null,
+        history: { events: wfHistoryJson },
+        nextPageToken: 'cGFnZTI=',
+        rawHistory: null,
+      });
+  });
+  describe('Export', function () {
+    const wfHistoryCliJson = `[{"eventId":1,"timestamp":1510701850351393089,"eventType":"WorkflowExecutionStarted","workflowExecutionStartedEventAttributes":{"workflowType":{"name":"github.com/uber/cadence/demo"},"taskList":{"name":"ci-task-queue"},"input":"eyJlbWFpbHMiOlsiamFuZUBleGFtcGxlLmNvbSIsImJvYkBleGFtcGxlLmNvbSJdLCJpbmNsdWRlRm9vdGVyIjp0cnVlfQ==","executionStartToCloseTimeoutSeconds":1080,"taskStartToCloseTimeoutSeconds":30}},{"eventId":2,"timestamp":1510701850351393089,"eventType":"DecisionTaskScheduled","decisionTaskScheduledEventAttributes":{"taskList":{"name":"canary-task-queue"},"startToCloseTimeoutSeconds":180,"attempt":1}},{"eventId":3,"timestamp":1510701867531262273,"eventType":"DecisionTaskStarted","decisionTaskStartedEventAttributes":{"scheduledEventId":2,"identity":"box1@ci-task-queue","requestId":"fafa095d-b4ca-423a-a812-223e62b5ccf8"}}]`;
+    // it('should be able to export history in a format compatible with the CLI', function () {
+    //   const events = {
+    //     tchannel: wfHistoryThrift,
+    //     grpc: wfHistoryGrpc,
+    //   };
+    //   this.test.GetWorkflowExecutionHistory = ({ getRequest }) => ({
+    //     history: { events: events[TRANSPORT_CLIENT_TYPE_DEFAULT] },
+    //   });
+    //   return request()
+    //     .get('/api/domains/canary/workflows/ci%2Fdemo/run1/export')
+    //     .expect(200)
+    //     .expect(wfHistoryCliJson);
+    // });
+    //   it('should page through all responses', async function() {
+    //     let calls = 0;
+    //     this.test.GetWorkflowExecutionHistory = ({ getRequest }) => {
+    //       if (calls > 0) {
+    //         getRequest.nextPageToken.should.be.ok;
+    //       } else {
+    //         should.not.exist(getRequest.nextPageToken);
+    //       }
+    //       const resp = {
+    //         history: { events: [wfHistoryThrift[calls]] },
+    //       };
+    //       if (++calls < wfHistoryThrift.length) {
+    //         resp.nextPageToken = new Buffer('page' + calls);
+    //       }
+    //       return resp;
+    //     };
+    //     return request()
+    //       .get('/api/domains/canary/workflows/ci%2Fdemo/run1/export')
+    //       .expect(200)
+    //       .expect(wfHistoryCliJson);
+    //   });
+  });
 });
