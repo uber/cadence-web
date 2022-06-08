@@ -19,11 +19,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const formatTimestampToDatetime = timestamp =>
-  !timestamp
-    ? null
-    : new Date(
-      parseInt(timestamp.seconds) * 1000 + (parseInt(timestamp.nanos) / 1e6)
-    );
+const formatHistoryEventDetails = require('./format-history-event-details');
+const formatHistoryEventType = require('./format-history-event-type');
+const formatTimestampToLong = require('./format-timestamp-to-long');
+const { cliTransform } = require('../transform');
 
-module.exports = formatTimestampToDatetime;
+const formatResponseExportHistory = ({
+  archived,
+  history: {
+    events,
+  },
+  rawHistory,
+  ...response
+}) => ({
+  ...response,
+  archived: archived || null,
+  history: {
+    events: events.map(({ eventId, eventTime, ...event }) => {
+
+
+      return cliTransform({
+        ...event,
+        ...formatHistoryEventDetails(event),
+        eventType: formatHistoryEventType(event),
+        eventId: parseInt(eventId),
+        timestamp: formatTimestampToLong(eventTime),
+      })
+    }),
+  },
+  rawHistory: rawHistory?.length ? rawHistory : null,
+});
+
+module.exports = formatResponseExportHistory;

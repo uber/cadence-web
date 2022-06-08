@@ -27,6 +27,7 @@ const formatResponseDefault = require('./format-response-default');
 const formatResponseDescribeTaskList = require('./format-response-describe-task-list');
 const formatResponseDescribeWorkflow = require('./format-response-describe-workflow');
 const formatResponseDomain = require('./format-response-domain');
+const formatResponseExportHistory = require('./format-response-export-history');
 const formatResponseGetHistory = require('./format-response-get-history');
 const formatResponseListDomains = require('./format-response-list-domains');
 const formatResponseQueryWorkflow = require('./format-response-query-workflow');
@@ -34,6 +35,7 @@ const formatResponseSignalWorkflowExecution = require('./format-response-signal-
 const formatResponseTerminateWorkflowExecution = require('./format-response-terminate-workflow-execution');
 const formatResponseWorkflowList = require('./format-response-workflow-list');
 const formatTimestampToDatetime = require('./format-timestamp-to-datetime');
+const formatTimestampToLong = require('./format-timestamp-to-long');
 const formatTimestampToSeconds = require('./format-timestamp-to-seconds');
 
 module.exports = {
@@ -45,6 +47,7 @@ module.exports = {
   formatResponseDescribeTaskList,
   formatResponseDescribeWorkflow,
   formatResponseDomain,
+  formatResponseExportHistory,
   formatResponseGetHistory,
   formatResponseListDomains,
   formatResponseQueryWorkflow,
@@ -52,5 +55,6 @@ module.exports = {
   formatResponseTerminateWorkflowExecution,
   formatResponseWorkflowList,
   formatTimestampToDatetime,
+  formatTimestampToLong,
   formatTimestampToSeconds,
 };

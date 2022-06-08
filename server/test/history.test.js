@@ -24,7 +24,7 @@ const { TRANSPORT_CLIENT_TYPE_DEFAULT } = require('../constants');
 
 const wfHistoryThrift = [
   {
-    eventId: new Long(1),
+    eventId: 1,
     timestamp: new Long(800610625, 351737684, false),
     eventType: 'WorkflowExecutionStarted',
     workflowExecutionStartedEventAttributes: {
@@ -66,7 +66,7 @@ const wfHistoryThrift = [
     },
   },
   {
-    eventId: new Long(2),
+    eventId: 2,
     timestamp: new Long(800610625, 351737684, false),
     eventType: 'DecisionTaskScheduled',
     decisionTaskScheduledEventAttributes: {
@@ -79,20 +79,20 @@ const wfHistoryThrift = [
     },
   },
   {
-    eventId: new Long(3),
+    eventId: 3,
     timestamp: new Long(800610625, 351737688, false),
     eventType: 'DecisionTaskStarted',
     decisionTaskStartedEventAttributes: {
       identity: 'box1@ci-task-queue',
       requestId: 'fafa095d-b4ca-423a-a812-223e62b5ccf8',
-      scheduledEventId: new Long(2),
+      scheduledEventId: 2,
     },
   },
 ];
 const wfHistoryGrpc = [
   {
-    eventId: new Long(1),
-    eventTime: { seconds: '1510701850', nanos: '351' },
+    eventId: 1,
+    eventTime: { seconds: '1510701850', nanos: '351393089' },
     eventType: 'WorkflowExecutionStarted',
     workflowExecutionStartedEventAttributes: {
       attempt: null,
@@ -137,8 +137,8 @@ const wfHistoryGrpc = [
     },
   },
   {
-    eventId: new Long(2),
-    eventTime: { seconds: '1510701850', nanos: '351' },
+    eventId: 2,
+    eventTime: { seconds: '1510701850', nanos: '351393083' },
     eventType: 'DecisionTaskScheduled',
     decisionTaskScheduledEventAttributes: {
       startToCloseTimeout: { seconds: 180 },
@@ -150,13 +150,13 @@ const wfHistoryGrpc = [
     },
   },
   {
-    eventId: new Long(3),
-    eventTime: { seconds: '1510701867', nanos: '531' },
+    eventId: 3,
+    eventTime: { seconds: '1510701867', nanos: '531393093' },
     eventType: 'DecisionTaskStarted',
     decisionTaskStartedEventAttributes: {
       identity: 'box1@ci-task-queue',
       requestId: 'fafa095d-b4ca-423a-a812-223e62b5ccf8',
-      scheduledEventId: new Long(2),
+      scheduledEventId: 2,
     },
   },
 ];

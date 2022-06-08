@@ -19,12 +19,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+const cliTransform = require('./cli-transform');
 const transformDefault = require('./transform-default');
 const withDomain = require('./with-domain');
 const withPagination = require('./with-pagination');
 const withWorkflowExecution = require('./with-workflow-execution');
 
 module.exports = {
+  cliTransform,
   transformDefault,
   withDomain,
   withPagination,

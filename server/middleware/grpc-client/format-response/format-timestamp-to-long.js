@@ -19,11 +19,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const formatTimestampToDatetime = timestamp =>
-  !timestamp
-    ? null
-    : new Date(
-      parseInt(timestamp.seconds) * 1000 + (parseInt(timestamp.nanos) / 1e6)
-    );
+// const losslessJSON = require('lossless-json');
+const NanoDate = require('nano-date').default;
+const Long = require('long');
 
-module.exports = formatTimestampToDatetime;
+
+console.log('NanoDate = ');
+console.log(NanoDate);
+console.log(new NanoDate());
+
+const formatTimestampToLong = timestamp => {
+  console.log('timestamp.seconds = ', timestamp.seconds);
+  console.log('timestamp.nanos = ', timestamp.nanos);
+  console.log('timestamp = ', `${timestamp.seconds}${timestamp.nanos}`);
+  console.log('NanoDate.getTime() = ', (new NanoDate()).getTime());
+  return !timestamp ? null : Long.fromValue(`${timestamp.seconds}${timestamp.nanos}`);
+}
+
+// (parseInt(timestamp.seconds) * 1e6), parseInt(timestamp.nanos), false).toString());
+
+module.exports = formatTimestampToLong;

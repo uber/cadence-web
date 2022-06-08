@@ -34,6 +34,7 @@ const {
   formatResponseDescribeTaskList,
   formatResponseDescribeWorkflow,
   formatResponseDomain,
+  formatResponseExportHistory,
   formatResponseGetHistory,
   formatResponseListDomains,
   formatResponseQueryWorkflow,
@@ -113,7 +114,7 @@ const grpcClient = ({ peers, requestConfig }) =>
       }),
       exportHistory: workflowService.request({
         formatRequest: formatRequestGetHistory,
-        formatResponse: formatResponseGetHistory,
+        formatResponse: formatResponseExportHistory,
         method: 'GetWorkflowExecutionHistory',
         transform: combine(
           withDomain(ctx),
