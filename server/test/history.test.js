@@ -314,26 +314,30 @@ describe('Workflow History', function () {
         .expect(200)
         .expect(wfHistoryCliJson);
     });
-    //   it('should page through all responses', async function() {
-    //     let calls = 0;
-    //     this.test.GetWorkflowExecutionHistory = ({ getRequest }) => {
-    //       if (calls > 0) {
-    //         getRequest.nextPageToken.should.be.ok;
-    //       } else {
-    //         should.not.exist(getRequest.nextPageToken);
-    //       }
-    //       const resp = {
-    //         history: { events: [wfHistoryThrift[calls]] },
-    //       };
-    //       if (++calls < wfHistoryThrift.length) {
-    //         resp.nextPageToken = new Buffer('page' + calls);
-    //       }
-    //       return resp;
-    //     };
-    //     return request()
-    //       .get('/api/domains/canary/workflows/ci%2Fdemo/run1/export')
-    //       .expect(200)
-    //       .expect(wfHistoryCliJson);
-    //   });
+    it('should page through all responses', async function () {
+      let calls = 0;
+      const events = {
+        tchannel: wfHistoryThrift,
+        grpc: wfHistoryGrpc,
+      };
+      this.test.GetWorkflowExecutionHistory = ({ getRequest }) => {
+        if (calls > 0) {
+          getRequest.nextPageToken.should.be.ok;
+        } else {
+          should.not.exist(getRequest.nextPageToken);
+        }
+        const resp = {
+          history: { events: [events[TRANSPORT_CLIENT_TYPE_DEFAULT][calls]] },
+        };
+        if (++calls < events[TRANSPORT_CLIENT_TYPE_DEFAULT].length) {
+          resp.nextPageToken = new Buffer('page' + calls);
+        }
+        return resp;
+      };
+      return request()
+        .get('/api/domains/canary/workflows/ci%2Fdemo/run1/export')
+        .expect(200)
+        .expect(wfHistoryCliJson);
+    });
   });
 });
