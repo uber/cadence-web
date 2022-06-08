@@ -35,15 +35,13 @@ const formatResponseExportHistory = ({
   ...response,
   archived: archived || null,
   history: {
-    events: events.map(({ eventId, eventTime, ...event }) => {
-
-
+    events: events.map(({ attributes, eventId, eventTime, taskId, version, ...event }) => {
       return cliTransform({
-        ...event,
-        ...formatHistoryEventDetails(event),
-        eventType: formatHistoryEventType(event),
         eventId: parseInt(eventId),
         timestamp: formatTimestampToLong(eventTime),
+        eventType: formatHistoryEventType({ attributes }),
+        ...event,
+        ...formatHistoryEventDetails({ ...event, attributes }),
       })
     }),
   },

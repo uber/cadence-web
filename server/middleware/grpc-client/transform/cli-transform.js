@@ -28,6 +28,11 @@ const cliTransform = item => {
   }
 
   Object.entries(item).forEach(([subkey, subvalue]) => {
+    if (subkey === 'input' && typeof subvalue !== 'string') {
+      item[subkey] = Buffer.from(
+        JSON.stringify(subvalue)
+      ).toString('base64');
+    }
     if (subvalue && typeof subvalue.unsigned === 'boolean') {
       item[subkey] = new losslessJSON.LosslessNumber(
         Long.fromValue(subvalue).toString()

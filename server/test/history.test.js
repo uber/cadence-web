@@ -138,7 +138,7 @@ const wfHistoryGrpc = [
   },
   {
     eventId: 2,
-    eventTime: { seconds: '1510701850', nanos: '351393083' },
+    eventTime: { seconds: '1510701850', nanos: '351393089' },
     eventType: 'DecisionTaskScheduled',
     decisionTaskScheduledEventAttributes: {
       startToCloseTimeout: { seconds: 180 },
@@ -151,7 +151,7 @@ const wfHistoryGrpc = [
   },
   {
     eventId: 3,
-    eventTime: { seconds: '1510701867', nanos: '531393093' },
+    eventTime: { seconds: '1510701867', nanos: '531262273' },
     eventType: 'DecisionTaskStarted',
     decisionTaskStartedEventAttributes: {
       identity: 'box1@ci-task-queue',
@@ -301,19 +301,19 @@ describe('Workflow History', function () {
   });
   describe('Export', function () {
     const wfHistoryCliJson = `[{"eventId":1,"timestamp":1510701850351393089,"eventType":"WorkflowExecutionStarted","workflowExecutionStartedEventAttributes":{"workflowType":{"name":"github.com/uber/cadence/demo"},"taskList":{"name":"ci-task-queue"},"input":"eyJlbWFpbHMiOlsiamFuZUBleGFtcGxlLmNvbSIsImJvYkBleGFtcGxlLmNvbSJdLCJpbmNsdWRlRm9vdGVyIjp0cnVlfQ==","executionStartToCloseTimeoutSeconds":1080,"taskStartToCloseTimeoutSeconds":30}},{"eventId":2,"timestamp":1510701850351393089,"eventType":"DecisionTaskScheduled","decisionTaskScheduledEventAttributes":{"taskList":{"name":"canary-task-queue"},"startToCloseTimeoutSeconds":180,"attempt":1}},{"eventId":3,"timestamp":1510701867531262273,"eventType":"DecisionTaskStarted","decisionTaskStartedEventAttributes":{"scheduledEventId":2,"identity":"box1@ci-task-queue","requestId":"fafa095d-b4ca-423a-a812-223e62b5ccf8"}}]`;
-    // it('should be able to export history in a format compatible with the CLI', function () {
-    //   const events = {
-    //     tchannel: wfHistoryThrift,
-    //     grpc: wfHistoryGrpc,
-    //   };
-    //   this.test.GetWorkflowExecutionHistory = ({ getRequest }) => ({
-    //     history: { events: events[TRANSPORT_CLIENT_TYPE_DEFAULT] },
-    //   });
-    //   return request()
-    //     .get('/api/domains/canary/workflows/ci%2Fdemo/run1/export')
-    //     .expect(200)
-    //     .expect(wfHistoryCliJson);
-    // });
+    it('should be able to export history in a format compatible with the CLI', function () {
+      const events = {
+        tchannel: wfHistoryThrift,
+        grpc: wfHistoryGrpc,
+      };
+      this.test.GetWorkflowExecutionHistory = ({ getRequest }) => ({
+        history: { events: events[TRANSPORT_CLIENT_TYPE_DEFAULT] },
+      });
+      return request()
+        .get('/api/domains/canary/workflows/ci%2Fdemo/run1/export')
+        .expect(200)
+        .expect(wfHistoryCliJson);
+    });
     //   it('should page through all responses', async function() {
     //     let calls = 0;
     //     this.test.GetWorkflowExecutionHistory = ({ getRequest }) => {

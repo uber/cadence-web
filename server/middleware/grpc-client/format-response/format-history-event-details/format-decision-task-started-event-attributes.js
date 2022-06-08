@@ -23,8 +23,8 @@ const formatDecisionTaskStartedEventAttributes = ({
   scheduledEventId,
   ...eventAttributes
 }) => ({
-  ...eventAttributes,
   scheduledEventId: parseInt(scheduledEventId),
+  ...eventAttributes,
 });
 
 module.exports = formatDecisionTaskStartedEventAttributes;

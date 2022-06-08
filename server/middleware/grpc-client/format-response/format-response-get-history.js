@@ -35,11 +35,11 @@ const formatResponseGetHistory = ({
   archived: archived || null,
   history: {
     events: events.map(({ eventId, eventTime, ...event }) => ({
-      ...event,
-      ...formatHistoryEventDetails(event),
-      eventType: formatHistoryEventType(event),
       eventId: parseInt(eventId),
       timestamp: formatTimestampToDatetime(eventTime),
+      eventType: formatHistoryEventType(event),
+      ...event,
+      ...formatHistoryEventDetails(event),
     })),
   },
   rawHistory: rawHistory?.length ? rawHistory : null,

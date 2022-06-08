@@ -27,12 +27,12 @@ const formatDecisionTaskScheduledEventAttributes = ({
   taskList,
   ...eventAttributes
 }) => ({
-  ...eventAttributes,
-  startToCloseTimeoutSeconds: formatTimestampToSeconds(startToCloseTimeout),
   taskList: {
     kind: formatEnum(taskList?.kind, 'TASK_LIST_KIND'),
     name: taskList?.name || null,
   },
+  startToCloseTimeoutSeconds: formatTimestampToSeconds(startToCloseTimeout),
+  ...eventAttributes,
 });
 
 module.exports = formatDecisionTaskScheduledEventAttributes;

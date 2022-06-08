@@ -50,14 +50,22 @@ const formatWorkflowExecutionStartedEventAttributes = ({
   ...eventAttributes
 }) => ({
   ...eventAttributes,
+  taskList: {
+    kind: formatEnum(taskList?.kind, 'TASK_LIST_KIND'),
+    name: taskList?.name || null,
+  },
+  input: formatPayload(input),
+  executionStartToCloseTimeoutSeconds: formatTimestampToSeconds(
+    executionStartToCloseTimeout
+  ),
+  taskStartToCloseTimeoutSeconds: formatTimestampToSeconds(
+    taskStartToCloseTimeout
+  ),
   attempt: attempt || null,
   continuedExecutionRunId: continuedExecutionRunId || null,
   continuedFailureDetails: continuedFailure?.details || null,
   continuedFailureReason: continuedFailure?.reason || null,
   cronSchedule: cronSchedule || null,
-  executionStartToCloseTimeoutSeconds: formatTimestampToSeconds(
-    executionStartToCloseTimeout
-  ),
   expirationTimestamp: formatTimestampToDatetime(expirationTime),
   firstDecisionTaskBackoffSeconds: formatTimestampToSeconds(
     firstDecisionTaskBackoff
@@ -65,7 +73,6 @@ const formatWorkflowExecutionStartedEventAttributes = ({
   firstExecutionRunId: firstExecutionRunId || null,
   identity: identity || null,
   initiator: formatEnum(initiator, 'CONTINUE_AS_NEW_INITIATOR'),
-  input: formatPayload(input),
   memo: formatPayloadMap(memo, 'fields'),
   originalExecutionRunId: originalExecutionRunId || null,
   parentInitiatedEventId: parentExecutionInfo?.initiatedId
@@ -76,13 +83,6 @@ const formatWorkflowExecutionStartedEventAttributes = ({
   prevAutoResetPoints: formatPrevAutoResetPoints(prevAutoResetPoints),
   retryPolicy: formatRetryPolicy(retryPolicy),
   searchAttributes: formatPayloadMap(searchAttributes, 'indexedFields'),
-  taskList: {
-    kind: formatEnum(taskList?.kind, 'TASK_LIST_KIND'),
-    name: taskList?.name || null,
-  },
-  taskStartToCloseTimeoutSeconds: formatTimestampToSeconds(
-    taskStartToCloseTimeout
-  ),
 });
 
 module.exports = formatWorkflowExecutionStartedEventAttributes;
