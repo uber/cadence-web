@@ -19,32 +19,60 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-describe('Listing Workflows', function() {
+const { TRANSPORT_CLIENT_TYPE_DEFAULT } = require('../constants');
+
+describe('Listing Workflows', function () {
   const demoExecThrift = {
-      execution: {
-        workflowId: 'demo',
-        runId: 'd92bb92c-5f49-487f-80a8-f8f375ba55a8',
-      },
-      type: {
-        name: 'github.com/uber/cadence/demo.cronWorkflow',
-      },
-      startTime: dateToLong('2017-11-10T21:30:00.000Z'),
-      closeTime: null,
-      closeStatus: null,
-      domainName: 'canary',
-      historyLength: null,
-      isCron: null,
-      autoResetPoints: null,
-      executionTime: null,
-      memo: null,
-      parentDomainId: null,
-      parentExecution: null,
-      searchAttributes: null,
+    execution: {
+      workflowId: 'demo',
+      runId: 'd92bb92c-5f49-487f-80a8-f8f375ba55a8',
     },
-    demoExecJson = Object.assign({}, demoExecThrift, {
-      startTime: '2017-11-10T21:30:00.000Z',
-      taskList: null,
-    });
+    type: {
+      name: 'github.com/uber/cadence/demo.cronWorkflow',
+    },
+    startTime: dateToLong('2017-11-10T21:30:00.000Z'),
+    closeTime: null,
+    closeStatus: null,
+    domainName: 'canary',
+    historyLength: null,
+    isCron: null,
+    autoResetPoints: null,
+    executionTime: null,
+    memo: null,
+    parentDomainId: null,
+    parentExecution: null,
+    searchAttributes: null,
+  };
+  const demoExecGrpc = {
+    workflowExecution: {
+      workflowId: 'demo',
+      runId: 'd92bb92c-5f49-487f-80a8-f8f375ba55a8',
+    },
+    type: {
+      name: 'github.com/uber/cadence/demo.cronWorkflow',
+    },
+    startTime: dateToTimestamp('2017-11-10T21:30:00.000Z'),
+    closeTime: null,
+    closeStatus: null,
+    domainName: 'canary',
+    historyLength: null,
+    isCron: null,
+    autoResetPoints: null,
+    executionTime: null,
+    memo: null,
+    parentDomainId: null,
+    parentExecution: null,
+    searchAttributes: null,
+  };
+  const demoExecJson = Object.assign({}, demoExecThrift, {
+    startTime: '2017-11-10T21:30:00.000Z',
+    taskList: null,
+  });
+  const demoExec = {
+    thrift: demoExecThrift,
+    grpc: demoExecGrpc,
+    json: demoExecJson,
+  }
 
   const clusterElasticSearchEnabled = {
     persistenceInfo: {
@@ -76,7 +104,8 @@ describe('Listing Workflows', function() {
     return request().delete('/api/cluster/cache');
   });
 
-  // it('should fail to list all workflows with ES disabled', function() {
+  // NOTE: TEST DISABLED UNTIL PROTO IS SUPPORTED
+  // it('should fail to list all workflows with ES disabled', function () {
   //   this.test.DescribeCluster = () => {
   //     return clusterElasticSearchDisabled;
   //   };
@@ -93,38 +122,38 @@ describe('Listing Workflows', function() {
   //     });
   // });
 
-  // it('should list all workflows with ES enabled', function() {
-  //   this.test.ListWorkflowExecutions = ({ listRequest }) => {
-  //     listRequest.query
-  //       .match('2017-11-12T12:00:00.000Z')[0]
-  //       .should.equal('2017-11-12T12:00:00.000Z');
+  it('should list all workflows with ES enabled', function () {
+    this.test.ListWorkflowExecutions = ({ listRequest }) => {
+      listRequest.query
+        .match('2017-11-12T12:00:00.000Z')[0]
+        .should.equal('2017-11-12T12:00:00.000Z');
 
-  //     listRequest.query
-  //       .match('2017-11-13T14:30:00.000Z')[0]
-  //       .should.equal('2017-11-13T14:30:00.000Z');
+      listRequest.query
+        .match('2017-11-13T14:30:00.000Z')[0]
+        .should.equal('2017-11-13T14:30:00.000Z');
 
-  //     return {
-  //       executions: [demoExecThrift],
-  //       nextPageToken: new Buffer('{"IsWorkflowRunning":true,NextEventId:37}'),
-  //     };
-  //   };
+      return {
+        executions: [demoExec[TRANSPORT_CLIENT_TYPE_DEFAULT]],
+        nextPageToken: new Buffer('{"IsWorkflowRunning":true,NextEventId:37}'),
+      };
+    };
 
-  //   this.test.DescribeCluster = () => {
-  //     return clusterElasticSearchEnabled;
-  //   };
+    this.test.DescribeCluster = () => {
+      return clusterElasticSearchEnabled;
+    };
 
-  //   return request()
-  //     .get(
-  //       '/api/domains/canary/workflows/all?startTime=2017-11-12T12:00:00Z&endTime=2017-11-13T14:30:00Z'
-  //     )
-  //     .expect(200)
-  //     .expect('Content-Type', /json/)
-  //     .expect({
-  //       executions: [demoExecJson],
-  //       nextPageToken:
-  //         'eyJJc1dvcmtmbG93UnVubmluZyI6dHJ1ZSxOZXh0RXZlbnRJZDozN30=',
-  //     });
-  // });
+    return request()
+      .get(
+        '/api/domains/canary/workflows/all?startTime=2017-11-12T12:00:00Z&endTime=2017-11-13T14:30:00Z'
+      )
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .expect({
+        executions: [demoExec.json],
+        nextPageToken:
+          'eyJJc1dvcmtmbG93UnVubmluZyI6dHJ1ZSxOZXh0RXZlbnRJZDozN30=',
+      });
+  });
 
   // it('should list open workflows with ES disabled', function() {
   //   this.test.ListOpenWorkflowExecutions = ({ listRequest }) => {

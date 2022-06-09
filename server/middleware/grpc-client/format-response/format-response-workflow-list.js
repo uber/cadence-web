@@ -20,6 +20,7 @@
 // THE SOFTWARE.
 
 const formatCloseStatus = require('./format-close-status');
+const formatEnum = require('./format-enum');
 const formatTimestampToDatetime = require('./format-timestamp-to-datetime');
 
 const formatResponseWorkflowList = ({ executions, nextPageToken }) => ({
@@ -29,7 +30,10 @@ const formatResponseWorkflowList = ({ executions, nextPageToken }) => ({
       closeTime,
       executionTime,
       historyLength,
+      isCron,
+      parentExecutionInfo,
       startTime,
+      taskList,
       workflowExecution,
       ...execution
     }) => ({
@@ -38,8 +42,17 @@ const formatResponseWorkflowList = ({ executions, nextPageToken }) => ({
       closeTime: formatTimestampToDatetime(closeTime),
       execution: workflowExecution,
       executionTime: formatTimestampToDatetime(executionTime),
-      historyLength: parseInt(historyLength),
+      historyLength: historyLength === '' ? parseInt(historyLength) : null,
+      isCron: isCron || null,
+      parentDomainId: parentExecutionInfo?.domainId || null,
+      parentExecution: parentExecutionInfo?.workflowExecution || null,
       startTime: formatTimestampToDatetime(startTime),
+      taskList: taskList
+        ? {
+          kind: formatEnum(taskList?.kind, 'TASK_LIST_KIND'),
+          name: taskList?.name || null,
+        }
+        : null,
     })
   ),
   nextPageToken,

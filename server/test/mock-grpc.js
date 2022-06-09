@@ -92,14 +92,14 @@ const mockGRPC = done => {
   };
 
   const domainServiceMock = GRPCServiceMock(domainServiceConfig);
-  // const visibilityServiceMock = GRPCServiceMock(visibilityServiceConfig);
+  const visibilityServiceMock = GRPCServiceMock(visibilityServiceConfig);
   const workflowServiceMock = GRPCServiceMock(workflowServiceConfig);
 
   const handler = (method, requestName) => (call, callback) => {
     console.log('method', method);
 
     if (!currentTest[method]) {
-      throw new Error(`unexpected request to ${req.endpoint}`);
+      throw new Error(`unexpected request to ${method}.${requestName}`);
     }
 
     console.log('mock = ', currentTest[method]);
@@ -138,6 +138,10 @@ const mockGRPC = done => {
     SignalWorkflowExecution: handler('SignalWorkflowExecution', 'signalRequest'),
     TerminateWorkflowExecution: handler('TerminateWorkflowExecution', 'terminateRequest'),
   });
+
+  server.addService(visibilityServiceMock.service, {
+    ListWorkflowExecutions: handler('ListWorkflowExecutions', 'listRequest'),
+  })
 
   server.bindAsync(
     '127.0.0.1:11343',
