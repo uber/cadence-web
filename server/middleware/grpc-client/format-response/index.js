@@ -19,7 +19,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const formatCloseStatus = require('./format-close-status');
 const formatEnum = require('./format-enum');
 const formatHistoryEventDetails = require('./format-history-event-details');
 const formatHistoryEventType = require('./format-history-event-type');
@@ -39,7 +38,6 @@ const formatTimestampToLong = require('./format-timestamp-to-long');
 const formatTimestampToSeconds = require('./format-timestamp-to-seconds');
 
 module.exports = {
-  formatCloseStatus,
   formatEnum,
   formatHistoryEventDetails,
   formatHistoryEventType,

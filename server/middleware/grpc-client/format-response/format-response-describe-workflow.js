@@ -19,7 +19,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const formatCloseStatus = require('./format-close-status');
 const formatEnum = require('./format-enum');
 const formatTimestampToDatetime = require('./format-timestamp-to-datetime');
 const formatTimestampToSeconds = require('./format-timestamp-to-seconds');
@@ -66,7 +65,10 @@ const formatResponseDescribeWorkflow = ({
             ) || null,
         },
         closeStatus: workflowExecutionInfo?.closeStatus
-          ? formatCloseStatus(workflowExecutionInfo?.closeStatus)
+          ? formatEnum(
+              workflowExecutionInfo?.closeStatus,
+              'WORKFLOW_EXECUTION_CLOSE_STATUS'
+            )
           : null,
         closeTime:
           formatTimestampToDatetime(workflowExecutionInfo?.closeTime) || null,
