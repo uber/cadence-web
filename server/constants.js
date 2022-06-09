@@ -29,7 +29,7 @@ const REQUEST_TIMEOUT_DEFAULT = 1000 * 60 * 5;
 
 const SERVICE_NAME_DEFAULT = 'cadence-frontend';
 
-const TRANSPORT_CLIENT_TYPE_DEFAULT = 'tchannel';  // 'tchannel', 'grpc'
+const TRANSPORT_CLIENT_TYPE_DEFAULT = 'tchannel'; // 'tchannel', 'grpc'
 
 module.exports = {
   PEERS_DEFAULT,
