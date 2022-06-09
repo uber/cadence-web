@@ -45,6 +45,10 @@ const {
 
 const staticRoot = path.join(__dirname, '../dist');
 const app = new Koa();
+const transportClients = {
+  tchannel: tchannelClient,
+  grpc: grpcClient,
+};
 
 app.webpackConfig = webpackConfig;
 
@@ -70,8 +74,13 @@ app.init = function({
     timeout,
   };
 
-  const transportClient =
-    transportClientType === 'grpc' ? grpcClient : tchannelClient;
+  const transportClient = transportClients[transportClientType];
+
+  if (!transportClient) {
+    throw new Error(
+      `Unexpected transport client "${transportClientType}". Only support 'tchannel' or 'grpc'.`
+    );
+  }
 
   let compiler;
 
