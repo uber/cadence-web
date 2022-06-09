@@ -19,8 +19,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const { TRANSPORT_CLIENT_TYPE_DEFAULT } = require('../constants');
-
 describe('Listing Workflows', function() {
   const demoExecThrift = {
     execution: {
@@ -132,7 +130,7 @@ describe('Listing Workflows', function() {
         .should.equal('2017-11-13T14:30:00.000Z');
 
       return {
-        executions: [demoExec[TRANSPORT_CLIENT_TYPE_DEFAULT]],
+        executions: [demoExec[process.env.TRANSPORT_CLIENT_TYPE]],
         nextPageToken: new Buffer('{"IsWorkflowRunning":true,NextEventId:37}'),
       };
     };
@@ -160,7 +158,7 @@ describe('Listing Workflows', function() {
       should.not.exist(listRequest.executionFilter);
       should.not.exist(listRequest.typeFilter);
 
-      switch (TRANSPORT_CLIENT_TYPE_DEFAULT) {
+      switch (process.env.TRANSPORT_CLIENT_TYPE) {
         case 'tchannel': {
           listRequest.StartTimeFilter.earliestTime
             .div(1000000000)
@@ -183,12 +181,12 @@ describe('Listing Workflows', function() {
         }
         default:
           throw new Error(
-            `unexpected transport type "${TRANSPORT_CLIENT_TYPE_DEFAULT}"`
+            `unexpected transport type "${process.env.TRANSPORT_CLIENT_TYPE}"`
           );
       }
 
       return {
-        executions: [demoExec[TRANSPORT_CLIENT_TYPE_DEFAULT]],
+        executions: [demoExec[process.env.TRANSPORT_CLIENT_TYPE]],
         nextPageToken: new Buffer('{"IsWorkflowRunning":true,NextEventId:37}'),
       };
     };
@@ -221,7 +219,7 @@ describe('Listing Workflows', function() {
         .should.equal('2017-11-13T14:30:00.000Z');
 
       return {
-        executions: [demoExec[TRANSPORT_CLIENT_TYPE_DEFAULT]],
+        executions: [demoExec[process.env.TRANSPORT_CLIENT_TYPE]],
         nextPageToken: new Buffer('{"IsWorkflowRunning":true,NextEventId:37}'),
       };
     };
@@ -249,7 +247,7 @@ describe('Listing Workflows', function() {
       should.not.exist(listRequest.executionFilter);
       should.not.exist(listRequest.typeFilter);
 
-      switch (TRANSPORT_CLIENT_TYPE_DEFAULT) {
+      switch (process.env.TRANSPORT_CLIENT_TYPE) {
         case 'tchannel': {
           listRequest.StartTimeFilter.earliestTime
             .div(1000000000)
@@ -272,12 +270,12 @@ describe('Listing Workflows', function() {
         }
         default:
           throw new Error(
-            `unexpected transport type "${TRANSPORT_CLIENT_TYPE_DEFAULT}"`
+            `unexpected transport type "${process.env.TRANSPORT_CLIENT_TYPE}"`
           );
       }
 
       return {
-        executions: [demoExec[TRANSPORT_CLIENT_TYPE_DEFAULT]],
+        executions: [demoExec[process.env.TRANSPORT_CLIENT_TYPE]],
         nextPageToken: new Buffer('{"IsWorkflowRunning":false}'),
       };
     };
@@ -311,7 +309,7 @@ describe('Listing Workflows', function() {
         .should.equal('2017-11-13T14:30:00.000Z');
 
       return {
-        executions: [demoExec[TRANSPORT_CLIENT_TYPE_DEFAULT]],
+        executions: [demoExec[process.env.TRANSPORT_CLIENT_TYPE]],
         nextPageToken: new Buffer('{"IsWorkflowRunning":false}'),
       };
     };
@@ -334,7 +332,7 @@ describe('Listing Workflows', function() {
 
   it('should forward the next page token along', function() {
     this.test.ListClosedWorkflowExecutions = ({ listRequest }) => {
-      switch (TRANSPORT_CLIENT_TYPE_DEFAULT) {
+      switch (process.env.TRANSPORT_CLIENT_TYPE) {
         case 'tchannel': {
           listRequest.nextPageToken.toString().should.equal('page1');
           break;
@@ -345,7 +343,7 @@ describe('Listing Workflows', function() {
         }
         default:
           throw new Error(
-            `unexpected transport type "${TRANSPORT_CLIENT_TYPE_DEFAULT}"`
+            `unexpected transport type "${process.env.TRANSPORT_CLIENT_TYPE}"`
           );
       }
 

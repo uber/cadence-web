@@ -57,7 +57,7 @@ app.init = function({
   serviceName = process.env.CADENCE_TCHANNEL_SERVICE || SERVICE_NAME_DEFAULT,
   timeout = REQUEST_TIMEOUT_DEFAULT,
   transportClientType = process.env.TRANSPORT_CLIENT_TYPE ||
-    TRANSPORT_CLIENT_TYPE_DEFAULT,
+    TRANSPORT_CLIENT_TYPE_DEFAULT, // 'tchannel', 'grpc'
   useWebpack = process.env.NODE_ENV !== 'production',
   enableAuth = process.env.ENABLE_AUTH === 'true',
   authType = process.env.AUTH_TYPE,

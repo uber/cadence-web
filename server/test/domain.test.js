@@ -20,7 +20,6 @@
 // THE SOFTWARE.
 
 const grpc = require('@grpc/grpc-js');
-const { TRANSPORT_CLIENT_TYPE_DEFAULT } = require('../constants');
 
 describe('Describe Domain', function() {
   it('should list domains', async function() {
@@ -79,7 +78,7 @@ describe('Describe Domain', function() {
     this.test.ListDomains = ({ listRequest }) => {
       should.not.exist(listRequest.nextPageToken);
 
-      return { domains: domains[TRANSPORT_CLIENT_TYPE_DEFAULT] };
+      return { domains: domains[process.env.TRANSPORT_CLIENT_TYPE] };
     };
 
     return request()
@@ -143,7 +142,7 @@ describe('Describe Domain', function() {
     this.test.DescribeDomain = ({ describeRequest }) => {
       describeRequest.name.should.equal('test-domain');
 
-      return domainDesc[TRANSPORT_CLIENT_TYPE_DEFAULT];
+      return domainDesc[process.env.TRANSPORT_CLIENT_TYPE];
     };
 
     return request()
@@ -170,7 +169,7 @@ describe('Describe Domain', function() {
         },
       };
 
-      return error[TRANSPORT_CLIENT_TYPE_DEFAULT];
+      return error[process.env.TRANSPORT_CLIENT_TYPE];
     };
 
     this.test.DescribeDomain = errorHandler;

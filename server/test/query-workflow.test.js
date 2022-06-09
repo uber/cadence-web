@@ -21,7 +21,6 @@
 
 const btoa = require('btoa');
 const grpc = require('@grpc/grpc-js');
-const { TRANSPORT_CLIENT_TYPE_DEFAULT } = require('../constants');
 
 describe('Query Workflow', function() {
   it('should list workflows using a temporary hack of parsing out the available workflows from a NotFoundError', async function() {
@@ -44,7 +43,7 @@ describe('Query Workflow', function() {
         },
       };
 
-      return error[TRANSPORT_CLIENT_TYPE_DEFAULT];
+      return error[process.env.TRANSPORT_CLIENT_TYPE];
     };
 
     return request(global.app)
@@ -85,7 +84,7 @@ describe('Query Workflow', function() {
       };
 
       queryRequest.should.deep.equal(
-        expectedRequest[TRANSPORT_CLIENT_TYPE_DEFAULT]
+        expectedRequest[process.env.TRANSPORT_CLIENT_TYPE]
       );
 
       const response = {
@@ -99,7 +98,7 @@ describe('Query Workflow', function() {
         },
       };
 
-      return response[TRANSPORT_CLIENT_TYPE_DEFAULT];
+      return response[process.env.TRANSPORT_CLIENT_TYPE];
     };
 
     return request(global.app)
@@ -128,7 +127,7 @@ describe('Query Workflow', function() {
       },
     };
 
-    this.test.QueryWorkflow = () => response[TRANSPORT_CLIENT_TYPE_DEFAULT];
+    this.test.QueryWorkflow = () => response[process.env.TRANSPORT_CLIENT_TYPE];
 
     return request(global.app)
       .post('/api/domains/canary/workflows/ci%2Fdemo/run1/query/state')

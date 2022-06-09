@@ -19,8 +19,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const { TRANSPORT_CLIENT_TYPE_DEFAULT } = require('../constants');
-
 describe('Task List Pollers', function() {
   it('should aggregate decision and activity pollers together by instance', function() {
     this.test.DescribeTaskList = ({ request }) => {
@@ -78,7 +76,7 @@ describe('Task List Pollers', function() {
         },
       };
 
-      return response[TRANSPORT_CLIENT_TYPE_DEFAULT];
+      return response[process.env.TRANSPORT_CLIENT_TYPE];
     };
 
     return request()

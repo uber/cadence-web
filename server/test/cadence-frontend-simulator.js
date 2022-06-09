@@ -22,7 +22,6 @@
 const supertest = require('supertest');
 const Long = require('long');
 const moment = require('moment');
-const { TRANSPORT_CLIENT_TYPE_DEFAULT } = require('../constants');
 const mockGRPC = require('./mock-grpc');
 const mockTChannel = require('./mock-tchannel');
 
@@ -39,29 +38,30 @@ global.dateToTimestamp = d => ({
   seconds: moment(d).unix(),
 });
 
-before(function(done) {
+before(function (done) {
   process.env.CADENCE_TCHANNEL_PEERS = '127.0.0.1:11343';
+  process.env.TRANSPORT_CLIENT_TYPE = 'tchannel';
 
-  console.log(
-    'TRANSPORT_CLIENT_TYPE_DEFAULT = ',
-    TRANSPORT_CLIENT_TYPE_DEFAULT
-  );
-
-  if (TRANSPORT_CLIENT_TYPE_DEFAULT === 'tchannel') {
-    mocks = mockTChannel(done);
-    closeClient = mocks.closeClient;
-    closeServer = mocks.closeServer;
-    setCurrentTest = mocks.setCurrentTest;
-    1;
-  } else if (TRANSPORT_CLIENT_TYPE_DEFAULT === 'grpc') {
-    mocks = mockGRPC(done);
-    closeClient = mocks.closeClient;
-    closeServer = mocks.closeServer;
-    setCurrentTest = mocks.setCurrentTest;
-  } else {
-    throw new Error(
-      `Unsupported client type: "${TRANSPORT_CLIENT_TYPE_DEFAULT}"`
-    );
+  switch (process.env.TRANSPORT_CLIENT_TYPE) {
+    case 'tchannel': {
+      mocks = mockTChannel(done);
+      closeClient = mocks.closeClient;
+      closeServer = mocks.closeServer;
+      setCurrentTest = mocks.setCurrentTest;
+      break;
+    }
+    case 'grpc': {
+      mocks = mockGRPC(done);
+      closeClient = mocks.closeClient;
+      closeServer = mocks.closeServer;
+      setCurrentTest = mocks.setCurrentTest;
+      break;
+    }
+    default: {
+      throw new Error(
+        `Unsupported client type: "${process.env.TRANSPORT_CLIENT_TYPE}"`
+      );
+    }
   }
 
   app = require('../')
@@ -70,12 +70,12 @@ before(function(done) {
   global.request = supertest.bind(supertest, app);
 });
 
-after(function() {
+after(function () {
   app.close();
   closeClient();
   closeServer();
 });
 
-beforeEach(function() {
+beforeEach(function () {
   setCurrentTest(this.currentTest);
 });

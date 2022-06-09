@@ -19,8 +19,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const { TRANSPORT_CLIENT_TYPE_DEFAULT } = require('../constants');
-
 describe('Workflow Execution', function() {
   it('should describe the workflow', async function() {
     this.test.DescribeWorkflowExecution = ({ describeRequest }) => {
@@ -39,7 +37,7 @@ describe('Workflow Execution', function() {
         },
       };
 
-      return response[TRANSPORT_CLIENT_TYPE_DEFAULT];
+      return response[process.env.TRANSPORT_CLIENT_TYPE];
     };
 
     return request()

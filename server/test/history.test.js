@@ -21,7 +21,6 @@
 
 const btoa = require('btoa');
 const Long = require('long');
-const { TRANSPORT_CLIENT_TYPE_DEFAULT } = require('../constants');
 
 const wfHistoryThrift = [
   {
@@ -225,7 +224,7 @@ describe('Workflow History', function() {
         },
       };
 
-      getRequest.should.deep.equal(request[TRANSPORT_CLIENT_TYPE_DEFAULT]);
+      getRequest.should.deep.equal(request[process.env.TRANSPORT_CLIENT_TYPE]);
 
       return {
         history: { events: wfHistoryThrift },
@@ -247,7 +246,7 @@ describe('Workflow History', function() {
 
       getRequest.nextPageToken
         .toString()
-        .should.equal(requestNextPageToken[TRANSPORT_CLIENT_TYPE_DEFAULT]);
+        .should.equal(requestNextPageToken[process.env.TRANSPORT_CLIENT_TYPE]);
 
       return {
         history: { events: [] },
@@ -296,7 +295,7 @@ describe('Workflow History', function() {
     };
 
     this.test.GetWorkflowExecutionHistory = ({ getRequest }) => ({
-      history: { events: events[TRANSPORT_CLIENT_TYPE_DEFAULT] },
+      history: { events: events[process.env.TRANSPORT_CLIENT_TYPE] },
       nextPageToken: new Buffer('page2'),
     });
 
@@ -320,7 +319,7 @@ describe('Workflow History', function() {
       };
 
       this.test.GetWorkflowExecutionHistory = ({ getRequest }) => ({
-        history: { events: events[TRANSPORT_CLIENT_TYPE_DEFAULT] },
+        history: { events: events[process.env.TRANSPORT_CLIENT_TYPE] },
       });
 
       return request()
@@ -343,10 +342,12 @@ describe('Workflow History', function() {
         }
 
         const resp = {
-          history: { events: [events[TRANSPORT_CLIENT_TYPE_DEFAULT][calls]] },
+          history: {
+            events: [events[process.env.TRANSPORT_CLIENT_TYPE][calls]],
+          },
         };
 
-        if (++calls < events[TRANSPORT_CLIENT_TYPE_DEFAULT].length) {
+        if (++calls < events[process.env.TRANSPORT_CLIENT_TYPE].length) {
           resp.nextPageToken = new Buffer('page' + calls);
         }
 
