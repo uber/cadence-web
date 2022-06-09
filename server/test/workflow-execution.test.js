@@ -21,8 +21,8 @@
 
 const { TRANSPORT_CLIENT_TYPE_DEFAULT } = require('../constants');
 
-describe('Workflow Execution', function () {
-  it('should describe the workflow', async function () {
+describe('Workflow Execution', function() {
+  it('should describe the workflow', async function() {
     this.test.DescribeWorkflowExecution = ({ describeRequest }) => {
       const response = {
         tchannel: {
@@ -36,11 +36,12 @@ describe('Workflow Execution', function () {
             taskList: { name: 'ci-task-list' },
             taskStartToCloseTimeout: { seconds: 10 },
           },
-        }
+        },
       };
 
       return response[TRANSPORT_CLIENT_TYPE_DEFAULT];
     };
+
     return request()
       .get('/api/domains/canary/workflows/ci%2Fdemo/run1')
       .expect(200)
@@ -60,28 +61,34 @@ describe('Workflow Execution', function () {
         pendingDecision: null,
       });
   });
-  it('should terminate a workflow', async function () {
+  it('should terminate a workflow', async function() {
     let reason;
+
     this.test.TerminateWorkflowExecution = ({ terminateRequest }) => {
       terminateRequest.workflowExecution.workflowId.should.equal('ci/demo');
       terminateRequest.workflowExecution.runId.should.equal('run1');
       reason = terminateRequest.reason;
+
       return {};
     };
+
     return request()
       .post('/api/domains/canary/workflows/ci%2Fdemo/run1/terminate')
       .send({ reason: 'example reason' })
       .expect(204)
       .expect(() => reason.should.equal('example reason'));
   });
-  it('should signal a workflow without input', async function () {
+  it('should signal a workflow without input', async function() {
     let signal;
+
     this.test.SignalWorkflowExecution = ({ signalRequest }) => {
       signalRequest.workflowExecution.workflowId.should.equal('ci/demo');
       signalRequest.workflowExecution.runId.should.equal('run2');
       signal = signalRequest.signalName;
+
       return {};
     };
+
     return request()
       .post('/api/domains/canary/workflows/ci%2Fdemo/run2/signal/firealarm')
       .expect(204)

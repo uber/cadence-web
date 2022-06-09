@@ -22,8 +22,8 @@
 const grpc = require('@grpc/grpc-js');
 const { TRANSPORT_CLIENT_TYPE_DEFAULT } = require('../constants');
 
-describe('Describe Domain', function () {
-  it('should list domains', async function () {
+describe('Describe Domain', function() {
+  it('should list domains', async function() {
     const domains = {
       tchannel: [
         {
@@ -89,7 +89,7 @@ describe('Describe Domain', function () {
       .expect(domains.tchannel);
   });
 
-  it('should describe the domain', async function () {
+  it('should describe the domain', async function() {
     const domainDesc = {
       tchannel: {
         domainInfo: {
@@ -153,7 +153,7 @@ describe('Describe Domain', function () {
       .expect(domainDesc.tchannel);
   });
 
-  it('should return 404 if the domain is not found', async function () {
+  it('should return 404 if the domain is not found', async function() {
     const errorHandler = ({ describeRequest }) => {
       const message = `domain "${describeRequest.name}" does not exist`;
       const error = {

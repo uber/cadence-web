@@ -41,7 +41,9 @@ const formatResponseDescribeWorkflow = ({
       executionStartToCloseTimeout
     ),
     taskList: {
-      kind: taskList?.kind ? formatEnum(taskList?.kind, 'TASK_LIST_KIND') : null,
+      kind: taskList?.kind
+        ? formatEnum(taskList?.kind, 'TASK_LIST_KIND')
+        : null,
       name: taskList?.name || null,
     },
     taskStartToCloseTimeoutSeconds: formatTimestampToSeconds(
@@ -50,22 +52,33 @@ const formatResponseDescribeWorkflow = ({
   },
   pendingActivities: pendingActivities?.length ? pendingActivities : null,
   pendingChildren: pendingChildren?.length ? pendingChildren : null,
-  workflowExecutionInfo: workflowExecutionInfo ? {
-    ...workflowExecutionInfo,
-    autoResetPoints: {
-      points: workflowExecutionInfo?.autoResetPoints?.points.map(({ createdTime, expiringTime, ...point }) => ({
-        ...point,
-        createdTimeNano: formatTimestampToDatetime(createdTime),
-        expiringTimeNano: formatTimestampToDatetime(expiringTime),
-      })) || null,
-    },
-    closeStatus: workflowExecutionInfo?.closeStatus ? formatCloseStatus(workflowExecutionInfo?.closeStatus) : null,
-    closeTime: formatTimestampToDatetime(workflowExecutionInfo?.closeTime) || null,
-    execution: workflowExecutionInfo?.workflowExecution || null,
-    executionTime: formatTimestampToDatetime(workflowExecutionInfo?.executionTime) || null,
-    historyLength: parseInt(workflowExecutionInfo?.historyLength) || null,
-    startTime: formatTimestampToDatetime(workflowExecutionInfo?.startTime) || null,
-  } : null,
+  workflowExecutionInfo: workflowExecutionInfo
+    ? {
+        ...workflowExecutionInfo,
+        autoResetPoints: {
+          points:
+            workflowExecutionInfo?.autoResetPoints?.points.map(
+              ({ createdTime, expiringTime, ...point }) => ({
+                ...point,
+                createdTimeNano: formatTimestampToDatetime(createdTime),
+                expiringTimeNano: formatTimestampToDatetime(expiringTime),
+              })
+            ) || null,
+        },
+        closeStatus: workflowExecutionInfo?.closeStatus
+          ? formatCloseStatus(workflowExecutionInfo?.closeStatus)
+          : null,
+        closeTime:
+          formatTimestampToDatetime(workflowExecutionInfo?.closeTime) || null,
+        execution: workflowExecutionInfo?.workflowExecution || null,
+        executionTime:
+          formatTimestampToDatetime(workflowExecutionInfo?.executionTime) ||
+          null,
+        historyLength: parseInt(workflowExecutionInfo?.historyLength) || null,
+        startTime:
+          formatTimestampToDatetime(workflowExecutionInfo?.startTime) || null,
+      }
+    : null,
 });
 
 module.exports = formatResponseDescribeWorkflow;

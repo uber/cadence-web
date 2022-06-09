@@ -49,9 +49,9 @@ const formatResponseWorkflowList = ({ executions, nextPageToken }) => ({
       startTime: formatTimestampToDatetime(startTime),
       taskList: taskList
         ? {
-          kind: formatEnum(taskList?.kind, 'TASK_LIST_KIND'),
-          name: taskList?.name || null,
-        }
+            kind: formatEnum(taskList?.kind, 'TASK_LIST_KIND'),
+            name: taskList?.name || null,
+          }
         : null,
     })
   ),

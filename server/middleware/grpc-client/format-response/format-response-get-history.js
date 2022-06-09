@@ -25,9 +25,7 @@ const formatTimestampToDatetime = require('./format-timestamp-to-datetime');
 
 const formatResponseGetHistory = ({
   archived,
-  history: {
-    events,
-  },
+  history: { events },
   rawHistory,
   ...response
 }) => ({

@@ -21,6 +21,7 @@
 
 const Long = require('long');
 
-const formatTimestampToLong = timestamp => !timestamp ? null : Long.fromValue(`${timestamp.seconds}${timestamp.nanos}`);
+const formatTimestampToLong = timestamp =>
+  !timestamp ? null : Long.fromValue(`${timestamp.seconds}${timestamp.nanos}`);
 
 module.exports = formatTimestampToLong;

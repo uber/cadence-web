@@ -19,31 +19,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+const { cliTransform } = require('../transform');
 const formatHistoryEventDetails = require('./format-history-event-details');
 const formatHistoryEventType = require('./format-history-event-type');
 const formatTimestampToLong = require('./format-timestamp-to-long');
-const { cliTransform } = require('../transform');
 
 const formatResponseExportHistory = ({
   archived,
-  history: {
-    events,
-  },
+  history: { events },
   rawHistory,
   ...response
 }) => ({
   ...response,
   archived: archived || null,
   history: {
-    events: events.map(({ attributes, eventId, eventTime, taskId, version, ...event }) => {
-      return cliTransform({
-        eventId: parseInt(eventId),
-        timestamp: formatTimestampToLong(eventTime),
-        eventType: formatHistoryEventType({ attributes }),
-        ...event,
-        ...formatHistoryEventDetails({ ...event, attributes }),
-      })
-    }),
+    events: events.map(
+      ({ attributes, eventId, eventTime, taskId, version, ...event }) => {
+        return cliTransform({
+          eventId: parseInt(eventId),
+          timestamp: formatTimestampToLong(eventTime),
+          eventType: formatHistoryEventType({ attributes }),
+          ...event,
+          ...formatHistoryEventDetails({ ...event, attributes }),
+        });
+      }
+    ),
   },
   rawHistory: rawHistory?.length ? rawHistory : null,
 });

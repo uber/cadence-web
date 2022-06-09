@@ -22,8 +22,8 @@
 const grpc = require('@grpc/grpc-js');
 const { TRANSPORT_CLIENT_TYPE_DEFAULT } = require('../constants');
 
-describe('Query Workflow', function () {
-  it('should list workflows using a temporary hack of parsing out the available workflows from a NotFoundError', async function () {
+describe('Query Workflow', function() {
+  it('should list workflows using a temporary hack of parsing out the available workflows from a NotFoundError', async function() {
     this.timeout(50000);
     this.test.QueryWorkflow = ({ queryRequest }) => {
       queryRequest.query.queryType.should.equal('__cadence_web_list');
@@ -52,7 +52,7 @@ describe('Query Workflow', function () {
       .expect('Content-Type', /json/)
       .expect(['foo', 'bar']);
   });
-  it('should forward the query to the workflow', async function () {
+  it('should forward the query to the workflow', async function() {
     this.test.QueryWorkflow = ({ queryRequest }) => {
       const expectedRequest = {
         tchannel: {
@@ -83,7 +83,9 @@ describe('Query Workflow', function () {
         },
       };
 
-      queryRequest.should.deep.equal(expectedRequest[TRANSPORT_CLIENT_TYPE_DEFAULT]);
+      queryRequest.should.deep.equal(
+        expectedRequest[TRANSPORT_CLIENT_TYPE_DEFAULT]
+      );
 
       const response = {
         tchannel: {
@@ -93,11 +95,12 @@ describe('Query Workflow', function () {
           queryResult: {
             data: btoa('foobar'),
           },
-        }
-      }
+        },
+      };
 
       return response[TRANSPORT_CLIENT_TYPE_DEFAULT];
     };
+
     return request(global.app)
       .post('/api/domains/canary/workflows/ci%2Fdemo/run1/query/state')
       .expect(200)
@@ -108,7 +111,7 @@ describe('Query Workflow', function () {
         queryResult_base64: Buffer.from('foobar').toString('base64'),
       });
   });
-  it('should turn bad requests into 400s', async function () {
+  it('should turn bad requests into 400s', async function() {
     const message = 'that does not make sense';
     const response = {
       tchannel: {
@@ -121,10 +124,11 @@ describe('Query Workflow', function () {
       grpc: {
         code: grpc.status.INVALID_ARGUMENT,
         message,
-      }
+      },
     };
 
     this.test.QueryWorkflow = () => response[TRANSPORT_CLIENT_TYPE_DEFAULT];
+
     return request(global.app)
       .post('/api/domains/canary/workflows/ci%2Fdemo/run1/query/state')
       .expect(400)

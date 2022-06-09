@@ -21,7 +21,7 @@
 
 const { TRANSPORT_CLIENT_TYPE_DEFAULT } = require('../constants');
 
-describe('Listing Workflows', function () {
+describe('Listing Workflows', function() {
   const demoExecThrift = {
     execution: {
       workflowId: 'demo',
@@ -72,7 +72,7 @@ describe('Listing Workflows', function () {
     tchannel: demoExecThrift,
     grpc: demoExecGrpc,
     json: demoExecJson,
-  }
+  };
 
   const clusterElasticSearchEnabled = {
     persistenceInfo: {
@@ -122,7 +122,7 @@ describe('Listing Workflows', function () {
   //     });
   // });
 
-  it('should list all workflows with ES enabled', function () {
+  it('should list all workflows with ES enabled', function() {
     this.test.ListWorkflowExecutions = ({ listRequest }) => {
       listRequest.query
         .match('2017-11-12T12:00:00.000Z')[0]
@@ -193,7 +193,7 @@ describe('Listing Workflows', function () {
   //     });
   // });
 
-  it('should list open workflows with ES enabled', function () {
+  it('should list open workflows with ES enabled', function() {
     this.test.ListWorkflowExecutions = ({ listRequest }) => {
       listRequest.query
         .match('2017-11-12T12:00:00.000Z')[0]
@@ -263,7 +263,7 @@ describe('Listing Workflows', function () {
   //     });
   // });
 
-  it('should list closed workflows with ES enabled', function () {
+  it('should list closed workflows with ES enabled', function() {
     this.test.ListWorkflowExecutions = ({ listRequest }) => {
       listRequest.domain.should.equal('canary');
 
@@ -324,13 +324,13 @@ describe('Listing Workflows', function () {
   //     });
   // });
 
-  it('should return 404 if another state of workflows is queried', function () {
+  it('should return 404 if another state of workflows is queried', function() {
     return request()
       .get('/api/domains/canary/workflows/failed')
       .expect(404);
   });
 
-  it('should return 400 if startTime or endTime are missing', async function () {
+  it('should return 400 if startTime or endTime are missing', async function() {
     await request()
       .get('/api/domains/canary/workflows/open?startTime=2017-11-01')
       .expect(400);
