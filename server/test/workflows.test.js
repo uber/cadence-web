@@ -155,7 +155,8 @@ describe('Listing Workflows', function () {
       });
   });
 
-  // it('should list open workflows with ES disabled', function() {
+  // NOTE: TEST DISABLED UNTIL PROTO IS SUPPORTED
+  // it('should list open workflows with ES disabled', function () {
   //   this.test.ListOpenWorkflowExecutions = ({ listRequest }) => {
   //     listRequest.domain.should.equal('canary');
   //     listRequest.StartTimeFilter.earliestTime
@@ -170,7 +171,7 @@ describe('Listing Workflows', function () {
   //     should.not.exist(listRequest.typeFilter);
 
   //     return {
-  //       executions: [demoExecThrift],
+  //       executions: [demoExec[TRANSPORT_CLIENT_TYPE_DEFAULT]],
   //       nextPageToken: new Buffer('{"IsWorkflowRunning":true,NextEventId:37}'),
   //     };
   //   };
@@ -186,45 +187,46 @@ describe('Listing Workflows', function () {
   //     .expect(200)
   //     .expect('Content-Type', /json/)
   //     .expect({
-  //       executions: [demoExecJson],
+  //       executions: [demoExec.json],
   //       nextPageToken:
   //         'eyJJc1dvcmtmbG93UnVubmluZyI6dHJ1ZSxOZXh0RXZlbnRJZDozN30=',
   //     });
   // });
 
-  // it('should list open workflows with ES enabled', function() {
-  //   this.test.ListWorkflowExecutions = ({ listRequest }) => {
-  //     listRequest.query
-  //       .match('2017-11-12T12:00:00.000Z')[0]
-  //       .should.equal('2017-11-12T12:00:00.000Z');
+  it('should list open workflows with ES enabled', function () {
+    this.test.ListWorkflowExecutions = ({ listRequest }) => {
+      listRequest.query
+        .match('2017-11-12T12:00:00.000Z')[0]
+        .should.equal('2017-11-12T12:00:00.000Z');
 
-  //     listRequest.query
-  //       .match('2017-11-13T14:30:00.000Z')[0]
-  //       .should.equal('2017-11-13T14:30:00.000Z');
+      listRequest.query
+        .match('2017-11-13T14:30:00.000Z')[0]
+        .should.equal('2017-11-13T14:30:00.000Z');
 
-  //     return {
-  //       executions: [demoExecThrift],
-  //       nextPageToken: new Buffer('{"IsWorkflowRunning":true,NextEventId:37}'),
-  //     };
-  //   };
+      return {
+        executions: [demoExec[TRANSPORT_CLIENT_TYPE_DEFAULT]],
+        nextPageToken: new Buffer('{"IsWorkflowRunning":true,NextEventId:37}'),
+      };
+    };
 
-  //   this.test.DescribeCluster = () => {
-  //     return clusterElasticSearchEnabled;
-  //   };
+    this.test.DescribeCluster = () => {
+      return clusterElasticSearchEnabled;
+    };
 
-  //   return request()
-  //     .get(
-  //       '/api/domains/canary/workflows/open?startTime=2017-11-12T12:00:00Z&endTime=2017-11-13T14:30:00Z'
-  //     )
-  //     .expect(200)
-  //     .expect('Content-Type', /json/)
-  //     .expect({
-  //       executions: [demoExecJson],
-  //       nextPageToken:
-  //         'eyJJc1dvcmtmbG93UnVubmluZyI6dHJ1ZSxOZXh0RXZlbnRJZDozN30=',
-  //     });
-  // });
+    return request()
+      .get(
+        '/api/domains/canary/workflows/open?startTime=2017-11-12T12:00:00Z&endTime=2017-11-13T14:30:00Z'
+      )
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .expect({
+        executions: [demoExec.json],
+        nextPageToken:
+          'eyJJc1dvcmtmbG93UnVubmluZyI6dHJ1ZSxOZXh0RXZlbnRJZDozN30=',
+      });
+  });
 
+  // NOTE: TEST DISABLED UNTIL PROTO IS SUPPORTED
   // it('should list closed workflows with ES disabled', function() {
   //   this.test.ListClosedWorkflowExecutions = ({ listRequest }) => {
   //     listRequest.domain.should.equal('canary');
@@ -261,41 +263,42 @@ describe('Listing Workflows', function () {
   //     });
   // });
 
-  // it('should list closed workflows with ES enabled', function() {
-  //   this.test.ListWorkflowExecutions = ({ listRequest }) => {
-  //     listRequest.domain.should.equal('canary');
+  it('should list closed workflows with ES enabled', function () {
+    this.test.ListWorkflowExecutions = ({ listRequest }) => {
+      listRequest.domain.should.equal('canary');
 
-  //     listRequest.query
-  //       .match('2017-11-12T12:00:00.000Z')[0]
-  //       .should.equal('2017-11-12T12:00:00.000Z');
+      listRequest.query
+        .match('2017-11-12T12:00:00.000Z')[0]
+        .should.equal('2017-11-12T12:00:00.000Z');
 
-  //     listRequest.query
-  //       .match('2017-11-13T14:30:00.000Z')[0]
-  //       .should.equal('2017-11-13T14:30:00.000Z');
+      listRequest.query
+        .match('2017-11-13T14:30:00.000Z')[0]
+        .should.equal('2017-11-13T14:30:00.000Z');
 
-  //     return {
-  //       executions: [demoExecThrift],
-  //       nextPageToken: new Buffer('{"IsWorkflowRunning":false}'),
-  //     };
-  //   };
+      return {
+        executions: [demoExec[TRANSPORT_CLIENT_TYPE_DEFAULT]],
+        nextPageToken: new Buffer('{"IsWorkflowRunning":false}'),
+      };
+    };
 
-  //   this.test.DescribeCluster = () => {
-  //     return clusterElasticSearchEnabled;
-  //   };
+    this.test.DescribeCluster = () => {
+      return clusterElasticSearchEnabled;
+    };
 
-  //   return request()
-  //     .get(
-  //       '/api/domains/canary/workflows/closed?startTime=2017-11-12T12:00:00Z&endTime=2017-11-13T14:30:00Z'
-  //     )
-  //     .expect(200)
-  //     .expect('Content-Type', /json/)
-  //     .expect({
-  //       executions: [demoExecJson],
-  //       nextPageToken: 'eyJJc1dvcmtmbG93UnVubmluZyI6ZmFsc2V9',
-  //     });
-  // });
+    return request()
+      .get(
+        '/api/domains/canary/workflows/closed?startTime=2017-11-12T12:00:00Z&endTime=2017-11-13T14:30:00Z'
+      )
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .expect({
+        executions: [demoExec.json],
+        nextPageToken: 'eyJJc1dvcmtmbG93UnVubmluZyI6ZmFsc2V9',
+      });
+  });
 
-  // it('should forward the next page token along', function() {
+  // NOTE: TEST DISABLED UNTIL PROTO IS SUPPORTED
+  // it('should forward the next page token along', function () {
   //   this.test.ListClosedWorkflowExecutions = ({ listRequest }) => {
   //     listRequest.nextPageToken.toString().should.equal('page1');
 
@@ -321,19 +324,19 @@ describe('Listing Workflows', function () {
   //     });
   // });
 
-  // it('should return 404 if another state of workflows is queried', function() {
-  //   return request()
-  //     .get('/api/domains/canary/workflows/failed')
-  //     .expect(404);
-  // });
+  it('should return 404 if another state of workflows is queried', function () {
+    return request()
+      .get('/api/domains/canary/workflows/failed')
+      .expect(404);
+  });
 
-  // it('should return 400 if startTime or endTime are missing', async function() {
-  //   await request()
-  //     .get('/api/domains/canary/workflows/open?startTime=2017-11-01')
-  //     .expect(400);
+  it('should return 400 if startTime or endTime are missing', async function () {
+    await request()
+      .get('/api/domains/canary/workflows/open?startTime=2017-11-01')
+      .expect(400);
 
-  //   return request()
-  //     .get('/api/domains/canary/workflows/closed?endTime=2017-11-01')
-  //     .expect(400);
-  // });
+    return request()
+      .get('/api/domains/canary/workflows/closed?endTime=2017-11-01')
+      .expect(400);
+  });
 });
