@@ -48,16 +48,11 @@ const makeRequest = ({ authTokenHeaders, channels, ctx, requestConfig }) => ({
         },
         (error, response) => {
           try {
-            console.log('makeRequest: error = ');
-            console.dir(error, { depth: 10 });
-
             if (error) {
-              console.log('simply reject?');
               reject(error);
             } else if (response.ok) {
               resolve(responseTransform(response.body));
             } else {
-              console.log('ctx throw?');
               ctx.throw(
                 response.typeName === 'entityNotExistError' ? 404 : 400,
                 null,

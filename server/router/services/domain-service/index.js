@@ -37,9 +37,6 @@ class DomainService {
       pageSize,
     });
 
-    // console.log('domainList = ');
-    // console.dir(domainList, { depth: 10 });
-
     if (all) {
       return domainList;
     }

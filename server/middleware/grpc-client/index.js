@@ -170,8 +170,6 @@ const grpcClient = ({ peers, requestConfig }) =>
       domainService.close();
       visibilityService.close();
       workflowService.close();
-      console.log('recieved error = ');
-      console.dir(e, { depth: 10 });
       throw e;
     }
   };

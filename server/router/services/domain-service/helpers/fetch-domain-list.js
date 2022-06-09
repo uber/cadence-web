@@ -30,8 +30,6 @@ const fetchDomainList = ({ ctx, delayTime, pageSize }) => async () => {
     delayTime,
     pageSize,
   });
-  // console.log('fetchDomainList = ');
-  // console.dir(domainList, { depth: 10 });
 
   return combine(filterDomainList, sortDomainList)(domainList);
 };

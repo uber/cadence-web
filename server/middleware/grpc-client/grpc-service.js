@@ -54,8 +54,6 @@ class GRPCService {
       servicePath
     );
 
-    // console.log(servicePath, ': ', ServiceDefinition);
-
     this.ctx = ctx;
     this.service = new ServiceDefinition(
       peers,
@@ -84,9 +82,6 @@ class GRPCService {
 
           deadline.setSeconds(deadline.getSeconds() + 50);
 
-          console.log('payload with format & transform:');
-          console.dir(formatRequest(transform(payload)), { depth: 10 });
-
           this.service[method](
             formatRequest(transform(payload)),
             this.meta(),
@@ -94,25 +89,12 @@ class GRPCService {
             (error, response) => {
               try {
                 if (error) {
-                  console.log('error string:', String(error));
-                  console.log('raw error = ');
-                  console.log(error.code);
-                  console.log(error.message);
-                  console.log(error.details);
-                  // console.dir(error, { depth: 10 });
-
                   return this.ctx.throw(
                     GRPC_ERROR_STATUS_TO_HTTP_ERROR_CODE_MAP[error.code] || 500,
                     null,
                     error.details || error.message || response.body || response
                   );
                 }
-
-                console.log('raw:');
-                console.dir(response, { depth: 10 });
-
-                console.log('formatted response:');
-                console.dir(formatResponse(response), { depth: 10 });
 
                 return resolve(formatResponse(response));
               } catch (e) {

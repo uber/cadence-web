@@ -102,23 +102,13 @@ const mockGRPC = done => {
   const workflowServiceMock = GRPCServiceMock(workflowServiceConfig);
 
   const handler = (method, requestName) => (call, callback) => {
-    console.log('method', method);
-
     if (!currentTest[method]) {
       throw new Error(`unexpected request to ${method}.${requestName}`);
     }
 
-    console.log('mock = ', currentTest[method]);
-    // console.log('call = ', call);
-    console.log('callback = ', callback);
-    console.log('body = ', call.request);
-
     const request = formatRequest(call.request);
 
     const bodyMock = currentTest[method]({ [requestName]: request }, null);
-
-    console.log('bodyMock = ');
-    console.dir(bodyMock, { depth: 10 });
 
     if (bodyMock instanceof Error) {
       callback(bodyMock);
