@@ -75,6 +75,11 @@ const mockGRPC = done => {
     currentTest = test;
   };
 
+  const adminServiceConfig = {
+    peers,
+    schemaPath: 'uber/cadence/admin/v1/service.proto',
+    servicePath: 'uber.cadence.admin.v1.AdminAPI',
+  };
   const domainServiceConfig = {
     peers,
     schemaPath: 'uber/cadence/api/v1/service_domain.proto',
@@ -91,6 +96,7 @@ const mockGRPC = done => {
     servicePath: 'uber.cadence.api.v1.WorkflowAPI',
   };
 
+  const adminServiceMock = GRPCServiceMock(adminServiceConfig);
   const domainServiceMock = GRPCServiceMock(domainServiceConfig);
   const visibilityServiceMock = GRPCServiceMock(visibilityServiceConfig);
   const workflowServiceMock = GRPCServiceMock(workflowServiceConfig);
@@ -124,6 +130,10 @@ const mockGRPC = done => {
   };
 
   const server = new grpc.Server();
+
+  server.addService(adminServiceMock.service, {
+    DescribeCluster: handler('DescribeCluster', 'describeRequest'),
+  });
 
   server.addService(domainServiceMock.service, {
     ListDomains: handler('ListDomains', 'listRequest'),
