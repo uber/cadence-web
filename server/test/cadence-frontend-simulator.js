@@ -38,7 +38,7 @@ global.dateToTimestamp = d => ({
   seconds: moment(d).unix(),
 });
 
-before(function (done) {
+before(function(done) {
   process.env.CADENCE_TCHANNEL_PEERS = '127.0.0.1:11343';
   process.env.TRANSPORT_CLIENT_TYPE = 'tchannel';
 
@@ -70,12 +70,12 @@ before(function (done) {
   global.request = supertest.bind(supertest, app);
 });
 
-after(function () {
+after(function() {
   app.close();
   closeClient();
   closeServer();
 });
 
-beforeEach(function () {
+beforeEach(function() {
   setCurrentTest(this.currentTest);
 });
