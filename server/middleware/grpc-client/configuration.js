@@ -20,6 +20,10 @@
 // THE SOFTWARE.
 
 const serviceConfiguration = {
+  adminServiceConfig: {
+    schemaPath: 'uber/cadence/admin/v1/service.proto',
+    servicePath: 'uber.cadence.admin.v1.AdminAPI',
+  },
   domainServiceConfig: {
     schemaPath: 'uber/cadence/api/v1/service_domain.proto',
     servicePath: 'uber.cadence.api.v1.DomainAPI',

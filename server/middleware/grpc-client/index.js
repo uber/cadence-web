@@ -21,6 +21,7 @@
 
 const { combine } = require('../../helpers');
 const {
+  adminServiceConfig,
   domainServiceConfig,
   visibilityServiceConfig,
   workflowServiceConfig,
@@ -50,7 +51,13 @@ const {
 } = require('./transform');
 
 const grpcClient = ({ peers, requestConfig }) =>
-  async function(ctx, next) {
+  async function (ctx, next) {
+    const adminService = new GRPCService({
+      ctx,
+      peers,
+      requestConfig,
+      ...adminServiceConfig,
+    });
     const domainService = new GRPCService({
       ctx,
       peers,
@@ -82,22 +89,9 @@ const grpcClient = ({ peers, requestConfig }) =>
         method: 'ListClosedWorkflowExecutions',
         transform: combine(withDomain(ctx), withPagination(ctx)),
       }),
-      describeCluster: () => {
-        // TODO - looks like endpoint is missing from proto.
-        //        will mock response for now until this is addressed in the cadence-idl project.
-        return {
-          persistenceInfo: {
-            visibilityStore: {
-              features: [
-                {
-                  key: 'advancedVisibilityEnabled',
-                  enabled: true,
-                },
-              ],
-            },
-          },
-        };
-      },
+      describeCluster: adminService.request({
+        method: 'DescribeCluster',
+      }),
       describeDomain: domainService.request({
         formatResponse: formatResponseDomain,
         method: 'DescribeDomain',

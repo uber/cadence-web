@@ -19,7 +19,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const formatEnum = (value, prefix) =>
-  value.includes('INVALID') ? null : value.replace(`${prefix}_`, '');
+const formatEnum = (value, prefix) => !value || value.includes('INVALID')
+  ? null
+  : value.replace(`${prefix}_`, '');
 
 module.exports = formatEnum;
