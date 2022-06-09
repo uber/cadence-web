@@ -21,7 +21,7 @@
 
 const { TRANSPORT_CLIENT_TYPE_DEFAULT } = require('../constants');
 
-describe('Listing Workflows', function() {
+describe('Listing Workflows', function () {
   const demoExecThrift = {
     execution: {
       workflowId: 'demo',
@@ -104,25 +104,24 @@ describe('Listing Workflows', function() {
     return request().delete('/api/cluster/cache');
   });
 
-  // NOTE: TEST DISABLED UNTIL PROTO IS SUPPORTED
-  // it('should fail to list all workflows with ES disabled', function () {
-  //   this.test.DescribeCluster = () => {
-  //     return clusterElasticSearchDisabled;
-  //   };
+  it('should fail to list all workflows with ES disabled', function () {
+    this.test.DescribeCluster = () => {
+      return clusterElasticSearchDisabled;
+    };
 
-  //   return request()
-  //     .get(
-  //       '/api/domains/canary/workflows/all?startTime=2017-11-12T12:00:00Z&endTime=2017-11-13T14:30:00Z'
-  //     )
-  //     .expect(400)
-  //     .expect('Content-Type', /json/)
-  //     .expect({
-  //       message:
-  //         'Advanced visibility is not supported for cluster. Try using workflows open or closed APIs.',
-  //     });
-  // });
+    return request()
+      .get(
+        '/api/domains/canary/workflows/all?startTime=2017-11-12T12:00:00Z&endTime=2017-11-13T14:30:00Z'
+      )
+      .expect(400)
+      .expect('Content-Type', /json/)
+      .expect({
+        message:
+          'Advanced visibility is not supported for cluster. Try using workflows open or closed APIs.',
+      });
+  });
 
-  it('should list all workflows with ES enabled', function() {
+  it('should list all workflows with ES enabled', function () {
     this.test.ListWorkflowExecutions = ({ listRequest }) => {
       listRequest.query
         .match('2017-11-12T12:00:00.000Z')[0]
@@ -155,45 +154,57 @@ describe('Listing Workflows', function() {
       });
   });
 
-  // NOTE: TEST DISABLED UNTIL PROTO IS SUPPORTED
-  // it('should list open workflows with ES disabled', function () {
-  //   this.test.ListOpenWorkflowExecutions = ({ listRequest }) => {
-  //     listRequest.domain.should.equal('canary');
-  //     listRequest.StartTimeFilter.earliestTime
-  //       .div(1000000000)
-  //       .toNumber()
-  //       .should.equal(1510488000);
-  //     listRequest.StartTimeFilter.latestTime
-  //       .div(1000000000)
-  //       .toNumber()
-  //       .should.equal(1510583400);
-  //     should.not.exist(listRequest.executionFilter);
-  //     should.not.exist(listRequest.typeFilter);
+  it('should list open workflows with ES disabled', function () {
+    this.test.ListOpenWorkflowExecutions = ({ listRequest }) => {
+      listRequest.domain.should.equal('canary');
+      should.not.exist(listRequest.executionFilter);
+      should.not.exist(listRequest.typeFilter);
 
-  //     return {
-  //       executions: [demoExec[TRANSPORT_CLIENT_TYPE_DEFAULT]],
-  //       nextPageToken: new Buffer('{"IsWorkflowRunning":true,NextEventId:37}'),
-  //     };
-  //   };
+      switch (TRANSPORT_CLIENT_TYPE_DEFAULT) {
+        case 'tchannel': {
+          listRequest.StartTimeFilter.earliestTime
+            .div(1000000000)
+            .toNumber()
+            .should.equal(1510488000);
+          listRequest.StartTimeFilter.latestTime
+            .div(1000000000)
+            .toNumber()
+            .should.equal(1510583400);
+          break;
+        }
+        case 'grpc': {
+          listRequest.startTimeFilter.earliestTime.seconds.should.equal('1510488000');
+          listRequest.startTimeFilter.latestTime.seconds.should.equal('1510583400');
+          break;
+        }
+        default:
+          throw new Error(`unexpected transport type "${TRANSPORT_CLIENT_TYPE_DEFAULT}"`);
+      }
 
-  //   this.test.DescribeCluster = () => {
-  //     return clusterElasticSearchDisabled;
-  //   };
+      return {
+        executions: [demoExec[TRANSPORT_CLIENT_TYPE_DEFAULT]],
+        nextPageToken: new Buffer('{"IsWorkflowRunning":true,NextEventId:37}'),
+      };
+    };
 
-  //   return request()
-  //     .get(
-  //       '/api/domains/canary/workflows/open?startTime=2017-11-12T12:00:00Z&endTime=2017-11-13T14:30:00Z'
-  //     )
-  //     .expect(200)
-  //     .expect('Content-Type', /json/)
-  //     .expect({
-  //       executions: [demoExec.json],
-  //       nextPageToken:
-  //         'eyJJc1dvcmtmbG93UnVubmluZyI6dHJ1ZSxOZXh0RXZlbnRJZDozN30=',
-  //     });
-  // });
+    this.test.DescribeCluster = () => {
+      return clusterElasticSearchDisabled;
+    };
 
-  it('should list open workflows with ES enabled', function() {
+    return request()
+      .get(
+        '/api/domains/canary/workflows/open?startTime=2017-11-12T12:00:00Z&endTime=2017-11-13T14:30:00Z'
+      )
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .expect({
+        executions: [demoExec.json],
+        nextPageToken:
+          'eyJJc1dvcmtmbG93UnVubmluZyI6dHJ1ZSxOZXh0RXZlbnRJZDozN30=',
+      });
+  });
+
+  it('should list open workflows with ES enabled', function () {
     this.test.ListWorkflowExecutions = ({ listRequest }) => {
       listRequest.query
         .match('2017-11-12T12:00:00.000Z')[0]
@@ -226,44 +237,56 @@ describe('Listing Workflows', function() {
       });
   });
 
-  // NOTE: TEST DISABLED UNTIL PROTO IS SUPPORTED
-  // it('should list closed workflows with ES disabled', function() {
-  //   this.test.ListClosedWorkflowExecutions = ({ listRequest }) => {
-  //     listRequest.domain.should.equal('canary');
-  //     listRequest.StartTimeFilter.earliestTime
-  //       .div(1000000000)
-  //       .toNumber()
-  //       .should.equal(1510488000);
-  //     listRequest.StartTimeFilter.latestTime
-  //       .div(1000000000)
-  //       .toNumber()
-  //       .should.equal(1510583400);
-  //     should.not.exist(listRequest.executionFilter);
-  //     should.not.exist(listRequest.typeFilter);
+  it('should list closed workflows with ES disabled', function () {
+    this.test.ListClosedWorkflowExecutions = ({ listRequest }) => {
+      listRequest.domain.should.equal('canary');
+      should.not.exist(listRequest.executionFilter);
+      should.not.exist(listRequest.typeFilter);
 
-  //     return {
-  //       executions: [demoExecThrift],
-  //       nextPageToken: new Buffer('{"IsWorkflowRunning":false}'),
-  //     };
-  //   };
+      switch (TRANSPORT_CLIENT_TYPE_DEFAULT) {
+        case 'tchannel': {
+          listRequest.StartTimeFilter.earliestTime
+            .div(1000000000)
+            .toNumber()
+            .should.equal(1510488000);
+          listRequest.StartTimeFilter.latestTime
+            .div(1000000000)
+            .toNumber()
+            .should.equal(1510583400);
+          break;
+        }
+        case 'grpc': {
+          listRequest.startTimeFilter.earliestTime.seconds.should.equal('1510488000');
+          listRequest.startTimeFilter.latestTime.seconds.should.equal('1510583400');
+          break;
+        }
+        default:
+          throw new Error(`unexpected transport type "${TRANSPORT_CLIENT_TYPE_DEFAULT}"`);
+      }
 
-  //   this.test.DescribeCluster = () => {
-  //     return clusterElasticSearchDisabled;
-  //   };
+      return {
+        executions: [demoExec[TRANSPORT_CLIENT_TYPE_DEFAULT]],
+        nextPageToken: new Buffer('{"IsWorkflowRunning":false}'),
+      };
+    };
 
-  //   return request()
-  //     .get(
-  //       '/api/domains/canary/workflows/closed?startTime=2017-11-12T12:00:00Z&endTime=2017-11-13T14:30:00Z'
-  //     )
-  //     .expect(200)
-  //     .expect('Content-Type', /json/)
-  //     .expect({
-  //       executions: [demoExecJson],
-  //       nextPageToken: 'eyJJc1dvcmtmbG93UnVubmluZyI6ZmFsc2V9',
-  //     });
-  // });
+    this.test.DescribeCluster = () => {
+      return clusterElasticSearchDisabled;
+    };
 
-  it('should list closed workflows with ES enabled', function() {
+    return request()
+      .get(
+        '/api/domains/canary/workflows/closed?startTime=2017-11-12T12:00:00Z&endTime=2017-11-13T14:30:00Z'
+      )
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .expect({
+        executions: [demoExecJson],
+        nextPageToken: 'eyJJc1dvcmtmbG93UnVubmluZyI6ZmFsc2V9',
+      });
+  });
+
+  it('should list closed workflows with ES enabled', function () {
     this.test.ListWorkflowExecutions = ({ listRequest }) => {
       listRequest.domain.should.equal('canary');
 
@@ -297,40 +320,50 @@ describe('Listing Workflows', function() {
       });
   });
 
-  // NOTE: TEST DISABLED UNTIL PROTO IS SUPPORTED
-  // it('should forward the next page token along', function () {
-  //   this.test.ListClosedWorkflowExecutions = ({ listRequest }) => {
-  //     listRequest.nextPageToken.toString().should.equal('page1');
+  it('should forward the next page token along', function () {
+    this.test.ListClosedWorkflowExecutions = ({ listRequest }) => {
+      switch (TRANSPORT_CLIENT_TYPE_DEFAULT) {
+        case 'tchannel': {
+          listRequest.nextPageToken.toString().should.equal('page1');
+          break;
+        }
+        case 'grpc': {
+          listRequest.nextPageToken.toString().should.equal('cGFnZTE=');
+          break;
+        }
+        default:
+          throw new Error(`unexpected transport type "${TRANSPORT_CLIENT_TYPE_DEFAULT}"`);
+      }
 
-  //     return {
-  //       executions: [],
-  //       nextPageToken: new Buffer('page2'),
-  //     };
-  //   };
+      return {
+        executions: [],
+        nextPageToken: new Buffer('page2'),
+      };
+    };
 
-  //   this.test.DescribeCluster = () => {
-  //     return clusterElasticSearchDisabled;
-  //   };
+    this.test.DescribeCluster = () => {
+      return clusterElasticSearchDisabled;
+    };
 
-  //   return request()
-  //     .get(
-  //       '/api/domains/canary/workflows/closed?startTime=2017-11-01&endTime=2017-11-13T22:27:17.551Z&nextPageToken=cGFnZTE='
-  //     )
-  //     .expect(200)
-  //     .expect('Content-Type', /json/)
-  //     .expect({
-  //       executions: [],
-  //       nextPageToken: 'cGFnZTI=',
-  //     });
-  // });
+    return request()
+      .get(
+        '/api/domains/canary/workflows/closed?startTime=2017-11-01&endTime=2017-11-13T22:27:17.551Z&nextPageToken=cGFnZTE='
+      )
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .expect({
+        executions: [],
+        nextPageToken: 'cGFnZTI=',
+      });
+  });
 
-  it('should return 404 if another state of workflows is queried', function() {
+  it('should return 404 if another state of workflows is queried', function () {
     return request()
       .get('/api/domains/canary/workflows/failed')
       .expect(404);
   });
 
-  it('should return 400 if startTime or endTime are missing', async function() {
+  it('should return 400 if startTime or endTime are missing', async function () {
     await request()
       .get('/api/domains/canary/workflows/open?startTime=2017-11-01')
       .expect(400);
