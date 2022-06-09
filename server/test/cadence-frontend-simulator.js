@@ -59,7 +59,7 @@ before(function(done) {
     }
     default: {
       throw new Error(
-        `Unsupported client type: "${process.env.TRANSPORT_CLIENT_TYPE}"`
+        `Unsupported client type: "${process.env.TRANSPORT_CLIENT_TYPE}". Only support 'tchannel' or 'grpc'.`
       );
     }
   }
