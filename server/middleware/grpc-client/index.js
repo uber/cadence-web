@@ -51,7 +51,7 @@ const {
 } = require('./transform');
 
 const grpcClient = ({ peers, requestConfig }) =>
-  async function (ctx, next) {
+  async function(ctx, next) {
     const adminService = new GRPCService({
       ctx,
       peers,

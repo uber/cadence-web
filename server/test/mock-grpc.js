@@ -162,8 +162,14 @@ const mockGRPC = done => {
   });
 
   server.addService(visibilityServiceMock.service, {
-    ListClosedWorkflowExecutions: handler('ListClosedWorkflowExecutions', 'listRequest'),
-    ListOpenWorkflowExecutions: handler('ListOpenWorkflowExecutions', 'listRequest'),
+    ListClosedWorkflowExecutions: handler(
+      'ListClosedWorkflowExecutions',
+      'listRequest'
+    ),
+    ListOpenWorkflowExecutions: handler(
+      'ListOpenWorkflowExecutions',
+      'listRequest'
+    ),
     ListWorkflowExecutions: handler('ListWorkflowExecutions', 'listRequest'),
   });
 
