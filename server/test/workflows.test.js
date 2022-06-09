@@ -69,7 +69,7 @@ describe('Listing Workflows', function () {
     taskList: null,
   });
   const demoExec = {
-    thrift: demoExecThrift,
+    tchannel: demoExecThrift,
     grpc: demoExecGrpc,
     json: demoExecJson,
   }
