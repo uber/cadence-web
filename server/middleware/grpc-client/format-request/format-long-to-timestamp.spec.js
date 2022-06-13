@@ -19,15 +19,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const formatLongToTimestamp = long => {
-  const longNumber = long.toNumber();
-  const seconds = Math.floor(longNumber / 1e9);
-  const nanos = parseInt(longNumber.toString().slice(-9));
+const Long = require('long');
+const formatLongToTimestamp = require('./format-long-to-timestamp');
 
-  return {
-    seconds,
-    nanos,
-  };
-};
+describe('formatLongToTimestamp', () => {
+  it('converts a long to a timestamp', () => {
+    const expectedTimestamp = {
+      seconds: 1655151848,
+      nanos: 301000000,
+    };
+    const dateString = '2022-06-13T20:24:08.301Z';
+    const date = new Date(dateString);
+    const dateLong = Long.fromValue(Number(date)).mul(1e6);
+    const dateTimestamp = formatLongToTimestamp(dateLong);
+    expect(dateTimestamp).toEqual(expectedTimestamp);
 
-module.exports = formatLongToTimestamp;
+    // convert back to date string to verify
+    const parsedDateMillis = dateTimestamp.seconds * 1e3 + Math.floor(dateTimestamp.nanos / 1e6);
+    const parsedDate = new Date(parsedDateMillis);
+    expect(parsedDate.toISOString()).toEqual(dateString);
+  });
+});
