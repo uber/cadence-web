@@ -136,7 +136,7 @@ HTMLElement.prototype.selectItem = async function selectItem(text) {
   const itemToClick = Array.from(
     await this.waitUntilAllExist('ul.vs__dropdown-menu li')
   ).find(a => a.innerText.trim() === text);
-  const selectedItem = new MouseEvent('mousedown');
+  const selectedItem = new MouseEvent('click');
 
   itemToClick.dispatchEvent(selectedItem);
 };

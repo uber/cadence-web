@@ -99,7 +99,7 @@ describe('Domain search', () => {
 
     const domainListItem = domainAutocompleteList.querySelector('li');
 
-    domainListItem.trigger('mousedown');
+    domainListItem.click();
 
     await testEl.waitUntilExists('section.workflow-list.ready');
     const headerBar = testEl.querySelector('header.top-bar');
@@ -157,7 +157,7 @@ describe('Domain search', () => {
 
     recentDomains.textNodes('li').should.deep.equal(['ci-tests', 'demo']);
 
-    recentDomains.querySelectorAll('li')[0].trigger('mousedown');
+    recentDomains.querySelectorAll('li')[0].click();
 
     await testEl.waitUntilExists('section.workflow-list.ready');
     scenario.location.should.contain('/domains/ci-tests/workflows');
