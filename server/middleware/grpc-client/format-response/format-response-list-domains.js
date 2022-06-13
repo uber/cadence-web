@@ -44,7 +44,7 @@ const formatListDomains = ({ domains, nextPageToken }) => ({
     }) => ({
       configuration: {
         badBinaries,
-        emitMetric: false, // missing from grpc
+        emitMetric: true, // DEPRECATED
         historyArchivalStatus: formatEnum(
           historyArchivalStatus,
           'ARCHIVAL_STATUS'

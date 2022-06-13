@@ -44,7 +44,7 @@ const formatDomain = ({
 }) => ({
   configuration: {
     badBinaries,
-    emitMetric: false, // missing from grpc
+    emitMetric: true, // DEPRECATED
     historyArchivalStatus: formatEnum(historyArchivalStatus, 'ARCHIVAL_STATUS'),
     historyArchivalURI: historyArchivalUri ? historyArchivalUri : null,
     visibilityArchivalStatus: formatEnum(

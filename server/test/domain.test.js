@@ -39,7 +39,7 @@ describe('Describe Domain', function() {
           failoverVersion: 0,
           configuration: {
             badBinaries: null,
-            emitMetric: false,
+            emitMetric: true,
             historyArchivalStatus: null,
             historyArchivalURI: null,
             visibilityArchivalStatus: null,
@@ -105,7 +105,7 @@ describe('Describe Domain', function() {
         configuration: {
           badBinaries: null,
           workflowExecutionRetentionPeriodInDays: 14,
-          emitMetric: false,
+          emitMetric: true,
           historyArchivalStatus: null,
           historyArchivalURI: null,
           visibilityArchivalStatus: null,
