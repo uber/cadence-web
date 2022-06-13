@@ -32,11 +32,14 @@ describe('formatLongToTimestamp', () => {
     const date = new Date(dateString);
     const dateLong = Long.fromValue(Number(date)).mul(1e6);
     const dateTimestamp = formatLongToTimestamp(dateLong);
+
     expect(dateTimestamp).toEqual(expectedTimestamp);
 
     // convert back to date string to verify
-    const parsedDateMillis = dateTimestamp.seconds * 1e3 + Math.floor(dateTimestamp.nanos / 1e6);
+    const parsedDateMillis =
+      dateTimestamp.seconds * 1e3 + Math.floor(dateTimestamp.nanos / 1e6);
     const parsedDate = new Date(parsedDateMillis);
+
     expect(parsedDate.toISOString()).toEqual(dateString);
   });
 });
