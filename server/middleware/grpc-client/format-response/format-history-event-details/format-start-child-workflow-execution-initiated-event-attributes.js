@@ -22,7 +22,7 @@
 const atob = require('atob');
 const formatPayload = require('../format-payload');
 const formatPayloadMap = require('../format-payload-map');
-const formatTimestampToSeconds = require('../format-timestamp-to-seconds');
+const formatDurationToSeconds = require('../format-duration-to-seconds');
 const formatRetryPolicy = require('./format-retry-policy');
 
 const formatStartChildWorkflowExecutionInitiatedEventAttributes = ({
@@ -41,8 +41,8 @@ const formatStartChildWorkflowExecutionInitiatedEventAttributes = ({
   ...eventAttributes,
   control: control ? parseInt(atob(control)) : null,
   decisionTaskCompletedEventId: parseInt(decisionTaskCompletedEventId),
-  delayStartSeconds: formatTimestampToSeconds(delayStart),
-  executionStartToCloseTimeoutSeconds: formatTimestampToSeconds(
+  delayStartSeconds: formatDurationToSeconds(delayStart),
+  executionStartToCloseTimeoutSeconds: formatDurationToSeconds(
     executionStartToCloseTimeout
   ),
   header: formatPayloadMap(header, 'fields'),
@@ -50,7 +50,7 @@ const formatStartChildWorkflowExecutionInitiatedEventAttributes = ({
   memo: formatPayloadMap(memo, 'fields'),
   retryPolicy: formatRetryPolicy(retryPolicy),
   searchAttributes: formatPayloadMap(searchAttributes, 'indexedFields'),
-  taskStartToCloseTimeoutSeconds: formatTimestampToSeconds(
+  taskStartToCloseTimeoutSeconds: formatDurationToSeconds(
     taskStartToCloseTimeout
   ),
 });

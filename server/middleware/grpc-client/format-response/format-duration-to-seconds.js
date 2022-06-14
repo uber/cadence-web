@@ -19,7 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const formatTimestampToSeconds = timestamp =>
-  !timestamp ? null : parseInt(timestamp.seconds);
+const formatDurationToSeconds = duration =>
+  !duration ? null : parseInt(duration.seconds);
 
-module.exports = formatTimestampToSeconds;
+module.exports = formatDurationToSeconds;

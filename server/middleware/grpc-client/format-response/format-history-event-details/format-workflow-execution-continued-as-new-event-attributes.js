@@ -21,7 +21,7 @@
 
 const formatPayload = require('../format-payload');
 const formatPayloadMap = require('../format-payload-map');
-const formatTimestampToSeconds = require('../format-timestamp-to-seconds');
+const formatDurationToSeconds = require('../format-duration-to-seconds');
 
 const formatWorkflowExecutionContinuedAsNewEventAttributes = ({
   backoffStartInterval,
@@ -36,9 +36,9 @@ const formatWorkflowExecutionContinuedAsNewEventAttributes = ({
   ...eventAttributes
 }) => ({
   ...eventAttributes,
-  backoffStartIntervalInSeconds: formatTimestampToSeconds(backoffStartInterval),
+  backoffStartIntervalInSeconds: formatDurationToSeconds(backoffStartInterval),
   decisionTaskCompletedEventId: parseInt(decisionTaskCompletedEventId),
-  executionStartToCloseTimeoutSeconds: formatTimestampToSeconds(
+  executionStartToCloseTimeoutSeconds: formatDurationToSeconds(
     executionStartToCloseTimeout
   ),
   failureDetails: failure?.details || null,
@@ -47,7 +47,7 @@ const formatWorkflowExecutionContinuedAsNewEventAttributes = ({
   input: formatPayload(input),
   memo: formatPayloadMap(memo, 'fields'),
   searchAttributes: formatPayloadMap(searchAttributes, 'indexedFields'),
-  taskStartToCloseTimeoutSeconds: formatTimestampToSeconds(
+  taskStartToCloseTimeoutSeconds: formatDurationToSeconds(
     taskStartToCloseTimeout
   ),
 });

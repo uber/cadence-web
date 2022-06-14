@@ -23,7 +23,7 @@ const formatEnum = require('../format-enum');
 const formatPayload = require('../format-payload');
 const formatPayloadMap = require('../format-payload-map');
 const formatTimestampToDatetime = require('../format-timestamp-to-datetime');
-const formatTimestampToSeconds = require('../format-timestamp-to-seconds');
+const formatDurationToSeconds = require('../format-duration-to-seconds');
 const formatRetryPolicy = require('./format-retry-policy');
 const formatPrevAutoResetPoints = require('./format-prev-auto-reset-points');
 
@@ -55,10 +55,10 @@ const formatWorkflowExecutionStartedEventAttributes = ({
     name: taskList?.name || null,
   },
   input: formatPayload(input),
-  executionStartToCloseTimeoutSeconds: formatTimestampToSeconds(
+  executionStartToCloseTimeoutSeconds: formatDurationToSeconds(
     executionStartToCloseTimeout
   ),
-  taskStartToCloseTimeoutSeconds: formatTimestampToSeconds(
+  taskStartToCloseTimeoutSeconds: formatDurationToSeconds(
     taskStartToCloseTimeout
   ),
   attempt: attempt || null,
@@ -67,7 +67,7 @@ const formatWorkflowExecutionStartedEventAttributes = ({
   continuedFailureReason: continuedFailure?.reason || null,
   cronSchedule: cronSchedule || null,
   expirationTimestamp: formatTimestampToDatetime(expirationTime),
-  firstDecisionTaskBackoffSeconds: formatTimestampToSeconds(
+  firstDecisionTaskBackoffSeconds: formatDurationToSeconds(
     firstDecisionTaskBackoff
   ),
   firstExecutionRunId: firstExecutionRunId || null,

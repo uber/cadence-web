@@ -19,7 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const formatTimestampToSeconds = require('../format-timestamp-to-seconds');
+const formatDurationToSeconds = require('../format-duration-to-seconds');
 
 const formatTimerStartedEventAttributes = ({
   decisionTaskCompletedEventId,
@@ -28,7 +28,7 @@ const formatTimerStartedEventAttributes = ({
 }) => ({
   ...eventAttributes,
   decisionTaskCompletedEventId: parseInt(decisionTaskCompletedEventId),
-  startToFireTimeoutSeconds: formatTimestampToSeconds(startToFireTimeout),
+  startToFireTimeoutSeconds: formatDurationToSeconds(startToFireTimeout),
 });
 
 module.exports = formatTimerStartedEventAttributes;

@@ -19,6 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+const formatDurationToSeconds = require('./format-duration-to-seconds');
 const formatEnum = require('./format-enum');
 const formatHistoryEventDetails = require('./format-history-event-details');
 const formatHistoryEventType = require('./format-history-event-type');
@@ -35,9 +36,9 @@ const formatResponseTerminateWorkflowExecution = require('./format-response-term
 const formatResponseWorkflowList = require('./format-response-workflow-list');
 const formatTimestampToDatetime = require('./format-timestamp-to-datetime');
 const formatTimestampToLong = require('./format-timestamp-to-long');
-const formatTimestampToSeconds = require('./format-timestamp-to-seconds');
 
 module.exports = {
+  formatDurationToSeconds,
   formatEnum,
   formatHistoryEventDetails,
   formatHistoryEventType,
@@ -54,5 +55,4 @@ module.exports = {
   formatResponseWorkflowList,
   formatTimestampToDatetime,
   formatTimestampToLong,
-  formatTimestampToSeconds,
 };

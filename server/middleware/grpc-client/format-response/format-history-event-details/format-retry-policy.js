@@ -19,7 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const formatTimestampToSeconds = require('../format-timestamp-to-seconds');
+const formatDurationToSeconds = require('../format-duration-to-seconds');
 
 const formatRetryPolicy = retryPolicy => {
   if (!retryPolicy) {
@@ -34,9 +34,9 @@ const formatRetryPolicy = retryPolicy => {
   } = retryPolicy;
 
   return {
-    expirationIntervalInSeconds: formatTimestampToSeconds(expirationInterval),
-    initialIntervalInSeconds: formatTimestampToSeconds(initialInterval),
-    maximumIntervalInSeconds: formatTimestampToSeconds(maximumInterval),
+    expirationIntervalInSeconds: formatDurationToSeconds(expirationInterval),
+    initialIntervalInSeconds: formatDurationToSeconds(initialInterval),
+    maximumIntervalInSeconds: formatDurationToSeconds(maximumInterval),
     ...rest,
   };
 };

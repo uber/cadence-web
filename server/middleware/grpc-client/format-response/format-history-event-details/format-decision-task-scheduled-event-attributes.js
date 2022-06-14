@@ -20,7 +20,7 @@
 // THE SOFTWARE.
 
 const formatEnum = require('../format-enum');
-const formatTimestampToSeconds = require('../format-timestamp-to-seconds');
+const formatDurationToSeconds = require('../format-duration-to-seconds');
 
 const formatDecisionTaskScheduledEventAttributes = ({
   startToCloseTimeout,
@@ -31,7 +31,7 @@ const formatDecisionTaskScheduledEventAttributes = ({
     kind: formatEnum(taskList?.kind, 'TASK_LIST_KIND'),
     name: taskList?.name || null,
   },
-  startToCloseTimeoutSeconds: formatTimestampToSeconds(startToCloseTimeout),
+  startToCloseTimeoutSeconds: formatDurationToSeconds(startToCloseTimeout),
   ...eventAttributes,
 });
 

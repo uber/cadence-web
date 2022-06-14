@@ -21,7 +21,7 @@
 
 const formatEnum = require('./format-enum');
 const formatTimestampToDatetime = require('./format-timestamp-to-datetime');
-const formatTimestampToSeconds = require('./format-timestamp-to-seconds');
+const formatDurationToSeconds = require('./format-duration-to-seconds');
 
 const formatResponseDescribeWorkflow = ({
   executionConfiguration: {
@@ -36,7 +36,7 @@ const formatResponseDescribeWorkflow = ({
 }) => ({
   ...response,
   executionConfiguration: {
-    executionStartToCloseTimeoutSeconds: formatTimestampToSeconds(
+    executionStartToCloseTimeoutSeconds: formatDurationToSeconds(
       executionStartToCloseTimeout
     ),
     taskList: {
@@ -45,7 +45,7 @@ const formatResponseDescribeWorkflow = ({
         : null,
       name: taskList?.name || null,
     },
-    taskStartToCloseTimeoutSeconds: formatTimestampToSeconds(
+    taskStartToCloseTimeoutSeconds: formatDurationToSeconds(
       taskStartToCloseTimeout
     ),
   },

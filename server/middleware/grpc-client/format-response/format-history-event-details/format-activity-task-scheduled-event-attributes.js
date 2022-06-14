@@ -21,7 +21,7 @@
 
 const formatPayload = require('../format-payload');
 const formatPayloadMap = require('../format-payload-map');
-const formatTimestampToSeconds = require('../format-timestamp-to-seconds');
+const formatDurationToSeconds = require('../format-duration-to-seconds');
 const formatRetryPolicy = require('./format-retry-policy');
 
 const formatActivityTaskScheduledEventAttributes = ({
@@ -40,16 +40,16 @@ const formatActivityTaskScheduledEventAttributes = ({
   decisionTaskCompletedEventId: parseInt(decisionTaskCompletedEventId),
   domain: domain || null,
   header: formatPayloadMap(header, 'fields'),
-  heartbeatTimeoutSeconds: formatTimestampToSeconds(heartbeatTimeout),
+  heartbeatTimeoutSeconds: formatDurationToSeconds(heartbeatTimeout),
   input: formatPayload(input),
   retryPolicy: formatRetryPolicy(retryPolicy),
-  scheduleToCloseTimeoutSeconds: formatTimestampToSeconds(
+  scheduleToCloseTimeoutSeconds: formatDurationToSeconds(
     scheduleToCloseTimeout
   ),
-  scheduleToStartTimeoutSeconds: formatTimestampToSeconds(
+  scheduleToStartTimeoutSeconds: formatDurationToSeconds(
     scheduleToStartTimeout
   ),
-  startToCloseTimeoutSeconds: formatTimestampToSeconds(startToCloseTimeout),
+  startToCloseTimeoutSeconds: formatDurationToSeconds(startToCloseTimeout),
 });
 
 module.exports = formatActivityTaskScheduledEventAttributes;
