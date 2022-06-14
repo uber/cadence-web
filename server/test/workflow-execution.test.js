@@ -22,12 +22,22 @@
 describe('Workflow Execution', function() {
   it('should describe the workflow', async function() {
     this.test.DescribeWorkflowExecution = ({ describeRequest }) => {
-      return {
-        executionConfiguration: {
-          taskList: { name: 'ci-task-list' },
-          taskStartToCloseTimeoutSeconds: 10,
+      const response = {
+        tchannel: {
+          executionConfiguration: {
+            taskList: { name: 'ci-task-list' },
+            taskStartToCloseTimeoutSeconds: 10,
+          },
+        },
+        grpc: {
+          executionConfiguration: {
+            taskList: { name: 'ci-task-list' },
+            taskStartToCloseTimeout: { seconds: 10 },
+          },
         },
       };
+
+      return response[process.env.TRANSPORT_CLIENT_TYPE];
     };
 
     return request()
@@ -49,7 +59,6 @@ describe('Workflow Execution', function() {
         pendingDecision: null,
       });
   });
-
   it('should terminate a workflow', async function() {
     let reason;
 
@@ -67,7 +76,6 @@ describe('Workflow Execution', function() {
       .expect(204)
       .expect(() => reason.should.equal('example reason'));
   });
-
   it('should signal a workflow without input', async function() {
     let signal;
 

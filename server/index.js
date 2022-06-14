@@ -31,6 +31,7 @@ const webpack = require('webpack');
 const jwt = require('jsonwebtoken');
 
 const webpackConfig = require('../webpack.config');
+const grpcClient = require('./middleware/grpc-client');
 const tchannelClient = require('./middleware/tchannel-client');
 const router = require('./router');
 const {
@@ -39,10 +40,15 @@ const {
   REQUEST_RETRY_LIMIT_DEFAULT,
   REQUEST_TIMEOUT_DEFAULT,
   SERVICE_NAME_DEFAULT,
+  TRANSPORT_CLIENT_TYPE_DEFAULT,
 } = require('./constants');
 
 const staticRoot = path.join(__dirname, '../dist');
 const app = new Koa();
+const transportClients = {
+  tchannel: tchannelClient,
+  grpc: grpcClient,
+};
 
 app.webpackConfig = webpackConfig;
 
@@ -54,6 +60,8 @@ app.init = function({
     REQUEST_RETRY_LIMIT_DEFAULT,
   serviceName = process.env.CADENCE_TCHANNEL_SERVICE || SERVICE_NAME_DEFAULT,
   timeout = REQUEST_TIMEOUT_DEFAULT,
+  transportClientType = process.env.TRANSPORT_CLIENT_TYPE ||
+    TRANSPORT_CLIENT_TYPE_DEFAULT, // 'tchannel', 'grpc'
   useWebpack = process.env.NODE_ENV !== 'production',
   enableAuth = process.env.ENABLE_AUTH === 'true',
   authType = process.env.AUTH_TYPE,
@@ -65,6 +73,14 @@ app.init = function({
     serviceName,
     timeout,
   };
+
+  const transportClient = transportClients[transportClientType];
+
+  if (!transportClient) {
+    throw new Error(
+      `Unexpected transport client "${transportClientType}". Only support 'tchannel' or 'grpc'.`
+    );
+  }
 
   let compiler;
 
@@ -114,7 +130,7 @@ app.init = function({
 
       await next();
     })
-    .use(tchannelClient({ peers, requestConfig }))
+    .use(transportClient({ peers, requestConfig }))
     .use(
       useWebpack
         ? koaWebpack({

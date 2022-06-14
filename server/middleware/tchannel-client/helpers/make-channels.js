@@ -50,12 +50,12 @@ const makeChannels = async ({ client, peers }) => {
 
   const adminTChannelAsThrift = TChannelAsThrift({
     channel: cadenceChannel,
-    entryPoint: path.join(__dirname, '../../../idl/admin.thrift'),
+    entryPoint: path.join(__dirname, '../../../idl/thrift/admin.thrift'),
   });
 
   const cadenceTChannelAsThrift = TChannelAsThrift({
     channel: cadenceChannel,
-    entryPoint: path.join(__dirname, '../../../idl/cadence.thrift'),
+    entryPoint: path.join(__dirname, '../../../idl/thrift/cadence.thrift'),
   });
 
   return {

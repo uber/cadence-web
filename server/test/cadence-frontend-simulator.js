@@ -19,82 +19,50 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const path = require('path'),
-  supertest = require('supertest'),
-  TChannel = require('tchannel'),
-  TChannelAsThrift = require('tchannel/as/thrift'),
-  Long = require('long');
+const supertest = require('supertest');
+const Long = require('long');
+const moment = require('moment');
+const mockGRPC = require('./mock-grpc');
+const mockTChannel = require('./mock-tchannel');
 
-let tchanServer, currTest, client, app;
+let app;
+let closeClient;
+let closeServer;
+let setCurrentTest;
 
 global.should = require('chai').should();
 
 global.dateToLong = d => Long.fromValue(Number(new Date(d))).mul(1000000);
 
+global.dateToTimestamp = d => ({
+  seconds: moment(d).unix(),
+});
+
 before(function(done) {
-  tchanServer = new TChannel({ serviceName: 'cadence-frontend' });
-
-  client = new TChannel();
-  const cadenceChannel = client.makeSubChannel({
-    serviceName: 'cadence-frontend',
-  });
-  const tchan = TChannelAsThrift({
-    channel: cadenceChannel,
-    entryPoint: path.join(__dirname, '../idl/cadence.thrift'),
-  });
-  const adminTChannel = TChannelAsThrift({
-    channel: cadenceChannel,
-    entryPoint: path.join(__dirname, '../idl/admin.thrift'),
-  });
-
-  const handler = serviceName => (ctx, req, head, body, cb) => {
-    const mockName = req.endpoint.replace(`${serviceName}::`, '');
-
-    if (!currTest[mockName]) {
-      throw new Error(`unexpected request to ${req.endpoint}`);
-    }
-
-    const bodyMock = currTest[mockName](body, req);
-
-    if (bodyMock instanceof Error) {
-      cb(bodyMock);
-    } else if (bodyMock && bodyMock.ok === false) {
-      cb(null, bodyMock);
-    } else {
-      cb(null, { ok: true, head, body: bodyMock });
-    }
-  };
-
-  [
-    'ListOpenWorkflowExecutions',
-    'ListClosedWorkflowExecutions',
-    'ListWorkflowExecutions',
-    'GetWorkflowExecutionHistory',
-    'QueryWorkflow',
-    'DescribeWorkflowExecution',
-    'TerminateWorkflowExecution',
-    'SignalWorkflowExecution',
-    'ListDomains',
-    'DescribeDomain',
-    'DescribeTaskList',
-  ].forEach(endpoint =>
-    tchan.register(
-      tchanServer,
-      'WorkflowService::' + endpoint,
-      {},
-      handler('WorkflowService')
-    )
-  );
-
-  adminTChannel.register(
-    tchanServer,
-    'AdminService::DescribeCluster',
-    {},
-    handler('AdminService')
-  );
-
   process.env.CADENCE_TCHANNEL_PEERS = '127.0.0.1:11343';
-  tchanServer.listen(11343, '127.0.0.1', () => done());
+  process.env.TRANSPORT_CLIENT_TYPE = 'tchannel';
+
+  switch (process.env.TRANSPORT_CLIENT_TYPE) {
+    case 'tchannel': {
+      mocks = mockTChannel(done);
+      closeClient = mocks.closeClient;
+      closeServer = mocks.closeServer;
+      setCurrentTest = mocks.setCurrentTest;
+      break;
+    }
+    case 'grpc': {
+      mocks = mockGRPC(done);
+      closeClient = mocks.closeClient;
+      closeServer = mocks.closeServer;
+      setCurrentTest = mocks.setCurrentTest;
+      break;
+    }
+    default: {
+      throw new Error(
+        `Unsupported client type: "${process.env.TRANSPORT_CLIENT_TYPE}". Only support 'tchannel' or 'grpc'.`
+      );
+    }
+  }
 
   app = require('../')
     .init({ useWebpack: false, logErrors: false })
@@ -104,10 +72,10 @@ before(function(done) {
 
 after(function() {
   app.close();
-  tchanServer.close();
-  client.close();
+  closeClient();
+  closeServer();
 });
 
 beforeEach(function() {
-  currTest = this.currentTest;
+  setCurrentTest(this.currentTest);
 });
