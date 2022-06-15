@@ -27,7 +27,7 @@ const { formatRequestDefault } = require('./format-request');
 const { formatResponseDefault } = require('./format-response');
 const { transformDefault } = require('./transform');
 
-const BASE_PATH = path.resolve('./server/idl/proto');
+const BASE_PATH = path.join(__dirname, '../../idl/proto');
 const MAX_MESSAGE_SIZE = 64 * 1024 * 1024;
 const GRPC_OPTIONS = {
   'grpc.max_send_message_length': MAX_MESSAGE_SIZE,
