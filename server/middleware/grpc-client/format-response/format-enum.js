@@ -19,7 +19,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const formatEnum = (value, prefix) =>
-  !value || value.includes('INVALID') ? null : value.replace(`${prefix}_`, '');
+const lowerCase = require('lodash.lowercase');
+const snakeCase = require('lodash.snakecase');
+const startCase = require('lodash.startcase');
+const upperCase = require('lodash.uppercase');
+const { combine } = require('../../../helpers');
+
+const upperSnakeCase = combine(
+  snakeCase,
+  upperCase,
+);
+
+const pascalCase = combine(
+  lowerCase,
+  startCase,
+  (value) => value.replace(/\s/g, ''),
+);
+
+const caseFormatterMap = {
+  snake: upperSnakeCase,
+  pascal: pascalCase,
+};
+
+const formatEnum = (value, prefix, caseType = 'snake') => {
+  if (!value || value.includes('INVALID')) {
+    return null;
+  }
+
+  const valueRemovedPrefix = value.replace(`${prefix}_`, '');
+  const caseFormatter = caseFormatterMap[caseType];
+  return caseFormatter(valueRemovedPrefix);
+};
 
 module.exports = formatEnum;

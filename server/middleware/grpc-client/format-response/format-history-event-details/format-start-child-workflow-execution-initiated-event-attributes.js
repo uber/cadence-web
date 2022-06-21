@@ -34,10 +34,12 @@ const formatStartChildWorkflowExecutionInitiatedEventAttributes = ({
   header,
   input,
   memo,
+  parentClosePolicy,
   retryPolicy,
   searchAttributes,
   taskList,
   taskStartToCloseTimeout,
+  workflowIdReusePolicy,
   ...eventAttributes
 }) => ({
   ...eventAttributes,
@@ -50,6 +52,7 @@ const formatStartChildWorkflowExecutionInitiatedEventAttributes = ({
   header: formatPayloadMap(header, 'fields'),
   input: formatPayload(input),
   memo: formatPayloadMap(memo, 'fields'),
+  parentClosePolicy: formatEnum(parentClosePolicy, 'PARENT_CLOSE_POLICY'),
   retryPolicy: formatRetryPolicy(retryPolicy),
   searchAttributes: formatPayloadMap(searchAttributes, 'indexedFields'),
   taskList: {
@@ -59,6 +62,7 @@ const formatStartChildWorkflowExecutionInitiatedEventAttributes = ({
   taskStartToCloseTimeoutSeconds: formatDurationToSeconds(
     taskStartToCloseTimeout
   ),
+  workflowIdReusePolicy: formatEnum(workflowIdReusePolicy, 'WORKFLOW_ID_REUSE_POLICY', 'pascal'),
 });
 
 module.exports = formatStartChildWorkflowExecutionInitiatedEventAttributes;
