@@ -41,13 +41,13 @@ const caseFormatterMap = {
   pascal: pascalCase,
 };
 
-const formatEnum = (value, prefix, caseType = 'snake') => {
+const formatEnum = (value, prefix, caseFormat = 'snake') => {
   if (!value || value.includes('INVALID')) {
     return null;
   }
 
   const valueRemovedPrefix = value.replace(`${prefix}_`, '');
-  const caseFormatter = caseFormatterMap[caseType];
+  const caseFormatter = caseFormatterMap[caseFormat];
   return caseFormatter(valueRemovedPrefix);
 };
 
