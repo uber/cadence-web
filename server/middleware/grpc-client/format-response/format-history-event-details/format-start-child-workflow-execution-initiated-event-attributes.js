@@ -62,7 +62,11 @@ const formatStartChildWorkflowExecutionInitiatedEventAttributes = ({
   taskStartToCloseTimeoutSeconds: formatDurationToSeconds(
     taskStartToCloseTimeout
   ),
-  workflowIdReusePolicy: formatEnum(workflowIdReusePolicy, 'WORKFLOW_ID_REUSE_POLICY', 'pascal'),
+  workflowIdReusePolicy: formatEnum(
+    workflowIdReusePolicy,
+    'WORKFLOW_ID_REUSE_POLICY',
+    'pascal'
+  ),
 });
 
 module.exports = formatStartChildWorkflowExecutionInitiatedEventAttributes;

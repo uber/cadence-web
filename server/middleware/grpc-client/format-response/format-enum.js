@@ -25,15 +25,10 @@ const startCase = require('lodash.startcase');
 const upperCase = require('lodash.uppercase');
 const { combine } = require('../../../helpers');
 
-const upperSnakeCase = combine(
-  snakeCase,
-  upperCase,
-);
+const upperSnakeCase = combine(snakeCase, upperCase);
 
-const pascalCase = combine(
-  lowerCase,
-  startCase,
-  (value) => value.replace(/\s/g, ''),
+const pascalCase = combine(lowerCase, startCase, value =>
+  value.replace(/\s/g, '')
 );
 
 const caseFormatterMap = {
@@ -48,6 +43,7 @@ const formatEnum = (value, prefix, caseFormat = 'snake') => {
 
   const valueRemovedPrefix = value.replace(`${prefix}_`, '');
   const caseFormatter = caseFormatterMap[caseFormat];
+
   return caseFormatter(valueRemovedPrefix);
 };
 
