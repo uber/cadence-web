@@ -27,9 +27,9 @@ const { combine } = require('../../../helpers');
 
 const upperSnakeCase = combine(snakeCase, upperCase);
 
-const pascalCase = combine(lowerCase, startCase, value =>
-  value.replace(/\s/g, '')
-);
+const removeWhiteSpace = value => value.replace(/\s/g, '');
+
+const pascalCase = combine(lowerCase, startCase, removeWhiteSpace);
 
 const caseFormatterMap = {
   snake: upperSnakeCase,
