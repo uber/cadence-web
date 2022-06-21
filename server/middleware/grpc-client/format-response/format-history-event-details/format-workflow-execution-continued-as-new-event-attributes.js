@@ -19,6 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+const formatEnum = require('../format-enum');
 const formatPayload = require('../format-payload');
 const formatPayloadMap = require('../format-payload-map');
 const formatDurationToSeconds = require('../format-duration-to-seconds');
@@ -32,6 +33,7 @@ const formatWorkflowExecutionContinuedAsNewEventAttributes = ({
   input,
   memo,
   searchAttributes,
+  taskList,
   taskStartToCloseTimeout,
   ...eventAttributes
 }) => ({
@@ -47,6 +49,10 @@ const formatWorkflowExecutionContinuedAsNewEventAttributes = ({
   input: formatPayload(input),
   memo: formatPayloadMap(memo, 'fields'),
   searchAttributes: formatPayloadMap(searchAttributes, 'indexedFields'),
+  taskList: {
+    kind: formatEnum(taskList?.kind, 'TASK_LIST_KIND'),
+    name: taskList?.name || null,
+  },
   taskStartToCloseTimeoutSeconds: formatDurationToSeconds(
     taskStartToCloseTimeout
   ),

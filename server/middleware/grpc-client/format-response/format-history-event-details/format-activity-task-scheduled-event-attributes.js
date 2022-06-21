@@ -19,6 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+const formatEnum = require('../format-enum');
 const formatPayload = require('../format-payload');
 const formatPayloadMap = require('../format-payload-map');
 const formatDurationToSeconds = require('../format-duration-to-seconds');
@@ -34,6 +35,7 @@ const formatActivityTaskScheduledEventAttributes = ({
   scheduleToCloseTimeout,
   scheduleToStartTimeout,
   startToCloseTimeout,
+  taskList,
   ...eventAttributes
 }) => ({
   ...eventAttributes,
@@ -50,6 +52,10 @@ const formatActivityTaskScheduledEventAttributes = ({
     scheduleToStartTimeout
   ),
   startToCloseTimeoutSeconds: formatDurationToSeconds(startToCloseTimeout),
+  taskList: {
+    kind: formatEnum(taskList?.kind, 'TASK_LIST_KIND'),
+    name: taskList?.name || null,
+  },
 });
 
 module.exports = formatActivityTaskScheduledEventAttributes;
