@@ -22,10 +22,11 @@
 const lowerCase = require('lodash.lowercase');
 const snakeCase = require('lodash.snakecase');
 const startCase = require('lodash.startcase');
-const upperCase = require('lodash.uppercase');
 const { combine } = require('../../../helpers');
 
-const upperSnakeCase = combine(snakeCase, upperCase);
+const convertToUpper = value => value.toUpperCase();
+
+const upperSnakeCase = combine(snakeCase, convertToUpper);
 
 const removeWhiteSpace = value => value.replace(/\s/g, '');
 
