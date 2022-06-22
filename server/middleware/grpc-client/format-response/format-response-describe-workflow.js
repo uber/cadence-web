@@ -51,65 +51,74 @@ const formatResponseDescribeWorkflow = ({
     ),
   },
   pendingActivities: pendingActivities?.length
-    ? pendingActivities.map(({
-      expirationTime,
-      lastHeartbeatTime,
-      lastStartedTime,
-      scheduledTime,
-      state,
-      ...pendingActivity
-    }) => ({
-      ...pendingActivity,
-      expirationTimestamp: formatTimestampToDatetime(expirationTime),
-      lastHeartbeatTimestamp: formatTimestampToDatetime(lastHeartbeatTime),
-      lastStartedTimestamp: formatTimestampToDatetime(lastStartedTime),
-      scheduledTimestamp: formatTimestampToDatetime(scheduledTime),
-      state: formatEnum(state, 'PENDING_ACTIVITY_STATE'),
-    }))
+    ? pendingActivities.map(
+        ({
+          expirationTime,
+          lastHeartbeatTime,
+          lastStartedTime,
+          scheduledTime,
+          state,
+          ...pendingActivity
+        }) => ({
+          ...pendingActivity,
+          expirationTimestamp: formatTimestampToDatetime(expirationTime),
+          lastHeartbeatTimestamp: formatTimestampToDatetime(lastHeartbeatTime),
+          lastStartedTimestamp: formatTimestampToDatetime(lastStartedTime),
+          scheduledTimestamp: formatTimestampToDatetime(scheduledTime),
+          state: formatEnum(state, 'PENDING_ACTIVITY_STATE'),
+        })
+      )
     : null,
   pendingChildren: pendingChildren?.length
     ? pendingChildren.map(({ parentClosePolicy, ...pendingChild }) => ({
-      ...pendingChild,
-      parentClosePolicy: formatEnum(parentClosePolicy, 'PARENT_CLOSE_POLICY'),
-    })) : null,
+        ...pendingChild,
+        parentClosePolicy: formatEnum(parentClosePolicy, 'PARENT_CLOSE_POLICY'),
+      }))
+    : null,
   pendingDecision: pendingDecision
     ? {
-      attempt: pendingDecision.attempt,
-      originalScheduledTimestamp: formatTimestampToDatetime(pendingDecision.originalScheduledTime),
-      scheduledTimestamp: formatTimestampToDatetime(pendingDecision.scheduledTime),
-      startedTimestamp: formatTimestampToDatetime(pendingDecision.startedTime),
-      state: formatEnum(pendingDecision.state, 'PENDING_DECISION_STATE'),
-    }
+        attempt: pendingDecision.attempt,
+        originalScheduledTimestamp: formatTimestampToDatetime(
+          pendingDecision.originalScheduledTime
+        ),
+        scheduledTimestamp: formatTimestampToDatetime(
+          pendingDecision.scheduledTime
+        ),
+        startedTimestamp: formatTimestampToDatetime(
+          pendingDecision.startedTime
+        ),
+        state: formatEnum(pendingDecision.state, 'PENDING_DECISION_STATE'),
+      }
     : null,
   workflowExecutionInfo: workflowExecutionInfo
     ? {
-      ...workflowExecutionInfo,
-      autoResetPoints: {
-        points:
-          workflowExecutionInfo?.autoResetPoints?.points.map(
-            ({ createdTime, expiringTime, ...point }) => ({
-              ...point,
-              createdTimeNano: formatTimestampToDatetime(createdTime),
-              expiringTimeNano: formatTimestampToDatetime(expiringTime),
-            })
-          ) || null,
-      },
-      closeStatus: workflowExecutionInfo?.closeStatus
-        ? formatEnum(
-          workflowExecutionInfo?.closeStatus,
-          'WORKFLOW_EXECUTION_CLOSE_STATUS'
-        )
-        : null,
-      closeTime:
-        formatTimestampToDatetime(workflowExecutionInfo?.closeTime) || null,
-      execution: workflowExecutionInfo?.workflowExecution || null,
-      executionTime:
-        formatTimestampToDatetime(workflowExecutionInfo?.executionTime) ||
-        null,
-      historyLength: parseInt(workflowExecutionInfo?.historyLength) || null,
-      startTime:
-        formatTimestampToDatetime(workflowExecutionInfo?.startTime) || null,
-    }
+        ...workflowExecutionInfo,
+        autoResetPoints: {
+          points:
+            workflowExecutionInfo?.autoResetPoints?.points.map(
+              ({ createdTime, expiringTime, ...point }) => ({
+                ...point,
+                createdTimeNano: formatTimestampToDatetime(createdTime),
+                expiringTimeNano: formatTimestampToDatetime(expiringTime),
+              })
+            ) || null,
+        },
+        closeStatus: workflowExecutionInfo?.closeStatus
+          ? formatEnum(
+              workflowExecutionInfo?.closeStatus,
+              'WORKFLOW_EXECUTION_CLOSE_STATUS'
+            )
+          : null,
+        closeTime:
+          formatTimestampToDatetime(workflowExecutionInfo?.closeTime) || null,
+        execution: workflowExecutionInfo?.workflowExecution || null,
+        executionTime:
+          formatTimestampToDatetime(workflowExecutionInfo?.executionTime) ||
+          null,
+        historyLength: parseInt(workflowExecutionInfo?.historyLength) || null,
+        startTime:
+          formatTimestampToDatetime(workflowExecutionInfo?.startTime) || null,
+      }
     : null,
 });
 
