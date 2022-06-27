@@ -19,33 +19,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const lowerCase = require('lodash.lowercase');
-const snakeCase = require('lodash.snakecase');
-const startCase = require('lodash.startcase');
-const { combine } = require('../../../helpers');
+import formatEnum from './format-enum';
 
-const convertToUpper = value => value.toUpperCase();
+describe('formatEnum', () => {
+  it('should return null when enum contains INVALID', () => {
+    const input = ['CONTAINS_INVALID'];
+    const output = formatEnum(input[0]);
 
-const upperSnakeCase = combine(snakeCase, convertToUpper);
+    expect(output).toEqual(null);
+  });
 
-const removeWhiteSpace = value => value.replace(/\s/g, '');
+  it('should format enum by removing prefix and converts to snake case (by default)', () => {
+    const input = ['PREFIX_ENUM_SNAKE_VALUE', 'PREFIX_ENUM'];
+    const output = formatEnum(...input);
 
-const pascalCase = combine(lowerCase, startCase, removeWhiteSpace);
+    expect(output).toEqual('SNAKE_VALUE');
+  });
 
-const caseFormatterMap = {
-  snake: upperSnakeCase,
-  pascal: pascalCase,
-};
+  it('should format enum by removing prefix and convert to pascal case when caseFormat is pascal.', () => {
+    const input = ['PREFIX_ENUM_PASCAL_VALUE', 'PREFIX_ENUM', 'pascal'];
+    const output = formatEnum(...input);
 
-const formatEnum = (value, prefix, caseFormat = 'snake') => {
-  if (!value || value.includes('INVALID')) {
-    return null;
-  }
-
-  const valueRemovedPrefix = value.replace(`${prefix}_`, '');
-  const caseFormatter = caseFormatterMap[caseFormat];
-
-  return caseFormatter(valueRemovedPrefix);
-};
-
-module.exports = formatEnum;
+    expect(output).toEqual('PascalValue');
+  });
+});

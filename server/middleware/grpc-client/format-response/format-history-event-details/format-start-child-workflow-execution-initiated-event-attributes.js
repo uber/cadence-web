@@ -20,6 +20,7 @@
 // THE SOFTWARE.
 
 const atob = require('atob');
+const formatEnum = require('../format-enum');
 const formatPayload = require('../format-payload');
 const formatPayloadMap = require('../format-payload-map');
 const formatDurationToSeconds = require('../format-duration-to-seconds');
@@ -33,9 +34,12 @@ const formatStartChildWorkflowExecutionInitiatedEventAttributes = ({
   header,
   input,
   memo,
+  parentClosePolicy,
   retryPolicy,
   searchAttributes,
+  taskList,
   taskStartToCloseTimeout,
+  workflowIdReusePolicy,
   ...eventAttributes
 }) => ({
   ...eventAttributes,
@@ -48,10 +52,20 @@ const formatStartChildWorkflowExecutionInitiatedEventAttributes = ({
   header: formatPayloadMap(header, 'fields'),
   input: formatPayload(input),
   memo: formatPayloadMap(memo, 'fields'),
+  parentClosePolicy: formatEnum(parentClosePolicy, 'PARENT_CLOSE_POLICY'),
   retryPolicy: formatRetryPolicy(retryPolicy),
   searchAttributes: formatPayloadMap(searchAttributes, 'indexedFields'),
+  taskList: {
+    kind: formatEnum(taskList?.kind, 'TASK_LIST_KIND'),
+    name: taskList?.name || null,
+  },
   taskStartToCloseTimeoutSeconds: formatDurationToSeconds(
     taskStartToCloseTimeout
+  ),
+  workflowIdReusePolicy: formatEnum(
+    workflowIdReusePolicy,
+    'WORKFLOW_ID_REUSE_POLICY',
+    'pascal'
   ),
 });
 

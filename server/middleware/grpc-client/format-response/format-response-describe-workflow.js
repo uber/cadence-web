@@ -31,6 +31,7 @@ const formatResponseDescribeWorkflow = ({
   },
   pendingActivities,
   pendingChildren,
+  pendingDecision,
   workflowExecutionInfo,
   ...response
 }) => ({
@@ -49,8 +50,46 @@ const formatResponseDescribeWorkflow = ({
       taskStartToCloseTimeout
     ),
   },
-  pendingActivities: pendingActivities?.length ? pendingActivities : null,
-  pendingChildren: pendingChildren?.length ? pendingChildren : null,
+  pendingActivities: pendingActivities?.length
+    ? pendingActivities.map(
+        ({
+          expirationTime,
+          lastHeartbeatTime,
+          lastStartedTime,
+          scheduledTime,
+          state,
+          ...pendingActivity
+        }) => ({
+          ...pendingActivity,
+          expirationTimestamp: formatTimestampToDatetime(expirationTime),
+          lastHeartbeatTimestamp: formatTimestampToDatetime(lastHeartbeatTime),
+          lastStartedTimestamp: formatTimestampToDatetime(lastStartedTime),
+          scheduledTimestamp: formatTimestampToDatetime(scheduledTime),
+          state: formatEnum(state, 'PENDING_ACTIVITY_STATE'),
+        })
+      )
+    : null,
+  pendingChildren: pendingChildren?.length
+    ? pendingChildren.map(({ parentClosePolicy, ...pendingChild }) => ({
+        ...pendingChild,
+        parentClosePolicy: formatEnum(parentClosePolicy, 'PARENT_CLOSE_POLICY'),
+      }))
+    : null,
+  pendingDecision: pendingDecision
+    ? {
+        attempt: pendingDecision.attempt,
+        originalScheduledTimestamp: formatTimestampToDatetime(
+          pendingDecision.originalScheduledTime
+        ),
+        scheduledTimestamp: formatTimestampToDatetime(
+          pendingDecision.scheduledTime
+        ),
+        startedTimestamp: formatTimestampToDatetime(
+          pendingDecision.startedTime
+        ),
+        state: formatEnum(pendingDecision.state, 'PENDING_DECISION_STATE'),
+      }
+    : null,
   workflowExecutionInfo: workflowExecutionInfo
     ? {
         ...workflowExecutionInfo,
