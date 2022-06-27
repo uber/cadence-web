@@ -53,7 +53,9 @@ const formatResponseDescribeWorkflow = ({
   pendingActivities: pendingActivities?.length
     ? pendingActivities.map(
         ({
+          activityId,
           expirationTime,
+          lastFailure,
           lastHeartbeatTime,
           lastStartedTime,
           scheduledTime,
@@ -61,7 +63,10 @@ const formatResponseDescribeWorkflow = ({
           ...pendingActivity
         }) => ({
           ...pendingActivity,
+          activityID: parseInt(activityId),
           expirationTimestamp: formatTimestampToDatetime(expirationTime),
+          lastFailureDetails: lastFailure?.details || null,
+          lastFailureReason: lastFailure?.reason || null,
           lastHeartbeatTimestamp: formatTimestampToDatetime(lastHeartbeatTime),
           lastStartedTimestamp: formatTimestampToDatetime(lastStartedTime),
           scheduledTimestamp: formatTimestampToDatetime(scheduledTime),
@@ -70,10 +75,23 @@ const formatResponseDescribeWorkflow = ({
       )
     : null,
   pendingChildren: pendingChildren?.length
-    ? pendingChildren.map(({ parentClosePolicy, ...pendingChild }) => ({
-        ...pendingChild,
-        parentClosePolicy: formatEnum(parentClosePolicy, 'PARENT_CLOSE_POLICY'),
-      }))
+    ? pendingChildren.map(
+        ({
+          initiatedId,
+          parentClosePolicy,
+          workflowExecution,
+          ...pendingChild
+        }) => ({
+          ...pendingChild,
+          initiatedID: parseInt(initiatedId),
+          parentClosePolicy: formatEnum(
+            parentClosePolicy,
+            'PARENT_CLOSE_POLICY'
+          ),
+          runID: workflowExecution?.runId || null,
+          workflowID: workflowExecution?.workflowId || null,
+        })
+      )
     : null,
   pendingDecision: pendingDecision
     ? {
