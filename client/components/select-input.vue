@@ -102,6 +102,7 @@ export default {
     }
 
     .vs__dropdown-toggle {
+      background-color: transparent;
       border-radius: 0;
       border: input-border;
       padding: 4px;
