@@ -20,6 +20,7 @@
 // THE SOFTWARE.
 
 const formatEnum = require('../format-enum');
+const formatFailureDetails = require('../format-failure-details');
 const formatPayload = require('../format-payload');
 const formatPayloadMap = require('../format-payload-map');
 const formatTimestampToDatetime = require('../format-timestamp-to-datetime');
@@ -63,7 +64,7 @@ const formatWorkflowExecutionStartedEventAttributes = ({
   ),
   attempt: attempt || null,
   continuedExecutionRunId: continuedExecutionRunId || null,
-  continuedFailureDetails: continuedFailure?.details || null,
+  continuedFailureDetails: formatFailureDetails(continuedFailure),
   continuedFailureReason: continuedFailure?.reason || null,
   cronSchedule: cronSchedule || null,
   expirationTimestamp: formatTimestampToDatetime(expirationTime),

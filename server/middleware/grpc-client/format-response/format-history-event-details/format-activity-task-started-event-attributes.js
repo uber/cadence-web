@@ -19,13 +19,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+const formatFailureDetails = require('../format-failure-details');
+
 const formatActivityTaskStartedEventAttributes = ({
   lastFailure,
   scheduledEventId,
   ...eventAttributes
 }) => ({
   ...eventAttributes,
-  lastFailureDetails: lastFailure?.details || null,
+  lastFailureDetails: formatFailureDetails(lastFailure),
   lastFailureReason: lastFailure?.reason || '',
   scheduledEventId: parseInt(scheduledEventId),
 });

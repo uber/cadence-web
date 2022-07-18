@@ -19,12 +19,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+const formatFailureDetails = require('../format-failure-details');
+
 const formatWorkflowExecutionFailedEventAttributes = ({
   failure,
   decisionTaskCompletedEventId,
 }) => ({
   decisionTaskCompletedEventId: parseInt(decisionTaskCompletedEventId),
-  details: failure?.details || null,
+  details: formatFailureDetails(failure),
   reason: failure?.reason || '',
 });
 

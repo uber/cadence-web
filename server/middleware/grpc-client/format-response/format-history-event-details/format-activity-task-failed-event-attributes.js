@@ -19,6 +19,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+const formatFailureDetails = require('../format-failure-details');
+
 const formatActivityTaskFailedEventAttributes = ({
   failure,
   scheduledEventId,
@@ -26,7 +28,7 @@ const formatActivityTaskFailedEventAttributes = ({
   ...eventAttributes
 }) => ({
   ...eventAttributes,
-  details: failure?.details || null,
+  details: formatFailureDetails(failure),
   reason: failure?.reason || '',
   scheduledEventId: parseInt(scheduledEventId),
   startedEventId: parseInt(startedEventId),

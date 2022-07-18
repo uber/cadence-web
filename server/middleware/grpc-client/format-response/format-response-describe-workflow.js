@@ -20,6 +20,7 @@
 // THE SOFTWARE.
 
 const formatEnum = require('./format-enum');
+const formatFailureDetails = require('./format-failure-details');
 const formatTimestampToDatetime = require('./format-timestamp-to-datetime');
 const formatDurationToSeconds = require('./format-duration-to-seconds');
 
@@ -52,91 +53,91 @@ const formatResponseDescribeWorkflow = ({
   },
   pendingActivities: pendingActivities?.length
     ? pendingActivities.map(
-        ({
-          activityId,
-          expirationTime,
-          lastFailure,
-          lastHeartbeatTime,
-          lastStartedTime,
-          scheduledTime,
-          state,
-          ...pendingActivity
-        }) => ({
-          ...pendingActivity,
-          activityID: parseInt(activityId),
-          expirationTimestamp: formatTimestampToDatetime(expirationTime),
-          lastFailureDetails: lastFailure?.details || null,
-          lastFailureReason: lastFailure?.reason || null,
-          lastHeartbeatTimestamp: formatTimestampToDatetime(lastHeartbeatTime),
-          lastStartedTimestamp: formatTimestampToDatetime(lastStartedTime),
-          scheduledTimestamp: formatTimestampToDatetime(scheduledTime),
-          state: formatEnum(state, 'PENDING_ACTIVITY_STATE'),
-        })
-      )
+      ({
+        activityId,
+        expirationTime,
+        lastFailure,
+        lastHeartbeatTime,
+        lastStartedTime,
+        scheduledTime,
+        state,
+        ...pendingActivity
+      }) => ({
+        ...pendingActivity,
+        activityID: parseInt(activityId),
+        expirationTimestamp: formatTimestampToDatetime(expirationTime),
+        lastFailureDetails: formatFailureDetails(lastFailure),
+        lastFailureReason: lastFailure?.reason || null,
+        lastHeartbeatTimestamp: formatTimestampToDatetime(lastHeartbeatTime),
+        lastStartedTimestamp: formatTimestampToDatetime(lastStartedTime),
+        scheduledTimestamp: formatTimestampToDatetime(scheduledTime),
+        state: formatEnum(state, 'PENDING_ACTIVITY_STATE'),
+      })
+    )
     : null,
   pendingChildren: pendingChildren?.length
     ? pendingChildren.map(
-        ({
-          initiatedId,
+      ({
+        initiatedId,
+        parentClosePolicy,
+        workflowExecution,
+        ...pendingChild
+      }) => ({
+        ...pendingChild,
+        initiatedID: parseInt(initiatedId),
+        parentClosePolicy: formatEnum(
           parentClosePolicy,
-          workflowExecution,
-          ...pendingChild
-        }) => ({
-          ...pendingChild,
-          initiatedID: parseInt(initiatedId),
-          parentClosePolicy: formatEnum(
-            parentClosePolicy,
-            'PARENT_CLOSE_POLICY'
-          ),
-          runID: workflowExecution?.runId || null,
-          workflowID: workflowExecution?.workflowId || null,
-        })
-      )
+          'PARENT_CLOSE_POLICY'
+        ),
+        runID: workflowExecution?.runId || null,
+        workflowID: workflowExecution?.workflowId || null,
+      })
+    )
     : null,
   pendingDecision: pendingDecision
     ? {
-        attempt: pendingDecision.attempt,
-        originalScheduledTimestamp: formatTimestampToDatetime(
-          pendingDecision.originalScheduledTime
-        ),
-        scheduledTimestamp: formatTimestampToDatetime(
-          pendingDecision.scheduledTime
-        ),
-        startedTimestamp: formatTimestampToDatetime(
-          pendingDecision.startedTime
-        ),
-        state: formatEnum(pendingDecision.state, 'PENDING_DECISION_STATE'),
-      }
+      attempt: pendingDecision.attempt,
+      originalScheduledTimestamp: formatTimestampToDatetime(
+        pendingDecision.originalScheduledTime
+      ),
+      scheduledTimestamp: formatTimestampToDatetime(
+        pendingDecision.scheduledTime
+      ),
+      startedTimestamp: formatTimestampToDatetime(
+        pendingDecision.startedTime
+      ),
+      state: formatEnum(pendingDecision.state, 'PENDING_DECISION_STATE'),
+    }
     : null,
   workflowExecutionInfo: workflowExecutionInfo
     ? {
-        ...workflowExecutionInfo,
-        autoResetPoints: {
-          points:
-            workflowExecutionInfo?.autoResetPoints?.points.map(
-              ({ createdTime, expiringTime, ...point }) => ({
-                ...point,
-                createdTimeNano: formatTimestampToDatetime(createdTime),
-                expiringTimeNano: formatTimestampToDatetime(expiringTime),
-              })
-            ) || null,
-        },
-        closeStatus: workflowExecutionInfo?.closeStatus
-          ? formatEnum(
-              workflowExecutionInfo?.closeStatus,
-              'WORKFLOW_EXECUTION_CLOSE_STATUS'
-            )
-          : null,
-        closeTime:
-          formatTimestampToDatetime(workflowExecutionInfo?.closeTime) || null,
-        execution: workflowExecutionInfo?.workflowExecution || null,
-        executionTime:
-          formatTimestampToDatetime(workflowExecutionInfo?.executionTime) ||
-          null,
-        historyLength: parseInt(workflowExecutionInfo?.historyLength) || null,
-        startTime:
-          formatTimestampToDatetime(workflowExecutionInfo?.startTime) || null,
-      }
+      ...workflowExecutionInfo,
+      autoResetPoints: {
+        points:
+          workflowExecutionInfo?.autoResetPoints?.points.map(
+            ({ createdTime, expiringTime, ...point }) => ({
+              ...point,
+              createdTimeNano: formatTimestampToDatetime(createdTime),
+              expiringTimeNano: formatTimestampToDatetime(expiringTime),
+            })
+          ) || null,
+      },
+      closeStatus: workflowExecutionInfo?.closeStatus
+        ? formatEnum(
+          workflowExecutionInfo?.closeStatus,
+          'WORKFLOW_EXECUTION_CLOSE_STATUS'
+        )
+        : null,
+      closeTime:
+        formatTimestampToDatetime(workflowExecutionInfo?.closeTime) || null,
+      execution: workflowExecutionInfo?.workflowExecution || null,
+      executionTime:
+        formatTimestampToDatetime(workflowExecutionInfo?.executionTime) ||
+        null,
+      historyLength: parseInt(workflowExecutionInfo?.historyLength) || null,
+      startTime:
+        formatTimestampToDatetime(workflowExecutionInfo?.startTime) || null,
+    }
     : null,
 });
 
