@@ -19,6 +19,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+const formatFailureDetails = require('../format-failure-details');
+
 const formatChildWorkflowExecutionFailedEventAttributes = ({
   failure,
   initiatedEventId,
@@ -26,7 +28,7 @@ const formatChildWorkflowExecutionFailedEventAttributes = ({
   ...eventAttributes
 }) => ({
   ...eventAttributes,
-  details: failure?.details || null,
+  details: formatFailureDetails(failure),
   initiatedEventId: parseInt(initiatedEventId),
   reason: failure?.reason || '',
   startedEventId: parseInt(startedEventId),

@@ -20,6 +20,7 @@
 // THE SOFTWARE.
 
 const formatEnum = require('../format-enum');
+const formatFailureDetails = require('../format-failure-details');
 const formatPayload = require('../format-payload');
 const formatPayloadMap = require('../format-payload-map');
 const formatDurationToSeconds = require('../format-duration-to-seconds');
@@ -44,7 +45,7 @@ const formatWorkflowExecutionContinuedAsNewEventAttributes = ({
   executionStartToCloseTimeoutSeconds: formatDurationToSeconds(
     executionStartToCloseTimeout
   ),
-  failureDetails: failure?.details || null,
+  failureDetails: formatFailureDetails(failure),
   failureReason: failure?.reason || '',
   header: formatPayloadMap(header, 'fields'),
   initiator: formatEnum(initiator, 'CONTINUE_AS_NEW_INITIATOR'),

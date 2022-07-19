@@ -20,6 +20,7 @@
 // THE SOFTWARE.
 
 const formatEnum = require('./format-enum');
+const formatFailureDetails = require('./format-failure-details');
 const formatTimestampToDatetime = require('./format-timestamp-to-datetime');
 const formatDurationToSeconds = require('./format-duration-to-seconds');
 
@@ -65,7 +66,7 @@ const formatResponseDescribeWorkflow = ({
           ...pendingActivity,
           activityID: parseInt(activityId),
           expirationTimestamp: formatTimestampToDatetime(expirationTime),
-          lastFailureDetails: lastFailure?.details || null,
+          lastFailureDetails: formatFailureDetails(lastFailure),
           lastFailureReason: lastFailure?.reason || null,
           lastHeartbeatTimestamp: formatTimestampToDatetime(lastHeartbeatTime),
           lastStartedTimestamp: formatTimestampToDatetime(lastStartedTime),

@@ -19,15 +19,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const formatFailureDetails = require('../format-failure-details');
+const atob = require('atob');
 
-const formatWorkflowExecutionFailedEventAttributes = ({
-  failure,
-  decisionTaskCompletedEventId,
-}) => ({
-  decisionTaskCompletedEventId: parseInt(decisionTaskCompletedEventId),
-  details: formatFailureDetails(failure),
-  reason: failure?.reason || '',
-});
+const formatFailureDetails = failure => {
+  if (!failure?.details) {
+    return null;
+  }
 
-module.exports = formatWorkflowExecutionFailedEventAttributes;
+  const decodedFailureDetails = atob(failure.details);
+
+  try {
+    return JSON.parse(decodedFailureDetails);
+  } catch (e) {
+    return decodedFailureDetails;
+  }
+};
+
+module.exports = formatFailureDetails;

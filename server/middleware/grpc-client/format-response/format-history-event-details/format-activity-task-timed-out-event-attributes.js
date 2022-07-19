@@ -19,6 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+const formatFailureDetails = require('../format-failure-details');
 const formatPayload = require('../format-payload');
 
 const formatActivityTaskTimedOutEventAttributes = ({
@@ -30,7 +31,7 @@ const formatActivityTaskTimedOutEventAttributes = ({
 }) => ({
   ...eventAttributes,
   details: formatPayload(details),
-  lastFailureDetails: lastFailure?.details || null,
+  lastFailureDetails: formatFailureDetails(lastFailure),
   lastFailureReason: lastFailure?.reason || '',
   scheduledEventId: parseInt(scheduledEventId),
   startedEventId: parseInt(startedEventId),
