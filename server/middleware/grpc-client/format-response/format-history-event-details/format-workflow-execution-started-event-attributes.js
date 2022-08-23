@@ -37,6 +37,7 @@ const formatWorkflowExecutionStartedEventAttributes = ({
   expirationTime,
   firstDecisionTaskBackoff,
   firstExecutionRunId,
+  firstScheduledTimeNano,
   identity,
   initiator,
   input,
@@ -72,6 +73,7 @@ const formatWorkflowExecutionStartedEventAttributes = ({
     firstDecisionTaskBackoff
   ),
   firstExecutionRunId: firstExecutionRunId || null,
+  firstScheduledTimeNano: firstScheduledTimeNano || null,
   identity: identity || null,
   initiator: formatEnum(initiator, 'CONTINUE_AS_NEW_INITIATOR'),
   memo: formatPayloadMap(memo, 'fields'),
