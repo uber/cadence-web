@@ -53,6 +53,7 @@ import {
 } from '~components';
 import { delay, getEndTimeIsoString, getStartTimeIsoString } from '~helpers';
 import { httpService } from '~services';
+import { featureFlagService } from '~services';
 
 export default {
   name: 'workflow-list',
@@ -87,10 +88,16 @@ export default {
       nptAlt: undefined,
       statusList: STATUS_LIST,
       maxRetentionDays: undefined,
+      defaultDateRange: undefined,
       FILTER_MODE_ADVANCED: FILTER_MODE_ADVANCED,
     };
   },
   async created() {
+    const defaultDateRange = await featureFlagService.getConfiguration({
+      name: 'defaultDateRange',
+    });
+
+    this.defaultDateRange = Number(defaultDateRange) || 30;
     await this.fetchDomain();
     this.fetchWorkflowList();
   },
@@ -161,8 +168,12 @@ export default {
       return this.getMinStartDate();
     },
     range() {
-      const { maxRetentionDays, minStartDate, state } = this;
+      const { defaultDateRange, maxRetentionDays, minStartDate, state } = this;
       const query = this.$route.query || {};
+
+      if (defaultDateRange === undefined) {
+        return null;
+      }
 
       if (state === STATE_CLOSED && maxRetentionDays === undefined) {
         return null;
@@ -170,10 +181,10 @@ export default {
 
       if (!this.isRouteRangeValid(minStartDate)) {
         const defaultRange = [STATE_ALL, STATE_OPEN].includes(state)
-          ? 30
+          ? defaultDateRange
           : maxRetentionDays;
         const updatedQuery = this.setRange(
-          `last-${Math.min(30, defaultRange)}-days`
+          `last-${Math.min(defaultDateRange, defaultRange)}-days`
         );
 
         query.startTime = getStartTimeIsoString(
