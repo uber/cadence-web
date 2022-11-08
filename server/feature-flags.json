@@ -16,6 +16,10 @@
     "value": []
   },
   {
+    "key": "defaultDateRange",
+    "value": 30
+  },
+  {
     "key": "domainAuthorization",
     "value": true
   },

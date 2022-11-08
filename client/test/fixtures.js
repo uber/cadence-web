@@ -76,6 +76,10 @@ export default {
       value: false,
     },
     {
+      key: 'defaultDateRange',
+      value: 30,
+    },
+    {
       key: 'domainAuthorization',
       value: false,
     },
