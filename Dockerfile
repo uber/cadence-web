@@ -3,6 +3,9 @@ FROM node:fermium-bullseye AS BUILD_IMAGE
 ### Build step ###
 WORKDIR /usr/build
 
+RUN wget https://github.com/Yelp/dumb-init/releases/download/v1.2.2/dumb-init_1.2.2_amd64.deb
+RUN dpkg -i dumb-init_*.deb
+
 # Bundle app source
 COPY . .
 
@@ -31,4 +34,4 @@ ENV NPM_CONFIG_PRODUCTION=true
 
 # run node server
 EXPOSE 8088
-CMD [ "node", "server.js" ]
+CMD [ "dumb-init", "node", "server.js" ]
