@@ -52,7 +52,7 @@ export default {
         'elapsed',
       compactDetails:
         localStorage.getItem(`${this.domain}:history-compact-details`) ===
-        'true',      
+        'true',
       splitEnabled: false,
       eventType: 'All',
       eventTypes: [
