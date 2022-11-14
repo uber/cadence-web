@@ -52,8 +52,7 @@ export default {
         'elapsed',
       compactDetails:
         localStorage.getItem(`${this.domain}:history-compact-details`) ===
-        'true',
-      scrolledToEventOnInit: false,
+        'true',      
       splitEnabled: false,
       eventType: 'All',
       eventTypes: [
@@ -310,19 +309,6 @@ export default {
     },
   },
   watch: {
-    eventId(eventId) {
-      this.scrollEventIntoView(eventId);
-    },
-    filteredEvents() {
-      if (
-        !this.scrolledToEventOnInit &&
-        this.eventId !== undefined &&
-        this.filteredEventIdToIndex[this.eventId] !== undefined
-      ) {
-        this.scrolledToEventOnInit = true;
-        setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
-      }
-    },
     graphView() {
       this.setSplitSize();
     },
