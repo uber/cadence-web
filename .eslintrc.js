@@ -1,23 +1,36 @@
-const currentYear = (new Date()).getFullYear();
+// Copyright (c) 2022 Uber Technologies Inc.
+//
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+const currentYear = new Date().getFullYear();
 
 module.exports = {
-  extends: [
-    'plugin:prettier/recommended',
-    'plugin:vue/essential',
-  ],
+  extends: ['plugin:prettier/recommended', 'plugin:vue/essential'],
   env: {
     'jest/globals': true,
-    'node': true,
+    node: true,
   },
   globals: {
-    module: true,   // hot reloading
+    module: true, // hot reloading
     scenario: true, // mocha
-    should: true,   // mocha
+    should: true, // mocha
   },
   parserOptions: {
     ecmaVersion: 2020,
   },
   plugins: ['jest', 'import', 'eslint-plugin-header'],
+  ignorePatterns: ['LICENSE'],
   rules: {
     curly: ['error', 'all'],
     'dot-notation': 'error',
@@ -82,39 +95,30 @@ module.exports = {
           template: ' ',
         },
         '',
-        ' Permission is hereby granted, free of charge, to any person obtaining a copy',
-        ' of this software and associated documentation files (the "Software"), to deal',
-        ' in the Software without restriction, including without limitation the rights',
-        ' to use, copy, modify, merge, publish, distribute, sublicense, and/or sell',
-        ' copies of the Software, and to permit persons to whom the Software is',
-        ' furnished to do so, subject to the following conditions:',
+        ' Licensed under the Apache License, Version 2.0 (the "License");',
+        ' you may not use this file except in compliance with the License.',
+        ' You may obtain a copy of the License at',
         '',
-        ' The above copyright notice and this permission notice shall be included in',
-        ' all copies or substantial portions of the Software.',
+        '   http://www.apache.org/licenses/LICENSE-2.0',
         '',
-        ' THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR',
-        ' IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,',
-        ' FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE',
-        ' AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER',
-        ' LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,',
-        ' OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN',
-        ' THE SOFTWARE.'
+        ' Unless required by applicable law or agreed to in writing, software',
+        ' distributed under the License is distributed on an "AS IS" BASIS,',
+        ' WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.',
+        ' See the License for the specific language governing permissions and',
+        ' limitations under the License.',
       ],
-      2
+      2,
     ],
     'import/order': [
       'error',
-      { 'groups': ['builtin', 'external', 'parent', 'sibling', 'index'] }
+      { groups: ['builtin', 'external', 'parent', 'sibling', 'index'] },
     ],
-    'jest/consistent-test-it': [
-      'error',
-      { 'fn': 'test', 'withinDescribe': 'it' }
-    ],
+    'jest/consistent-test-it': ['error', { fn: 'test', withinDescribe: 'it' }],
     'jest/lowercase-name': [
       'error',
       {
-        'ignore': ['describe', 'test']
-      }
+        ignore: ['describe', 'test'],
+      },
     ],
     'no-var': 'error',
     'no-use-before-define': 'error',
@@ -122,18 +126,18 @@ module.exports = {
     'object-curly-spacing': ['error', 'always'],
     'padding-line-between-statements': [
       'error',
-      { 'blankLine': 'always', 'prev': '*', 'next': 'return' },
-      { 'blankLine': 'always', 'prev': ['const', 'let', 'var'], 'next': '*' },
+      { blankLine: 'always', prev: '*', next: 'return' },
+      { blankLine: 'always', prev: ['const', 'let', 'var'], next: '*' },
       {
-        'blankLine': 'any',
-        'prev': ['const', 'let', 'var'],
-        'next': ['const', 'let', 'var']
+        blankLine: 'any',
+        prev: ['const', 'let', 'var'],
+        next: ['const', 'let', 'var'],
       },
-      { 'blankLine': 'always', 'prev': 'directive', 'next': '*' },
-      { 'blankLine': 'any', 'prev': 'directive', 'next': 'directive' },
-      { 'blankLine': 'always', 'prev': '*', 'next': 'if' },
-      { 'blankLine': 'always', 'prev': 'if', 'next': '*' },
-      { 'blankLine': 'always', 'prev': '*', 'next': 'function' }
+      { blankLine: 'always', prev: 'directive', next: '*' },
+      { blankLine: 'any', prev: 'directive', next: 'directive' },
+      { blankLine: 'always', prev: '*', next: 'if' },
+      { blankLine: 'always', prev: 'if', next: '*' },
+      { blankLine: 'always', prev: '*', next: 'function' },
     ],
     'prefer-const': 'error',
     'prettier/prettier': [
@@ -142,15 +146,15 @@ module.exports = {
         bracketSpacing: true,
         singleQuote: true,
         trailingComma: 'es5',
-        jsxBracketSameLine: false
+        jsxBracketSameLine: false,
       },
     ],
     'space-before-blocks': 'error',
     'vue/component-tags-order': [
       'error',
       {
-        'order': ['script', 'template', 'style'],
-      }
+        order: ['script', 'template', 'style'],
+      },
     ],
     'vue/multi-word-component-names': 'off',
   },
