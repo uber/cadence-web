@@ -69,12 +69,12 @@ export default {
                 <copy :text="code" />
                 <a class="close" href="#" @click="$emit('close')"></a>
               </header>
-              <prism language="json">{{code}}</prism>
+              <prism inline language="json">{{code}}</prism>
             </div>
           `,
         },
         {
-          code: this.item.jsonStringFull,
+          code: this.item.value,
           title: this.title,
         },
         {
@@ -129,7 +129,7 @@ export default {
 
 [data-modal="data-viewer-fullscreen"]
   .v--modal-box.v--modal
-    max-width calc(100vw - 20px)
+    max-width calc(90vw - 20px)
     max-height calc(100vh - 20px)
   div.data-viewer-fullscreen
     flex-exactly-to-parent(column)
