@@ -1,5 +1,5 @@
 <script>
-// Copyright (c) 2017-2022 Uber Technologies Inc.
+// Copyright (c) 2017-2023 Uber Technologies Inc.
 // Portions of the Software are attributed to Copyright (c) 2020-2022 Temporal Technologies Inc.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy

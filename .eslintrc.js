@@ -33,7 +33,7 @@ module.exports = {
            * // Copyright (c) 2020 Uber Technologies Inc.
            *
            * 2. multi-year span
-           * // Copyright (c) 2017-2022 Uber Technologies Inc.
+           * // Copyright (c) 2017-2023 Uber Technologies Inc.
            *
            * 3. new file from another company referenced
            * // Modifications Copyright (c) 2020 Uber Technologies Inc.
