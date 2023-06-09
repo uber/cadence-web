@@ -66,15 +66,15 @@ export default {
             <div class="data-viewer-fullscreen">
               <header>
                 <h3>{{title}}</h3>
-                <copy :text="code" />
+                <copy :text="code.jsonStringFull" />
                 <a class="close" href="#" @click="$emit('close')"></a>
               </header>
-              <prism inline language="json">{{code}}</prism>
+              <prism language="json">{{ code.value }}</prism>
             </div>
           `,
         },
         {
-          code: this.item.value,
+          code: this.item,
           title: this.title,
         },
         {
@@ -129,7 +129,7 @@ export default {
 
 [data-modal="data-viewer-fullscreen"]
   .v--modal-box.v--modal
-    max-width calc(90vw - 20px)
+    max-width calc(100vw - 20px)
     max-height calc(100vh - 20px)
   div.data-viewer-fullscreen
     flex-exactly-to-parent(column)
@@ -140,4 +140,10 @@ export default {
       padding-right 30px
       h3
         one-liner-ellipsis()
+    code.language-json
+      display inline-block
+      max-width calc(80vw)
+      overflow-wrap break-word
+      white-space pre-wrap
+      overflow hidden
 </style>
