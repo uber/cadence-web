@@ -11,4 +11,4 @@ services:
   install:
     extends:
       base
-    command: /bin/sh -c "npm install --no-save --unsafe-perm"
+    command: /bin/sh -c "npm install --no-save --unsafe-perm && npm run dev"
