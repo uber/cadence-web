@@ -66,15 +66,15 @@ export default {
             <div class="data-viewer-fullscreen">
               <header>
                 <h3>{{title}}</h3>
-                <copy :text="code" />
+                <copy :text="code.jsonStringFull" />
                 <a class="close" href="#" @click="$emit('close')"></a>
               </header>
-              <prism language="json">{{code}}</prism>
+              <prism language="json">{{code.value}}</prism>
             </div>
           `,
         },
         {
-          code: this.item.jsonStringFull,
+          code: this.item,
           title: this.title,
         },
         {
@@ -140,4 +140,10 @@ export default {
       padding-right 30px
       h3
         one-liner-ellipsis()
+    code.language-json
+      display inline-block
+      max-width calc(80vw)
+      overflow-wrap break-word
+      white-space pre-wrap
+      overflow hidden
 </style>
