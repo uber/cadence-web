@@ -1,0 +1,14 @@
+version: '3'
+services:
+  base:
+    env_file:
+      - .docker_env
+    image: node:fermium-bullseye
+    volumes:
+      - .:/usr/src/service
+    working_dir: /usr/src/service
+    command: npm run dev
+  install:
+    extends:
+      base
+    command: /bin/sh -c "npm install --no-save --unsafe-perm && npm run dev"

@@ -7,7 +7,7 @@ WORKDIR /usr/build
 COPY . .
 
 # Install app dependencies
-RUN npm install --production --unsafe-perm
+RUN npm install --no-save --production --unsafe-perm
 
 # Bundle the client code
 RUN npm run build-production

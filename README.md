@@ -27,11 +27,14 @@ Set these environment variables if you need to change their defaults
 ### Running locally
 
 `cadence-web` requires node `v10.22.1` or greater to be able to run correctly. `cadence-web` uses all the standard [npm scripts](https://docs.npmjs.com/misc/scripts) to install dependencies, run the
-server, and run tests. Additionally to run locally with webpack hot reloading and other conveniences, use
+server, and run tests. To provide a consistent environment we recommend using docker in development.
+To start local server with live reload on code change you can run:
 
 ```
-npm run dev
+docker-compose up
 ```
+
+For development we recommend using VSCode with [Remote Containers plugin](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers). We provide a default configuration for remote container using docker-compose.
 
 For development and contributing to `cadence-web`, please see the [contributing guide](https://github.com/uber/cadence-web/blob/master/CONTRIBUTING.md).
 
