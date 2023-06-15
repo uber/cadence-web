@@ -28,6 +28,7 @@ const getJsonStringObject = value => {
   return {
     jsonStringDisplay,
     jsonStringFull,
+    value,
   };
 };
 
