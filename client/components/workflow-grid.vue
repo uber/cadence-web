@@ -25,7 +25,7 @@ import NoResults from './no-results';
 
 export default {
   name: 'workflow-grid',
-  props: ['workflows', 'loading'],
+  props: ['workflows', 'loading','noResultsText'],
   data() {
     return {
       nextPageToken: undefined,
@@ -63,7 +63,7 @@ export default {
       <div class="col col-end">End Time</div>
     </div>
     <div class="spacer" />
-    <no-results :results="workflows" v-if="!loading" />
+    <no-results :results="workflows" v-if="!loading" :message="noResultsText" />
     <RecycleScroller
       key-field="uniqueId"
       :items="workflows"

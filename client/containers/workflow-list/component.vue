@@ -22,6 +22,7 @@
 
 import moment from 'moment';
 import debounce from 'lodash-es/debounce';
+import lowerCase from 'lodash-es/lowerCase';
 import {
   IS_CRON_LIST,
   FILTER_MODE_ADVANCED,
@@ -196,9 +197,9 @@ export default {
 
       return query.startTime && query.endTime
         ? {
-            startTime: moment(query.startTime),
-            endTime: moment(query.endTime),
-          }
+          startTime: moment(query.startTime),
+          endTime: moment(query.endTime),
+        }
         : query.range;
     },
     startTime() {
@@ -209,6 +210,14 @@ export default {
       }
 
       return getStartTimeIsoString(range, startTime);
+    },
+    noResultsMessageText() {
+      const { status, workflowId, workflowName, startTime,endTime} = this.$route.query || {};
+
+      if (status !== STATUS_ALL || workflowId || workflowName) return `No workflows for the selected filters`;
+      if (typeof this.range === "string") return `No workflows within ${lowerCase(this.range)}`;
+      if (startTime && endTime) return `No workflows within selected period`;
+      return "No Results"
     },
     crossRegionProps() {
       const { clusterName, domain } = this;
@@ -597,6 +606,7 @@ export default {
     <error-message :error="error" />
     <workflow-grid
       :workflows="formattedResults"
+      :noResultsText="noResultsMessageText" 
       :loading="loading"
       @onScroll="onWorkflowGridScroll"
       v-if="!error"
