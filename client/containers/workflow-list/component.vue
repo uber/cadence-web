@@ -196,7 +196,7 @@ export default {
       }
 
       return query.startTime && query.endTime
-      ? {
+        ? {
             startTime: moment(query.startTime),
             endTime: moment(query.endTime),
           }
