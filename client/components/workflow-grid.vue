@@ -25,7 +25,7 @@ import NoResults from './no-results';
 
 export default {
   name: 'workflow-grid',
-  props: ['workflows', 'loading','noResultsText'],
+  props: ['workflows', 'loading', 'noResultsText'],
   data() {
     return {
       nextPageToken: undefined,

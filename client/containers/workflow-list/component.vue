@@ -212,12 +212,22 @@ export default {
       return getStartTimeIsoString(range, startTime);
     },
     noResultsMessageText() {
-      const { status, workflowId, workflowName, startTime,endTime} = this.$route.query || {};
+      const { status, workflowId, workflowName, startTime, endTime } =
+        this.$route.query || {};
 
-      if (status !== STATUS_ALL || workflowId || workflowName) return `No workflows for the selected filters`;
-      if (typeof this.range === "string") return `No workflows within ${lowerCase(this.range)}`;
-      if (startTime && endTime) return `No workflows within selected period`;
-      return "No Results"
+      if (status !== STATUS_ALL || workflowId || workflowName) {
+        return `No workflows for the selected filters`;
+      }
+
+      if (typeof this.range === 'string') {
+        return `No workflows within ${lowerCase(this.range)}`;
+      }
+
+      if (startTime && endTime) {
+        return `No workflows within selected period`;
+      }
+
+      return 'No Results';
     },
     crossRegionProps() {
       const { clusterName, domain } = this;
@@ -606,7 +616,7 @@ export default {
     <error-message :error="error" />
     <workflow-grid
       :workflows="formattedResults"
-      :noResultsText="noResultsMessageText" 
+      :noResultsText="noResultsMessageText"
       :loading="loading"
       @onScroll="onWorkflowGridScroll"
       v-if="!error"
