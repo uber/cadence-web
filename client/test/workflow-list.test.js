@@ -65,7 +65,7 @@ describe('Workflow list', () => {
       .querySelector('[data-cy="status-filter"] .vs__selected')
       .should.contain.text('All');
 
-    await resultsEl.waitUntilExists('.workflow-grid-wrapper.ready');
+    await resultsEl.waitUntilExists('.workflow-grid.ready');
 
     resultsEl
       .textNodes('.row-header > div')
