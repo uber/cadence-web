@@ -57,13 +57,15 @@ describe('Workflow list', () => {
 
   it('should query for all workflows and show the results in a grid', async function test() {
     const [workflowsEl] = await workflowsTest(this.test);
-    const resultsEl = workflowsEl.querySelector('section.workflow-grid');
+    const resultsEl = workflowsEl.querySelector(
+      'section.workflow-grid-wrapper'
+    );
 
     workflowsEl
       .querySelector('[data-cy="status-filter"] .vs__selected')
       .should.contain.text('All');
 
-    await resultsEl.waitUntilExists('.workflow-grid.ready');
+    await resultsEl.waitUntilExists('.workflow-grid-wrapper.ready');
 
     resultsEl
       .textNodes('.row-header > div')
@@ -208,7 +210,9 @@ describe('Workflow list', () => {
 
     await retry(() =>
       testEl
-        .querySelectorAll('section.workflow-list section.workflow-grid .row')
+        .querySelectorAll(
+          'section.workflow-list section.workflow-grid-wrapper .row'
+        )
         .should.have.length(1)
     );
     await Promise.delay(50);
@@ -243,7 +247,9 @@ describe('Workflow list', () => {
 
     await retry(() =>
       workflowsEl
-        .textNodes('section.workflow-list section.workflow-grid .row .col-id')
+        .textNodes(
+          'section.workflow-list section.workflow-grid-wrapper .row .col-id'
+        )
         .should.deep.equal(['demoWfId'])
     );
   });
@@ -267,7 +273,9 @@ describe('Workflow list', () => {
 
     await retry(() =>
       workflowsEl
-        .textNodes('section.workflow-list section.workflow-grid .row .col-id')
+        .textNodes(
+          'section.workflow-list section.workflow-grid-wrapper .row .col-id'
+        )
         .should.deep.equal(['demoWfId'])
     );
   });
@@ -311,7 +319,9 @@ describe('Workflow list', () => {
 
     await retry(() =>
       workflowsEl
-        .textNodes('section.workflow-list section.workflow-grid .row .col-name')
+        .textNodes(
+          'section.workflow-list section.workflow-grid-wrapper .row .col-name'
+        )
         .should.deep.equal(['demo'])
     );
   });
@@ -337,7 +347,7 @@ describe('Workflow list', () => {
     await retry(() => {
       workflowsEl.querySelector('div.no-results').should.be.displayed;
       workflowsEl
-        .querySelector('section.workflow-grid')
+        .querySelector('section.workflow-grid-wrapper')
         .should.not.contain('.results');
     });
   });

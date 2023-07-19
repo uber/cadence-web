@@ -609,8 +609,8 @@ export default {
 
 section.workflow-list
   display: flex;
-  flex: auto;
   flex-direction: column;
+  flex: 1;
 
   &.loading section.results table
     opacity 0.7
