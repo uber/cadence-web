@@ -769,8 +769,14 @@ describe('Workflow', () => {
     });
 
     describe('Grid View', () => {
+      async function gridViewTest(mochaTest) {
+        return historyTest(mochaTest, {
+          query: 'format=grid',
+        });
+      };
+
       it('should show full results in a grid', async function test() {
-        return historyTest(this.test).then(async ([historyEl]) => {
+        return gridViewTest(this.test).then(async ([historyEl]) => {
           await historyEl.waitUntilExists(
             '.results .table .vue-recycle-scroller__item-view:nth-child(5) .tr'
           );
@@ -830,7 +836,7 @@ describe('Workflow', () => {
       });
 
       it('should show details as flattened key-value pairs from parsed json, except for result and input', async function test() {
-        const [historyEl] = await historyTest(this.test);
+        const [historyEl] = await gridViewTest(this.test);
         const startDetails = await historyEl.waitUntilExists(
           '.results .tr:first-child .td:nth-child(5)'
         );
@@ -867,7 +873,7 @@ describe('Workflow', () => {
           baz: new Array(100).fill('aa').join('|'),
         };
 
-        const [historyEl, scenario] = await historyTest(this.test, {
+        const [historyEl, scenario] = await gridViewTest(this.test, {
           attach: true,
           events: [
             {
@@ -909,7 +915,7 @@ describe('Workflow', () => {
       });
 
       it('should allow toggling of the details column between summary and full details', async function test() {
-        const [historyEl] = await historyTest(this.test);
+        const [historyEl] = await gridViewTest(this.test);
 
         await historyEl.waitUntilExists(
           '.results .vue-recycle-scroller__item-view:nth-child(5) .tr'
@@ -949,7 +955,7 @@ describe('Workflow', () => {
 
       it('should use the details format from local storage if available', async function test() {
         localStorage.setItem('ci-test:history-compact-details', 'true');
-        const [historyEl] = await historyTest(this.test);
+        const [historyEl] = await gridViewTest(this.test);
 
         await retry(() =>
           historyEl
@@ -961,7 +967,7 @@ describe('Workflow', () => {
       });
 
       it('should specially handle MarkerRecorded events', async function test() {
-        const [historyEl] = await historyTest(this.test, {
+        const [historyEl] = await gridViewTest(this.test, {
           events: [
             {
               eventId: 1,
@@ -1063,7 +1069,7 @@ describe('Workflow', () => {
       });
 
       it('should render event inputs as highlighted json', async function test() {
-        const [historyEl] = await historyTest(this.test);
+        const [historyEl] = await gridViewTest(this.test);
         const startDetails = await historyEl.waitUntilExists(
           '.results .tr:first-child .td:nth-child(5)'
         );
@@ -1082,7 +1088,7 @@ describe('Workflow', () => {
       });
 
       it('should link to child workflows, and load its history when navigated too', async function test() {
-        const [historyEl] = await historyTest(this.test, {
+        const [historyEl] = await gridViewTest(this.test, {
           events: [
             {
               eventType: 'WorkflowExecutionStarted',
