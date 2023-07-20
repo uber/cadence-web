@@ -214,7 +214,7 @@ export default {
     noResultsMessageText() {
       const { status, workflowId, workflowName, startTime, endTime } =
         this.$route.query || {};
-      console.log(this.$route.query)
+
       if ((status && status !== STATUS_ALL) || workflowId || workflowName) {
         return `No workflows for the selected filters`;
       }
