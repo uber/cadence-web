@@ -773,7 +773,7 @@ describe('Workflow', () => {
         return historyTest(mochaTest, {
           query: 'format=grid',
         });
-      };
+      }
 
       it('should show full results in a grid', async function test() {
         return gridViewTest(this.test).then(async ([historyEl]) => {
