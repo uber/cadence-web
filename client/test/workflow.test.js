@@ -772,6 +772,7 @@ describe('Workflow', () => {
       async function gridViewTest(mochaTest) {
         return historyTest(mochaTest, {
           query: 'format=grid',
+          attach: true,
         });
       }
 
