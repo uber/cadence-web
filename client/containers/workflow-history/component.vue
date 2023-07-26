@@ -47,9 +47,6 @@ export default {
   name: 'history',
   data() {
     return {
-      tsFormat:
-        localStorage.getItem(`${this.domain}:history-ts-col-format`) ||
-        'elapsed',
       compactDetails:
         localStorage.getItem(`${this.domain}:history-compact-details`) ===
         'true',
@@ -113,7 +110,7 @@ export default {
     this.unwatch.push(
       this.$watch(
         () =>
-          `${this.events.length}${this.tsFormat.length}${this.$route.query.format}${this.compactDetails}`,
+          `${this.events.length}${this.$route.query.format}${this.compactDetails}`,
         this.onResizeWindow,
         { immediate: true }
       )
@@ -233,10 +230,6 @@ export default {
         query: { ...this.$route.query, format },
       });
       setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
-    },
-    setTsFormat(tsFormat) {
-      this.tsFormat = tsFormat;
-      localStorage.setItem(`${this.domain}:history-ts-col-format`, tsFormat);
     },
     setCompactDetails(compact) {
       const { scrollerGrid } = this.$refs;
@@ -456,19 +449,10 @@ export default {
                 />
               </div>
               <div class="th col-time">
-                <a
-                  class="elapsed"
-                  :href="tsFormat === 'elapsed' ? null : '#'"
-                  @click.prevent="setTsFormat('elapsed')"
-                  >Elapsed</a
-                >
-                /
-                <a
-                  class="ts"
-                  :href="tsFormat === 'elapsed' ? '#' : null"
-                  @click.prevent="setTsFormat('ts')"
-                  >Time</a
-                >
+                Time
+              </div>
+              <div class="th col-elapsed-time">
+                Elapsed
               </div>
               <div class="th col-summary">
                 <a
@@ -519,11 +503,10 @@ export default {
                       />
                     </div>
                     <div class="td col-time">
-                      {{
-                        tsFormat === 'elapsed'
-                          ? item.timeElapsedDisplay
-                          : item.timeStampDisplay
-                      }}
+                      {{ item.timeStampDisplay }}
+                    </div>
+                    <div class="td col-elapsed-time">
+                      {{ item.timeElapsedDisplay }}
                     </div>
                     <div class="td col-summary">
                       <event-detail
@@ -792,7 +775,7 @@ section.history {
       flex: 1;
     }
 
-    .col-time {
+    .col-time, .col-elapsed-time {
       min-width: 150px;
     }
 

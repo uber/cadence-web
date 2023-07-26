@@ -772,7 +772,7 @@ describe('Workflow', () => {
       it('should show full results in a grid', async function test() {
         return historyTest(this.test).then(async ([historyEl]) => {
           await historyEl.waitUntilExists(
-            '.results .table .vue-recycle-scroller__item-view:nth-child(4) .tr'
+            '.results .table .vue-recycle-scroller__item-view:nth-child(5) .tr'
           );
 
           historyEl
@@ -784,6 +784,7 @@ describe('Workflow', () => {
 
           textNodes[0].should.equal('ID');
           textNodes[1].should.include('Type');
+          //test id column exists in correct format
           await retry(() =>
             historyEl
               .textNodes('.table .vue-recycle-scroller__item-view .td.col-id')
@@ -791,6 +792,17 @@ describe('Workflow', () => {
                 new Array(6).fill('').map((_, i) => String(i + 1))
               )
           );
+          // test time column exists in correct format
+          await retry(() =>
+            historyEl
+              .textNodes('.table .vue-recycle-scroller__item-view .td.col-time')
+              .should.deep.equal(
+                getFixture('history.emailRun1')
+                  .filter((_value, index) => index < 6)
+                  .map(e => moment(e.timestamp).format('MMM D, YYYY h:mm:ss A'))
+              )
+          );
+          // test type column exists wirth correct values
           historyEl
             .textNodes('.table .vue-recycle-scroller__item-view .td.col-type')
             .slice(0, 3)
@@ -799,8 +811,11 @@ describe('Workflow', () => {
               'DecisionTaskScheduled',
               'DecisionTaskStarted',
             ]);
+          // test elapsed time exists with correct values
           historyEl
-            .textNodes('.table .vue-recycle-scroller__item-view .td.col-time')
+            .textNodes(
+              '.table .vue-recycle-scroller__item-view .td.col-elapsed-time'
+            )
             .should.deep.equal([
               moment(getFixture('history.emailRun1')[0].timestamp).format(
                 'MMM D, YYYY h:mm:ss A'
@@ -814,50 +829,10 @@ describe('Workflow', () => {
         });
       });
 
-      it('should allow toggling of the time column between elapsed and local timestamp', async function test() {
-        const [historyEl] = await historyTest(this.test);
-
-        await historyEl.waitUntilExists(
-          '.results .vue-recycle-scroller__item-view:nth-child(4) .tr'
-        );
-
-        const [elapsedEl, tsEl] = historyEl.querySelectorAll(
-          '.thead .th:nth-child(3) a'
-        );
-
-        elapsedEl.should.have.text('Elapsed').and.not.have.attr('href');
-        tsEl.should.have.text('Time').and.have.attr('href', '#');
-
-        tsEl.trigger('click');
-        await retry(() =>
-          historyEl.textNodes('.td.col-time').should.deep.equal(
-            getFixture('history.emailRun1')
-              .filter((_value, index) => index < 6)
-              .map(e => moment(e.timestamp).format('MMM D, YYYY h:mm:ss A'))
-          )
-        );
-        localStorage
-          .getItem('ci-test:history-ts-col-format')
-          .should.equal('ts');
-      });
-
-      it('should use the timestamp format from local storage if available', async function test() {
-        localStorage.setItem('ci-test:history-ts-col-format', 'ts');
-        const [historyEl] = await historyTest(this.test);
-
-        await retry(() =>
-          historyEl.textNodes('.td.col-time').should.deep.equal(
-            getFixture('history.emailRun1')
-              .filter((_value, index) => index < 6)
-              .map(e => moment(e.timestamp).format('MMM D, YYYY h:mm:ss A'))
-          )
-        );
-      });
-
       it('should show details as flattened key-value pairs from parsed json, except for result and input', async function test() {
         const [historyEl] = await historyTest(this.test);
         const startDetails = await historyEl.waitUntilExists(
-          '.results .tr:first-child .td:nth-child(4)'
+          '.results .tr:first-child .td:nth-child(5)'
         );
         const inputPreText = JSON.stringify(
           getFixture('history.emailRun1')[0].details.input,
@@ -911,7 +886,7 @@ describe('Workflow', () => {
         });
 
         const viewFullScreen = await historyEl.waitUntilExists(
-          '.results .td:nth-child(4) .data-viewer.overflow a.view-full-screen'
+          '.results .td:nth-child(5) .data-viewer.overflow a.view-full-screen'
         );
 
         viewFullScreen.trigger('click');
@@ -937,11 +912,11 @@ describe('Workflow', () => {
         const [historyEl] = await historyTest(this.test);
 
         await historyEl.waitUntilExists(
-          '.results .vue-recycle-scroller__item-view:nth-child(4) .tr'
+          '.results .vue-recycle-scroller__item-view:nth-child(5) .tr'
         );
 
         const [summaryEl, fullDetailsEl] = historyEl.querySelectorAll(
-          '.thead .th:nth-child(4) a'
+          '.thead .th:nth-child(5) a'
         );
 
         summaryEl.should.have.text('Summary').and.have.attr('href', '#');
@@ -979,7 +954,7 @@ describe('Workflow', () => {
         await retry(() =>
           historyEl
             .textNodes(
-              '.results .vue-recycle-scroller__item-view:first-child .tr .td:nth-child(4) dl.details dt'
+              '.results .vue-recycle-scroller__item-view:first-child .tr .td:nth-child(5) dl.details dt'
             )
             .should.deep.equal(['Close Timeout', 'input', 'Workflow'])
         );
@@ -1090,7 +1065,7 @@ describe('Workflow', () => {
       it('should render event inputs as highlighted json', async function test() {
         const [historyEl] = await historyTest(this.test);
         const startDetails = await historyEl.waitUntilExists(
-          '.results .tr:first-child .td:nth-child(4)'
+          '.results .tr:first-child .td:nth-child(5)'
         );
         const inputPreText = JSON.stringify(
           getFixture('history.emailRun1')[0].details.input,
@@ -1133,7 +1108,7 @@ describe('Workflow', () => {
           ],
         });
         const childStartDetails = await historyEl.waitUntilExists(
-          '.results .vue-recycle-scroller__item-view:nth-child(1) .tr .td:nth-child(4)'
+          '.results .vue-recycle-scroller__item-view:nth-child(1) .tr .td:nth-child(5)'
         );
 
         childStartDetails
