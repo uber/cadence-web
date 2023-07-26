@@ -516,6 +516,8 @@ describe('Workflow', () => {
       await historyEl.waitUntilExists('section.results');
       const resultsEl = historyEl.querySelector('section.results');
 
+      historyEl.querySelector('.view-formats a.grid').trigger('click');
+
       await retry(() =>
         resultsEl.querySelectorAll('.tr').should.have.length(6)
       );
@@ -769,13 +771,14 @@ describe('Workflow', () => {
     });
 
     describe('Grid View', () => {
-      async function gridViewTest(mochaTest) {
-        return historyTest(mochaTest, {
+      async function gridViewTest(mochaTest, o) {
+        const [summaryEl, scenario] = await historyTest(mochaTest, {
           query: 'format=grid',
-          attach: true,
+          ...(o || {}),
         });
-      }
 
+        return [summaryEl, scenario];
+      }
       it('should show full results in a grid', async function test() {
         return gridViewTest(this.test).then(async ([historyEl]) => {
           await historyEl.waitUntilExists(
