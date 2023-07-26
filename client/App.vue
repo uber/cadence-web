@@ -453,15 +453,19 @@ header.top-bar
       font-weight: bold;
     }
   }
-
-body, main
-  height 100%
-main
-  position absolute
-  width 100%
-  display flex
-  flex-direction column
-
+html, body {
+  height: 100%;
+}
+body, main {
+  display: flex;
+  flex-direction: column;
+}
+body {
+  overscroll-behavior: none;
+}
+main {
+  flex:1
+}
 main
   > section
     display flex

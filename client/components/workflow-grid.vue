@@ -25,7 +25,7 @@ import NoResults from './no-results';
 
 export default {
   name: 'workflow-grid',
-  props: ['workflows', 'loading'],
+  props: ['workflows', 'loading', 'noResultsText'],
   data() {
     return {
       nextPageToken: undefined,
@@ -53,7 +53,7 @@ export default {
 </script>
 
 <template>
-  <section class="workflow-grid" :class="{ loading }">
+  <section class="workflow-grid-wrapper" :class="{ loading }">
     <div class="row-header">
       <div class="col col-id">Workflow ID</div>
       <div class="col col-link">Run ID</div>
@@ -63,7 +63,7 @@ export default {
       <div class="col col-end">End Time</div>
     </div>
     <div class="spacer" />
-    <no-results :results="workflows" v-if="!loading" />
+    <no-results :results="workflows" v-if="!loading" :message="noResultsText" />
     <RecycleScroller
       key-field="uniqueId"
       :items="workflows"
@@ -107,9 +107,11 @@ export default {
 
 paged-grid();
 
-.workflow-grid {
-  height: calc(100vh - 203px);
-
+.workflow-grid-wrapper{
+  display: flex;
+  flex:1;
+  flex-direction: column;
+  min-width: 1000px;
   &.loading.has-results::after {
     content: none;
   }
@@ -192,5 +194,8 @@ paged-grid();
       width: 170px;
     }
   }
+}
+.workflow-grid {
+  flex:1 1 400px;
 }
 </style>
