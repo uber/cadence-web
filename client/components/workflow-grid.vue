@@ -53,7 +53,7 @@ export default {
 </script>
 
 <template>
-  <section class="workflow-grid" :class="{ loading }">
+  <section class="workflow-grid-wrapper" :class="{ loading }">
     <div class="row-header">
       <div class="col col-id">Workflow ID</div>
       <div class="col col-link">Run ID</div>
@@ -107,9 +107,11 @@ export default {
 
 paged-grid();
 
-.workflow-grid {
-  height: calc(100vh - 203px);
-
+.workflow-grid-wrapper{
+  display: flex;
+  flex:1;
+  flex-direction: column;
+  min-width: 1000px;
   &.loading.has-results::after {
     content: none;
   }
@@ -192,5 +194,8 @@ paged-grid();
       width: 170px;
     }
   }
+}
+.workflow-grid {
+  flex:1 1 400px;
 }
 </style>
