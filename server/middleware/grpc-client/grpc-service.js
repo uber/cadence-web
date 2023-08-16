@@ -118,6 +118,10 @@ class GRPCService {
     meta.add('rpc-caller', 'cadence-ui');
     meta.add('rpc-encoding', 'proto');
 
+    Object.entries(this.ctx.authTokenHeaders || {}).forEach(([key, value]) => {
+      meta.add(key, value);
+    });
+
     return meta;
   }
 }
