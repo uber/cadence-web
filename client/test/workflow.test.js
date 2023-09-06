@@ -509,6 +509,22 @@ describe('Workflow', () => {
 
       return [historyEl, scenario];
     }
+    it('should pick default view format from localstorage if exists ', async function test() {
+      localStorage.setItem('ci-test:history-viewing-format', 'json');
+      const [historyEl] = await historyTest(this.test);
+
+      historyEl
+        .querySelector('.view-formats .json')
+        .should.have.class('active');
+    });
+    it('should set default view format to compact if no persisted selection in localstorage', async function test() {
+      localStorage.removeItem('ci-test:history-viewing-format');
+      const [historyEl] = await historyTest(this.test);
+
+      historyEl
+        .querySelector('.view-formats .compact')
+        .should.have.class('active');
+    });
 
     it('should allow the user to change the view format', async function test() {
       const [historyEl, scenario] = await historyTest(this.test);
