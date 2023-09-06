@@ -124,6 +124,13 @@ export default {
     }
   },
   computed: {
+    selectedViewingFormat() {
+      return (
+        this.format ||
+        localStorage.getItem(`${this.domain}:history-viewing-format`) ||
+        'compact'
+      );
+    },
     exportFilename() {
       return `${this.workflowId.replace(/[\\~#%&*{}/:<>?|"-]/g, ' ')} - ${
         this.runId
@@ -150,7 +157,7 @@ export default {
         }, {});
     },
     isGrid() {
-      return this.format === 'grid';
+      return this.selectedViewingFormat === 'grid';
     },
     selectedTimelineEvent() {
       return this.timelineEvents.find(te => te.eventIds.includes(this.eventId));
@@ -229,6 +236,11 @@ export default {
       this.$router.replace({
         query: { ...this.$route.query, format },
       });
+
+      if (typeof format === 'string') {
+        localStorage.setItem(`${this.domain}:history-viewing-format`, format);
+      }
+
       setTimeout(() => this.scrollEventIntoView(this.eventId), 100);
     },
     setCompactDetails(compact) {
@@ -354,21 +366,21 @@ export default {
             href="#"
             class="compact"
             @click.prevent="setFormat('compact')"
-            :class="format === 'compact' ? 'active' : ''"
+            :class="selectedViewingFormat === 'compact' ? 'active' : ''"
             >Compact</a
           >
           <a
             href="#"
             class="grid"
             @click.prevent="setFormat('grid')"
-            :class="format === 'grid' ? 'active' : ''"
+            :class="selectedViewingFormat === 'grid' ? 'active' : ''"
             >Grid</a
           >
           <a
             href="#"
             class="json"
             @click.prevent="setFormat('json')"
-            :class="format === 'json' ? 'active' : ''"
+            :class="selectedViewingFormat === 'json' ? 'active' : ''"
             >JSON</a
           >
         </div>
@@ -433,7 +445,7 @@ export default {
         <section v-snapscroll class="results" ref="results">
           <div
             class="table"
-            v-if="format === 'grid' && showTable"
+            v-if="selectedViewingFormat === 'grid' && showTable"
             :class="{ compact: compactDetails }"
           >
             <div class="thead">
@@ -542,13 +554,15 @@ export default {
           <prism
             class="json"
             language="json"
-            v-if="format === 'json' && events.length < 90"
+            v-if="selectedViewingFormat === 'json' && events.length < 90"
             >{{ JSON.stringify(events, null, 2) }}</prism
           >
-          <pre class="json" v-if="format === 'json' && events.length >= 90">{{
-            JSON.stringify(events, null, 2)
-          }}</pre>
-          <div class="compact-view" v-if="format === 'compact'">
+          <pre
+            class="json"
+            v-if="selectedViewingFormat === 'json' && events.length >= 90"
+            >{{ JSON.stringify(events, null, 2) }}</pre
+          >
+          <div class="compact-view" v-if="selectedViewingFormat === 'compact'">
             <RecycleScroller
               class="scroller-compact"
               key-field="id"

@@ -194,7 +194,7 @@ const routeOpts = {
               clusterName: params.clusterName,
               domain: params.domain,
               eventId: Number(query.eventId) || undefined,
-              format: query.format || 'compact',
+              format: query.format,
               runId: params.runId,
               showGraph: Boolean(query.showGraph) === true,
               graphView: query.graphView,
