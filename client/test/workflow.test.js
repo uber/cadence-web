@@ -50,8 +50,10 @@ describe('Workflow', () => {
         )
         .withTaskList('ci_task_list')
         .startingAt(
-          `/domains/ci-test/workflows/${extendedOptions.workflowId}/${extendedOptions.runId
-          }/${extendedOptions.view}${extendedOptions.query ? `?${extendedOptions.query}` : ''
+          `/domains/ci-test/workflows/${extendedOptions.workflowId}/${
+            extendedOptions.runId
+          }/${extendedOptions.view}${
+            extendedOptions.query ? `?${extendedOptions.query}` : ''
           }`
         ),
       extendedOptions,
