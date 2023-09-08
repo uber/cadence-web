@@ -123,6 +123,7 @@ export default {
         eventType: 'WorkflowExecutionStarted',
         eventId: 1,
         details: {
+          cronSchedule: '30 * * * *',
           workflowType: {
             name: 'email-daily-summaries',
           },

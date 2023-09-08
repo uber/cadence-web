@@ -50,10 +50,8 @@ describe('Workflow', () => {
         )
         .withTaskList('ci_task_list')
         .startingAt(
-          `/domains/ci-test/workflows/${extendedOptions.workflowId}/${
-            extendedOptions.runId
-          }/${extendedOptions.view}${
-            extendedOptions.query ? `?${extendedOptions.query}` : ''
+          `/domains/ci-test/workflows/${extendedOptions.workflowId}/${extendedOptions.runId
+          }/${extendedOptions.view}${extendedOptions.query ? `?${extendedOptions.query}` : ''
           }`
         ),
       extendedOptions,
@@ -123,6 +121,10 @@ describe('Workflow', () => {
       summaryEl.should.not.have.descendant('.pending-activities');
 
       summaryEl.should.not.have.descendant('.parent-workflow');
+
+      summaryEl
+        .querySelector('.cron-schedule dd')
+        .should.have.text('30 * * * *');
 
       summaryEl
         .querySelector('.workflow-status dd')
@@ -869,6 +871,7 @@ describe('Workflow', () => {
         startDetails
           .textNodes('dl.details dt')
           .should.deep.equal([
+            'cronSchedule',
             'workflowType.name',
             'taskList.name',
             'input',
@@ -878,6 +881,7 @@ describe('Workflow', () => {
         startDetails
           .textNodes('dl.details dd')
           .should.deep.equal([
+            '30 * * * *',
             'email-daily-summaries',
             'ci-task-queue',
             inputPreText,
