@@ -38,6 +38,7 @@ const getSummary = ({ clusterName, events, isWorkflowRunning, workflow }) => {
     return {
       input: undefined,
       isWorkflowRunning,
+      cronSchedule: undefined,
       parentWorkflowRoute: undefined,
       result: undefined,
       wfStatus: undefined,
@@ -77,6 +78,7 @@ const getSummary = ({ clusterName, events, isWorkflowRunning, workflow }) => {
 
   return {
     input,
+    cronSchedule: firstEvent.details.cronSchedule,
     isWorkflowRunning,
     parentWorkflowRoute,
     result,

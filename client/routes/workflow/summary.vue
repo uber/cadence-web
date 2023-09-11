@@ -43,6 +43,7 @@ export default {
     'input',
     'isWorkflowRunning',
     'parentWorkflowRoute',
+    'cronSchedule',
     'result',
     'runId',
     'timeFormat',
@@ -250,6 +251,10 @@ export default {
           </router-link>
         </dd>
       </div>
+      <div class="cron-schedule" v-if="cronSchedule">
+        <dt>Cron Schedule</dt>
+        <dd>{{ cronSchedule }}</dd>
+      </div>
       <div class="task-list">
         <dt>Task List</dt>
         <dd>
@@ -318,7 +323,7 @@ section.workflow-summary
     margin-bottom 1em
     dt
       padding 0 4px
-  .run-id, .task-list, .workflow-id, .workflow-name
+  .run-id, .task-list, .workflow-id, .workflow-name, .cron-schedule
     dd
       font-weight 300
       font-family monospace-font-family

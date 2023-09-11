@@ -49,6 +49,7 @@ export default {
         input: undefined,
         isWorkflowRunning: undefined,
         parentWorkflowRoute: undefined,
+        cronSchedule: undefined,
         result: undefined,
         wfStatus: undefined,
         workflow: undefined,
@@ -147,6 +148,7 @@ export default {
       this.history.loading = undefined;
 
       this.summary.input = undefined;
+      this.summary.cronSchedule = undefined;
       this.summary.isWorkflowRunning = undefined;
       this.summary.parentWorkflowRoute = undefined;
       this.summary.result = undefined;
@@ -395,6 +397,7 @@ export default {
       :display-workflow-id="displayWorkflowId"
       :domain="domain"
       :input="summary.input"
+      :cronSchedule="summary.cronSchedule"
       :isWorkflowRunning="summary.isWorkflowRunning"
       :parentWorkflowRoute="summary.parentWorkflowRoute"
       :result="summary.result"

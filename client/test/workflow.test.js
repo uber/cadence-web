@@ -125,6 +125,10 @@ describe('Workflow', () => {
       summaryEl.should.not.have.descendant('.parent-workflow');
 
       summaryEl
+        .querySelector('.cron-schedule dd')
+        .should.have.text('30 * * * *');
+
+      summaryEl
         .querySelector('.workflow-status dd')
         .should.contain.text('running');
 
@@ -869,6 +873,7 @@ describe('Workflow', () => {
         startDetails
           .textNodes('dl.details dt')
           .should.deep.equal([
+            'cronSchedule',
             'workflowType.name',
             'taskList.name',
             'input',
@@ -878,6 +883,7 @@ describe('Workflow', () => {
         startDetails
           .textNodes('dl.details dd')
           .should.deep.equal([
+            '30 * * * *',
             'email-daily-summaries',
             'ci-task-queue',
             inputPreText,
