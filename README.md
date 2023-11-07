@@ -27,14 +27,23 @@ Set these environment variables if you need to change their defaults
 ### Running locally
 
 `cadence-web` requires node `v10.22.1` or greater to be able to run correctly. `cadence-web` uses all the standard [npm scripts](https://docs.npmjs.com/misc/scripts) to install dependencies, run the
-server, and run tests. To provide a consistent environment we recommend using docker in development.
-To start local server with live reload on code change you can run:
+server, and run tests. 
+
+To provide a consistent environment we recommend using docker in development. We use VSCode with [Remote Containers plugin](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers). 
+We provide a default configuration for remote containers using docker-compose.
+
+#### Using VSCode Dev Containers
+
+1. Set up the [Remote Containers plugin](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) in VSCode.
+2. Open the cadence-web directory in VSCode.
+3. Use the Command Palette to select the "Reopen folder in Container" option. `npm install` should run locally upon doing so.
+4. Run the app with `npm start`.
+
+Alternatively, to start local server with live reload on code change you can run:
 
 ```
 docker-compose up
 ```
-
-For development we recommend using VSCode with [Remote Containers plugin](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers). We provide a default configuration for remote container using docker-compose.
 
 For development and contributing to `cadence-web`, please see the [contributing guide](https://github.com/uber/cadence-web/blob/master/CONTRIBUTING.md).
 
