@@ -35,7 +35,7 @@ To provide a consistent environment we recommend using docker in development. We
 
 1. Set up the [Remote Containers plugin](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) in VSCode.
 2. Open the cadence-web directory in VSCode.
-3. Use the Command Palette to select the "Reopen folder in Container" option. `npm install` should run automatically in the container upon doing so.
+3. Use the Command Palette to select the 'Reopen folder in Container' option. `npm install` should run automatically in the container upon doing so.
 4. Run the app in the container with `npm run dev`.
 5. Open `localhost:8088` (or the custom Cadence Web port you have defined) to load the webapp.
 
@@ -62,15 +62,15 @@ All options are optional.
 For example, here is how you would add a request count metric using `uber-statsd-client`:
 
 ```javascript
-var app = require("cadence-web");
-var createStatsd = require("uber-statsd-client");
+var app = require('cadence-web');
+var createStatsd = require('uber-statsd-client');
 var sdc = createStatsd({
-  host: "statsd.example.com",
+  host: 'statsd.example.com',
 });
 
 app
   .use(async function(ctx, next) {
-    sdc.increment("http.request");
+    sdc.increment('http.request');
     await next();
   })
   .init()
