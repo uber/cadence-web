@@ -31,6 +31,14 @@ describe('getStringElipsis', () => {
       expect(output).toEqual('a-short-string');
     });
   });
+  describe('when passed the empty string', () => {
+    it('should return the empty string', () => {
+      const input = '';
+      const output = getStringElipsis(input);
+
+      expect(output).toEqual('');
+    });
+  });
   describe('when passed a string that has a length equal to MAXIMUM_JSON_CHARACTER_LIMIT', () => {
     it('should return a substring of the original string up until the limit and display a message.', () => {
       const input = ''.padEnd(MAXIMUM_JSON_CHARACTER_LIMIT, '_');
