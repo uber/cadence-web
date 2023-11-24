@@ -163,7 +163,7 @@ Scenario.prototype.withDomainDescription = function withDomainDescription(
 ) {
   const { origin } = this;
 
-  this.api.getOnce(
+  this.api.get(
     `${origin}/api/domains/${domain}`,
     deepmerge(
       {
@@ -218,7 +218,8 @@ Scenario.prototype.withFeatureFlags = function withFeatureFlags(
     this.api.getOnce(`${origin}/api/feature-flags/${key}`, {
       key,
       value,
-    });
+    }, { query: {} }); // for some reason when value contains an array of objects that has `origin` field it adds it to query params
+    // so we need to reset query tp empty obj
   });
 
   return this;
@@ -274,7 +275,7 @@ Scenario.prototype.withWorkflows = function withWorkflows({
     ? { executions: workflows, nextPageToken: '' }
     : workflows;
 
-  this.api.getOnce(url, response);
+  this.api.get(url, response);
 
   return this;
 };
