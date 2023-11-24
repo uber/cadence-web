@@ -215,10 +215,14 @@ Scenario.prototype.withFeatureFlags = function withFeatureFlags(
   const { origin } = this;
 
   featureFlags.forEach(({ key, value }) => {
-    this.api.getOnce(`${origin}/api/feature-flags/${key}`, {
-      key,
-      value,
-    }, { query: {} }); // for some reason when value contains an array of objects that has `origin` field it adds it to query params
+    this.api.getOnce(
+      `${origin}/api/feature-flags/${key}`,
+      {
+        key,
+        value,
+      },
+      { query: {} }
+    ); // for some reason when value contains an array of objects that has `origin` field it adds it to query params
     // so we need to reset query tp empty obj
   });
 
