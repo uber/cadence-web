@@ -22,8 +22,9 @@
 import getStringElipsis from './get-string-elipsis';
 
 const getJsonStringObject = value => {
-  const jsonStringFull = value ? JSON.stringify(value, null, 2) : '';
-  const jsonStringDisplay = value ? getStringElipsis(jsonStringFull) : '';
+  const jsonStringFull =
+    value !== undefined ? JSON.stringify(value, null, 2) : '';
+  const jsonStringDisplay = getStringElipsis(jsonStringFull);
 
   return {
     jsonStringDisplay,
