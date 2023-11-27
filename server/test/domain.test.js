@@ -48,7 +48,7 @@ describe('Describe Domain', function() {
           },
           replicationConfiguration: {
             activeClusterName: 'ci-cluster',
-            clusters: [],
+            clusters: [{ clusterName: 'ci-cluster' }],
           },
         },
       ],
@@ -67,7 +67,7 @@ describe('Describe Domain', function() {
           visibilityArchivalStatus: 'ARCHIVAL_STATUS_INVALID',
           visibilityArchivalUri: '',
           activeClusterName: 'ci-cluster',
-          clusters: [],
+          clusters: [{ clusterName: 'ci-cluster' }],
           failoverVersion: '0',
           isGlobalDomain: false,
           failoverInfo: null,

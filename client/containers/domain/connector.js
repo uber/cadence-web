@@ -20,10 +20,12 @@
 // THE SOFTWARE.
 
 import { connect } from 'vuex-connect';
+import { ROUTE_REPLACE } from '../route/action-types';
 import {
   ROUTE_PARAMS_CLUSTER_NAME,
   ROUTE_PARAMS_DOMAIN,
 } from '../route/getter-types';
+import { ACTIVE_STATUS_CLUSTER } from '../active-status/getter-types';
 import {
   DOMAIN_FETCH,
   DOMAIN_ON_MOUNT,
@@ -44,6 +46,7 @@ const actionsToEvents = {
 
 const gettersToProps = {
   clusterName: ROUTE_PARAMS_CLUSTER_NAME,
+  activeCluster: ACTIVE_STATUS_CLUSTER,
   domainName: ROUTE_PARAMS_DOMAIN,
   error: DOMAIN_ERROR,
   isLoading: DOMAIN_IS_LOADING,
@@ -53,6 +56,20 @@ const gettersToProps = {
 
 const lifecycle = {
   mounted: ({ dispatch }) => dispatch(DOMAIN_ON_MOUNT),
+  updated({ dispatch, state }) {
+    const urlParamClusterName = this.clusterName;
+
+    if (!urlParamClusterName && this.activeCluster?.clusterName) {
+      // in some cases users have urls that are generic (with no cluster name specified) those are used when we want to auto redirect the user to one of the clusters by default without carring about which cluster.
+      dispatch(ROUTE_REPLACE, {
+        name: state.route.name,
+        params: {
+          ...state.route.params,
+          clusterName: this.activeCluster?.clusterName,
+        },
+      });
+    }
+  },
 };
 
 export default connect({
