@@ -95,7 +95,6 @@ describe('Domain ', () => {
       .startingAt('/domains/ci-test')
       .go();
 
-
     return [testEl, scenario];
   }
 

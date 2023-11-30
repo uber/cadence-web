@@ -61,7 +61,7 @@ const lifecycle = {
     const routeSupportsClusterNameParam = urlParams?.hasOwnProperty(
       'clusterName'
     );
-    console.log(urlParams)
+
     const hasClusterNameParam = Boolean(urlParams.clusterName);
 
     if (
