@@ -58,9 +58,10 @@ const lifecycle = {
   mounted: ({ dispatch }) => dispatch(DOMAIN_ON_MOUNT),
   updated({ dispatch, state }) {
     const urlParams = state.route.params;
-    const routeSupportsClusterNameParam = urlParams.params?.hasOwnProperty(
+    const routeSupportsClusterNameParam = urlParams?.hasOwnProperty(
       'clusterName'
     );
+    console.log(urlParams)
     const hasClusterNameParam = Boolean(urlParams.clusterName);
 
     if (
