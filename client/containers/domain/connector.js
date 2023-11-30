@@ -57,9 +57,17 @@ const gettersToProps = {
 const lifecycle = {
   mounted: ({ dispatch }) => dispatch(DOMAIN_ON_MOUNT),
   updated({ dispatch, state }) {
-    const urlParamClusterName = this.clusterName;
+    const urlParams = state.route.params;
+    const routeSupportsClusterNameParam = urlParams.params?.hasOwnProperty(
+      'clusterName'
+    );
+    const hasClusterNameParam = Boolean(urlParams.clusterName);
 
-    if (!urlParamClusterName && this.activeCluster?.clusterName) {
+    if (
+      routeSupportsClusterNameParam &&
+      !hasClusterNameParam &&
+      this.activeCluster?.clusterName
+    ) {
       // in some cases users have urls that are generic (with no cluster name specified) those are used when we want to auto redirect the user to one of the clusters by default without carring about which cluster.
       dispatch(ROUTE_REPLACE, {
         name: state.route.name,
