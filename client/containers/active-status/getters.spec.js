@@ -31,7 +31,7 @@ import { initGetters } from '~test';
 
 describe('Active status getters', () => {
   describe('when calling getters[ACTIVE_STATUS_CLUSTER_LIST]', () => {
-    it('should return the value empty list if dynamic dependent getters are Nil', () => {
+    it('should return empty array if its dynamic dependent getters returned Nil', () => {
       const dependentGetterNames = [
         CROSS_REGION_CLUSTER_ORIGIN_LIST,
         CROSS_REGION,
