@@ -95,8 +95,6 @@ describe('Domain ', () => {
       .startingAt('/domains/ci-test')
       .go();
 
-    const configEl = await testEl.waitUntilExists('section.domain');
-
     return [testEl, scenario];
   }
 

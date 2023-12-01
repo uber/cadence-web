@@ -72,7 +72,7 @@ const getters = {
 
     const domainNamespace = domainHash[domainName];
 
-    if (!crossRegion || !isReady) {
+    if (!domainName || !crossRegion || !isReady) {
       return [];
     }
 
