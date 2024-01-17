@@ -30,13 +30,13 @@ module.exports = {
            * Examples which match pattern:
            *
            * 1. single year span (by default for new files)
-           * // Copyright (c) 2020 Uber Technologies Inc.
+           * // Copyright (c) 2024 Uber Technologies Inc.
            *
            * 2. multi-year span
-           * // Copyright (c) 2017-2023 Uber Technologies Inc.
+           * // Copyright (c) 2017-2024 Uber Technologies Inc.
            *
            * 3. new file from another company referenced
-           * // Modifications Copyright (c) 2020 Uber Technologies Inc.
+           * // Modifications Copyright (c) 2024 Uber Technologies Inc.
            *
            * See `client/test/lint/license` for passing examples.
            *
@@ -47,13 +47,13 @@ module.exports = {
            *
            *       In this case it will change header:
            *         from:
-           *           Copyright (c) 2017-2022 Uber Technologies Inc.
+           *           Copyright (c) 2017-2023 Uber Technologies Inc.
            *           Copyright (c) 2020 Uber Technologies Inc.
            *         to:
-           *           Copyright (c) 2022 Uber Technologies Inc.
+           *           Copyright (c) 2024 Uber Technologies Inc.
            *         but should be (respectively):
-           *           Copyright (c) 2017-2022 Uber Technologies Inc.
-           *           Copyright (c) 2020-2022 Uber Technologies Inc.
+           *           Copyright (c) 2017-2024 Uber Technologies Inc.
+           *           Copyright (c) 2020-2024 Uber Technologies Inc.
            *
            *       I have requested for a new feature which allows templates to
            *       use named capture groups in the template. See open issue:
