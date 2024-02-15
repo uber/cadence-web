@@ -122,6 +122,7 @@ app.init = function({
           authAdminJwtPrivateKey,
           {
             algorithm: 'RS256',
+            expiresIn: '10s',
           }
         );
 
