@@ -92,13 +92,13 @@ describe('Domain ', () => {
       .withDomainDescription('ci-test', desc)
       .withWorkflows({ status: 'open' })
       .withWorkflows({ status: 'closed', startTimeOffset: 30 })
-      .startingAt('/domains/ci-test')
+      .startingAt('/domains/ci-test?t=test')
       .go();
 
     return [testEl, scenario];
   }
 
-  it('should redirect to cluster if it is missing in the url in a cross region domain environment', async function test() {
+  it('should redirect to cluster if it is missing in the url in a cross region domain environment while preserving queryParams', async function test() {
     // if clusterName is missing in the url and active cluser exists
     // make sure to redirect to add cluster to url
     // we make sure the activeCluster config exists by passing feature flags for crossRegion configs
@@ -108,6 +108,8 @@ describe('Domain ', () => {
 
     await testEl.waitUntilExists('.feature-flag .active-status');
     scenario.location.should.contain('/ci-test-cluster');
+    // query paramas should be preserveded
+    scenario.location.should.contain('t=test');
   });
 
   it('should not redirect to cluster if it is missing in the url in a non cross region domain environment', async function test() {
