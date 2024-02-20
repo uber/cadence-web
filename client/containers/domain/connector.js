@@ -72,6 +72,7 @@ const lifecycle = {
       // in some cases users have urls that are generic (with no cluster name specified) those are used when we want to auto redirect the user to one of the clusters by default without carring about which cluster.
       dispatch(ROUTE_REPLACE, {
         name: state.route.name,
+        query: state.route.query,
         params: {
           ...state.route.params,
           clusterName: this.activeCluster?.clusterName,
