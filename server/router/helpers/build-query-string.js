@@ -19,14 +19,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const { STATE_TO_FILTER_BY_MAP } = require('../constants');
 const isString = require('lodash.isstring');
+const { STATE_TO_FILTER_BY_MAP } = require('../constants');
 
-const getStatusQueryValue = (status) => {
-  if (isString(status)) return `"${status}"`;
-  else if (Number.isInteger(status)) return`${status}`; // stringify value to convert 0 to none falsy value 0 -> "0"
-  return "";
-}
+const getStatusQueryValue = status => {
+  if (isString(status)) {
+    return `"${status}"`;
+  } else if (Number.isInteger(status)) {
+    return `${status}`;
+  } // stringify value to convert 0 to none falsy value 0 -> "0"
+
+  return '';
+};
 
 const buildQueryString = (
   startTime,
