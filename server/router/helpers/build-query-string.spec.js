@@ -101,13 +101,13 @@ describe('buildQueryString', () => {
     });
 
     describe('status = "Completed"', () => {
-      const status = 'Completed';
+      const status = 1;
 
-      it('should return "CloseTime >= "2021-06-03T00:00:00.000Z" and CloseTime <= "2021-06-04T00:00:00.000Z" and CloseStatus = "Completed"".', () => {
+      it('should return "CloseTime >= "2021-06-03T00:00:00.000Z" and CloseTime <= "2021-06-04T00:00:00.000Z" and CloseStatus = 1".', () => {
         const output = buildQueryString(startTime, endTime, { status });
 
         expect(output).toEqual(
-          'CloseTime >= "2021-06-03T00:00:00.000Z" and CloseTime <= "2021-06-04T00:00:00.000Z" and CloseStatus = "Completed"'
+          'CloseTime >= "2021-06-03T00:00:00.000Z" and CloseTime <= "2021-06-04T00:00:00.000Z" and CloseStatus = 1'
         );
       });
     });
