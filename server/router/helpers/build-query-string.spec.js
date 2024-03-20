@@ -101,6 +101,30 @@ describe('buildQueryString', () => {
     });
 
     describe('status = "Completed"', () => {
+      const status = 'Completed';
+
+      it('should return "CloseTime >= "2021-06-03T00:00:00.000Z" and CloseTime <= "2021-06-04T00:00:00.000Z" and CloseStatus = "Completed"".', () => {
+        const output = buildQueryString(startTime, endTime, { status });
+
+        expect(output).toEqual(
+          'CloseTime >= "2021-06-03T00:00:00.000Z" and CloseTime <= "2021-06-04T00:00:00.000Z" and CloseStatus = "Completed"'
+        );
+      });
+    });
+
+    describe('archival status, status = 0', () => {
+      const status = 0;
+
+      it('should return "CloseTime >= "2021-06-03T00:00:00.000Z" and CloseTime <= "2021-06-04T00:00:00.000Z" and CloseStatus = 0".', () => {
+        const output = buildQueryString(startTime, endTime, { status });
+
+        expect(output).toEqual(
+          'CloseTime >= "2021-06-03T00:00:00.000Z" and CloseTime <= "2021-06-04T00:00:00.000Z" and CloseStatus = 0'
+        );
+      });
+    });
+
+    describe('archival status, status = 1', () => {
       const status = 1;
 
       it('should return "CloseTime >= "2021-06-03T00:00:00.000Z" and CloseTime <= "2021-06-04T00:00:00.000Z" and CloseStatus = 1".', () => {
