@@ -19,7 +19,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+const isString = require('lodash.isstring');
 const { STATE_TO_FILTER_BY_MAP } = require('../constants');
+
+const getStatusQueryValue = status => {
+  if (isString(status)) {
+    return `"${status}"`;
+  } else if (Number.isInteger(status)) {
+    return `${status}`;
+  } // stringify value to convert 0 to none falsy value 0 -> "0"
+
+  return '';
+};
 
 const buildQueryString = (
   startTime,
@@ -27,12 +38,13 @@ const buildQueryString = (
   { isCron, state = 'closed', status, workflowId, workflowName } = {}
 ) => {
   const filterBy = STATE_TO_FILTER_BY_MAP[state];
+  const statusQueryValue = getStatusQueryValue(status);
 
   return [
     `${filterBy} >= "${startTime.toISOString()}"`,
     `${filterBy} <= "${endTime.toISOString()}"`,
     state === 'open' && `CloseTime = missing`,
-    status && `CloseStatus = ${status}`,
+    statusQueryValue && `CloseStatus = ${statusQueryValue}`,
     isCron !== undefined && `IsCron = "${isCron}"`,
     workflowId && `WorkflowID = "${workflowId}"`,
     workflowName && `WorkflowType = "${workflowName}"`,
