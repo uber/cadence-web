@@ -411,7 +411,7 @@ export default {
           class="show-timeline-btn"
           >{{ graphView === GRAPH_VIEW_TIMELINE ? 'hide' : 'show' }} timeline</a
         >
-        <a class="export" :href="#" @click.prevent="exportHistory">Export</a>
+        <a class="export" href="#" @click.prevent="exportHistory">Export</a>
       </div>
     </header>
     <Split
