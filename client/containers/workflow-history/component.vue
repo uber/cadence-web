@@ -317,10 +317,7 @@ export default {
       }
     },
     async exportHistory(e) {
-      const historyJson = await httpService.get(this.baseAPIURL + '/export', {
-        query,
-        signal,
-      });
+      const historyJson = await httpService.get(this.baseAPIURL + '/export');
       const blob = new Blob(historyJson, { type: 'application\/json' });
 
       e.currentTarget.href = window.URL.createObjectURL(blob);
