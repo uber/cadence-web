@@ -43,6 +43,8 @@ import {
   SelectInput,
 } from '~components';
 
+import { httpService } from '~services';
+
 export default {
   name: 'history',
   data() {
@@ -314,6 +316,17 @@ export default {
         });
       }
     },
+    async exportHistory(e) {
+      const historyJson = await httpService.get(this.baseAPIURL + '/export', {
+        query,
+        signal,
+      });
+      const blob = new Blob(historyJson, { type: 'application\/json' });
+
+      e.currentTarget.href = window.URL.createObjectURL(blob);
+      e.currentTarget.download = this.exportFilename;
+      e.currentTarget.click();
+    },
   },
   watch: {
     eventId(eventId) {
@@ -400,8 +413,8 @@ export default {
         >
         <a
           class="export"
-          :href="origin + baseAPIURL + '/export'"
-          :download="exportFilename"
+          :href="#"
+          @click.prevent="exportHistory"
           >Export</a
         >
       </div>
