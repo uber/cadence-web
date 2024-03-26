@@ -88,7 +88,6 @@ export default {
     'workflowHistoryEventHighlightList',
     'workflowHistoryEventHighlightListEnabled',
     'workflowId',
-    'origin',
   ],
   created() {
     this.onResizeWindow = debounce(() => {
@@ -400,7 +399,7 @@ export default {
         >
         <a
           class="export"
-          :href="origin + baseAPIURL + '/export'"
+          :href="baseAPIURL + '/export'"
           :download="exportFilename"
           >Export</a
         >

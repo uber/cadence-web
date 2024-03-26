@@ -577,7 +577,7 @@ describe('Workflow', () => {
 
       exportEl.should.have.attr(
         'href',
-        'http://localhost:8090/api/domains/ci-test/workflows/email-daily-summaries/emailRun1/export'
+        '/api/domains/ci-test/workflows/email-daily-summaries/emailRun1/export'
       );
       exportEl.should.have.attr(
         'download',
