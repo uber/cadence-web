@@ -69,6 +69,7 @@
     "lodash.camelcase": "^4.3.0",
     "lodash.get": "^4.4.2",
     "lodash.isequal": "^4.5.0",
+    "lodash.isstring": "^4.0.1",
     "lodash.lowercase": "^4.3.0",
     "lodash.snakecase": "^4.1.1",
     "lodash.startcase": "^4.4.0",
