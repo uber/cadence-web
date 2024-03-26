@@ -90,7 +90,6 @@ export default {
     'workflowHistoryEventHighlightList',
     'workflowHistoryEventHighlightListEnabled',
     'workflowId',
-    'origin',
   ],
   created() {
     this.onResizeWindow = debounce(() => {
@@ -316,13 +315,16 @@ export default {
         });
       }
     },
-    async exportHistory(e) {
-      const historyJson = await httpService.get(this.baseAPIURL + '/export');
-      const blob = new Blob(historyJson, { type: 'application\/json' });
+    exportHistory(e) {
+      httpService.get(this.baseAPIURL + '/export').then(historyJson => {
+        const blob = new Blob(historyJson, { type: 'application\/json' });
 
-      e.currentTarget.href = window.URL.createObjectURL(blob);
-      e.currentTarget.download = this.exportFilename;
-      e.currentTarget.click();
+        e.target.href = window.URL.createObjectURL(blob);
+        e.target.download = this.exportFilename;
+        e.target.click();
+      });
+
+      return false;
     },
   },
   watch: {
@@ -408,7 +410,9 @@ export default {
           class="show-timeline-btn"
           >{{ graphView === GRAPH_VIEW_TIMELINE ? 'hide' : 'show' }} timeline</a
         >
-        <a class="export" href="#" @click.prevent="exportHistory">Export</a>
+        <a class="export" href="#" @click.once.prevent="exportHistory"
+          >Export</a
+        >
       </div>
     </header>
     <Split

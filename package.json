@@ -45,6 +45,7 @@
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "btoa": "^1.2.1",
+    "chai-spies": "^1.1.0",
     "css-loader": "^0.28.7",
     "cytoscape": "3.16.0",
     "deepmerge": "^2.0.0",

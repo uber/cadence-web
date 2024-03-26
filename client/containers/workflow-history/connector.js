@@ -21,11 +21,9 @@
 
 import { connect } from 'vuex-connect';
 import { WORKFLOW_EXECUTION_PENDING_TASK_COUNT } from '../workflow/getter-types';
-import { DOMAIN_CROSS_ORIGIN } from '../domain/getter-types';
 
 const gettersToProps = {
   pendingTaskCount: WORKFLOW_EXECUTION_PENDING_TASK_COUNT,
-  origin: DOMAIN_CROSS_ORIGIN,
 };
 
 const stateToProps = {
