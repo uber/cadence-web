@@ -587,12 +587,6 @@ describe('Workflow', () => {
           'email daily summaries - emailRun1.json'
         );
       });
-
-      //let blob = await fetch(exportEl.href).then(r => r.blob());
-      //const enc = new TextDecoder("utf-8");
-      //const data = new Uint8Array(await blob.arrayBuffer())
-      //console.log(JSON.parse(enc.decode(data)))
-      //blobJson.should.equal(opts.events);
     });
 
     describe('Compact View', function describeTest() {

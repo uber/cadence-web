@@ -317,7 +317,7 @@ export default {
     },
     exportHistory(e) {
       httpService.get(this.baseAPIURL + '/export').then(historyJson => {
-        const blob = new Blob(historyJson, { type: 'application\/json' });
+        const blob = new Blob([JSON.stringify(historyJson)], { type: 'application/json' });
 
         e.target.href = window.URL.createObjectURL(blob);
         e.target.download = this.exportFilename;
