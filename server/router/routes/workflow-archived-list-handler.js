@@ -35,9 +35,16 @@ const workflowArchivedListHandler = async ctx => {
   } else {
     const startTime = moment(query.startTime || NaN);
     const endTime = moment(query.endTime || NaN);
+    const parsedStatus =
+      query.status && !isNaN(query.status)
+        ? parseInt(query.status)
+        : query.status;
 
     ctx.assert(startTime.isValid() && endTime.isValid(), 400);
-    queryString = buildQueryString(startTime, endTime, query);
+    queryString = buildQueryString(startTime, endTime, {
+      ...query,
+      status: parsedStatus,
+    });
   }
 
   const archivedWorkflowsResponse = await ctx.cadence.archivedWorkflows({
