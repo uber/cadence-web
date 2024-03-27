@@ -317,6 +317,7 @@ export default {
     },
     exportHistory(e) {
       const target = e.target;
+
       httpService.get(this.baseAPIURL + '/export').then(historyJson => {
         const blob = new Blob([JSON.stringify(historyJson)], {
           type: 'application/json',
