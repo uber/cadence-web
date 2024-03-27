@@ -316,14 +316,15 @@ export default {
       }
     },
     exportHistory(e) {
+      const target = e.target;
       httpService.get(this.baseAPIURL + '/export').then(historyJson => {
         const blob = new Blob([JSON.stringify(historyJson)], {
           type: 'application/json',
         });
 
-        e.target.href = window.URL.createObjectURL(blob);
-        e.target.download = this.exportFilename;
-        e.target.click();
+        target.href = window.URL.createObjectURL(blob);
+        target.download = this.exportFilename;
+        target.click();
       });
 
       return false;
