@@ -72,6 +72,7 @@ chai.should();
 chai.use(require('chai-dom'));
 chai.use(require('chai-string'));
 chai.use(require('chai-things'));
+chai.use(require('chai-spies'));
 
 require('nathanboktae-browser-test-utils');
 

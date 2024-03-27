@@ -505,13 +505,13 @@ describe('Workflow', () => {
         ...o,
       });
 
-      scenario.withFullHistory(opts.events);
+      scenario.withFullHistory(opts.events).withExportHistory(opts.events);
 
       const historyEl = await scenario
         .render(opts.attach)
         .waitUntilExists('section.execution.ready');
 
-      return [historyEl, scenario];
+      return [historyEl, scenario, opts];
     }
     it('should pick default view format from localstorage if exists ', async function test() {
       localStorage.setItem('ci-test:history-viewing-format', 'json');
@@ -570,19 +570,23 @@ describe('Workflow', () => {
     });
 
     it('should allow downloading the full history via export', async function test() {
-      const [, scenario] = await historyTest(this.test);
+      const [, scenario, opts] = await historyTest(this.test);
       const exportEl = await scenario.vm.$el.waitUntilExists(
         'section.history .controls a.export'
       );
+      const downloadLink = 'javascript:void(0);'; //prevent createing a redirectable link
 
-      exportEl.should.have.attr(
-        'href',
-        'http://localhost:8090/api/domains/ci-test/workflows/email-daily-summaries/emailRun1/export'
-      );
-      exportEl.should.have.attr(
-        'download',
-        'email daily summaries - emailRun1.json'
-      );
+      chai.spy.on(window.URL, 'createObjectURL', () => downloadLink);
+      exportEl.trigger('click');
+
+      await retry(() => {
+        window.URL.createObjectURL.should.have.been.called();
+        exportEl.should.have.attr('href', downloadLink);
+        exportEl.should.have.attr(
+          'download',
+          'email daily summaries - emailRun1.json'
+        );
+      });
     });
 
     describe('Compact View', function describeTest() {

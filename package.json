@@ -109,6 +109,7 @@
     "babel-jest": "^24.9.0",
     "chai": "^4.1.2",
     "chai-dom": "^1.7.0",
+    "chai-spies": "^1.1.0",
     "chai-string": "^1.5.0",
     "chai-things": "^0.2.0",
     "eslint": "^7.32.0",

@@ -365,6 +365,14 @@ Scenario.prototype.withFullHistory = function withFullHistory(events, options) {
     .withHistory(parsedEvents.slice(third + third), false, options);
 };
 
+Scenario.prototype.withExportHistory = function withExportHistory(events) {
+  const jsonHistoryEvents = getFixture('history.emailRun1', events);
+
+  this.api.getOnce(`${this.execApiBase()}/export`, jsonHistoryEvents);
+
+  return this;
+};
+
 Scenario.prototype.withQuery = function withQuery(query) {
   this.api.getOnce(
     `${this.execApiBase()}/query`,

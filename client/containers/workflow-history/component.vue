@@ -43,6 +43,8 @@ import {
   SelectInput,
 } from '~components';
 
+import { httpService } from '~services';
+
 export default {
   name: 'history',
   data() {
@@ -88,7 +90,6 @@ export default {
     'workflowHistoryEventHighlightList',
     'workflowHistoryEventHighlightListEnabled',
     'workflowId',
-    'origin',
   ],
   created() {
     this.onResizeWindow = debounce(() => {
@@ -314,6 +315,21 @@ export default {
         });
       }
     },
+    exportHistory(e) {
+      const target = e.target;
+
+      httpService.get(this.baseAPIURL + '/export').then(historyJson => {
+        const blob = new Blob([JSON.stringify(historyJson)], {
+          type: 'application/json',
+        });
+
+        target.href = window.URL.createObjectURL(blob);
+        target.download = this.exportFilename;
+        target.click();
+      });
+
+      return false;
+    },
   },
   watch: {
     eventId(eventId) {
@@ -398,10 +414,7 @@ export default {
           class="show-timeline-btn"
           >{{ graphView === GRAPH_VIEW_TIMELINE ? 'hide' : 'show' }} timeline</a
         >
-        <a
-          class="export"
-          :href="origin + baseAPIURL + '/export'"
-          :download="exportFilename"
+        <a class="export" href="#" @click.once.prevent="exportHistory"
           >Export</a
         >
       </div>
