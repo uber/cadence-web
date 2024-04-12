@@ -38,8 +38,12 @@ describe('Listing Workflows', function() {
     executionTime: null,
     memo: null,
     parentDomainId: null,
+    parentDomainName: null,
     parentExecution: null,
+    parentInitatedId: null,
+    partitionConfig: null,
     searchAttributes: null,
+    updateTime: null,
   };
   const demoExecGrpc = {
     workflowExecution: {
@@ -59,8 +63,12 @@ describe('Listing Workflows', function() {
     executionTime: null,
     memo: null,
     parentDomainId: null,
+    parentDomainName: null,
     parentExecution: null,
+    parentInitatedId: null,
+    partitionConfig: null,
     searchAttributes: null,
+    updateTime: null,
   };
   const demoExecJson = Object.assign({}, demoExecThrift, {
     startTime: '2017-11-10T21:30:00.000Z',
