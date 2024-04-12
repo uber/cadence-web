@@ -21,8 +21,8 @@
 
 const grpc = require('@grpc/grpc-js');
 
-describe('Describe Domain', function() {
-  it('should list domains', async function() {
+describe('Describe Domain', function () {
+  it('should list domains', async function () {
     const domains = {
       tchannel: [
         {
@@ -38,10 +38,12 @@ describe('Describe Domain', function() {
           failoverInfo: null,
           failoverVersion: 0,
           configuration: {
+            AsyncWorkflowConfiguration: null,
             badBinaries: null,
             emitMetric: true,
             historyArchivalStatus: null,
             historyArchivalURI: null,
+            isolationgroups: null,
             visibilityArchivalStatus: null,
             visibilityArchivalURI: null,
             workflowExecutionRetentionPeriodInDays: 14,
@@ -88,7 +90,7 @@ describe('Describe Domain', function() {
       .expect(domains.tchannel);
   });
 
-  it('should describe the domain', async function() {
+  it('should describe the domain', async function () {
     const domainDesc = {
       tchannel: {
         domainInfo: {
@@ -103,11 +105,13 @@ describe('Describe Domain', function() {
         failoverVersion: 0,
         isGlobalDomain: true,
         configuration: {
+          AsyncWorkflowConfiguration: null,
           badBinaries: null,
           workflowExecutionRetentionPeriodInDays: 14,
           emitMetric: true,
           historyArchivalStatus: null,
           historyArchivalURI: null,
+          isolationgroups: null,
           visibilityArchivalStatus: null,
           visibilityArchivalURI: null,
         },
@@ -152,7 +156,7 @@ describe('Describe Domain', function() {
       .expect(domainDesc.tchannel);
   });
 
-  it('should return 404 if the domain is not found', async function() {
+  it('should return 404 if the domain is not found', async function () {
     const errorHandler = ({ describeRequest }) => {
       const message = `domain "${describeRequest.name}" does not exist`;
       const error = {

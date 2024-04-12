@@ -50,6 +50,7 @@ const wfHistoryThrift = [
       cronSchedule: null,
       firstDecisionTaskBackoffSeconds: null,
       firstExecutionRunId: null,
+      firstScheduledTimeNano: null,
       header: null,
       initiator: null,
       lastCompletionResult: null,
@@ -58,7 +59,9 @@ const wfHistoryThrift = [
       parentInitiatedEventId: null,
       parentWorkflowDomain: null,
       parentWorkflowExecution: null,
+      partitionConfig: null,
       prevAutoResetPoints: null,
+      requestId: null,
       retryPolicy: null,
       searchAttributes: null,
       taskStartToCloseTimeoutSeconds: 30,
@@ -121,6 +124,7 @@ const wfHistoryGrpc = [
       cronSchedule: null,
       firstDecisionTaskBackoff: null,
       firstExecutionRunId: null,
+      firstScheduledTimeNano: null,
       header: null,
       initiator: null,
       lastCompletionResult: null,
@@ -129,7 +133,9 @@ const wfHistoryGrpc = [
       parentInitiatedEventId: null,
       parentWorkflowDomain: null,
       parentWorkflowExecution: null,
+      partitionConfig: null,
       prevAutoResetPoints: null,
+      requestId: null,
       retryPolicy: null,
       searchAttributes: null,
       taskStartToCloseTimeout: { seconds: 30 },
@@ -194,8 +200,8 @@ const wfHistoryJson = [
   },
 ];
 
-describe('Workflow History', function() {
-  it('should forward the request to the cadence frontend with workflowId and runId', function() {
+describe('Workflow History', function () {
+  it('should forward the request to the cadence frontend with workflowId and runId', function () {
     this.test.GetWorkflowExecutionHistory = ({ getRequest }) => {
       const request = {
         tchannel: {
@@ -237,7 +243,7 @@ describe('Workflow History', function() {
       .expect(200)
       .expect('Content-Type', /json/);
   });
-  it('should forward the nextPageToken', function() {
+  it('should forward the nextPageToken', function () {
     this.test.GetWorkflowExecutionHistory = ({ getRequest }) => {
       const requestNextPageToken = {
         tchannel: 'page2',
@@ -267,7 +273,7 @@ describe('Workflow History', function() {
         rawHistory: null,
       });
   });
-  it('should support long polling by forwarding the waitForNewEvent flag', function() {
+  it('should support long polling by forwarding the waitForNewEvent flag', function () {
     this.test.GetWorkflowExecutionHistory = ({ getRequest }) => {
       getRequest.waitForNewEvent.should.be.true;
 
@@ -288,7 +294,7 @@ describe('Workflow History', function() {
           .expect(200)
       );
   });
-  it('should transform Long numbers to JavaScript numbers, Long dates to ISO date strings, and line-delimited JSON buffers to JSON', function() {
+  it('should transform Long numbers to JavaScript numbers, Long dates to ISO date strings, and line-delimited JSON buffers to JSON', function () {
     const events = {
       tchannel: wfHistoryThrift,
       grpc: wfHistoryGrpc,
@@ -309,10 +315,10 @@ describe('Workflow History', function() {
         rawHistory: null,
       });
   });
-  describe('Export', function() {
+  describe('Export', function () {
     const wfHistoryCliJson = `[{"eventId":1,"timestamp":1510701850351393089,"eventType":"WorkflowExecutionStarted","workflowExecutionStartedEventAttributes":{"workflowType":{"name":"github.com/uber/cadence/demo"},"taskList":{"name":"ci-task-queue"},"input":"eyJlbWFpbHMiOlsiamFuZUBleGFtcGxlLmNvbSIsImJvYkBleGFtcGxlLmNvbSJdLCJpbmNsdWRlRm9vdGVyIjp0cnVlfQ==","executionStartToCloseTimeoutSeconds":1080,"taskStartToCloseTimeoutSeconds":30}},{"eventId":2,"timestamp":1510701850351393089,"eventType":"DecisionTaskScheduled","decisionTaskScheduledEventAttributes":{"taskList":{"name":"canary-task-queue"},"startToCloseTimeoutSeconds":180,"attempt":1}},{"eventId":3,"timestamp":1510701867531262273,"eventType":"DecisionTaskStarted","decisionTaskStartedEventAttributes":{"scheduledEventId":2,"identity":"box1@ci-task-queue","requestId":"fafa095d-b4ca-423a-a812-223e62b5ccf8"}}]`;
 
-    it('should be able to export history in a format compatible with the CLI', function() {
+    it('should be able to export history in a format compatible with the CLI', function () {
       const events = {
         tchannel: wfHistoryThrift,
         grpc: wfHistoryGrpc,
@@ -327,7 +333,7 @@ describe('Workflow History', function() {
         .expect(200)
         .expect(wfHistoryCliJson);
     });
-    it('should page through all responses', async function() {
+    it('should page through all responses', async function () {
       let calls = 0;
       const events = {
         tchannel: wfHistoryThrift,
