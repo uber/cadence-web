@@ -19,7 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-describe('Listing Workflows', function () {
+describe('Listing Workflows', function() {
   const demoExecThrift = {
     execution: {
       workflowId: 'demo',
@@ -110,7 +110,7 @@ describe('Listing Workflows', function () {
     return request().delete('/api/cluster/cache');
   });
 
-  it('should fail to list all workflows with ES disabled', function () {
+  it('should fail to list all workflows with ES disabled', function() {
     this.test.DescribeCluster = () => {
       return clusterElasticSearchDisabled;
     };
@@ -127,7 +127,7 @@ describe('Listing Workflows', function () {
       });
   });
 
-  it('should list all workflows with ES enabled', function () {
+  it('should list all workflows with ES enabled', function() {
     this.test.ListWorkflowExecutions = ({ listRequest }) => {
       listRequest.query
         .match('2017-11-12T12:00:00.000Z')[0]
@@ -160,7 +160,7 @@ describe('Listing Workflows', function () {
       });
   });
 
-  it('should list open workflows with ES disabled', function () {
+  it('should list open workflows with ES disabled', function() {
     this.test.ListOpenWorkflowExecutions = ({ listRequest }) => {
       listRequest.domain.should.equal('canary');
       should.not.exist(listRequest.executionFilter);
@@ -216,7 +216,7 @@ describe('Listing Workflows', function () {
       });
   });
 
-  it('should list open workflows with ES enabled', function () {
+  it('should list open workflows with ES enabled', function() {
     this.test.ListWorkflowExecutions = ({ listRequest }) => {
       listRequest.query
         .match('2017-11-12T12:00:00.000Z')[0]
@@ -249,7 +249,7 @@ describe('Listing Workflows', function () {
       });
   });
 
-  it('should list closed workflows with ES disabled', function () {
+  it('should list closed workflows with ES disabled', function() {
     this.test.ListClosedWorkflowExecutions = ({ listRequest }) => {
       listRequest.domain.should.equal('canary');
       should.not.exist(listRequest.executionFilter);
@@ -304,7 +304,7 @@ describe('Listing Workflows', function () {
       });
   });
 
-  it('should list closed workflows with ES enabled', function () {
+  it('should list closed workflows with ES enabled', function() {
     this.test.ListWorkflowExecutions = ({ listRequest }) => {
       listRequest.domain.should.equal('canary');
 
@@ -338,7 +338,7 @@ describe('Listing Workflows', function () {
       });
   });
 
-  it('should forward the next page token along', function () {
+  it('should forward the next page token along', function() {
     this.test.ListClosedWorkflowExecutions = ({ listRequest }) => {
       switch (process.env.TRANSPORT_CLIENT_TYPE) {
         case 'tchannel': {
@@ -377,13 +377,13 @@ describe('Listing Workflows', function () {
       });
   });
 
-  it('should return 404 if another state of workflows is queried', function () {
+  it('should return 404 if another state of workflows is queried', function() {
     return request()
       .get('/api/domains/canary/workflows/failed')
       .expect(404);
   });
 
-  it('should return 400 if startTime or endTime are missing', async function () {
+  it('should return 400 if startTime or endTime are missing', async function() {
     await request()
       .get('/api/domains/canary/workflows/open?startTime=2017-11-01')
       .expect(400);
