@@ -4,17 +4,8 @@ module.exports = {
     'plugin:react/recommended',
     'plugin:prettier/recommended',
   ],
-  plugins: ['react'],
+  plugins: ['react', 'prettier'],
   rules: {
     'react/react-in-jsx-scope': 'off',
-    'prettier/prettier': [
-      'error',
-      {
-        bracketSpacing: true,
-        singleQuote: true,
-        trailingComma: 'es5',
-        jsxBracketSameLine: false,
-      },
-    ],
   },
 };
