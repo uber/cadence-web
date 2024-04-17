@@ -4,7 +4,7 @@ module.exports = {
     'plugin:react/recommended',
     'plugin:prettier/recommended',
   ],
-  plugins: ['react', 'prettier'],
+  plugins: ['react'],
   rules: {
     'react/react-in-jsx-scope': 'off',
   },
