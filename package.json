@@ -6,7 +6,7 @@
     "dev": "next dev -p ${CADENCE_WEB_PORT}",
     "build": "NODE_ENV=production && next build",
     "start": "next start -p ${CADENCE_WEB_PORT-8088}",
-    "lint": "next lint --fix",
+    "lint": "next lint",
     "install-idl": "mkdir -p node_modules && cd node_modules && npx --yes tiged  https://github.com/uber/cadence-idl#e3a59cdd3c3676b0edee2f3262a22379f25b9fa5 cadence-idl",
     "generate:idl": "mkdir -p src/idl; npm run generate:idl:proto",
     "generate:idl:proto": "rm -rf src/idl/proto && cp -R node_modules/cadence-idl/proto src/idl/proto",
