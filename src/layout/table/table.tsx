@@ -1,5 +1,5 @@
-import React from "react";
-import { styled, withStyle, type Theme } from "baseui";
+import React from 'react';
+import { styled, withStyle, type Theme } from 'baseui';
 import {
   StyledRoot,
   StyledTable,
@@ -11,11 +11,11 @@ import {
   StyledTableBodyRow,
   StyledTableBodyCell,
   StyledTableLoadingMessage,
-} from "baseui/table-semantic";
-import ChevronUp from "baseui/icon/chevron-up";
-import ChevronDown from "baseui/icon/chevron-down";
+} from 'baseui/table-semantic';
+import ChevronUp from 'baseui/icon/chevron-up';
+import ChevronDown from 'baseui/icon/chevron-down';
 
-import type { Props } from "./table.types";
+import type { Props } from './table.types';
 
 export default function Table<T extends Object>({
   data,
@@ -103,17 +103,17 @@ function SortableTableHeadCell({
   let SortIcon, sortLabel;
 
   switch (columnID === sortColumn && sortOrder) {
-    case "ASC":
+    case 'ASC':
       SortIcon = ChevronUp;
-      sortLabel = "ascending sorting";
+      sortLabel = 'ascending sorting';
       break;
-    case "DESC":
+    case 'DESC':
       SortIcon = ChevronDown;
-      sortLabel = "descending sorting";
+      sortLabel = 'descending sorting';
       break;
     default:
       SortIcon = null;
-      sortLabel = "not sorted";
+      sortLabel = 'not sorted';
       break;
   }
 
@@ -134,28 +134,28 @@ function SortableTableHeadCell({
   );
 }
 
-const SortableHeaderContainer = styled("div", ({ $theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-between",
+const SortableHeaderContainer = styled('div', ({ $theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
   columnGap: $theme.sizing.scale300,
 }));
 
 const TableRoot = withStyle(StyledRoot, ({ $theme }) => ({
-  alignSelf: "center",
-  flex: "1 1 0",
-  overflow: "visible",
-  width: "100%",
+  alignSelf: 'center',
+  flex: '1 1 0',
+  overflow: 'visible',
+  width: '100%',
 }));
 
 const TableMessage = withStyle(StyledTableLoadingMessage, ({ $theme }) => ({
-  display: "flex",
-  justifyContent: "center",
+  display: 'flex',
+  justifyContent: 'center',
 }));
 
 const tableHeadCellStyles = ($theme: Theme) => ({
   ...$theme.typography.LabelXSmall,
-  color: "#5E5E5E",
+  color: '#5E5E5E',
 });
 
 const TableHeadCell = withStyle(StyledTableHeadCell, ({ $theme }) => ({
