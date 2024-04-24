@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { styled } from './workflow-status-tag-icon.styles';
+import { styledComponents as styled } from './workflow-status-tag-icon.styles';
 import { WorkflowStatusTagIconProps } from './workflow-status-tag-icon.types';
 
 export default function WorkflowStatusTagIcon(
