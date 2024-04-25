@@ -8,12 +8,12 @@ export type WorkflowStatus =
   | 'timedOut'
   | 'unknown';
 
-export type WorkflowStatusTagProps = {
+export type Props = {
   status: WorkflowStatus;
   link?: string;
 };
 
-export type WorkflowStatusTagOverridesArgs = {
+export type OverridesArgs = {
   status: WorkflowStatus;
   link?: string;
 };

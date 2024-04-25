@@ -2,9 +2,9 @@ import { type Theme } from 'baseui';
 import type { TagOverrides } from 'baseui/tag/types';
 import { type StyleObject } from 'styletron-react';
 
-import { WorkflowStatusTagOverridesArgs } from './workflow-status-tag.types';
+import { OverridesArgs } from './workflow-status-tag.types';
 
-export function overrides(args: WorkflowStatusTagOverridesArgs) {
+export function overrides(args: OverridesArgs) {
   return {
     tag: {
       Root: {

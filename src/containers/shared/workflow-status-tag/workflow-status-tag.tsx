@@ -1,25 +1,12 @@
 import React from 'react';
 import { Tag, VARIANT } from 'baseui/tag';
 
-import type {
-  WorkflowStatus,
-  WorkflowStatusTagProps,
-} from './workflow-status-tag.types';
-import WorkflowStatusTagIcon from './workflow-status-tag-icon/workflow-status-tag-icon';
+import { WORKFLOW_STATUS_NAMES } from './workflow-status-tag.constants';
 import { overrides } from './workflow-status-tag.styles';
+import type { Props } from './workflow-status-tag.types';
+import WorkflowStatusTagIcon from './workflow-status-tag-icon/workflow-status-tag-icon';
 
-const WORKFLOW_STATUS_NAMES: Record<WorkflowStatus, string> = {
-  running: 'Running',
-  completed: 'Completed',
-  failed: 'Failed',
-  canceled: 'Canceled',
-  terminated: 'Terminated',
-  continuedAsNew: 'Continued As New',
-  timedOut: 'Timed Out',
-  unknown: 'Unknown',
-};
-
-export default function WorkflowStatusTag(props: WorkflowStatusTagProps) {
+export default function WorkflowStatusTag(props: Props) {
   return (
     <Tag
       variant={VARIANT.solid}
