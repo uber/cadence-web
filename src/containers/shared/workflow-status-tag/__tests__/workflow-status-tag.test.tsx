@@ -5,7 +5,7 @@ import WorkflowStatusTag from '../workflow-status-tag';
 import { type WorkflowStatus } from '../workflow-status-tag.types';
 
 jest.mock('../workflow-status-tag-icon/workflow-status-tag-icon', () =>
-  jest.fn(() => <div>Mock icon</div>)
+  jest.fn(({ kind }) => <div>Mock icon {kind}</div>)
 );
 
 describe('WorkflowStatusTag', () => {
@@ -14,7 +14,7 @@ describe('WorkflowStatusTag', () => {
   });
 
   afterEach(() => {
-    jest.resetAllMocks();
+    jest.clearAllMocks();
   });
 
   const tests: Array<{
@@ -73,7 +73,10 @@ describe('WorkflowStatusTag', () => {
       );
 
       const tag = screen.getByText(test.text);
-      expect(tag).toBeDefined();
+      expect(tag).toBeInTheDocument();
+
+      expect(screen.getByText('Mock icon start')).toBeInTheDocument();
+      expect(screen.getByText('Mock icon end')).toBeInTheDocument();
 
       if (test.link) {
         expect(screen.getByRole('button')).toHaveAttribute('href', test.link);
