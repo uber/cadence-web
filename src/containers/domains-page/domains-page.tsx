@@ -5,7 +5,7 @@ import DomainPageTitle from '@/containers/domains-page/domains-page-title/domain
 import DomainsPageTitleBadge from '@/containers/domains-page/domains-page-title-badge/domains-page-title-badge';
 import SectionLoadingIndicator from '@/components/section-loading-indicator/section-loading-indicator';
 import { getCachedAllDomains } from '@/containers/domains-page/helpers/get-all-domains';
-import AsyncPropsLoader from '@/components/async-props-loader/asyc-props-loader';
+import AsyncPropsLoader from '@/components/async-props-loader/async-props-loader';
 
 export default async function DomainsPage() {
   return (
