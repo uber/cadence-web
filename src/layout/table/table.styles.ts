@@ -6,7 +6,7 @@ import {
   StyledTableLoadingMessage,
 } from 'baseui/table-semantic';
 
-export const components = {
+export const styled = {
   TableRoot: withStyle(StyledRoot, {
     alignSelf: 'center',
     flex: '1 1 0',

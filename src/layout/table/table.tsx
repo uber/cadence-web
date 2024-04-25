@@ -9,7 +9,7 @@ import {
 } from 'baseui/table-semantic';
 
 import type { Props } from './table.types';
-import { components } from './table.styles';
+import { styled } from './table.styles';
 import TableSortableHeadCell from './table-sortable-head-cell/table-sortable-head-cell';
 
 export default function Table<T extends Object>({
@@ -20,7 +20,7 @@ export default function Table<T extends Object>({
   ...sortParams
 }: Props<T>) {
   return (
-    <components.TableRoot>
+    <styled.TableRoot>
       <StyledTable>
         <StyledTableHead>
           <StyledTableHeadRow>
@@ -34,14 +34,14 @@ export default function Table<T extends Object>({
                   {...sortParams}
                 />
               ) : (
-                <components.TableHeadCell
+                <styled.TableHeadCell
                   $size="compact"
                   $divider="clean"
                   $width={column.width}
                   key={column.id}
                 >
                   {column.name}
-                </components.TableHeadCell>
+                </styled.TableHeadCell>
               )
             )}
           </StyledTableHeadRow>
@@ -65,11 +65,11 @@ export default function Table<T extends Object>({
             ))}
           <tr>
             <td colSpan={columns.length}>
-              <components.TableMessage>{endMessage}</components.TableMessage>
+              <styled.TableMessage>{endMessage}</styled.TableMessage>
             </td>
           </tr>
         </StyledTableBody>
       </StyledTable>
-    </components.TableRoot>
+    </styled.TableRoot>
   );
 }
