@@ -38,7 +38,7 @@ export default function TableSortableHeadCell({
       onClick={() => onSort(columnID)}
       $isFocusVisible={false}
     >
-      <styled.SortableHeaderContainer aria-label={`${columnID}, ${sortLabel}`}>
+      <styled.SortableHeaderContainer aria-label={`${name}, ${sortLabel}`}>
         {name}
         {columnID === sortColumn && SortIcon && (
           <SortIcon size="16px" aria-hidden="true" role="presentation" />
