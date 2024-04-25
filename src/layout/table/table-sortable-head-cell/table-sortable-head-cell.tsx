@@ -3,7 +3,7 @@ import ChevronUp from 'baseui/icon/chevron-up';
 import ChevronDown from 'baseui/icon/chevron-down';
 
 import type { Props } from './table-sortable-head-cell.types';
-import { components } from './table-sortable-head-cell.styles';
+import { styled } from './table-sortable-head-cell.styles';
 
 export default function TableSortableHeadCell({
   name,
@@ -31,21 +31,19 @@ export default function TableSortableHeadCell({
   }
 
   return (
-    <components.TableSortableHeadCellRoot
+    <styled.SortableHeadCellRoot
       $size="compact"
       $divider="clean"
       $width={width}
       onClick={() => onSort(columnID)}
       $isFocusVisible={false}
     >
-      <components.SortableHeaderContainer
-        aria-label={`${columnID}, ${sortLabel}`}
-      >
+      <styled.SortableHeaderContainer aria-label={`${columnID}, ${sortLabel}`}>
         {name}
         {columnID === sortColumn && SortIcon && (
           <SortIcon size="16px" aria-hidden="true" role="presentation" />
         )}
-      </components.SortableHeaderContainer>
-    </components.TableSortableHeadCellRoot>
+      </styled.SortableHeaderContainer>
+    </styled.SortableHeadCellRoot>
   );
 }

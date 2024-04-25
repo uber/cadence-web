@@ -1,14 +1,14 @@
-import { styled, withStyle } from 'baseui';
+import { styled as createStyled, withStyle } from 'baseui';
 import { StyledTableHeadCellSortable } from 'baseui/table-semantic';
 
-export const components = {
-  SortableHeaderContainer: styled('div', ({ $theme }) => ({
+export const styled = {
+  SortableHeaderContainer: createStyled('div', ({ $theme }) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
     columnGap: $theme.sizing.scale300,
   })),
-  TableSortableHeadCellRoot: withStyle<
+  SortableHeadCellRoot: withStyle<
     typeof StyledTableHeadCellSortable,
     { $width: string }
   >(StyledTableHeadCellSortable, ({ $theme, $width }) => ({
