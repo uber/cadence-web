@@ -1,10 +1,14 @@
 import React from 'react';
-import { render, screen, fireEvent, act } from '@/test-utils/rtl';
+import { render, screen } from '@/test-utils/rtl';
 import WorkflowStatusTag from '../workflow-status-tag';
 
 import { type WorkflowStatus } from '../workflow-status-tag.types';
 
-describe('WorkflowStatus', () => {
+jest.mock('../workflow-status-tag-icon/workflow-status-tag-icon', () =>
+  jest.fn(() => <div>Mock icon</div>)
+);
+
+describe('WorkflowStatusTag', () => {
   beforeEach(() => {
     window.open = jest.fn();
   });
@@ -18,13 +22,11 @@ describe('WorkflowStatus', () => {
     workflowStatus: WorkflowStatus;
     text: string;
     link?: string;
-    icons?: Array<string>;
   }> = [
     {
       name: 'should render Running correctly',
       workflowStatus: 'running',
       text: 'Running',
-      icons: ['running-spinner'],
     },
     {
       name: 'should render Completed correctly',
@@ -73,15 +75,8 @@ describe('WorkflowStatus', () => {
       const tag = screen.getByText(test.text);
       expect(tag).toBeDefined();
 
-      if (test.icons) {
-        test.icons.forEach((icon) => {
-          expect(screen.getByTestId(`${icon}`)).toBeDefined();
-        });
-      }
-
       if (test.link) {
-        fireEvent.click(tag);
-        expect(window.open).toHaveBeenCalledWith(test.link);
+        expect(screen.getByRole('button')).toHaveAttribute('href', test.link);
       }
     });
   });

@@ -7,7 +7,7 @@ export default function WorkflowStatusTagIcon(props: Props) {
   switch (props.kind) {
     case 'start':
       if (props.status === 'running') {
-        return <styled.Spinner data-testid="running-spinner" />;
+        return <styled.Spinner aria-label="running-spinner" />;
       }
     case 'end':
     // if there is a link, return the styled link
