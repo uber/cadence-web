@@ -20,28 +20,15 @@ const WORKFLOW_STATUS_NAMES: Record<WorkflowStatus, string> = {
 };
 
 export default function WorkflowStatusTag(props: WorkflowStatusTagProps) {
-  if (props.link) {
-    return (
-      <a target="_blank" rel="noreferrer" href={props.link}>
-        <WorkflowStatusTagBase {...props} />
-      </a>
-    );
-  }
-
-  return <WorkflowStatusTagBase {...props} />;
-}
-
-function WorkflowStatusTagBase(props: WorkflowStatusTagProps) {
   return (
     <Tag
       variant={VARIANT.solid}
       closeable={false}
-      overrides={overrides({ status: props.status }).tag}
+      overrides={overrides({ status: props.status, link: props.link }).tag}
+      // To render hover & focus effects for the tag, we need to pass an onClick hander
+      // However, since we are already passing a link through overrides, we pass a no-op here
       {...(props.link && {
-        onClick: (event) => {
-          event.stopPropagation();
-          window.open(props.link);
-        },
+        onClick: () => {},
       })}
     >
       <WorkflowStatusTagIcon

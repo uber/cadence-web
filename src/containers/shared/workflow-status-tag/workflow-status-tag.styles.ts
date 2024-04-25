@@ -2,15 +2,15 @@ import { type Theme } from 'baseui';
 import type { TagOverrides } from 'baseui/tag/types';
 import { type StyleObject } from 'styletron-react';
 
-import { WorkflowStatusTagOverridesProps } from './workflow-status-tag.types';
+import { WorkflowStatusTagOverridesArgs } from './workflow-status-tag.types';
 
-export function overrides(props: WorkflowStatusTagOverridesProps) {
+export function overrides(args: WorkflowStatusTagOverridesArgs) {
   return {
     tag: {
       Root: {
         style: ({ $theme }: { $theme: Theme }): StyleObject => {
           let tagColor: string;
-          switch (props.status) {
+          switch (args.status) {
             case 'running':
               tagColor = $theme.colors.accent100;
               break;
@@ -45,6 +45,14 @@ export function overrides(props: WorkflowStatusTagOverridesProps) {
             margin: 0,
           };
         },
+        ...(args.link && {
+          props: {
+            $as: 'a',
+            target: '_blank',
+            rel: 'noreferrer',
+            href: args.link,
+          },
+        }),
       },
       Text: {
         style: ({ $theme }: { $theme: Theme }) => ({

@@ -13,6 +13,7 @@ export type WorkflowStatusTagProps = {
   link?: string;
 };
 
-export type WorkflowStatusTagOverridesProps = {
+export type WorkflowStatusTagOverridesArgs = {
   status: WorkflowStatus;
+  link?: string;
 };
