@@ -6,11 +6,12 @@ import { Delete, Filter, Search } from 'baseui/icon';
 import { Cell, Grid } from 'baseui/layout-grid';
 import usePageQueryParams from '@/hooks/use-page-query-params/use-page-query-params';
 import useStyletronClasses from '@/hooks/use-styletron-classes';
-import domainsPageQueryParamsConfig from '../config/domains-page-query-params.config';
-import getDomainsPageChangedFiltersCount from '../helpers/get-domain-page-changed-filters-count';
-import domainsPageFiltersConfig from '../config/domains-page-filters.config';
+
 import { cssStyles, overrides } from './domains-page-filters.styles';
-import clearDomainsPageFilters from '../helpers/clear-domain-page-filters';
+import domainsPageQueryParamsConfig from '../config/domains-page-query-params.config';
+import domainsPageFiltersConfig from '../config/domains-page-filters.config';
+import getDomainsPageChangedFiltersCount from '../helpers/get-domain-page-changed-filters-count';
+import clearDomainsPageFilters from '../helpers/clear-domains-page-filters';
 
 export default function DomainsPageFilters() {
   const [queryParams, setQueryParams] = usePageQueryParams(
