@@ -1,3 +1,3 @@
-import DomainPage from '@/views/domain-page/domain-page';
+import DomainPageContent from '@/views/domain-page/domain-page-content/domain-page-content';
 
-export default DomainPage;
+export default DomainPageContent;
