@@ -17,5 +17,11 @@ export const overrides = {
         paddingTop: $theme.sizing.scale100,
       }),
     },
+    ControlContainer: {
+      style: ({ $theme }: { $theme: Theme }): StyleObject => ({
+        height: $theme.sizing.scale850,
+        alignItems: 'center',
+      })
+    }
   } satisfies SelectOverrides,
 };
