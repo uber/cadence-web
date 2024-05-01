@@ -7,24 +7,22 @@ import DomainPageHeaderInfoItem from '../domain-page-header-info-item/domain-pag
 import DomainPageClusterSelector from '../domain-page-cluster-selector/domain-page-cluster-selector';
 
 export default function DomainPageHeaderInfo(props: Props) {
-  return (
+return (
     <styled.DomainDetailsContainer>
       <DomainPageHeaderInfoItem
         title="Cluster"
-        content={
-          <DomainPageClusterSelector
-            selectedCluster={props.cluster}
-            availableClusters={props.domainInfo.clusters}
-          />
-        }
+        {...(props.loading ? {loading: true} : {loading: false, content:  <DomainPageClusterSelector
+          selectedCluster={props.cluster}
+          availableClusters={props.domainInfo.clusters}
+        />})}
       />
       <DomainPageHeaderInfoItem
         title="Global/Local"
-        content={props.domainInfo.isGlobalDomain ? 'Global' : 'Local'}
+        {...(props.loading ? {loading: true} : {loading: false, content: props.domainInfo.isGlobalDomain ? 'Global' : 'Local'})}
       />
       <DomainPageHeaderInfoItem
         title="Domain ID"
-        content={props.domainInfo.id}
+        {...(props.loading ? {loading: true} : {loading: false, content: props.domainInfo.id})}
       />
     </styled.DomainDetailsContainer>
   );

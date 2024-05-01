@@ -15,7 +15,7 @@ export default async function DomainPageLayout(props: Props) {
       <DomainPageHeader
         domain={decodedParams.domain}
         domainMetadata={
-          <Suspense>
+          <Suspense fallback={<DomainPageHeaderInfo loading />}>
             <AsyncPropsLoader
               component={DomainPageHeaderInfo}
               getAsyncProps={async () => {
@@ -23,6 +23,7 @@ export default async function DomainPageLayout(props: Props) {
                   name: decodedParams.domain,
                 });
                 return {
+                  loading: false,
                   domainInfo: res.domain,
                   cluster: decodedParams.cluster,
                 };
