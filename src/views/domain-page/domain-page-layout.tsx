@@ -14,7 +14,6 @@ export default async function DomainPageLayout(props: Props) {
     <>
       <DomainPageHeader
         domain={decodedParams.domain}
-        cluster={decodedParams.cluster}
         domainMetadata={
           <Suspense>
             <AsyncPropsLoader
