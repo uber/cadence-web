@@ -12,7 +12,13 @@ jest.mock(
     jest.fn((props: Props) => (
       <div>
         <div>{props.title}</div>
-        <div>{props.content}</div>
+        <div>
+          {props.loading ? (
+            <div data-testid="loading-spinner" />
+          ) : (
+            props.content
+          )}
+        </div>
       </div>
     ))
 );
@@ -33,7 +39,7 @@ describe(DomainPageHeaderInfo.name, () => {
     domainPageHeaderInfoItemsConfig.forEach((configItem) => {
       expect(screen.getByText(configItem.title)).toBeInTheDocument();
     });
-    expect(screen.getAllByLabelText('loading-spinner')).toHaveLength(
+    expect(screen.getAllByTestId('loading-spinner')).toHaveLength(
       domainPageHeaderInfoItemsConfig.length
     );
   });

@@ -1,7 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent, act, within } from '@/test-utils/rtl';
 
-
 import DomainPageClusterSelector from '../domain-page-cluster-selector';
 import {
   mockDomainInfo,

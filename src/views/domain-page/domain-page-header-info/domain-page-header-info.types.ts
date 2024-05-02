@@ -22,6 +22,7 @@ type DomainPageHeaderInfoItem = {
   getContent: (
     props: DomainHeaderInfoItemContentProps
   ) => string | React.ReactElement;
+  placeholderSize: string;
 };
 
 export type DomainPageHeaderInfoItemsConfig = Array<DomainPageHeaderInfoItem>;

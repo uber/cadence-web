@@ -1,4 +1,7 @@
-import { styled as createStyled } from 'baseui';
+import type { StyleObject } from 'styletron-react';
+
+import { styled as createStyled, type Theme } from 'baseui';
+import type { SkeletonOverrides } from 'baseui/skeleton/types';
 
 export const styled = {
   ItemTitle: createStyled('div', ({ $theme }) => ({
@@ -14,4 +17,15 @@ export const styled = {
     display: 'flex',
     flexDirection: 'column',
   })),
+};
+
+export const overrides = {
+  skeleton: {
+    Root: {
+      style: ({ $theme }: { $theme: Theme }): StyleObject => ({
+        height: $theme.sizing.scale700,
+        marginTop: $theme.sizing.scale300,
+      }),
+    },
+  } satisfies SkeletonOverrides,
 };
