@@ -3,27 +3,28 @@ import React from 'react';
 
 import { styled } from './domain-page-header-info.styles';
 import { Props } from './domain-page-header-info.types';
+import domainPageHeaderInfoItemsConfig from '../config/domain-page-header-info-items.config';
 import DomainPageHeaderInfoItem from '../domain-page-header-info-item/domain-page-header-info-item';
-import DomainPageClusterSelector from '../domain-page-cluster-selector/domain-page-cluster-selector';
 
 export default function DomainPageHeaderInfo(props: Props) {
-return (
+  return (
     <styled.DomainDetailsContainer>
-      <DomainPageHeaderInfoItem
-        title="Cluster"
-        {...(props.loading ? {loading: true} : {loading: false, content:  <DomainPageClusterSelector
-          selectedCluster={props.cluster}
-          availableClusters={props.domainInfo.clusters}
-        />})}
-      />
-      <DomainPageHeaderInfoItem
-        title="Global/Local"
-        {...(props.loading ? {loading: true} : {loading: false, content: props.domainInfo.isGlobalDomain ? 'Global' : 'Local'})}
-      />
-      <DomainPageHeaderInfoItem
-        title="Domain ID"
-        {...(props.loading ? {loading: true} : {loading: false, content: props.domainInfo.id})}
-      />
+      {domainPageHeaderInfoItemsConfig.map((configItem) => (
+        <DomainPageHeaderInfoItem
+          key={configItem.title}
+          title={configItem.title}
+          content={
+            props.loading ? (
+              <styled.Spinner />
+            ) : (
+              configItem.getContent({
+                domainInfo: props.domainInfo,
+                cluster: props.cluster,
+              })
+            )
+          }
+        />
+      ))}
     </styled.DomainDetailsContainer>
   );
 }
