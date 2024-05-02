@@ -1,5 +1,5 @@
-import { styled as createStyled, type Theme } from 'baseui';
 import type { StyleObject } from 'styletron-react';
+import { styled as createStyled, type Theme } from 'baseui';
 import type { SelectOverrides } from 'baseui/select';
 
 export const styled = {
@@ -21,7 +21,7 @@ export const overrides = {
       style: ({ $theme }: { $theme: Theme }): StyleObject => ({
         height: $theme.sizing.scale850,
         alignItems: 'center',
-      })
-    }
+      }),
+    },
   } satisfies SelectOverrides,
 };
