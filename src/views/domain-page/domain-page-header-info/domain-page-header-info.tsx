@@ -15,7 +15,7 @@ export default function DomainPageHeaderInfo(props: Props) {
           title={configItem.title}
           content={
             props.loading ? (
-              <styled.Spinner />
+              <styled.Spinner aria-label="loading-spinner" />
             ) : (
               configItem.getContent({
                 domainInfo: props.domainInfo,
