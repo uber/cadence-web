@@ -13,16 +13,18 @@ export default function DomainPageHeaderInfo(props: Props) {
         <DomainPageHeaderInfoItem
           key={configItem.title}
           title={configItem.title}
-          content={
-            props.loading ? (
-              <styled.Spinner aria-label="loading-spinner" />
-            ) : (
-              configItem.getContent({
-                domainInfo: props.domainInfo,
-                cluster: props.cluster,
-              })
-            )
-          }
+          {...(props.loading
+            ? {
+                loading: true,
+                placeholderSize: configItem.placeholderSize,
+              }
+            : {
+                loading: false,
+                content: configItem.getContent({
+                  domainInfo: props.domainInfo,
+                  cluster: props.cluster,
+                }),
+              })}
         />
       ))}
     </styled.DomainDetailsContainer>

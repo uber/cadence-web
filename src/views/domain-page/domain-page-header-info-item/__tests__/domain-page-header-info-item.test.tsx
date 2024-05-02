@@ -10,7 +10,11 @@ describe(DomainPageHeaderInfoItem.name, () => {
 
   it('Should render text content correctly', () => {
     render(
-      <DomainPageHeaderInfoItem title="Test title" content="Test content" />
+      <DomainPageHeaderInfoItem
+        loading={false}
+        title="Test title"
+        content="Test content"
+      />
     );
 
     expect(screen.getByText('Test title')).toBeInTheDocument();
@@ -20,10 +24,27 @@ describe(DomainPageHeaderInfoItem.name, () => {
   it('Should render React Node content correctly', () => {
     const mockContent = <div data-testid="mock-content-id" />;
     render(
-      <DomainPageHeaderInfoItem title="Test title" content={mockContent} />
+      <DomainPageHeaderInfoItem
+        loading={false}
+        title="Test title"
+        content={mockContent}
+      />
     );
 
     expect(screen.getByText('Test title')).toBeInTheDocument();
     expect(screen.getByTestId('mock-content-id')).toBeInTheDocument();
+  });
+
+  it('Should render loading state correctly', () => {
+    const { container } = render(
+      <DomainPageHeaderInfoItem
+        loading={true}
+        title="Test title"
+        placeholderSize="64px"
+      />
+    );
+
+    expect(screen.getByText('Test title')).toBeInTheDocument();
+    expect(container.querySelector('[testid="loader"]')).not.toBeNull();
   });
 });

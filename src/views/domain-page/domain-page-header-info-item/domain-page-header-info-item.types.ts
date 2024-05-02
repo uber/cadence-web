@@ -1,6 +1,15 @@
 import type { ReactNode } from 'react';
 
-export type Props = {
-  title: string;
+type LoadingProps = {
+  loading: true;
+  placeholderSize: string;
+};
+
+type LoadedProps = {
+  loading: false;
   content: string | ReactNode;
+};
+
+export type Props = (LoadingProps | LoadedProps) & {
+  title: string;
 };
