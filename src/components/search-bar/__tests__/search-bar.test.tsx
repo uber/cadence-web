@@ -3,7 +3,7 @@ import { render, screen, act, fireEvent } from '@/test-utils/rtl';
 
 import SearchBar from '../search-bar';
 
-const MockComboboxFilter = ({
+const MockFilter = ({
   options,
   value,
   setValue,
@@ -110,7 +110,7 @@ function setup({ valuesOverrides }: { valuesOverrides?: Array<string> }) {
         const filterValue = valuesOverrides?.[idx] ?? filter.value;
         return {
           component: (
-            <MockComboboxFilter
+            <MockFilter
               options={filter.options}
               value={filterValue}
               setValue={filter.setValue}
