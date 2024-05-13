@@ -3,8 +3,6 @@ import type { Theme } from 'baseui';
 import { TabOverrides, TabsOverrides } from 'baseui/tabs-motion';
 import type { StyleObject } from 'styletron-react';
 
-
-
 export const overrides = {
   tabs: {
     Root: {
