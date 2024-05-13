@@ -1,7 +1,3 @@
-import type {
-  StyletronCSSObject,
-  StyletronCSSObjectOf,
-} from '@/hooks/use-styletron-classes';
 import { getMediaQueryMargins } from '@/utils/media-query/get-media-queries-margins';
 import type { Theme } from 'baseui';
 import { TabOverrides, TabsOverrides } from 'baseui/tabs-motion';
@@ -51,14 +47,3 @@ export const overrides = {
     },
   } satisfies TabOverrides,
 };
-
-const cssStylesObj = {
-  breadcrumbItemContainer: (theme) => ({
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.sizing.scale550,
-  }),
-} satisfies StyletronCSSObject;
-
-export const cssStyles: StyletronCSSObjectOf<typeof cssStylesObj> =
-  cssStylesObj;
