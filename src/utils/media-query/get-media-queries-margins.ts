@@ -1,6 +1,6 @@
-import type { Theme } from "baseui";
-import type { StyleObject } from "styletron-react";
-import { getMediaQueriesForBreakpoints } from "./get-media-queries-for-breakpoints";
+import type { Theme } from 'baseui';
+import type { StyleObject } from 'styletron-react';
+import { getMediaQueriesForBreakpoints } from './get-media-queries-for-breakpoints';
 
 const defaultCreateMargins = (margin: number): StyleObject => ({
   marginRight: `${margin}px`,
@@ -8,7 +8,10 @@ const defaultCreateMargins = (margin: number): StyleObject => ({
 });
 
 export function getMediaQueryMargins(
-  theme: { breakpoints: Theme['breakpoints'], grid: Pick<Theme['grid'], 'margins'> },
+  theme: {
+    breakpoints: Theme['breakpoints'];
+    grid: Pick<Theme['grid'], 'margins'>;
+  },
   createStyles: (margin: number) => StyleObject = defaultCreateMargins
 ) {
   const result = {} as {
