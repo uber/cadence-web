@@ -14,6 +14,7 @@ describe(DomainPageHeaderInfoItem.name, () => {
         loading={false}
         title="Test title"
         content="Test content"
+        placeholderSize="64px"
       />
     );
 
@@ -28,6 +29,7 @@ describe(DomainPageHeaderInfoItem.name, () => {
         loading={false}
         title="Test title"
         content={mockContent}
+        placeholderSize="64px"
       />
     );
 
