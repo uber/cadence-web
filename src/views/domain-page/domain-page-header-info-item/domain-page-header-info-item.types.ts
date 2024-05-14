@@ -1,15 +1,6 @@
-import type { ReactNode } from 'react';
-
-type LoadingProps = {
-  loading: true;
-  placeholderSize: string;
-};
-
-type LoadedProps = {
-  loading: false;
-  content: string | ReactNode;
-};
-
-export type Props = (LoadingProps | LoadedProps) & {
+export type Props = {
   title: string;
+  loading: boolean;
+  content?: React.ReactNode;
+  placeholderSize: string;
 };

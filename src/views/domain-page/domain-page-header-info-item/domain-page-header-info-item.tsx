@@ -14,10 +14,10 @@ export default function DomainPageHeaderInfoItem(props: Props) {
           overrides={overrides.skeleton}
           animation={true}
         />
-      ) : typeof props.content === 'string' ? (
-        <styled.ItemLabel>{props.content}</styled.ItemLabel>
       ) : (
-        <div>{props.content}</div>
+        <styled.Item $isString={typeof props.content === 'string'}>
+          {props.content}
+        </styled.Item>
       )}
     </styled.ItemContainer>
   );

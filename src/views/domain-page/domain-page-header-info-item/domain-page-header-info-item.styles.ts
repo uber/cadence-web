@@ -8,11 +8,16 @@ export const styled = {
     ...$theme.typography.LabelXSmall,
     color: $theme.colors.contentTertiary,
   })),
-  ItemLabel: createStyled('div', ({ $theme }) => ({
-    ...$theme.typography.LabelXSmall,
-    color: $theme.colors.contentPrimary,
-    paddingTop: $theme.sizing.scale400,
-  })),
+  Item: createStyled<'div', { $isString?: boolean }>(
+    'div',
+    ({ $theme, $isString }) => ({
+      color: $theme.colors.contentPrimary,
+      ...($isString && {
+        ...$theme.typography.LabelXSmall,
+        paddingTop: $theme.sizing.scale400,
+      }),
+    })
+  ),
   ItemContainer: createStyled('div', ({ $theme }) => ({
     display: 'flex',
     flexDirection: 'column',
