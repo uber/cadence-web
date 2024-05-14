@@ -5,6 +5,7 @@ export const styled = {
     display: 'flex',
     flexDirection: 'row',
     gap: $theme.sizing.scale700,
+    marginTop: $theme.sizing.scale1000,
   })),
   DomainInfoContainer: createStyled('div', ({ $theme }) => ({
     display: 'flex',

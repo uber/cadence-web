@@ -1,21 +1,24 @@
 import DomainPageClusterSelector from '../domain-page-cluster-selector/domain-page-cluster-selector';
-import { DomainPageHeaderInfoItemsConfig } from '../domain-page-header-info/domain-page-header-info.types';
+import {
+  DomainHeaderInfoItemContentProps,
+  DomainPageHeaderInfoItemsConfig,
+} from '../domain-page-header-info/domain-page-header-info.types';
 
 const domainPageHeaderInfoItemsConfig = [
   {
     title: 'Cluster',
-    getContent: DomainPageClusterSelector,
+    component: DomainPageClusterSelector,
     placeholderSize: '120px',
   },
   {
     title: 'Global/Local',
-    getContent: (props) =>
+    getLabel: (props: DomainHeaderInfoItemContentProps) =>
       props.domainInfo.isGlobalDomain ? 'Global' : 'Local',
     placeholderSize: '64px',
   },
   {
     title: 'Domain ID',
-    getContent: (props) => props.domainInfo.id,
+    getLabel: (props: DomainHeaderInfoItemContentProps) => props.domainInfo.id,
     placeholderSize: '256px',
   },
 ] as const satisfies DomainPageHeaderInfoItemsConfig;

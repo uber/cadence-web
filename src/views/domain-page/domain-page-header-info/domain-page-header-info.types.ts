@@ -1,3 +1,4 @@
+import React from 'react';
 import type { DomainInfo } from '../domain-page.types';
 
 type LoadingProps = {
@@ -17,12 +18,22 @@ export type DomainHeaderInfoItemContentProps = {
   cluster: string;
 };
 
-type DomainPageHeaderInfoItem = {
+interface InfoItemBase {
   title: string;
-  getContent: (
-    props: DomainHeaderInfoItemContentProps
-  ) => string | React.ReactElement;
   placeholderSize: string;
-};
+}
 
-export type DomainPageHeaderInfoItemsConfig = Array<DomainPageHeaderInfoItem>;
+interface InfoItemComponent extends InfoItemBase {
+  component: React.ComponentType<DomainHeaderInfoItemContentProps>;
+  getLabel?: never;
+}
+
+interface InfoItemLabel extends InfoItemBase {
+  getLabel: (props: DomainHeaderInfoItemContentProps) => string;
+  component?: never;
+}
+
+export type DomainPageHeaderInfoItemConfig = InfoItemComponent | InfoItemLabel;
+
+export type DomainPageHeaderInfoItemsConfig =
+  Array<DomainPageHeaderInfoItemConfig>;
