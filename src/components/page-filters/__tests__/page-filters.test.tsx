@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, act, fireEvent } from '@/test-utils/rtl';
 
-import SearchBar from '../search-bar';
+import PageFilters from '../page-filters';
 
 const MockFilter = ({
   options,
@@ -44,7 +44,7 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
-describe('SearchBar', () => {
+describe('PageFilters', () => {
   it('should render search bar correctly and call setSearch on input change', async () => {
     const { setSearch } = setup({});
 
@@ -102,7 +102,7 @@ function setup({ valuesOverrides }: { valuesOverrides?: Array<string> }) {
   const resetAllFilters = jest.fn();
 
   render(
-    <SearchBar
+    <PageFilters
       search=""
       setSearch={setSearch}
       placeholder="placeholder"

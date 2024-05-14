@@ -3,7 +3,7 @@ import type { ButtonOverrides } from 'baseui/button';
 import { type StyleObject } from 'styletron-react';
 
 export const styled = {
-  SearchBarContainer: createStyled('div', {
+  PageFiltersContainer: createStyled('div', {
     width: '100%',
     alignSelf: 'center',
   }),

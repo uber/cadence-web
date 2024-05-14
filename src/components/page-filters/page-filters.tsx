@@ -3,10 +3,10 @@ import { Button, KIND, SIZE } from 'baseui/button';
 import { Search, Filter, Delete } from 'baseui/icon';
 import { Input } from 'baseui/input';
 
-import { Props } from './search-bar.types';
-import { styled, overrides } from './search-bar.styles';
+import { Props } from './page-filters.types';
+import { styled, overrides } from './page-filters.styles';
 
-export default function SearchBar({
+export default function PageFilters({
   search,
   setSearch,
   placeholder,
@@ -20,7 +20,7 @@ export default function SearchBar({
   );
 
   return (
-    <styled.SearchBarContainer>
+    <styled.PageFiltersContainer>
       <styled.SearchInputContainer>
         <Input
           value={search}
@@ -62,6 +62,6 @@ export default function SearchBar({
           </Button>
         </styled.SearchFiltersContainer>
       )}
-    </styled.SearchBarContainer>
+    </styled.PageFiltersContainer>
   );
 }
