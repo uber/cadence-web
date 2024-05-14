@@ -16,6 +16,7 @@ const nextConfig = {
     return config;
   },
   redirects: async () => {
+    // TODO - load tabs configs here to dynamically define redirects
     return [
       {
         source: '/domains/:domain/:cluster',
