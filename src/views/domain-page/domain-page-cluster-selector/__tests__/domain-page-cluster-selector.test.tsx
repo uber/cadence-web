@@ -19,7 +19,11 @@ jest.mock('next/navigation', () => ({
     prefetch: () => {},
     refresh: () => {},
   }),
-  usePathname: () => 'mock-url/cluster_1/workflows',
+  useParams: () => ({
+    domain: 'mock-domain',
+    cluster: 'cluster_1',
+    domainTab: 'workflows',
+  }),
 }));
 
 describe(DomainPageClusterSelector.name, () => {
@@ -58,7 +62,9 @@ describe(DomainPageClusterSelector.name, () => {
       fireEvent.click(cluster2option);
     });
 
-    expect(mockPushFn).toHaveBeenCalledWith('mock-url/cluster_2/workflows');
+    expect(mockPushFn).toHaveBeenCalledWith(
+      '/domains/mock-domain/cluster_2/workflows'
+    );
   });
 });
 
