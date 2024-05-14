@@ -11,8 +11,8 @@ export const styled = {
   Item: createStyled<'div', { $isString?: boolean }>(
     'div',
     ({ $theme, $isString }) => ({
-      color: $theme.colors.contentPrimary,
       ...($isString && {
+        color: $theme.colors.contentPrimary,
         ...$theme.typography.LabelXSmall,
         paddingTop: $theme.sizing.scale400,
       }),
