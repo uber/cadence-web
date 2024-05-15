@@ -5,18 +5,32 @@ import { Input } from 'baseui/input';
 
 import { Props } from './page-filters.types';
 import { styled, overrides } from './page-filters.styles';
+import { PageQueryParams } from '@/hooks/use-page-query-params/use-page-query-params.types';
+import usePageQueryParams from '@/hooks/use-page-query-params/use-page-query-params';
 
-export default function PageFilters({
+// Approach: directly pass pagequeryparamsconfig as a generic type
+// Then pass the config along to each filter component to render it
+export default function PageFilters<T extends PageQueryParams>({
+  // Ideally we could omit this too but I think we need to somehow ensure that there is at least one string type page query param that is for search
   search,
   setSearch,
-  placeholder,
-  searchFilters,
+  searchPlaceholder,
+  pageFiltersConfig,
+  pageQueryParamsConfig,
+  // See if this can be omitted
   resetAllFilters,
-}: Props) {
+}: Props<T>) {
   const [areFiltersShown, setAreFiltersShown] = React.useState(false);
+  const [queryParams] = usePageQueryParams(pageQueryParamsConfig);
   const activeFiltersCount = React.useMemo(
-    () => searchFilters.filter((filter) => filter.isSet).length,
-    [searchFilters]
+    () =>
+      pageFiltersConfig.filter((filter) =>
+        filter.isSet({
+          pageQueryParams: queryParams,
+          pageQueryParamsConfig: pageQueryParamsConfig,
+        })
+      ).length,
+    [pageFiltersConfig, pageQueryParamsConfig, queryParams]
   );
 
   return (
@@ -25,7 +39,7 @@ export default function PageFilters({
         <Input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder={placeholder}
+          placeholder={searchPlaceholder}
           startEnhancer={() => <Search />}
           clearOnEscape
         />
@@ -44,10 +58,12 @@ export default function PageFilters({
       </styled.SearchInputContainer>
       {areFiltersShown && (
         <styled.SearchFiltersContainer>
-          {searchFilters?.map((filter, index) => {
+          {pageFiltersConfig?.map((filter) => {
             return (
-              <styled.SearchFilterContainer key={index}>
-                {filter.component}
+              <styled.SearchFilterContainer key={filter.id}>
+                <filter.component
+                  pageQueryParamsConfig={pageQueryParamsConfig}
+                />
               </styled.SearchFilterContainer>
             );
           })}
