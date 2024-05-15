@@ -11,27 +11,43 @@ import usePageQueryParams from '@/hooks/use-page-query-params/use-page-query-par
 // Approach: directly pass pagequeryparamsconfig as a generic type
 // Then pass the config along to each filter component to render it
 export default function PageFilters<T extends PageQueryParams>({
-  // Ideally we could omit this too but I think we need to somehow ensure that there is at least one string type page query param that is for search
   search,
   setSearch,
   searchPlaceholder,
   pageFiltersConfig,
   pageQueryParamsConfig,
-  // See if this can be omitted
-  resetAllFilters,
 }: Props<T>) {
   const [areFiltersShown, setAreFiltersShown] = React.useState(false);
-  const [queryParams] = usePageQueryParams(pageQueryParamsConfig);
-  const activeFiltersCount = React.useMemo(
-    () =>
-      pageFiltersConfig.filter((filter) =>
-        filter.isSet({
-          pageQueryParams: queryParams,
-          pageQueryParamsConfig: pageQueryParamsConfig,
-        })
-      ).length,
-    [pageFiltersConfig, pageQueryParamsConfig, queryParams]
+  const [queryParams, setQueryParams] = usePageQueryParams(
+    pageQueryParamsConfig,
+    { pageRerender: false }
   );
+
+  const activeFiltersCount = React.useMemo(() => {
+    const configsByKey = Object.fromEntries(
+      pageQueryParamsConfig.map((c) => [c.key, c])
+    );
+    return pageFiltersConfig.filter((filter) =>
+      filter.queryParamsUsedKeys.some(
+        (queryParamKey) =>
+          queryParams[queryParamKey] &&
+          queryParams[queryParamKey] !==
+            configsByKey[queryParamKey].defaultValue
+      )
+    ).length;
+  }, [pageFiltersConfig, pageQueryParamsConfig, queryParams]);
+
+  const resetAllFilters = React.useCallback(() => {
+    const emptyFiltersKeyValueEntries = pageFiltersConfig.flatMap(
+      (pageFilter) =>
+        pageFilter.queryParamsUsedKeys.map((queryParamKey) => [
+          queryParamKey,
+          undefined,
+        ])
+    );
+    setQueryParams(Object.fromEntries(emptyFiltersKeyValueEntries));
+    setSearch('');
+  }, [pageFiltersConfig, setQueryParams, setSearch]);
 
   return (
     <styled.PageFiltersContainer>

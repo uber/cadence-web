@@ -1,21 +1,18 @@
 import {
   PageQueryParamKeys,
-  PageQueryParamValues,
   PageQueryParams,
 } from '@/hooks/use-page-query-params/use-page-query-params.types';
 import type React from 'react';
 
-type FilterIsSetProps<T extends PageQueryParams> = {
-  pageQueryParams: PageQueryParamValues<T>;
+// Is there a way to assert that the component uses only the given page query params?
+export type PageFilterComponentProps<T extends PageQueryParams> = {
   pageQueryParamsConfig: T;
 };
 
 export type PageFilterConfig<T extends PageQueryParams> = {
   id: PageQueryParamKeys<T>;
-  component: React.ComponentType<{
-    pageQueryParamsConfig: T;
-  }>;
-  isSet: (props: FilterIsSetProps<T>) => boolean;
+  component: React.ComponentType<PageFilterComponentProps<T>>;
+  queryParamsUsedKeys: Array<PageQueryParamKeys<T>>;
 };
 
 export interface Props<T extends PageQueryParams> {
