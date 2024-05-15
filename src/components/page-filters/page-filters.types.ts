@@ -21,5 +21,4 @@ export interface Props<T extends PageQueryParams> {
   searchPlaceholder: string;
   pageFiltersConfig: Array<PageFilterConfig<T>>;
   pageQueryParamsConfig: T;
-  resetAllFilters: () => void;
 }
