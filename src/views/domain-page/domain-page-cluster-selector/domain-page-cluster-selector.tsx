@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import { Select, SIZE } from 'baseui/select';
-import { Route } from 'next';
+import { type Route } from 'next';
 import { useRouter, useParams } from 'next/navigation';
 
 import { overrides, styled } from './domain-page-cluster-selector.styles';
@@ -11,7 +11,7 @@ export default function DomainPageClusterSelector(
   props: DomainHeaderInfoItemContentProps
 ) {
   const router = useRouter();
-  const { domain, domainTab } = useParams();
+  const { domain: encodedDomain, domainTab: encodedDomainTab } = useParams();
 
   if (props.domainInfo.clusters?.length === 1) {
     return <styled.ItemLabel>{props.cluster}</styled.ItemLabel>;
@@ -31,9 +31,9 @@ export default function DomainPageClusterSelector(
         },
       ]}
       onChange={({ option }) => {
-        if (option && option.id !== props.cluster) {
+        if (option?.id && option.id !== props.cluster) {
           const newPath =
-            `/domains/${domain}/${option.id}/${domainTab}` as Route;
+            `/domains/${encodedDomain}/${encodeURIComponent(option.id)}/${encodedDomainTab}` as Route;
           router.push(newPath);
         }
       }}

@@ -1,3 +1,3 @@
-import DomainPageLayout from '@/views/domain-page/domain-page-layout/domain-page-layout';
+import DomainPage from '@/views/domain-page/domain-page';
 
-export default DomainPageLayout;
+export default DomainPage;
