@@ -3,8 +3,8 @@ import React from 'react';
 
 import { styled } from './domain-page-header-info.styles';
 import {
-  DomainPageHeaderInfoItemConfig,
-  Props,
+  type DomainPageHeaderInfoItemConfig,
+  type Props,
 } from './domain-page-header-info.types';
 import domainPageHeaderInfoItemsConfig from '../config/domain-page-header-info-items.config';
 import DomainPageHeaderInfoItem from '../domain-page-header-info-item/domain-page-header-info-item';

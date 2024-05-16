@@ -4,7 +4,7 @@ import { render, screen } from '@/test-utils/rtl';
 import DomainPageHeaderInfo from '../domain-page-header-info';
 import domainPageHeaderInfoItemsConfig from '../../config/domain-page-header-info-items.config';
 import { mockDomainInfo } from '../../__fixtures__/domain-info';
-import { Props } from '../../domain-page-header-info-item/domain-page-header-info-item.types';
+import { type Props } from '../../domain-page-header-info-item/domain-page-header-info-item.types';
 
 jest.mock(
   '../../domain-page-header-info-item/domain-page-header-info-item',

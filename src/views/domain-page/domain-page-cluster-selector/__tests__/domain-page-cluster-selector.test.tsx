@@ -6,7 +6,7 @@ import {
   mockDomainInfo,
   mockDomainInfoSingleCluster,
 } from '../../__fixtures__/domain-info';
-import { DomainInfo } from '../../domain-page.types';
+import { type DomainInfo } from '../../domain-page.types';
 
 const mockPushFn = jest.fn();
 jest.mock('next/navigation', () => ({

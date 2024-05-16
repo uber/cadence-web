@@ -5,7 +5,7 @@ import { type Route } from 'next';
 import { useRouter, useParams } from 'next/navigation';
 
 import { overrides, styled } from './domain-page-cluster-selector.styles';
-import { DomainHeaderInfoItemContentProps } from '../domain-page-header-info/domain-page-header-info.types';
+import { type DomainHeaderInfoItemContentProps } from '../domain-page-header-info/domain-page-header-info.types';
 
 export default function DomainPageClusterSelector(
   props: DomainHeaderInfoItemContentProps

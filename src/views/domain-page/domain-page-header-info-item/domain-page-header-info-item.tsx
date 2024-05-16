@@ -2,7 +2,7 @@ import React from 'react';
 import { Skeleton } from 'baseui/skeleton';
 
 import { overrides, styled } from './domain-page-header-info-item.styles';
-import { Props } from './domain-page-header-info-item.types';
+import { type Props } from './domain-page-header-info-item.types';
 
 export default function DomainPageHeaderInfoItem(props: Props) {
   return (

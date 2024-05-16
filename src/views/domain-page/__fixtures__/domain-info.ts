@@ -1,4 +1,4 @@
-import { DomainInfo } from '../domain-page.types';
+import { type DomainInfo } from '../domain-page.types';
 
 export const mockDomainInfo: DomainInfo = {
   activeClusterName: 'cluster_1',

@@ -1,7 +1,7 @@
 import DomainPageClusterSelector from '../domain-page-cluster-selector/domain-page-cluster-selector';
 import {
-  DomainHeaderInfoItemContentProps,
-  DomainPageHeaderInfoItemsConfig,
+  type DomainHeaderInfoItemContentProps,
+  type DomainPageHeaderInfoItemsConfig,
 } from '../domain-page-header-info/domain-page-header-info.types';
 
 const domainPageHeaderInfoItemsConfig = [
