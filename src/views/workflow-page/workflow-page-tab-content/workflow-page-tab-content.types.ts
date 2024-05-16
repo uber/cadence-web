@@ -3,8 +3,8 @@ import type { WorkflowPageTabsParams } from '../workflow-page-tabs/workflow-page
 
 export type WorkflowPageTabsContentsMap = {
   [k in (typeof worflowPageTabsConfig)[number]['key']]:
-    | React.ComponentType<WorkflowPageTabContentProps>
-    | ((props: WorkflowPageTabContentProps) => React.ReactNode);
+  | React.ComponentType<WorkflowPageTabContentProps>
+  | ((props: WorkflowPageTabContentProps) => React.ReactNode);
 };
 
 export type WorkflowPageTabContentParams = {

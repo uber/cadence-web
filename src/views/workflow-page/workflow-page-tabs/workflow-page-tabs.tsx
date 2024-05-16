@@ -13,7 +13,7 @@ export default function WorkflowPageTabs({ params, children }: Props) {
       <PageTabs
         selectedTab={decodedParams.workflowTab}
         tabList={worflowPageTabsConfig}
-        setSelectedTab={() => {}}
+        setSelectedTab={() => { }}
       />
       <PageSection>{children}</PageSection>
     </>
