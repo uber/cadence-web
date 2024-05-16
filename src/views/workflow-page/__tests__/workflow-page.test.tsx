@@ -3,9 +3,13 @@ import { render } from '@/test-utils/rtl';
 import WorkflowPage from '../workflow-page';
 import type { Props } from '../workflow-page.types';
 
-jest.mock('../workflow-page-header/workflow-page-header', () => () => (
-  <div data-testid="page-header" />
-));
+jest.mock(
+  '../workflow-page-header/workflow-page-header',
+  () =>
+    function TestPageHeader() {
+      return <div data-testid="page-header" />;
+    }
+);
 
 jest.mock('../helpers/get-workflow-execution', () => ({
   getWorkflowExecution: jest.fn().mockResolvedValue({
