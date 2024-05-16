@@ -5,11 +5,12 @@ import { Input } from 'baseui/input';
 
 import { Props } from './page-filters.types';
 import { styled, overrides } from './page-filters.styles';
-import { PageQueryParamSetterValues, PageQueryParams } from '@/hooks/use-page-query-params/use-page-query-params.types';
+import {
+  PageQueryParamSetterValues,
+  PageQueryParams,
+} from '@/hooks/use-page-query-params/use-page-query-params.types';
 import usePageQueryParams from '@/hooks/use-page-query-params/use-page-query-params';
 
-// Approach: directly pass pagequeryparamsconfig as a generic type
-// Then pass the config along to each filter component to render it
 export default function PageFilters<T extends PageQueryParams>({
   search,
   searchId,
@@ -24,22 +25,41 @@ export default function PageFilters<T extends PageQueryParams>({
     { pageRerender: false }
   );
 
-  const activeFiltersCount = React.useMemo(() => {
-    pageFiltersConfig.reduce((countSoFar: number, pageFilter) => {
-      if (pageFilter.isSet({pageQueryParamsConfig: pageQueryParamsConfig, pageQueryParamsValues: queryParams})) {
-        countSoFar += 1
-      }
-      return countSoFar;
-    }, 0)
-  }, [pageFiltersConfig, pageQueryParamsConfig, queryParams]);
+  const activeFiltersCount = React.useMemo(
+    () =>
+      pageFiltersConfig.reduce((countSoFar: number, pageFilter) => {
+        if (
+          pageFilter.isSet({
+            pageQueryParamsConfig: pageQueryParamsConfig,
+            pageQueryParamsValues: queryParams,
+          })
+        ) {
+          countSoFar += 1;
+        }
+        return countSoFar;
+      }, 0),
+    [pageFiltersConfig, pageQueryParamsConfig, queryParams]
+  );
 
   const resetAllFilters = React.useCallback(() => {
     // Clear all query params except search
-    setQueryParams(pageQueryParamsConfig.reduce((acc, config) => {
-      acc[config.key] = undefined;
-      return acc;
-    }, {}));
-  }, [pageFiltersConfig, setQueryParams, setSearch]);
+    setQueryParams(
+      pageQueryParamsConfig.reduce(
+        (
+          acc: Partial<
+            PageQueryParamSetterValues<typeof pageQueryParamsConfig>
+          >,
+          config
+        ) => {
+          if (config.key !== searchId) {
+            acc[config.key] = undefined;
+          }
+          return acc;
+        },
+        {}
+      )
+    );
+  }, [pageQueryParamsConfig, setQueryParams, searchId]);
 
   return (
     <styled.PageFiltersContainer>
