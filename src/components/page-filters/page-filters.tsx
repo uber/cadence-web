@@ -5,13 +5,14 @@ import { Input } from 'baseui/input';
 
 import { Props } from './page-filters.types';
 import { styled, overrides } from './page-filters.styles';
-import { PageQueryParams } from '@/hooks/use-page-query-params/use-page-query-params.types';
+import { PageQueryParamSetterValues, PageQueryParams } from '@/hooks/use-page-query-params/use-page-query-params.types';
 import usePageQueryParams from '@/hooks/use-page-query-params/use-page-query-params';
 
 // Approach: directly pass pagequeryparamsconfig as a generic type
 // Then pass the config along to each filter component to render it
 export default function PageFilters<T extends PageQueryParams>({
   search,
+  searchId,
   setSearch,
   searchPlaceholder,
   pageFiltersConfig,
@@ -24,29 +25,20 @@ export default function PageFilters<T extends PageQueryParams>({
   );
 
   const activeFiltersCount = React.useMemo(() => {
-    const configsByKey = Object.fromEntries(
-      pageQueryParamsConfig.map((c) => [c.key, c])
-    );
-    return pageFiltersConfig.filter((filter) =>
-      filter.queryParamsUsedKeys.some(
-        (queryParamKey) =>
-          queryParams[queryParamKey] &&
-          queryParams[queryParamKey] !==
-            configsByKey[queryParamKey].defaultValue
-      )
-    ).length;
+    pageFiltersConfig.reduce((countSoFar: number, pageFilter) => {
+      if (pageFilter.isSet({pageQueryParamsConfig: pageQueryParamsConfig, pageQueryParamsValues: queryParams})) {
+        countSoFar += 1
+      }
+      return countSoFar;
+    }, 0)
   }, [pageFiltersConfig, pageQueryParamsConfig, queryParams]);
 
   const resetAllFilters = React.useCallback(() => {
-    const emptyFiltersKeyValueEntries = pageFiltersConfig.flatMap(
-      (pageFilter) =>
-        pageFilter.queryParamsUsedKeys.map((queryParamKey) => [
-          queryParamKey,
-          undefined,
-        ])
-    );
-    setQueryParams(Object.fromEntries(emptyFiltersKeyValueEntries));
-    setSearch('');
+    // Clear all query params except search
+    setQueryParams(pageQueryParamsConfig.reduce((acc, config) => {
+      acc[config.key] = undefined;
+      return acc;
+    }, {}));
   }, [pageFiltersConfig, setQueryParams, setSearch]);
 
   return (
