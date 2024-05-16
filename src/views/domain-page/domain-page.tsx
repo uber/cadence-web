@@ -7,9 +7,11 @@ import { Props } from './domain-page.types';
 import DomainPageHeader from './domain-page-header/domain-page-header';
 import DomainPageHeaderInfo from './domain-page-header-info/domain-page-header-info';
 import { getCachedDomainInfo } from './helpers/get-domain-info';
+import DomainPageTabs from './domain-page-tabs/domain-page-tabs';
+import { DomainPageTabsParams } from './domain-page-tabs/domain-page-tabs.types';
 
 export default async function DomainPage(props: Props) {
-  const decodedParams = decodeURLParams(props.params);
+  const decodedParams = decodeURLParams(props.params) as DomainPageTabsParams;
   return (
     <>
       <DomainPageHeader
@@ -32,7 +34,7 @@ export default async function DomainPage(props: Props) {
           </Suspense>
         }
       />
-      {/* TODO: Add Tabs here */}
+      <DomainPageTabs decodedParams={decodedParams} />
       {/* props.children is injected here by the Next router, loading domain-page-content.tsx  */}
       {props.children}
     </>
