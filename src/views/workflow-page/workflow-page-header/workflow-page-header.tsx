@@ -30,7 +30,10 @@ export default function WorkflowPageHeader({
             alt="Cadence Icon"
             src={cadenceLogoBlack}
           />
-          <StyledLink $as={Link} href={`/domains/${encodeURIComponent(domain)}`}>
+          <StyledLink
+            $as={Link}
+            href={`/domains/${encodeURIComponent(domain)}`}
+          >
             {domain}
           </StyledLink>
         </div>

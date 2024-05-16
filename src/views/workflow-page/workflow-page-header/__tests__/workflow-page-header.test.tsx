@@ -4,17 +4,16 @@ import WorkflowPageHeader from '../workflow-page-header'; // Import the componen
 import type { Props } from '../workflow-page-header.types';
 
 describe('WorkflowPageHeader', () => {
-
-
   it('renders breadcrumbs with correct domain content and link', () => {
     const domain = 'test-domain';
     const { getByText } = setup({ domain });
     // Verify domain breadcrumb
     const domainBreadcrumb = getByText(domain);
     expect(domainBreadcrumb).toBeInTheDocument();
-    expect(domainBreadcrumb.closest('a')).toHaveAttribute('href', `/domains/${encodeURIComponent(domain)}`);
-
-
+    expect(domainBreadcrumb.closest('a')).toHaveAttribute(
+      'href',
+      `/domains/${encodeURIComponent(domain)}`
+    );
   });
 
   it('renders breadcrumbs with correct workflowId content and link', () => {
@@ -29,7 +28,9 @@ describe('WorkflowPageHeader', () => {
 
   it('renders breadcrumbs with correct runId and status tag', () => {
     const runId = 'test-runId';
-    const workflowStatusTag = <div data-testid='workflow-status-tag'>Example Status Tag</div>;
+    const workflowStatusTag = (
+      <div data-testid="workflow-status-tag">Example Status Tag</div>
+    );
     const { getByText, getByTestId } = setup({ runId, workflowStatusTag });
 
     // Verify runId breadcrumb
@@ -39,9 +40,7 @@ describe('WorkflowPageHeader', () => {
     expect(getByTestId('workflow-status-tag')).toBeInTheDocument();
   });
 
-
   it('renders Cadence Icon image with correct alt text and source', () => {
-
     const { getByAltText } = setup({});
 
     const cadenceIcon = getByAltText('Cadence Icon');
@@ -49,14 +48,12 @@ describe('WorkflowPageHeader', () => {
   });
 });
 
-
 function setup({
   domain = 'example-domain',
   workflowId = 'example-workflow-id',
   runId = 'example-run-id',
   workflowStatusTag = null,
 }: Partial<Props>) {
-
   return render(
     <WorkflowPageHeader
       domain={domain}

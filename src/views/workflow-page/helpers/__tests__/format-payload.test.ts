@@ -1,4 +1,4 @@
-import formatPayload from "../format-payload";
+import formatPayload from '../format-payload';
 
 describe('formatPayload', () => {
   it('should return null if payload data is null', () => {

@@ -1,6 +1,5 @@
 import React from 'react';
 
-
 export type Props = {
   domain: string;
   workflowId: string;

@@ -4,23 +4,19 @@ import WorkflowPageTabs from '../workflow-page-tabs';
 import type { Props } from '../workflow-page-tabs.types';
 import { worflowPageTabsConfig } from '../../config/workflow-page-tabs.config';
 
-
-jest.mock(
-  '../../config/workflow-page-tabs.config',
-  () => ({
-    worflowPageTabsConfig: [
-      {
-        key: 'summary',
-        title: 'Summary',
-        artwork: () => <div data-testid="summary-artwork" />,
-      },
-      {
-        key: 'page-2',
-        title: 'Page 2',
-      },
-    ]
-  })
-);
+jest.mock('../../config/workflow-page-tabs.config', () => ({
+  worflowPageTabsConfig: [
+    {
+      key: 'summary',
+      title: 'Summary',
+      artwork: () => <div data-testid="summary-artwork" />,
+    },
+    {
+      key: 'page-2',
+      title: 'Page 2',
+    },
+  ],
+}));
 
 describe('WorkflowPageTabs', () => {
   afterEach(() => {
@@ -37,20 +33,18 @@ describe('WorkflowPageTabs', () => {
   it('renders tabs artworks correctly', () => {
     const { queryByTestId, getByTestId } = setup({});
     worflowPageTabsConfig.forEach(({ key, artwork }) => {
-      if (typeof artwork !== "undefined")
+      if (typeof artwork !== 'undefined')
         expect(getByTestId(`${key}-artwork`)).toBeInTheDocument();
-      else
-        expect(queryByTestId(`${key}-artwork`)).not.toBeInTheDocument();
+      else expect(queryByTestId(`${key}-artwork`)).not.toBeInTheDocument();
     });
   });
 
   it('renders children', () => {
     const { getByText } = setup({
-      children: <div>Mock Children</div>
+      children: <div>Mock Children</div>,
     });
     expect(getByText('Mock Children')).toBeInTheDocument();
   });
-
 });
 
 function setup({
@@ -59,11 +53,10 @@ function setup({
     domain: 'example-domain',
     runId: 'example-runId',
     workflowId: 'example-workflowId',
-    workflowTab: 'summary'
+    workflowTab: 'summary',
   },
-  children = null
+  children = null,
 }: Partial<Props>) {
-
   return render(
     <WorkflowPageTabs params={params}>{children}</WorkflowPageTabs>
   );

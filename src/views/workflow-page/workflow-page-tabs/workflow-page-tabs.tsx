@@ -6,7 +6,6 @@ import type { Props, WorkflowPageTabsParams } from './workflow-page-tabs.types';
 import decodeUrlParams from '@/utils/decode-url-params';
 import PageSection from '@/components/page-section/page-section';
 
-
 export default function WorkflowPageTabs({ params, children }: Props) {
   const decodedParams = decodeUrlParams(params) as WorkflowPageTabsParams;
   return (
@@ -14,7 +13,7 @@ export default function WorkflowPageTabs({ params, children }: Props) {
       <PageTabs
         selectedTab={decodedParams.workflowTab}
         tabList={worflowPageTabsConfig}
-        setSelectedTab={() => { }}
+        setSelectedTab={() => {}}
       />
       <PageSection>{children}</PageSection>
     </>

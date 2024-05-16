@@ -28,7 +28,7 @@ export const overrides = {
         marginBottom: $theme.sizing.scale200,
         ...$theme.typography.LabelSmall,
       }),
-    }
+    },
   } satisfies BreadcrumbsOverrides,
 };
 

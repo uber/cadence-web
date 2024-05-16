@@ -3,7 +3,6 @@ import { HeadingXSmall } from 'baseui/typography';
 import { styled } from 'baseui';
 import AlertIcon from 'baseui/icon/alert';
 
-
 // TODO: @assem.hafez extract error component to reusable error messages component
 const StyledContainer = styled('div', ({ $theme }) => {
   return {
