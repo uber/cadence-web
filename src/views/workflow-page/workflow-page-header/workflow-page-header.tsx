@@ -14,6 +14,7 @@ export default function WorkflowPageHeader({
   domain,
   workflowId,
   runId,
+  cluster,
   workflowStatusTag,
 }: Props) {
   const { cls } = useStyletronClasses(cssStyles);
@@ -32,7 +33,7 @@ export default function WorkflowPageHeader({
           />
           <StyledLink
             $as={Link}
-            href={`/domains/${encodeURIComponent(domain)}`}
+            href={`/domains/${encodeURIComponent(domain)}/${encodeURIComponent(cluster)}`}
           >
             {domain}
           </StyledLink>

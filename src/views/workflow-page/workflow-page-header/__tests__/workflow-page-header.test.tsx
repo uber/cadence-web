@@ -6,13 +6,14 @@ import type { Props } from '../workflow-page-header.types';
 describe('WorkflowPageHeader', () => {
   it('renders breadcrumbs with correct domain content and link', () => {
     const domain = 'test-domain';
-    const { getByText } = setup({ domain });
+    const cluster = 'test-cluster';
+    const { getByText } = setup({ domain, cluster });
     // Verify domain breadcrumb
     const domainBreadcrumb = getByText(domain);
     expect(domainBreadcrumb).toBeInTheDocument();
-    expect(domainBreadcrumb.closest('a')).toHaveAttribute(
+    expect(domainBreadcrumb).toHaveAttribute(
       'href',
-      `/domains/${encodeURIComponent(domain)}`
+      `/domains/${encodeURIComponent(domain)}/${encodeURIComponent(cluster)}`
     );
   });
 
@@ -52,6 +53,7 @@ function setup({
   domain = 'example-domain',
   workflowId = 'example-workflow-id',
   runId = 'example-run-id',
+  cluster = 'example-cluster',
   workflowStatusTag = null,
 }: Partial<Props>) {
   return render(
@@ -59,6 +61,7 @@ function setup({
       domain={domain}
       workflowId={workflowId}
       runId={runId}
+      cluster={cluster}
       workflowStatusTag={workflowStatusTag}
     />
   );

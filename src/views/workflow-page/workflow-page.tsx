@@ -7,7 +7,7 @@ import { getCachedWorkflowExecution } from './helpers/get-workflow-execution';
 import decodeUrlParams from '@/utils/decode-url-params';
 
 export default async function WorkflowPage({ params, children }: Props) {
-  const decodedParams = decodeUrlParams(params);
+  const decodedParams = decodeUrlParams(params) as Props['params'];
 
   return (
     <>
@@ -15,6 +15,7 @@ export default async function WorkflowPage({ params, children }: Props) {
         domain={decodedParams.domain}
         workflowId={decodedParams.workflowId}
         runId={decodedParams.runId}
+        cluster={decodedParams.cluster}
         workflowStatusTag={
           <Suspense>
             <AsyncPropsLoader
