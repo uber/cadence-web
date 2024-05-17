@@ -5,8 +5,8 @@ import Link from 'next/link';
 import { Breadcrumbs } from 'baseui/breadcrumbs';
 import { StyledLink } from 'baseui/link';
 import useStyletronClasses from '@/hooks/use-styletron-classes';
-import cadenceLogoBlack from '@/assets/cadence-logo-black.svg';
 import PageSection from '@/components/page-section/page-section';
+import cadenceLogoBlack from '@/assets/cadence-logo-black.svg';
 import type { Props } from './workflow-page-header.types';
 import { cssStyles, overrides } from './workflow-page-header.styles';
 
