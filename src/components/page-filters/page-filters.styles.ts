@@ -12,16 +12,26 @@ export const styled = {
     'div',
     ({ $theme }: { $theme: Theme }) => ({
       display: 'flex',
+      flexDirection: 'column',
       gap: $theme.sizing.scale500,
-      paddingBottom: $theme.sizing.scale500,
+      marginBottom: $theme.sizing.scale500,
+      [$theme.mediaQuery.medium]: {
+        flexDirection: 'row',
+      },
     })
   ),
   SearchFiltersContainer: createStyled(
     'div',
     ({ $theme }: { $theme: Theme }) => ({
       display: 'flex',
-      justifyContent: 'stretch',
+      flexDirection: 'column',
+      flex: 1,
+      flexWrap: 'wrap',
       gap: $theme.sizing.scale500,
+      marginBottom: $theme.sizing.scale700,
+      [$theme.mediaQuery.medium]: {
+        flexDirection: 'row',
+      },
     })
   ),
   SearchFilterContainer: createStyled('div', {
@@ -44,10 +54,13 @@ export const overrides = {
     Root: {
       style: ({ $theme }: { $theme: Theme }): StyleObject => ({
         whiteSpace: 'nowrap',
-        alignSelf: 'flex-end',
-        marginBottom: $theme.sizing.scale600,
-        marginTop: $theme.sizing.scale700,
+        flexGrow: 2,
         height: $theme.sizing.scale950,
+        [$theme.mediaQuery.medium]: {
+          flexGrow: 0,
+          alignSelf: 'flex-end',
+          marginTop: $theme.sizing.scale700,
+        },
       }),
     },
   } satisfies ButtonOverrides,

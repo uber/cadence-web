@@ -29,9 +29,7 @@ export default function PageFilters<T extends PageQueryParams>({
   const activeFiltersCount = React.useMemo(
     () =>
       pageFiltersConfig.filter((pageFilter) =>
-        pageFilter.isSet({
-          pageQueryParamsValues: queryParams,
-        })
+        pageFilter.isSet({ queryParams })
       ).length,
     [pageFiltersConfig, queryParams]
   );
@@ -39,15 +37,8 @@ export default function PageFilters<T extends PageQueryParams>({
   const resetAllFilters = React.useCallback(() => {
     setQueryParams(
       pageQueryParamsConfig.reduce(
-        (
-          acc: Partial<
-            PageQueryParamSetterValues<typeof pageQueryParamsConfig>
-          >,
-          config
-        ) => {
-          const queryParamKey: PageQueryParamKeys<
-            typeof pageQueryParamsConfig
-          > = config.key;
+        (acc: Partial<PageQueryParamSetterValues<T>>, config) => {
+          const queryParamKey: PageQueryParamKeys<T> = config.key;
           if (queryParamKey !== searchId) {
             acc[queryParamKey] = undefined;
           }
@@ -88,7 +79,8 @@ export default function PageFilters<T extends PageQueryParams>({
             return (
               <styled.SearchFilterContainer key={filter.id}>
                 <filter.component
-                  pageQueryParamsConfig={pageQueryParamsConfig}
+                  queryParams={queryParams}
+                  setQueryParams={setQueryParams}
                 />
               </styled.SearchFilterContainer>
             );
