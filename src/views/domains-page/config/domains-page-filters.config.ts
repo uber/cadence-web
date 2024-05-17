@@ -9,9 +9,7 @@ const domainsPageFiltersConfig = [
         !queryParams.clusterName ||
           domain.clusters.find((c) => c.clusterName === queryParams.clusterName)
       ),
-    component: DomainsPageFiltersClusterName,
-    isSet: ({ pageQueryParamsValues }) =>
-      Boolean(pageQueryParamsValues.clusterName),
+    renderFilter: DomainsPageFiltersClusterName,
   },
 ] as const satisfies DomainsPageFiltersConfig;
 

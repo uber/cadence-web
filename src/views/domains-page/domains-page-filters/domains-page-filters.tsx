@@ -6,7 +6,6 @@ import { Delete, Filter, Search } from 'baseui/icon';
 import { Cell, Grid } from 'baseui/layout-grid';
 import usePageQueryParams from '@/hooks/use-page-query-params/use-page-query-params';
 import useStyletronClasses from '@/hooks/use-styletron-classes';
-import PageFilters from '@/components/page-filters/page-filters';
 
 import { cssStyles, overrides } from './domains-page-filters.styles';
 import domainsPageQueryParamsConfig from '../config/domains-page-query-params.config';
@@ -30,18 +29,7 @@ export default function DomainsPageFilters() {
     <section>
       <Grid>
         <Cell span={12}>
-          <PageFilters
-            search={queryParams.searchText}
-            setSearch={(value) => {
-              const trimmedValue = value.trim();
-              return setQueryParams({ searchText: trimmedValue ?? undefined });
-            }}
-            searchId="searchText"
-            searchPlaceholder="Find Cadence domain"
-            pageFiltersConfig={domainsPageFiltersConfig}
-            pageQueryParamsConfig={domainsPageQueryParamsConfig}
-          />
-          {/* <div className={cls.searchBarContainer}>
+          <div className={cls.searchBarContainer}>
             <Input
               overrides={overrides.searchInput}
               size="compact"
@@ -93,7 +81,7 @@ export default function DomainsPageFilters() {
                 </Button>
               </div>
             </div>
-          )} */}
+          )}
         </Cell>
       </Grid>
     </section>

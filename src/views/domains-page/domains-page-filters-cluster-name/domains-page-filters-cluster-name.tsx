@@ -8,9 +8,7 @@ import {
 import { FormControl } from 'baseui/form-control';
 import { Select } from 'baseui/select';
 import CLUSTERS_CONFIGS from '@/config/clusters/clusters.config';
-import { PageFilterComponentProps } from '@/components/page-filters/page-filters.types';
-import domainsPageQueryParamsConfig from '../config/domains-page-query-params.config';
-import usePageQueryParams from '@/hooks/use-page-query-params/use-page-query-params';
+import { DomainsPageFilterProps } from '../domains-page-filters/domains-page-filters.types';
 
 const clustersOptions = CLUSTERS_CONFIGS.map(({ clusterName }) => ({
   label: clusterName,
@@ -18,17 +16,12 @@ const clustersOptions = CLUSTERS_CONFIGS.map(({ clusterName }) => ({
 }));
 
 function DomainsPageFiltersClusterName({
-  pageQueryParamsConfig,
-}: PageFilterComponentProps<typeof domainsPageQueryParamsConfig>) {
+  onChange,
+  value,
+}: DomainsPageFilterProps) {
   const { cls } = useStyletronClasses(cssStyles);
-  const [queryParams, setQueryParams] = usePageQueryParams(
-    pageQueryParamsConfig,
-    { pageRerender: false }
-  );
 
-  const clusterValue = clustersOptions.filter(
-    ({ id }) => id === queryParams.clusterName
-  );
+  const clusterValue = clustersOptions.filter(({ id }) => id === value);
 
   return (
     <div className={cls.selectFilterContainer}>
@@ -37,13 +30,13 @@ function DomainsPageFiltersClusterName({
           size="compact"
           value={clusterValue}
           options={clustersOptions}
-          onChange={(params) => {
-            const newValue =
+          onChange={(params) =>
+            onChange(
               typeof params.value[0]?.id === 'undefined'
                 ? undefined
-                : String(params.value[0]?.id);
-            setQueryParams({ clusterName: newValue });
-          }}
+                : String(params.value[0]?.id)
+            )
+          }
         />
       </FormControl>
     </div>
