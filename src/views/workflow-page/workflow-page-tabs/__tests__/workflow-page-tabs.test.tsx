@@ -4,19 +4,18 @@ import WorkflowPageTabs from '../workflow-page-tabs';
 import type { Props } from '../workflow-page-tabs.types';
 import workflowPageTabsConfig from '../../config/workflow-page-tabs.config';
 
-jest.mock('../../config/workflow-page-tabs.config', () => ({
-  workflowPageTabsConfig: [
-    {
-      key: 'summary',
-      title: 'Summary',
-      artwork: () => <div data-testid="summary-artwork" />,
-    },
-    {
-      key: 'page-2',
-      title: 'Page 2',
-    },
-  ],
-}));
+jest.mock('../../config/workflow-page-tabs.config', () => ([
+  {
+    key: 'summary',
+    title: 'Summary',
+    artwork: () => <div data-testid="summary-artwork" />,
+  },
+  {
+    key: 'page-2',
+    title: 'Page 2',
+  },
+]
+));
 
 describe('WorkflowPageTabs', () => {
   afterEach(() => {
