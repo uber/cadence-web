@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import PageTabs from '@/components/page-tabs/page-tabs';
-import { worflowPageTabsConfig } from '../config/workflow-page-tabs.config';
+import workflowPageTabsConfig from '../config/workflow-page-tabs.config';
 import type { Props, WorkflowPageTabsParams } from './workflow-page-tabs.types';
 import decodeUrlParams from '@/utils/decode-url-params';
 import PageSection from '@/components/page-section/page-section';
@@ -12,8 +12,8 @@ export default function WorkflowPageTabs({ params, children }: Props) {
     <>
       <PageTabs
         selectedTab={decodedParams.workflowTab}
-        tabList={worflowPageTabsConfig}
-        setSelectedTab={() => { }}
+        tabList={workflowPageTabsConfig}
+        setSelectedTab={() => {}}
       />
       <PageSection>{children}</PageSection>
     </>

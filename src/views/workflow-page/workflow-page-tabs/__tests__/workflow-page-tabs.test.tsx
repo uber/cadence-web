@@ -2,10 +2,10 @@ import React from 'react';
 import { render } from '@/test-utils/rtl';
 import WorkflowPageTabs from '../workflow-page-tabs';
 import type { Props } from '../workflow-page-tabs.types';
-import { worflowPageTabsConfig } from '../../config/workflow-page-tabs.config';
+import workflowPageTabsConfig from '../../config/workflow-page-tabs.config';
 
 jest.mock('../../config/workflow-page-tabs.config', () => ({
-  worflowPageTabsConfig: [
+  workflowPageTabsConfig: [
     {
       key: 'summary',
       title: 'Summary',
@@ -26,13 +26,13 @@ describe('WorkflowPageTabs', () => {
   it('renders tabs titles correctly', () => {
     const { getByText } = setup({});
 
-    worflowPageTabsConfig.forEach(({ title }) => {
+    workflowPageTabsConfig.forEach(({ title }) => {
       expect(getByText(title)).toBeInTheDocument();
     });
   });
   it('renders tabs artworks correctly', () => {
     const { queryByTestId, getByTestId } = setup({});
-    worflowPageTabsConfig.forEach(({ key, artwork }) => {
+    workflowPageTabsConfig.forEach(({ key, artwork }) => {
       if (typeof artwork !== 'undefined')
         expect(getByTestId(`${key}-artwork`)).toBeInTheDocument();
       else expect(queryByTestId(`${key}-artwork`)).not.toBeInTheDocument();

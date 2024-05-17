@@ -16,7 +16,7 @@ export default function WorkflowStatusTag(props: Props) {
       // To render hover & focus effects for the tag, we need to pass an onClick hander
       // However, since we are already passing a link through overrides, we pass a no-op here
       {...(props.link && {
-        onClick: () => { },
+        onClick: () => {},
       })}
     >
       <WorkflowStatusTagIcon
