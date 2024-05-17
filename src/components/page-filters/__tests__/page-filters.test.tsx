@@ -1,42 +1,67 @@
 import React from 'react';
 import { render, screen, act, fireEvent } from '@/test-utils/rtl';
+import * as usePageQueryParamsModule from '@/hooks/use-page-query-params/use-page-query-params';
+import { type PageQueryParamValues } from '@/hooks/use-page-query-params/use-page-query-params.types';
 
 import PageFilters from '../page-filters';
+import {
+  PageFilterComponentProps,
+  PageFilterConfig,
+} from '../page-filters.types';
+import {
+  mockQueryParamsValues,
+  mockPageQueryParamConfig,
+  defaultParamA,
+  defaultParamB,
+} from '../__fixtures__/page-filters.fixtures';
 
-const MockFilter = ({
-  options,
-  value,
-  setValue,
-}: {
-  options: Array<string>;
-  value: string;
-  setValue: (v: string) => void;
-}) => {
+const mockSetQueryParams = jest.fn();
+jest.mock('../../../hooks/use-page-query-params/use-page-query-params', () =>
+  jest.fn(() => [mockQueryParamsValues, mockSetQueryParams])
+);
+
+const MockFilterA = ({
+  queryParams,
+  setQueryParams,
+}: PageFilterComponentProps<typeof mockPageQueryParamConfig>) => {
   return (
     <div>
-      <div>Value: {value}</div>
-      <div data-testid="change-filters" onClick={() => setValue(options[1])} />
+      <div>Value 1: {queryParams.valueA1}</div>
+      <div
+        data-testid="change-filters"
+        onClick={() => setQueryParams({ paramA: 'valueA2' })}
+      />
     </div>
   );
 };
 
-const setSearchFilters = jest.fn();
-const MOCK_FILTERS_PROPS = [
+const MockFilterB = ({
+  queryParams,
+  setQueryParams,
+}: PageFilterComponentProps<typeof mockPageQueryParamConfig>) => {
+  return (
+    <div>
+      <div>Value 2: {queryParams.valueA1}</div>
+      <div
+        data-testid="change-filters"
+        onClick={() => setQueryParams({ paramB: 'valueB2' })}
+      />
+    </div>
+  );
+};
+
+const MOCK_FILTERS_CONFIG: Array<
+  PageFilterConfig<typeof mockPageQueryParamConfig>
+> = [
   {
-    id: 'filter1',
-    label: 'Filter 1',
-    options: ['value 1', 'value 2'],
-    value: 'value 1',
-    setValue: (v: string) => setSearchFilters({ filter1: v }),
-    defaultValue: 'value 1',
+    id: 'filterA',
+    component: MockFilterA,
+    isSet: ({ queryParams }) => queryParams.paramA !== defaultParamA,
   },
   {
-    id: 'filter2',
-    label: 'Filter 2',
-    options: ['value 3', 'value 4'],
-    value: 'value 3',
-    setValue: (v: string) => setSearchFilters({ filter2: v }),
-    defaultValue: 'value 3',
+    id: 'filterB',
+    component: MockFilterB,
+    isSet: ({ queryParams }) => queryParams.paramB !== defaultParamB,
   },
 ];
 
@@ -46,7 +71,7 @@ afterEach(() => {
 
 describe('PageFilters', () => {
   it('should render search bar correctly and call setSearch on input change', async () => {
-    const { setSearch } = setup({});
+    const { mockSetSearch } = setup({});
 
     const searchInput = await screen.findByRole('textbox');
 
@@ -54,7 +79,7 @@ describe('PageFilters', () => {
       fireEvent.change(searchInput, { target: { value: 'test-search' } });
     });
 
-    expect(setSearch).toHaveBeenCalledWith('test-search');
+    expect(mockSetSearch).toHaveBeenCalledWith('test-search');
   });
 
   it('should show filters when Filters button is clicked, and modify additional filters', async () => {
@@ -73,12 +98,12 @@ describe('PageFilters', () => {
       fireEvent.click(filtersButtons[0]);
     });
 
-    expect(setSearchFilters).toHaveBeenCalledWith({ filter1: 'value 2' });
+    expect(mockSetQueryParams).toHaveBeenCalledWith({ paramA: 'valueA2' });
   });
 
   it('should call resetFilters when clear filters button is pressed', async () => {
-    const { resetAllFilters } = setup({
-      valuesOverrides: ['value 2', 'value 4'],
+    setup({
+      valuesOverrides: { paramA: 'valueA2', paramB: 'valueB2' },
     });
 
     const filtersButton = await screen.findByText('Filters (2)');
@@ -93,38 +118,40 @@ describe('PageFilters', () => {
       fireEvent.click(clearFiltersButton);
     });
 
-    expect(resetAllFilters).toHaveBeenCalled();
+    expect(mockSetQueryParams).toHaveBeenCalled();
   });
 });
 
-function setup({ valuesOverrides }: { valuesOverrides?: Array<string> }) {
-  const setSearch = jest.fn();
-  const resetAllFilters = jest.fn();
+function setup({
+  valuesOverrides,
+}: {
+  valuesOverrides?: Partial<
+    PageQueryParamValues<typeof mockPageQueryParamConfig>
+  >;
+}) {
+  const mockSetSearch = jest.fn();
+
+  if (valuesOverrides) {
+    jest
+      .spyOn(usePageQueryParamsModule, 'default')
+      .mockReturnValue([
+        { ...mockQueryParamsValues, ...valuesOverrides },
+        mockSetQueryParams,
+      ]);
+  }
 
   render(
     <PageFilters
       search=""
-      setSearch={setSearch}
-      placeholder="placeholder"
-      searchFilters={MOCK_FILTERS_PROPS.map((filter, idx) => {
-        const filterValue = valuesOverrides?.[idx] ?? filter.value;
-        return {
-          component: (
-            <MockFilter
-              options={filter.options}
-              value={filterValue}
-              setValue={filter.setValue}
-            />
-          ),
-          isSet: Boolean(filterValue) && filterValue !== filter.defaultValue,
-        };
-      })}
-      resetAllFilters={resetAllFilters}
+      searchId="search"
+      setSearch={mockSetSearch}
+      searchPlaceholder="placeholder"
+      pageFiltersConfig={MOCK_FILTERS_CONFIG}
+      pageQueryParamsConfig={mockPageQueryParamConfig}
     />
   );
 
   return {
-    setSearch,
-    resetAllFilters,
+    mockSetSearch,
   };
 }
