@@ -36,6 +36,7 @@ export default function DomainsPageFilters() {
               const trimmedValue = value.trim();
               return setQueryParams({ searchText: trimmedValue ?? undefined });
             }}
+            searchId="searchText"
             searchPlaceholder="Find Cadence domain"
             pageFiltersConfig={domainsPageFiltersConfig}
             pageQueryParamsConfig={domainsPageQueryParamsConfig}

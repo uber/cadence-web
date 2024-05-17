@@ -6,9 +6,8 @@ import {
 import type React from 'react';
 
 export type PageFilterIsSetProps<T extends PageQueryParams> = {
-  pageQueryParamsConfig: T;
   pageQueryParamsValues: PageQueryParamValues<T>;
-}
+};
 
 // Is there a way to assert that the component uses only the given page query params?
 export type PageFilterComponentProps<T extends PageQueryParams> = {
@@ -18,7 +17,7 @@ export type PageFilterComponentProps<T extends PageQueryParams> = {
 export type PageFilterConfig<T extends PageQueryParams> = {
   id: PageQueryParamKeys<T>;
   component: React.ComponentType<PageFilterComponentProps<T>>;
-  isSet: (props: PageFilterIsSetProps<T>) => boolean
+  isSet: (props: PageFilterIsSetProps<T>) => boolean;
 };
 
 export interface Props<T extends PageQueryParams> {

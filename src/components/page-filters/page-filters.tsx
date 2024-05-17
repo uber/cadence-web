@@ -6,6 +6,7 @@ import { Input } from 'baseui/input';
 import { Props } from './page-filters.types';
 import { styled, overrides } from './page-filters.styles';
 import {
+  PageQueryParamKeys,
   PageQueryParamSetterValues,
   PageQueryParams,
 } from '@/hooks/use-page-query-params/use-page-query-params.types';
@@ -27,22 +28,15 @@ export default function PageFilters<T extends PageQueryParams>({
 
   const activeFiltersCount = React.useMemo(
     () =>
-      pageFiltersConfig.reduce((countSoFar: number, pageFilter) => {
-        if (
-          pageFilter.isSet({
-            pageQueryParamsConfig: pageQueryParamsConfig,
-            pageQueryParamsValues: queryParams,
-          })
-        ) {
-          countSoFar += 1;
-        }
-        return countSoFar;
-      }, 0),
-    [pageFiltersConfig, pageQueryParamsConfig, queryParams]
+      pageFiltersConfig.filter((pageFilter) =>
+        pageFilter.isSet({
+          pageQueryParamsValues: queryParams,
+        })
+      ).length,
+    [pageFiltersConfig, queryParams]
   );
 
   const resetAllFilters = React.useCallback(() => {
-    // Clear all query params except search
     setQueryParams(
       pageQueryParamsConfig.reduce(
         (
@@ -51,8 +45,11 @@ export default function PageFilters<T extends PageQueryParams>({
           >,
           config
         ) => {
-          if (config.key !== searchId) {
-            acc[config.key] = undefined;
+          const queryParamKey: PageQueryParamKeys<
+            typeof pageQueryParamsConfig
+          > = config.key;
+          if (queryParamKey !== searchId) {
+            acc[queryParamKey] = undefined;
           }
           return acc;
         },
@@ -70,13 +67,14 @@ export default function PageFilters<T extends PageQueryParams>({
           placeholder={searchPlaceholder}
           startEnhancer={() => <Search />}
           clearOnEscape
+          overrides={overrides.searchInput}
         />
         <Button
           kind={areFiltersShown ? KIND.primary : KIND.secondary}
           onClick={() => {
             setAreFiltersShown((value) => !value);
           }}
-          endEnhancer={Filter}
+          startEnhancer={Filter}
           overrides={overrides.filtersButton}
         >
           {activeFiltersCount === 0
