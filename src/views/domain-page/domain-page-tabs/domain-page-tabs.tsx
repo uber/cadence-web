@@ -1,18 +1,23 @@
 'use client';
 import React from 'react';
+import { useRouter, useParams } from 'next/navigation';
 import PageTabs from '@/components/page-tabs/page-tabs';
-import domainPageTabsConfig from '../config/domain-page-tabs.config';
-import type { Props, DomainPageTabsParams } from './domain-page-tabs.types';
-import { useRouter } from 'next/navigation';
+import decodeUrlParams from '@/utils/decode-url-params';
 
-export default function DomainPageTabs(props: Props) {
+import type { DomainPageTabsParams } from './domain-page-tabs.types';
+import domainPageTabsConfig from '../config/domain-page-tabs.config';
+
+export default function DomainPageTabs() {
   const router = useRouter();
+  const params = useParams<DomainPageTabsParams>();
+  const decodedParams = decodeUrlParams(params) as DomainPageTabsParams;
+
   return (
     <PageTabs
-      selectedTab={props.decodedParams.domainTab}
+      selectedTab={decodedParams.domainTab}
       tabList={domainPageTabsConfig}
       setSelectedTab={(newTab) => {
-        router.push('/metadata');
+        router.push(encodeURIComponent(newTab.toString()));
       }}
     />
   );
