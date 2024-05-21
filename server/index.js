@@ -33,9 +33,7 @@ const webpackConfig = require('../webpack.config');
 const grpcClient = require('./middleware/grpc-client');
 const tchannelClient = require('./middleware/tchannel-client');
 const router = require('./router');
-const config = require('../config/config');
-
-
+const config = require('./config/config');
 const staticRoot = path.join(__dirname, '../dist');
 const app = new Koa();
 const transportClients = {
