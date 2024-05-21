@@ -46,13 +46,22 @@ app.webpackConfig = webpackConfig;
 app.init = function({
   logErrors,
   peers = config.peers,
-  requestConfig = config.requestConfig,
+  retryFlags = config.requestConfig.retryFlags,
+  retryLimit = config.requestConfig.retryLimit,
+  serviceName = config.requestConfig.serviceName,
+  timeout = config.requestConfig.timeout,
   transportClientType = config.transportClientType,
   useWebpack = config.useWebpack,
   enableAuth = config.enableAuth,
   authType = config.authType,
   authAdminJwtPrivateKey = config.authAdminJwtPrivateKey,
 } = {}) {
+  const requestConfig = {
+    retryFlags,
+    retryLimit,
+    serviceName,
+    timeout,
+  };
 
   const transportClient = transportClients[transportClientType];
 
