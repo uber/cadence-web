@@ -5,7 +5,7 @@ const {
   REQUEST_TIMEOUT_DEFAULT,
   SERVICE_NAME_DEFAULT,
   TRANSPORT_CLIENT_TYPE_DEFAULT,
-} = require('./constants')
+} = require('../constants')
 
 module.exports = {
     peers: process.env.CADENCE_TCHANNEL_PEERS || PEERS_DEFAULT,
