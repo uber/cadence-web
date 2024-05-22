@@ -14,6 +14,11 @@ const mockedTabContentsMap: WorkflowPageTabsContentsMap = {
   summary: MockedTabContent,
 };
 
+jest.mock(
+  '../config/workflow-page-tabs-contents-map.config',
+  () => mockedTabContentsMap
+);
+
 const params: WorkflowPageTabContentProps['params'] = {
   cluster: 'example-cluster',
   domain: 'example-domain',
@@ -24,19 +29,14 @@ const params: WorkflowPageTabContentProps['params'] = {
 
 describe('WorkflowPageTabContent', () => {
   it('renders tab content with correct params when workflowTab exists in contentsMap', () => {
-    const { getByText } = render(
-      <WorkflowPageTabContent
-        params={params}
-        tabsContentMap={mockedTabContentsMap}
-      />
-    );
+    const { getByText } = render(<WorkflowPageTabContent params={params} />);
     expect(getByText(JSON.stringify(params))).toBeInTheDocument();
   });
 
   it('does not return any tab cotent if workflowTab is not present in the contentsMap', () => {
     const paramsWithoutTabContent = { ...params, workflowTab: 'unkown-tab' };
-    //@ts-ignore allow passing unknown workflowtab to test recieving wrong value as a param
     const { container } = render(
+      //@ts-ignore allow passing unknown workflowtab to test recieving wrong value as a param
       <WorkflowPageTabContent params={paramsWithoutTabContent} />
     );
     expect(container.firstChild?.textContent).toBe('');

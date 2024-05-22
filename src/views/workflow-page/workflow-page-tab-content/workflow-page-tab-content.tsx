@@ -5,13 +5,10 @@ import { worflowPageTabsContentsMapConfig } from '../config/workflow-page-tabs-c
 import useStyletronClasses from '@/hooks/use-styletron-classes';
 import { cssStyles } from './workflow-page-tab-content.styles';
 
-export default function WorkflowPageTabContent({
-  params,
-  tabsContentMap = worflowPageTabsContentsMapConfig,
-}: Props) {
+export default function WorkflowPageTabContent({ params }: Props) {
   const { cls } = useStyletronClasses(cssStyles);
   const selectedWorkflowTabName = params.workflowTab;
-  const TabContent = tabsContentMap[selectedWorkflowTabName];
+  const TabContent = worflowPageTabsContentsMapConfig[selectedWorkflowTabName];
   if (TabContent)
     return (
       <div className={cls.tabContentContainer}>
