@@ -29,20 +29,11 @@ const koaStatic = require('koa-static');
 const koaWebpack = require('koa-webpack');
 const webpack = require('webpack');
 const jwt = require('jsonwebtoken');
-
 const webpackConfig = require('../webpack.config');
 const grpcClient = require('./middleware/grpc-client');
 const tchannelClient = require('./middleware/tchannel-client');
 const router = require('./router');
-const {
-  PEERS_DEFAULT,
-  REQUEST_RETRY_FLAGS_DEFAULT,
-  REQUEST_RETRY_LIMIT_DEFAULT,
-  REQUEST_TIMEOUT_DEFAULT,
-  SERVICE_NAME_DEFAULT,
-  TRANSPORT_CLIENT_TYPE_DEFAULT,
-} = require('./constants');
-
+const config = require('./config/config');
 const staticRoot = path.join(__dirname, '../dist');
 const app = new Koa();
 const transportClients = {
@@ -54,18 +45,16 @@ app.webpackConfig = webpackConfig;
 
 app.init = function({
   logErrors,
-  peers = process.env.CADENCE_TCHANNEL_PEERS || PEERS_DEFAULT,
-  retryFlags = REQUEST_RETRY_FLAGS_DEFAULT,
-  retryLimit = process.env.CADENCE_TCHANNEL_RETRY_LIMIT ||
-    REQUEST_RETRY_LIMIT_DEFAULT,
-  serviceName = process.env.CADENCE_TCHANNEL_SERVICE || SERVICE_NAME_DEFAULT,
-  timeout = REQUEST_TIMEOUT_DEFAULT,
-  transportClientType = process.env.TRANSPORT_CLIENT_TYPE ||
-    TRANSPORT_CLIENT_TYPE_DEFAULT, // 'tchannel', 'grpc'
-  useWebpack = process.env.NODE_ENV !== 'production',
-  enableAuth = process.env.ENABLE_AUTH === 'true',
-  authType = process.env.AUTH_TYPE,
-  authAdminJwtPrivateKey = process.env.AUTH_ADMIN_JWT_PRIVATE_KEY,
+  peers = config.peers,
+  retryFlags = config.requestConfig.retryFlags,
+  retryLimit = config.requestConfig.retryLimit,
+  serviceName = config.requestConfig.serviceName,
+  timeout = config.requestConfig.timeout,
+  transportClientType = config.transportClientType,
+  useWebpack = config.useWebpack,
+  enableAuth = config.enableAuth,
+  authType = config.authType,
+  authAdminJwtPrivateKey = config.authAdminJwtPrivateKey,
 } = {}) {
   const requestConfig = {
     retryFlags,
