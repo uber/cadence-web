@@ -1,23 +1,13 @@
 import React from 'react';
 import { render } from '@/test-utils/rtl';
 import WorkflowPageTabContent from '../workflow-page-tab-content';
-import type {
-  WorkflowPageTabContentProps,
-  WorkflowPageTabsContentsMap,
-} from '../workflow-page-tab-content.types';
+import type { WorkflowPageTabContentProps } from '../workflow-page-tab-content.types';
 
-const MockedTabContent = ({ params }: WorkflowPageTabContentProps) => (
-  <div>{JSON.stringify(params)}</div>
-);
-
-const mockedTabContentsMap: WorkflowPageTabsContentsMap = {
-  summary: MockedTabContent,
-};
-
-jest.mock(
-  '../config/workflow-page-tabs-contents-map.config',
-  () => mockedTabContentsMap
-);
+jest.mock('../../config/workflow-page-tabs-contents-map.config', () => ({
+  summary: ({ params }: WorkflowPageTabContentProps) => (
+    <div>{JSON.stringify(params)}</div>
+  ),
+}));
 
 const params: WorkflowPageTabContentProps['params'] = {
   cluster: 'example-cluster',

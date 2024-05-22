@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import type { Props } from './workflow-page-tab-content.types';
-import { worflowPageTabsContentsMapConfig } from '../config/workflow-page-tabs-contents-map.config';
+import worflowPageTabsContentsMapConfig from '../config/workflow-page-tabs-contents-map.config';
 import useStyletronClasses from '@/hooks/use-styletron-classes';
 import { cssStyles } from './workflow-page-tab-content.styles';
 
