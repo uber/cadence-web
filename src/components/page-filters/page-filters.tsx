@@ -32,10 +32,11 @@ export default function PageFilters<
       pageQueryParamsConfig.map((c) => [c.key, c])
     );
     return pageFiltersConfig.filter((pageFilter) =>
-      pageFilter.params.some(
-        (param) =>
-          queryParams[param] &&
-          queryParams[param] !== configsByKey[param].defaultValue
+      pageFilter.queryParamKeys.every(
+        (queryParamKey) =>
+          queryParams[queryParamKey] &&
+          queryParams[queryParamKey] !==
+            configsByKey[queryParamKey].defaultValue
       )
     ).length;
   }, [pageFiltersConfig, pageQueryParamsConfig, queryParams]);
@@ -44,8 +45,8 @@ export default function PageFilters<
     setQueryParams(
       pageFiltersConfig.reduce(
         (acc, pageFilter) => {
-          pageFilter.params.forEach((param) => {
-            acc[param] = undefined;
+          pageFilter.queryParamKeys.forEach((queryParamKey) => {
+            acc[queryParamKey] = undefined;
           });
           return acc;
         },

@@ -17,7 +17,7 @@ export type PageFilterComponentProps<T extends PageQueryParams> = {
 export type PageFilterConfig<P extends PageQueryParams> = {
   id: string;
   component: React.ComponentType<PageFilterComponentProps<P>>;
-  params: Array<PageQueryParamKeys<P>>;
+  queryParamKeys: Array<PageQueryParamKeys<P>>;
 };
 
 export interface Props<
