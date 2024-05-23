@@ -6,55 +6,64 @@ import { Input } from 'baseui/input';
 import { Props } from './page-filters.types';
 import { styled, overrides } from './page-filters.styles';
 import {
-  PageQueryParamKeys,
-  PageQueryParamSetterValues,
-  PageQueryParams,
+  type PageQueryParams,
+  type PageQueryParamKeys,
+  type PageQueryParamSetterValues,
 } from '@/hooks/use-page-query-params/use-page-query-params.types';
 import usePageQueryParams from '@/hooks/use-page-query-params/use-page-query-params';
 
-export default function PageFilters<T extends PageQueryParams>({
-  search,
+export default function PageFilters<
+  P extends PageQueryParams,
+  K extends PageQueryParamKeys<P>,
+>({
   searchId,
-  setSearch,
   searchPlaceholder,
   pageFiltersConfig,
   pageQueryParamsConfig,
-}: Props<T>) {
+}: Props<P, K>) {
   const [areFiltersShown, setAreFiltersShown] = React.useState(false);
   const [queryParams, setQueryParams] = usePageQueryParams(
     pageQueryParamsConfig,
     { pageRerender: false }
   );
 
-  const activeFiltersCount = React.useMemo(
-    () =>
-      pageFiltersConfig.filter((pageFilter) =>
-        pageFilter.isSet({ queryParams })
-      ).length,
-    [pageFiltersConfig, queryParams]
-  );
+  const activeFiltersCount = React.useMemo(() => {
+    const configsByKey = Object.fromEntries(
+      pageQueryParamsConfig.map((c) => [c.key, c])
+    );
+    return pageFiltersConfig.filter((pageFilter) =>
+      pageFilter.params.some(
+        (param) =>
+          queryParams[param] &&
+          queryParams[param] !== configsByKey[param].defaultValue
+      )
+    ).length;
+  }, [pageFiltersConfig, pageQueryParamsConfig, queryParams]);
 
   const resetAllFilters = React.useCallback(() => {
     setQueryParams(
-      pageQueryParamsConfig.reduce(
-        (acc: Partial<PageQueryParamSetterValues<T>>, config) => {
-          const queryParamKey: PageQueryParamKeys<T> = config.key;
-          if (queryParamKey !== searchId) {
-            acc[queryParamKey] = undefined;
-          }
+      pageFiltersConfig.reduce(
+        (acc, pageFilter) => {
+          pageFilter.params.forEach((param) => {
+            acc[param] = undefined;
+          });
           return acc;
         },
-        {}
+        {} as Partial<PageQueryParamSetterValues<P>>
       )
     );
-  }, [pageQueryParamsConfig, setQueryParams, searchId]);
+  }, [pageFiltersConfig, setQueryParams]);
 
   return (
     <styled.PageFiltersContainer>
       <styled.SearchInputContainer>
         <Input
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          value={queryParams[searchId]}
+          onChange={(event) =>
+            setQueryParams({
+              [searchId]: event.target.value,
+            } as Partial<PageQueryParamSetterValues<P>>)
+          }
           placeholder={searchPlaceholder}
           startEnhancer={() => <Search />}
           clearOnEscape
