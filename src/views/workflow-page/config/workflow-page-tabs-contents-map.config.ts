@@ -1,8 +1,8 @@
 import type { WorkflowPageTabsContentsMap } from '../workflow-page-tab-content/workflow-page-tab-content.types';
 
-const worflowPageTabsContentsMapConfig = {
+const workflowPageTabsContentsMapConfig = {
   // TODO: @assem.hafez add summary tab
   summary: (props: any) => null,
 } as const satisfies WorkflowPageTabsContentsMap;
 
-export default worflowPageTabsContentsMapConfig;
+export default workflowPageTabsContentsMapConfig;
