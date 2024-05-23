@@ -54,12 +54,12 @@ const MOCK_FILTERS_CONFIG: Array<
   {
     id: 'filterA',
     component: MockFilterA,
-    params: ['paramA'],
+    queryParamKeys: ['paramA'],
   },
   {
     id: 'filterB',
     component: MockFilterB,
-    params: ['paramB'],
+    queryParamKeys: ['paramB'],
   },
 ];
 
@@ -116,7 +116,10 @@ describe('PageFilters', () => {
       fireEvent.click(clearFiltersButton);
     });
 
-    expect(mockSetQueryParams).toHaveBeenCalled();
+    expect(mockSetQueryParams).toHaveBeenCalledWith({
+      paramA: undefined,
+      paramB: undefined,
+    });
   });
 });
 
