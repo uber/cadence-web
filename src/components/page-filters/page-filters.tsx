@@ -55,7 +55,7 @@ export default function PageFilters<
   }, [pageFiltersConfig, setQueryParams]);
 
   return (
-    <styled.PageFiltersContainer>
+    <>
       <styled.SearchInputContainer>
         <Input
           value={queryParams[searchId]}
@@ -105,6 +105,6 @@ export default function PageFilters<
           </Button>
         </styled.SearchFiltersContainer>
       )}
-    </styled.PageFiltersContainer>
+    </>
   );
 }

@@ -4,10 +4,6 @@ import { InputOverrides } from 'baseui/input';
 import { type StyleObject } from 'styletron-react';
 
 export const styled = {
-  PageFiltersContainer: createStyled('div', {
-    width: '100%',
-    alignSelf: 'center',
-  }),
   SearchInputContainer: createStyled(
     'div',
     ({ $theme }: { $theme: Theme }) => ({
