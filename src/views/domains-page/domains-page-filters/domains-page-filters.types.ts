@@ -4,12 +4,13 @@ import { type PageFilterConfig } from '@/components/page-filters/page-filters.ty
 import domainsPageQueryParamsConfig from '../config/domains-page-query-params.config';
 import { type DomainData } from '../domains-page.types';
 
-export interface DomainsPageFilterConfig
-  extends PageFilterConfig<typeof domainsPageQueryParamsConfig> {
+export type DomainsPageFilterConfig = PageFilterConfig<
+  typeof domainsPageQueryParamsConfig
+> & {
   filterFunc: (
     d: DomainData,
     queryParams: PageQueryParamValues<typeof domainsPageQueryParamsConfig>
   ) => boolean;
-}
+};
 
 export type DomainsPageFiltersConfig = Array<DomainsPageFilterConfig>;

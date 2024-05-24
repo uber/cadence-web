@@ -8,7 +8,7 @@ export default function DomainsPageFilters() {
   return (
     <PageSection>
       <PageFilters
-        searchId="searchText"
+        searchQueryParamKey="searchText"
         searchPlaceholder="Find Cadence domain"
         pageFiltersConfig={domainsPageFiltersConfig}
         pageQueryParamsConfig={domainsPageQueryParamsConfig}
