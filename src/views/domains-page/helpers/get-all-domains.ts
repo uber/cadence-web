@@ -9,9 +9,11 @@ import getUniqueDomains from './get-unique-domains';
 export const getAllDomains = async () => {
   const results = await Promise.all(
     CLUSTERS_CONFIGS.map(({ clusterName }) =>
-      grpcClient.clusterMethods[clusterName].listDomains({ pageSize: 1000 }).then(({ domains }: { domains: DomainData[] }) => {
-        return filterDomainsIrrelevantToCluster(clusterName, domains)
-      })
+      grpcClient.clusterMethods[clusterName]
+        .listDomains({ pageSize: 1000 })
+        .then(({ domains }: { domains: DomainData[] }) => {
+          return filterDomainsIrrelevantToCluster(clusterName, domains);
+        })
     )
   );
   return { domains: getUniqueDomains(results.flat(1)) };
