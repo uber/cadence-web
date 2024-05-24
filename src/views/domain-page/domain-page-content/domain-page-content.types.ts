@@ -17,7 +17,7 @@ export type DomainPageTabContentProps = {
   cluster: string;
 };
 
-export type DomainPageTabsContentMap = Record<
+export type DomainPageTabsContentConfig = Record<
   DomainTabName,
   React.ComponentType<DomainPageTabContentProps>
 >;

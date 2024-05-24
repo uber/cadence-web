@@ -1,4 +1,3 @@
-'use client';
 import React from 'react';
 import { DomainPageTabContentProps } from '../domain-page-content/domain-page-content.types';
 
