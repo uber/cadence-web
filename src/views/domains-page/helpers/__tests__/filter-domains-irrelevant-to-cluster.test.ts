@@ -7,14 +7,20 @@ describe('filterDomainsIrrelevantToCluster', () => {
     const domains: Pick<DomainData, 'clusters' | 'name'>[] = [
       { name: '1', clusters: [{ clusterName: 'ClusterA' }] },
       { name: '2', clusters: [{ clusterName: 'ClusterB' }] },
-      { name: '3', clusters: [{ clusterName: 'ClusterA' }, { clusterName: 'ClusterC' }] },
+      {
+        name: '3',
+        clusters: [{ clusterName: 'ClusterA' }, { clusterName: 'ClusterC' }],
+      },
     ];
 
     const result = filterDomainsIrrelevantToCluster('ClusterA', domains);
 
     expect(result).toEqual([
       { name: '1', clusters: [{ clusterName: 'ClusterA' }] },
-      { name: '3', clusters: [{ clusterName: 'ClusterA' }, { clusterName: 'ClusterC' }] },
+      {
+        name: '3',
+        clusters: [{ clusterName: 'ClusterA' }, { clusterName: 'ClusterC' }],
+      },
     ]);
   });
 
@@ -41,7 +47,10 @@ describe('filterDomainsIrrelevantToCluster', () => {
     //@ts-ignore domains comes from backend so testing null behavior
     const resultWithNull = filterDomainsIrrelevantToCluster('ClusterA', null);
     //@ts-ignore domains comes from backend so testing undefined behavior
-    const resultWithUndefined = filterDomainsIrrelevantToCluster('ClusterA', undefined);
+    const resultWithUndefined = filterDomainsIrrelevantToCluster(
+      'ClusterA',
+      undefined
+    );
 
     expect(resultWithNull).toEqual([]);
     expect(resultWithUndefined).toEqual([]);
