@@ -19,7 +19,6 @@ jest.mock(
     }
 );
 
-
 jest.mock('../helpers/get-workflow-execution', () => ({
   getWorkflowExecution: jest.fn().mockResolvedValue({
     workflowExecutionInfo: {
