@@ -1,6 +1,8 @@
 import React from 'react';
 import { withStyle } from 'baseui';
 import { StyledLink } from 'baseui/link';
+import Link from 'next/link';
+import { Props } from './domains-table-link.types';
 
 const TableLinkBase = withStyle<typeof StyledLink, { disabled: boolean }>(
   StyledLink,
@@ -18,18 +20,13 @@ const TableLinkBase = withStyle<typeof StyledLink, { disabled: boolean }>(
 export default function DomainsTableLink({
   href,
   children,
-  className,
-}: {
-  href?: string;
-  className?: string;
-  children: React.ReactNode;
-}) {
+  ...restProps
+}: Props) {
   return (
     <TableLinkBase
-      className={className}
+      {...restProps}
+      $as={Link}
       href={href}
-      target="_blank"
-      rel="noreferrer"
       disabled={!href}
     >
       {children}
