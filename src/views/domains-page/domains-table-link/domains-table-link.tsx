@@ -23,12 +23,7 @@ export default function DomainsTableLink({
   ...restProps
 }: Props) {
   return (
-    <TableLinkBase
-      {...restProps}
-      $as={Link}
-      href={href}
-      disabled={!href}
-    >
+    <TableLinkBase {...restProps} $as={Link} href={href} disabled={!href}>
       {children}
     </TableLinkBase>
   );

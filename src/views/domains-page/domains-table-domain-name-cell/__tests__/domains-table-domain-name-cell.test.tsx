@@ -9,7 +9,10 @@ describe('DomainTableClusterCell', () => {
     const clusterLinks = await screen.findAllByRole('link');
     clusterLinks.forEach((clusterLink, i) => {
       expect(clusterLink.innerHTML).toBe(globalDomain.name);
-      expect(clusterLink).toHaveAttribute('href', `/domains/${globalDomain.name}/${globalDomain.activeClusterName}`);
+      expect(clusterLink).toHaveAttribute(
+        'href',
+        `/domains/${globalDomain.name}/${globalDomain.activeClusterName}`
+      );
     });
   });
 });
