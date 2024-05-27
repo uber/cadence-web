@@ -11,6 +11,15 @@ jest.mock(
     }
 );
 
+jest.mock(
+  '../workflow-page-tabs/workflow-page-tabs',
+  () =>
+    function TestPageHeader() {
+      return <div data-testid="page-tabs" />;
+    }
+);
+
+
 jest.mock('../helpers/get-workflow-execution', () => ({
   getWorkflowExecution: jest.fn().mockResolvedValue({
     workflowExecutionInfo: {
@@ -27,6 +36,11 @@ describe('WorkflowPage', () => {
   it('renders workflow page header correctly', async () => {
     const { getByTestId } = await setup({});
     expect(getByTestId('page-header')).toBeInTheDocument();
+  });
+
+  it('renders workflow page tabs correctly', async () => {
+    const { getByTestId } = await setup({});
+    expect(getByTestId('page-tabs')).toBeInTheDocument();
   });
 
   it('renders children', async () => {
