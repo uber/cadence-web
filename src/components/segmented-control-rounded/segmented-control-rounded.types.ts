@@ -1,4 +1,7 @@
-import { SegmentProps, SegmentedControlProps } from 'baseui/segmented-control';
+import type {
+  SegmentProps,
+  SegmentedControlProps,
+} from 'baseui/segmented-control';
 import React from 'react';
 
 export type SegmentControlRoundedOption = Omit<SegmentProps, 'key'> & {
