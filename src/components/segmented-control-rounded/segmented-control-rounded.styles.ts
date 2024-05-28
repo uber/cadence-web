@@ -7,7 +7,6 @@ import {
   StyledSegment,
   StyledActive,
 } from 'baseui/segmented-control';
-import themeLight from '@/config/theme/theme-light.config';
 
 export const overrides = {
   segmentedControl: {
