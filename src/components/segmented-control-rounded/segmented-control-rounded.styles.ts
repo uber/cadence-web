@@ -1,4 +1,4 @@
-import { ComponentProps } from 'react';
+import type { ComponentProps } from 'react';
 import type { StyleObject } from 'styletron-react';
 import type { Theme } from 'baseui';
 import {
