@@ -12,7 +12,6 @@ const cssStylesObj = {
     marginRight: theme.sizing.scale550,
     marginTop: theme.sizing.scale0,
     marginBottom: theme.sizing.scale0,
-    ...theme.typography.MonoLabelXSmall,
   }),
   stringValue: {
     color: '#A964F7',
