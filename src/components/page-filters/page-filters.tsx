@@ -89,6 +89,7 @@ export default function PageFilters<
             return (
               <styled.SearchFilterContainer key={filter.id}>
                 <filter.component
+                  queryParamKeys={filter.queryParamKeys}
                   queryParams={queryParams}
                   setQueryParams={setQueryParams}
                 />

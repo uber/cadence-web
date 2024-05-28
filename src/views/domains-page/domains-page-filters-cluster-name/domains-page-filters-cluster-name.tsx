@@ -18,10 +18,15 @@ const clustersOptions = CLUSTERS_CONFIGS.map(({ clusterName }) => ({
 }));
 
 function DomainsPageFiltersClusterName({
+  queryParamKeys,
   queryParams,
   setQueryParams,
-}: PageFilterComponentProps<typeof domainsPageQueryParamsConfig>) {
+}: PageFilterComponentProps<
+  typeof domainsPageQueryParamsConfig,
+  ['clusterName']
+>) {
   const { cls } = useStyletronClasses(cssStyles);
+  // We want both the queryparamkeys passed and written to match
 
   const clusterValue = clustersOptions.filter(
     ({ id }) => id === queryParams.clusterName
