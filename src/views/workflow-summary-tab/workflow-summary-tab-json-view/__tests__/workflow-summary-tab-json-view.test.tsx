@@ -5,17 +5,24 @@ import WorkflowSummaryTabJsonView from '../workflow-summary-tab-json-view';
 
 // Mock dependencies
 jest.mock('copy-to-clipboard', jest.fn);
-jest.mock('@/components/segmented-control-rounded/segmented-control-rounded', () => jest.fn(() => <div>SegmentedControlRounded Mock</div>));
-jest.mock('@/components/pretty-json/pretty-json', () => jest.fn(() => <div>PrettyJson Mock</div>));
+jest.mock(
+  '@/components/segmented-control-rounded/segmented-control-rounded',
+  () => jest.fn(() => <div>SegmentedControlRounded Mock</div>)
+);
+jest.mock('@/components/pretty-json/pretty-json', () =>
+  jest.fn(() => <div>PrettyJson Mock</div>)
+);
 
 describe('WorkflowSummaryTabJsonView Component', () => {
-
   const inputJson = { input: 'inputJson' };
   const resultJson = { result: 'resultJson' };
 
   it('renders correctly with initial props', () => {
     const { getByText } = render(
-      <WorkflowSummaryTabJsonView inputJson={inputJson} resultJson={resultJson} />
+      <WorkflowSummaryTabJsonView
+        inputJson={inputJson}
+        resultJson={resultJson}
+      />
     );
 
     expect(getByText('SegmentedControlRounded Mock')).toBeInTheDocument();
@@ -24,7 +31,10 @@ describe('WorkflowSummaryTabJsonView Component', () => {
 
   it('handles tab change', () => {
     render(
-      <WorkflowSummaryTabJsonView inputJson={inputJson} resultJson={resultJson} />
+      <WorkflowSummaryTabJsonView
+        inputJson={inputJson}
+        resultJson={resultJson}
+      />
     );
 
     // Mock the onChange event for SegmentedControlRounded
@@ -35,7 +45,10 @@ describe('WorkflowSummaryTabJsonView Component', () => {
 
   it('copies JSON to clipboard and shows tooltip', () => {
     render(
-      <WorkflowSummaryTabJsonView inputJson={inputJson} resultJson={resultJson} />
+      <WorkflowSummaryTabJsonView
+        inputJson={inputJson}
+        resultJson={resultJson}
+      />
     );
 
     const copyButton = screen.getByText('Copy');
@@ -43,5 +56,4 @@ describe('WorkflowSummaryTabJsonView Component', () => {
 
     expect(copy).toHaveBeenCalledWith(JSON.stringify(inputJson, null, '\t'));
   });
-
 });

@@ -10,11 +10,11 @@ jest.mock('next/navigation', () => ({
   ...jest.requireActual('next/navigation'),
   useRouter: () => ({
     push: mockPushFn,
-    back: () => { },
-    replace: () => { },
-    forward: () => { },
-    prefetch: () => { },
-    refresh: () => { },
+    back: () => {},
+    replace: () => {},
+    forward: () => {},
+    prefetch: () => {},
+    refresh: () => {},
   }),
   useParams: () => ({
     cluster: 'example-cluster',
@@ -60,7 +60,5 @@ describe('WorkflowPageTabs', () => {
 });
 
 function setup() {
-  return render(
-    <WorkflowPageTabs />
-  );
+  return render(<WorkflowPageTabs />);
 }
