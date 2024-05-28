@@ -10,11 +10,11 @@ jest.mock('next/navigation', () => ({
   ...jest.requireActual('next/navigation'),
   useRouter: () => ({
     push: mockPushFn,
-    back: () => {},
-    replace: () => {},
-    forward: () => {},
-    prefetch: () => {},
-    refresh: () => {},
+    back: () => { },
+    replace: () => { },
+    forward: () => { },
+    prefetch: () => { },
+    refresh: () => { },
   }),
   useParams: () => ({
     domain: 'mock-domain',
