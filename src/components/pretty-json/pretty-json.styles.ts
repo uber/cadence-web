@@ -4,6 +4,9 @@ import type {
 } from '@/hooks/use-styletron-classes';
 
 const cssStylesObj = {
+  container: (theme) => ({
+    ...theme.typography.MonoLabelXSmall,
+  }),
   basicChildStyle: (theme) => ({
     marginLeft: theme.sizing.scale550,
     marginRight: theme.sizing.scale550,
@@ -44,7 +47,6 @@ const cssStylesObj = {
       content: '" ... "',
     },
   }),
-  container: {},
   otherValue: {},
   expandIcon: {},
   collapseIcon: {},

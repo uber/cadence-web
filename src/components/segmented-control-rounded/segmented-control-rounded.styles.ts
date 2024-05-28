@@ -1,4 +1,4 @@
-import { ComponentProps } from 'react';
+import type { ComponentProps } from 'react';
 import type { StyleObject } from 'styletron-react';
 import type { Theme } from 'baseui';
 import {
@@ -13,13 +13,14 @@ export const overrides = {
     Root: {
       style: ({ $theme }: { $theme: Theme }): StyleObject => ({
         padding: 0,
-        borderRadius: '23px',
+        borderRadius: $theme.sizing.scale550,
       }),
     },
     SegmentList: {
       style: ({ $theme }: { $theme: Theme }): StyleObject => ({
         background: $theme.colors.backgroundTertiary,
-        minHeight: '24px',
+        minHeight: $theme.sizing.scale850,
+        height: $theme.sizing.scale850,
       }),
     },
     Active: {
@@ -29,7 +30,7 @@ export const overrides = {
       }: { $theme: Theme } & ComponentProps<
         typeof StyledActive
       >): StyleObject => ({
-        borderRadius: '23px',
+        borderRadius: $theme.sizing.scale550,
         opacity: $length === 0 ? 0 : 1,
         background: $theme.colors.backgroundInversePrimary,
       }),
@@ -39,6 +40,7 @@ export const overrides = {
     Label: {
       style: ({ $theme }: { $theme: Theme }): StyleObject => ({
         animationDuration: $theme.animation.timing900,
+        ...$theme.typography.LabelXSmall,
       }),
     },
     Segment: {
@@ -51,7 +53,7 @@ export const overrides = {
         color: $isActive ? $theme.colors.contentInversePrimary : '#A6A6A6',
         transitionProperty: 'color',
         transitionDelay: $theme.animation.timing200,
-        borderRadius: '23px',
+        borderRadius: $theme.sizing.scale550,
       }),
     },
   } satisfies SegmentOverrides,
