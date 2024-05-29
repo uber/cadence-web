@@ -1,7 +1,6 @@
 import React from 'react';
-import { render } from '@/test-utils/rtl';
+import { render, screen } from '@/test-utils/rtl';
 import WorkflowPageTabs from '../workflow-page-tabs';
-import type { WorkflowPageTabsParams } from '../workflow-page-tabs.types';
 import workflowPageTabsConfig from '../../config/workflow-page-tabs.config';
 
 const mockPushFn = jest.fn();
@@ -10,11 +9,11 @@ jest.mock('next/navigation', () => ({
   ...jest.requireActual('next/navigation'),
   useRouter: () => ({
     push: mockPushFn,
-    back: () => {},
-    replace: () => {},
-    forward: () => {},
-    prefetch: () => {},
-    refresh: () => {},
+    back: () => { },
+    replace: () => { },
+    forward: () => { },
+    prefetch: () => { },
+    refresh: () => { },
   }),
   useParams: () => ({
     cluster: 'example-cluster',
@@ -43,18 +42,18 @@ describe('WorkflowPageTabs', () => {
   });
 
   it('renders tabs titles correctly', () => {
-    const { getByText } = setup();
+    setup();
 
     workflowPageTabsConfig.forEach(({ title }) => {
-      expect(getByText(title)).toBeInTheDocument();
+      expect(screen.getByText(title)).toBeInTheDocument();
     });
   });
   it('renders tabs artworks correctly', () => {
-    const { queryByTestId, getByTestId } = setup();
+    setup();
     workflowPageTabsConfig.forEach(({ key, artwork }) => {
       if (typeof artwork !== 'undefined')
-        expect(getByTestId(`${key}-artwork`)).toBeInTheDocument();
-      else expect(queryByTestId(`${key}-artwork`)).not.toBeInTheDocument();
+        expect(screen.getByTestId(`${key}-artwork`)).toBeInTheDocument();
+      else expect(screen.queryByTestId(`${key}-artwork`)).not.toBeInTheDocument();
     });
   });
 });
