@@ -9,11 +9,11 @@ jest.mock('next/navigation', () => ({
   ...jest.requireActual('next/navigation'),
   useRouter: () => ({
     push: mockPushFn,
-    back: () => { },
-    replace: () => { },
-    forward: () => { },
-    prefetch: () => { },
-    refresh: () => { },
+    back: () => {},
+    replace: () => {},
+    forward: () => {},
+    prefetch: () => {},
+    refresh: () => {},
   }),
   useParams: () => ({
     cluster: 'example-cluster',
@@ -53,7 +53,8 @@ describe('WorkflowPageTabs', () => {
     workflowPageTabsConfig.forEach(({ key, artwork }) => {
       if (typeof artwork !== 'undefined')
         expect(screen.getByTestId(`${key}-artwork`)).toBeInTheDocument();
-      else expect(screen.queryByTestId(`${key}-artwork`)).not.toBeInTheDocument();
+      else
+        expect(screen.queryByTestId(`${key}-artwork`)).not.toBeInTheDocument();
     });
   });
 });
