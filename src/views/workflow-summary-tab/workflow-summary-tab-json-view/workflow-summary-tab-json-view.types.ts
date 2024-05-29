@@ -3,7 +3,6 @@ export type Props = {
   resultJson: JsonValue;
 };
 
-
 export type JsonValue =
   | string
   | number
@@ -11,7 +10,6 @@ export type JsonValue =
   | null
   | JsonObject
   | JsonArray;
-
 
 type JsonObject = { [key: string]: JsonValue };
 type JsonArray = JsonValue[];
