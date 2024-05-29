@@ -79,5 +79,7 @@ describe('WorkflowSummaryTabJsonView Component', () => {
     // Ensure the tooltip is hidden after 1000ms
     const hiddenTooltip = screen.queryByText('Copied');
     expect(hiddenTooltip).not.toBeInTheDocument();
+
+    jest.useRealTimers();
   });
 });
