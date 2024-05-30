@@ -50,6 +50,7 @@ export default function DomainPageWorkflowsFiltersDates({
         }}
         onClose={() => {
           if (dates.length !== 2 || dates.some((date) => !date)) {
+            // What should we do if the user picks a date but then closes? Do we also clear query params?
             setDates([]);
           }
         }}

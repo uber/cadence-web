@@ -4,9 +4,9 @@ import { WorkflowStatus } from '@/views/shared/workflow-status-tag/workflow-stat
 
 const domainPageQueryParamsConfig: [
   PageQueryParam<'search', string>,
-  PageQueryParam<'status', WorkflowStatus>,
-  PageQueryParam<'startDate', Date>,
-  PageQueryParam<'endDate', Date>,
+  PageQueryParam<'status', WorkflowStatus | undefined>,
+  PageQueryParam<'startDate', Date | undefined>,
+  PageQueryParam<'endDate', Date | undefined>,
   PageQueryParam<'sortColumn', string>,
   PageQueryParam<'sortOrder', SortingOrder>,
 ] = [
@@ -30,10 +30,12 @@ const domainPageQueryParamsConfig: [
   {
     key: 'sortColumn',
     queryParamKey: 'column',
+    defaultValue: 'startTime',
   },
   {
     key: 'sortOrder',
     queryParamKey: 'order',
+    defaultValue: 'DESC',
   },
 ] as const;
 
