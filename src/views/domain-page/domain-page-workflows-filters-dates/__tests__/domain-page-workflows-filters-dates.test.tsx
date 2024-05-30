@@ -51,7 +51,39 @@ describe('DomainPageWorkflowsFiltersDates', () => {
     });
   });
 
-  it('clears the input when one date is selected and then the modal is closed', () => {
+  it('resets to previous date when one date is selected and then the modal is closed', () => {
+    const { mockSetQueryParams } = setup({
+      queryParamsOverrides: mockDateOverrides,
+    });
+    const datePicker = screen.getByPlaceholderText('Select time range');
+
+    act(() => {
+      fireEvent.focus(datePicker);
+    });
+
+    const startDateLabel = screen.getByLabelText(
+      "Choose Saturday, May 13th 2023. It's available."
+    );
+
+    act(() => {
+      fireEvent.click(startDateLabel);
+    });
+
+    screen.getByText(
+      'Selected date is 13 May 2023, 00:00 +00. Select the second date.'
+    );
+
+    act(() => {
+      fireEvent.keyDown(datePicker, { keyCode: 9 });
+    });
+
+    expect(datePicker).toHaveValue(
+      '23 May 2023, 00:00 +00 – 24 May 2023, 00:00 +00'
+    );
+    expect(mockSetQueryParams).not.toHaveBeenCalled();
+  });
+
+  it('resets to empty state when one date is selected and then the modal is closed', () => {
     const { mockSetQueryParams } = setup({});
     const datePicker = screen.getByPlaceholderText('Select time range');
 

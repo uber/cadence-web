@@ -16,11 +16,11 @@ export default function DomainPageWorkflowsFiltersDates({
   const [dates, setDates] = React.useState<Array<Date | null | undefined>>([]);
 
   React.useEffect(() => {
-    if (Boolean(queryParams.startDate) && Boolean(queryParams.endDate)) {
-      setDates([queryParams.startDate, queryParams.endDate]);
-    } else {
-      setDates([]);
-    }
+    setDates(
+      Boolean(queryParams.startDate) && Boolean(queryParams.endDate)
+        ? [queryParams.startDate, queryParams.endDate]
+        : []
+    );
   }, [queryParams]);
 
   return (
@@ -50,8 +50,11 @@ export default function DomainPageWorkflowsFiltersDates({
         }}
         onClose={() => {
           if (dates.length !== 2 || dates.some((date) => !date)) {
-            // What should we do if the user picks a date but then closes? Do we also clear query params?
-            setDates([]);
+            setDates(
+              Boolean(queryParams.startDate) && Boolean(queryParams.endDate)
+                ? [queryParams.startDate, queryParams.endDate]
+                : []
+            );
           }
         }}
         placeholder="Select time range"
