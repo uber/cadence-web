@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent, act } from '@/test-utils/rtl';
-import { PageQueryParamValues } from '@/hooks/use-page-query-params/use-page-query-params.types';
+import { type PageQueryParamValues } from '@/hooks/use-page-query-params/use-page-query-params.types';
 import { WORKFLOW_STATUS_NAMES } from '@/views/shared/workflow-status-tag/workflow-status-tag.constants';
 import DomainPageWorkflowsFiltersStatus from '../domain-page-workflows-filters-status';
 import { mockDomainPageQueryParamsValues } from '../../__fixtures__/domain-page-query-params';

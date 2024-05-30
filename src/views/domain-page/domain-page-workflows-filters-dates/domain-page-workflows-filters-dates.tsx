@@ -4,7 +4,7 @@ import { DatePicker } from 'baseui/datepicker';
 import { FormControl } from 'baseui/form-control';
 import { SIZE } from 'baseui/input';
 
-import { PageFilterComponentProps } from '@/components/page-filters/page-filters.types';
+import { type PageFilterComponentProps } from '@/components/page-filters/page-filters.types';
 import { DATE_FORMAT } from './domain-page-workflows-filters-dates.constants';
 import { overrides } from './domain-page-workflows-filters-dates.styles';
 import domainPageQueryParamsConfig from '../config/domain-page-query-params.config';

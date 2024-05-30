@@ -1,6 +1,6 @@
-import { PageQueryParam } from '@/hooks/use-page-query-params/use-page-query-params.types';
-import { SortingOrder } from '@/components/table/table.types';
-import { WorkflowStatus } from '@/views/shared/workflow-status-tag/workflow-status-tag.types';
+import { type PageQueryParam } from '@/hooks/use-page-query-params/use-page-query-params.types';
+import { type SortingOrder } from '@/components/table/table.types';
+import { type WorkflowStatus } from '@/views/shared/workflow-status-tag/workflow-status-tag.types';
 import parseDateQueryParam from '../helpers/parse-date-query-param';
 
 const domainPageQueryParamsConfig: [

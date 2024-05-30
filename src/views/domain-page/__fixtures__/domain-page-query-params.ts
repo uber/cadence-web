@@ -1,4 +1,4 @@
-import { PageQueryParamValues } from '@/hooks/use-page-query-params/use-page-query-params.types';
+import { type PageQueryParamValues } from '@/hooks/use-page-query-params/use-page-query-params.types';
 import domainPageQueryParamsConfig from '../config/domain-page-query-params.config';
 
 export const mockDomainPageQueryParamsValues: PageQueryParamValues<
