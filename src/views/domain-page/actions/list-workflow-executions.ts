@@ -25,7 +25,6 @@ export const listWorkflowExecutions = async (
   clusterName: string,
   args: ArgsType
 ) => {
-  // How will errors be handled?
   const {
     domain,
     nextPage,
@@ -37,14 +36,11 @@ export const listWorkflowExecutions = async (
     startTimeRangeEnd,
   } = args;
 
-  let result;
   try {
-    result = await grpcClient.clusterMethods[
-      clusterName
-    ].listWorkflowExecutions({
+    const result = await grpcClient.clusterMethods[clusterName].listWorkflows({
       domain: domain,
       pageSize: PAGE_SIZE,
-      nextPageToken: nextPage ? Buffer.from(nextPage, 'utf8') : undefined,
+      nextPageToken: nextPage ?? undefined,
       query: getListWorkflowExecutionsQuery({
         search,
         workflowStatus,
@@ -54,13 +50,12 @@ export const listWorkflowExecutions = async (
         startTimeRangeEnd,
       }),
     });
-  } catch (e) {
-    throw e;
-  } finally {
     return {
       workflows: mapExecutionsToWorkflows(result.executions),
-      nextPage: result.nextPageToken?.toString('utf8'),
+      nextPage: result.nextPageToken,
     };
+  } catch (e) {
+    throw e;
   }
 };
 
