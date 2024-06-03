@@ -20,10 +20,7 @@ export type ArgsType = {
 };
 
 // TODO @adhitya.mamallan - use GRPC types here when they are ready
-export const listWorkflowExecutions = async (
-  clusterName: string,
-  args: ArgsType
-) => {
+export const listWorkflows = async (clusterName: string, args: ArgsType) => {
   const {
     domain,
     pageSize,
@@ -59,4 +56,4 @@ export const listWorkflowExecutions = async (
   }
 };
 
-export const listCachedWorkflowExecutions = cache(listWorkflowExecutions);
+export const listCachedWorkflows = cache(listWorkflows);
