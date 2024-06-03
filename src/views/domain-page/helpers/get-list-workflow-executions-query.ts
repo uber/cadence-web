@@ -28,8 +28,7 @@ export default function getListWorkflowExecutionsQuery({
     if (workflowStatus === 'WORKFLOW_EXECUTION_STATUS_RUNNING') {
       searchQueries.push('CloseTime = missing');
     } else {
-      // Try to map exact close status
-      searchQueries.push(`CloseStatus = ${mapStatusToInt(workflowStatus)}`);
+      searchQueries.push(`CloseStatus = ${workflowStatus}`);
     }
   }
 
@@ -45,8 +44,4 @@ export default function getListWorkflowExecutionsQuery({
     (searchQueries.length > 0 ? `${searchQueries.join(' AND ')} ` : '') +
     `ORDER BY ${sortColumn ?? 'StartTime'} ${sortOrder ?? 'DESC'}`
   );
-}
-
-function mapStatusToInt(status: WorkflowStatus): number {
-  return Object.keys(WORKFLOW_STATUS_NAMES).indexOf(status) - 1;
 }
