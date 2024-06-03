@@ -1,4 +1,4 @@
-FROM node:fermium-bullseye AS BUILD_IMAGE
+FROM node:20.13.1-bullseye-slim AS BUILD_IMAGE
 
 ### Build step ###
 WORKDIR /usr/build
