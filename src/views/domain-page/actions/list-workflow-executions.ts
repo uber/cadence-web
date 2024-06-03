@@ -7,10 +7,9 @@ import type { SortingOrder } from '@/components/table/table.types';
 import getListWorkflowExecutionsQuery from '../helpers/get-list-workflow-executions-query';
 import mapExecutionsToWorkflows from '../helpers/map-executions-to-workflows';
 
-const PAGE_SIZE = 10;
-
 export type ArgsType = {
   domain: string;
+  pageSize: number;
   search?: string;
   workflowStatus?: WorkflowStatus;
   sortColumn?: string;
@@ -27,6 +26,7 @@ export const listWorkflowExecutions = async (
 ) => {
   const {
     domain,
+    pageSize,
     nextPage,
     search,
     workflowStatus,
@@ -39,7 +39,7 @@ export const listWorkflowExecutions = async (
   try {
     const result = await grpcClient.clusterMethods[clusterName].listWorkflows({
       domain: domain,
-      pageSize: PAGE_SIZE,
+      pageSize: pageSize,
       nextPageToken: nextPage ?? undefined,
       query: getListWorkflowExecutionsQuery({
         search,
