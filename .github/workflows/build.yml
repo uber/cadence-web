@@ -17,7 +17,8 @@ jobs:
         node-version: '18'
     - run: npm ci
     - run: npm run test
-    #- run: npm run lint:check
+    - run: npm run lint
+    - run: npm run typecheck
     #- run: npm run test:unit
     #- run: npm run test-server &
     #- run: npm run test
