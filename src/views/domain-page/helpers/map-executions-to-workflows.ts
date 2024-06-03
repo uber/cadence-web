@@ -1,4 +1,4 @@
-import parseGrpcTimestamp from '@/utils/grpc/parse-grpc-timestamp';
+import parseGrpcTimestamp from '@/utils/datetime/parse-grpc-timestamp';
 import type { DomainWorkflow } from '../domain-page.types';
 
 // TODO @adhitya.mamallan - use GRPC types here when they are ready
