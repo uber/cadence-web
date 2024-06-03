@@ -1,3 +1,4 @@
+import parseGrpcTimestamp from '@/utils/grpc/parse-grpc-timestamp';
 import type { DomainWorkflow } from '../domain-page.types';
 
 // TODO @adhitya.mamallan - use GRPC types here when they are ready
@@ -22,7 +23,7 @@ export default function mapExecutionsToWorkflows(
     }
 
     const workflowExecutionCloseTime = execution.closeTime
-      ? getTimeFromJSON(execution.closeTime)
+      ? parseGrpcTimestamp(execution.closeTime)
       : undefined;
 
     acc.push({
@@ -32,14 +33,10 @@ export default function mapExecutionsToWorkflows(
       status: Boolean(workflowExecutionCloseTime)
         ? execution.closeStatus
         : 'WORKFLOW_EXECUTION_STATUS_RUNNING',
-      startTime: getTimeFromJSON(execution.startTime),
+      startTime: parseGrpcTimestamp(execution.startTime),
       closeTime: workflowExecutionCloseTime,
     });
 
     return acc;
   }, []);
-}
-
-function getTimeFromJSON(time: { seconds: number; nanos: number }): number {
-  return time.seconds * 1000 + time.nanos / 1000000;
 }
