@@ -1,4 +1,4 @@
-import getListWorkflowExecutionsQuery from '../get-list-workflow-executions-query';
+import getListWorkflowExecutionsQuery from '../../../../handlers/list-workflows/helpers/get-list-workflow-executions-query';
 
 describe('getListWorkflowExecutionsQuery', () => {
   it('should return query', () => {
@@ -7,8 +7,8 @@ describe('getListWorkflowExecutionsQuery', () => {
       workflowStatus: 'WORKFLOW_EXECUTION_CLOSE_STATUS_TERMINATED',
       sortColumn: 'CloseTime',
       sortOrder: 'ASC',
-      startTimeRangeStart: 1712066100,
-      startTimeRangeEnd: 1712096100,
+      startTimeRangeStart: new Date(1712066100),
+      startTimeRangeEnd: new Date(1712096100),
     });
     expect(query).toEqual(
       '(WorkflowType = "mocksearchterm" OR WorkflowID = "mocksearchterm" OR RunID = "mocksearchterm") AND CloseStatus = WORKFLOW_EXECUTION_CLOSE_STATUS_TERMINATED AND StartTime > "1712066100000000" AND StartTime <= "1712096100000000" ORDER BY CloseTime ASC'

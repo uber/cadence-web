@@ -4,7 +4,7 @@ import * as grpcClient from '@/utils/grpc/grpc-client';
 import type { WorkflowStatus } from '@/views/shared/workflow-status-tag/workflow-status-tag.types';
 import type { SortingOrder } from '@/components/table/table.types';
 
-import getListWorkflowExecutionsQuery from '../helpers/get-list-workflow-executions-query';
+import getListWorkflowExecutionsQuery from '../../../handlers/list-workflows/helpers/get-list-workflow-executions-query';
 import mapExecutionsToWorkflows from '../helpers/map-executions-to-workflows';
 
 export type ArgsType = {

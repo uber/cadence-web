@@ -1,5 +1,5 @@
 import parseGrpcTimestamp from '@/utils/datetime/parse-grpc-timestamp';
-import type { DomainWorkflow } from '../domain-page.types';
+import type { DomainWorkflow } from '@/views/domain-page/domain-page.types';
 
 // TODO @adhitya.mamallan - use GRPC types here when they are ready
 export default function mapExecutionsToWorkflows(

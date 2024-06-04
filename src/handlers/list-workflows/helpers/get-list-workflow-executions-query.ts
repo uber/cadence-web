@@ -1,6 +1,5 @@
 import type { WorkflowStatus } from '@/views/shared/workflow-status-tag/workflow-status-tag.types';
 import type { SortingOrder } from '@/components/table/table.types';
-import { WORKFLOW_STATUS_NAMES } from '@/views/shared/workflow-status-tag/workflow-status-tag.constants';
 
 export default function getListWorkflowExecutionsQuery({
   search,
@@ -14,8 +13,8 @@ export default function getListWorkflowExecutionsQuery({
   workflowStatus?: WorkflowStatus;
   sortColumn?: string;
   sortOrder?: SortingOrder;
-  startTimeRangeStart?: number;
-  startTimeRangeEnd?: number;
+  startTimeRangeStart?: string;
+  startTimeRangeEnd?: string;
 }) {
   const searchQueries: Array<string> = [];
   if (search) {
@@ -33,11 +32,11 @@ export default function getListWorkflowExecutionsQuery({
   }
 
   if (startTimeRangeStart) {
-    searchQueries.push(`StartTime > "${startTimeRangeStart.toString()}000000"`);
+    searchQueries.push(`StartTime > "${startTimeRangeStart}000000"`);
   }
 
   if (startTimeRangeEnd) {
-    searchQueries.push(`StartTime <= "${startTimeRangeEnd.toString()}000000"`);
+    searchQueries.push(`StartTime <= "${startTimeRangeEnd}000000"`);
   }
 
   return (
