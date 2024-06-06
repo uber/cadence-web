@@ -3,7 +3,7 @@ services:
   base:
     env_file:
       - .docker_env
-    image: node:fermium-bullseye
+    image: node:20.13.1-bullseye-slim AS BUILD_IMAGE
     volumes:
       - .:/usr/src/service
     working_dir: /usr/src/service
