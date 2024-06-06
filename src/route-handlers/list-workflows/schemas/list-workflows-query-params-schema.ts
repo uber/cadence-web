@@ -5,7 +5,11 @@ import isWorkflowStatus from '@/views/shared/workflow-status-tag/helpers/is-work
 import { type WorkflowStatus } from '@/views/shared/workflow-status-tag/workflow-status-tag.types';
 import getTimestampNsFromISO from '@/utils/datetime/get-timestamp-ns-from-iso';
 
-export const listWorkflowsQueryParamSchema = z.object({
+const listWorkflowsQueryParamSchema = z.object({
+  pageSize: z
+    .string()
+    .regex(/^[1-9]\d*$/, { message: 'Page size must be a positive integer' })
+    .transform((val) => parseInt(val, 10)),
   search: z.string().optional(),
   status: z
     .custom<WorkflowStatus>(isWorkflowStatus, {
@@ -34,6 +38,4 @@ export const listWorkflowsQueryParamSchema = z.object({
   nextPage: z.string().optional(),
 });
 
-export type ListWorkflowsHandlerQueryParams = z.input<
-  typeof listWorkflowsQueryParamSchema
->;
+export default listWorkflowsQueryParamSchema;

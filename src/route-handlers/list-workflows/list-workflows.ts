@@ -1,10 +1,9 @@
-import decodeUrlParams from '@/utils/decode-url-params';
-import * as grpcClient from '@/utils/grpc/grpc-client';
 import { type NextRequest, NextResponse } from 'next/server';
 
-import { PAGE_SIZE } from './list-workflows.constants';
-import { listWorkflowsQueryParamSchema } from './list-workflows.query-params-schema';
+import decodeUrlParams from '@/utils/decode-url-params';
+import * as grpcClient from '@/utils/grpc/grpc-client';
 import type { Props, RouteParams } from './list-workflows.types';
+import listWorkflowsQueryParamSchema from './schemas/list-workflows-query-params-schema';
 import getListWorkflowExecutionsQuery from './helpers/get-list-workflow-executions-query';
 import mapExecutionsToWorkflows from './helpers/map-executions-to-workflows';
 
@@ -29,7 +28,7 @@ export async function listWorkflows(request: NextRequest, props: Props) {
       decodedParams.cluster
     ].listWorkflows({
       domain: decodedParams.domain,
-      pageSize: PAGE_SIZE,
+      pageSize: queryParams.pageSize,
       nextPageToken: queryParams.nextPage,
       query: getListWorkflowExecutionsQuery({
         search: queryParams.search,
