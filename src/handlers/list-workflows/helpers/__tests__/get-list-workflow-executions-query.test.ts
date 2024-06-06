@@ -7,11 +7,11 @@ describe('getListWorkflowExecutionsQuery', () => {
       workflowStatus: 'WORKFLOW_EXECUTION_CLOSE_STATUS_TERMINATED',
       sortColumn: 'CloseTime',
       sortOrder: 'ASC',
-      startTimeRangeStart: '1712066100',
-      startTimeRangeEnd: '1712096100',
+      startTimeRangeStart: '2024-04-02T13:55:00.000Z',
+      startTimeRangeEnd: '2024-04-02T22:15:00.000Z',
     });
     expect(query).toEqual(
-      '(WorkflowType = "mocksearchterm" OR WorkflowID = "mocksearchterm" OR RunID = "mocksearchterm") AND CloseStatus = WORKFLOW_EXECUTION_CLOSE_STATUS_TERMINATED AND StartTime > "1712066100000000" AND StartTime <= "1712096100000000" ORDER BY CloseTime ASC'
+      '(WorkflowType = "mocksearchterm" OR WorkflowID = "mocksearchterm" OR RunID = "mocksearchterm") AND CloseStatus = 3 AND StartTime > "1712066100000000" AND StartTime <= "1712096100000000" ORDER BY CloseTime ASC'
     );
   });
 

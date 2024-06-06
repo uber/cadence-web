@@ -1,5 +1,7 @@
 import type { WorkflowStatus } from '@/views/shared/workflow-status-tag/workflow-status-tag.types';
 import type { SortingOrder } from '@/components/table/table.types';
+import mapWorkflowStatusToInt from './map-workflow-status-to-int';
+import getTimestampNsFromISO from '../../../utils/datetime/get-timestamp-ns-from-iso';
 
 export default function getListWorkflowExecutionsQuery({
   search,
@@ -27,16 +29,22 @@ export default function getListWorkflowExecutionsQuery({
     if (workflowStatus === 'WORKFLOW_EXECUTION_STATUS_RUNNING') {
       searchQueries.push('CloseTime = missing');
     } else {
-      searchQueries.push(`CloseStatus = ${workflowStatus}`);
+      searchQueries.push(
+        `CloseStatus = ${mapWorkflowStatusToInt(workflowStatus)}`
+      );
     }
   }
 
   if (startTimeRangeStart) {
-    searchQueries.push(`StartTime > "${startTimeRangeStart}000000"`);
+    searchQueries.push(
+      `StartTime > "${getTimestampNsFromISO(startTimeRangeStart)}"`
+    );
   }
 
   if (startTimeRangeEnd) {
-    searchQueries.push(`StartTime <= "${startTimeRangeEnd}000000"`);
+    searchQueries.push(
+      `StartTime <= "${getTimestampNsFromISO(startTimeRangeEnd)}"`
+    );
   }
 
   return (
