@@ -1,4 +1,4 @@
-import getTimestampNsFromISO from '../../../../utils/datetime/get-timestamp-ns-from-iso';
+import getTimestampNsFromISO from '../get-timestamp-ns-from-iso';
 
 describe('getTimestampNsFromISO', () => {
   it('should get the timestamp in nanoseconds given the ISO 8601 date', () => {

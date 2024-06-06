@@ -36,8 +36,8 @@ export async function listWorkflows(request: NextRequest, props: Props) {
         workflowStatus: queryParams.status,
         sortColumn: queryParams.sortColumn,
         sortOrder: queryParams.sortOrder,
-        startTimeRangeStart: queryParams.startTimestamp,
-        startTimeRangeEnd: queryParams.endTimestamp,
+        timeRangeStart: queryParams.timeRangeStart,
+        timeRangeEnd: queryParams.timeRangeEnd,
       }),
     });
     return NextResponse.json({

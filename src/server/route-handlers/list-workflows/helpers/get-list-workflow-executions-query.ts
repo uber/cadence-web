@@ -1,22 +1,21 @@
 import type { WorkflowStatus } from '@/views/shared/workflow-status-tag/workflow-status-tag.types';
 import type { SortingOrder } from '@/components/table/table.types';
 import mapWorkflowStatusToInt from './map-workflow-status-to-int';
-import getTimestampNsFromISO from '../../../../utils/datetime/get-timestamp-ns-from-iso';
 
 export default function getListWorkflowExecutionsQuery({
   search,
   workflowStatus,
   sortColumn,
   sortOrder,
-  startTimeRangeStart,
-  startTimeRangeEnd,
+  timeRangeStart,
+  timeRangeEnd,
 }: {
   search?: string;
   workflowStatus?: WorkflowStatus;
   sortColumn?: string;
   sortOrder?: SortingOrder;
-  startTimeRangeStart?: string;
-  startTimeRangeEnd?: string;
+  timeRangeStart?: string;
+  timeRangeEnd?: string;
 }) {
   const searchQueries: Array<string> = [];
   if (search) {
@@ -35,16 +34,12 @@ export default function getListWorkflowExecutionsQuery({
     }
   }
 
-  if (startTimeRangeStart) {
-    searchQueries.push(
-      `StartTime > "${getTimestampNsFromISO(startTimeRangeStart)}"`
-    );
+  if (timeRangeStart) {
+    searchQueries.push(`StartTime > "${timeRangeStart}"`);
   }
 
-  if (startTimeRangeEnd) {
-    searchQueries.push(
-      `StartTime <= "${getTimestampNsFromISO(startTimeRangeEnd)}"`
-    );
+  if (timeRangeEnd) {
+    searchQueries.push(`StartTime <= "${timeRangeEnd}"`);
   }
 
   return (

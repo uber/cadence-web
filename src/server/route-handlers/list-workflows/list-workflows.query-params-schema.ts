@@ -12,12 +12,12 @@ export const listWorkflowsQueryParamSchema = z.object({
       message: 'Invalid workflow status',
     })
     .optional(),
-  startTimestamp: z
+  timeRangeStart: z
     .string()
     .datetime()
     .transform(getTimestampNsFromISO)
     .optional(),
-  endTimestamp: z
+  timeRangeEnd: z
     .string()
     .datetime()
     .transform(getTimestampNsFromISO)
