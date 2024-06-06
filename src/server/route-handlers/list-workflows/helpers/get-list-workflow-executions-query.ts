@@ -1,7 +1,7 @@
 import type { WorkflowStatus } from '@/views/shared/workflow-status-tag/workflow-status-tag.types';
 import type { SortingOrder } from '@/components/table/table.types';
 import mapWorkflowStatusToInt from './map-workflow-status-to-int';
-import getTimestampNsFromISO from '../../../utils/datetime/get-timestamp-ns-from-iso';
+import getTimestampNsFromISO from '../../../../utils/datetime/get-timestamp-ns-from-iso';
 
 export default function getListWorkflowExecutionsQuery({
   search,
