@@ -6,13 +6,7 @@ import getPageQueryParamsValues from './use-page-query-params/helpers/get-page-q
 
 export function useServerComponentQueryParams<P extends PageQueryParams>(
   config: P,
-  searchQueryParams: ParsedQuery<string> | URLSearchParams
+  searchQueryParams: ParsedQuery<string>
 ) {
-  if (searchQueryParams instanceof URLSearchParams) {
-    return getPageQueryParamsValues(
-      config,
-      Object.fromEntries(searchQueryParams)
-    );
-  }
   return getPageQueryParamsValues(config, searchQueryParams);
 }
