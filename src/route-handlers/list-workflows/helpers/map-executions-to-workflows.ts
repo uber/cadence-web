@@ -6,7 +6,6 @@ export default function mapExecutionsToWorkflows(
   executions: Array<any>
 ): Array<DomainWorkflow> {
   return executions.reduce((acc: Array<DomainWorkflow>, execution) => {
-    console.log(JSON.stringify(execution));
     if (
       !execution.workflowExecution?.runId ||
       !execution.workflowExecution?.workflowId

@@ -1,5 +1,5 @@
 import type { WorkflowStatus } from '@/views/shared/workflow-status-tag/workflow-status-tag.types';
-import type { SortingOrder } from '@/components/table/table.types';
+import { type SortOrder } from '@/utils/sort-by';
 import mapWorkflowStatusToInt from './map-workflow-status-to-int';
 
 export default function getListWorkflowExecutionsQuery({
@@ -13,7 +13,7 @@ export default function getListWorkflowExecutionsQuery({
   search?: string;
   workflowStatus?: WorkflowStatus;
   sortColumn?: string;
-  sortOrder?: SortingOrder;
+  sortOrder?: SortOrder;
   timeRangeStart?: string;
   timeRangeEnd?: string;
 }) {
