@@ -23,6 +23,6 @@ export type ListWorkflowsResponse = {
 
 export type ListWorkflowsError = {
   error: string;
-  validationErrors: Array<ZodIssue>;
+  validationErrors?: Array<ZodIssue>;
   message?: string;
 };
