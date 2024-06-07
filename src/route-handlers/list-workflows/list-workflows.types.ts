@@ -1,15 +1,27 @@
 import { z } from 'zod';
 import listWorkflowsQueryParamSchema from './schemas/list-workflows-query-params-schema';
+import { DomainWorkflow } from '@/views/domain-page/domain-page.types';
 
 export type RouteParams = {
   domain: string;
   cluster: string;
 };
 
-export type Props = {
+export type RequestParams = {
   params: RouteParams;
 };
 
-export type ListWorkflowsHandlerQueryParams = z.input<
+export type ListWorkflowsRequestQueryParams = z.input<
   typeof listWorkflowsQueryParamSchema
 >;
+
+export type ListWorkflowsResponse = {
+  workflows: Array<DomainWorkflow>;
+  // TODO @adhitya.mamallan - use the Byte[] type from Protobuf when it is available
+  nextPage: any;
+};
+
+export type ListWorkflowsError = {
+  error: string;
+  message: string;
+};

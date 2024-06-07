@@ -2,13 +2,20 @@ import { type NextRequest, NextResponse } from 'next/server';
 
 import decodeUrlParams from '@/utils/decode-url-params';
 import * as grpcClient from '@/utils/grpc/grpc-client';
-import type { Props, RouteParams } from './list-workflows.types';
+import type {
+  ListWorkflowsResponse,
+  RequestParams,
+  RouteParams,
+} from './list-workflows.types';
 import listWorkflowsQueryParamSchema from './schemas/list-workflows-query-params-schema';
 import getListWorkflowExecutionsQuery from './helpers/get-list-workflow-executions-query';
 import mapExecutionsToWorkflows from './helpers/map-executions-to-workflows';
 
-export async function listWorkflows(request: NextRequest, props: Props) {
-  const decodedParams = decodeUrlParams(props.params) as RouteParams;
+export async function listWorkflows(
+  request: NextRequest,
+  requestParams: RequestParams
+) {
+  const decodedParams = decodeUrlParams(requestParams.params) as RouteParams;
 
   const { data: queryParams, error } = listWorkflowsQueryParamSchema.safeParse(
     Object.fromEntries(request.nextUrl.searchParams)
@@ -39,10 +46,13 @@ export async function listWorkflows(request: NextRequest, props: Props) {
         timeRangeEnd: queryParams.timeRangeEnd,
       }),
     });
-    return NextResponse.json({
+
+    const response: ListWorkflowsResponse = {
       workflows: mapExecutionsToWorkflows(res.executions),
       nextPage: res.nextPageToken,
-    });
+    };
+
+    return NextResponse.json(response);
   } catch (e: any) {
     // TODO: improve error formatting when we have a GRPC error type
     return NextResponse.json(

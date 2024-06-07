@@ -1,7 +1,9 @@
 import type { WorkflowStatus } from '@/views/shared/workflow-status-tag/workflow-status-tag.types';
 
 // TODO @adhitya.mamallan - Use the GRPC enum here when it is ready
-export default function mapWorkflowStatusToInt(status: WorkflowStatus): number {
+export default function mapWorkflowStatusToStatusCode(
+  status: WorkflowStatus
+): number {
   switch (status) {
     case 'WORKFLOW_EXECUTION_CLOSE_STATUS_COMPLETED':
       return 1;

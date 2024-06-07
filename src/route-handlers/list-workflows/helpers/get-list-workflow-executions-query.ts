@@ -1,6 +1,6 @@
 import type { WorkflowStatus } from '@/views/shared/workflow-status-tag/workflow-status-tag.types';
 import { type SortOrder } from '@/utils/sort-by';
-import mapWorkflowStatusToInt from './map-workflow-status-to-int';
+import mapWorkflowStatusToStatusCode from './map-workflow-status-to-status-code';
 
 export default function getListWorkflowExecutionsQuery({
   search,
@@ -29,7 +29,7 @@ export default function getListWorkflowExecutionsQuery({
       searchQueries.push('CloseTime = missing');
     } else {
       searchQueries.push(
-        `CloseStatus = ${mapWorkflowStatusToInt(workflowStatus)}`
+        `CloseStatus = ${mapWorkflowStatusToStatusCode(workflowStatus)}`
       );
     }
   }

@@ -1,8 +1,8 @@
-import mapWorkflowStatusToInt from '../map-workflow-status-to-int';
 import { type WorkflowStatus } from '@/views/shared/workflow-status-tag/workflow-status-tag.types';
 import { WORKFLOW_STATUS_NAMES } from '@/views/shared/workflow-status-tag/workflow-status-tag.constants';
+import mapWorkflowStatusToStatusCode from '../map-workflow-status-to-status-code';
 
-describe('mapWorkflowStatusToInt', () => {
+describe('mapWorkflowStatusToStatusCode', () => {
   const tests: Array<{
     input: WorkflowStatus;
     output: number;
@@ -39,7 +39,7 @@ describe('mapWorkflowStatusToInt', () => {
 
   tests.forEach(({ input, output }) =>
     it(`returns ${output} for ${WORKFLOW_STATUS_NAMES[input]} status`, () => {
-      expect(mapWorkflowStatusToInt(input)).toEqual(output);
+      expect(mapWorkflowStatusToStatusCode(input)).toEqual(output);
     })
   );
 });
