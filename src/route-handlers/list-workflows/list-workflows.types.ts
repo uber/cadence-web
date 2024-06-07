@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { ZodIssue, z } from 'zod';
 import listWorkflowsQueryParamSchema from './schemas/list-workflows-query-params-schema';
 import { DomainWorkflow } from '@/views/domain-page/domain-page.types';
 
@@ -23,5 +23,6 @@ export type ListWorkflowsResponse = {
 
 export type ListWorkflowsError = {
   error: string;
-  message: string;
+  validationErrors: Array<ZodIssue>;
+  message?: string;
 };
