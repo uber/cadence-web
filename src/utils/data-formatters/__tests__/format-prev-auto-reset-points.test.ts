@@ -22,7 +22,9 @@ describe('formatPrevAutoResetPoints', () => {
 
   test('should return empty array if points array is empty', () => {
     const prevAutoResetPoints = { points: [] };
-    expect(formatPrevAutoResetPoints(prevAutoResetPoints)).toEqual({ points: [] });
+    expect(formatPrevAutoResetPoints(prevAutoResetPoints)).toEqual({
+      points: [],
+    });
   });
 
   test('should format prevAutoResetPoints correctly for valid input', () => {
