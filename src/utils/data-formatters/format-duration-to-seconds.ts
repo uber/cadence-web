@@ -21,6 +21,6 @@
 
 const formatDurationToSeconds = (
   duration?: { seconds: number | string } | null
-) => (!duration ? null : parseInt(String(duration.seconds)));
+) => (duration ? parseInt(String(duration.seconds)) : null);
 
 export default formatDurationToSeconds;

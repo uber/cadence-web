@@ -25,11 +25,10 @@ const formatTimestampToDatetime = (
     | null
     | undefined
 ) =>
-  !timestamp
-    ? null
-    : new Date(
-        parseInt(String(timestamp.seconds)) * 1000 +
-          parseInt(String(timestamp.nanos)) / 1e6
-      );
+  timestamp
+    ? new Date(
+      parseInt(String(timestamp.seconds)) * 1000 +
+      parseInt(String(timestamp.nanos)) / 1e6
+    ) : null;
 
 export default formatTimestampToDatetime;
