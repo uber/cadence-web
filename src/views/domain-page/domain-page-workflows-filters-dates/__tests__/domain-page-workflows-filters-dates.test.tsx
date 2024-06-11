@@ -1,11 +1,13 @@
 import React from 'react';
-import { render, screen, act, fireEvent } from '@/test-utils/rtl';
+
 import { type PageQueryParamValues } from '@/hooks/use-page-query-params/use-page-query-params.types';
+import { render, screen, act, fireEvent } from '@/test-utils/rtl';
+
 import {
   mockDomainPageQueryParamsValues,
   mockDateOverrides,
 } from '../../__fixtures__/domain-page-query-params';
-import domainPageQueryParamsConfig from '../../config/domain-page-query-params.config';
+import type domainPageQueryParamsConfig from '../../config/domain-page-query-params.config';
 import DomainPageWorkflowsFiltersDates from '../domain-page-workflows-filters-dates';
 
 jest.useFakeTimers().setSystemTime(new Date('2023-05-25'));
