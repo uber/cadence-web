@@ -7,7 +7,7 @@ module.exports = {
     'plugin:import/recommended',
     'plugin:import/typescript',
   ],
-  plugins: ['react', 'prettier'],
+  plugins: ['react'],
   rules: {
     'react/react-in-jsx-scope': 'off',
 
@@ -37,6 +37,11 @@ module.exports = {
           {
             pattern: 'react',
             group: 'external',
+            position: 'before',
+          },
+          {
+            pattern: '@/test-utils/rtl',
+            group: 'internal',
             position: 'before',
           },
         ],

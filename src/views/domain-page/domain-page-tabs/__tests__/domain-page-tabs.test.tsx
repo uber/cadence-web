@@ -1,7 +1,8 @@
 import React from 'react';
 
-import { type PageTab } from '@/components/page-tabs/page-tabs.types';
 import { render, screen, act, fireEvent } from '@/test-utils/rtl';
+
+import { type PageTab } from '@/components/page-tabs/page-tabs.types';
 
 import domainPageTabsConfig from '../../config/domain-page-tabs.config';
 import DomainPageTabs from '../domain-page-tabs';

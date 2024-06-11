@@ -1,8 +1,9 @@
 import React from 'react';
 
+import { render, screen, act, fireEvent } from '@/test-utils/rtl';
+
 import * as usePageQueryParamsModule from '@/hooks/use-page-query-params/use-page-query-params';
 import { type PageQueryParamValues } from '@/hooks/use-page-query-params/use-page-query-params.types';
-import { render, screen, act, fireEvent } from '@/test-utils/rtl';
 
 import {
   mockQueryParamsValues,

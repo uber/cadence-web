@@ -1,7 +1,8 @@
 import React from 'react';
 
-import { type PageQueryParamValues } from '@/hooks/use-page-query-params/use-page-query-params.types';
 import { render, screen, act, fireEvent } from '@/test-utils/rtl';
+
+import { type PageQueryParamValues } from '@/hooks/use-page-query-params/use-page-query-params.types';
 
 import {
   mockDomainPageQueryParamsValues,
