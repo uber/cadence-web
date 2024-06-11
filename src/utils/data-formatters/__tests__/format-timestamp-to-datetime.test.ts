@@ -41,8 +41,8 @@ describe('formatTimestampToDatetime', () => {
 
   test('should handle large numbers for seconds and nanos', () => {
     const timestamp = { seconds: '2147483647', nanos: '999999999' };
-    // We omit the last 6 nines since JS ignores that precision anyway
-    const expectedDate = new Date(2147483647999);
+    // eslint-disable-next-line @typescript-eslint/no-loss-of-precision
+    const expectedDate = new Date(2147483647999.999999);
     expect(formatTimestampToDatetime(timestamp)).toEqual(expectedDate);
   });
 
