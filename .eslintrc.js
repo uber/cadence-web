@@ -3,13 +3,25 @@ module.exports = {
     'next/core-web-vitals',
     'plugin:react/recommended',
     'plugin:prettier/recommended',
+    'plugin:@typescript-eslint/recommended',
     'plugin:import/recommended',
     'plugin:import/typescript',
   ],
   plugins: ['react', 'prettier'],
   rules: {
     'react/react-in-jsx-scope': 'off',
+
+    // Typescript rules
+    '@typescript-eslint/consistent-type-imports': [
+      'error',
+      { prefer: 'type-imports', fixStyle: 'inline-type-imports' },
+    ],
+    '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/no-unused-vars': 'off',
+
+    // Import rules
     'import/no-unresolved': 'error',
+    'import/no-duplicates': 'error',
     'import/order': [
       'error',
       {
@@ -28,6 +40,7 @@ module.exports = {
             position: 'before',
           },
         ],
+        distinctGroup: true,
         pathGroupsExcludedImportTypes: ['react'],
       },
     ],
@@ -39,6 +52,7 @@ module.exports = {
     'import/resolver': {
       typescript: {
         alwaysTryTypes: true,
+        project: '/',
       },
     },
   },

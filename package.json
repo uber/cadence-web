@@ -41,6 +41,7 @@
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/react": "^15.0.2",
     "@tsd/typescript": "^5.4.5",
+    "@types/eslint__js": "^8.42.3",
     "@types/jest": "^29.5.12",
     "@types/lodash": "^4.14.202",
     "@types/node": "^20.11.17",
@@ -60,7 +61,8 @@
     "next-router-mock": "^0.9.13",
     "prettier": "3.2.5",
     "ts-jest": "^29.1.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "typescript-eslint": "^7.13.0"
   },
   "overrides": {
     "d3-color": "3.1.0",
