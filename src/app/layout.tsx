@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { Rubik } from 'next/font/google';
 
 import './globals.css';
+import ReactQueryProvider from '@/providers/react-query-provider';
+
 import StyletronProvider from '../providers/styletron-provider';
 
 import StyledJsxRegistry from './registry';
@@ -23,7 +25,9 @@ export default function RootLayout({
     <html lang="en">
       <StyledJsxRegistry />
       <body className={inter.className}>
-        <StyletronProvider>{children}</StyletronProvider>
+        <ReactQueryProvider>
+          <StyletronProvider>{children}</StyletronProvider>
+        </ReactQueryProvider>
       </body>
     </html>
   );
