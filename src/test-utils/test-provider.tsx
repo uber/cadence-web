@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 
-import { MemoryRouterProvider } from 'next-router-mock/MemoryRouterProvider';
-
-import StyletronProvider from '@/providers/styletron-provider';
-
 import {
   QueryClient,
   type QueryClientConfig,
   QueryClientProvider,
 } from '@tanstack/react-query';
+import { MemoryRouterProvider } from 'next-router-mock/MemoryRouterProvider';
+
+import StyletronProvider from '@/providers/styletron-provider';
+
 import { type Props } from './test-provider.types';
 
 jest.mock('next/router', () => jest.requireActual('next-router-mock'));

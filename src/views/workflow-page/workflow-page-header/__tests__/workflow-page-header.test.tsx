@@ -9,7 +9,9 @@ jest.mock(
   '../../workflow-page-status-tag/workflow-page-status-tag',
   () =>
     function WorkflowPageStatusTag() {
-      return  <div data-testid="workflow-page-status-tag">Example Status Tag</div>;
+      return (
+        <div data-testid="workflow-page-status-tag">Example Status Tag</div>
+      );
     }
 );
 

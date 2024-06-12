@@ -1,5 +1,6 @@
-import { QueryClientConfig } from '@tanstack/react-query';
 import { type ReactElement } from 'react';
+
+import { type QueryClientConfig } from '@tanstack/react-query';
 
 export type Props = {
   children?: ReactElement;
@@ -7,5 +8,5 @@ export type Props = {
     initialUrl?: string;
     pathnames?: string[];
   };
-  queryClientConfig?:QueryClientConfig
+  queryClientConfig?: QueryClientConfig;
 };
