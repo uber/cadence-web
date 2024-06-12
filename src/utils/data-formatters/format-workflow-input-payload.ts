@@ -28,7 +28,7 @@ function parseJsonLines(input: string) {
       jsonArray.push(jsonObject);
       // Reset currentJson for the next JSON object
       currentJson = '';
-    } catch (e) {
+    } catch (_) {
       // If parsing fails, keep appending lines until we get a valid JSON
     }
   });
@@ -38,7 +38,7 @@ function parseJsonLines(input: string) {
     try {
       const jsonObject = JSON.parse(currentJson);
       jsonArray.push(jsonObject);
-    } catch (e) {
+    } catch (_) {
       //TODO: @assem.hafez add logging here to capture parse issues
       console.error(
         'Error parsing JSON string:',
