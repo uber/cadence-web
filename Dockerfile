@@ -1,4 +1,4 @@
-FROM node:20.13.1-bullseye-slim AS BUILD_IMAGE
+FROM node:20.13.1-bullseye-slim
 
 ### Build step ###
 WORKDIR /usr/build
@@ -13,7 +13,7 @@ RUN npm install --no-save --production --unsafe-perm
 RUN npm run build-production
 
 # switch to lite version of node
-FROM node:20.13.1-bullseye-slim AS BUILD_IMAGE
+FROM node:20.13.1-bullseye-slim
 
 ### Run step ###
 WORKDIR /usr/app
