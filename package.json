@@ -30,8 +30,8 @@
   ],
   "author": "Nathan Black <nathanbl@uber.com>",
   "engines": {
-    "node": "14.19.3",
-    "npm": "6.14.17"
+    "node": "20.13.1",
+    "npm": "10.8.1"
   },
   "dependencies": {
     "@babel/core": "^7.8.3",
