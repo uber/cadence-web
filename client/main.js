@@ -60,6 +60,7 @@ import {
 import { injectMomentDurationFormat, jsonTryParse } from '~helpers';
 
 const routeOpts = {
+  base: process.env.PREFIX_PATH,
   mode: 'history',
   routes: [
     {

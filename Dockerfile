@@ -10,6 +10,8 @@ COPY . .
 RUN npm install --no-save --production --unsafe-perm
 
 # Bundle the client code
+ARG PREFIX_PATH
+ENV PREFIX_PATH=$PREFIX_PATH
 RUN npm run build-production
 
 # switch to lite version of node
