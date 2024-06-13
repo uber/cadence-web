@@ -21,7 +21,7 @@ module.exports = {
       'warn',
       {
         args: 'all',
-        argsIgnorePattern: '^_|\\$theme',
+        argsIgnorePattern: '^_',
         caughtErrors: 'all',
         caughtErrorsIgnorePattern: '^_',
         destructuredArrayIgnorePattern: '^_',
