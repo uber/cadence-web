@@ -18,7 +18,7 @@ export default function WorkflowSummaryTab({
   const { cls } = useStyletronClasses(cssStyles);
 
   const { data: workflowHistory } = useSuspenseQuery({
-    queryKey: ['wokflow_history'],
+    queryKey: ['workflow_history'],
     queryFn: () =>
       request(
         `/api/domains/${params.domain}/${params.cluster}/workflows/${params.workflowId}/${params.runId}/history`

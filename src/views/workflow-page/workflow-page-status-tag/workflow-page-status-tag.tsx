@@ -7,12 +7,12 @@ import { useParams } from 'next/navigation';
 import request from '@/utils/request';
 import WorkflowStatusTag from '@/views/shared/workflow-status-tag/workflow-status-tag';
 
-import type { WorkflowPageTabsParams } from './workflow-page-status-tag.types';
+import type { WorkflowPageParams } from '../workflow-page.types';
 
 export default function WorkflowPageStatusTag() {
-  const params = useParams<WorkflowPageTabsParams>();
+  const params = useParams<WorkflowPageParams>();
   const { data, isError, isLoading } = useSuspenseQuery({
-    queryKey: ['wokflow_execution'],
+    queryKey: ['workflow_execution'],
     queryFn: () =>
       request(
         `/api/domains/${params.domain}/${params.cluster}/workflows/${params.workflowId}/${params.runId}`
