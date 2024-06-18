@@ -10,7 +10,7 @@ export const overrides = {
       style: ({ $theme }: { $theme: Theme }): StyleObject => ({
         display: 'flex',
         flexDirection: 'column',
-        borderBottom: '1px solid #F3F3F3',
+        borderBottom: `1px solid ${$theme.colors.borderOpaque}`,
       }),
     },
     TabBar: {
