@@ -32,7 +32,7 @@ const formatWorkflowHistory = ({
   ...response,
   archived: archived || null,
   history: {
-    events: events.map(({ eventId, eventTime, ...event }) => ({
+    events: events.map(({ eventId, eventTime, ...event }: any) => ({
       eventId: parseInt(eventId),
       timestamp: formatTimestampToDatetime(eventTime),
       eventType: formatWorkflowHistoryEventType(event.attributes),
