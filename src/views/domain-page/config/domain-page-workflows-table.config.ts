@@ -1,5 +1,7 @@
+import { createElement } from 'react';
+
+import FormattedDate from '@/components/formatted-date/formatted-date';
 import { type TableColumn } from '@/components/table/table.types';
-import formatDate from '@/utils/data-formatters/format-date';
 import WorkflowStatusTag from '@/views/shared/workflow-status-tag/workflow-status-tag';
 
 import { type DomainWorkflow } from '../domain-page.types';
@@ -14,7 +16,8 @@ const domainPageWorkflowsTableConfig: Array<TableColumn<DomainWorkflow>> = [
   {
     name: 'Status',
     id: 'CloseStatus',
-    renderCell: WorkflowStatusTag,
+    renderCell: (row: DomainWorkflow) =>
+      createElement(WorkflowStatusTag, { status: row.status }),
     width: '7.5%',
   },
   {
@@ -32,7 +35,8 @@ const domainPageWorkflowsTableConfig: Array<TableColumn<DomainWorkflow>> = [
   {
     name: 'Started',
     id: 'StartTime',
-    renderCell: (row: DomainWorkflow) => formatDate(row.startTime),
+    renderCell: (row: DomainWorkflow) =>
+      createElement(FormattedDate, { timestampMs: row.startTime }),
     width: '12.5%',
     sortable: true,
   },
@@ -40,7 +44,7 @@ const domainPageWorkflowsTableConfig: Array<TableColumn<DomainWorkflow>> = [
     name: 'Ended',
     id: 'CloseTime',
     renderCell: (row: DomainWorkflow) =>
-      row.closeTime ? formatDate(row.closeTime) : 'Ongoing',
+      createElement(FormattedDate, { timestampMs: row.closeTime }),
     width: '12.5%',
     sortable: true,
   },

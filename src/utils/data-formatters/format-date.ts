@@ -1,5 +1,9 @@
-import { format } from 'date-fns';
+import { format, isThisYear } from 'date-fns';
 
-export default function formatDate(timestampNs: number) {
-  return format(new Date(timestampNs / 1e6), 'dd MMM yyyy, HH:mm:ss z');
+export default function formatDate(timestampMs: number) {
+  const date = new Date(timestampMs);
+  return format(
+    date,
+    isThisYear(date) ? 'dd MMM, HH:mm:ss z' : 'dd MMM yyyy, HH:mm:ss z'
+  );
 }

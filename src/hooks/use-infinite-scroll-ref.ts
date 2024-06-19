@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+
 import { useInView } from 'react-intersection-observer';
 
 /**
@@ -13,12 +15,13 @@ export default function useInfiniteScrollRef({
 }) {
   const { ref, inView } = useInView({
     threshold: 0.5,
-    onChange: () => {
-      if (inView && !isFetchingResults) {
-        fetchResults();
-      }
-    },
   });
+
+  useEffect(() => {
+    if (inView && !isFetchingResults) {
+      fetchResults();
+    }
+  }, [inView, fetchResults, isFetchingResults]);
 
   return ref;
 }
