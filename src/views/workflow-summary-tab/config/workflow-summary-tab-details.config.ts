@@ -1,13 +1,11 @@
 import { createElement } from 'react';
 
-import { StyledLink } from 'baseui/link';
-
 import WorkflowStatusTag from '@/views/shared/workflow-status-tag/workflow-status-tag';
 import getWorkflowIsCompleted from '@/views/workflow-page/helpers/get-workflow-is-completed';
 import getWorkflowStatusTagProps from '@/views/workflow-page/helpers/get-workflow-status-tag-props';
 
-import getWorkflowExecutionLinkProps from '../helpers/get-workflow-execution-link-props';
 import { type WorkflowSummaryTabDetailsConfig } from '../workflow-summary-tab-details/workflow-summary-tab-details.types';
+import WorkflowSummaryTabDetailsExecutionLink from '../workflow-summary-tab-details-wf-execution-link/workflow-summary-tab-details-wf-execution-link';
 
 const workflowSummaryTabDetailsConfig: WorkflowSummaryTabDetailsConfig[] = [
   {
@@ -37,14 +35,10 @@ const workflowSummaryTabDetailsConfig: WorkflowSummaryTabDetailsConfig[] = [
       const runId =
         firstEvent?.workflowExecutionStartedEventAttributes
           ?.continuedExecutionRunId;
-      return createElement(
-        StyledLink,
-        getWorkflowExecutionLinkProps({
-          ...params,
-          runId,
-        }),
-        runId
-      );
+      return createElement(WorkflowSummaryTabDetailsExecutionLink, {
+        ...params,
+        runId,
+      });
     },
     hide: ({ firstEvent }) =>
       !firstEvent?.workflowExecutionStartedEventAttributes
@@ -99,18 +93,14 @@ const workflowSummaryTabDetailsConfig: WorkflowSummaryTabDetailsConfig[] = [
       const { runId, workflowId } =
         firstEvent?.workflowExecutionStartedEventAttributes
           ?.parentWorkflowExecution || {};
-      return createElement(
-        StyledLink,
-        getWorkflowExecutionLinkProps({
-          domain:
-            firstEvent?.workflowExecutionStartedEventAttributes
-              ?.parentWorkflowDomain,
-          cluster: params.cluster,
-          workflowId,
-          runId,
-        }),
-        runId
-      );
+      return createElement(WorkflowSummaryTabDetailsExecutionLink, {
+        domain:
+          firstEvent?.workflowExecutionStartedEventAttributes
+            ?.parentWorkflowDomain,
+        cluster: params.cluster,
+        workflowId,
+        runId,
+      });
     },
     hide: ({ firstEvent }) =>
       !firstEvent?.workflowExecutionStartedEventAttributes

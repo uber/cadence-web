@@ -15,7 +15,6 @@ const cssStylesObj = {
     },
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center',
     gap: theme.sizing.scale300,
     flexWrap: 'wrap',
     paddingTop: theme.sizing.scale400,
@@ -30,6 +29,7 @@ const cssStylesObj = {
   detailsValue: (theme) => ({
     ...theme.typography.ParagraphXSmall,
     display: 'flex',
+    flex: '1 0 300px',
   }),
 } satisfies StyletronCSSObject;
 
