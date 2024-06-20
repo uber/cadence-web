@@ -104,7 +104,7 @@ async function setup({
 }: {
   errorCase?: 'initial-fetch-error' | 'subsequent-fetch-error';
 }) {
-  //TODO: @adhitya.mamallan - This is not type-safe, explore using a library such as nock or msw
+  // TODO: @adhitya.mamallan - This is not type-safe, explore using a library such as nock or msw
   const requestMock = jest.spyOn(requestModule, 'default') as jest.Mock;
   const pages = generateWorkflowPages(2);
 
