@@ -1,4 +1,4 @@
-import { styled as createStyled, withStyle, type Theme } from 'baseui';
+import { styled as createStyled, withStyle } from 'baseui';
 import { StyledLink } from 'baseui/link';
 
 export const styled = {

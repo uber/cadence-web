@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 
-import { render, screen, act, fireEvent, waitFor } from '@/test-utils/rtl';
+import { render, screen, act, fireEvent } from '@/test-utils/rtl';
 
 import { type ListWorkflowsResponse } from '@/route-handlers/list-workflows/list-workflows.types';
 import * as requestModule from '@/utils/request';
