@@ -1,4 +1,4 @@
-import { createElement } from 'react';
+import { Fragment, createElement } from 'react';
 
 import WorkflowStatusTag from '@/views/shared/workflow-status-tag/workflow-status-tag';
 import getWorkflowIsCompleted from '@/views/workflow-page/helpers/get-workflow-is-completed';
@@ -25,7 +25,11 @@ const workflowSummaryTabDetailsConfig: WorkflowSummaryTabDetailsConfig[] = [
     key: 'lastEvent',
     getLabel: () => 'Last event',
     valueComponent: ({ lastEvent }) => {
-      return `${lastEvent?.eventType} (${new Date(lastEvent.timestamp).toLocaleString()})`;
+      return createElement(
+        'div',
+        { suppressHydrationWarning: true },
+        `${lastEvent?.eventType} (${new Date(lastEvent.timestamp).toLocaleString()})`
+      );
     },
   },
   {
@@ -64,18 +68,24 @@ const workflowSummaryTabDetailsConfig: WorkflowSummaryTabDetailsConfig[] = [
     key: 'startTime',
     getLabel: () => 'Start at',
     valueComponent: ({ firstEvent }) =>
-      firstEvent?.timestamp
-        ? new Date(firstEvent.timestamp).toLocaleString()
-        : '-',
+      createElement(
+        'div',
+        { suppressHydrationWarning: true },
+        firstEvent?.timestamp
+          ? new Date(firstEvent.timestamp).toLocaleString()
+          : '-'
+      ),
   },
   {
     key: 'endTime',
     getLabel: () => 'End time',
     valueComponent: ({ lastEvent }) => {
       const isCompletedEvent = getWorkflowIsCompleted(lastEvent.attributes);
-      return isCompletedEvent
-        ? new Date(lastEvent.timestamp).toLocaleString()
-        : '-';
+      return createElement(
+        'div',
+        { suppressHydrationWarning: true },
+        isCompletedEvent ? new Date(lastEvent.timestamp).toLocaleString() : '-'
+      );
     },
   },
   {

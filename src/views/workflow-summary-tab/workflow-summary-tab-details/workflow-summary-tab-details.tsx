@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 
-import { LabelMedium, LabelXSmall } from 'baseui/typography';
+import { LabelMedium } from 'baseui/typography';
 
 import useStyletronClasses from '@/hooks/use-styletron-classes';
 
@@ -41,11 +41,8 @@ export default function WorkflowSummaryTabDetails({
           )
           .map((c) => (
             <div className={cls.detailsRow} key={c.key}>
-              <LabelXSmall className={cls.detailsLabel}>
-                {c.getLabel()}
-              </LabelXSmall>
-              {/*supress hydration warning for dates */}
-              <div className={cls.detailsValue} suppressHydrationWarning>
+              <div className={cls.detailsLabel}>{c.getLabel()}</div>
+              <div className={cls.detailsValue}>
                 <c.valueComponent
                   firstEvent={firstHistoryEvent}
                   lastEvent={lastHistoryEvent}

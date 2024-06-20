@@ -25,6 +25,8 @@ const cssStylesObj = {
     minWidth: '120px',
     maxWidth: '120px',
     display: 'flex',
+    ...theme.typography.LabelXSmall,
+    lineHeight: theme.typography.ParagraphXSmall.lineHeight, // gives the same line height as the value
   }),
   detailsValue: (theme) => ({
     ...theme.typography.ParagraphXSmall,
