@@ -1,9 +1,8 @@
 import React from 'react';
 
-import TableLoadingRows from '@/components/table-loading-rows/table-loading-rows';
-import useInfiniteScrollRef from '@/hooks/use-infinite-scroll-ref';
+import { Spinner } from 'baseui/spinner';
 
-import { PAGE_SIZE } from '../domain-page-workflows-table/domain-page-workflows-table.constants';
+import useInfiniteScrollRef from '@/hooks/use-infinite-scroll-ref';
 
 import { styled } from './domain-page-workflows-table-end-message.styles';
 import { type Props } from './domain-page-workflows-table-end-message.types';
@@ -15,7 +14,7 @@ export default function DomainPageWorkflowsTableEndMessage(props: Props) {
   });
 
   if (props.isFetchingNextPage) {
-    return <TableLoadingRows numRows={PAGE_SIZE} data-testid="loading" />;
+    return <Spinner data-testid="loading-spinner" />;
   }
 
   if (props.error) {
@@ -35,10 +34,9 @@ export default function DomainPageWorkflowsTableEndMessage(props: Props) {
 
   if (props.hasNextPage) {
     return (
-      <>
-        <div data-testid="infinite-scroll-spinner" ref={targetRef} />
-        <TableLoadingRows numRows={PAGE_SIZE} />
-      </>
+      <div data-testid="infinite-scroll-spinner" ref={targetRef}>
+        <Spinner />
+      </div>
     );
   }
 
