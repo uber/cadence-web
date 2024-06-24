@@ -7,6 +7,7 @@ import { useParams } from 'next/navigation';
 
 import request from '@/utils/request';
 import WorkflowStatusTag from '@/views/shared/workflow-status-tag/workflow-status-tag';
+import { WORKFLOW_STATUSES } from '@/views/shared/workflow-status-tag/workflow-status-tag.constants';
 
 import getWorkflowStatusTagProps from '../helpers/get-workflow-status-tag-props';
 import type { WorkflowPageParams } from '../workflow-page.types';
