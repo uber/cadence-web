@@ -34,25 +34,21 @@ export async function listWorkflows(
   }
 
   try {
-    const res = await grpcClient.grpcRequest(
-      decodedParams.cluster,
-      'listWorkflows',
-      [
-        {
-          domain: decodedParams.domain,
-          pageSize: queryParams.pageSize,
-          nextPageToken: queryParams.nextPage,
-          query: getListWorkflowExecutionsQuery({
-            search: queryParams.search,
-            workflowStatus: queryParams.status,
-            sortColumn: queryParams.sortColumn,
-            sortOrder: queryParams.sortOrder,
-            timeRangeStart: queryParams.timeRangeStart,
-            timeRangeEnd: queryParams.timeRangeEnd,
-          }),
-        },
-      ]
-    );
+    const res = await grpcClient
+      .getClusterMethods(decodedParams.cluster)
+      .listWorkflows({
+        domain: decodedParams.domain,
+        pageSize: queryParams.pageSize,
+        nextPageToken: queryParams.nextPage,
+        query: getListWorkflowExecutionsQuery({
+          search: queryParams.search,
+          workflowStatus: queryParams.status,
+          sortColumn: queryParams.sortColumn,
+          sortOrder: queryParams.sortOrder,
+          timeRangeStart: queryParams.timeRangeStart,
+          timeRangeEnd: queryParams.timeRangeEnd,
+        }),
+      });
 
     const response: ListWorkflowsResponse = {
       workflows: mapExecutionsToWorkflows(res.executions),
@@ -61,6 +57,7 @@ export async function listWorkflows(
 
     return NextResponse.json(response);
   } catch (e: any) {
+    console.log(e.message);
     return NextResponse.json(
       {
         message: 'Failed to fetch workflows',

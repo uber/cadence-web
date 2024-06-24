@@ -244,16 +244,12 @@ const clusterServicesMethods = CLUSTERS_CONFIGS.reduce(
 
 export const clusterMethods = clusterServicesMethods;
 
-export function grpcRequest<
-  C extends string,
-  E extends keyof (typeof clusterServicesMethods)[C],
->(
-  cluster: C,
-  endpoint: E,
-  args: Parameters<(typeof clusterServicesMethods)[C][E]>
-): Promise<any> {
-  if (!CLUSTERS_CONFIGS.find((config) => config.clusterName === cluster)) {
-    return Promise.reject('Invalid cluster');
+export function getClusterMethods(
+  cluster: string
+): (typeof clusterMethods)[string] {
+  const methods = clusterMethods[cluster];
+  if (!methods) {
+    throw new Error('Invalid cluster provided');
   }
-  return clusterServicesMethods[cluster][endpoint](args);
+  return methods;
 }

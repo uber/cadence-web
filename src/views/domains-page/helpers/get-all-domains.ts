@@ -11,7 +11,7 @@ import getUniqueDomains from './get-unique-domains';
 export const getAllDomains = async () => {
   const results = await Promise.all(
     CLUSTERS_CONFIGS.map(({ clusterName }) =>
-      grpcClient.clusterMethods[clusterName]
+      grpcClient.getClusterMethods(clusterName)
         .listDomains({ pageSize: 1000 })
         .then(({ domains }) => {
           return filterDomainsIrrelevantToCluster(clusterName, domains);
