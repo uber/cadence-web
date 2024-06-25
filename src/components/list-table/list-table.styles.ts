@@ -2,7 +2,7 @@ import { type Theme, styled as createStyled } from 'baseui';
 import { type StyleObject } from 'styletron-react';
 
 export const styled = {
-  MetadataRow: createStyled(
+  ListRow: createStyled(
     'div',
     ({ $theme }: { $theme: Theme }): StyleObject => ({
       ':not(:last-child)': {
@@ -12,25 +12,26 @@ export const styled = {
       flexDirection: 'row',
       gap: $theme.sizing.scale300,
       flexWrap: 'wrap',
-      paddingTop: $theme.sizing.scale400,
-      paddingBottom: $theme.sizing.scale400,
+      minHeight: $theme.sizing.scale1200,
+      paddingTop: $theme.sizing.scale550,
+      paddingBottom: $theme.sizing.scale550,
       wordBreak: 'break-word',
     })
   ),
-  MetadataItemLabel: createStyled(
+  ListItemLabel: createStyled(
     'div',
     ({ $theme }: { $theme: Theme }): StyleObject => ({
-      minWidth: '120px',
-      maxWidth: '120px',
+      minWidth: '160px',
+      maxWidth: '160px',
       display: 'flex',
-      ...$theme.typography.LabelXSmall,
-      lineHeight: $theme.typography.ParagraphXSmall.lineHeight,
+      ...$theme.typography.LabelSmall,
+      lineHeight: $theme.typography.ParagraphSmall.lineHeight,
     })
   ),
-  MetadataItemValue: createStyled(
+  ListItemValue: createStyled(
     'div',
     ({ $theme }: { $theme: Theme }): StyleObject => ({
-      ...$theme.typography.ParagraphXSmall,
+      ...$theme.typography.ParagraphSmall,
       display: 'flex',
       flex: '1 0 300px',
     })

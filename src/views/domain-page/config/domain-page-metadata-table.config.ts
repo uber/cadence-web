@@ -1,8 +1,8 @@
-import type { MetadataTableItem } from '@/components/metadata-table/metadata-table.types';
+import type { ListTableItem } from '@/components/list-table/list-table.types';
 
 import { type DomainInfo } from '../domain-page.types';
 
-const domainPageMetadataTableConfig: Array<MetadataTableItem<DomainInfo>> = [
+const domainPageMetadataTableConfig: Array<ListTableItem<DomainInfo>> = [
   {
     key: 'domainId',
     label: 'Domain ID',
@@ -26,7 +26,7 @@ const domainPageMetadataTableConfig: Array<MetadataTableItem<DomainInfo>> = [
   },
   {
     key: 'failoverVersion',
-    label: 'FailoverVersion',
+    label: 'Failover version',
     renderValue: (domainInfo: DomainInfo) => domainInfo.failoverVersion,
   },
 ];
