@@ -1,4 +1,4 @@
-import type React from 'react';
+import React from 'react';
 
 import LinkBlack from '@/components/link-black/link-black';
 
@@ -18,15 +18,15 @@ export default function DomainPageMetadataClusters(domainInfo: DomainInfo) {
             ? 'active'
             : 'passive';
         return (
-          <>
+          <React.Fragment key={cluster.clusterName}>
             <LinkBlack
               href={`/domains/${domainInfo.name}/${cluster.clusterName}`}
             >
               {cluster.clusterName}
-            </LinkBlack>{' '}
-            {`(${replicationStatusLabel})`}
+            </LinkBlack>
+            {` (${replicationStatusLabel})`}
             {index < numClusters - 1 ? ', ' : ''}
-          </>
+          </React.Fragment>
         );
       })}
     </div>

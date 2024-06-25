@@ -17,9 +17,12 @@ export default function DomainPageMetadata(props: DomainPageTabContentProps) {
   const { data: domainInfo } = useSuspenseQuery<DomainInfo>({
     queryKey: ['describeDomain', props],
     queryFn: () =>
-      request(`/api/domains/${props.domain}/${props.cluster}`).then((res) =>
-        res.json()
-      ),
+      request(`/api/domains/${props.domain}/${props.cluster}`).then((res) => {
+        if (!res.ok) {
+          throw new Error('Failed to fetch domain metadata');
+        }
+        return res.json();
+      }),
   });
 
   return (
