@@ -1,5 +1,8 @@
+import { createElement } from 'react';
+
 import type { ListTableItem } from '@/components/list-table/list-table.types';
 
+import DomainPageMetadataClusters from '../domain-page-metadata-clusters/domain-page-metadata-clusters';
 import { type DomainInfo } from '../domain-page.types';
 
 const domainPageMetadataTableConfig: Array<ListTableItem<DomainInfo>> = [
@@ -16,7 +19,8 @@ const domainPageMetadataTableConfig: Array<ListTableItem<DomainInfo>> = [
   {
     key: 'clusters',
     label: 'Clusters',
-    renderValue: (domainInfo: DomainInfo) => domainInfo.activeClusterName, // create a new Clusters component
+    renderValue: (domainInfo: DomainInfo) =>
+      createElement(DomainPageMetadataClusters, domainInfo),
   },
   {
     key: 'globalOrLocal',
