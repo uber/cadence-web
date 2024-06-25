@@ -3,6 +3,7 @@ import React from 'react';
 import { styled } from './metadata-table.styles';
 import type { Props } from './metadata-table.types';
 
+// Probably rename this to avoid semantic collisions with Metadata
 export default function MetadataTable<T extends object>(props: Props<T>) {
   return (
     <div>
@@ -10,7 +11,7 @@ export default function MetadataTable<T extends object>(props: Props<T>) {
         <styled.MetadataRow key={tableItem.key}>
           <styled.MetadataItemLabel>{tableItem.label}</styled.MetadataItemLabel>
           <styled.MetadataItemValue>
-            <tableItem.renderValue metadataObj={props.metadataObj} />
+            <tableItem.renderValue {...props.metadataObj} />
           </styled.MetadataItemValue>
         </styled.MetadataRow>
       ))}
