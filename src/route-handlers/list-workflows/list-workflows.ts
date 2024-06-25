@@ -57,7 +57,6 @@ export async function listWorkflows(
 
     return NextResponse.json(response);
   } catch (e: any) {
-    console.log(e.message);
     return NextResponse.json(
       {
         message: 'Failed to fetch workflows',
