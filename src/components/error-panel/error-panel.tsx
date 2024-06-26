@@ -1,3 +1,5 @@
+import { startTransition } from 'react';
+
 import { Button, SIZE, KIND, SHAPE } from 'baseui/button';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -26,8 +28,9 @@ export default function ErrorPanel(props: Props) {
               onClick={() => {
                 switch (action.kind) {
                   case 'retry':
-                    // TODO @adhitya.mamallan: once the react-query domain changes are landed, try to replace this with props.reset()
-                    router.refresh();
+                    // TODO @adhitya.mamallan: See if there's a more optimal solution than a full reload
+                    // https://github.com/vercel/next.js/discussions/49935
+                    window.location.reload();
                     break;
                   case 'link-internal':
                     router.push(action.link);

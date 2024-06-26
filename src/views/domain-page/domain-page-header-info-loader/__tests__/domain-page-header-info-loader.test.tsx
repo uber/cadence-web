@@ -56,12 +56,9 @@ async function setup({ error }: { error?: boolean }) {
   const requestMock = jest.spyOn(requestModule, 'default') as jest.Mock;
 
   if (error) {
-    requestMock.mockResolvedValue({
-      ok: false,
-    });
+    requestMock.mockRejectedValue(new Error('Failed to fetch domain info'));
   } else {
     requestMock.mockResolvedValue({
-      ok: true,
       json: () => Promise.resolve(mockDomainInfo),
     });
   }
