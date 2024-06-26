@@ -27,7 +27,7 @@ describe(DomainPageHeaderInfoLoader.name, () => {
 
     expect(
       await screen.findByText(
-        'Mock domain info for Domain mock-domain-staging in mock-cluster'
+        'Mock domain info for Domain mock-domain-staging in cluster_1'
       )
     ).toBeInTheDocument();
     expect(
