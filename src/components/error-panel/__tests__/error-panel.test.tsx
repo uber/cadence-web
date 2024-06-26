@@ -80,14 +80,17 @@ describe(ErrorPanel.name, () => {
 
   it('should perform the Reset action', async () => {
     // TODO @adhitya.mamallan: once the react-query domain changes are landed, try to assert on props.reset()
-    setup({ message: 'Mock error message', actions: mockActions });
+    const { mockReload } = setup({
+      message: 'Mock error message',
+      actions: mockActions,
+    });
 
     const resetButtonText = screen.getByText('Retry');
     act(() => {
       fireEvent.click(resetButtonText);
     });
 
-    expect(mockRefreshFn).toHaveBeenCalled();
+    expect(mockReload).toHaveBeenCalled();
   });
 
   it('should perform the External Link action', async () => {
@@ -127,7 +130,9 @@ function setup({
 }) {
   const mockReset = jest.fn();
   const mockWindowOpen = jest.fn();
+  const mockReload = jest.fn();
   jest.spyOn(window, 'open').mockImplementation(mockWindowOpen);
+  jest.spyOn(window.location, 'reload').mockImplementation(mockReload);
   render(<ErrorPanel message={message} actions={actions} reset={mockReset} />);
-  return { mockReset, mockWindowOpen };
+  return { mockReset, mockWindowOpen, mockReload };
 }
