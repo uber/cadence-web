@@ -13,4 +13,14 @@ export const styled = {
   ErrorText: createStyled('div', ({ $theme }: { $theme: Theme }) => ({
     ...$theme.typography.HeadingXSmall,
   })),
+  ErrorActionsContainer: createStyled(
+    'div',
+    ({ $theme }: { $theme: Theme }) => ({
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: $theme.sizing.scale300,
+      paddingTop: $theme.sizing.scale100,
+    })
+  ),
 };
