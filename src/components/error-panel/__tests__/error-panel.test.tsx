@@ -5,17 +5,25 @@ import { render, screen, act, fireEvent, within } from '@/test-utils/rtl';
 import ErrorPanel from '../error-panel';
 import { type ErrorAction } from '../error-panel.types';
 
-const mockPushFn = jest.fn();
-const mockRefreshFn = jest.fn();
+const mockRouterPush = jest.fn();
+const mockRouterRefresh = jest.fn();
 jest.mock('next/navigation', () => ({
   ...jest.requireActual('next/navigation'),
   useRouter: () => ({
-    push: mockPushFn,
+    push: mockRouterPush,
     back: () => {},
     replace: () => {},
     forward: () => {},
     prefetch: () => {},
-    refresh: mockRefreshFn,
+    refresh: mockRouterRefresh,
+  }),
+}));
+
+const mockResetQueryErrors = jest.fn();
+jest.mock('@tanstack/react-query', () => ({
+  ...jest.requireActual('@tanstack/react-query'),
+  useQueryErrorResetBoundary: () => ({
+    reset: mockResetQueryErrors,
   }),
 }));
 
@@ -79,8 +87,7 @@ describe(ErrorPanel.name, () => {
   });
 
   it('should perform the Reset action', async () => {
-    // TODO @adhitya.mamallan: once the react-query domain changes are landed, try to assert on props.reset()
-    const { mockReload } = setup({
+    const { mockReset } = setup({
       message: 'Mock error message',
       actions: mockActions,
     });
@@ -90,7 +97,9 @@ describe(ErrorPanel.name, () => {
       fireEvent.click(resetButtonText);
     });
 
-    expect(mockReload).toHaveBeenCalled();
+    expect(mockRouterRefresh).toHaveBeenCalled();
+    expect(mockResetQueryErrors).toHaveBeenCalled();
+    expect(mockReset).toHaveBeenCalled();
   });
 
   it('should perform the External Link action', async () => {
@@ -117,7 +126,7 @@ describe(ErrorPanel.name, () => {
       fireEvent.click(intLinkButtonText);
     });
 
-    expect(mockPushFn).toHaveBeenCalledWith('/mock/internal/link');
+    expect(mockRouterPush).toHaveBeenCalledWith('/mock/internal/link');
   });
 });
 
@@ -130,9 +139,7 @@ function setup({
 }) {
   const mockReset = jest.fn();
   const mockWindowOpen = jest.fn();
-  const mockReload = jest.fn();
   jest.spyOn(window, 'open').mockImplementation(mockWindowOpen);
-  jest.spyOn(window.location, 'reload').mockImplementation(mockReload);
   render(<ErrorPanel message={message} actions={actions} reset={mockReset} />);
-  return { mockReset, mockWindowOpen, mockReload };
+  return { mockReset, mockWindowOpen };
 }
