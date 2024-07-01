@@ -8,6 +8,7 @@ export const overrides = {
       style: ({ $theme }: { $theme: Theme }): StyleObject => ({
         color: $theme.colors.contentPrimary,
         backgroundColor: $theme.colors.backgroundTertiary,
+        borderColor: $theme.colors.backgroundTertiary,
         height: $theme.sizing.scale700,
         borderRadius: $theme.borders.radius400,
         margin: 0,

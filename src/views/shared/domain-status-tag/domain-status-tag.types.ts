@@ -4,4 +4,5 @@ export type DomainStatus = DomainStatusProto;
 
 export type Props = {
   status: DomainStatus;
+  isLarge?: boolean;
 };
