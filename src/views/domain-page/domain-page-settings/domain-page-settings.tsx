@@ -8,7 +8,7 @@ import PageSection from '@/components/page-section/page-section';
 import request from '@/utils/request';
 
 import {
-  settingsFieldsConfig,
+  settingsFormConfig,
   settingsValuesConfig,
 } from '../config/domain-page-settings-form.config';
 import { type DomainPageTabContentProps } from '../domain-page-content/domain-page-content.types';
@@ -31,9 +31,14 @@ export default function DomainPageSettings(props: DomainPageTabContentProps) {
         <Form
           data={domainInfo}
           zodSchema={settingsValuesConfig}
-          formConfig={settingsFieldsConfig}
+          formConfig={settingsFormConfig}
           // TODO @adhitya.mamallan: Update this with the domain update server action
-          onSubmit={(data) => console.log('Submitted values', data)}
+          onSubmit={async (data) => {
+            // Simulating an async request to cadence-frontend to set domain info for now
+            await new Promise((resolve) => setTimeout(resolve, 4000));
+            console.log('Submitted values', data);
+          }}
+          submitButtonText="Save settings"
         />
       </styled.SettingsContainer>
     </PageSection>

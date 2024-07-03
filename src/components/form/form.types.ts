@@ -1,6 +1,6 @@
 import type React from 'react';
 
-import { type Path } from 'react-hook-form';
+import { type SubmitHandler, type Path } from 'react-hook-form';
 import { type z } from 'zod';
 
 export type FieldComponentProps<V> = {
@@ -27,3 +27,11 @@ export type FormField<
 export type FormConfig<D extends object, Z extends z.ZodTypeAny> = Array<
   FormField<D, Z, any>
 >;
+
+export type Props<D extends object, Z extends z.ZodTypeAny> = {
+  data: D;
+  zodSchema: Z;
+  formConfig: FormConfig<D, Z>;
+  onSubmit: SubmitHandler<FormValues<Z>>;
+  submitButtonText: string;
+};

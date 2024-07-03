@@ -12,12 +12,14 @@ import { type DomainInfo } from '../domain-page.types';
 
 export const settingsValuesConfig = z.object({
   description: z.string(),
-  retentionPeriodDays: z.number(),
+  retentionPeriodDays: z
+    .number({ message: 'Retention period must be a positive integer' })
+    .positive({ message: 'Retention period must be positive' }),
   visibilityArchival: z.boolean(),
   historyArchival: z.boolean(),
 });
 
-export const settingsFieldsConfig: [
+export const settingsFormConfig: [
   FormField<DomainInfo, typeof settingsValuesConfig, 'description'>,
   FormField<DomainInfo, typeof settingsValuesConfig, 'retentionPeriodDays'>,
   FormField<DomainInfo, typeof settingsValuesConfig, 'visibilityArchival'>,
@@ -40,7 +42,8 @@ export const settingsFieldsConfig: [
   {
     path: 'retentionPeriodDays',
     title: 'Retention Period',
-    description: 'Brief, high-level description of the Cadence domain',
+    description:
+      'Duration for which the workflow execution history is kept in primary persistence store',
     getDefaultValue: (data) =>
       formatDurationToDays(data.workflowExecutionRetentionPeriod) ?? 0,
     component: DomainPageSettingsRetentionPeriod,
@@ -48,7 +51,7 @@ export const settingsFieldsConfig: [
   {
     path: 'visibilityArchival',
     title: 'Visibility Archival',
-    description: 'Brief, high-level description of the Cadence domain',
+    description: 'Flag to enable archival for visibility records',
     getDefaultValue: (data) =>
       data.visibilityArchivalStatus === 'ARCHIVAL_STATUS_ENABLED',
     component: ({ onBlur, onChange, value, error }) =>
@@ -63,7 +66,7 @@ export const settingsFieldsConfig: [
   {
     path: 'historyArchival',
     title: 'History Archival',
-    description: 'Brief, high-level description of the Cadence domain',
+    description: 'Flag to enable archival for workflow history data',
     getDefaultValue: (data) =>
       data.historyArchivalStatus === 'ARCHIVAL_STATUS_ENABLED',
     component: ({ onBlur, onChange, value, error }) =>

@@ -2,12 +2,13 @@
 import React from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Button, SIZE } from 'baseui/button';
 import { FormControl } from 'baseui/form-control';
-import { type SubmitHandler, useForm, Controller } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { type z } from 'zod';
 
 import { styled } from './form.styles';
-import { type FormValues, type FormConfig } from './form.types';
+import { type FormValues, type Props } from './form.types';
 import getDefaultValues from './helpers/get-default-values';
 
 export default function Form<D extends object, Z extends z.ZodTypeAny>({
@@ -15,12 +16,8 @@ export default function Form<D extends object, Z extends z.ZodTypeAny>({
   zodSchema,
   formConfig,
   onSubmit,
-}: {
-  data: D;
-  zodSchema: Z;
-  formConfig: FormConfig<D, Z>;
-  onSubmit: SubmitHandler<FormValues<Z>>;
-}) {
+  submitButtonText,
+}: Props<D, Z>) {
   const { control, handleSubmit, formState } = useForm<FormValues<Z>>({
     mode: 'onBlur',
     defaultValues: getDefaultValues({ data, formConfig }),
@@ -30,40 +27,52 @@ export default function Form<D extends object, Z extends z.ZodTypeAny>({
   return (
     <form
       onSubmit={(event) => {
+        // Prevent form from clearing itself on submit
         event.preventDefault();
         handleSubmit(onSubmit)(event);
       }}
     >
-      {formConfig.map((field) => {
-        return (
-          <styled.FieldContainer key={field.path}>
-            <styled.Info>
-              <styled.Title>{field.title}</styled.Title>
-              <styled.Description>{field.description}</styled.Description>
-            </styled.Info>
-            <FormControl
-              error={formState.errors[field.path]?.message?.toString()}
-            >
-              <Controller
-                control={control}
-                name={field.path}
-                render={({
-                  field: { onChange, onBlur, value },
-                  fieldState: { error },
-                }) => (
-                  <field.component
-                    onChange={onChange}
-                    onBlur={onBlur}
-                    value={value}
-                    error={error?.message}
-                  />
-                )}
-              />
-            </FormControl>
-          </styled.FieldContainer>
-        );
-      })}
-      <input type="submit" />
+      <styled.FieldsContainer>
+        {formConfig.map((field) => {
+          return (
+            <styled.FieldContainer key={field.path}>
+              <styled.Info>
+                <styled.Title>{field.title}</styled.Title>
+                <styled.Description>{field.description}</styled.Description>
+              </styled.Info>
+              <FormControl
+                error={formState.errors[field.path]?.message?.toString()}
+              >
+                <Controller
+                  control={control}
+                  name={field.path}
+                  render={({
+                    field: { onChange, onBlur, value },
+                    fieldState: { error },
+                  }) => (
+                    <field.component
+                      onChange={onChange}
+                      onBlur={onBlur}
+                      value={value}
+                      error={error?.message}
+                    />
+                  )}
+                />
+              </FormControl>
+            </styled.FieldContainer>
+          );
+        })}
+      </styled.FieldsContainer>
+      <styled.ButtonContainer>
+        <Button
+          type="submit"
+          size={SIZE.compact}
+          disabled={!formState.isDirty || !formState.isValid}
+          isLoading={formState.isSubmitting}
+        >
+          {submitButtonText}
+        </Button>
+      </styled.ButtonContainer>
     </form>
   );
 }

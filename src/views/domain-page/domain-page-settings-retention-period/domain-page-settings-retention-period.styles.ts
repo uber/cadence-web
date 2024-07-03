@@ -7,7 +7,7 @@ export const overrides = {
     Root: {
       style: ({ $theme }: { $theme: Theme }): StyleObject => ({
         ...$theme.typography.ParagraphSmall,
-        maxWidth: '132px',
+        maxWidth: '160px',
       }),
     },
   } satisfies InputOverrides,

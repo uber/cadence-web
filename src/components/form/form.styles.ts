@@ -2,12 +2,19 @@ import { type Theme, styled as createStyled } from 'baseui';
 import { type StyleObject } from 'styletron-react';
 
 export const styled = {
+  FieldsContainer: createStyled(
+    'div',
+    ({ $theme }: { $theme: Theme }): StyleObject => ({
+      display: 'flex',
+      flexDirection: 'column',
+      rowGap: $theme.sizing.scale800,
+    })
+  ),
   FieldContainer: createStyled(
     'div',
     ({ $theme }: { $theme: Theme }): StyleObject => ({
       display: 'flex',
       gap: $theme.sizing.scale1200,
-      paddingBottom: $theme.sizing.scale800,
     })
   ),
   Info: createStyled(
@@ -32,6 +39,12 @@ export const styled = {
       ...$theme.typography.LabelXSmall,
       color: $theme.colors.contentTertiary,
       fontWeight: '400',
+    })
+  ),
+  ButtonContainer: createStyled(
+    'div',
+    ({ $theme }: { $theme: Theme }): StyleObject => ({
+      paddingTop: $theme.sizing.scale900,
     })
   ),
 };

@@ -14,11 +14,12 @@ export default function DomainPageSettingsRetentionPeriod(
       onChange={(e) => {
         props.onChange(parseInt(e.target.value));
       }}
-      value={props.value}
+      value={!isNaN(props.value) ? props.value : ''}
       error={Boolean(props.error)}
       endEnhancer={<LabelSmall>{props.value == 1 ? 'Day' : 'Days'}</LabelSmall>}
       size={SIZE.compact}
       type="number"
+      min={1}
       pattern="^d*$"
       overrides={overrides.input}
     />
