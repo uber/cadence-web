@@ -10,7 +10,7 @@ import formatDurationToDays from '@/utils/data-formatters/format-duration-to-day
 import DomainPageSettingsRetentionPeriod from '../domain-page-settings-retention-period/domain-page-settings-retention-period';
 import { type DomainInfo } from '../domain-page.types';
 
-export const settingsValuesConfig = z.object({
+export const settingsFormSchema = z.object({
   description: z.string(),
   retentionPeriodDays: z
     .number({ message: 'Retention period must be a positive integer' })
@@ -20,10 +20,10 @@ export const settingsValuesConfig = z.object({
 });
 
 export const settingsFormConfig: [
-  FormField<DomainInfo, typeof settingsValuesConfig, 'description'>,
-  FormField<DomainInfo, typeof settingsValuesConfig, 'retentionPeriodDays'>,
-  FormField<DomainInfo, typeof settingsValuesConfig, 'visibilityArchival'>,
-  FormField<DomainInfo, typeof settingsValuesConfig, 'historyArchival'>,
+  FormField<DomainInfo, typeof settingsFormSchema, 'description'>,
+  FormField<DomainInfo, typeof settingsFormSchema, 'retentionPeriodDays'>,
+  FormField<DomainInfo, typeof settingsFormSchema, 'visibilityArchival'>,
+  FormField<DomainInfo, typeof settingsFormSchema, 'historyArchival'>,
 ] = [
   {
     path: 'description',

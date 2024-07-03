@@ -9,7 +9,7 @@ import request from '@/utils/request';
 
 import {
   settingsFormConfig,
-  settingsValuesConfig,
+  settingsFormSchema,
 } from '../config/domain-page-settings-form.config';
 import { type DomainPageTabContentProps } from '../domain-page-content/domain-page-content.types';
 import { type DomainInfo } from '../domain-page.types';
@@ -30,7 +30,7 @@ export default function DomainPageSettings(props: DomainPageTabContentProps) {
       <styled.SettingsContainer>
         <Form
           data={domainInfo}
-          zodSchema={settingsValuesConfig}
+          zodSchema={settingsFormSchema}
           formConfig={settingsFormConfig}
           // TODO @adhitya.mamallan: Update this with the domain update server action
           onSubmit={async (data) => {
