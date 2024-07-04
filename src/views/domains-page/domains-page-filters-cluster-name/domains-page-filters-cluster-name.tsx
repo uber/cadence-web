@@ -10,6 +10,7 @@ import useStyletronClasses from '@/hooks/use-styletron-classes';
 
 import type domainsPageQueryParamsConfig from '../config/domains-page-query-params.config';
 
+import { type DomainPageFiltersClusterNameProps } from './domain-page-filters-cluster-name.types';
 import {
   cssStyles,
   overrides,
@@ -21,13 +22,16 @@ const clustersOptions = CLUSTERS_CONFIGS.map(({ clusterName }) => ({
 }));
 
 function DomainsPageFiltersClusterName({
-  queryParams,
-  setQueryParams,
-}: PageFilterComponentProps<typeof domainsPageQueryParamsConfig>) {
+  value,
+  setValue,
+}: PageFilterComponentProps<
+  typeof domainsPageQueryParamsConfig,
+  DomainPageFiltersClusterNameProps
+>) {
   const { cls } = useStyletronClasses(cssStyles);
 
   const clusterValue = clustersOptions.filter(
-    ({ id }) => id === queryParams.clusterName
+    ({ id }) => id === value.clusterName
   );
 
   return (
@@ -38,7 +42,7 @@ function DomainsPageFiltersClusterName({
           value={clusterValue}
           options={clustersOptions}
           onChange={(params) =>
-            setQueryParams({
+            setValue({
               clusterName:
                 typeof params.value[0]?.id === 'undefined'
                   ? undefined

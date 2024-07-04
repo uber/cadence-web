@@ -9,8 +9,8 @@ const domainsPageFiltersConfig = [
         !queryParams.clusterName ||
           domain.clusters.find((c) => c.clusterName === queryParams.clusterName)
       ),
+    getValue: (v) => ({ clusterName: v.clusterName }),
     component: DomainsPageFiltersClusterName,
-    queryParamKeys: ['clusterName'],
   },
 ] as const satisfies DomainsPageFiltersConfig;
 

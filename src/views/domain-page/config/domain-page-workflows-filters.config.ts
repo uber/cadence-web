@@ -5,12 +5,15 @@ import DomainPageWorkflowsFiltersStatus from '../domain-page-workflows-filters-s
 const domainPageWorkflowsFiltersConfig = [
   {
     id: 'status',
-    queryParamKeys: ['status'],
+    getValue: (v) => ({ status: v.status }),
     component: DomainPageWorkflowsFiltersStatus,
   },
   {
     id: 'dates',
-    queryParamKeys: ['timeRangeStart', 'timeRangeEnd'],
+    getValue: (v) => ({
+      timeRangeStart: v.timeRangeStart,
+      timeRangeEnd: v.timeRangeEnd,
+    }),
     component: DomainPageWorkflowsFiltersDates,
   },
 ] as const satisfies DomainPageWorkflowsFiltersConfig;
