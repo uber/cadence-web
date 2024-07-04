@@ -1,8 +1,22 @@
-import { type DomainPageWorkflowsFiltersConfig } from '../domain-page-workflows-filters/domain-page-workflows-filters.types';
+import { type PageFilterConfig } from '@/components/page-filters/page-filters.types';
+
+import { type DomainPageWorkflowFiltersDatesValue } from '../domain-page-workflows-filters-dates/domain-page-workflow-filters-dates.types';
 import DomainPageWorkflowsFiltersDates from '../domain-page-workflows-filters-dates/domain-page-workflows-filters-dates';
+import { type DomainPageWorkflowFiltersStatusValue } from '../domain-page-workflows-filters-status/domain-page-workflow-filters-status-types';
 import DomainPageWorkflowsFiltersStatus from '../domain-page-workflows-filters-status/domain-page-workflows-filters-status';
 
-const domainPageWorkflowsFiltersConfig = [
+import type domainPageQueryParamsConfig from './domain-page-query-params.config';
+
+const domainPageWorkflowsFiltersConfig: [
+  PageFilterConfig<
+    typeof domainPageQueryParamsConfig,
+    DomainPageWorkflowFiltersStatusValue
+  >,
+  PageFilterConfig<
+    typeof domainPageQueryParamsConfig,
+    DomainPageWorkflowFiltersDatesValue
+  >,
+] = [
   {
     id: 'status',
     getValue: (v) => ({ status: v.status }),
@@ -16,6 +30,6 @@ const domainPageWorkflowsFiltersConfig = [
     }),
     component: DomainPageWorkflowsFiltersDates,
   },
-] as const satisfies DomainPageWorkflowsFiltersConfig;
+] as const;
 
 export default domainPageWorkflowsFiltersConfig;

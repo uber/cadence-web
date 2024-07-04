@@ -2,7 +2,6 @@ import { type PageFilterConfig } from '@/components/page-filters/page-filters.ty
 import type { PageQueryParamValues } from '@/hooks/use-page-query-params/use-page-query-params.types';
 
 import type domainsPageQueryParamsConfig from '../config/domains-page-query-params.config';
-import { type DomainPageFiltersClusterNameProps } from '../domains-page-filters-cluster-name/domain-page-filters-cluster-name.types';
 import { type DomainData } from '../domains-page.types';
 
 export type DomainsPageFilterConfig<
@@ -13,7 +12,3 @@ export type DomainsPageFilterConfig<
     queryParams: PageQueryParamValues<typeof domainsPageQueryParamsConfig>
   ) => boolean;
 };
-
-export type DomainsPageFiltersConfig = [
-  DomainsPageFilterConfig<DomainPageFiltersClusterNameProps>,
-];
