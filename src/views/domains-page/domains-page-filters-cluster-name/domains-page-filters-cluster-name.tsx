@@ -10,7 +10,7 @@ import useStyletronClasses from '@/hooks/use-styletron-classes';
 
 import type domainsPageQueryParamsConfig from '../config/domains-page-query-params.config';
 
-import { type DomainPageFiltersClusterNameProps } from './domain-page-filters-cluster-name.types';
+import { type DomainPageFiltersClusterNameValue } from './domain-page-filters-cluster-name.types';
 import {
   cssStyles,
   overrides,
@@ -26,7 +26,7 @@ function DomainsPageFiltersClusterName({
   setValue,
 }: PageFilterComponentProps<
   typeof domainsPageQueryParamsConfig,
-  DomainPageFiltersClusterNameProps
+  DomainPageFiltersClusterNameValue
 >) {
   const { cls } = useStyletronClasses(cssStyles);
 

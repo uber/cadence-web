@@ -1,3 +1,3 @@
-export type DomainPageFiltersClusterNameProps = {
+export type DomainPageFiltersClusterNameValue = {
   clusterName: string;
 };
