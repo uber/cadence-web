@@ -23,10 +23,7 @@ jest.mock('../../../hooks/use-page-query-params/use-page-query-params', () =>
 const MockFilterA = ({
   value,
   setValue,
-}: PageFilterComponentProps<
-  typeof mockPageQueryParamConfig,
-  { paramA: string }
->) => {
+}: PageFilterComponentProps<{ paramA: string }>) => {
   return (
     <div>
       <div>Value 1: {value.paramA}</div>
@@ -41,10 +38,7 @@ const MockFilterA = ({
 const MockFilterB = ({
   value,
   setValue,
-}: PageFilterComponentProps<
-  typeof mockPageQueryParamConfig,
-  { paramB: string }
->) => {
+}: PageFilterComponentProps<{ paramB: string }>) => {
   return (
     <div>
       <div>Value 2: {value.paramB}</div>
@@ -63,11 +57,13 @@ const MOCK_FILTERS_CONFIG: [
   {
     id: 'filterA',
     getValue: (v) => ({ paramA: v.paramA }),
+    formatValue: (v) => v,
     component: MockFilterA,
   },
   {
     id: 'filterB',
     getValue: (v) => ({ paramB: v.paramB }),
+    formatValue: (v) => v,
     component: MockFilterB,
   },
 ];

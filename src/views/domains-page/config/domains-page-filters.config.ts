@@ -13,6 +13,7 @@ const domainsPageFiltersConfig: [
           domain.clusters.find((c) => c.clusterName === queryParams.clusterName)
       ),
     getValue: (v) => ({ clusterName: v.clusterName }),
+    formatValue: (v) => v,
     component: DomainsPageFiltersClusterName,
   },
 ] as const;

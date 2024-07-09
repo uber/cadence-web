@@ -98,7 +98,9 @@ export default function PageFilters<
               <styled.SearchFilterContainer key={filter.id}>
                 <filter.component
                   value={filter.getValue(queryParams)}
-                  setValue={(newValue) => setQueryParams(newValue)}
+                  setValue={(newValue) =>
+                    setQueryParams(filter.formatValue(newValue))
+                  }
                 />
               </styled.SearchFilterContainer>
             );

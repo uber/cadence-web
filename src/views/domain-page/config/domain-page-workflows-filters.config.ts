@@ -20,6 +20,7 @@ const domainPageWorkflowsFiltersConfig: [
   {
     id: 'status',
     getValue: (v) => ({ status: v.status }),
+    formatValue: (v) => v,
     component: DomainPageWorkflowsFiltersStatus,
   },
   {
@@ -27,6 +28,10 @@ const domainPageWorkflowsFiltersConfig: [
     getValue: (v) => ({
       timeRangeStart: v.timeRangeStart,
       timeRangeEnd: v.timeRangeEnd,
+    }),
+    formatValue: (v) => ({
+      timeRangeStart: v.timeRangeStart?.toISOString(),
+      timeRangeEnd: v.timeRangeEnd?.toISOString(),
     }),
     component: DomainPageWorkflowsFiltersDates,
   },
