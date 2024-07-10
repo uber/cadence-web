@@ -30,6 +30,7 @@ export default function DomainPageWorkflowsTableEndMessage(props: Props) {
     return (
       <InView
         as="div"
+        data-testid="infinite-scroll-spinner"
         onChange={(inView) => {
           if (inView && !props.isFetchingNextPage) {
             props.fetchNextPage();

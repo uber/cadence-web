@@ -46,8 +46,8 @@ describe('DomainPageWorkflowsFiltersDates', () => {
     });
 
     expect(mockSetValue).toHaveBeenCalledWith({
-      timeRangeStart: '2023-05-13T00:00:00.000Z',
-      timeRangeEnd: '2023-05-14T00:00:00.000Z',
+      timeRangeStart: new Date('2023-05-13T00:00:00.000Z'),
+      timeRangeEnd: new Date('2023-05-14T00:00:00.000Z'),
     });
   });
 
