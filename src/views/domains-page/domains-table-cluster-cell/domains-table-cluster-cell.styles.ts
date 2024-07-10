@@ -7,7 +7,7 @@ const cssStylesObj = {
   clustersLinks: (theme) => ({
     display: 'flex',
     gap: theme.sizing.scale400,
-    ...theme.typography.ParagraphXSmall,
+    ...theme.typography.LabelXSmall,
   }),
 } satisfies StyletronCSSObject;
 

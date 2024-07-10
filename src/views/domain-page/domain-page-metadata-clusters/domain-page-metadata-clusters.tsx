@@ -1,10 +1,8 @@
 import React from 'react';
 
-import Link from '@/components/link/link';
+import LinkBlack from '@/components/link-black/link-black';
 
 import { type DomainInfo } from '../domain-page.types';
-
-import { styled } from './domain-page-metadata-clusters.styles';
 
 export default function DomainPageMetadataClusters(domainInfo: DomainInfo) {
   const numClusters = domainInfo.clusters.length;
@@ -13,7 +11,7 @@ export default function DomainPageMetadataClusters(domainInfo: DomainInfo) {
   }
 
   return (
-    <styled.ClusterTextContainer>
+    <div>
       {domainInfo.clusters.map((cluster, index) => {
         const replicationStatusLabel =
           cluster.clusterName === domainInfo.activeClusterName
@@ -21,14 +19,16 @@ export default function DomainPageMetadataClusters(domainInfo: DomainInfo) {
             : 'passive';
         return (
           <React.Fragment key={cluster.clusterName}>
-            <Link href={`/domains/${domainInfo.name}/${cluster.clusterName}`}>
+            <LinkBlack
+              href={`/domains/${domainInfo.name}/${cluster.clusterName}`}
+            >
               {cluster.clusterName}
-            </Link>
+            </LinkBlack>
             {` (${replicationStatusLabel})`}
             {index < numClusters - 1 ? ', ' : ''}
           </React.Fragment>
         );
       })}
-    </styled.ClusterTextContainer>
+    </div>
   );
 }
