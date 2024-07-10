@@ -1,3 +1,3 @@
 export type DomainPageFiltersClusterNameValue = {
-  clusterName: string;
+  clusterName: string | undefined;
 };

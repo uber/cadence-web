@@ -8,8 +8,6 @@ import { type PageFilterComponentProps } from '@/components/page-filters/page-fi
 import CLUSTERS_CONFIGS from '@/config/clusters/clusters.config';
 import useStyletronClasses from '@/hooks/use-styletron-classes';
 
-import type domainsPageQueryParamsConfig from '../config/domains-page-query-params.config';
-
 import { type DomainPageFiltersClusterNameValue } from './domain-page-filters-cluster-name.types';
 import {
   cssStyles,
@@ -24,10 +22,7 @@ const clustersOptions = CLUSTERS_CONFIGS.map(({ clusterName }) => ({
 function DomainsPageFiltersClusterName({
   value,
   setValue,
-}: PageFilterComponentProps<
-  typeof domainsPageQueryParamsConfig,
-  DomainPageFiltersClusterNameValue
->) {
+}: PageFilterComponentProps<DomainPageFiltersClusterNameValue>) {
   const { cls } = useStyletronClasses(cssStyles);
 
   const clusterValue = clustersOptions.filter(
