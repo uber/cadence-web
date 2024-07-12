@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 
 import Form from '@/components/form/form';
 import PageSection from '@/components/page-section/page-section';
@@ -18,6 +18,8 @@ import { type DomainInfo } from '../domain-page.types';
 import { styled } from './domain-page-settings.styles';
 
 export default function DomainPageSettings(props: DomainPageTabContentProps) {
+  const queryClient = useQueryClient();
+
   const { data: domainInfo } = useSuspenseQuery<DomainInfo>({
     queryKey: ['describeDomain', props],
     queryFn: () =>
@@ -33,11 +35,30 @@ export default function DomainPageSettings(props: DomainPageTabContentProps) {
           data={domainInfo}
           zodSchema={settingsFormSchema}
           formConfig={settingsFormConfig}
-          // TODO @adhitya.mamallan: Update this with the domain update server action
           onSubmit={async (data) => {
-            // Simulating an async request to cadence-frontend to set domain info for now
-            await updateDomain.bind(null, { test: 'C' })();
-            console.log('Submitted values', data);
+            await updateDomain({
+              cluster: props.cluster,
+              domain: props.domain,
+              values: {
+                description: data.description,
+                historyArchivalStatus: data.historyArchival
+                  ? 'ARCHIVAL_STATUS_ENABLED'
+                  : 'ARCHIVAL_STATUS_DISABLED',
+                visibilityArchivalStatus: data.visibilityArchival
+                  ? 'ARCHIVAL_STATUS_ENABLED'
+                  : 'ARCHIVAL_STATUS_DISABLED',
+                workflowExecutionRetentionPeriod: {
+                  seconds: data.retentionPeriodDays * 86400,
+                },
+              },
+            }).then(
+              (domain) => {
+                queryClient.setQueryData(['describeDomain', props], domain);
+              },
+              (error) => {
+                console.log(error);
+              }
+            );
           }}
           submitButtonText="Save settings"
         />
