@@ -5,6 +5,7 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 
 import Form from '@/components/form/form';
 import PageSection from '@/components/page-section/page-section';
+import updateDomain from '@/server-actions/update-domain/update-domain';
 import request from '@/utils/request';
 
 import {
@@ -35,7 +36,7 @@ export default function DomainPageSettings(props: DomainPageTabContentProps) {
           // TODO @adhitya.mamallan: Update this with the domain update server action
           onSubmit={async (data) => {
             // Simulating an async request to cadence-frontend to set domain info for now
-            await new Promise((resolve) => setTimeout(resolve, 4000));
+            await updateDomain.bind(null, { test: 'C' })();
             console.log('Submitted values', data);
           }}
           submitButtonText="Save settings"
