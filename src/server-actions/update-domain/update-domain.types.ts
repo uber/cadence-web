@@ -1,10 +1,15 @@
 import { type UpdateDomainRequest__Input } from '@/__generated__/proto-ts/uber/cadence/api/v1/UpdateDomainRequest';
 import { type DomainInfo } from '@/views/domain-page/domain-page.types';
 
+export type UpdateDomainFields = Omit<
+  UpdateDomainRequest__Input,
+  'securityToken' | 'name' | 'updateMask'
+>;
+
 export type Props = {
-  domain: string;
   cluster: string;
-  values: UpdateDomainRequest__Input;
+  domain: string;
+  values: Partial<UpdateDomainFields>;
 };
 
 export type UpdateDomainResponse = DomainInfo;

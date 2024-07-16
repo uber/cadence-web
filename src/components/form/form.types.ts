@@ -20,7 +20,7 @@ export type FormField<
   path: K extends Path<FormValues<Z>> ? K : never;
   title: string;
   description: string;
-  getDefaultValue: (data: D) => FormValues<Z>[K];
+  getInitialValue: (data: D) => FormValues<Z>[K];
   component: React.ComponentType<FieldComponentProps<FormValues<Z>[K]>>;
 };
 
@@ -34,4 +34,5 @@ export type Props<D extends object, Z extends z.ZodTypeAny> = {
   formConfig: FormConfig<D, Z>;
   onSubmit: SubmitHandler<FormValues<Z>>;
   submitButtonText: string;
+  onSubmitError: (error: any) => void;
 };

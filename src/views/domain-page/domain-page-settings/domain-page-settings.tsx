@@ -1,7 +1,12 @@
 'use client';
 import React from 'react';
 
-import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 
 import Form from '@/components/form/form';
 import PageSection from '@/components/page-section/page-section';
@@ -16,17 +21,46 @@ import { type DomainPageTabContentProps } from '../domain-page-content/domain-pa
 import { type DomainInfo } from '../domain-page.types';
 
 import { styled } from './domain-page-settings.styles';
+import { type SettingsValues } from './domain-page-settings.types';
 
 export default function DomainPageSettings(props: DomainPageTabContentProps) {
   const queryClient = useQueryClient();
+  const router = useRouter();
 
-  const { data: domainInfo } = useSuspenseQuery<DomainInfo>({
-    queryKey: ['describeDomain', props],
-    queryFn: () =>
-      request(`/api/domains/${props.domain}/${props.cluster}`).then((res) =>
-        res.json()
-      ),
-  });
+  const { data: domainInfo } = useSuspenseQuery<DomainInfo>(
+    {
+      queryKey: ['describeDomain', props],
+      queryFn: () =>
+        request(`/api/domains/${props.domain}/${props.cluster}`).then((res) =>
+          res.json()
+        ),
+    },
+    queryClient
+  );
+
+  const saveSettings = useMutation(
+    {
+      mutationFn: (data: SettingsValues): Promise<DomainInfo> => {
+        return updateDomain({
+          cluster: props.cluster,
+          domain: props.domain,
+          values: {
+            description: data.description,
+            historyArchivalStatus: data.historyArchival
+              ? 'ARCHIVAL_STATUS_ENABLED'
+              : 'ARCHIVAL_STATUS_DISABLED',
+            visibilityArchivalStatus: data.visibilityArchival
+              ? 'ARCHIVAL_STATUS_ENABLED'
+              : 'ARCHIVAL_STATUS_DISABLED',
+            workflowExecutionRetentionPeriod: {
+              seconds: data.retentionPeriodDays * 86400,
+            },
+          },
+        });
+      },
+    },
+    queryClient
+  );
 
   return (
     <PageSection>
@@ -35,32 +69,17 @@ export default function DomainPageSettings(props: DomainPageTabContentProps) {
           data={domainInfo}
           zodSchema={settingsFormSchema}
           formConfig={settingsFormConfig}
-          onSubmit={async (data) => {
-            await updateDomain({
-              cluster: props.cluster,
-              domain: props.domain,
-              values: {
-                description: data.description,
-                historyArchivalStatus: data.historyArchival
-                  ? 'ARCHIVAL_STATUS_ENABLED'
-                  : 'ARCHIVAL_STATUS_DISABLED',
-                visibilityArchivalStatus: data.visibilityArchival
-                  ? 'ARCHIVAL_STATUS_ENABLED'
-                  : 'ARCHIVAL_STATUS_DISABLED',
-                workflowExecutionRetentionPeriod: {
-                  seconds: data.retentionPeriodDays * 86400,
-                },
-              },
-            }).then(
-              (domain) => {
-                queryClient.setQueryData(['describeDomain', props], domain);
-              },
-              (error) => {
-                console.log(error);
-              }
-            );
-          }}
+          onSubmit={async (data) =>
+            await saveSettings.mutateAsync(data).then(() => {
+              queryClient.invalidateQueries({
+                queryKey: ['describeDomain', props],
+              });
+              router.refresh();
+            })
+          }
           submitButtonText="Save settings"
+          // TODO @adhitya.mamallan - Add logic for an error banner/toast
+          onSubmitError={(e) => console.log(e)}
         />
       </styled.SettingsContainer>
     </PageSection>

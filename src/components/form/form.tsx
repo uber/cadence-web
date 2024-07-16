@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, SIZE } from 'baseui/button';
@@ -9,7 +9,7 @@ import { type z } from 'zod';
 
 import { styled } from './form.styles';
 import { type FormValues, type Props } from './form.types';
-import getDefaultValues from './helpers/get-default-values';
+import getInitialValues from './helpers/get-initial-values';
 
 export default function Form<D extends object, Z extends z.ZodTypeAny>({
   data,
@@ -17,19 +17,24 @@ export default function Form<D extends object, Z extends z.ZodTypeAny>({
   formConfig,
   onSubmit,
   submitButtonText,
+  onSubmitError,
 }: Props<D, Z>) {
-  const { control, handleSubmit, formState } = useForm<FormValues<Z>>({
+  const { control, handleSubmit, formState, reset } = useForm<FormValues<Z>>({
     mode: 'onBlur',
-    defaultValues: getDefaultValues({ data, formConfig }),
+    values: getInitialValues({ data, formConfig }),
     resolver: zodResolver(zodSchema),
   });
+
+  useEffect(() => {
+    reset();
+  }, [data, reset]);
 
   return (
     <form
       onSubmit={(event) => {
         // Prevent form from clearing itself on submit
         event.preventDefault();
-        handleSubmit(onSubmit)(event);
+        handleSubmit(onSubmit)(event).catch(onSubmitError);
       }}
     >
       <styled.FieldsContainer>
@@ -68,7 +73,7 @@ export default function Form<D extends object, Z extends z.ZodTypeAny>({
           type="submit"
           size={SIZE.compact}
           disabled={!formState.isDirty || !formState.isValid}
-          isLoading={formState.isSubmitting}
+          isLoading={formState.isSubmitting || formState.isSubmitSuccessful}
         >
           {submitButtonText}
         </Button>

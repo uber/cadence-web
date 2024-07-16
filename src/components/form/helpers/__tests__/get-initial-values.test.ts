@@ -1,9 +1,9 @@
 import { mockData, mockFormConfig } from '../../__fixtures__/form.fixtures';
-import getDefaultValues from '../get-default-values';
+import getInitialValues from '../get-initial-values';
 
-describe(getDefaultValues.name, () => {
+describe(getInitialValues.name, () => {
   it('returns expected values', () => {
-    const result = getDefaultValues({
+    const result = getInitialValues({
       data: mockData,
       formConfig: mockFormConfig,
     });

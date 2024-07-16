@@ -2,7 +2,7 @@ import { type z } from 'zod';
 
 import { type FormValues, type FormConfig } from '../form.types';
 
-export default function getDefaultValues<
+export default function getInitialValues<
   D extends object,
   Z extends z.ZodTypeAny,
 >({
@@ -13,6 +13,6 @@ export default function getDefaultValues<
   formConfig: FormConfig<D, Z>;
 }): FormValues<Z> {
   return Object.fromEntries(
-    formConfig.map((field) => [field.path, field.getDefaultValue(data)])
+    formConfig.map((field) => [field.path, field.getInitialValue(data)])
   );
 }

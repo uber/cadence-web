@@ -29,7 +29,7 @@ export const settingsFormConfig: [
     path: 'description',
     title: 'Description',
     description: 'Brief, high-level description of the Cadence domain',
-    getDefaultValue: (data) => data.description,
+    getInitialValue: (data) => data.description,
     component: ({ onBlur, onChange, value, error }) =>
       createElement(Textarea, {
         onBlur,
@@ -44,7 +44,7 @@ export const settingsFormConfig: [
     title: 'Retention Period',
     description:
       'Duration for which the workflow execution history is kept in primary persistence store',
-    getDefaultValue: (data) =>
+    getInitialValue: (data) =>
       formatDurationToDays(data.workflowExecutionRetentionPeriod) ?? 0,
     component: DomainPageSettingsRetentionPeriod,
   },
@@ -52,7 +52,7 @@ export const settingsFormConfig: [
     path: 'visibilityArchival',
     title: 'Visibility Archival',
     description: 'Flag to enable archival for visibility records',
-    getDefaultValue: (data) =>
+    getInitialValue: (data) =>
       data.visibilityArchivalStatus === 'ARCHIVAL_STATUS_ENABLED',
     component: ({ onBlur, onChange, value, error }) =>
       createElement(Checkbox, {
@@ -67,7 +67,7 @@ export const settingsFormConfig: [
     path: 'historyArchival',
     title: 'History Archival',
     description: 'Flag to enable archival for workflow history data',
-    getDefaultValue: (data) =>
+    getInitialValue: (data) =>
       data.historyArchivalStatus === 'ARCHIVAL_STATUS_ENABLED',
     component: ({ onBlur, onChange, value, error }) =>
       createElement(Checkbox, {
