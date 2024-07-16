@@ -1,5 +1,6 @@
 'use server';
 
+import SECURITY_TOKEN from '@/config/auth/security-token';
 import * as grpcClient from '@/utils/grpc/grpc-client';
 import { GRPCError } from '@/utils/grpc/grpc-error';
 
@@ -14,6 +15,7 @@ export default async function updateDomain(
     const res = await grpcClient.getClusterMethods(props.cluster).updateDomain({
       ...props.values,
       name: props.domain,
+      securityToken: SECURITY_TOKEN,
       updateMask: { paths: Object.keys(props.values) },
     });
 
