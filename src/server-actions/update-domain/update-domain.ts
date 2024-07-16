@@ -29,9 +29,6 @@ export default async function updateDomain(
     }
     return res.domain;
   } catch (e) {
-    throw new Error(
-      'Error updating domain info: ' +
-        (e instanceof Error ? e.message : 'Unknown')
-    );
+    throw new Error(e instanceof Error ? e.message : 'Unknown');
   }
 }

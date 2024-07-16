@@ -54,6 +54,26 @@ describe(Form.name, () => {
     );
   });
 
+  it('should call onSubmitError if the call to submit fails', async () => {
+    const { user, mockOnSubmit, mockOnSubmitError } = setup({});
+
+    const submitButton = screen.getByRole('button');
+    expect(submitButton).toHaveAttribute('disabled');
+
+    const formFieldA = screen.getByDisplayValue('mock_data_A');
+
+    await user.clear(formFieldA);
+    await user.type(formFieldA, 'new_mock_data_A');
+
+    expect(formFieldA).toHaveValue('new_mock_data_A');
+    expect(submitButton).not.toHaveAttribute('disabled');
+
+    mockOnSubmit.mockRejectedValueOnce('Test error case');
+    await user.click(submitButton);
+
+    expect(mockOnSubmitError).toHaveBeenCalled();
+  });
+
   it('should disable submit button if a field is reset to original value', async () => {
     const { user } = setup({});
 
@@ -100,6 +120,7 @@ describe(Form.name, () => {
 function setup({}) {
   const user = userEvent.setup();
   const mockOnSubmit = jest.fn();
+  const mockOnSubmitError = jest.fn();
 
   render(
     <Form
@@ -108,8 +129,9 @@ function setup({}) {
       formConfig={mockFormConfig}
       onSubmit={mockOnSubmit}
       submitButtonText="Submit form"
+      onSubmitError={mockOnSubmitError}
     />
   );
 
-  return { user, mockOnSubmit };
+  return { user, mockOnSubmit, mockOnSubmitError };
 }

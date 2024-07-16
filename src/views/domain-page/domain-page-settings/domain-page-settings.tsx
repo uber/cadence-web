@@ -53,7 +53,7 @@ export default function DomainPageSettings(props: DomainPageTabContentProps) {
               ? 'ARCHIVAL_STATUS_ENABLED'
               : 'ARCHIVAL_STATUS_DISABLED',
             workflowExecutionRetentionPeriod: {
-              seconds: data.retentionPeriodDays * 86400,
+              seconds: data.retentionPeriodSeconds,
             },
           },
         });
@@ -79,7 +79,7 @@ export default function DomainPageSettings(props: DomainPageTabContentProps) {
           }
           submitButtonText="Save settings"
           // TODO @adhitya.mamallan - Add logic for an error banner/toast
-          onSubmitError={(e) => console.log(e)}
+          onSubmitError={(e) => console.error(e)}
         />
       </styled.SettingsContainer>
     </PageSection>

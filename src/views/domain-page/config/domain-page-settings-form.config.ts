@@ -5,14 +5,14 @@ import { Textarea, SIZE } from 'baseui/textarea';
 import { z } from 'zod';
 
 import { type FormField } from '@/components/form/form.types';
-import formatDurationToDays from '@/utils/data-formatters/format-duration-to-days';
+import formatDurationToSeconds from '@/utils/data-formatters/format-duration-to-seconds';
 
 import DomainPageSettingsRetentionPeriod from '../domain-page-settings-retention-period/domain-page-settings-retention-period';
 import { type DomainInfo } from '../domain-page.types';
 
 export const settingsFormSchema = z.object({
   description: z.string(),
-  retentionPeriodDays: z
+  retentionPeriodSeconds: z
     .number({ message: 'Retention period must be a positive integer' })
     .positive({ message: 'Retention period must be positive' }),
   visibilityArchival: z.boolean(),
@@ -21,7 +21,7 @@ export const settingsFormSchema = z.object({
 
 export const settingsFormConfig: [
   FormField<DomainInfo, typeof settingsFormSchema, 'description'>,
-  FormField<DomainInfo, typeof settingsFormSchema, 'retentionPeriodDays'>,
+  FormField<DomainInfo, typeof settingsFormSchema, 'retentionPeriodSeconds'>,
   FormField<DomainInfo, typeof settingsFormSchema, 'visibilityArchival'>,
   FormField<DomainInfo, typeof settingsFormSchema, 'historyArchival'>,
 ] = [
@@ -40,12 +40,12 @@ export const settingsFormConfig: [
       }),
   },
   {
-    path: 'retentionPeriodDays',
+    path: 'retentionPeriodSeconds',
     title: 'Retention Period',
     description:
       'Duration for which the workflow execution history is kept in primary persistence store',
     getInitialValue: (data) =>
-      formatDurationToDays(data.workflowExecutionRetentionPeriod) ?? 0,
+      formatDurationToSeconds(data.workflowExecutionRetentionPeriod) ?? 0,
     component: DomainPageSettingsRetentionPeriod,
   },
   {
