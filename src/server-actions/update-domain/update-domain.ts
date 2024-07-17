@@ -1,5 +1,7 @@
 'use server';
 
+import { snakeCase } from 'lodash';
+
 import SECURITY_TOKEN from '@/config/auth/security-token';
 import * as grpcClient from '@/utils/grpc/grpc-client';
 
@@ -18,10 +20,12 @@ export default async function updateDomain(
 
   try {
     const res = await grpcClient.getClusterMethods(props.cluster).updateDomain({
-      ...props.values,
+      ...values,
       name: props.domain,
       securityToken: SECURITY_TOKEN,
-      updateMask: { paths: Object.keys(values) },
+      updateMask: {
+        paths: Object.keys(values).map(snakeCase),
+      },
     });
 
     if (!res.domain) {
