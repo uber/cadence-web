@@ -1,5 +1,6 @@
 import { styled as createStyled, type Theme } from 'baseui';
 import { type ToasterOverrides } from 'baseui/toast';
+import { type StyleObject } from 'styletron-react';
 
 export const styled = {
   SettingsContainer: createStyled('div', ({ $theme }: { $theme: Theme }) => ({
@@ -10,8 +11,15 @@ export const styled = {
 export const overrides = {
   toast: {
     ToastBody: {
+      style: ({ $theme }: { $theme: Theme }): StyleObject => ({
+        [$theme.mediaQuery.medium]: {
+          width: '500px',
+        },
+      }),
+    },
+    ToastCloseIcon: {
       style: {
-        width: '500px',
+        alignSelf: 'center',
       },
     },
   } satisfies ToasterOverrides,
