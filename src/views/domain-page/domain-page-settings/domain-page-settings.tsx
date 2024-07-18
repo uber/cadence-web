@@ -6,6 +6,7 @@ import {
   useQueryClient,
   useSuspenseQuery,
 } from '@tanstack/react-query';
+import { toaster, ToasterContainer } from 'baseui/toast';
 
 import PageSection from '@/components/page-section/page-section';
 import updateDomain from '@/server-actions/update-domain/update-domain';
@@ -19,6 +20,7 @@ import {
 import { type DomainPageTabContentProps } from '../domain-page-content/domain-page-content.types';
 import { type DomainInfo } from '../domain-page.types';
 
+import { SETTINGS_UPDATE_TOAST_DURATION_MS } from './domain-page-settings.constants';
 import { styled } from './domain-page-settings.styles';
 import { type SettingsValues } from './domain-page-settings.types';
 
@@ -61,24 +63,28 @@ export default function DomainPageSettings(props: DomainPageTabContentProps) {
   );
 
   return (
-    <PageSection>
-      <styled.SettingsContainer>
-        <SettingsForm
-          data={domainInfo}
-          zodSchema={domainPageSettingsFormSchema}
-          formConfig={domainPageSettingsFormConfig}
-          onSubmit={async (data) =>
-            await saveSettings.mutateAsync(data).then(() => {
-              queryClient.invalidateQueries({
-                queryKey: ['describeDomain', props],
-              });
-            })
-          }
-          submitButtonText="Save settings"
-          // TODO @adhitya.mamallan - Add logic for an error banner/toast
-          onSubmitError={(e) => console.error(e)}
-        />
-      </styled.SettingsContainer>
-    </PageSection>
+    <ToasterContainer autoHideDuration={SETTINGS_UPDATE_TOAST_DURATION_MS}>
+      <PageSection>
+        <styled.SettingsContainer>
+          <SettingsForm
+            data={domainInfo}
+            zodSchema={domainPageSettingsFormSchema}
+            formConfig={domainPageSettingsFormConfig}
+            onSubmit={async (data) =>
+              await saveSettings.mutateAsync(data).then(() => {
+                queryClient.invalidateQueries({
+                  queryKey: ['describeDomain', props],
+                });
+                toaster.positive('Successfully updated domain settings');
+              })
+            }
+            submitButtonText="Save settings"
+            onSubmitError={(e) =>
+              toaster.negative('Error updating domain settings: ' + e.message)
+            }
+          />
+        </styled.SettingsContainer>
+      </PageSection>
+    </ToasterContainer>
   );
 }
