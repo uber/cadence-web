@@ -35,9 +35,10 @@ const config: Config = {
   coverageDirectory: "coverage",
 
   // An array of regexp pattern strings used to skip coverage collection
-  // coveragePathIgnorePatterns: [
-  //   "/node_modules/"
-  // ],
+  coveragePathIgnorePatterns: [
+    "/node_modules/",
+    "src/test-utils",
+  ],
 
   // Indicates which provider should be used to instrument code for coverage
   coverageProvider: "v8",
@@ -133,7 +134,7 @@ const config: Config = {
   // resetModules: false,
 
   // A path to a custom resolver
-  // resolver: undefined,
+   resolver: '<rootDir>/jest.resolver.js',
 
   // Automatically restore mock state and implementation before every test
   // restoreMocks: false,
@@ -150,7 +151,8 @@ const config: Config = {
   // runner: "jest-runner",
 
   // The paths to modules that run some code to configure or set up the testing environment before each test
-  // setupFiles: [],
+  setupFiles: ['<rootDir>/jest.polyfills.js'],
+
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
   setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
@@ -210,7 +212,7 @@ const config: Config = {
   // Whether to use watchman for file crawling
   // watchman: true,
 };
-
+ 
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
 export default createJestConfig(config)
