@@ -1,7 +1,7 @@
 import { Input, SIZE } from 'baseui/input';
 import { LabelSmall } from 'baseui/typography';
 
-import { type FieldComponentProps } from '@/components/form/form.types';
+import { type FieldComponentProps } from '@/views/shared/settings-form/settings-form.types';
 
 import { NUM_SECONDS_IN_DAY } from './domain-page-settings-retention-period.constants';
 import { overrides } from './domain-page-settings-retention-period.styles';

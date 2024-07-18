@@ -7,11 +7,11 @@ import { FormControl } from 'baseui/form-control';
 import { useForm, Controller } from 'react-hook-form';
 import { type z } from 'zod';
 
-import { styled } from './form.styles';
-import { type FormValues, type Props } from './form.types';
 import getInitialValues from './helpers/get-initial-values';
+import { styled } from './settings-form.styles';
+import { type SettingsFormValues, type Props } from './settings-form.types';
 
-export default function Form<D extends object, Z extends z.ZodTypeAny>({
+export default function SettingsForm<D extends object, Z extends z.ZodTypeAny>({
   data,
   zodSchema,
   formConfig,
@@ -19,7 +19,9 @@ export default function Form<D extends object, Z extends z.ZodTypeAny>({
   submitButtonText,
   onSubmitError,
 }: Props<D, Z>) {
-  const { control, handleSubmit, formState, reset } = useForm<FormValues<Z>>({
+  const { control, handleSubmit, formState, reset } = useForm<
+    SettingsFormValues<Z>
+  >({
     mode: 'onBlur',
     values: getInitialValues({ data, formConfig }),
     resolver: zodResolver(zodSchema),

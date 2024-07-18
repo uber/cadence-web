@@ -8,10 +8,10 @@ import {
   mockZodSchema,
   mockData,
   mockFormConfig,
-} from '../__fixtures__/form.fixtures';
-import Form from '../form';
+} from '../__fixtures__/settings-form.fixtures';
+import SettingsForm from '../settings-form';
 
-describe(Form.name, () => {
+describe(SettingsForm.name, () => {
   it('should render form correctly', () => {
     setup({});
 
@@ -123,7 +123,7 @@ function setup({}) {
   const mockOnSubmitError = jest.fn();
 
   render(
-    <Form
+    <SettingsForm
       data={mockData}
       zodSchema={mockZodSchema}
       formConfig={mockFormConfig}

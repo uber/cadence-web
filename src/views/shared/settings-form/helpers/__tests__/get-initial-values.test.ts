@@ -1,4 +1,7 @@
-import { mockData, mockFormConfig } from '../../__fixtures__/form.fixtures';
+import {
+  mockData,
+  mockFormConfig,
+} from '../../__fixtures__/settings-form.fixtures';
 import getInitialValues from '../get-initial-values';
 
 describe(getInitialValues.name, () => {

@@ -7,14 +7,14 @@ import {
   useSuspenseQuery,
 } from '@tanstack/react-query';
 
-import Form from '@/components/form/form';
 import PageSection from '@/components/page-section/page-section';
 import updateDomain from '@/server-actions/update-domain/update-domain';
 import request from '@/utils/request';
+import SettingsForm from '@/views/shared/settings-form/settings-form';
 
 import {
-  settingsFormConfig,
-  settingsFormSchema,
+  domainPageSettingsFormConfig,
+  domainPageSettingsFormSchema,
 } from '../config/domain-page-settings-form.config';
 import { type DomainPageTabContentProps } from '../domain-page-content/domain-page-content.types';
 import { type DomainInfo } from '../domain-page.types';
@@ -63,10 +63,10 @@ export default function DomainPageSettings(props: DomainPageTabContentProps) {
   return (
     <PageSection>
       <styled.SettingsContainer>
-        <Form
+        <SettingsForm
           data={domainInfo}
-          zodSchema={settingsFormSchema}
-          formConfig={settingsFormConfig}
+          zodSchema={domainPageSettingsFormSchema}
+          formConfig={domainPageSettingsFormConfig}
           onSubmit={async (data) =>
             await saveSettings.mutateAsync(data).then(() => {
               queryClient.invalidateQueries({

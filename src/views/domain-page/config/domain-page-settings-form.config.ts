@@ -4,13 +4,13 @@ import { STYLE_TYPE, Checkbox } from 'baseui/checkbox';
 import { Textarea, SIZE } from 'baseui/textarea';
 import { z } from 'zod';
 
-import { type FormField } from '@/components/form/form.types';
 import formatDurationToSeconds from '@/utils/data-formatters/format-duration-to-seconds';
+import { type SettingsFormField } from '@/views/shared/settings-form/settings-form.types';
 
 import DomainPageSettingsRetentionPeriod from '../domain-page-settings-retention-period/domain-page-settings-retention-period';
 import { type DomainInfo } from '../domain-page.types';
 
-export const settingsFormSchema = z.object({
+export const domainPageSettingsFormSchema = z.object({
   description: z.string(),
   retentionPeriodSeconds: z
     .number({ message: 'Retention period must be a positive integer' })
@@ -19,11 +19,27 @@ export const settingsFormSchema = z.object({
   historyArchival: z.boolean(),
 });
 
-export const settingsFormConfig: [
-  FormField<DomainInfo, typeof settingsFormSchema, 'description'>,
-  FormField<DomainInfo, typeof settingsFormSchema, 'retentionPeriodSeconds'>,
-  FormField<DomainInfo, typeof settingsFormSchema, 'visibilityArchival'>,
-  FormField<DomainInfo, typeof settingsFormSchema, 'historyArchival'>,
+export const domainPageSettingsFormConfig: [
+  SettingsFormField<
+    DomainInfo,
+    typeof domainPageSettingsFormSchema,
+    'description'
+  >,
+  SettingsFormField<
+    DomainInfo,
+    typeof domainPageSettingsFormSchema,
+    'retentionPeriodSeconds'
+  >,
+  SettingsFormField<
+    DomainInfo,
+    typeof domainPageSettingsFormSchema,
+    'visibilityArchival'
+  >,
+  SettingsFormField<
+    DomainInfo,
+    typeof domainPageSettingsFormSchema,
+    'historyArchival'
+  >,
 ] = [
   {
     path: 'description',

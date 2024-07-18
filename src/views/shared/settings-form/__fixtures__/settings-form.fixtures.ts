@@ -2,7 +2,7 @@ import { createElement } from 'react';
 
 import { z } from 'zod';
 
-import { type FormField } from '../form.types';
+import { type SettingsFormField } from '../settings-form.types';
 
 export const mockZodSchema = z.object({
   field1: z.string(),
@@ -17,9 +17,9 @@ export const mockData = {
 };
 
 export const mockFormConfig: [
-  FormField<typeof mockData, typeof mockZodSchema, 'field1'>,
-  FormField<typeof mockData, typeof mockZodSchema, 'field2'>,
-  FormField<typeof mockData, typeof mockZodSchema, 'field3'>,
+  SettingsFormField<typeof mockData, typeof mockZodSchema, 'field1'>,
+  SettingsFormField<typeof mockData, typeof mockZodSchema, 'field2'>,
+  SettingsFormField<typeof mockData, typeof mockZodSchema, 'field3'>,
 ] = [
   {
     path: 'field1',

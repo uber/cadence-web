@@ -19,7 +19,7 @@ const mockDomainSettings: SettingsValues = {
   visibilityArchival: true,
 };
 
-jest.mock('@/components/form/form', () =>
+jest.mock('@/views/shared/settings-form/settings-form', () =>
   jest.fn(
     ({
       data,
