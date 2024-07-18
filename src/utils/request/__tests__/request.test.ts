@@ -3,7 +3,7 @@ import request from '../request';
 global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
-  })
+  } as Response)
 );
 
 const mockedFetch = global.fetch as jest.MockedFunction<typeof global.fetch>;
