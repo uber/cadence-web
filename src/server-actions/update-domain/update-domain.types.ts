@@ -6,7 +6,7 @@ export type UpdateDomainFields = Omit<
   'securityToken' | 'name' | 'updateMask'
 >;
 
-export type Props = {
+export type Params = {
   cluster: string;
   domain: string;
   values: Partial<UpdateDomainFields>;

@@ -2,31 +2,33 @@
 
 import { snakeCase } from 'lodash';
 
-import SECURITY_TOKEN from '@/config/auth/security-token';
+import ADMIN_SECURITY_TOKEN from '@/config/auth/admin-security-token';
 import * as grpcClient from '@/utils/grpc/grpc-client';
 
 import updateDomainValuesSchema from './schemas/update-domain-values-schema';
-import { type Props, type UpdateDomainResponse } from './update-domain.types';
+import { type Params, type UpdateDomainResponse } from './update-domain.types';
 
 export default async function updateDomain(
-  props: Props
+  params: Params
 ): Promise<UpdateDomainResponse> {
   const { data: values, error } = updateDomainValuesSchema.safeParse(
-    props.values
+    params.values
   );
   if (error) {
     throw new Error('Invalid values: ' + error.message);
   }
 
   try {
-    const res = await grpcClient.getClusterMethods(props.cluster).updateDomain({
-      ...values,
-      name: props.domain,
-      securityToken: SECURITY_TOKEN,
-      updateMask: {
-        paths: Object.keys(values).map(snakeCase),
-      },
-    });
+    const res = await grpcClient
+      .getClusterMethods(params.cluster)
+      .updateDomain({
+        ...values,
+        name: params.domain,
+        securityToken: ADMIN_SECURITY_TOKEN,
+        updateMask: {
+          paths: Object.keys(values).map(snakeCase),
+        },
+      });
 
     if (!res.domain) {
       throw new Error('Received empty response');

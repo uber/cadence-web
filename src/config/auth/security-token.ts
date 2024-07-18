@@ -1,3 +1,0 @@
-const SECURITY_TOKEN = process.env.CADENCE_SECURITY_TOKEN;
-
-export default SECURITY_TOKEN;

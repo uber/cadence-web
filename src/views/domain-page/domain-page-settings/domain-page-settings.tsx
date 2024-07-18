@@ -6,7 +6,6 @@ import {
   useQueryClient,
   useSuspenseQuery,
 } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
 
 import Form from '@/components/form/form';
 import PageSection from '@/components/page-section/page-section';
@@ -25,7 +24,6 @@ import { type SettingsValues } from './domain-page-settings.types';
 
 export default function DomainPageSettings(props: DomainPageTabContentProps) {
   const queryClient = useQueryClient();
-  const router = useRouter();
 
   const { data: domainInfo } = useSuspenseQuery<DomainInfo>(
     {
@@ -74,7 +72,6 @@ export default function DomainPageSettings(props: DomainPageTabContentProps) {
               queryClient.invalidateQueries({
                 queryKey: ['describeDomain', props],
               });
-              router.refresh();
             })
           }
           submitButtonText="Save settings"

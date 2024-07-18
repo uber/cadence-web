@@ -1,6 +1,10 @@
 import type React from 'react';
 
-import { type SubmitHandler, type Path } from 'react-hook-form';
+import {
+  type SubmitHandler,
+  type Path,
+  type SubmitErrorHandler,
+} from 'react-hook-form';
 import { type z } from 'zod';
 
 export type FieldComponentProps<V> = {
@@ -34,5 +38,5 @@ export type Props<D extends object, Z extends z.ZodTypeAny> = {
   formConfig: FormConfig<D, Z>;
   onSubmit: SubmitHandler<FormValues<Z>>;
   submitButtonText: string;
-  onSubmitError: (error: any) => void;
+  onSubmitError: SubmitErrorHandler<FormValues<Z>>;
 };

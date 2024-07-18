@@ -22,7 +22,9 @@ export default function DomainPageSettingsRetentionPeriod(
       }}
       value={!isNaN(props.value) ? valueInDays : ''}
       error={Boolean(props.error)}
-      endEnhancer={<LabelSmall>{valueInDays == 1 ? 'Day' : 'Days'}</LabelSmall>}
+      endEnhancer={
+        <LabelSmall>{valueInDays === 1 ? 'Day' : 'Days'}</LabelSmall>
+      }
       size={SIZE.compact}
       type="number"
       min={1}
