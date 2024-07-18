@@ -9,7 +9,7 @@ import { MemoryRouterProvider } from 'next-router-mock/MemoryRouterProvider';
 
 import StyletronProvider from '@/providers/styletron-provider';
 
-import MSWTestController from './msw-tests-controller/msw-tests-controller';
+import MSWMockHandlers from './msw-mock-handlers/msw-mock-handlers';
 import { type Props } from './test-provider.types';
 
 jest.mock('next/router', () => jest.requireActual('next-router-mock'));
@@ -46,7 +46,7 @@ export const TestProvider = ({
   const [client] = useState(() => getQueryClient(queryClientConfig));
   return (
     <StyletronProvider>
-      <MSWTestController endpointsMocks={endpointsMocks} />
+      <MSWMockHandlers endpointsMocks={endpointsMocks} />
       <MemoryRouterProvider url={router.initialUrl}>
         <QueryClientProvider client={client}>{children}</QueryClientProvider>
       </MemoryRouterProvider>

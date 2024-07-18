@@ -2,7 +2,7 @@ import { HttpResponse, http } from 'msw';
 
 import { server } from '@/utils/msw/node';
 
-import { type HttpEndpointMock } from '../msw-tests-controller.types';
+import { type HttpEndpointMock } from '../msw-mock-handlers.types';
 
 export default function mswMockEndpoints(
   endpointsMocks: Array<HttpEndpointMock>

@@ -1,18 +1,21 @@
 import request from '../request';
 
-global.fetch = jest.fn(() =>
-  Promise.resolve({
-    ok: true,
-  } as Response)
-);
-
-const mockedFetch = global.fetch as jest.MockedFunction<typeof global.fetch>;
-
 describe('request', () => {
   afterEach(() => {
+    const mockedFetch = global.fetch as jest.MockedFunction<
+      typeof global.fetch
+    >;
     mockedFetch.mockClear();
   });
-
+  beforeEach(() => {
+    // mock within before each as jest.pollyfills.js replaces the implementation of fetch
+    // if we mocked it at the top if the file
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        ok: true,
+      } as Response)
+    );
+  });
   it('should call fetch with absolute URL and no-cache option', async () => {
     const url = 'http://example.com';
     const options = { method: 'GET' };
