@@ -8,9 +8,9 @@ import {
 import { MemoryRouterProvider } from 'next-router-mock/MemoryRouterProvider';
 
 import StyletronProvider from '@/providers/styletron-provider';
-import MswMocksHandlers from './msw-mocks-handlers/msw-mocks-handlers';
-import { Props } from './test-provider.types';
 
+import MswMocksHandlers from './msw-mocks-handlers/msw-mocks-handlers';
+import { type Props } from './test-provider.types';
 
 jest.mock('next/router', () => jest.requireActual('next-router-mock'));
 

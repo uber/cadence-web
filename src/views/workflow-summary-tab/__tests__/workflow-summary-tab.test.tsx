@@ -28,33 +28,38 @@ describe('WorkflowSummaryTab', () => {
   };
 
   it('should render WorkflowSummaryTabDetails and WorkflowSummaryTabJsonView', async () => {
-    render(<Suspense><WorkflowSummaryTab params={params} /></Suspense>, {
-      endpointsMocks: [
-        {
-          path: '/api/domains/:domain/:cluster/workflows/:workflowId/:runId/history',
-          httpMethod: 'GET',
-          //TODO: @assem.hafez Provide more realistic mock
-          jsonResponse: {
-            history: {
-              events: [
-                {
-                  eventId: '13',
-                  attributes: 'workflowExecutionStartedEventAttributes',
-                  startAttributes: { input: 'startInput' },
-                  workflowExecutionStartedEventAttributes: {},
-                },
-                {
-                  eventId: '2',
-                  attributes: 'workflowExecutionCompletedEventAttributes',
-                  lastAttributes: { result: 'lastResult' },
-                  workflowExecutionCompletedEventAttributes: {},
-                },
-              ],
+    render(
+      <Suspense>
+        <WorkflowSummaryTab params={params} />
+      </Suspense>,
+      {
+        endpointsMocks: [
+          {
+            path: '/api/domains/:domain/:cluster/workflows/:workflowId/:runId/history',
+            httpMethod: 'GET',
+            //TODO: @assem.hafez Provide more realistic mock
+            jsonResponse: {
+              history: {
+                events: [
+                  {
+                    eventId: '13',
+                    attributes: 'workflowExecutionStartedEventAttributes',
+                    startAttributes: { input: 'startInput' },
+                    workflowExecutionStartedEventAttributes: {},
+                  },
+                  {
+                    eventId: '2',
+                    attributes: 'workflowExecutionCompletedEventAttributes',
+                    lastAttributes: { result: 'lastResult' },
+                    workflowExecutionCompletedEventAttributes: {},
+                  },
+                ],
+              },
             },
-          }
-        }
-      ]
-    });
+          },
+        ],
+      }
+    );
     expect(
       await screen.findByText('MockWorkflowSummaryTabDetails')
     ).toBeInTheDocument();
