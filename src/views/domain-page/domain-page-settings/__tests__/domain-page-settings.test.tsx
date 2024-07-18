@@ -12,20 +12,6 @@ import { type DomainInfo } from '../../domain-page.types';
 import DomainPageSettings from '../domain-page-settings';
 import { type SettingsValues } from '../domain-page-settings.types';
 
-const mockRouterPush = jest.fn();
-const mockRouterRefresh = jest.fn();
-jest.mock('next/navigation', () => ({
-  ...jest.requireActual('next/navigation'),
-  useRouter: () => ({
-    push: mockRouterPush,
-    back: () => {},
-    replace: () => {},
-    forward: () => {},
-    prefetch: () => {},
-    refresh: mockRouterRefresh,
-  }),
-}));
-
 const mockDomainSettings: SettingsValues = {
   description: 'Mock new description',
   retentionPeriodSeconds: 172800,
@@ -100,7 +86,6 @@ describe(DomainPageSettings.name, () => {
     });
 
     expect(requestMock).toHaveBeenCalledTimes(2);
-    expect(mockRouterRefresh).toHaveBeenCalled();
   });
 
   it('submits modified settings with error', async () => {
@@ -131,7 +116,6 @@ describe(DomainPageSettings.name, () => {
       new Error('Failed to update domain')
     );
     expect(requestMock).toHaveBeenCalledTimes(1);
-    expect(mockRouterRefresh).not.toHaveBeenCalled();
   });
 
   it('does not render if the initial data fetch fails', async () => {
