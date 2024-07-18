@@ -12,15 +12,18 @@ export const overrides = {
   toast: {
     ToastBody: {
       style: ({ $theme }: { $theme: Theme }): StyleObject => ({
+        columnGap: $theme.sizing.scale300,
         [$theme.mediaQuery.medium]: {
           width: '500px',
         },
       }),
     },
     ToastCloseIcon: {
-      style: {
+      style: ({ $theme }: { $theme: Theme }): StyleObject => ({
         alignSelf: 'center',
-      },
+        width: $theme.sizing.scale800,
+        height: $theme.sizing.scale800,
+      }),
     },
   } satisfies ToasterOverrides,
 };
