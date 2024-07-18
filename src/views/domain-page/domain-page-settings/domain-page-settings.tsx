@@ -6,7 +6,7 @@ import {
   useQueryClient,
   useSuspenseQuery,
 } from '@tanstack/react-query';
-import { toaster, ToasterContainer } from 'baseui/toast';
+import { toaster, ToasterContainer, PLACEMENT } from 'baseui/toast';
 
 import PageSection from '@/components/page-section/page-section';
 import updateDomain from '@/server-actions/update-domain/update-domain';
@@ -21,7 +21,7 @@ import { type DomainPageTabContentProps } from '../domain-page-content/domain-pa
 import { type DomainInfo } from '../domain-page.types';
 
 import { SETTINGS_UPDATE_TOAST_DURATION_MS } from './domain-page-settings.constants';
-import { styled } from './domain-page-settings.styles';
+import { overrides, styled } from './domain-page-settings.styles';
 import { type SettingsValues } from './domain-page-settings.types';
 
 export default function DomainPageSettings(props: DomainPageTabContentProps) {
@@ -63,7 +63,11 @@ export default function DomainPageSettings(props: DomainPageTabContentProps) {
   );
 
   return (
-    <ToasterContainer autoHideDuration={SETTINGS_UPDATE_TOAST_DURATION_MS}>
+    <ToasterContainer
+      placement={PLACEMENT.bottom}
+      autoHideDuration={SETTINGS_UPDATE_TOAST_DURATION_MS}
+      overrides={overrides.toast}
+    >
       <PageSection>
         <styled.SettingsContainer>
           <SettingsForm
