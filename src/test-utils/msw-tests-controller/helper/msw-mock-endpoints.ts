@@ -1,12 +1,12 @@
-import { memo } from 'react';
-
 import { HttpResponse, http } from 'msw';
 
 import { server } from '@/utils/msw/node';
 
-import { type Props } from './msw-mocks-handlers.types';
+import { type HttpEndpointMock } from '../msw-tests-controller.types';
 
-export default memo(function MSWMocksHandlers({ endpointsMocks }: Props) {
+export default function mswMockEndpoints(
+  endpointsMocks: Array<HttpEndpointMock>
+) {
   if (endpointsMocks?.length) {
     const handlers = endpointsMocks.map((m) => {
       const method = m.httpMethod.toLowerCase() as Lowercase<
@@ -23,6 +23,4 @@ export default memo(function MSWMocksHandlers({ endpointsMocks }: Props) {
     });
     server.use(...handlers);
   }
-
-  return null;
-});
+}

@@ -1,6 +1,10 @@
 import request from '../request';
 
-global.fetch = jest.fn().mockReturnValue({ then: jest.fn() });
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    ok: true,
+  })
+);
 
 const mockedFetch = global.fetch as jest.MockedFunction<typeof global.fetch>;
 
