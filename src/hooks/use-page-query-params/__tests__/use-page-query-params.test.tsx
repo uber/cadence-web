@@ -1,13 +1,15 @@
+import * as nextRouterMock from 'next-router-mock';
+
 import { renderHook, act } from '@/test-utils/rtl';
 
 import { queryParamsConfig } from '../__fixtures__/page-query-params.fixtures';
 import usePageQueryParams from '../use-page-query-params';
 
-jest.mock('next/router', () => require('next-router-mock'));
+jest.mock('next/router', () => nextRouterMock);
 
 //TODO: @assem.hafez refactor all next/navigations to use the same mock
 jest.mock('next/navigation', () => {
-  const { useRouter } = require('next-router-mock');
+  const { useRouter } = nextRouterMock;
   const usePathname = () => {
     const router = useRouter();
     return router.pathname;
