@@ -219,6 +219,8 @@ const getCustomizedConfig= async () => {
   const jestConfig = await createJestConfig(config)();
   return {
     ...jestConfig,
+    // replacing nextjs node_modules ignore patterns with a pattern that doesn't ignore es modules
+    // link to discussion and fix https://github.com/vercel/next.js/issues/40183#issuecomment-1249077718
     transformIgnorePatterns: jestConfig.transformIgnorePatterns?.filter(
       (ptn) => ptn !== '/node_modules/'
     ),
