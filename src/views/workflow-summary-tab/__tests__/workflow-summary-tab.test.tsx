@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 
-import { render, screen, waitFor } from '@/test-utils/rtl';
+import { render, screen } from '@/test-utils/rtl';
 
 import { type WorkflowPageTabContentProps } from '@/views/workflow-page/workflow-page-tab-content/workflow-page-tab-content.types';
 

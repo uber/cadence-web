@@ -9,7 +9,7 @@ describe('request', () => {
   });
   beforeEach(() => {
     // mock within beforeEach as jest.pollyfills.js replaces the implementation of fetch
-    // if we mocked it at the top if the file
+    // if we mocked it at the top of the file
     global.fetch = jest.fn(() =>
       Promise.resolve({
         ok: true,
