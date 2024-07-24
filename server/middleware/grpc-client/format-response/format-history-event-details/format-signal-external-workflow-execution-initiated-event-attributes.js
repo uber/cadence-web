@@ -20,7 +20,7 @@
 // THE SOFTWARE.
 
 const atob = require('atob');
-const formatPayload = require('../format-payload');
+const formatInputPayload = require('../format-input-payload');
 
 const formatSignalExternalWorkflowExecutionInitiatedEventAttributes = ({
   control,
@@ -31,7 +31,7 @@ const formatSignalExternalWorkflowExecutionInitiatedEventAttributes = ({
   ...eventAttributes,
   control: control ? parseInt(atob(control)) : null,
   decisionTaskCompletedEventId: parseInt(decisionTaskCompletedEventId),
-  input: formatPayload(input),
+  input: formatInputPayload(input),
 });
 
 module.exports = formatSignalExternalWorkflowExecutionInitiatedEventAttributes;

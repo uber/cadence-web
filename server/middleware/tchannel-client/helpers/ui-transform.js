@@ -21,12 +21,13 @@
 
 const Long = require('long');
 const moment = require('moment');
+const parseJsonLines = require('../../../helpers/parse-json-lines');
 
 const uiTransform = item => {
   if (!item || typeof item !== 'object') {
     return item;
   }
-
+  
   Object.entries(item).forEach(([subkey, subvalue]) => {
     if (subvalue && typeof subvalue.unsigned === 'boolean') {
       item[subkey] = Long.fromValue(subvalue).toNumber();
@@ -46,13 +47,20 @@ const uiTransform = item => {
 
       try {
         // most of Cadence's uses of buffer is just line-delimited JSON.
-        item[subkey] = stringval
-          .split('\n')
-          .filter(x => x)
-          .map(JSON.parse);
+        // parse input buffer
+        if (subkey === 'input') {
+          item[subkey] = parseJsonLines(stringval);
+        }
+        //parse remaining buffers
+        else {
+          item[subkey] = stringval
+            .split('\n')
+            .filter(x => x)
+            .map(JSON.parse);
 
-        if (item[subkey].length === 1) {
-          item[subkey] = item[subkey][0];
+          if (item[subkey].length === 1) {
+            item[subkey] = item[subkey][0];
+          }
         }
       } catch (e) {
         item[`${subkey}_base64`] = subvalue.toString('base64');
