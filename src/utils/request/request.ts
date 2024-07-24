@@ -13,8 +13,8 @@ export default function request(
   return fetch(absoluteUrl, { cache: 'no-cache', ...(options || {}) }).then(
     async (res) => {
       if (!res.ok) {
-        const message = await res.text();
-        throw new RequestError(message, res.status);
+        const error = await res.json();
+        throw new RequestError(error.error, res.status);
       }
       return res;
     }

@@ -60,7 +60,7 @@ export async function listWorkflows(
   } catch (e) {
     return NextResponse.json(
       {
-        message: 'Error fetching workflows',
+        message: e instanceof Error ? e.message : 'Error fetching workflows',
         cause: e,
       },
       {

@@ -21,7 +21,7 @@ export async function describeDomain(
   } catch (e) {
     return NextResponse.json(
       {
-        error: 'Error fetching domain info',
+        error: e instanceof Error ? e.message : 'Error fetching domain info',
         cause: e,
       },
       { status: getHTTPStatusCode(e) }
