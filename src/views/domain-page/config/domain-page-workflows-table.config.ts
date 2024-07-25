@@ -12,7 +12,7 @@ const domainPageWorkflowsTableConfig: Array<TableColumn<DomainWorkflow>> = [
     name: 'Workflow ID',
     id: 'WorkflowID',
     renderCell: (row: DomainWorkflow) => row.workflowID,
-    width: '27.5%',
+    width: '25.5%',
   },
   {
     name: 'Status',
@@ -32,7 +32,7 @@ const domainPageWorkflowsTableConfig: Array<TableColumn<DomainWorkflow>> = [
         },
         row.runID
       ),
-    width: '20%',
+    width: '22%',
   },
   {
     name: 'Workflow type',
