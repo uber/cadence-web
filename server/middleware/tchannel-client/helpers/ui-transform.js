@@ -27,7 +27,7 @@ const uiTransform = item => {
   if (!item || typeof item !== 'object') {
     return item;
   }
-  
+
   Object.entries(item).forEach(([subkey, subvalue]) => {
     if (subvalue && typeof subvalue.unsigned === 'boolean') {
       item[subkey] = Long.fromValue(subvalue).toNumber();
