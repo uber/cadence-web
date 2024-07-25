@@ -50,7 +50,6 @@ const wfHistoryThrift = [
       cronSchedule: null,
       firstDecisionTaskBackoffSeconds: null,
       firstExecutionRunId: null,
-      firstScheduledTimeNano: null,
       header: null,
       initiator: null,
       lastCompletionResult: null,
@@ -59,9 +58,7 @@ const wfHistoryThrift = [
       parentInitiatedEventId: null,
       parentWorkflowDomain: null,
       parentWorkflowExecution: null,
-      partitionConfig: null,
       prevAutoResetPoints: null,
-      requestId: null,
       retryPolicy: null,
       searchAttributes: null,
       taskStartToCloseTimeoutSeconds: 30,
@@ -124,7 +121,6 @@ const wfHistoryGrpc = [
       cronSchedule: null,
       firstDecisionTaskBackoff: null,
       firstExecutionRunId: null,
-      firstScheduledTimeNano: null,
       header: null,
       initiator: null,
       lastCompletionResult: null,
@@ -133,9 +129,7 @@ const wfHistoryGrpc = [
       parentInitiatedEventId: null,
       parentWorkflowDomain: null,
       parentWorkflowExecution: null,
-      partitionConfig: null,
       prevAutoResetPoints: null,
-      requestId: null,
       retryPolicy: null,
       searchAttributes: null,
       taskStartToCloseTimeout: { seconds: 30 },
@@ -175,10 +169,12 @@ const wfHistoryJson = [
       {},
       wfHistoryThrift[0].workflowExecutionStartedEventAttributes,
       {
-        input: {
-          emails: ['jane@example.com', 'bob@example.com'],
-          includeFooter: true,
-        },
+        input: [
+          {
+            emails: ['jane@example.com', 'bob@example.com'],
+            includeFooter: true,
+          },
+        ],
       }
     ),
   },
