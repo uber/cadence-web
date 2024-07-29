@@ -19,14 +19,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const formatPayload = require('../format-payload');
+const formatInputPayload = require('../format-input-payload');
 
 const formatWorkflowExecutionSignaledEventAttributes = ({
   input,
   ...eventAttributes
 }) => ({
   ...eventAttributes,
-  input: formatPayload(input),
+  input: formatInputPayload(input),
 });
 
 module.exports = formatWorkflowExecutionSignaledEventAttributes;

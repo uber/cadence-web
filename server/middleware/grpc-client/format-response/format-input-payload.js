@@ -1,4 +1,4 @@
-// Copyright (c) 2022-2024 Uber Technologies Inc.
+// Copyright (c) 2024 Uber Technologies Inc.
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,18 +20,18 @@
 // THE SOFTWARE.
 
 const atob = require('atob');
-const formatInputPayload = require('../format-input-payload');
+const parseJsonLines = require('../../../helpers/parse-json-lines');
 
-const formatSignalExternalWorkflowExecutionInitiatedEventAttributes = ({
-  control,
-  decisionTaskCompletedEventId,
-  input,
-  ...eventAttributes
-}) => ({
-  ...eventAttributes,
-  control: control ? parseInt(atob(control)) : null,
-  decisionTaskCompletedEventId: parseInt(decisionTaskCompletedEventId),
-  input: formatInputPayload(input),
-});
+const formatInputPayload = payload => {
+  const data = payload?.data;
 
-module.exports = formatSignalExternalWorkflowExecutionInitiatedEventAttributes;
+  if (!data) {
+    return null;
+  }
+
+  const parsedData = atob(data);
+
+  return parseJsonLines(parsedData);
+};
+
+module.exports = formatInputPayload;
