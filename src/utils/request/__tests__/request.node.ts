@@ -19,7 +19,7 @@ describe('request on node env', () => {
     const options = { method: 'POST' };
     await request(url, options);
     expect(fetch).toHaveBeenCalledWith(
-      `http://127.0.0.1:${process.env.CADENCE_WEB_PORT}` + url,
+      `http://127.0.0.1:${process.env.CADENCE_WEB_PORT || 3000}` + url,
       {
         cache: 'no-cache',
         ...options,
