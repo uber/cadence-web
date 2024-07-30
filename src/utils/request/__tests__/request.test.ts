@@ -37,11 +37,13 @@ describe('request', () => {
       Promise.resolve({
         ok: false,
         json: async () => ({ error: 'test error' }),
-        status: 500
+        status: 500,
       } as Response)
     );
     const url = '/api/data';
     const options = { method: 'POST' };
-    expect(request(url, options)).rejects.toThrow(new RequestError('test error', 400));
+    expect(request(url, options)).rejects.toThrow(
+      new RequestError('test error', 400)
+    );
   });
 });
