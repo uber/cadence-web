@@ -219,7 +219,6 @@ const config: Config = {
   // watchman: true,
 };
  
-console.log("HIII")
 const getCustomizedConfig= async () => {
   const jestConfig = await createJestConfig(config)();
   return {
