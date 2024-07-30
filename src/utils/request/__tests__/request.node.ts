@@ -1,6 +1,6 @@
 import request from '../request';
 
-describe('request', () => {
+describe('request on node env', () => {
   afterEach(() => {
     const mockedFetch = global.fetch as jest.MockedFunction<
       typeof global.fetch
@@ -18,7 +18,7 @@ describe('request', () => {
     const url = '/api/data';
     const options = { method: 'POST' };
     await request(url, options);
-    expect(fetch).toHaveBeenCalledWith('http://127.0.0.1:8088' + url, {
+    expect(fetch).toHaveBeenCalledWith(`http://127.0.0.1:${process.env.CADENCE_WEB_PORT}` + url, {
       cache: 'no-cache',
       ...options,
     });

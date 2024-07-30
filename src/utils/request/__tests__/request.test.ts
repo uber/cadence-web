@@ -1,7 +1,7 @@
 import request from '../request';
 import { RequestError } from '../request-error';
 
-describe('request', () => {
+describe('request on browser env', () => {
   afterEach(() => {
     const mockedFetch = global.fetch as jest.MockedFunction<
       typeof global.fetch
