@@ -18,10 +18,13 @@ describe('request on node env', () => {
     const url = '/api/data';
     const options = { method: 'POST' };
     await request(url, options);
-    expect(fetch).toHaveBeenCalledWith(`http://127.0.0.1:${process.env.CADENCE_WEB_PORT}` + url, {
-      cache: 'no-cache',
-      ...options,
-    });
+    expect(fetch).toHaveBeenCalledWith(
+      `http://127.0.0.1:${process.env.CADENCE_WEB_PORT}` + url,
+      {
+        cache: 'no-cache',
+        ...options,
+      }
+    );
   });
   // TODO: @assem.hafez add test for server, currently the testing environment is browser
 });
