@@ -26,5 +26,4 @@ describe('request on node env', () => {
       }
     );
   });
-  // TODO: @assem.hafez add test for server, currently the testing environment is browser
 });
