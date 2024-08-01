@@ -98,7 +98,7 @@ dl.details
     &:nth-child(2n)
       background-color rgba(0,0,0,0.03)
   dt
-    flex 0 1 300px
+    flex 0 0 300px
     font-family monospace-font-family
     font-weight 200
     margin-right 1em
