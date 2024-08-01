@@ -107,5 +107,6 @@ dl.details
     max-width calc(100vw - 700px)
     @media (max-width: 1000px)
       max-width 500px
-    one-liner-ellipsis()
+    overflow-y: auto;
+    max-height: 16vh;
 </style>
