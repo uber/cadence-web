@@ -98,7 +98,7 @@ dl.details
     &:nth-child(2n)
       background-color rgba(0,0,0,0.03)
   dt
-    flex 0 1 300px
+    flex 0 0 300px
     font-family monospace-font-family
     font-weight 200
     margin-right 1em
@@ -107,5 +107,6 @@ dl.details
     max-width calc(100vw - 700px)
     @media (max-width: 1000px)
       max-width 500px
-    one-liner-ellipsis()
+    overflow-y: auto;
+    max-height: 16vh;
 </style>

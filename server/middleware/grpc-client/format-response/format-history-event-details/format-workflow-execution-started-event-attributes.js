@@ -21,7 +21,7 @@
 
 const formatEnum = require('../format-enum');
 const formatFailureDetails = require('../format-failure-details');
-const formatPayload = require('../format-payload');
+const formatInputPayload = require('../format-input-payload');
 const formatPayloadMap = require('../format-payload-map');
 const formatTimestampToDatetime = require('../format-timestamp-to-datetime');
 const formatDurationToSeconds = require('../format-duration-to-seconds');
@@ -56,7 +56,7 @@ const formatWorkflowExecutionStartedEventAttributes = ({
     kind: formatEnum(taskList?.kind, 'TASK_LIST_KIND'),
     name: taskList?.name || null,
   },
-  input: formatPayload(input),
+  input: formatInputPayload(input),
   executionStartToCloseTimeoutSeconds: formatDurationToSeconds(
     executionStartToCloseTimeout
   ),

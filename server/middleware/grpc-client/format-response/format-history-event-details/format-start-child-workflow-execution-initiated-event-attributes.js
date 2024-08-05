@@ -21,7 +21,7 @@
 
 const atob = require('atob');
 const formatEnum = require('../format-enum');
-const formatPayload = require('../format-payload');
+const formatInputPayload = require('../format-input-payload');
 const formatPayloadMap = require('../format-payload-map');
 const formatDurationToSeconds = require('../format-duration-to-seconds');
 const formatRetryPolicy = require('./format-retry-policy');
@@ -50,7 +50,7 @@ const formatStartChildWorkflowExecutionInitiatedEventAttributes = ({
     executionStartToCloseTimeout
   ),
   header: formatPayloadMap(header, 'fields'),
-  input: formatPayload(input),
+  input: formatInputPayload(input),
   memo: formatPayloadMap(memo, 'fields'),
   parentClosePolicy: formatEnum(parentClosePolicy, 'PARENT_CLOSE_POLICY'),
   retryPolicy: formatRetryPolicy(retryPolicy),

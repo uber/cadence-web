@@ -95,7 +95,7 @@
     "vue-split-panel": "^1.0.4",
     "vue-style-loader": "^3.1.2",
     "vue-template-compiler": "^2.5.2",
-    "vue-virtual-scroller": "^1.0.0-rc.2",
+    "vue-virtual-scroller": "1.0.10",
     "vue2-datepicker": "^3.4.1",
     "vuex": "^3.5.1",
     "vuex-connect": "^2.2.0",
