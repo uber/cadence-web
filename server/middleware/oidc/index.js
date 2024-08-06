@@ -25,9 +25,10 @@ const session = require('koa-session');
 const allowUrl = ['/login', '/logout', '/oauth2/redirect'];
 
 let settings = {};
+var oiClient;
 
 try {
-  settings = require('../../config/oidc');
+  settings = require('../../config/oidc.js');
 } catch (e) {
   console.log('OIDC configuration file not found, using ENV variables');
 }
@@ -47,14 +48,14 @@ const middleware = async function(ctx, next) {
     return ctx.redirect('/login');
   }
 
-  // logout user to remove session with old token
+  // refresh token when access token is expired
   if (
     ctx.state.user.exp !== undefined &&
     ctx.state.user.exp < Date.now() / 1000
   ) {
-    ctx.logout();
-
-    return ctx.redirect('/login');
+    ts = await oiClient.refresh(ctx.state.user.refreshToken);
+    ctx.state.user.exp = ts.expires_at
+    ctx.state.user.accessToken = ts.access_token
   }
 
   ctx.authTokenHeaders = ctx.authTokenHeaders || {};
@@ -85,37 +86,36 @@ const setupAuth = async function(app, router) {
   passport.deserializeUser((user, done) => done(null, user));
 
   const discovered = await OpenIDClient.Issuer.discover(discoverURL);
-  const openIdClient = new discovered.Client({
+  oiClient = new discovered.Client({
     client_id: clientID,
     client_secret: clientSecret,
   });
 
-  const openIDStrategy = new OpenIDClient.Strategy(
-    {
-      client: openIdClient,
-      params: {
-        redirect_uri: callbackURL,
-        scope: scope,
-      },
-      passReqToCallback: false,
-      sessionKey: 'koa.sess',
-    },
-    (tokenSet, user, done) => {
-      let email = '';
-      if (tokenSet.claims().email) {
-        email = tokenSet.claims().email;
-      }
-
-      return done(null, {
-        accessToken: tokenSet.access_token,
-        exp: tokenSet.expires_at,
-        email: email,
-      });
-    }
-  );
-
-  passport.use('oidc', openIDStrategy);
+const strategyOptions =  {
+  client: oiClient,
+  params: {
+    redirect_uri: callbackURL,
+    scope: scope,
+  },
+  passReqToCallback: false,
 };
+
+  passport.use('oidc', OpenIDClient.Strategy(strategyOptions,verifyCallback));
+};
+
+function verifyCallback (tokenSet, user, done) {
+  let email = '';
+  if (tokenSet.claims().email) {
+    email = tokenSet.claims().email;
+  }
+
+  return done(null, {
+    accessToken:tokenSet.access_token,
+    refreshToken:tokenSet.refresh_token,
+    exp: tokenSet.expires_at,
+    email: email,
+  });
+}
 
 module.exports = {
   setupAuth: setupAuth,
