@@ -39,6 +39,21 @@ const callbackURL = settings.callbackURL || process.env.OPENID_CALLBACK_URL;
 const discoverURL = settings.discoverURL || process.env.OPENID_DISCOVER_URL;
 const scope = settings.scope || process.env.OPENID_SCOPE || 'openid';
 
+function verifyCallback(tokenSet, user, done) {
+  let email = '';
+
+  if (tokenSet.claims().email) {
+    email = tokenSet.claims().email;
+  }
+
+  return done(null, {
+    accessToken: tokenSet.access_token,
+    refreshToken: tokenSet.refresh_token,
+    exp: tokenSet.expires_at,
+    email: email,
+  });
+}
+
 const middleware = async function(ctx, next) {
   if (allowUrl.includes(ctx.path)) {
     return next();
@@ -54,8 +69,9 @@ const middleware = async function(ctx, next) {
     ctx.state.user.exp < Date.now() / 1000
   ) {
     const ts = await oiClient.refresh(ctx.state.user.refreshToken);
-    ctx.state.user.exp = ts.expires_at
-    ctx.state.user.accessToken = ts.access_token
+
+    ctx.state.user.exp = ts.expires_at;
+    ctx.state.user.accessToken = ts.access_token;
   }
 
   ctx.authTokenHeaders = ctx.authTokenHeaders || {};
@@ -86,36 +102,23 @@ const setupAuth = async function(app, router) {
   passport.deserializeUser((user, done) => done(null, user));
 
   const discovered = await OpenIDClient.Issuer.discover(discoverURL);
+
   oiClient = new discovered.Client({
     client_id: clientID,
     client_secret: clientSecret,
   });
 
-const strategyOptions =  {
-  client: oiClient,
-  params: {
-    redirect_uri: callbackURL,
-    scope: scope,
-  },
-  passReqToCallback: false,
+  const strategyOptions = {
+    client: oiClient,
+    params: {
+      redirect_uri: callbackURL,
+      scope: scope,
+    },
+    passReqToCallback: false,
+  };
+
+  passport.use('oidc', OpenIDClient.Strategy(strategyOptions, verifyCallback));
 };
-
-  passport.use('oidc', OpenIDClient.Strategy(strategyOptions,verifyCallback));
-};
-
-function verifyCallback (tokenSet, user, done) {
-  let email = '';
-  if (tokenSet.claims().email) {
-    email = tokenSet.claims().email;
-  }
-
-  return done(null, {
-    accessToken:tokenSet.access_token,
-    refreshToken:tokenSet.refresh_token,
-    exp: tokenSet.expires_at,
-    email: email,
-  });
-}
 
 module.exports = {
   setupAuth: setupAuth,
