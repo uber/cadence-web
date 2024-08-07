@@ -25,7 +25,7 @@ const session = require('koa-session');
 const allowUrl = ['/login', '/logout', '/oauth2/redirect'];
 
 let settings = {};
-var oiClient;
+let oiClient;
 
 try {
   settings = require('../../config/oidc.js');
@@ -53,7 +53,7 @@ const middleware = async function(ctx, next) {
     ctx.state.user.exp !== undefined &&
     ctx.state.user.exp < Date.now() / 1000
   ) {
-    ts = await oiClient.refresh(ctx.state.user.refreshToken);
+    const ts = await oiClient.refresh(ctx.state.user.refreshToken);
     ctx.state.user.exp = ts.expires_at
     ctx.state.user.accessToken = ts.access_token
   }
