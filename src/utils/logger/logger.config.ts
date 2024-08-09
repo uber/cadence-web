@@ -1,8 +1,13 @@
-const isDevelopment = process.env.NODE_ENV === 'development';
 import type { LoggerOptions } from 'pino';
 
+import logOnServer from '@/server-actions/log-on-server/log-on-server';
+
+import getLogParams from './helpers/get-log-params';
+
+const isDevelopment = process.env.NODE_ENV === 'development';
+
 const LOGGER_CONFIG: LoggerOptions = {
-  level: isDevelopment ? 'debug' : 'info',
+  level: isDevelopment ? 'trace' : 'info',
   formatters: {
     level(label, number) {
       return { level: isDevelopment ? number : label };
@@ -11,10 +16,8 @@ const LOGGER_CONFIG: LoggerOptions = {
   browser: {
     transmit: {
       level: 'warn',
-      send: (level, info) => {
-        // testing send
-        // eslint-disable-next-line no-console
-        console.log(level, info);
+      send: (level, logEvent) => {
+        logOnServer(getLogParams(level, logEvent));
       },
     },
   },
