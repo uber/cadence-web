@@ -21,7 +21,7 @@
 
 const formatEnum = require('../format-enum');
 const formatFailureDetails = require('../format-failure-details');
-const formatPayload = require('../format-payload');
+const formatInputPayload = require('../format-input-payload');
 const formatPayloadMap = require('../format-payload-map');
 const formatDurationToSeconds = require('../format-duration-to-seconds');
 
@@ -49,7 +49,7 @@ const formatWorkflowExecutionContinuedAsNewEventAttributes = ({
   failureReason: failure?.reason || '',
   header: formatPayloadMap(header, 'fields'),
   initiator: formatEnum(initiator, 'CONTINUE_AS_NEW_INITIATOR'),
-  input: formatPayload(input),
+  input: formatInputPayload(input),
   memo: formatPayloadMap(memo, 'fields'),
   searchAttributes: formatPayloadMap(searchAttributes, 'indexedFields'),
   taskList: {

@@ -793,6 +793,7 @@ section.history {
     .vue-recycle-scroller__slot, .vue-recycle-scroller__item-view, .scroller-item {
       display: flex;
       width: 100%;
+      overflow-wrap: anywhere;
     }
 
     .col-id {

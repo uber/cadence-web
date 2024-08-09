@@ -175,10 +175,12 @@ const wfHistoryJson = [
       {},
       wfHistoryThrift[0].workflowExecutionStartedEventAttributes,
       {
-        input: {
-          emails: ['jane@example.com', 'bob@example.com'],
-          includeFooter: true,
-        },
+        input: [
+          {
+            emails: ['jane@example.com', 'bob@example.com'],
+            includeFooter: true,
+          },
+        ],
       }
     ),
   },
