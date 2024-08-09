@@ -1,18 +1,14 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const pino = require('pino');
+/*
+  This file is a configuration file for the next-logger library,
+  which patches Next's logger to output NDJSON to stdout using Pino.
 
-const isDevelopment = process.env.NODE_ENV === 'development';
+  next-logger uses its own Pino logger by default, but for a unified logging
+  experience, we override it to use the same Pino logger as utils/logger.
+*/
 
-const logger = (defaultConfig) =>
-  pino({
-    ...defaultConfig,
-    level: isDevelopment ? 'debug' : 'info',
-    formatters: {
-      level(label, number) {
-        return { level: isDevelopment ? number : label };
-      },
-    },
-  });
+const {
+  getBaseLogger: logger,
+} = async () => await import('./src/utils/logger/logger')();
 
 module.exports = {
   logger,

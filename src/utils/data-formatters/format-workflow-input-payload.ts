@@ -1,4 +1,4 @@
-import { logger } from '@/utils/logger/logger';
+import logger from '@/utils/logger';
 
 const formatWorkflowInputPayload = (
   payload: { data?: string | null } | null | undefined

@@ -1,5 +1,10 @@
-import { pino, type Logger } from 'pino';
+import { type LoggerOptions, pino } from 'pino';
 
-import LOGGER_CONFIG from '@/config/logger/logger.config';
+import LOGGER_CONFIG from './logger.config';
 
-export const logger: Logger = pino(LOGGER_CONFIG);
+export const getBaseLogger = (config?: LoggerOptions) =>
+  pino({ ...config, ...LOGGER_CONFIG });
+
+const logger = getBaseLogger();
+
+export default logger;
