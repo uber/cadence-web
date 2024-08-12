@@ -1,6 +1,6 @@
 import type { LoggerOptions } from 'pino';
 
-import logOnServer from '@/server-actions/log-on-server/log-on-server';
+import logToServer from '@/server-actions/log-to-server/log-to-server';
 
 import getLogParams from './helpers/get-log-params';
 
@@ -17,7 +17,7 @@ const LOGGER_CONFIG: LoggerOptions = {
     transmit: {
       level: 'warn',
       send: (level, logEvent) => {
-        logOnServer(getLogParams(level, logEvent));
+        logToServer(getLogParams(level, logEvent));
       },
     },
   },
