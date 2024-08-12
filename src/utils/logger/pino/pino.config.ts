@@ -1,8 +1,6 @@
 import type { LoggerOptions } from 'pino';
 
-import logToServer from '@/server-actions/log-to-server/log-to-server';
-
-import getLogParams from './helpers/get-log-params';
+import getLogBody from './helpers/get-log-body';
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 
@@ -17,7 +15,10 @@ const LOGGER_CONFIG: LoggerOptions = {
     transmit: {
       level: 'warn',
       send: (level, logEvent) => {
-        logToServer(getLogParams(level, logEvent));
+        navigator.sendBeacon(
+          '/log',
+          JSON.stringify(getLogBody(level, logEvent))
+        );
       },
     },
   },

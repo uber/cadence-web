@@ -1,8 +1,11 @@
 import { type Level, type LogEvent } from 'pino';
 
-import { type LogParams } from '@/server-actions/log-to-server/log-to-server.types';
+import { type LogToServerBody } from '@/route-handlers/log-to-server/log-to-server.types';
 
-export default function getLogParams(level: Level, event: LogEvent): LogParams {
+export default function getLogBody(
+  level: Level,
+  event: LogEvent
+): LogToServerBody {
   return {
     level,
     message:
