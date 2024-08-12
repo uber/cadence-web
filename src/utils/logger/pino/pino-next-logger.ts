@@ -7,8 +7,9 @@
 import { type LoggerOptions, pino } from 'pino';
 
 import LOGGER_CONFIG from './pino.config';
+import { type CustomLevels } from './pino.types';
 
-const getNextLogger = (nextLoggerConfig: LoggerOptions) =>
-  pino({ ...nextLoggerConfig, ...LOGGER_CONFIG });
+const getNextLogger = (nextLoggerConfig: LoggerOptions<CustomLevels>) =>
+  pino<CustomLevels>({ ...nextLoggerConfig, ...LOGGER_CONFIG, name: 'next' });
 
 export default getNextLogger;
