@@ -10,6 +10,6 @@ import LOGGER_CONFIG from './pino.config';
 import { type CustomLevels } from './pino.types';
 
 const getNextLogger = (nextLoggerConfig: LoggerOptions<CustomLevels>) =>
-  pino<CustomLevels>({ ...nextLoggerConfig, ...LOGGER_CONFIG, name: 'next' });
+  pino<CustomLevels>({ ...nextLoggerConfig, ...LOGGER_CONFIG });
 
 export default getNextLogger;
