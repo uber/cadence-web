@@ -20,9 +20,8 @@ export async function logToServer(request: NextRequest) {
   }
 
   const { level, message, payload } = data;
-  const browserLogger = logger.child({ name: 'browser' });
 
-  browserLogger[level](payload, message);
+  logger[level](payload, message);
 
   return NextResponse.json({
     status: 200,

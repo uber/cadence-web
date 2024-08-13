@@ -15,7 +15,7 @@ export default function getLogBody(
       browserTimestamp: event.ts,
       messages: event.messages,
       bindings: event.bindings,
-      isBrowser: true,
+      source: 'browser',
     },
   };
 }
