@@ -13,6 +13,10 @@ export default function getLogBody(
       'Log from browser',
     payload: {
       browserTimestamp: event.ts,
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      userAgent: navigator.userAgent,
+      // TODO @adhitya.mamallan: add a field for "userUuid" once we start sending it for auth
+      url: window.location.href,
       messages: event.messages,
       bindings: event.bindings,
       source: 'browser',
