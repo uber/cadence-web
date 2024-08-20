@@ -16,7 +16,14 @@ export default function getLogBody(
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       userAgent: navigator.userAgent,
       // TODO @adhitya.mamallan: add a field for "userUuid" once we start sending it for auth
-      url: window.location.href,
+      // userUuid: ...
+      url: {
+        base: window.location.origin + window.location.pathname,
+        searchParams: Object.fromEntries(
+          new URLSearchParams(window.location.search)
+        ),
+        hash: window.location.hash,
+      },
       messages: event.messages,
       bindings: event.bindings,
       source: 'browser',
