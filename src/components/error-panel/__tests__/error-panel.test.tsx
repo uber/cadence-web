@@ -2,6 +2,8 @@ import React from 'react';
 
 import { render, screen, act, fireEvent, within } from '@/test-utils/rtl';
 
+import { RequestError } from '@/utils/request/request-error';
+
 import ErrorPanel from '../error-panel';
 import { type ErrorAction } from '../error-panel.types';
 
@@ -17,6 +19,11 @@ jest.mock('next/navigation', () => ({
     prefetch: () => {},
     refresh: mockRouterRefresh,
   }),
+}));
+
+const mockError = jest.fn();
+jest.mock('@/utils/logger', () => ({
+  error: mockError,
 }));
 
 const mockResetQueryErrors = jest.fn();
@@ -60,6 +67,24 @@ describe(ErrorPanel.name, () => {
 
     expect(screen.getByAltText('Error')).toBeInTheDocument();
     expect(screen.getByText('Mock error message')).toBeInTheDocument();
+  });
+
+  it('should emit log if an error is passed', async () => {
+    setup({
+      message: 'Mock error message',
+      error: new Error('something bad happened'),
+    });
+
+    expect(mockError).toHaveBeenCalled();
+  });
+
+  it('should not emit log if a 404 error is passed', async () => {
+    setup({
+      message: 'Mock error message',
+      error: new RequestError('Something was not found', 404),
+    });
+
+    expect(mockError).not.toHaveBeenCalled();
   });
 
   it('should render correctly with actions', async () => {
@@ -132,14 +157,23 @@ describe(ErrorPanel.name, () => {
 
 function setup({
   message,
+  error,
   actions,
 }: {
   message: string;
+  error?: Error;
   actions?: Array<ErrorAction>;
 }) {
   const mockReset = jest.fn();
   const mockWindowOpen = jest.fn();
   jest.spyOn(window, 'open').mockImplementation(mockWindowOpen);
-  render(<ErrorPanel message={message} actions={actions} reset={mockReset} />);
+  render(
+    <ErrorPanel
+      message={message}
+      error={error}
+      actions={actions}
+      reset={mockReset}
+    />
+  );
   return { mockReset, mockWindowOpen };
 }
