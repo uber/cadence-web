@@ -3,14 +3,9 @@ import { useParams } from 'next/navigation';
 
 import ErrorPanel from '@/components/error-panel/error-panel';
 import { RequestError } from '@/utils/request/request-error';
+import { Props } from './domain-page-error.types';
 
-export default function DomainPageError({
-  error,
-  reset,
-}: Readonly<{
-  error: Error;
-  reset: () => void;
-}>) {
+export default function DomainPageError({ error, reset }: Props) {
   const { domain } = useParams();
 
   if (error instanceof RequestError && error.status === 404) {

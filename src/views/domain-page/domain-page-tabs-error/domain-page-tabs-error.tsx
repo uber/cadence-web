@@ -1,18 +1,13 @@
 import { useParams } from 'next/navigation';
 
 import ErrorPanel from '@/components/error-panel/error-panel';
-import { type RequestError } from '@/utils/request/request-error';
 
 import domainPageTabsErrorConfig from '../config/domain-page-tabs-error.config';
 import { type DomainTabName } from '../domain-page-content/domain-page-content.types';
 
-export default function DomainPageContentError({
-  error,
-  reset,
-}: Readonly<{
-  error: RequestError;
-  reset: () => void;
-}>) {
+import { type Props } from './domain-page-tabs-error.types';
+
+export default function DomainPageTabsError({ error, reset }: Props) {
   const { domainTab } = useParams();
   const getConfig = domainPageTabsErrorConfig[domainTab as DomainTabName];
 

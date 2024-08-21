@@ -8,3 +8,8 @@ export type DomainPageTabsErrorConfig = Record<
   DomainTabName,
   (err: Error) => DomainPageTabErrorConfig
 >;
+
+export type Props = {
+  error: Error;
+  reset: () => void;
+};
