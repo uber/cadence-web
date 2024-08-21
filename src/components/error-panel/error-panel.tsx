@@ -5,13 +5,26 @@ import { useRouter } from 'next/navigation';
 import { MdRefresh, MdOpenInNew } from 'react-icons/md';
 
 import errorIcon from '@/assets/error-icon.svg';
+import logger from '@/utils/logger';
+import { RequestError } from '@/utils/request/request-error';
 
+import { NO_LOG_ERROR_CODES } from './error-panel.constants';
 import { styled } from './error-panel.styles';
 import { type Props } from './error-panel.types';
 
 export default function ErrorPanel(props: Props) {
   const router = useRouter();
   const { reset: resetQueryErrors } = useQueryErrorResetBoundary();
+
+  if (
+    props.error &&
+    !(
+      props.error instanceof RequestError &&
+      NO_LOG_ERROR_CODES.includes(props.error.status)
+    )
+  ) {
+    logger.error(props.error, props.message);
+  }
 
   return (
     <styled.ErrorContainer>
@@ -30,7 +43,7 @@ export default function ErrorPanel(props: Props) {
                   case 'retry':
                     resetQueryErrors();
                     router.refresh();
-                    props.reset();
+                    props.reset?.();
                     break;
                   case 'link-internal':
                     router.push(action.link);
