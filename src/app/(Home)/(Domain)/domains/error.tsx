@@ -1,14 +1,3 @@
-'use client';
-import ErrorPanel from '@/components/error-panel/error-panel';
+import DomainPageError from '@/views/domain-page/domain-page-error/domain-page-error';
 
-export default function DomainPageError({
-  error,
-  reset,
-}: Readonly<{
-  error: Error;
-  reset: () => void;
-}>) {
-  return (
-    <ErrorPanel error={error} message="Failed to load domain" reset={reset} />
-  );
-}
+export default DomainPageError;
