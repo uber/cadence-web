@@ -3,7 +3,8 @@ import { useParams } from 'next/navigation';
 
 import ErrorPanel from '@/components/error-panel/error-panel';
 import { RequestError } from '@/utils/request/request-error';
-import { Props } from './domain-page-error.types';
+
+import { type Props } from './domain-page-error.types';
 
 export default function DomainPageError({ error, reset }: Props) {
   const { domain } = useParams();
@@ -12,7 +13,7 @@ export default function DomainPageError({ error, reset }: Props) {
     return (
       <ErrorPanel
         error={error}
-        message={`The domain "${domain} was not found`}
+        message={`The domain "${domain}" was not found`}
         actions={[
           {
             kind: 'link-internal',

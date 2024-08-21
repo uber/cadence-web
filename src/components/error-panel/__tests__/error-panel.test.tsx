@@ -23,7 +23,11 @@ jest.mock('next/navigation', () => ({
 
 const mockError = jest.fn();
 jest.mock('@/utils/logger', () => ({
-  error: mockError,
+  ...jest.requireActual('@/utils/logger'),
+  __esModule: true,
+  default: {
+    error: () => mockError(),
+  },
 }));
 
 const mockResetQueryErrors = jest.fn();

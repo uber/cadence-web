@@ -20,6 +20,10 @@ jest.mock('@/components/error-panel/error-panel', () =>
 );
 
 describe(DomainPageError.name, () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('renders error page correctly', () => {
     render(
       <DomainPageError
@@ -38,7 +42,7 @@ describe(DomainPageError.name, () => {
       />
     );
     expect(
-      screen.getByText('The domain test-domain was not found')
+      screen.getByText('The domain "test-domain" was not found')
     ).toBeInTheDocument();
   });
 });
