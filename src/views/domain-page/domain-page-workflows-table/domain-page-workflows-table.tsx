@@ -67,10 +67,6 @@ export default function DomainPageWorkflowsTable(props: Props) {
     [data]
   );
 
-  if (workflows.length > 30) {
-    throw new Error('testing random UI bug');
-  }
-
   return (
     <PageSection>
       <Table
