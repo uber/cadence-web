@@ -2,8 +2,6 @@ import React from 'react';
 
 import { render, screen, act, fireEvent, within } from '@/test-utils/rtl';
 
-import { RequestError } from '@/utils/request/request-error';
-
 import ErrorPanel from '../error-panel';
 import { type ErrorAction } from '../error-panel.types';
 
@@ -23,7 +21,6 @@ jest.mock('next/navigation', () => ({
 
 const mockError = jest.fn();
 jest.mock('@/utils/logger', () => ({
-  ...jest.requireActual('@/utils/logger'),
   __esModule: true,
   default: {
     error: () => mockError(),
@@ -82,10 +79,11 @@ describe(ErrorPanel.name, () => {
     expect(mockError).toHaveBeenCalled();
   });
 
-  it('should not emit log if a 404 error is passed', async () => {
+  it('should not emit log if an error is passed but omitLogging is true', async () => {
     setup({
       message: 'Mock error message',
-      error: new RequestError('Something was not found', 404),
+      error: new Error('Something was not found'),
+      omitLogging: true,
     });
 
     expect(mockError).not.toHaveBeenCalled();
@@ -163,10 +161,12 @@ function setup({
   message,
   error,
   actions,
+  omitLogging,
 }: {
   message: string;
   error?: Error;
   actions?: Array<ErrorAction>;
+  omitLogging?: boolean;
 }) {
   const mockReset = jest.fn();
   const mockWindowOpen = jest.fn();
@@ -177,6 +177,7 @@ function setup({
       error={error}
       actions={actions}
       reset={mockReset}
+      omitLogging={omitLogging}
     />
   );
   return { mockReset, mockWindowOpen };

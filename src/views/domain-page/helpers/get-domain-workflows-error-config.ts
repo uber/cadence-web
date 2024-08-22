@@ -1,11 +1,10 @@
-import { RequestError } from '@/utils/request/request-error';
-
 import { type DomainPageTabErrorConfig } from '../domain-page-tabs-error/domain-page-tabs-error.types';
+import { NO_WORKFLOWS_ERROR_MESSAGE } from '../domain-page-workflows-table/domain-page-workflows-table.constants';
 
 export default function getDomainWorkflowsErrorConfig(
   err: Error
 ): DomainPageTabErrorConfig {
-  if (err instanceof RequestError && err.status === 404) {
+  if (err.message === NO_WORKFLOWS_ERROR_MESSAGE) {
     return {
       message: 'No workflows found for this domain',
       actions: [
@@ -15,6 +14,7 @@ export default function getDomainWorkflowsErrorConfig(
           link: 'https://cadenceworkflow.io/docs/concepts/workflows',
         },
       ],
+      omitLogging: true,
     };
   }
 

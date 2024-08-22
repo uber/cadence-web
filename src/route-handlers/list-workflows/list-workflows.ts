@@ -56,23 +56,6 @@ export async function listWorkflows(
       nextPage: res.nextPageToken,
     };
 
-    if (
-      !queryParams.search &&
-      !queryParams.status &&
-      !queryParams.timeRangeStart &&
-      !queryParams.timeRangeEnd &&
-      response.workflows.length === 0
-    ) {
-      return NextResponse.json(
-        {
-          message: 'No workflows found for this domain',
-        },
-        {
-          status: 404,
-        }
-      );
-    }
-
     return NextResponse.json(response);
   } catch (e) {
     return NextResponse.json(
