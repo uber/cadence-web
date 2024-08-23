@@ -14,7 +14,6 @@ const BadComponent = ({ shouldThrow }: { shouldThrow?: boolean }) => {
 
 const mockError = jest.fn();
 jest.mock('@/utils/logger', () => ({
-  ...jest.requireActual('@/utils/logger'),
   __esModule: true,
   default: {
     error: () => mockError(),
