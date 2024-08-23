@@ -1,6 +1,6 @@
 {
   "name": "cadence-web",
-  "version": "3.35.5",
+  "version": "3.35.5-beta.4",
   "lockfileVersion": 1,
   "requires": true,
   "dependencies": {
