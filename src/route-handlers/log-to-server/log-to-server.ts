@@ -8,10 +8,11 @@ export async function logToServer(request: NextRequest) {
   const requestBodyJSON = await request.json();
   const { data, error } = logToServerPayloadSchema.safeParse(requestBodyJSON);
   if (error) {
+    logger.error(error, 'Failed to parse log from browser');
+
     return NextResponse.json(
       {
-        error: 'Invalid argument(s) for logging to server',
-        validationErrors: error.errors,
+        message: 'Could not log browser log on server',
       },
       {
         status: 400,
