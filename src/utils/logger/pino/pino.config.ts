@@ -7,7 +7,6 @@ const isDevelopment = process.env.NODE_ENV === 'development';
 
 const LOGGER_CONFIG: LoggerOptions<CustomLevels> = {
   level: isDevelopment ? 'trace' : 'info',
-  messageKey: 'message',
   formatters: {
     level(label) {
       return { level: label };
