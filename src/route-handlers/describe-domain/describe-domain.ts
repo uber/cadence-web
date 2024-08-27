@@ -3,7 +3,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 import decodeUrlParams from '@/utils/decode-url-params';
 import * as grpcClient from '@/utils/grpc/grpc-client';
 import { getHTTPStatusCode, GRPCError } from '@/utils/grpc/grpc-error';
-import logger from '@/utils/logger';
+import logger, { type RouteHandlerErrorPayload } from '@/utils/logger';
 
 import { type RequestParams, type RouteParams } from './describe-domain.types';
 
@@ -20,8 +20,8 @@ export async function describeDomain(
 
     return NextResponse.json(res.domain);
   } catch (e) {
-    logger.error(
-      { requestParams: decodedParams, error: e },
+    logger.error<RouteHandlerErrorPayload>(
+      { requestParams: decodedParams, cause: e },
       'Error fetching domain info'
     );
 
