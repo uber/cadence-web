@@ -1,4 +1,4 @@
-import DomainWorkflows from '@/views/domain-workflows/domain-workflows/domain-workflows';
+import DomainWorkflows from '@/views/domain-workflows/domain-workflows';
 
 import type { DomainPageTabsContentConfig } from '../domain-page-content/domain-page-content.types';
 import DomainPageMetadata from '../domain-page-metadata/domain-page-metadata';
