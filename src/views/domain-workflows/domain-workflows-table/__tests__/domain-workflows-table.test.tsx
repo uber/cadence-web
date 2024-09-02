@@ -10,7 +10,7 @@ import { type Props as EndMessageProps } from '../../domain-workflows-table-end-
 import DomainWorkflowsTable from '../domain-workflows-table';
 
 jest.mock(
-  '../../domain-page-workflows-table-end-message/domain-page-workflows-table-end-message',
+  '../../domain-workflows-table-end-message/domain-workflows-table-end-message',
   () =>
     jest.fn((props: EndMessageProps) => (
       <button data-testid="mock-end-message" onClick={props.fetchNextPage}>

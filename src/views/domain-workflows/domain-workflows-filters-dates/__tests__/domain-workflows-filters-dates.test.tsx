@@ -11,8 +11,8 @@ import { type DomainWorkflowsFiltersDatesValue } from '../domain-workflows-filte
 
 jest.useFakeTimers().setSystemTime(new Date('2023-05-25'));
 
-jest.mock('../domain-page-workflows-filters-dates.constants', () => ({
-  ...jest.requireActual('../domain-page-workflows-filters-dates.constants'),
+jest.mock('../domain-workflows-filters-dates.constants', () => ({
+  ...jest.requireActual('../domain-workflows-filters-dates.constants'),
   DATE_FORMAT: 'dd MMM yyyy, HH:mm x',
 }));
 
