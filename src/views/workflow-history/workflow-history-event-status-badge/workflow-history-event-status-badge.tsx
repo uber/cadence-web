@@ -10,10 +10,7 @@ import {
   WORKFLOW_EVENT_STATUS_BADGE_SIZES,
 } from './workflow-history-event-status-badge.constants';
 import { styled } from './workflow-history-event-status-badge.styles';
-import type {
-  Props,
-  WorkflowEventStatusBadgeSize,
-} from './workflow-history-event-status-badge.types';
+import type { Props } from './workflow-history-event-status-badge.types';
 
 export default function WorkflowHistoryEventStatusBadge({
   status,
@@ -23,9 +20,8 @@ export default function WorkflowHistoryEventStatusBadge({
   if (!WORKFLOW_EVENT_STATUS[status]) return null;
 
   const renderIcon = () => {
-    const iconSizeMap = getBadgeIconSize(theme);
+    const iconSize = getBadgeIconSize(theme, size);
 
-    const iconSize = iconSizeMap[size];
     if (iconSize === undefined) return null;
 
     switch (status) {

@@ -1,4 +1,4 @@
-import { type Theme, styled as createStyled } from 'baseui';
+import { styled as createStyled } from 'baseui';
 
 import type { StyletronCSSObjectValue } from '@/hooks/use-styletron-classes';
 
@@ -14,15 +14,15 @@ export const styled = {
     'div',
     { $status: Props['status']; $size: WorkflowEventStatusBadgeSize }
   >('div', ({ $size, $status, $theme }) => {
-    const containerSizeMap = getBadgeContainerSize($theme);
+    const containerSize = getBadgeContainerSize($theme, $size);
 
     return {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       borderRadius: '16px',
-      width: containerSizeMap[$size],
-      height: containerSizeMap[$size],
+      width: containerSize,
+      height: containerSize,
       ...(
         {
           [WORKFLOW_EVENT_STATUS.COMPLETED]: {
@@ -33,12 +33,12 @@ export const styled = {
             backgroundColor: '#DEE9FE',
           },
           [WORKFLOW_EVENT_STATUS.FAILED]: {
-            color: '#DE1135',
+            color: $theme.colors.negative,
             backgroundColor: '#FFE1DE',
           },
           [WORKFLOW_EVENT_STATUS.WAITING]: {
-            color: '#000000',
-            backgroundColor: '#F3F3F3',
+            color: $theme.colors.black,
+            backgroundColor: $theme.colors.backgroundSecondary,
           },
         } satisfies Record<Props['status'], StyletronCSSObjectValue>
       )[$status],
