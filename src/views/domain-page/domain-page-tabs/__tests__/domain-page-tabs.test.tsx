@@ -67,6 +67,7 @@ describe('DomainPageTabs', () => {
     window = Object.create(window);
     Object.defineProperty(window, 'location', {
       value: {
+        ...window.location,
         search: '?queryParam1=one&queryParam2=two',
       },
       writable: true,
