@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`WorkflowHistoryTabEventStatusBadge should match snapshot when size is not valid and icon should not be rendered 1`] = `
+exports[`WorkflowHistoryEventStatusBadge should match snapshot when size is not valid and icon should not be rendered 1`] = `
 <div>
   <div
     class="css-cOgsKQ"
@@ -11,7 +11,7 @@ exports[`WorkflowHistoryTabEventStatusBadge should match snapshot when size is n
 </div>
 `;
 
-exports[`WorkflowHistoryTabEventStatusBadge should match snapshot when status is COMPLETED and size is medium 1`] = `
+exports[`WorkflowHistoryEventStatusBadge should match snapshot when status is COMPLETED and size is medium 1`] = `
 <div>
   <div
     class="css-cOgsKQ"
@@ -44,7 +44,7 @@ exports[`WorkflowHistoryTabEventStatusBadge should match snapshot when status is
 </div>
 `;
 
-exports[`WorkflowHistoryTabEventStatusBadge should match snapshot when status is COMPLETED and size is small 1`] = `
+exports[`WorkflowHistoryEventStatusBadge should match snapshot when status is COMPLETED and size is small 1`] = `
 <div>
   <div
     class="css-cOgsKQ"
@@ -77,7 +77,7 @@ exports[`WorkflowHistoryTabEventStatusBadge should match snapshot when status is
 </div>
 `;
 
-exports[`WorkflowHistoryTabEventStatusBadge should match snapshot when status is FAILED and size is medium 1`] = `
+exports[`WorkflowHistoryEventStatusBadge should match snapshot when status is FAILED and size is medium 1`] = `
 <div>
   <div
     class="css-cOgsKQ"
@@ -113,7 +113,7 @@ exports[`WorkflowHistoryTabEventStatusBadge should match snapshot when status is
 </div>
 `;
 
-exports[`WorkflowHistoryTabEventStatusBadge should match snapshot when status is FAILED and size is small 1`] = `
+exports[`WorkflowHistoryEventStatusBadge should match snapshot when status is FAILED and size is small 1`] = `
 <div>
   <div
     class="css-cOgsKQ"
@@ -149,7 +149,7 @@ exports[`WorkflowHistoryTabEventStatusBadge should match snapshot when status is
 </div>
 `;
 
-exports[`WorkflowHistoryTabEventStatusBadge should match snapshot when status is ONGOING and size is medium 1`] = `
+exports[`WorkflowHistoryEventStatusBadge should match snapshot when status is ONGOING and size is medium 1`] = `
 <div>
   <div
     class="css-cOgsKQ"
@@ -171,7 +171,7 @@ exports[`WorkflowHistoryTabEventStatusBadge should match snapshot when status is
 </div>
 `;
 
-exports[`WorkflowHistoryTabEventStatusBadge should match snapshot when status is ONGOING and size is small 1`] = `
+exports[`WorkflowHistoryEventStatusBadge should match snapshot when status is ONGOING and size is small 1`] = `
 <div>
   <div
     class="css-cOgsKQ"
@@ -193,7 +193,7 @@ exports[`WorkflowHistoryTabEventStatusBadge should match snapshot when status is
 </div>
 `;
 
-exports[`WorkflowHistoryTabEventStatusBadge should match snapshot when status is WAITING and size is medium 1`] = `
+exports[`WorkflowHistoryEventStatusBadge should match snapshot when status is WAITING and size is medium 1`] = `
 <div>
   <div
     class="css-cOgsKQ"
@@ -226,7 +226,7 @@ exports[`WorkflowHistoryTabEventStatusBadge should match snapshot when status is
 </div>
 `;
 
-exports[`WorkflowHistoryTabEventStatusBadge should match snapshot when status is WAITING and size is small 1`] = `
+exports[`WorkflowHistoryEventStatusBadge should match snapshot when status is WAITING and size is small 1`] = `
 <div>
   <div
     class="css-cOgsKQ"
@@ -259,7 +259,7 @@ exports[`WorkflowHistoryTabEventStatusBadge should match snapshot when status is
 </div>
 `;
 
-exports[`WorkflowHistoryTabEventStatusBadge should match snapshot when status is not valid and badge should not be rendered 1`] = `
+exports[`WorkflowHistoryEventStatusBadge should match snapshot when status is not valid and badge should not be rendered 1`] = `
 <div>
   <div
     class="css-cOgsKQ"

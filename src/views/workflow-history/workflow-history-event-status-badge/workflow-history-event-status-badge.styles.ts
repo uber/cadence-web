@@ -5,11 +5,11 @@ import type { StyletronCSSObjectValue } from '@/hooks/use-styletron-classes';
 import {
   WORKFLOW_EVENT_STATUS,
   containerSizeMap,
-} from './workflow-history-tab-event-status-badge.constants';
+} from './workflow-history-event-status-badge.constants';
 import type {
   Props,
   WorkflowEventStatusBadgeSize,
-} from './workflow-history-tab-event-status-badge.types';
+} from './workflow-history-event-status-badge.types';
 
 export const styled = {
   BadgeContainer: createStyled<

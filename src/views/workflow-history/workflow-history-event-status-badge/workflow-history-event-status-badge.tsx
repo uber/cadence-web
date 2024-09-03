@@ -7,11 +7,11 @@ import {
   WORKFLOW_EVENT_STATUS,
   WORKFLOW_EVENT_STATUS_BADGE_SIZES,
   iconSizeMap,
-} from './workflow-history-tab-event-status-badge.constants';
-import { styled } from './workflow-history-tab-event-status-badge.styles';
-import type { Props } from './workflow-history-tab-event-status-badge.types';
+} from './workflow-history-event-status-badge.constants';
+import { styled } from './workflow-history-event-status-badge.styles';
+import type { Props } from './workflow-history-event-status-badge.types';
 
-export default function WorkflowHistoryTabEventStatusBadge({
+export default function WorkflowHistoryEventStatusBadge({
   status,
   size = WORKFLOW_EVENT_STATUS_BADGE_SIZES.medium,
 }: Props) {

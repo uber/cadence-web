@@ -1,4 +1,4 @@
-import type { WorkflowEventStatusBadgeSize } from './workflow-history-tab-event-status-badge.types';
+import type { WorkflowEventStatusBadgeSize } from './workflow-history-event-status-badge.types';
 
 export const WORKFLOW_EVENT_STATUS = {
   COMPLETED: 'COMPLETED',
