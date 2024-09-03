@@ -1,11 +1,14 @@
-import type { WorkflowEventStatusBadgeSize } from './workflow-history-event-status-badge.types';
+import type {
+  WorkflowEventStatus,
+  WorkflowEventStatusBadgeSize,
+} from './workflow-history-event-status-badge.types';
 
 export const WORKFLOW_EVENT_STATUS = {
   COMPLETED: 'COMPLETED',
   FAILED: 'FAILED',
   ONGOING: 'ONGOING',
   WAITING: 'WAITING',
-} as const;
+} as const satisfies Record<WorkflowEventStatus, WorkflowEventStatus>;
 
 export const WORKFLOW_EVENT_STATUS_BADGE_SIZES: Record<
   WorkflowEventStatusBadgeSize,
@@ -13,14 +16,4 @@ export const WORKFLOW_EVENT_STATUS_BADGE_SIZES: Record<
 > = {
   small: 'small',
   medium: 'medium',
-};
-
-export const containerSizeMap: Record<WorkflowEventStatusBadgeSize, number> = {
-  small: 16,
-  medium: 24,
-};
-
-export const iconSizeMap: Record<WorkflowEventStatusBadgeSize, number> = {
-  small: 10,
-  medium: 14,
 };
