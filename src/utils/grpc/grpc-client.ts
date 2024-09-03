@@ -6,6 +6,8 @@ import { type DescribeDomainRequest__Input } from '@/__generated__/proto-ts/uber
 import { type DescribeDomainResponse } from '@/__generated__/proto-ts/uber/cadence/api/v1/DescribeDomainResponse';
 import { type DescribeTaskListRequest__Input } from '@/__generated__/proto-ts/uber/cadence/api/v1/DescribeTaskListRequest';
 import { type DescribeTaskListResponse } from '@/__generated__/proto-ts/uber/cadence/api/v1/DescribeTaskListResponse';
+import { type GetTaskListsByDomainRequest__Input } from '@/__generated__/proto-ts/uber/cadence/api/v1/GetTaskListsByDomainRequest';
+import { type GetTaskListsByDomainResponse } from '@/__generated__/proto-ts/uber/cadence/api/v1/GetTaskListsByDomainResponse';
 import { type GetWorkflowExecutionHistoryRequest__Input } from '@/__generated__/proto-ts/uber/cadence/api/v1/GetWorkflowExecutionHistoryRequest';
 import { type GetWorkflowExecutionHistoryResponse } from '@/__generated__/proto-ts/uber/cadence/api/v1/GetWorkflowExecutionHistoryResponse';
 import { type ListArchivedWorkflowExecutionsRequest__Input } from '@/__generated__/proto-ts/uber/cadence/api/v1/ListArchivedWorkflowExecutionsRequest';
@@ -146,6 +148,10 @@ const clusterServicesMethods = CLUSTERS_CONFIGS.reduce(
         method: 'ListDomains',
         //formatResponse: formatResponseListDomains,
       }),
+      getTaskListsByDomain: workflowService.request<
+        GetTaskListsByDomainRequest__Input,
+        GetTaskListsByDomainResponse
+      >({ method: 'GetTaskListsByDomain' }),
       listTaskListPartitions: workflowService.request<
         ListTaskListPartitionsRequest__Input,
         ListTaskListPartitionsResponse
@@ -229,6 +235,9 @@ const clusterServicesMethods = CLUSTERS_CONFIGS.reduce(
       listDomains: (
         payload: ListDomainsRequest__Input
       ) => Promise<ListDomainsResponse>;
+      getTaskListsByDomain: (
+        payload: GetTaskListsByDomainRequest__Input
+      ) => Promise<GetTaskListsByDomainResponse>;
       listTaskListPartitions: (
         payload: ListTaskListPartitionsRequest__Input
       ) => Promise<ListTaskListPartitionsResponse>;
