@@ -1,7 +1,7 @@
 import { type DescribeTaskListResponse } from '@/__generated__/proto-ts/uber/cadence/api/v1/DescribeTaskListResponse';
 import parseGrpcTimestamp from '@/utils/datetime/parse-grpc-timestamp';
 
-import { type Poller } from '../list-task-lists-by-domain.types';
+import { type Poller } from '../describe-task-list.types';
 
 export default function getPollersForTaskList({
   decisionTaskList,

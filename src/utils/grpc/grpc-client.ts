@@ -148,10 +148,6 @@ const clusterServicesMethods = CLUSTERS_CONFIGS.reduce(
         method: 'ListDomains',
         //formatResponse: formatResponseListDomains,
       }),
-      getTaskListsByDomain: workflowService.request<
-        GetTaskListsByDomainRequest__Input,
-        GetTaskListsByDomainResponse
-      >({ method: 'GetTaskListsByDomain' }),
       listTaskListPartitions: workflowService.request<
         ListTaskListPartitionsRequest__Input,
         ListTaskListPartitionsResponse
@@ -235,9 +231,6 @@ const clusterServicesMethods = CLUSTERS_CONFIGS.reduce(
       listDomains: (
         payload: ListDomainsRequest__Input
       ) => Promise<ListDomainsResponse>;
-      getTaskListsByDomain: (
-        payload: GetTaskListsByDomainRequest__Input
-      ) => Promise<GetTaskListsByDomainResponse>;
       listTaskListPartitions: (
         payload: ListTaskListPartitionsRequest__Input
       ) => Promise<ListTaskListPartitionsResponse>;

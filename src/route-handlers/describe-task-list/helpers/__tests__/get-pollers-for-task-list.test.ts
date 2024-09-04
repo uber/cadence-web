@@ -1,4 +1,7 @@
-import { getTaskListsByDomainResponse } from '../../__fixtures__/get-task-lists-by-domain-response';
+import {
+  mockDecisionTaskListResponse,
+  mockActivityTaskListResponse,
+} from '../../__fixtures__/mock-task-list-response';
 import getPollersForTaskList from '../get-pollers-for-task-list';
 
 const MOCK_POLLERS_RESPONSE_MIXED = [
@@ -55,10 +58,8 @@ const MOCK_POLLERS_RESPONSE_ACTIVITY = [
 describe(getPollersForTaskList.name, () => {
   it('should return pollers with lastAccessTime being latest of decision/activity poller accessTime', () => {
     const res = getPollersForTaskList({
-      decisionTaskList:
-        getTaskListsByDomainResponse.decisionTaskListMap['tasklist-1'],
-      activityTaskList:
-        getTaskListsByDomainResponse.activityTaskListMap['tasklist-1'],
+      decisionTaskList: mockDecisionTaskListResponse,
+      activityTaskList: mockActivityTaskListResponse,
     });
 
     expect(res).toEqual(MOCK_POLLERS_RESPONSE_MIXED);
@@ -66,8 +67,7 @@ describe(getPollersForTaskList.name, () => {
 
   it('should return decision pollers if the tasklist has no activity pollers', () => {
     const res = getPollersForTaskList({
-      decisionTaskList:
-        getTaskListsByDomainResponse.decisionTaskListMap['tasklist-1'],
+      decisionTaskList: mockDecisionTaskListResponse,
       activityTaskList: undefined,
     });
 
@@ -77,8 +77,7 @@ describe(getPollersForTaskList.name, () => {
   it('should return activity pollers if the tasklist has no decision pollers', () => {
     const res = getPollersForTaskList({
       decisionTaskList: undefined,
-      activityTaskList:
-        getTaskListsByDomainResponse.activityTaskListMap['tasklist-1'],
+      activityTaskList: mockActivityTaskListResponse,
     });
 
     expect(res).toEqual(MOCK_POLLERS_RESPONSE_ACTIVITY);
