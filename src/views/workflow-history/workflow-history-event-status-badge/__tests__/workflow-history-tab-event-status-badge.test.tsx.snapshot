@@ -199,7 +199,7 @@ exports[`WorkflowHistoryEventStatusBadge should match snapshot when status is WA
     class="css-cOgsKQ"
   >
     <div
-      class="css-hjSUsy"
+      class="css-ioUFkF"
     >
       <svg
         fill="currentColor"
@@ -232,7 +232,7 @@ exports[`WorkflowHistoryEventStatusBadge should match snapshot when status is WA
     class="css-cOgsKQ"
   >
     <div
-      class="css-GbfiY"
+      class="css-bLcQbf"
     >
       <svg
         fill="currentColor"
