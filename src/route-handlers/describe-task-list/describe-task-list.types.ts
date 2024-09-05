@@ -1,9 +1,10 @@
 import { type PollerInfo } from '@/__generated__/proto-ts/uber/cadence/api/v1/PollerInfo';
+import { type TaskListStatus } from '@/__generated__/proto-ts/uber/cadence/api/v1/TaskListStatus';
 
 export type RouteParams = {
   domain: string;
   cluster: string;
-  taskList: string;
+  taskListName: string;
 };
 
 export type RequestParams = {
@@ -18,4 +19,6 @@ export type Poller = Omit<PollerInfo, 'lastAccessTime'> & {
 export type TaskList = {
   name: string;
   pollers: Array<Poller>;
+  activityTaskListStatus: TaskListStatus | null;
+  decisionTaskListStatus: TaskListStatus | null;
 };
