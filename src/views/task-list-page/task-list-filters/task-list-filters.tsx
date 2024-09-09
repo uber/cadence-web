@@ -13,7 +13,7 @@ export default function TaskListFilters() {
       <styled.FiltersContainer>
         <PageFilters
           searchQueryParamKey="taskListSearch"
-          searchPlaceholder="Search"
+          searchPlaceholder="Find worker by identity"
           pageFiltersConfig={taskListFiltersConfig}
           pageQueryParamsConfig={taskListPageQueryParamsConfig}
         />
