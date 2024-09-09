@@ -32,6 +32,7 @@ const jwt = require('jsonwebtoken');
 const webpackConfig = require('../webpack.config');
 const grpcClient = require('./middleware/grpc-client');
 const tchannelClient = require('./middleware/tchannel-client');
+const oidc = require('./middleware/oidc')
 const router = require('./router');
 const config = require('./config/config');
 const staticRoot = path.join(__dirname, '../dist');
@@ -80,6 +81,12 @@ app.init = function({
   process.on('unhandledRejection', (reason, promise) => {
     console.log('Unhandled Rejection at:', promise, 'reason:', reason);
   });
+
+  if (enableAuth && authType === 'OIDC') {
+    oidc.setupAuth(app, router)
+    app.use(oidc.middleware)
+  }
+
 
   app
     .use(async (ctx, next) => {
