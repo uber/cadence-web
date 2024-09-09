@@ -7,7 +7,7 @@ import { type TaskListType } from '@/__generated__/proto-ts/uber/cadence/api/v1/
 import TaskListFiltersHandlers from '../task-list-filters-handlers';
 import { TASK_LIST_HANDLERS_OPTIONS } from '../task-list-filters-handlers.constants';
 
-describe('DomainWorkflowsFiltersStatus', () => {
+describe(TaskListFiltersHandlers.name, () => {
   it('renders without errors', () => {
     setup({});
     expect(screen.getByRole('combobox')).toBeInTheDocument();
