@@ -46,7 +46,7 @@ export async function describeTaskList(
       activityTaskListStatus: activityTaskList.taskListStatus,
     };
 
-    return NextResponse.json({ taskList: res });
+    return NextResponse.json(res);
   } catch (e) {
     logger.error<RouteHandlerErrorPayload>(
       { requestParams: decodedParams, cause: e },

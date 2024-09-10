@@ -6,6 +6,7 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import PageSection from '@/components/page-section/page-section';
 import { type TaskList } from '@/route-handlers/describe-task-list/describe-task-list.types';
 import request from '@/utils/request';
+import TaskListLabel from '@/views/shared/task-list-label/task-list-label';
 
 import { type Props } from './task-list-loader.types';
 
@@ -21,6 +22,7 @@ export default function TaskListLoader(props: Props) {
   return (
     <PageSection>
       <div>Placeholder for Task List table</div>
+      <TaskListLabel taskList={taskList} />
       <div>{JSON.stringify(taskList)}</div>
     </PageSection>
   );

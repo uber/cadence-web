@@ -1,0 +1,44 @@
+import { type Theme, styled as createStyled } from 'baseui';
+import type { TagKind, TagOverrides } from 'baseui/tag/types';
+import { type StyleObject } from 'styletron-react';
+
+export const styled = {
+  LabelContainer: createStyled('div', ({ $theme }: { $theme: Theme }) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    columnGap: $theme.sizing.scale500,
+    ...$theme.typography.LabelSmall,
+  })),
+};
+
+export const overrides = {
+  tag: {
+    Root: {
+      style: ({
+        $theme,
+        $kind,
+      }: {
+        $theme: Theme;
+        $kind: TagKind;
+      }): StyleObject => ({
+        color:
+          $kind === 'negative' ? $theme.colors.red900 : $theme.colors.blue900,
+        backgroundColor:
+          $kind === 'negative' ? $theme.colors.red100 : $theme.colors.blue100,
+        height: $theme.sizing.scale700,
+        borderRadius: $theme.borders.radius400,
+        paddingRight: $theme.sizing.scale300,
+        paddingLeft: $theme.sizing.scale300,
+        paddingTop: $theme.sizing.scale0,
+        paddingBottom: $theme.sizing.scale0,
+        margin: 0,
+      }),
+    },
+    Text: {
+      style: ({ $theme }: { $theme: Theme }) => ({
+        ...$theme.typography.LabelXSmall,
+      }),
+    },
+  } satisfies TagOverrides,
+};
