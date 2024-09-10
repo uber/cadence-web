@@ -36,7 +36,6 @@ export default function WorkflowHistoryCompactEventCard({
         )}
         {showLabelPlaceholder && (
           <div className={cls.label}>
-            {' '}
             <Skeleton
               rows={0}
               width="100px"
