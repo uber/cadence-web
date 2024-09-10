@@ -1,13 +1,9 @@
 import { Tag, KIND, VARIANT } from 'baseui/tag';
 
-import { type TaskList } from '@/route-handlers/describe-task-list/describe-task-list.types';
-
 import { styled, overrides } from './task-list-label.styles';
+import { type Props } from './task-list-label.types';
 
-export default function TaskListLabel(props: {
-  taskList: TaskList;
-  isHighlighted?: boolean;
-}) {
+export default function TaskListLabel(props: Props) {
   const numWorkers = props.taskList.pollers.length;
   return (
     <styled.LabelContainer $isHighlighted={props.isHighlighted}>
