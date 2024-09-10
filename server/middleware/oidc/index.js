@@ -117,7 +117,10 @@ const setupAuth = async function(app, router) {
     passReqToCallback: false,
   };
 
-  passport.use('oidc', new OpenIDClient.Strategy(strategyOptions, verifyCallback));
+  passport.use(
+    'oidc',
+    new OpenIDClient.Strategy(strategyOptions, verifyCallback)
+  );
 };
 
 module.exports = {
