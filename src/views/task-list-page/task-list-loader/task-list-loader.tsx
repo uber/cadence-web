@@ -8,6 +8,8 @@ import { type DescribeTaskListResponse } from '@/route-handlers/describe-task-li
 import request from '@/utils/request';
 import TaskListLabel from '@/views/shared/task-list-label/task-list-label';
 
+import TaskListWorkersTable from '../task-list-workers-table/task-list-workers-table';
+
 import { styled } from './task-list-loader.styles';
 import { type Props } from './task-list-loader.types';
 
@@ -26,7 +28,7 @@ export default function TaskListLoader(props: Props) {
     <PageSection>
       <styled.TaskListContainer>
         <TaskListLabel taskList={taskList} isHighlighted={true} />
-        <div>{'Task List Table placeholder: ' + JSON.stringify(taskList)}</div>
+        <TaskListWorkersTable taskList={taskList} />
       </styled.TaskListContainer>
     </PageSection>
   );
