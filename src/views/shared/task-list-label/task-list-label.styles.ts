@@ -3,13 +3,23 @@ import type { TagKind, TagOverrides } from 'baseui/tag/types';
 import { type StyleObject } from 'styletron-react';
 
 export const styled = {
-  LabelContainer: createStyled('div', ({ $theme }: { $theme: Theme }) => ({
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    columnGap: $theme.sizing.scale500,
-    ...$theme.typography.LabelSmall,
-  })),
+  LabelContainer: createStyled<'div', { $isHighlighted?: boolean }>(
+    'div',
+    ({
+      $theme,
+      $isHighlighted,
+    }: {
+      $theme: Theme;
+      $isHighlighted?: boolean;
+    }) => ({
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      columnGap: $theme.sizing.scale500,
+      ...$theme.typography.LabelSmall,
+      ...($isHighlighted && { fontWeight: 700 }),
+    })
+  ),
 };
 
 export const overrides = {

@@ -4,17 +4,21 @@ import { type TaskList } from '@/route-handlers/describe-task-list/describe-task
 
 import { styled, overrides } from './task-list-label.styles';
 
-export default function TaskListLabel(props: { taskList: TaskList }) {
+export default function TaskListLabel(props: {
+  taskList: TaskList;
+  isHighlighted?: boolean;
+}) {
+  const numWorkers = props.taskList.pollers.length;
   return (
-    <styled.LabelContainer>
+    <styled.LabelContainer $isHighlighted={props.isHighlighted}>
       {props.taskList.name}
       <Tag
-        kind={KIND.accent}
+        kind={numWorkers === 0 ? KIND.negative : KIND.accent}
         variant={VARIANT.solid}
         closeable={false}
         overrides={overrides.tag}
       >
-        {props.taskList.pollers.length} workers
+        {`${numWorkers} ${numWorkers === 1 ? 'worker' : 'workers'}`}
       </Tag>
     </styled.LabelContainer>
   );
