@@ -33,7 +33,7 @@ export const overrides = {
         $kind: TagKind;
       }): StyleObject => ({
         color:
-          $kind === 'negative' ? $theme.colors.red900 : $theme.colors.blue900,
+          $kind === 'negative' ? $theme.colors.red700 : $theme.colors.blue700,
         backgroundColor:
           $kind === 'negative' ? $theme.colors.red100 : $theme.colors.blue100,
         height: $theme.sizing.scale700,
@@ -46,7 +46,7 @@ export const overrides = {
       }),
     },
     Text: {
-      style: ({ $theme }: { $theme: Theme }) => ({
+      style: ({ $theme }: { $theme: Theme }): StyleObject => ({
         ...$theme.typography.LabelXSmall,
       }),
     },
