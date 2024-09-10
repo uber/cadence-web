@@ -24,7 +24,7 @@ describe(TaskListFiltersHandlers.name, () => {
     );
   });
 
-  it('calls the setQueryParams function when an option is selected', () => {
+  it('calls the setValue function when an option is selected', () => {
     const { mockSetValue } = setup({});
     const selectFilter = screen.getByRole('combobox');
     act(() => {
@@ -39,7 +39,7 @@ describe(TaskListFiltersHandlers.name, () => {
     });
   });
 
-  it('calls the setQueryParams function when the filter is cleared', () => {
+  it('calls the setValue function when the filter is cleared', () => {
     const { mockSetValue } = setup({
       handlerType: 'TASK_LIST_TYPE_ACTIVITY',
     });
