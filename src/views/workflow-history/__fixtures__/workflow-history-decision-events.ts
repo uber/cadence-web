@@ -10,7 +10,7 @@ export const scheduleDecisionTaskEvent = {
   taskId: '22647174794',
   decisionTaskScheduledEventAttributes: {
     taskList: {
-      name: 'canary-task-queue',
+      name: 'task-queue',
       kind: 'TASK_LIST_KIND_INVALID',
     },
     startToCloseTimeout: {
@@ -32,9 +32,8 @@ export const startDecisionTaskEvent = {
   taskId: '22647174798',
   decisionTaskStartedEventAttributes: {
     scheduledEventId: '2',
-    identity:
-      '1@phx8-wr5@cadence-canary-staging@canary-task-queue@958ab341-a376-431b-a17a-ed7d8a97ba91',
-    requestId: '66f7f58b-3d3b-4178-972a-fa7825ceec37',
+    identity: 'cadence@958ab341-a376-431b-a17a-ed7d8a97ba92',
+    requestId: '66f7f58b-3d3b-4178-972a-fa7825ceec38',
   },
   attributes: 'decisionTaskStartedEventAttributes',
 } as const satisfies DecisionHistoryEvent;
@@ -50,9 +49,8 @@ export const completeDecisionTaskEvent = {
   decisionTaskCompletedEventAttributes: {
     scheduledEventId: '2',
     startedEventId: '3',
-    identity:
-      '1@phx8-wr5@cadence-canary-staging@canary-task-queue@958ab341-a376-431b-a17a-ed7d8a97ba91',
-    binaryChecksum: 'uDeploy:eb16a90a9182002897d7a6c6585871eedace61d1',
+    identity: 'cadence@958ab342-a376-431b-a17a-ed7d8a97ba91',
+    binaryChecksum: 'cadence:eb16a90a9182002897d7a6c6585871eedace71d1',
     executionContext: '',
   },
   attributes: 'decisionTaskCompletedEventAttributes',
@@ -63,15 +61,3 @@ export const completedDecisionTaskEvents: DecisionHistoryEvent[] = [
   startDecisionTaskEvent,
   completeDecisionTaskEvent,
 ];
-
-/* export const failedDecisionTaskEvents: DecisionHistoryEvent[] = [
-  scheduleDecisionTaskEvent,
-  startDecisionTaskEvent,
-  failedDecisionTaskEvent,
-]; */
-
-/* export const timedoutDecisionTaskEvents: DecisionHistoryEvent[] = [
-  scheduleDecisionTaskEvent,
-  startDecisionTaskEvent,
-  timeoutDecisionTaskEvent,
-]; */
