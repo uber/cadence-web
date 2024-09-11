@@ -9,7 +9,7 @@ import {
   scheduleActivityTaskEvent,
   startActivityTaskEvent,
   timeoutActivityTaskEvent,
-} from '@/views/workflow-history/__fixtures__/workflow-history-events';
+} from '@/views/workflow-history/__fixtures__/workflow-history-activity-events';
 import { type ActivityHistoryEvent } from '@/views/workflow-history/workflow-history.types';
 
 import isActivityEvent from '../is-activity-event';
