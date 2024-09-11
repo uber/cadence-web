@@ -10,6 +10,6 @@ export default function isDecisionEvent(
     'decisionTaskStartedEventAttributes',
     'decisionTaskCompletedEventAttributes',
     'decisionTaskFailedEventAttributes',
-    'decisionTaskTimedOutEventAttribut',
+    'decisionTaskTimedOutEventAttributes',
   ].includes(event?.attributes);
 }
