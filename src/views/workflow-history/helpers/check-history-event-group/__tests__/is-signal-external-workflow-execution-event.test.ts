@@ -23,19 +23,19 @@ const invalidEvents: Pick<HistoryEvent, 'attributes'>[] = differenceBy(
 );
 
 describe('isSignalExternalWorkflowExecutionEvent', () => {
-  test('should return true for valid signalExternalWorkflowExecution events', () => {
+  it('should return true for valid signalExternalWorkflowExecution events', () => {
     validEvents.forEach((event) => {
       expect(isSignalExternalWorkflowExecutionEvent(event)).toBe(true);
     });
   });
 
-  test('should return false for invalid signalExternalWorkflowExecution events', () => {
+  it('should return false for invalid signalExternalWorkflowExecution events', () => {
     invalidEvents.forEach((event) => {
       expect(isSignalExternalWorkflowExecutionEvent(event)).toBe(false);
     });
   });
 
-  test('should return false for null, undefined, or missing attributes', () => {
+  it('should return false for null, undefined, or missing attributes', () => {
     //@ts-expect-error null is not of type HistoryEvent
     expect(isSignalExternalWorkflowExecutionEvent(null)).toBe(false);
     //@ts-expect-error undefined is not of type HistoryEvent

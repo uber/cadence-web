@@ -20,19 +20,19 @@ const invalidEvents: Pick<HistoryEvent, 'attributes'>[] = differenceBy(
 );
 
 describe('isTimerEvent', () => {
-  test('should return true for valid timer events', () => {
+  it('should return true for valid timer events', () => {
     validEvents.forEach((event) => {
       expect(isTimerEvent(event)).toBe(true);
     });
   });
 
-  test('should return false for invalid timer events', () => {
+  it('should return false for invalid timer events', () => {
     invalidEvents.forEach((event) => {
       expect(isTimerEvent(event)).toBe(false);
     });
   });
 
-  test('should return false for null, undefined, or missing attributes', () => {
+  it('should return false for null, undefined, or missing attributes', () => {
     //@ts-expect-error null is not of type HistoryEvent
     expect(isTimerEvent(null)).toBe(false);
     //@ts-expect-error undefined is not of type HistoryEvent

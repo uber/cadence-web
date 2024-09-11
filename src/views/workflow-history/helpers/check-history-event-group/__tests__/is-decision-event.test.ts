@@ -27,19 +27,19 @@ const invalidEvents: Pick<HistoryEvent, 'attributes'>[] = differenceBy(
 );
 
 describe('isDecisionEvent', () => {
-  test('should return true for valid decision events', () => {
+  it('should return true for valid decision events', () => {
     validEvents.forEach((event) => {
       expect(isDecisionEvent(event)).toBe(true);
     });
   });
 
-  test('should return false for invalid decision events', () => {
+  it('should return false for invalid decision events', () => {
     invalidEvents.forEach((event) => {
       expect(isDecisionEvent(event)).toBe(false);
     });
   });
 
-  test('should return false for null, undefined, or missing attributes', () => {
+  it('should return false for null, undefined, or missing attributes', () => {
     //@ts-expect-error null is not of type HistoryEvent
     expect(isDecisionEvent(null)).toBe(false);
     //@ts-expect-error undefined is not of type HistoryEvent

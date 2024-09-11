@@ -26,19 +26,19 @@ const invalidEvents: Pick<HistoryEvent, 'attributes'>[] = differenceBy(
 );
 
 describe('isRequestCancelExternalWorkflowExecutionEvent', () => {
-  test('should return true for valid requestCancelExternalWorkflowExecution events', () => {
+  it('should return true for valid requestCancelExternalWorkflowExecution events', () => {
     validEvents.forEach((event) => {
       expect(isRequestCancelExternalWorkflowExecutionEvent(event)).toBe(true);
     });
   });
 
-  test('should return false for invalid decision events', () => {
+  it('should return false for invalid decision events', () => {
     invalidEvents.forEach((event) => {
       expect(isRequestCancelExternalWorkflowExecutionEvent(event)).toBe(false);
     });
   });
 
-  test('should return false for null, undefined, or missing attributes', () => {
+  it('should return false for null, undefined, or missing attributes', () => {
     //@ts-expect-error null is not of type HistoryEvent
     expect(isRequestCancelExternalWorkflowExecutionEvent(null)).toBe(false);
     //@ts-expect-error undefined is not of type HistoryEvent
