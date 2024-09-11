@@ -2,12 +2,15 @@
 import React from 'react';
 
 import { useSuspenseQuery } from '@tanstack/react-query';
+import Image from 'next/image';
 
+import cadenceLogoBlack from '@/assets/cadence-logo-black.svg';
 import PageSection from '@/components/page-section/page-section';
 import { type DescribeTaskListResponse } from '@/route-handlers/describe-task-list/describe-task-list.types';
 import request from '@/utils/request';
 import TaskListLabel from '@/views/shared/task-list-label/task-list-label';
 
+import TaskListFilters from '../task-list-filters/task-list-filters';
 import TaskListWorkersTable from '../task-list-workers-table/task-list-workers-table';
 
 import { styled } from './task-list-loader.styles';
@@ -27,7 +30,16 @@ export default function TaskListLoader(props: Props) {
   return (
     <PageSection>
       <styled.TaskListContainer>
-        <TaskListLabel taskList={taskList} isHighlighted={true} />
+        <styled.TaskListHeaderContainer>
+          <Image
+            width={22}
+            height={22}
+            alt="Cadence Icon"
+            src={cadenceLogoBlack}
+          />
+          <TaskListLabel taskList={taskList} isHighlighted={true} />
+        </styled.TaskListHeaderContainer>
+        <TaskListFilters />
         <TaskListWorkersTable taskList={taskList} />
       </styled.TaskListContainer>
     </PageSection>
