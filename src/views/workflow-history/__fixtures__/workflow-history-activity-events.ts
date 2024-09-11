@@ -1,10 +1,6 @@
 import { type HistoryEvent } from '@/__generated__/proto-ts/uber/cadence/api/v1/HistoryEvent';
 
-import {
-  DecisionHistoryEvent,
-  type SingleHistoryEvent,
-  type ActivityHistoryEvent,
-} from '../workflow-history.types';
+import type { ActivityHistoryEvent } from '../workflow-history.types';
 
 export const scheduleActivityTaskEvent = {
   eventId: '7',
@@ -164,18 +160,3 @@ export const timedoutActivityTaskEvents: ActivityHistoryEvent[] = [
   startActivityTaskEvent,
   timeoutActivityTaskEvent,
 ];
-
-export const cancelRequestActivityTaskEvent = {
-  eventId: '13',
-  eventTime: {
-    seconds: '1725747370',
-    nanos: 632072806,
-  },
-  version: '575102',
-  taskId: '22647174813',
-  activityTaskCancelRequestedEventAttributes: {
-    activityId: '0',
-    decisionTaskCompletedEventId: '4',
-  },
-  attributes: 'activityTaskCancelRequestedEventAttributes',
-} as const satisfies SingleHistoryEvent;
