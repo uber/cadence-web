@@ -21,12 +21,12 @@ const taskListPageQueryParamsConfig: [
   },
   {
     key: 'sortColumn',
-    queryParamKey: 'column',
+    queryParamKey: 'tsc',
     defaultValue: 'lastAccessTime',
   },
   {
     key: 'sortOrder',
-    queryParamKey: 'order',
+    queryParamKey: 'tso',
     defaultValue: 'DESC',
     parseValue: (value: string) => (value === 'ASC' ? 'ASC' : 'DESC'),
   },

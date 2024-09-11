@@ -9,7 +9,7 @@ import { toggleSortOrder } from '@/utils/sort-by';
 import taskListPageQueryParamsConfig from '../config/task-list-page-query-params.config';
 import taskListWorkersTableConfig from '../config/task-list-workers-table.config';
 
-import useTaskListWorkers from './helpers/use-task-list-workers';
+import sortAndFilterWorkers from './helpers/sort-and-filter-workers';
 import { styled } from './task-list-workers-table.styles';
 
 export default function TaskListWorkersTable(props: { taskList: TaskList }) {
@@ -17,8 +17,8 @@ export default function TaskListWorkersTable(props: { taskList: TaskList }) {
     taskListPageQueryParamsConfig
   );
 
-  const sortedAndFilteredWorkers = useTaskListWorkers({
-    workers: props.taskList.pollers,
+  const workers = sortAndFilterWorkers({
+    workers: props.taskList.workers,
     handlerType: queryParams.handlerType,
     search: queryParams.taskListSearch,
     sortColumn: queryParams.sortColumn,
@@ -27,9 +27,11 @@ export default function TaskListWorkersTable(props: { taskList: TaskList }) {
 
   return (
     <Table
-      data={sortedAndFilteredWorkers}
+      data={workers}
       columns={taskListWorkersTableConfig}
       shouldShowResults={true}
+      sortColumn={queryParams.sortColumn}
+      sortOrder={queryParams.sortOrder}
       onSort={(column) =>
         setQueryParams({
           sortColumn: column,
@@ -41,7 +43,7 @@ export default function TaskListWorkersTable(props: { taskList: TaskList }) {
         })
       }
       endMessage={
-        sortedAndFilteredWorkers.length === 0 ? (
+        workers.length === 0 ? (
           <styled.EndMessageContainer>No workers</styled.EndMessageContainer>
         ) : null
       }

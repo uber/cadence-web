@@ -12,7 +12,7 @@ import TaskListLoader from '../task-list-loader';
 jest.mock('@/views/shared/task-list-label/task-list-label', () =>
   jest.fn(({ taskList }: TaskListLabelProps) => (
     <div>
-      {taskList.name}: {taskList.pollers.length} workers
+      {taskList.name}: {taskList.workers.length} workers
     </div>
   ))
 );
@@ -73,17 +73,17 @@ async function setup({ error }: { error?: boolean }) {
                 jsonResponse: {
                   taskList: {
                     name: 'tasklist-1',
-                    pollers: [
+                    workers: [
                       {
-                        activityHandler: true,
-                        decisionHandler: true,
+                        hasActivityHandler: true,
+                        hasDecisionHandler: true,
                         identity: 'poller-1@mock-domain@tasklist-1',
                         lastAccessTime: 1725370657336.2053,
                         ratePerSecond: 100000,
                       },
                       {
-                        activityHandler: true,
-                        decisionHandler: true,
+                        hasActivityHandler: true,
+                        hasDecisionHandler: true,
                         identity: 'poller-2@mock-domain@tasklist-1',
                         lastAccessTime: 1725370636402.4927,
                         ratePerSecond: 100000,
