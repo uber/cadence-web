@@ -6,7 +6,7 @@ import FormattedDate from '@/components/formatted-date/formatted-date';
 import { type TableColumn } from '@/components/table/table.types';
 import { type Poller } from '@/route-handlers/describe-task-list/describe-task-list.types';
 
-const taskListWorkersTableConfig: Array<TableColumn<Poller>> = [
+const taskListWorkersTableConfig = [
   {
     name: 'Identity',
     id: 'identity',
@@ -15,7 +15,7 @@ const taskListWorkersTableConfig: Array<TableColumn<Poller>> = [
   },
   {
     name: 'Last Access Time',
-    id: 'LastAccessTime',
+    id: 'lastAccessTime',
     renderCell: (row: Poller) =>
       createElement(FormattedDate, { timestampMs: row.lastAccessTime }),
     width: '30%',
@@ -34,6 +34,6 @@ const taskListWorkersTableConfig: Array<TableColumn<Poller>> = [
       createElement(row.activityHandler ? MdCheck : MdHorizontalRule),
     width: '10%',
   },
-];
+] as const satisfies Array<TableColumn<Poller>>;
 
 export default taskListWorkersTableConfig;
