@@ -38,7 +38,6 @@ describe('isActivityEvent', () => {
 
   test('should return false for invalid activity events', () => {
     invalidEvents.forEach((event) => {
-      console.log(event, isActivityEvent(event));
       expect(isActivityEvent(event)).toBe(false);
     });
   });
