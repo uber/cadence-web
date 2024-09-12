@@ -26,9 +26,11 @@ export const overrides = {
       }),
     },
     ToggleIcon: {
-      style: ({ $theme }: { $theme: Theme }): StyleObject => ({
+      style: ({ $theme, $disabled }: { $theme: Theme, $disabled:boolean }): StyleObject => ({
         height: $theme.sizing.scale600,
         width: $theme.sizing.scale600,
+        opacity: $disabled? 0 :undefined,
+    
       }),
     },
     PanelContainer: {
