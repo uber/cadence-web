@@ -14,7 +14,7 @@ exports[`WorkflowHistoryEventStatusBadge should match snapshot when size is not 
 exports[`WorkflowHistoryEventStatusBadge should match snapshot when status is CANCELED and size is medium 1`] = `
 <div>
   <div
-    class="css-cOgsKQ"
+    class="css-fWeknQ"
   >
     <div
       class="css-imTrvB"
@@ -47,7 +47,7 @@ exports[`WorkflowHistoryEventStatusBadge should match snapshot when status is CA
 exports[`WorkflowHistoryEventStatusBadge should match snapshot when status is CANCELED and size is small 1`] = `
 <div>
   <div
-    class="css-cOgsKQ"
+    class="css-fWeknQ"
   >
     <div
       class="css-bJbCmb"
