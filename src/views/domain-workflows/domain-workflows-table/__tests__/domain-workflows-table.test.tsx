@@ -135,7 +135,7 @@ async function setup({
     </Suspense>
   );
 }
-console.log('HIIIIIII', Buffer.from(`1`).toString());
+
 // TODO @adhitya.mamallan - Explore using fakerjs.dev for cases like this
 function generateWorkflowPages(count: number): Array<ListWorkflowsResponse> {
   const pages = Array.from(
