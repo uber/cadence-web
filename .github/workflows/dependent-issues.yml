@@ -1,13 +1,10 @@
 name: Dependent Issues
 
 on:
-  issues:
-    types:
-      - opened
-      - edited
-      - closed
-      - reopened
   pull_request_target:
+  branches:
+      - release/4.0.0
+      - master
     types:
       - opened
       - edited
