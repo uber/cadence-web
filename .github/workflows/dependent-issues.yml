@@ -2,7 +2,7 @@ name: Dependent Issues
 
 on:
   pull_request_target:
-  branches:
+    branches:
       - release/4.0.0
       - master
     types:
