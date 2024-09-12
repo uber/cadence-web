@@ -24,6 +24,7 @@ export default function WorkflowHistoryEventsCard({
       {eventsMetadata?.map((event, index) => {
         return (
           <Panel
+            key={`${event.label}-${index}`}
             title={
               <>
                 <WorkflowHistoryEventStatusBadge
