@@ -48,11 +48,10 @@ const getWrapper = (
   return { wrapper };
 };
 
-// eslint-disable-next-line import/export
 export * from '@testing-library/react';
 
-// eslint-disable-next-line import/export
+export * from '@testing-library/user-event';
+
 export { customRender as render };
 
-// eslint-disable-next-line import/export
 export { customRenderHook as renderHook };

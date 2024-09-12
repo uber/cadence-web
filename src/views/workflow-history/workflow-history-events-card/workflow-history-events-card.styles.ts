@@ -47,6 +47,11 @@ const cssStylesObj = {
     color: $theme.colors.contentPrimary,
     flex: 1,
   }),
+  skeletonContainer: ($theme: Theme) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: $theme.sizing.scale500,
+  }),
 } satisfies StyletronCSSObject;
 
 export const cssStyles: StyletronCSSObjectOf<typeof cssStylesObj> =
