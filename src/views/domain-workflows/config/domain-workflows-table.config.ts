@@ -11,14 +11,14 @@ const domainWorkflowsTableConfig: Array<TableColumn<DomainWorkflow>> = [
     name: 'Workflow ID',
     id: 'WorkflowID',
     renderCell: (row: DomainWorkflow) => row.workflowID,
-    width: '24%',
+    width: '25.5%',
   },
   {
     name: 'Status',
     id: 'CloseStatus',
     renderCell: (row: DomainWorkflow) =>
       createElement(WorkflowStatusTag, { status: row.status }),
-    width: '9%',
+    width: '7.5%',
   },
   {
     name: 'Run ID',

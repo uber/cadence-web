@@ -12,11 +12,11 @@ import {
   type ListWorkflowsRequestQueryParams,
 } from '@/route-handlers/list-workflows/list-workflows.types';
 import request from '@/utils/request';
-import { toggleSortOrder } from '@/utils/sort-by';
 import domainPageQueryParamsConfig from '@/views/domain-page/config/domain-page-query-params.config';
 
 import domainWorkflowsTableConfig from '../config/domain-workflows-table.config';
 import DomainWorkflowsTableEndMessage from '../domain-workflows-table-end-message/domain-workflows-table-end-message';
+import getNextSortOrder from '../helpers/get-next-sort-order';
 
 import {
   NO_WORKFLOWS_ERROR_MESSAGE,
@@ -89,9 +89,9 @@ export default function DomainWorkflowsTable(props: Props) {
         onSort={(column) => {
           setQueryParams({
             sortColumn: column,
-            sortOrder: toggleSortOrder({
-              currentSortColumn: queryParams.sortColumn,
-              newSortColumn: column,
+            sortOrder: getNextSortOrder({
+              currentColumn: queryParams.sortColumn,
+              nextColumn: column,
               currentSortOrder: queryParams.sortOrder,
             }),
           });

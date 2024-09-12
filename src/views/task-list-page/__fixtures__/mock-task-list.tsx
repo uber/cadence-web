@@ -5,16 +5,23 @@ export const mockTaskList: TaskList = {
   workers: [
     {
       hasActivityHandler: true,
-      hasDecisionHandler: true,
+      hasDecisionHandler: false,
       identity: 'poller-1@mock-domain@tasklist-1',
       lastAccessTime: 1725370657336.2053,
       ratePerSecond: 100000,
     },
     {
-      hasActivityHandler: true,
+      hasActivityHandler: false,
       hasDecisionHandler: true,
       identity: 'poller-2@mock-domain@tasklist-1',
       lastAccessTime: 1725370636402.4927,
+      ratePerSecond: 100000,
+    },
+    {
+      hasActivityHandler: true,
+      hasDecisionHandler: true,
+      identity: 'poller-3@mock-domain@tasklist-1',
+      lastAccessTime: 1725370657000,
       ratePerSecond: 100000,
     },
   ],
