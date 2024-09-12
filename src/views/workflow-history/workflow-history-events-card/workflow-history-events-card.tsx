@@ -62,7 +62,9 @@ export default function WorkflowHistoryEventsCard({
               />
             </div>
           }
-        ><></></Panel>
+        >
+          <></>
+        </Panel>
       )}
     </Accordion>
   );
