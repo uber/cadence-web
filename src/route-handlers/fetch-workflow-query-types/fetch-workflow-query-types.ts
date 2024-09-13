@@ -7,6 +7,7 @@ import logger, { type RouteHandlerErrorPayload } from '@/utils/logger';
 
 import { type RequestParams } from './fetch-workflow-query-types.types';
 import parseErrorMessageForQueryTypes from './helpers/parse-error-message-for-query-types';
+import { queryTypesDataSchema } from './schemas/query-types-data-schema';
 
 export default async function fetchWorkflowQueryTypes(
   _: NextRequest,
@@ -28,13 +29,14 @@ export default async function fetchWorkflowQueryTypes(
       },
     });
 
-    // You need to unmarshal this from base64
-    logger.info(res, 'result');
-
-    return Response.json({ queryTypes: res.queryResult?.data });
+    return Response.json({
+      queryTypes: queryTypesDataSchema.parse(res.queryResult?.data),
+    });
   } catch (e) {
-    if (e instanceof Error) {
-      logger.error(e.message, 'error message');
+    // This is a workaround to parse the error message for valid query types if the client
+    // does not have a query handler for __query_types (as is the case with the Java client)
+    if (e instanceof GRPCError) {
+      logger.info({ message: e.message }, 'parsing message for query types');
       const parsedQueryTypes = parseErrorMessageForQueryTypes(e.message);
       if (parsedQueryTypes.length > 0) {
         return Response.json({ queryTypes: parsedQueryTypes });

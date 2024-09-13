@@ -37,7 +37,9 @@ export default function WorkflowSummaryTab({
       ).then((res) => res.json()),
   });
 
-  const { data: queryTypes } = useSuspenseQuery<
+  const {
+    data: { queryTypes },
+  } = useSuspenseQuery<
     FetchWorkflowQueryTypesResponse,
     RequestError,
     FetchWorkflowQueryTypesResponse,
