@@ -5,4 +5,7 @@ export const styled = {
     ...$theme.typography.LabelSmall,
     color: $theme.colors.contentTertiary,
   })),
+  TableContainer: createStyled('div', {
+    overflowX: 'auto',
+  }),
 };

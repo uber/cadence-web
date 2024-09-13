@@ -25,34 +25,36 @@ export default function TaskListWorkersTable({ taskList }: Props) {
   });
 
   return (
-    <Table
-      data={sortBy(
-        filteredWorkers,
-        (w) =>
-          isValidTableColumn(queryParams.sortColumn)
-            ? w[queryParams.sortColumn]
-            : w.lastAccessTime,
-        queryParams.sortOrder
-      )}
-      columns={taskListWorkersTableConfig}
-      shouldShowResults={true}
-      sortColumn={queryParams.sortColumn}
-      sortOrder={queryParams.sortOrder}
-      onSort={(column) =>
-        setQueryParams({
-          sortColumn: column,
-          sortOrder: toggleSortOrder({
-            currentSortColumn: queryParams.sortColumn,
-            currentSortOrder: queryParams.sortOrder,
-            newSortColumn: column,
-          }),
-        })
-      }
-      endMessage={
-        filteredWorkers.length === 0 ? (
-          <styled.EndMessageContainer>No workers</styled.EndMessageContainer>
-        ) : null
-      }
-    />
+    <styled.TableContainer>
+      <Table
+        data={sortBy(
+          filteredWorkers,
+          (w) =>
+            isValidTableColumn(queryParams.sortColumn)
+              ? w[queryParams.sortColumn]
+              : w.lastAccessTime,
+          queryParams.sortOrder
+        )}
+        columns={taskListWorkersTableConfig}
+        shouldShowResults={true}
+        sortColumn={queryParams.sortColumn}
+        sortOrder={queryParams.sortOrder}
+        onSort={(column) =>
+          setQueryParams({
+            sortColumn: column,
+            sortOrder: toggleSortOrder({
+              currentSortColumn: queryParams.sortColumn,
+              currentSortOrder: queryParams.sortOrder,
+              newSortColumn: column,
+            }),
+          })
+        }
+        endMessage={
+          filteredWorkers.length === 0 ? (
+            <styled.EndMessageContainer>No workers</styled.EndMessageContainer>
+          ) : null
+        }
+      />
+    </styled.TableContainer>
   );
 }
