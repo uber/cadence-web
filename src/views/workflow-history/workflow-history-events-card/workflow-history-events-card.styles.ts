@@ -1,5 +1,6 @@
 import { type Theme } from 'baseui';
 import { type AccordionOverrides } from 'baseui/accordion';
+import { type SkeletonOverrides } from 'baseui/skeleton/types';
 import { type StyleObject } from 'styletron-react';
 
 import type {
@@ -8,6 +9,13 @@ import type {
 } from '@/hooks/use-styletron-classes';
 
 export const overrides = {
+  circularSkeleton: {
+    Root: {
+      style: {
+        borderRadius: '50%',
+      },
+    },
+  } satisfies SkeletonOverrides,
   accordion: {
     Root: {
       style: ({ $theme }: { $theme: Theme }): StyleObject => ({
@@ -35,7 +43,7 @@ export const overrides = {
       }): StyleObject => ({
         height: $theme.sizing.scale600,
         width: $theme.sizing.scale600,
-        opacity: $disabled ? 0 : undefined,
+        ...($disabled && { opacity: 0 }),
       }),
     },
     PanelContainer: {

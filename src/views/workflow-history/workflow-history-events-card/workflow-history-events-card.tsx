@@ -4,6 +4,7 @@ import React from 'react';
 import { Accordion, Panel } from 'baseui/accordion';
 import { Skeleton } from 'baseui/skeleton';
 
+
 import useStyletronClasses from '@/hooks/use-styletron-classes';
 
 import getBadgeContainerSize from '../workflow-history-event-status-badge/helpers/get-badge-container-size';
@@ -14,11 +15,11 @@ import { type Props } from './workflow-history-events-card.types';
 
 export default function WorkflowHistoryEventsCard({
   eventsMetadata,
-  showMissingEventPlaceholder,
+  showEventPlaceholder,
 }: Props) {
   const { cls, theme } = useStyletronClasses(cssStyles);
 
-  if (!eventsMetadata?.length && !showMissingEventPlaceholder) return null;
+  if (!eventsMetadata?.length && !showEventPlaceholder) return null;
   return (
     <Accordion overrides={overrides.accordion} accordion>
       {eventsMetadata?.map((event, index) => {
@@ -35,11 +36,11 @@ export default function WorkflowHistoryEventsCard({
               </>
             }
           >
-            {`Placeholder text ${index}`}
+             {`Placeholder text ${index}`}
           </Panel>
         );
       })}
-      {showMissingEventPlaceholder && (
+      {showEventPlaceholder && (
         <Panel
           disabled
           title={
@@ -47,13 +48,7 @@ export default function WorkflowHistoryEventsCard({
               <Skeleton
                 width={getBadgeContainerSize(theme, 'small')}
                 height={getBadgeContainerSize(theme, 'small')}
-                overrides={{
-                  Root: {
-                    style: {
-                      borderRadius: '50%',
-                    },
-                  },
-                }}
+                overrides={overrides.circularSkeleton}
               />
               <Skeleton
                 rows={0}
