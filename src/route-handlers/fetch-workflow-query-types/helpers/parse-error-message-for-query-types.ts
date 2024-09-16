@@ -8,6 +8,5 @@ export default function parseErrorMessageForQueryTypes(
     return [];
   }
 
-  // Test that this works with Java too
-  return errorMatches.split(/, | /).filter((q) => q);
+  return errorMatches.split(/, | /).filter(Boolean);
 }
