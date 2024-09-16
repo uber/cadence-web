@@ -28,10 +28,14 @@ describe(WorkflowQueriesLoader.name, () => {
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     expect(renderErrorMessage).toEqual('Failed to fetch query types');
 =======
     expect(renderErrorMessage).toEqual('Failed to fetch task list');
 >>>>>>> fa52add (Add more changes)
+=======
+    expect(renderErrorMessage).toEqual('Failed to fetch query types');
+>>>>>>> a3f8a50 (Add tests)
   });
 });
 
