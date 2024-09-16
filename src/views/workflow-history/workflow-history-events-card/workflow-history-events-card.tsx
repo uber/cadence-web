@@ -4,7 +4,8 @@ import React from 'react';
 import { Accordion, Panel } from 'baseui/accordion';
 import { Skeleton } from 'baseui/skeleton';
 
-
+import PrettyJson from '@/components/pretty-json/pretty-json';
+import type { JsonValue } from '@/components/pretty-json/pretty-json.types';
 import useStyletronClasses from '@/hooks/use-styletron-classes';
 
 import getBadgeContainerSize from '../workflow-history-event-status-badge/helpers/get-badge-container-size';
@@ -14,6 +15,7 @@ import { cssStyles, overrides } from './workflow-history-events-card.styles';
 import { type Props } from './workflow-history-events-card.types';
 
 export default function WorkflowHistoryEventsCard({
+  events,
   eventsMetadata,
   showEventPlaceholder,
 }: Props) {
@@ -36,7 +38,7 @@ export default function WorkflowHistoryEventsCard({
               </>
             }
           >
-             {`Placeholder text ${index}`}
+            <PrettyJson json={events[index] as never as JsonValue} />
           </Panel>
         );
       })}
