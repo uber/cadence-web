@@ -34,7 +34,6 @@ export default function WorkflowSummaryTab({
         `/api/domains/${qp.domain}/${qp.cluster}/workflows/${qp.workflowId}/${qp.runId}/history`
       ).then((res) => res.json()),
   });
-
   const formattedWorkflowHistory = formatWorkflowHistory(workflowHistory);
   const workflowEvents = formattedWorkflowHistory?.history?.events;
   const formattedStartEvent = formattedWorkflowHistory?.history?.events?.[0];
