@@ -2,10 +2,13 @@ import { TaskListType } from '@/__generated__/proto-ts/uber/cadence/api/v1/TaskL
 import { type PageQueryParam } from '@/hooks/use-page-query-params/use-page-query-params.types';
 import { type SortOrder } from '@/utils/sort-by';
 
+import isValidTableColumn from '../helpers/is-valid-table-column';
+import { type TaskListWorkerTableColumnID } from '../task-list-workers-table/task-list-workers-table.types';
+
 const taskListPageQueryParamsConfig: [
   PageQueryParam<'taskListSearch', string>,
   PageQueryParam<'handlerType', TaskListType | undefined>,
-  PageQueryParam<'sortColumn', string>,
+  PageQueryParam<'sortColumn', TaskListWorkerTableColumnID>,
   PageQueryParam<'sortOrder', SortOrder>,
 ] = [
   {
@@ -23,6 +26,8 @@ const taskListPageQueryParamsConfig: [
     key: 'sortColumn',
     queryParamKey: 'tsc',
     defaultValue: 'lastAccessTime',
+    parseValue: (value: string) =>
+      isValidTableColumn(value) ? value : 'lastAccessTime',
   },
   {
     key: 'sortOrder',

@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useMemo } from 'react';
 
 import Table from '@/components/table/table';
 import usePageQueryParams from '@/hooks/use-page-query-params/use-page-query-params';
@@ -7,9 +7,9 @@ import sortBy, { toggleSortOrder } from '@/utils/sort-by';
 
 import taskListPageQueryParamsConfig from '../config/task-list-page-query-params.config';
 import taskListWorkersTableConfig from '../config/task-list-workers-table.config';
+import isValidTableColumn from '../helpers/is-valid-table-column';
 
 import filterWorkers from './helpers/filter-workers';
-import isValidTableColumn from './helpers/is-valid-table-column';
 import { styled } from './task-list-workers-table.styles';
 import { type Props } from './task-list-workers-table.types';
 
@@ -18,30 +18,31 @@ export default function TaskListWorkersTable({ taskList }: Props) {
     taskListPageQueryParamsConfig
   );
 
-  const filteredWorkers = filterWorkers({
-    workers: taskList.workers,
-    handlerType: queryParams.handlerType,
-    search: queryParams.taskListSearch,
-  });
+  const filteredAndSortedWorkers = useMemo(
+    () =>
+      sortBy(
+        filterWorkers({
+          workers: taskList.workers,
+          handlerType: queryParams.handlerType,
+          search: queryParams.taskListSearch,
+        }),
+        (w) => w[queryParams.sortColumn],
+        queryParams.sortOrder
+      ),
+    [queryParams, taskList.workers]
+  );
 
   return (
     <styled.TableContainer>
       <Table
-        data={sortBy(
-          filteredWorkers,
-          (w) =>
-            isValidTableColumn(queryParams.sortColumn)
-              ? w[queryParams.sortColumn]
-              : w.lastAccessTime,
-          queryParams.sortOrder
-        )}
+        data={filteredAndSortedWorkers}
         columns={taskListWorkersTableConfig}
         shouldShowResults={true}
         sortColumn={queryParams.sortColumn}
         sortOrder={queryParams.sortOrder}
         onSort={(column) =>
           setQueryParams({
-            sortColumn: column,
+            sortColumn: isValidTableColumn(column) ? column : undefined,
             sortOrder: toggleSortOrder({
               currentSortColumn: queryParams.sortColumn,
               currentSortOrder: queryParams.sortOrder,
@@ -50,7 +51,7 @@ export default function TaskListWorkersTable({ taskList }: Props) {
           })
         }
         endMessage={
-          filteredWorkers.length === 0 ? (
+          filteredAndSortedWorkers.length === 0 ? (
             <styled.EndMessageContainer>No workers</styled.EndMessageContainer>
           ) : null
         }
