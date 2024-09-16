@@ -9,7 +9,11 @@ export default function parseErrorMessageForQueryTypes(
     return undefined;
   }
 
+<<<<<<< HEAD
   const queryTypes = knownTypesErrorMatch[2];
 
   return queryTypes ? queryTypes.split(/, | /).filter(Boolean) : [];
+=======
+  return errorMatches.split(/, | /).filter(Boolean);
+>>>>>>> fa52add (Add more changes)
 }
