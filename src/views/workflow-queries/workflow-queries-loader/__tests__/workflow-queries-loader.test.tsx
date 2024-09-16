@@ -27,7 +27,7 @@ describe(WorkflowQueriesLoader.name, () => {
       }
     }
 
-    expect(renderErrorMessage).toEqual('Failed to fetch task list');
+    expect(renderErrorMessage).toEqual('Failed to fetch query types');
   });
 });
 
