@@ -225,8 +225,11 @@ export const completedChildWorkflowEvents: ChildWorkflowExecutionHistoryEvent[] 
     completeChildWorkflowEvent,
   ];
 
-export const failedChildWorkflowEvents: ChildWorkflowExecutionHistoryEvent[] =
-  [initiateChildWorkflowEvent, startChildWorkflowEvent, failChildWorkflowEvent];
+export const failedChildWorkflowEvents: ChildWorkflowExecutionHistoryEvent[] = [
+  initiateChildWorkflowEvent,
+  startChildWorkflowEvent,
+  failChildWorkflowEvent,
+];
 
 export const timedoutChildWorkflowEvents: ChildWorkflowExecutionHistoryEvent[] =
   [
