@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 
+import { userEvent } from '@testing-library/user-event';
 import { HttpResponse } from 'msw';
 
 import { render, screen, act } from '@/test-utils/rtl';
@@ -8,11 +9,45 @@ import { type FetchWorkflowQueryTypesResponse } from '@/route-handlers/fetch-wor
 
 import WorkflowQueriesLoader from '../workflow-queries-loader';
 
-describe(WorkflowQueriesLoader.name, () => {
-  it('WIP: renders query types without error', async () => {
-    await setup({});
+jest.mock('../../workflow-queries-tile/workflow-queries-tile', () =>
+  jest.fn(({ name, onSelect, runQuery }) => (
+    <div onClick={onSelect}>
+      <div>Mock tile: {name}</div>
+      <button onClick={runQuery}>Run</button>
+    </div>
+  ))
+);
 
-    expect(await screen.findByText(/__query_types/)).toBeInTheDocument();
+jest.mock(
+  '../../workflow-queries-result-json/workflow-queries-result-json',
+  () =>
+    jest.fn(({ data }) => (
+      <div>
+        <div>Mock JSON</div>
+        <div>{JSON.stringify(data)}</div>
+      </div>
+    ))
+);
+
+describe(WorkflowQueriesLoader.name, () => {
+  it('renders without error', async () => {
+    const { container } = await setup({});
+
+    expect(container).toMatchSnapshot();
+  });
+
+  it('runs query and updates JSON', async () => {
+    const { user, container } = await setup({});
+
+    const queryRunButtons = await screen.findAllByRole('button');
+    expect(queryRunButtons).toHaveLength(2);
+
+    await user.click(queryRunButtons[1]);
+
+    expect(
+      await screen.findByText(/{"name":"__open_sessions"}/)
+    ).toBeInTheDocument();
+    expect(container).toMatchSnapshot();
   });
 
   it('does not render if the initial call fails', async () => {
@@ -40,7 +75,9 @@ describe(WorkflowQueriesLoader.name, () => {
 });
 
 async function setup({ error }: { error?: boolean }) {
-  render(
+  const user = userEvent.setup();
+
+  const container = render(
     <Suspense>
       <WorkflowQueriesLoader
         domain="mock-domain"
@@ -72,4 +109,6 @@ async function setup({ error }: { error?: boolean }) {
       ],
     }
   );
+
+  return { user, container };
 }

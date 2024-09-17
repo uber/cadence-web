@@ -1,0 +1,190 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`WorkflowQueriesTile renders correctly when an input is present 1`] = `
+<div>
+  <div
+    class="css-cOgsKQ"
+  >
+    <div
+      class="css-biqlcu"
+    >
+      <div
+        class="css-bsYdMi"
+      >
+        <div
+          class="css-ixnVtQ"
+        >
+          mock-query
+        </div>
+        <div
+          class="css-fAAOGo"
+        >
+          <button
+            class="css-ipKQbc"
+            data-baseweb="button"
+          >
+            Remove input
+          </button>
+          <button
+            class="css-gARaLg"
+            data-baseweb="button"
+          >
+            Run
+            <div
+              class="css-cDENyl"
+            >
+              <svg
+                fill="currentColor"
+                height="1em"
+                stroke="currentColor"
+                stroke-width="0"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M8 5v14l11-7z"
+                />
+              </svg>
+            </div>
+          </button>
+        </div>
+      </div>
+      <div>
+        Mock input
+      </div>
+    </div>
+  </div>
+  <div
+    class="css-PKJb"
+  />
+</div>
+`;
+
+exports[`WorkflowQueriesTile renders correctly when selected 1`] = `
+<div>
+  <div
+    class="css-cOgsKQ"
+  >
+    <div
+      class="css-hSKLnT"
+    >
+      <div
+        class="css-bsYdMi"
+      >
+        <div
+          class="css-ixnVtQ"
+        >
+          mock-query
+        </div>
+        <div
+          class="css-fAAOGo"
+        >
+          <button
+            class="css-ipKQbc"
+            data-baseweb="button"
+          >
+            Add input
+          </button>
+          <button
+            class="css-gARaLg"
+            data-baseweb="button"
+          >
+            Run
+            <div
+              class="css-cDENyl"
+            >
+              <svg
+                fill="currentColor"
+                height="1em"
+                stroke="currentColor"
+                stroke-width="0"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M8 5v14l11-7z"
+                />
+              </svg>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="css-PKJb"
+  />
+</div>
+`;
+
+exports[`WorkflowQueriesTile renders correctly when unselected 1`] = `
+<div>
+  <div
+    class="css-cOgsKQ"
+  >
+    <div
+      class="css-biqlcu"
+    >
+      <div
+        class="css-bsYdMi"
+      >
+        <div
+          class="css-ixnVtQ"
+        >
+          mock-query
+        </div>
+        <div
+          class="css-fAAOGo"
+        >
+          <button
+            class="css-ipKQbc"
+            data-baseweb="button"
+          >
+            Add input
+          </button>
+          <button
+            class="css-gARaLg"
+            data-baseweb="button"
+          >
+            Run
+            <div
+              class="css-cDENyl"
+            >
+              <svg
+                fill="currentColor"
+                height="1em"
+                stroke="currentColor"
+                stroke-width="0"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M8 5v14l11-7z"
+                />
+              </svg>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="css-PKJb"
+  />
+</div>
+`;

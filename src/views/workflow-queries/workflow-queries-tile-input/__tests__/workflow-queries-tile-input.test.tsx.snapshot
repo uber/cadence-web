@@ -1,0 +1,69 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`WorkflowQueriesTileInput renders correctly 1`] = `
+<div>
+  <div
+    class="css-cOgsKQ"
+  >
+    <div
+      class="css-gluhOz"
+      data-baseweb="textarea"
+    >
+      <div
+        class="css-TOJTm"
+        data-baseweb="base-input"
+      >
+        <textarea
+          aria-invalid="false"
+          aria-required="false"
+          autocomplete="on"
+          class="css-iZoRPZ"
+          inputmode="text"
+          name=""
+          placeholder=""
+          rows="3"
+          type="textarea"
+        />
+      </div>
+    </div>
+  </div>
+  <div
+    class="css-PKJb"
+  />
+</div>
+`;
+
+exports[`WorkflowQueriesTileInput renders correctly with a non-empty value 1`] = `
+<div>
+  <div
+    class="css-cOgsKQ"
+  >
+    <div
+      class="css-gluhOz"
+      data-baseweb="textarea"
+    >
+      <div
+        class="css-TOJTm"
+        data-baseweb="base-input"
+      >
+        <textarea
+          aria-invalid="false"
+          aria-required="false"
+          autocomplete="on"
+          class="css-iZoRPZ"
+          inputmode="text"
+          name=""
+          placeholder=""
+          rows="3"
+          type="textarea"
+        >
+          test value
+        </textarea>
+      </div>
+    </div>
+  </div>
+  <div
+    class="css-PKJb"
+  />
+</div>
+`;
