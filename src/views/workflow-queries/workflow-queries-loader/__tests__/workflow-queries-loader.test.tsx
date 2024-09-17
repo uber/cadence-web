@@ -33,6 +33,7 @@ describe(WorkflowQueriesLoader.name, () => {
   it('renders without error', async () => {
     const { container } = await setup({});
 
+    expect(await screen.findByText(/__open_sessions/)).toBeInTheDocument();
     expect(container).toMatchSnapshot();
   });
 

@@ -16,7 +16,57 @@ exports[`WorkflowQueriesLoader renders without error 1`] = `
   },
 }
 "
-      />
+      >
+        <div
+          class="style={
+  columnGap: '32px',
+  display: 'flex',
+  flexDirection: 'row',
+}
+"
+        >
+          <div
+            class="style={
+  display: 'flex',
+  flex: '1 0 300px',
+  flexDirection: 'column',
+  maxWidth: '450px',
+  rowGap: '16px',
+}
+"
+          >
+            <div>
+              <div>
+                Mock tile: 
+                __query_types
+              </div>
+              <button>
+                Run
+              </button>
+            </div>
+            <div>
+              <div>
+                Mock tile: 
+                __open_sessions
+              </div>
+              <button>
+                Run
+              </button>
+            </div>
+          </div>
+          <div
+            class="style={ flex: '1 0 300px' }
+"
+          >
+            <div>
+              <div>
+                Mock JSON
+              </div>
+              <div />
+            </div>
+          </div>
+        </div>
+      </div>
       <div
         class="style={}
 "
@@ -35,7 +85,57 @@ exports[`WorkflowQueriesLoader renders without error 1`] = `
   },
 }
 "
-    />
+    >
+      <div
+        class="style={
+  columnGap: '32px',
+  display: 'flex',
+  flexDirection: 'row',
+}
+"
+      >
+        <div
+          class="style={
+  display: 'flex',
+  flex: '1 0 300px',
+  flexDirection: 'column',
+  maxWidth: '450px',
+  rowGap: '16px',
+}
+"
+        >
+          <div>
+            <div>
+              Mock tile: 
+              __query_types
+            </div>
+            <button>
+              Run
+            </button>
+          </div>
+          <div>
+            <div>
+              Mock tile: 
+              __open_sessions
+            </div>
+            <button>
+              Run
+            </button>
+          </div>
+        </div>
+        <div
+          class="style={ flex: '1 0 300px' }
+"
+        >
+          <div>
+            <div>
+              Mock JSON
+            </div>
+            <div />
+          </div>
+        </div>
+      </div>
+    </div>
     <div
       class="style={}
 "
