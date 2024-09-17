@@ -6,6 +6,7 @@ import {
   QueryClientProvider,
 } from '@tanstack/react-query';
 import { MemoryRouterProvider } from 'next-router-mock/MemoryRouterProvider';
+// @ts-expect-error Could not find a declaration file for module 'styletron-engine-snapshot'
 import { StyletronSnapshotEngine } from 'styletron-engine-snapshot';
 
 import themeProviderOverrides from '@/config/theme/theme-provider-overrides.config';
