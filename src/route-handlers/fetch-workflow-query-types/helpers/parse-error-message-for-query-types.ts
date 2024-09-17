@@ -1,12 +1,15 @@
 export default function parseErrorMessageForQueryTypes(
   message: string
-): Array<string> {
-  const errorMatches =
-    message.match(/(KnownQueryTypes|knownTypes)=\[(.*)\]/)?.[2] ?? undefined;
+): Array<string> | undefined {
+  const knownTypesErrorMatch = message.match(
+    /(KnownQueryTypes|knownTypes)=\[(.*)?\]/
+  );
 
-  if (!errorMatches) {
-    return [];
+  if (!knownTypesErrorMatch) {
+    return undefined;
   }
 
-  return errorMatches.split(/, | /).filter(Boolean);
+  const queryTypes = knownTypesErrorMatch[2];
+
+  return queryTypes ? queryTypes.split(/, | /).filter(Boolean) : [];
 }

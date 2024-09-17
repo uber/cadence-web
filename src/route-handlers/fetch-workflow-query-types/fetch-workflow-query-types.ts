@@ -37,7 +37,7 @@ export default async function fetchWorkflowQueryTypes(
     // does not have a query handler for __query_types (as is the case with the Java client)
     if (e instanceof GRPCError) {
       const parsedQueryTypes = parseErrorMessageForQueryTypes(e.message);
-      if (parsedQueryTypes.length > 0) {
+      if (parsedQueryTypes) {
         return Response.json({ queryTypes: parsedQueryTypes });
       }
     }
