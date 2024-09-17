@@ -218,24 +218,24 @@ export const failChildWorkflowEvent = {
   attributes: 'childWorkflowExecutionFailedEventAttributes',
 } as const satisfies ChildWorkflowExecutionHistoryEvent;
 
-export const completedChildeWorkflowEvents: ChildWorkflowExecutionHistoryEvent[] =
+export const completedChildWorkflowEvents: ChildWorkflowExecutionHistoryEvent[] =
   [
     initiateChildWorkflowEvent,
     startChildWorkflowEvent,
     completeChildWorkflowEvent,
   ];
 
-export const failedChildeWorkflowEvents: ChildWorkflowExecutionHistoryEvent[] =
+export const failedChildWorkflowEvents: ChildWorkflowExecutionHistoryEvent[] =
   [initiateChildWorkflowEvent, startChildWorkflowEvent, failChildWorkflowEvent];
 
-export const timedoutChildeWorkflowEvents: ChildWorkflowExecutionHistoryEvent[] =
+export const timedoutChildWorkflowEvents: ChildWorkflowExecutionHistoryEvent[] =
   [
     initiateChildWorkflowEvent,
     startChildWorkflowEvent,
     timeoutChildWorkflowEvent,
   ];
 
-export const terminatedChildeWorkflowEvents: ChildWorkflowExecutionHistoryEvent[] =
+export const terminatedChildWorkflowEvents: ChildWorkflowExecutionHistoryEvent[] =
   [
     initiateChildWorkflowEvent,
     startChildWorkflowEvent,
@@ -249,5 +249,5 @@ export const canceledChildWorkflowEvents: ChildWorkflowExecutionHistoryEvent[] =
     cancelChildWorkflowEvent,
   ];
 
-export const initationFailedChildeWorkflowEvents: ChildWorkflowExecutionHistoryEvent[] =
+export const initationFailedChildWorkflowEvents: ChildWorkflowExecutionHistoryEvent[] =
   [initiateChildWorkflowEvent, initiateFailureChildWorkflowEvent];
