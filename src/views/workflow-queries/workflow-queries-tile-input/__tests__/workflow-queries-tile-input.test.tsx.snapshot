@@ -3,7 +3,7 @@
 exports[`WorkflowQueriesTileInput renders correctly 1`] = `
 <div>
   <div
-    class="css-cOgsKQ"
+    class="css-fWeknQ"
   >
     <div
       class="css-gluhOz"
@@ -36,7 +36,7 @@ exports[`WorkflowQueriesTileInput renders correctly 1`] = `
 exports[`WorkflowQueriesTileInput renders correctly with a non-empty value 1`] = `
 <div>
   <div
-    class="css-cOgsKQ"
+    class="css-fWeknQ"
   >
     <div
       class="css-gluhOz"

@@ -3,7 +3,7 @@
 exports[`WorkflowQueriesTile renders correctly when an input is present 1`] = `
 <div>
   <div
-    class="css-cOgsKQ"
+    class="css-fWeknQ"
   >
     <div
       class="css-biqlcu"
@@ -68,7 +68,7 @@ exports[`WorkflowQueriesTile renders correctly when an input is present 1`] = `
 exports[`WorkflowQueriesTile renders correctly when selected 1`] = `
 <div>
   <div
-    class="css-cOgsKQ"
+    class="css-fWeknQ"
   >
     <div
       class="css-hSKLnT"
@@ -130,7 +130,7 @@ exports[`WorkflowQueriesTile renders correctly when selected 1`] = `
 exports[`WorkflowQueriesTile renders correctly when unselected 1`] = `
 <div>
   <div
-    class="css-cOgsKQ"
+    class="css-fWeknQ"
   >
     <div
       class="css-biqlcu"

@@ -6,7 +6,7 @@ exports[`WorkflowQueriesLoader renders without error 1`] = `
   "baseElement": <body>
     <div>
       <div
-        class="css-cOgsKQ"
+        class="css-fWeknQ"
       />
       <div
         class="css-PKJb"
@@ -15,7 +15,7 @@ exports[`WorkflowQueriesLoader renders without error 1`] = `
   </body>,
   "container": <div>
     <div
-      class="css-cOgsKQ"
+      class="css-fWeknQ"
     />
     <div
       class="css-PKJb"
@@ -81,7 +81,7 @@ exports[`WorkflowQueriesLoader runs query and updates JSON 1`] = `
   "baseElement": <body>
     <div>
       <div
-        class="css-cOgsKQ"
+        class="css-fWeknQ"
       >
         <div
           class="css-tyUrN"
@@ -129,7 +129,7 @@ exports[`WorkflowQueriesLoader runs query and updates JSON 1`] = `
   </body>,
   "container": <div>
     <div
-      class="css-cOgsKQ"
+      class="css-fWeknQ"
     >
       <div
         class="css-tyUrN"
