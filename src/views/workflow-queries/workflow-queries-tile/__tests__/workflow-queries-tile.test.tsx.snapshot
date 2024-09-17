@@ -3,35 +3,174 @@
 exports[`WorkflowQueriesTile renders correctly when an input is present 1`] = `
 <div>
   <div
-    class="css-fWeknQ"
+    class="style={
+  '*, *::before, *::after': {
+    '-moz-animation': 'none !important',
+    '-moz-transition': ' none !important',
+    animation: 'none !important',
+    'caret-color': ' transparent !important',
+    transition: ' none !important',
+  },
+}
+"
   >
     <div
-      class="css-biqlcu"
+      class="style={
+  border: '2px solid',
+  borderColor: '#F3F3F3',
+  borderRadius: '12px',
+  display: 'flex',
+  flexDirection: 'column',
+  padding: '8px',
+  rowGap: '8px',
+}
+"
     >
       <div
-        class="css-bsYdMi"
+        class="style={
+  alignItems: 'center',
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+}
+"
       >
         <div
-          class="css-ixnVtQ"
+          class="style={
+  fontFamily: 'UberMoveMono, "Lucida Console", Monaco, monospace',
+  fontSize: '14px',
+  fontWeight: 500,
+  lineHeight: '16px',
+  paddingLeft: '8px',
+}
+"
         >
           mock-query
         </div>
         <div
-          class="css-fAAOGo"
+          class="style={
+  columnGap: '8px',
+  display: 'flex',
+  flexDirection: 'row',
+}
+"
         >
           <button
-            class="css-ipKQbc"
+            class="style={
+  ':active': {
+    backgroundColor: '#EEEEEE',
+  },
+  ':disabled': {
+    backgroundColor: 'transparent',
+    color: '#AFAFAF',
+    cursor: 'not-allowed',
+  },
+  ':hover': {
+    backgroundColor: '#F6F6F6',
+  },
+  WebkitAppearance: 'none',
+  alignItems: 'center',
+  backgroundColor: 'transparent',
+  borderBottomLeftRadius: '4px',
+  borderBottomRightRadius: '4px',
+  borderBottomStyle: 'none',
+  borderBottomWidth: 0,
+  borderLeftStyle: 'none',
+  borderLeftWidth: 0,
+  borderRightStyle: 'none',
+  borderRightWidth: 0,
+  borderTopLeftRadius: '4px',
+  borderTopRightRadius: '4px',
+  borderTopStyle: 'none',
+  borderTopWidth: 0,
+  boxShadow: 'none',
+  color: '#000000',
+  cursor: 'pointer',
+  display: 'inline-flex',
+  flexDirection: 'row',
+  fontFamily: 'UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif',
+  fontSize: '12px',
+  fontWeight: 500,
+  justifyContent: 'center',
+  lineHeight: '16px',
+  marginBottom: 0,
+  marginLeft: 0,
+  marginRight: 0,
+  marginTop: 0,
+  outline: 'none',
+  paddingBottom: '6px',
+  paddingLeft: '8px',
+  paddingRight: '8px',
+  paddingTop: '6px',
+  textDecoration: 'none',
+  transitionDuration: '200ms',
+  transitionProperty: 'background',
+  transitionTimingFunction: 'cubic-bezier(0, 0, 1, 1)',
+}
+"
             data-baseweb="button"
           >
             Remove input
           </button>
           <button
-            class="css-gARaLg"
+            class="style={
+  ':active': {
+    backgroundColor: '#CBCBCB',
+  },
+  ':disabled': {
+    backgroundColor: '#F6F6F6',
+    color: '#AFAFAF',
+    cursor: 'not-allowed',
+  },
+  ':hover': {
+    backgroundColor: '#E2E2E2',
+  },
+  WebkitAppearance: 'none',
+  alignItems: 'center',
+  backgroundColor: '#EEEEEE',
+  borderBottomLeftRadius: '8px',
+  borderBottomRightRadius: '8px',
+  borderBottomStyle: 'none',
+  borderBottomWidth: 0,
+  borderLeftStyle: 'none',
+  borderLeftWidth: 0,
+  borderRightStyle: 'none',
+  borderRightWidth: 0,
+  borderTopLeftRadius: '8px',
+  borderTopRightRadius: '8px',
+  borderTopStyle: 'none',
+  borderTopWidth: 0,
+  boxShadow: 'none',
+  color: '#000000',
+  cursor: 'pointer',
+  display: 'inline-flex',
+  flexDirection: 'row',
+  fontFamily: 'UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif',
+  fontSize: '14px',
+  fontWeight: 500,
+  justifyContent: 'center',
+  lineHeight: '16px',
+  marginBottom: 0,
+  marginLeft: 0,
+  marginRight: 0,
+  marginTop: 0,
+  outline: 'none',
+  paddingBottom: '10px',
+  paddingLeft: '12px',
+  paddingRight: '12px',
+  paddingTop: '10px',
+  textDecoration: 'none',
+  transitionDuration: '200ms',
+  transitionProperty: 'background',
+  transitionTimingFunction: 'cubic-bezier(0, 0, 1, 1)',
+}
+"
             data-baseweb="button"
           >
             Run
             <div
-              class="css-cDENyl"
+              class="style={ display: 'flex', marginLeft: '8px' }
+"
             >
               <svg
                 fill="currentColor"
@@ -60,7 +199,8 @@ exports[`WorkflowQueriesTile renders correctly when an input is present 1`] = `
     </div>
   </div>
   <div
-    class="css-PKJb"
+    class="style={}
+"
   />
 </div>
 `;
@@ -68,35 +208,174 @@ exports[`WorkflowQueriesTile renders correctly when an input is present 1`] = `
 exports[`WorkflowQueriesTile renders correctly when selected 1`] = `
 <div>
   <div
-    class="css-fWeknQ"
+    class="style={
+  '*, *::before, *::after': {
+    '-moz-animation': 'none !important',
+    '-moz-transition': ' none !important',
+    animation: 'none !important',
+    'caret-color': ' transparent !important',
+    transition: ' none !important',
+  },
+}
+"
   >
     <div
-      class="css-hSKLnT"
+      class="style={
+  border: '2px solid',
+  borderColor: '#000000',
+  borderRadius: '12px',
+  display: 'flex',
+  flexDirection: 'column',
+  padding: '8px',
+  rowGap: '8px',
+}
+"
     >
       <div
-        class="css-bsYdMi"
+        class="style={
+  alignItems: 'center',
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+}
+"
       >
         <div
-          class="css-ixnVtQ"
+          class="style={
+  fontFamily: 'UberMoveMono, "Lucida Console", Monaco, monospace',
+  fontSize: '14px',
+  fontWeight: 500,
+  lineHeight: '16px',
+  paddingLeft: '8px',
+}
+"
         >
           mock-query
         </div>
         <div
-          class="css-fAAOGo"
+          class="style={
+  columnGap: '8px',
+  display: 'flex',
+  flexDirection: 'row',
+}
+"
         >
           <button
-            class="css-ipKQbc"
+            class="style={
+  ':active': {
+    backgroundColor: '#EEEEEE',
+  },
+  ':disabled': {
+    backgroundColor: 'transparent',
+    color: '#AFAFAF',
+    cursor: 'not-allowed',
+  },
+  ':hover': {
+    backgroundColor: '#F6F6F6',
+  },
+  WebkitAppearance: 'none',
+  alignItems: 'center',
+  backgroundColor: 'transparent',
+  borderBottomLeftRadius: '4px',
+  borderBottomRightRadius: '4px',
+  borderBottomStyle: 'none',
+  borderBottomWidth: 0,
+  borderLeftStyle: 'none',
+  borderLeftWidth: 0,
+  borderRightStyle: 'none',
+  borderRightWidth: 0,
+  borderTopLeftRadius: '4px',
+  borderTopRightRadius: '4px',
+  borderTopStyle: 'none',
+  borderTopWidth: 0,
+  boxShadow: 'none',
+  color: '#000000',
+  cursor: 'pointer',
+  display: 'inline-flex',
+  flexDirection: 'row',
+  fontFamily: 'UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif',
+  fontSize: '12px',
+  fontWeight: 500,
+  justifyContent: 'center',
+  lineHeight: '16px',
+  marginBottom: 0,
+  marginLeft: 0,
+  marginRight: 0,
+  marginTop: 0,
+  outline: 'none',
+  paddingBottom: '6px',
+  paddingLeft: '8px',
+  paddingRight: '8px',
+  paddingTop: '6px',
+  textDecoration: 'none',
+  transitionDuration: '200ms',
+  transitionProperty: 'background',
+  transitionTimingFunction: 'cubic-bezier(0, 0, 1, 1)',
+}
+"
             data-baseweb="button"
           >
             Add input
           </button>
           <button
-            class="css-gARaLg"
+            class="style={
+  ':active': {
+    backgroundColor: '#CBCBCB',
+  },
+  ':disabled': {
+    backgroundColor: '#F6F6F6',
+    color: '#AFAFAF',
+    cursor: 'not-allowed',
+  },
+  ':hover': {
+    backgroundColor: '#E2E2E2',
+  },
+  WebkitAppearance: 'none',
+  alignItems: 'center',
+  backgroundColor: '#EEEEEE',
+  borderBottomLeftRadius: '8px',
+  borderBottomRightRadius: '8px',
+  borderBottomStyle: 'none',
+  borderBottomWidth: 0,
+  borderLeftStyle: 'none',
+  borderLeftWidth: 0,
+  borderRightStyle: 'none',
+  borderRightWidth: 0,
+  borderTopLeftRadius: '8px',
+  borderTopRightRadius: '8px',
+  borderTopStyle: 'none',
+  borderTopWidth: 0,
+  boxShadow: 'none',
+  color: '#000000',
+  cursor: 'pointer',
+  display: 'inline-flex',
+  flexDirection: 'row',
+  fontFamily: 'UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif',
+  fontSize: '14px',
+  fontWeight: 500,
+  justifyContent: 'center',
+  lineHeight: '16px',
+  marginBottom: 0,
+  marginLeft: 0,
+  marginRight: 0,
+  marginTop: 0,
+  outline: 'none',
+  paddingBottom: '10px',
+  paddingLeft: '12px',
+  paddingRight: '12px',
+  paddingTop: '10px',
+  textDecoration: 'none',
+  transitionDuration: '200ms',
+  transitionProperty: 'background',
+  transitionTimingFunction: 'cubic-bezier(0, 0, 1, 1)',
+}
+"
             data-baseweb="button"
           >
             Run
             <div
-              class="css-cDENyl"
+              class="style={ display: 'flex', marginLeft: '8px' }
+"
             >
               <svg
                 fill="currentColor"
@@ -122,7 +401,8 @@ exports[`WorkflowQueriesTile renders correctly when selected 1`] = `
     </div>
   </div>
   <div
-    class="css-PKJb"
+    class="style={}
+"
   />
 </div>
 `;
@@ -130,35 +410,174 @@ exports[`WorkflowQueriesTile renders correctly when selected 1`] = `
 exports[`WorkflowQueriesTile renders correctly when unselected 1`] = `
 <div>
   <div
-    class="css-fWeknQ"
+    class="style={
+  '*, *::before, *::after': {
+    '-moz-animation': 'none !important',
+    '-moz-transition': ' none !important',
+    animation: 'none !important',
+    'caret-color': ' transparent !important',
+    transition: ' none !important',
+  },
+}
+"
   >
     <div
-      class="css-biqlcu"
+      class="style={
+  border: '2px solid',
+  borderColor: '#F3F3F3',
+  borderRadius: '12px',
+  display: 'flex',
+  flexDirection: 'column',
+  padding: '8px',
+  rowGap: '8px',
+}
+"
     >
       <div
-        class="css-bsYdMi"
+        class="style={
+  alignItems: 'center',
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+}
+"
       >
         <div
-          class="css-ixnVtQ"
+          class="style={
+  fontFamily: 'UberMoveMono, "Lucida Console", Monaco, monospace',
+  fontSize: '14px',
+  fontWeight: 500,
+  lineHeight: '16px',
+  paddingLeft: '8px',
+}
+"
         >
           mock-query
         </div>
         <div
-          class="css-fAAOGo"
+          class="style={
+  columnGap: '8px',
+  display: 'flex',
+  flexDirection: 'row',
+}
+"
         >
           <button
-            class="css-ipKQbc"
+            class="style={
+  ':active': {
+    backgroundColor: '#EEEEEE',
+  },
+  ':disabled': {
+    backgroundColor: 'transparent',
+    color: '#AFAFAF',
+    cursor: 'not-allowed',
+  },
+  ':hover': {
+    backgroundColor: '#F6F6F6',
+  },
+  WebkitAppearance: 'none',
+  alignItems: 'center',
+  backgroundColor: 'transparent',
+  borderBottomLeftRadius: '4px',
+  borderBottomRightRadius: '4px',
+  borderBottomStyle: 'none',
+  borderBottomWidth: 0,
+  borderLeftStyle: 'none',
+  borderLeftWidth: 0,
+  borderRightStyle: 'none',
+  borderRightWidth: 0,
+  borderTopLeftRadius: '4px',
+  borderTopRightRadius: '4px',
+  borderTopStyle: 'none',
+  borderTopWidth: 0,
+  boxShadow: 'none',
+  color: '#000000',
+  cursor: 'pointer',
+  display: 'inline-flex',
+  flexDirection: 'row',
+  fontFamily: 'UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif',
+  fontSize: '12px',
+  fontWeight: 500,
+  justifyContent: 'center',
+  lineHeight: '16px',
+  marginBottom: 0,
+  marginLeft: 0,
+  marginRight: 0,
+  marginTop: 0,
+  outline: 'none',
+  paddingBottom: '6px',
+  paddingLeft: '8px',
+  paddingRight: '8px',
+  paddingTop: '6px',
+  textDecoration: 'none',
+  transitionDuration: '200ms',
+  transitionProperty: 'background',
+  transitionTimingFunction: 'cubic-bezier(0, 0, 1, 1)',
+}
+"
             data-baseweb="button"
           >
             Add input
           </button>
           <button
-            class="css-gARaLg"
+            class="style={
+  ':active': {
+    backgroundColor: '#CBCBCB',
+  },
+  ':disabled': {
+    backgroundColor: '#F6F6F6',
+    color: '#AFAFAF',
+    cursor: 'not-allowed',
+  },
+  ':hover': {
+    backgroundColor: '#E2E2E2',
+  },
+  WebkitAppearance: 'none',
+  alignItems: 'center',
+  backgroundColor: '#EEEEEE',
+  borderBottomLeftRadius: '8px',
+  borderBottomRightRadius: '8px',
+  borderBottomStyle: 'none',
+  borderBottomWidth: 0,
+  borderLeftStyle: 'none',
+  borderLeftWidth: 0,
+  borderRightStyle: 'none',
+  borderRightWidth: 0,
+  borderTopLeftRadius: '8px',
+  borderTopRightRadius: '8px',
+  borderTopStyle: 'none',
+  borderTopWidth: 0,
+  boxShadow: 'none',
+  color: '#000000',
+  cursor: 'pointer',
+  display: 'inline-flex',
+  flexDirection: 'row',
+  fontFamily: 'UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif',
+  fontSize: '14px',
+  fontWeight: 500,
+  justifyContent: 'center',
+  lineHeight: '16px',
+  marginBottom: 0,
+  marginLeft: 0,
+  marginRight: 0,
+  marginTop: 0,
+  outline: 'none',
+  paddingBottom: '10px',
+  paddingLeft: '12px',
+  paddingRight: '12px',
+  paddingTop: '10px',
+  textDecoration: 'none',
+  transitionDuration: '200ms',
+  transitionProperty: 'background',
+  transitionTimingFunction: 'cubic-bezier(0, 0, 1, 1)',
+}
+"
             data-baseweb="button"
           >
             Run
             <div
-              class="css-cDENyl"
+              class="style={ display: 'flex', marginLeft: '8px' }
+"
             >
               <svg
                 fill="currentColor"
@@ -184,7 +603,8 @@ exports[`WorkflowQueriesTile renders correctly when unselected 1`] = `
     </div>
   </div>
   <div
-    class="css-PKJb"
+    class="style={}
+"
   />
 </div>
 `;

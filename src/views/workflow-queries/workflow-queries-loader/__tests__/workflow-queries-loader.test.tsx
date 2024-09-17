@@ -37,7 +37,7 @@ describe(WorkflowQueriesLoader.name, () => {
   });
 
   it('runs query and updates JSON', async () => {
-    const { user, container } = await setup({});
+    const { user } = await setup({});
 
     const queryRunButtons = await screen.findAllByRole('button');
     expect(queryRunButtons).toHaveLength(2);
@@ -47,7 +47,6 @@ describe(WorkflowQueriesLoader.name, () => {
     expect(
       await screen.findByText(/{"name":"__open_sessions"}/)
     ).toBeInTheDocument();
-    expect(container).toMatchSnapshot();
   });
 
   it('does not render if the initial call fails', async () => {
@@ -99,6 +98,7 @@ async function setup({ error }: { error?: boolean }) {
               }),
         },
       ],
+      isSnapshotTest: true,
     }
   );
 

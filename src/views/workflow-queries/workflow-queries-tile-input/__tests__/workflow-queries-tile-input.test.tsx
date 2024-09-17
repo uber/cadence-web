@@ -13,7 +13,8 @@ describe(WorkflowQueriesTileInput.name, () => {
 
   it('renders correctly', () => {
     const { container } = render(
-      <WorkflowQueriesTileInput value="" setValue={jest.fn()} />
+      <WorkflowQueriesTileInput value="" setValue={jest.fn()} />,
+      { isSnapshotTest: true }
     );
 
     expect(container).toMatchSnapshot();
@@ -21,7 +22,8 @@ describe(WorkflowQueriesTileInput.name, () => {
 
   it('renders correctly with a non-empty value', () => {
     const { container } = render(
-      <WorkflowQueriesTileInput value="test value" setValue={jest.fn()} />
+      <WorkflowQueriesTileInput value="test value" setValue={jest.fn()} />,
+      { isSnapshotTest: true }
     );
 
     expect(container).toMatchSnapshot();

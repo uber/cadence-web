@@ -92,7 +92,8 @@ function setup({
       onSelect={mockOnSelect}
       runQuery={mockRunQuery}
       queryStatus="pending"
-    />
+    />,
+    { isSnapshotTest: true }
   );
 
   return {
