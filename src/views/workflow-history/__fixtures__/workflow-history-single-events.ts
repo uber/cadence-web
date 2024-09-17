@@ -1,6 +1,5 @@
 import type { SingleHistoryEvent } from '../workflow-history.types';
 
-
 //TODO: get more realistic time and workflow id/ run id references that relates to other events
 
 export const startWorkflowExecutionEvent = {
@@ -12,8 +11,7 @@ export const startWorkflowExecutionEvent = {
   version: '575102',
   taskId: '22647173800',
   workflowExecutionStartedEventAttributes: {
-    partitionConfig: {
-    },
+    partitionConfig: {},
     workflowType: {
       name: 'workflow.cron',
     },
@@ -54,8 +52,7 @@ export const startWorkflowExecutionEvent = {
       points: [],
     },
     header: {
-      fields: {
-      },
+      fields: {},
     },
     firstScheduledTime: {
       seconds: '1716246362',
@@ -66,9 +63,8 @@ export const startWorkflowExecutionEvent = {
   attributes: 'workflowExecutionStartedEventAttributes',
 } as const satisfies SingleHistoryEvent;
 
-
 export const signalWorkflowExecutionEvent = {
-  eventId: "2",
+  eventId: '2',
   eventTime: {
     seconds: '1724747415',
     nanos: 549377718,
@@ -76,14 +72,14 @@ export const signalWorkflowExecutionEvent = {
   version: '575102',
   taskId: '22647173801',
   workflowExecutionSignaledEventAttributes: {
-    signalName: "signal-name",
+    signalName: 'signal-name',
     input: {
-      data: "ImNhZGVuY2Uuc2lnbmFsIg=="
+      data: 'ImNhZGVuY2Uuc2lnbmFsIg==',
     },
-    identity: "cadence-service",
-    requestId: "488cd24f-37b0-48f7-955a-c5c8c7653290"
+    identity: 'cadence-service',
+    requestId: '488cd24f-37b0-48f7-955a-c5c8c7653290',
   },
-  attributes: "workflowExecutionSignaledEventAttributes"
+  attributes: 'workflowExecutionSignaledEventAttributes',
 } as const satisfies SingleHistoryEvent;
 
 export const recordMarkerExecutionEvent = {
@@ -105,9 +101,8 @@ export const recordMarkerExecutionEvent = {
   attributes: 'markerRecordedEventAttributes',
 } as const satisfies SingleHistoryEvent;
 
-
 export const failWorkflowExecutionEvent = {
-  eventId: "48",
+  eventId: '48',
   eventTime: {
     seconds: '1726747515',
     nanos: 549377718,
@@ -116,63 +111,58 @@ export const failWorkflowExecutionEvent = {
   taskId: '22647173803',
   workflowExecutionFailedEventAttributes: {
     failure: {
-      reason: "cadenceInternal:Generic",
-      details: "bmV3IGV4ZWN1dGlvbiB0cmlnZ2VyZWQgYnkgcmVzZXQgaXMgbm90IGNvbXBsZXRlZA=="
+      reason: 'cadenceInternal:Generic',
+      details:
+        'bmV3IGV4ZWN1dGlvbiB0cmlnZ2VyZWQgYnkgcmVzZXQgaXMgbm90IGNvbXBsZXRlZA==',
     },
-    decisionTaskCompletedEventId: "4"
+    decisionTaskCompletedEventId: '4',
   },
-  attributes: "workflowExecutionFailedEventAttributes"
+  attributes: 'workflowExecutionFailedEventAttributes',
 } as const satisfies SingleHistoryEvent;
 
-
-
 export const terminateWorkflowExecutionEvent = {
-  eventId: "49",
+  eventId: '49',
   eventTime: {
     seconds: '1726747615',
     nanos: 549377718,
   },
-  version: "587402",
-  taskId: "6051339957",
+  version: '587402',
+  taskId: '6051339957',
   workflowExecutionTerminatedEventAttributes: {
-    reason: "reset domain",
+    reason: 'reset domain',
     details: null,
-    identity: "history-service"
+    identity: 'history-service',
   },
-  attributes: "workflowExecutionTerminatedEventAttributes"
+  attributes: 'workflowExecutionTerminatedEventAttributes',
 } as const satisfies SingleHistoryEvent;
-
-
 
 export const timeoutWorkflowExecutionEvent = {
-  eventId: "50",
+  eventId: '50',
   eventTime: {
     seconds: '1726747715',
     nanos: 549377718,
   },
-  version: "587402",
-  taskId: "6051339957",
+  version: '587402',
+  taskId: '6051339957',
   workflowExecutionTimedOutEventAttributes: {
-    timeoutType: "TIMEOUT_TYPE_START_TO_CLOSE"
+    timeoutType: 'TIMEOUT_TYPE_START_TO_CLOSE',
   },
-  attributes: "workflowExecutionTimedOutEventAttributes"
+  attributes: 'workflowExecutionTimedOutEventAttributes',
 } as const satisfies SingleHistoryEvent;
 
-
-
 export const completeWorkflowExecutionEvent = {
-  eventId: "51",
+  eventId: '51',
   eventTime: {
     seconds: '1726747715',
     nanos: 549377718,
   },
-  version: "587402",
-  taskId: "605133998",
+  version: '587402',
+  taskId: '605133998',
   workflowExecutionCompletedEventAttributes: {
     result: null,
-    decisionTaskCompletedEventId: "4"
+    decisionTaskCompletedEventId: '4',
   },
-  attributes: "workflowExecutionCompletedEventAttributes"
+  attributes: 'workflowExecutionCompletedEventAttributes',
 } as const satisfies SingleHistoryEvent;
 
 export const cancelRequestActivityTaskEvent = {
@@ -181,8 +171,8 @@ export const cancelRequestActivityTaskEvent = {
     seconds: '1726747715',
     nanos: 549377718,
   },
-  version: "587402",
-  taskId: "605133998",
+  version: '587402',
+  taskId: '605133998',
   activityTaskCancelRequestedEventAttributes: {
     activityId: '0',
     decisionTaskCompletedEventId: '4',
@@ -190,22 +180,21 @@ export const cancelRequestActivityTaskEvent = {
   attributes: 'activityTaskCancelRequestedEventAttributes',
 } as const satisfies SingleHistoryEvent;
 
-
 export const failCancelTimerEvent = {
-  eventId: "53",
+  eventId: '53',
   eventTime: {
-    seconds: "1725748670",
-    nanos: 860748144
+    seconds: '1725748670',
+    nanos: 860748144,
   },
-  version: "587402",
-  taskId: "12690929028",
+  version: '587402',
+  taskId: '12690929028',
   cancelTimerFailedEventAttributes: {
     cause: '',
-    timerId: "0",
-    decisionTaskCompletedEventId: "9",
-    identity: "67b17b8c-fc30-4c5c-ac7e-bc3046311b18"
+    timerId: '0',
+    decisionTaskCompletedEventId: '9',
+    identity: '67b17b8c-fc30-4c5c-ac7e-bc3046311b18',
   },
-  attributes: "cancelTimerFailedEventAttributes"
+  attributes: 'cancelTimerFailedEventAttributes',
 } as const satisfies SingleHistoryEvent;
 
 export const failCancelRequestActivityTaskEvent = {
@@ -217,13 +206,12 @@ export const failCancelRequestActivityTaskEvent = {
   version: '587402',
   taskId: '22647174807',
   requestCancelActivityTaskFailedEventAttributes: {
-    activityId: "0",
+    activityId: '0',
     decisionTaskCompletedEventId: '4',
     cause: '',
   },
   attributes: 'requestCancelActivityTaskFailedEventAttributes',
 } as const satisfies SingleHistoryEvent;
-
 
 export const continueAsNewWorkflowExecutionEvent = {
   eventId: '55',
@@ -262,8 +250,7 @@ export const continueAsNewWorkflowExecutionEvent = {
     failure: null,
     lastCompletionResult: null,
     header: {
-      fields: {
-      },
+      fields: {},
     },
     memo: null,
     searchAttributes: null,
@@ -273,64 +260,61 @@ export const continueAsNewWorkflowExecutionEvent = {
 
 // TODO: Fill with realistic data
 export const requestCancelWorkflowExecutionEvent = {
-  eventId: "56",
+  eventId: '56',
   eventTime: {
-    seconds: "1726046172",
-    nanos: 860760687
+    seconds: '1726046172',
+    nanos: 860760687,
   },
-  version: "580100",
-  taskId: "12690929027",
+  version: '580100',
+  taskId: '12690929027',
   workflowExecutionCancelRequestedEventAttributes: {
     cause: '',
     identity: '',
     requestId: '',
     externalExecutionInfo: {
-      initiatedId: "",
+      initiatedId: '',
       workflowExecution: {
-        runId: "",
-        workflowId: ""
-      }
-    }
+        runId: '',
+        workflowId: '',
+      },
+    },
   },
-  attributes: "workflowExecutionCancelRequestedEventAttributes"
+  attributes: 'workflowExecutionCancelRequestedEventAttributes',
 } as const satisfies SingleHistoryEvent;
 export const cancelWorkflowExecutionEvent = {
-  eventId: "57",
+  eventId: '57',
   eventTime: {
-    seconds: "1726046172",
-    nanos: 860760687
+    seconds: '1726046172',
+    nanos: 860760687,
   },
-  version: "580100",
-  taskId: "12690929027",
+  version: '580100',
+  taskId: '12690929027',
   workflowExecutionCanceledEventAttributes: {
-    decisionTaskCompletedEventId: "9",
+    decisionTaskCompletedEventId: '9',
     details: {
-      data: "d29ya2Zsb3cgc2xlZXA6IENhbmNlbGVkRXJyb3I="
-    }
+      data: 'd29ya2Zsb3cgc2xlZXA6IENhbmNlbGVkRXJyb3I=',
+    },
   },
-  attributes: "workflowExecutionCanceledEventAttributes"
+  attributes: 'workflowExecutionCanceledEventAttributes',
 } as const satisfies SingleHistoryEvent;
 
-
-
-
 export const upsertWorkflowSearchAttributesEvent = {
-  eventId: "58",
+  eventId: '58',
   eventTime: {
-    seconds: "1726556443",
-    nanos: 322569089
+    seconds: '1726556443',
+    nanos: 322569089,
   },
-  version: "587402",
-  taskId: "6051339897",
+  version: '587402',
+  taskId: '6051339897',
   upsertWorkflowSearchAttributesEventAttributes: {
-    decisionTaskCompletedEventId: "4",
+    decisionTaskCompletedEventId: '4',
     searchAttributes: {
       indexedFields: {
         CadenceChangeVersion: {
-          data: "WyJpbml0aWFsIHZlcnNpb24tMyJd"
-        }
-      }
-    }
+          data: 'WyJpbml0aWFsIHZlcnNpb24tMyJd',
+        },
+      },
+    },
   },
-  attributes: "upsertWorkflowSearchAttributesEventAttributes"
+  attributes: 'upsertWorkflowSearchAttributesEventAttributes',
 } as const satisfies SingleHistoryEvent;
