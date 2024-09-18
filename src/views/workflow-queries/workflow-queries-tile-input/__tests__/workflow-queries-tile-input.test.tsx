@@ -12,21 +12,19 @@ describe(WorkflowQueriesTileInput.name, () => {
   });
 
   it('renders correctly', () => {
-    const { container } = render(
-      <WorkflowQueriesTileInput value="" onChange={jest.fn()} />,
-      { isSnapshotTest: true }
-    );
+    render(<WorkflowQueriesTileInput value="" onChange={jest.fn()} />);
 
-    expect(container).toMatchSnapshot();
+    const textbox = screen.getByRole('textbox');
+    expect(textbox).toBeInTheDocument();
   });
 
   it('renders correctly with a non-empty value', () => {
-    const { container } = render(
-      <WorkflowQueriesTileInput value="test value" onChange={jest.fn()} />,
-      { isSnapshotTest: true }
+    render(
+      <WorkflowQueriesTileInput value="test value" onChange={jest.fn()} />
     );
 
-    expect(container).toMatchSnapshot();
+    const textbox = screen.getByRole('textbox');
+    expect(textbox).toHaveTextContent('test value');
   });
 
   it('calls onChange when typed into', async () => {
