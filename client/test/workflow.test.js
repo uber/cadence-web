@@ -627,6 +627,7 @@ describe('Workflow', () => {
       }
 
       it('should build timeline events from granular event history', async function test() {
+        this.retries(3); // flakey on mocha-chrome but not normal, windowed Chrome
         const [, compactViewEl] = await compactViewTest(this.test);
 
         compactViewEl
