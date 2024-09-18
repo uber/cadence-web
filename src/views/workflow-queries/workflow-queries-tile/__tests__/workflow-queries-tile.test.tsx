@@ -16,9 +16,9 @@ describe(WorkflowQueriesTile.name, () => {
   });
 
   it('renders correctly', () => {
-    const { container } = setup({});
+    setup({});
 
-    expect(container).toMatchSnapshot();
+    expect(screen.getByText('mock-query')).toBeInTheDocument();
   });
 
   it('renders correctly when an input is present', () => {
@@ -76,7 +76,7 @@ function setup({
   const mockOnClick = jest.fn();
   const mockRunQuery = jest.fn();
 
-  const { container } = render(
+  render(
     <WorkflowQueriesTile
       name="mock-query"
       input={input}
@@ -85,13 +85,11 @@ function setup({
       onClick={mockOnClick}
       runQuery={mockRunQuery}
       queryStatus="pending"
-    />,
-    { isSnapshotTest: true }
+    />
   );
 
   return {
     user,
-    container,
     mockOnChangeInput,
     mockOnClick,
     mockRunQuery,

@@ -68,7 +68,7 @@ describe(WorkflowQueriesLoader.name, () => {
 async function setup({ error }: { error?: boolean }) {
   const user = userEvent.setup();
 
-  const container = render(
+  render(
     <Suspense>
       <WorkflowQueriesLoader
         domain="mock-domain"
@@ -101,5 +101,5 @@ async function setup({ error }: { error?: boolean }) {
     }
   );
 
-  return { user, container };
+  return { user };
 }
