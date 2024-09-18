@@ -13,6 +13,6 @@ export type RequestParams = {
 };
 
 export type QueryWorkflowResponse = {
-  result: object | null;
+  result: any;
   rejected: QueryRejected | null;
 };

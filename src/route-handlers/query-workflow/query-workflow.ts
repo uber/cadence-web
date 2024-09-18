@@ -9,13 +9,14 @@ import {
   type QueryWorkflowResponse,
   type RequestParams,
 } from './query-workflow.types';
-import { queryWorkflowResultDataSchema } from './schemas/query-workflow-result-data-schema';
 
 export async function queryWorkflow(
   request: NextRequest,
   requestParams: RequestParams
 ) {
-  const requestBody = await request.json();
+  logger.info({ request }, 'test0');
+  const requestBody = await request.text();
+  logger.info({ requestBody }, 'test1');
 
   const decodedParams = decodeUrlParams(requestParams.params);
 
@@ -31,14 +32,18 @@ export async function queryWorkflow(
       query: {
         queryType: decodedParams.queryName,
         queryArgs: {
-          data: requestBody,
+          data: Buffer.from(requestBody),
         },
       },
     });
 
+    logger.info({ res }, 'test2');
+
     return Response.json({
       result: res.queryResult
-        ? queryWorkflowResultDataSchema.parse(res.queryResult.data)
+        ? JSON.parse(
+            Buffer.from(res.queryResult.data, 'base64').toString('utf-8')
+          )
         : null,
       rejected: res.queryRejected,
     } satisfies QueryWorkflowResponse);
