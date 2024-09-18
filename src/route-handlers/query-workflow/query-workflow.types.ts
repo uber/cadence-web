@@ -5,6 +5,7 @@ export type RouteParams = {
   cluster: string;
   workflowId: string;
   runId: string;
+  queryName: string;
 };
 
 export type RequestParams = {
@@ -12,6 +13,6 @@ export type RequestParams = {
 };
 
 export type QueryWorkflowResponse = {
-  result: object;
-  rejected: QueryRejected;
+  result: object | null;
+  rejected: QueryRejected | null;
 };

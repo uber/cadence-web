@@ -1,12 +1,15 @@
-// make this a post endpoint
-
 import { type NextRequest, NextResponse } from 'next/server';
 
 import decodeUrlParams from '@/utils/decode-url-params';
 import * as grpcClient from '@/utils/grpc/grpc-client';
 import { getHTTPStatusCode, GRPCError } from '@/utils/grpc/grpc-error';
 import logger, { type RouteHandlerErrorPayload } from '@/utils/logger';
-import { RequestParams } from './query-workflow.types';
+
+import {
+  type QueryWorkflowResponse,
+  type RequestParams,
+} from './query-workflow.types';
+import { queryWorkflowResultDataSchema } from './schemas/query-workflow-result-data-schema';
 
 export async function queryWorkflow(
   request: NextRequest,
@@ -26,34 +29,28 @@ export async function queryWorkflow(
         runId: decodedParams.runId,
       },
       query: {
-        queryType: '__query_types',
+        queryType: decodedParams.queryName,
+        queryArgs: {
+          data: requestBody,
+        },
       },
     });
 
     return Response.json({
-      queryTypes: queryTypesDataSchema.parse(res.queryResult?.data),
-    });
+      result: res.queryResult
+        ? queryWorkflowResultDataSchema.parse(res.queryResult.data)
+        : null,
+      rejected: res.queryRejected,
+    } satisfies QueryWorkflowResponse);
   } catch (e) {
-    // This is a workaround to parse the error message for valid query types if the client
-    // does not have a query handler for __query_types (as is the case with the Java client)
-    if (e instanceof GRPCError) {
-      const parsedQueryTypes = parseErrorMessageForQueryTypes(e.message);
-      if (parsedQueryTypes) {
-        return Response.json({ queryTypes: parsedQueryTypes });
-      }
-    }
-
     logger.error<RouteHandlerErrorPayload>(
       { requestParams: decodedParams, cause: e },
-      'Error querying workflow for query types'
+      'Error querying workflow'
     );
 
     return NextResponse.json(
       {
-        message:
-          e instanceof GRPCError
-            ? e.message
-            : 'Error querying workflow for query types',
+        message: e instanceof GRPCError ? e.message : 'Error querying workflow',
         cause: e,
       },
       { status: getHTTPStatusCode(e) }
