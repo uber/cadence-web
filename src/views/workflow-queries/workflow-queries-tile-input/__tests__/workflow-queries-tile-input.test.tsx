@@ -13,7 +13,7 @@ describe(WorkflowQueriesTileInput.name, () => {
 
   it('renders correctly', () => {
     const { container } = render(
-      <WorkflowQueriesTileInput value="" setValue={jest.fn()} />,
+      <WorkflowQueriesTileInput value="" onChange={jest.fn()} />,
       { isSnapshotTest: true }
     );
 
@@ -22,21 +22,21 @@ describe(WorkflowQueriesTileInput.name, () => {
 
   it('renders correctly with a non-empty value', () => {
     const { container } = render(
-      <WorkflowQueriesTileInput value="test value" setValue={jest.fn()} />,
+      <WorkflowQueriesTileInput value="test value" onChange={jest.fn()} />,
       { isSnapshotTest: true }
     );
 
     expect(container).toMatchSnapshot();
   });
 
-  it('calls setValue when typed into', async () => {
+  it('calls onChange when typed into', async () => {
     const user = userEvent.setup();
-    const mockSetValue = jest.fn();
+    const mockOnChange = jest.fn();
 
-    render(<WorkflowQueriesTileInput value="" setValue={mockSetValue} />);
+    render(<WorkflowQueriesTileInput value="" onChange={mockOnChange} />);
 
     await user.type(screen.getByRole('textbox'), 'a');
 
-    expect(mockSetValue).toHaveBeenCalledWith('a');
+    expect(mockOnChange).toHaveBeenCalledWith('a');
   });
 });

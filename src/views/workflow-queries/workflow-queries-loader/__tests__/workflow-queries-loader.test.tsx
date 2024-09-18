@@ -10,8 +10,8 @@ import { type FetchWorkflowQueryTypesResponse } from '@/route-handlers/fetch-wor
 import WorkflowQueriesLoader from '../workflow-queries-loader';
 
 jest.mock('../../workflow-queries-tile/workflow-queries-tile', () =>
-  jest.fn(({ name, onSelect, runQuery }) => (
-    <div onClick={onSelect}>
+  jest.fn(({ name, onClick, runQuery }) => (
+    <div onClick={onClick}>
       <div>Mock tile: {name}</div>
       <button onClick={runQuery}>Run</button>
     </div>
