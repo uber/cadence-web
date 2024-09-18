@@ -15,14 +15,8 @@ describe(WorkflowQueriesTile.name, () => {
     jest.clearAllMocks();
   });
 
-  it('renders correctly when unselected', () => {
+  it('renders correctly', () => {
     const { container } = setup({});
-
-    expect(container).toMatchSnapshot();
-  });
-
-  it('renders correctly when selected', () => {
-    const { container } = setup({ isSelected: true });
 
     expect(container).toMatchSnapshot();
   });

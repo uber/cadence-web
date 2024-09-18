@@ -98,7 +98,6 @@ async function setup({ error }: { error?: boolean }) {
               }),
         },
       ],
-      isSnapshotTest: true,
     }
   );
 

@@ -5,7 +5,7 @@ import { MdPlayArrow } from 'react-icons/md';
 
 import WorkflowQueriesTileInput from '../workflow-queries-tile-input/workflow-queries-tile-input';
 
-import { styled } from './workflow-queries-tile.styles';
+import { overrides, styled } from './workflow-queries-tile.styles';
 import { type Props } from './workflow-queries-tile.types';
 
 export default function WorkflowQueriesTile(props: Props) {
@@ -18,6 +18,7 @@ export default function WorkflowQueriesTile(props: Props) {
         </styled.Label>
         <styled.Actions>
           <Button
+            overrides={overrides.inputButton}
             size={SIZE.mini}
             kind={KIND.tertiary}
             onClick={() =>

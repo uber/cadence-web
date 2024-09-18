@@ -1,4 +1,15 @@
 import { styled as createStyled } from 'baseui';
+import { type ButtonOverrides } from 'baseui/button';
+
+export const overrides = {
+  inputButton: {
+    Root: {
+      style: {
+        whiteSpace: 'nowrap',
+      },
+    },
+  } satisfies ButtonOverrides,
+};
 
 export const styled = {
   Tile: createStyled<'div', { $isSelected: boolean }>(
@@ -24,6 +35,10 @@ export const styled = {
   Label: createStyled('div', ({ $theme }) => ({
     ...$theme.typography.MonoLabelSmall,
     paddingLeft: $theme.sizing.scale300,
+    maxWidth: '240px',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
   })),
   Actions: createStyled('div', ({ $theme }) => ({
     display: 'flex',
