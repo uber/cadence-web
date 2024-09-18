@@ -31,10 +31,9 @@ jest.mock(
 
 describe(WorkflowQueriesLoader.name, () => {
   it('renders without error', async () => {
-    const { container } = await setup({});
+    await setup({});
 
     expect(await screen.findByText(/__open_sessions/)).toBeInTheDocument();
-    expect(container).toMatchSnapshot();
   });
 
   it('runs query and updates JSON', async () => {

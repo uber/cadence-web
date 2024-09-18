@@ -9,7 +9,7 @@ export default function WorkflowQueriesTileInput(props: Props) {
   return (
     <Textarea
       value={props.value}
-      onChange={(e) => props.setValue(e.target.value)}
+      onChange={(e) => props.onChange(e.target.value)}
       overrides={overrides.textarea}
     />
   );

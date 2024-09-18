@@ -4,7 +4,7 @@ import copy from 'copy-to-clipboard';
 
 import { render, fireEvent, screen, act } from '@/test-utils/rtl';
 
-import WorkflowQueriesResultJSON from '../workflow-queries-result-json';
+import WorkflowQueriesResultJson from '../workflow-queries-result-json';
 
 jest.mock('copy-to-clipboard', jest.fn);
 
@@ -17,7 +17,7 @@ jest.mock('@/components/pretty-json/pretty-json', () =>
   ))
 );
 
-describe(WorkflowQueriesResultJSON.name, () => {
+describe(WorkflowQueriesResultJson.name, () => {
   it('renders correctly with initial props', () => {
     setup({});
 
@@ -67,6 +67,6 @@ function setup({
   loading?: boolean;
 }) {
   render(
-    <WorkflowQueriesResultJSON data={data} error={error} loading={loading} />
+    <WorkflowQueriesResultJson data={data} error={error} loading={loading} />
   );
 }

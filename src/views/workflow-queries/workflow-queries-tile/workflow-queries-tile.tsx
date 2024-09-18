@@ -10,10 +10,7 @@ import { type Props } from './workflow-queries-tile.types';
 
 export default function WorkflowQueriesTile(props: Props) {
   return (
-    <styled.Tile
-      onClick={() => props.onSelect()}
-      $isSelected={props.isSelected}
-    >
+    <styled.Tile onClick={() => props.onClick()} $isSelected={props.isSelected}>
       <styled.Header>
         <styled.Label>
           {props.name}
@@ -24,7 +21,7 @@ export default function WorkflowQueriesTile(props: Props) {
             size={SIZE.mini}
             kind={KIND.tertiary}
             onClick={() =>
-              props.setInput(props.input !== undefined ? undefined : '')
+              props.onChangeInput(props.input !== undefined ? undefined : '')
             }
           >
             {props.input !== undefined ? 'Remove input' : 'Add input'}
@@ -42,7 +39,7 @@ export default function WorkflowQueriesTile(props: Props) {
       {props.input !== undefined && (
         <WorkflowQueriesTileInput
           value={props.input}
-          setValue={props.setInput}
+          onChange={props.onChangeInput}
         />
       )}
     </styled.Tile>

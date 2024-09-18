@@ -11,7 +11,7 @@ import PrettyJson from '@/components/pretty-json/pretty-json';
 import { styled } from './workflow-queries-result-json.styles';
 import { type Props } from './workflow-queries-result-json.types';
 
-export default function WorkflowQueriesResultJSON(props: Props) {
+export default function WorkflowQueriesResultJson(props: Props) {
   const [showTooltip, setShowTooltip] = useState(false);
 
   useEffect(() => {
@@ -25,29 +25,27 @@ export default function WorkflowQueriesResultJSON(props: Props) {
 
   return (
     <styled.ViewContainer>
-      <styled.ViewHeader>
-        <Tooltip
-          animateOutTime={400}
-          isOpen={showTooltip}
-          showArrow
-          placement="bottom"
-          accessibilityType={ACCESSIBILITY_TYPE.tooltip}
-          content={() => <>Copied</>}
-        >
-          <Button
-            onClick={() => {
-              copy(JSON.stringify(props.data, null, '\t'));
-              setShowTooltip(true);
-            }}
-            size={SIZE.compact}
-            shape={SHAPE.pill}
-            kind={BUTTON_KIND.secondary}
-          >
-            <MdCopyAll />
-          </Button>
-        </Tooltip>
-      </styled.ViewHeader>
       <PrettyJson json={props.data} />
+      <Tooltip
+        animateOutTime={400}
+        isOpen={showTooltip}
+        showArrow
+        placement="bottom"
+        accessibilityType={ACCESSIBILITY_TYPE.tooltip}
+        content={() => <>Copied</>}
+      >
+        <Button
+          onClick={() => {
+            copy(JSON.stringify(props.data, null, '\t'));
+            setShowTooltip(true);
+          }}
+          size={SIZE.compact}
+          shape={SHAPE.pill}
+          kind={BUTTON_KIND.secondary}
+        >
+          <MdCopyAll />
+        </Button>
+      </Tooltip>
     </styled.ViewContainer>
   );
 }

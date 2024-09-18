@@ -7,7 +7,7 @@ import { type FetchWorkflowQueryTypesResponse } from '@/route-handlers/fetch-wor
 import request from '@/utils/request';
 import { type RequestError } from '@/utils/request/request-error';
 
-import WorkflowQueriesResultJSON from '../workflow-queries-result-json/workflow-queries-result-json';
+import WorkflowQueriesResultJson from '../workflow-queries-result-json/workflow-queries-result-json';
 import WorkflowQueriesTile from '../workflow-queries-tile/workflow-queries-tile';
 
 import { styled } from './workflow-queries-loader.styles';
@@ -32,6 +32,7 @@ export default function WorkflowQueriesLoader(props: Props) {
   const [selectedQueryIndex, setSelectedQueryIndex] = useState<number>(-1);
   const [inputs, setInputs] = useState<Record<string, string | undefined>>({});
 
+  // TODO: when the queries are ready, add their generic types here
   const queries = useQueries({
     queries: queryTypes.map((name) => ({
       queryKey: [name, inputs[name]] as const,
@@ -55,18 +56,18 @@ export default function WorkflowQueriesLoader(props: Props) {
             key={name}
             name={name}
             input={inputs[name]}
-            setInput={(v) =>
+            onChangeInput={(v) =>
               setInputs((oldInputs) => ({ ...oldInputs, [name]: v }))
             }
             isSelected={index === selectedQueryIndex}
-            onSelect={() => setSelectedQueryIndex(index)}
+            onClick={() => setSelectedQueryIndex(index)}
             runQuery={queries[index].refetch}
             queryStatus={queries[index].status}
           />
         ))}
       </styled.QueriesSidebar>
       <styled.QueryResultView>
-        <WorkflowQueriesResultJSON
+        <WorkflowQueriesResultJson
           data={queries[selectedQueryIndex]?.data}
           error={queries[selectedQueryIndex]?.error}
           loading={queries[selectedQueryIndex]?.isFetching}
