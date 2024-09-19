@@ -5,8 +5,7 @@ export const styled = {
   EndMessageContainer: createStyled<'div', { $isError?: boolean }>(
     'div',
     ({ $theme, $isError }) => ({
-      display: 'flex',
-      justifyContent: 'center',
+      margin:'0 auto',
       padding: $theme.sizing.scale600,
       ...$theme.typography.LabelSmall,
       color: $isError
