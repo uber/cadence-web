@@ -84,7 +84,7 @@ function setup({
       isSelected={isSelected}
       onClick={mockOnClick}
       runQuery={mockRunQuery}
-      queryStatus="pending"
+      queryStatus="success"
     />
   );
 

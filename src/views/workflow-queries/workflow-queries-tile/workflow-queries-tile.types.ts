@@ -1,5 +1,7 @@
 import { type QueryStatus } from '@tanstack/react-query';
 
+export type WorkflowQueryStatus = QueryStatus | 'fetching';
+
 export type Props = {
   name: string;
   input: string | undefined;
@@ -7,5 +9,5 @@ export type Props = {
   isSelected: boolean;
   onClick: () => void;
   runQuery: () => void;
-  queryStatus?: QueryStatus;
+  queryStatus?: WorkflowQueryStatus;
 };

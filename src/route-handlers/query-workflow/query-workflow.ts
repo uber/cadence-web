@@ -9,14 +9,24 @@ import {
   type QueryWorkflowResponse,
   type RequestParams,
 } from './query-workflow.types';
+import validQueryInputSchema from './schemas/valid-query-input-schema';
 
 export async function queryWorkflow(
   request: NextRequest,
   requestParams: RequestParams
 ) {
-  logger.info({ request }, 'test0');
   const requestBody = await request.text();
-  logger.info({ requestBody }, 'test1');
+  const { data: queryInput, error } =
+    validQueryInputSchema.safeParse(requestBody);
+
+  if (error) {
+    return NextResponse.json(
+      {
+        message: 'Invalid JSON input provided for workflow querying',
+      },
+      { status: 400 }
+    );
+  }
 
   const decodedParams = decodeUrlParams(requestParams.params);
 
@@ -32,14 +42,12 @@ export async function queryWorkflow(
       query: {
         queryType: decodedParams.queryName,
         queryArgs: {
-          data: Buffer.from(requestBody),
+          data: Buffer.from(queryInput),
         },
       },
     });
 
-    logger.info({ res }, 'test2');
-
-    return Response.json({
+    return NextResponse.json({
       result: res.queryResult
         ? JSON.parse(
             Buffer.from(res.queryResult.data, 'base64').toString('utf-8')
