@@ -93,7 +93,6 @@ export default function WorkflowHistory({
                 />
               )
             )}
-            
           </section>
           <section className={cls.timelineSection}>
             {groupedHistoryEventsEntries.map(([groupId, group], index) => (
