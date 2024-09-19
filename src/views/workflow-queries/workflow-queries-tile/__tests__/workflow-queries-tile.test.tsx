@@ -11,6 +11,10 @@ jest.mock('../../workflow-queries-tile-input/workflow-queries-tile-input', () =>
   jest.fn(() => <div>Mock input</div>)
 );
 
+jest.mock('../../workflow-queries-tile-icon/workflow-queries-tile-icon', () =>
+  jest.fn(() => <div>Mock icon</div>)
+);
+
 describe(WorkflowQueriesTile.name, () => {
   afterEach(() => {
     jest.clearAllMocks();
@@ -20,6 +24,7 @@ describe(WorkflowQueriesTile.name, () => {
     setup({});
 
     expect(screen.getByText('mock-query')).toBeInTheDocument();
+    expect(screen.getByText('Mock icon')).toBeInTheDocument();
   });
 
   it('renders correctly when an input is present', () => {
