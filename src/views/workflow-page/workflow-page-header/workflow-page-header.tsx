@@ -1,10 +1,11 @@
 'use client';
-import React, { Suspense } from 'react';
+import React from 'react';
 
 import { Breadcrumbs } from 'baseui/breadcrumbs';
 import { StyledLink } from 'baseui/link';
 import Image from 'next/image';
 import Link from 'next/link';
+import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary';
 
 import cadenceLogoBlack from '@/assets/cadence-logo-black.svg';
 import PageSection from '@/components/page-section/page-section';
@@ -48,9 +49,9 @@ export default function WorkflowPageHeader({
         </StyledLink>
         <div className={cls.breadcrumbItemContainer}>
           {runId}
-          <Suspense>
+          <ReactErrorBoundary fallbackRender={() => null}>
             <WorkflowPageStatusTag />
-          </Suspense>
+          </ReactErrorBoundary>
         </div>
       </Breadcrumbs>
     </PageSection>
