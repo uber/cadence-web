@@ -14,7 +14,7 @@ export default function WorkflowQueriesTile(props: Props) {
     <styled.Tile onClick={() => props.onClick()} $isSelected={props.isSelected}>
       <styled.Header>
         <styled.LabelContainer>
-          <styled.Label>{props.name + 'fasdfdsfsdfsdfsdfdsfs'}</styled.Label>
+          <styled.Label>{props.name}</styled.Label>
           <WorkflowQueriesStatusIcon status={props.queryStatus} />
         </styled.LabelContainer>
         <styled.Actions>
