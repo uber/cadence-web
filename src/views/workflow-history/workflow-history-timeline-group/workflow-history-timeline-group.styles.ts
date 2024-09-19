@@ -13,7 +13,7 @@ export const styled = {
       borderColor: $theme.colors.borderOpaque,
       height: $hidden ? 0 : '100%',
       marginLeft: $theme.sizing.scale500,
-      transition :`height 0.2s ${$theme.animation.easeOutCurve}`
+      transition: `height 0.2s ${$theme.animation.easeOutCurve}`,
     })
   ),
 };
