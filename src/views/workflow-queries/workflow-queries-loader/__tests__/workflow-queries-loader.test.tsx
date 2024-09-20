@@ -31,10 +31,11 @@ jest.mock(
 );
 
 describe(WorkflowQueriesLoader.name, () => {
-  it('renders without error', async () => {
+  it('renders without error and does not show excluded query type', async () => {
     await setup({});
 
     expect(await screen.findByText(/__open_sessions/)).toBeInTheDocument();
+    expect(screen.queryByText(/__stack_trace/)).toBeNull();
   });
 
   it('runs query and updates JSON', async () => {
@@ -93,7 +94,11 @@ async function setup({ error }: { error?: boolean }) {
               }
             : {
                 jsonResponse: {
-                  queryTypes: ['__query_types', '__open_sessions'],
+                  queryTypes: [
+                    '__query_types',
+                    '__open_sessions',
+                    '__stack_trace',
+                  ],
                 } satisfies FetchWorkflowQueryTypesResponse,
               }),
         },
