@@ -37,7 +37,7 @@ describe('WorkflowHistoryTimelineLoadMore', () => {
       isFetchingNextPage: false,
     });
 
-    const spinnerDiv = screen.getByTestId('infinite-scroll-spinner');
+    const spinnerDiv = screen.getByTestId('intersection-observer-container');
     const instance = intersectionMockInstance(spinnerDiv);
     expect(instance.observe).toHaveBeenCalledWith(spinnerDiv);
 
