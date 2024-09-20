@@ -7,6 +7,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import cadenceLogoBlack from '@/assets/cadence-logo-black.svg';
+import ErrorBoundary from '@/components/error-boundary/error-boundary';
 import PageSection from '@/components/page-section/page-section';
 import useStyletronClasses from '@/hooks/use-styletron-classes';
 
@@ -14,7 +15,6 @@ import WorkflowPageStatusTag from '../workflow-page-status-tag/workflow-page-sta
 
 import { cssStyles, overrides } from './workflow-page-header.styles';
 import type { Props } from './workflow-page-header.types';
-import ErrorBoundary from '@/components/error-boundary/error-boundary';
 
 export default function WorkflowPageHeader({
   domain,
