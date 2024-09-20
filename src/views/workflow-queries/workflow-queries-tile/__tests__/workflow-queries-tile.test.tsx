@@ -11,8 +11,9 @@ jest.mock('../../workflow-queries-tile-input/workflow-queries-tile-input', () =>
   jest.fn(() => <div>Mock input</div>)
 );
 
-jest.mock('../../workflow-queries-tile-icon/workflow-queries-tile-icon', () =>
-  jest.fn(() => <div>Mock icon</div>)
+jest.mock(
+  '../../workflow-queries-status-icon/workflow-queries-status-icon',
+  () => jest.fn(() => <div>Mock icon</div>)
 );
 
 describe(WorkflowQueriesTile.name, () => {
