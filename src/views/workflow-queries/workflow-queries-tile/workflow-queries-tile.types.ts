@@ -1,4 +1,4 @@
-import { type QueryStatus } from '@tanstack/react-query';
+export type WorkflowQueryStatus = 'pending' | 'fetching' | 'success' | 'error';
 
 export type WorkflowQueryStatus = QueryStatus | 'fetching';
 

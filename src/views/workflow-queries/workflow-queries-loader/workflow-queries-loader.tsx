@@ -7,6 +7,7 @@ import { type FetchWorkflowQueryTypesResponse } from '@/route-handlers/fetch-wor
 import request from '@/utils/request';
 import { type RequestError } from '@/utils/request/request-error';
 
+import getWorkflowQueryStatus from '../helpers/get-workflow-query-status';
 import WorkflowQueriesResultJson from '../workflow-queries-result-json/workflow-queries-result-json';
 import WorkflowQueriesTile from '../workflow-queries-tile/workflow-queries-tile';
 
@@ -54,9 +55,10 @@ export default function WorkflowQueriesLoader(props: Props) {
             isSelected={index === selectedQueryIndex}
             onClick={() => setSelectedQueryIndex(index)}
             runQuery={queries[index].refetch}
-            queryStatus={
-              queries[index].isFetching ? 'fetching' : queries[index].status
-            }
+            queryStatus={getWorkflowQueryStatus({
+              queryStatus: queries[index].status,
+              isFetching: queries[index].isFetching,
+            })}
           />
         ))}
       </styled.QueriesSidebar>
