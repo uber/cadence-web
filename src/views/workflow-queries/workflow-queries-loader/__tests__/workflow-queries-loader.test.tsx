@@ -42,9 +42,9 @@ describe(WorkflowQueriesLoader.name, () => {
     const { user } = await setup({});
 
     const queryRunButtons = await screen.findAllByRole('button');
-    expect(queryRunButtons).toHaveLength(2);
+    expect(queryRunButtons).toHaveLength(1);
 
-    await user.click(queryRunButtons[1]);
+    await user.click(queryRunButtons[0]);
 
     expect(await screen.findByText(/"test_1"/)).toBeInTheDocument();
     expect(await screen.findByText(/"test_2"/)).toBeInTheDocument();
