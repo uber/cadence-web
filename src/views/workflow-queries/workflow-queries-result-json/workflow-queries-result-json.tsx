@@ -2,7 +2,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
 import { Button, KIND as BUTTON_KIND, SHAPE, SIZE } from 'baseui/button';
-import { Spinner } from 'baseui/spinner';
 import { ACCESSIBILITY_TYPE, Tooltip } from 'baseui/tooltip';
 import copy from 'copy-to-clipboard';
 import { MdCopyAll } from 'react-icons/md';

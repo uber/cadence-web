@@ -33,12 +33,6 @@ describe(WorkflowQueriesResultJson.name, () => {
     expect(screen.getByText(/dataJson/)).toBeInTheDocument();
   });
 
-  it('renders loading state correctly', () => {
-    setup({ data: undefined, loading: true });
-
-    expect(screen.getByRole('progressbar')).toBeInTheDocument();
-  });
-
   it('copies JSON to clipboard', () => {
     const testData = { test: 'dataJson' };
     setup({ data: { result: testData, rejected: null } });

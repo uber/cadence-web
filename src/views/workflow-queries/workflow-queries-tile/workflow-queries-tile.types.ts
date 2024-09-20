@@ -1,7 +1,5 @@
 export type WorkflowQueryStatus = 'pending' | 'fetching' | 'success' | 'error';
 
-export type WorkflowQueryStatus = QueryStatus | 'fetching';
-
 export type Props = {
   name: string;
   input: string | undefined;
