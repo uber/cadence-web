@@ -25,22 +25,22 @@ const cssStylesObj = {
   eventsContainer: (theme) => ({
     display: 'flex',
     marginTop: theme.sizing.scale500,
-    gap: '10px',
+    gap: theme.sizing.scale400,
     overflow: 'hidden',
   }),
-  compactSection: {
+  compactSection: (theme) => ({
     display: 'flex',
     flexDirection: 'column',
     width: '370px',
-    gap: '10px',
-  },
-  timelineSection: {
+    gap: theme.sizing.scale400,
+  }),
+  timelineSection: (theme) => ({
     display: 'flex',
     flexDirection: 'column',
     flex: 1,
-    paddingLeft: '32px',
+    paddingLeft: theme.sizing.scale900,
     overflow: 'hidden',
-  },
+  }),
 } satisfies StyletronCSSObject;
 
 export const cssStyles: StyletronCSSObjectOf<typeof cssStylesObj> =

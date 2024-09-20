@@ -33,6 +33,7 @@ export default function WorkflowHistory({
     pageSize: 1,
     waitForNewEvent: 'true',
   };
+
   const {
     data: result,
     hasNextPage,
@@ -68,6 +69,7 @@ export default function WorkflowHistory({
       .flat(1);
     return groupHistoryEvents(events);
   }, [workflowHistory]);
+
   const groupedHistoryEventsEntries = useMemo(() => {
     return sortBy(
       Object.entries(groupedHistoryEvents),

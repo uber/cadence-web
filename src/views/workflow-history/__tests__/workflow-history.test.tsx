@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 
 import { HttpResponse } from 'msw';
 
-import { render, screen } from '@/test-utils/rtl';
+import { act, render, screen } from '@/test-utils/rtl';
 
 import { type GetWorkflowHistoryResponse } from '@/route-handlers/get-workflow-history/get-workflow-history.types';
 
@@ -43,6 +43,16 @@ describe('WorkflowHistory', () => {
     setup({});
     expect(await screen.findByText('Load more')).toBeInTheDocument();
   });
+
+  it('throws an error if the request fails', async () => {
+    try {
+      await act(() => setup({ error: true }));
+    } catch (error) {
+      expect((error as Error)?.message).toBe(
+        'Failed to fetch workflow history'
+      );
+    }
+  });
 });
 
 function setup({ error }: { error?: boolean }) {
@@ -67,7 +77,7 @@ function setup({ error }: { error?: boolean }) {
             ? {
                 httpResolver: () => {
                   return HttpResponse.json(
-                    { message: 'Failed to fetch task list' },
+                    { message: 'Failed to fetch workflow history' },
                     { status: 500 }
                   );
                 },

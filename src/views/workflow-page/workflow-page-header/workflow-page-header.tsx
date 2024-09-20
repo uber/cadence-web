@@ -5,7 +5,6 @@ import { Breadcrumbs } from 'baseui/breadcrumbs';
 import { StyledLink } from 'baseui/link';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary';
 
 import cadenceLogoBlack from '@/assets/cadence-logo-black.svg';
 import ErrorBoundary from '@/components/error-boundary/error-boundary';
