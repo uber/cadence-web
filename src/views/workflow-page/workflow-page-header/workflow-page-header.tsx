@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary';
 
 import cadenceLogoBlack from '@/assets/cadence-logo-black.svg';
+import ErrorBoundary from '@/components/error-boundary/error-boundary';
 import PageSection from '@/components/page-section/page-section';
 import useStyletronClasses from '@/hooks/use-styletron-classes';
 
@@ -49,9 +50,9 @@ export default function WorkflowPageHeader({
         </StyledLink>
         <div className={cls.breadcrumbItemContainer}>
           {runId}
-          <ReactErrorBoundary fallbackRender={() => null}>
+          <ErrorBoundary fallbackRender={() => null} omitLogging={true}>
             <WorkflowPageStatusTag />
-          </ReactErrorBoundary>
+          </ErrorBoundary>
         </div>
       </Breadcrumbs>
     </PageSection>
