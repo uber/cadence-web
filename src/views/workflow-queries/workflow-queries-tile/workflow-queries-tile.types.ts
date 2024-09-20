@@ -1,6 +1,4 @@
-import { type QueryStatus } from '@tanstack/react-query';
-
-export type WorkflowQueryStatus = QueryStatus | 'fetching';
+export type WorkflowQueryStatus = 'pending' | 'fetching' | 'success' | 'error';
 
 export type Props = {
   name: string;
