@@ -34,7 +34,7 @@ export default function WorkflowHistoryTimelineLoadMore(props: Props) {
     return (
       <InView
         as="div"
-        data-testid="infinite-scroll-spinner"
+        data-testid="intersection-observer-container"
         onChange={(inView) => {
           if (inView && !props.isFetchingNextPage) {
             // For testing purposes
