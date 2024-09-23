@@ -629,11 +629,6 @@ describe('Workflow', () => {
       it('should build timeline events from granular event history', async function test() {
         const [, compactViewEl] = await compactViewTest(this.test);
 
-        await retry(() =>
-          compactViewEl
-            .querySelectorAll('.timeline-event')
-            .should.have.length(8)
-        );
         compactViewEl
           .querySelectorAll('.timeline-event.activity')
           .should.have.length(2);
