@@ -21,8 +21,13 @@ Set these environment variables if you need to change their defaults
 | CADENCE_WEB_PORT           | HTTP port to serve on                        | 8088             |
 | CADENCE_EXTERNAL_SCRIPTS   | Addtional JavaScript tags to serve in the UI |                  |
 | ENABLE_AUTH                | Enable auth feature                          | false            |
-| AUTH_TYPE                  | concurrently supports ADMIN_JWT              | ''               |
+| AUTH_TYPE                  | supports ADMIN_JWT and OIDC                  | ''               |
 | AUTH_ADMIN_JWT_PRIVATE_KEY | JWT signing private key for ADMIN_JWT type   | ''               |
+| OPENID_CLIENT_ID           | Client ID for OIDC type authentication       | ''               |
+| OPENID_CLIENT_SECRET       | Client secret for OIDC type authentication   | ''               |
+| OPENID_CALLBACK_URL        | URL redirect to Cadence WEB after OIDC auth  | ''               |
+| OPENID_DISCOVER_URL        | Link to provider .well-known configuration   | ''               |
+| OPENID_SCOPE               | Scope to request from idp                    | openid           |
 
 ### Running locally
 
