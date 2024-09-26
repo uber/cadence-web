@@ -46,7 +46,7 @@ const payloadSchema = z.object({
 });
 
 const durationSchema = z.object({
-  // Seconds is recieve as a numeric value if it is 0
+  // Seconds is recieved as a numeric value if it is 0
   // this is unexpected behavior from grpc protoLoader
   // coerce the value to string to avoid the issue
   seconds: z.coerce.string(),
@@ -219,9 +219,6 @@ export const workflowExecutionStartedEventSchema =
       requestId: z.string(),
     }),
   });
-
-// validate that all schemas generates values that matches HistoryEvent
-//historyEventSchemasArray.forEach((s) => validateSchema(s));
 
 export const workflowExecutionCompletedEventSchema =
   historyEventBaseSchema.extend({
