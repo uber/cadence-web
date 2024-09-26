@@ -91,9 +91,7 @@ const mockTChannel = done => {
     handler('AdminService')
   );
 
-  server.listen(11343, '127.0.0.1', () => {
-    done();
-  });
+  server.listen(11343, '127.0.0.1', () => done());
 
   const closeClient = () => {
     client.close();
