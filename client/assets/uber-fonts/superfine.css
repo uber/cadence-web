@@ -1,0 +1,125 @@
+/* ff-clan-web-pro */
+@font-face {
+    font-family: 'ff-clan-web-pro';
+    src: url('./UberMove-Light.woff2') format('woff2'),
+      url('./UberMove-Light.woff') format('woff');
+    font-weight: 100;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'ff-clan-web-pro';
+    src: url('./UberMove-Regular.woff2') format('woff2'),
+      url('./UberMove-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'ff-clan-web-pro';
+    src: url('./UberMove-Medium.woff2') format('woff2'),
+      url('./UberMove-Medium.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'ff-clan-web-pro';
+    src: url('./UberMove-Bold.woff2') format('woff2'),
+      url('./UberMove-Bold.woff') format('woff');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'ff-clan-web-pro';
+    src: url('./UberMove-Bold.woff2') format('woff2'),
+      url('./UberMove-Bold.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  
+  /* ff-clan-web-pro-narrow */
+  @font-face {
+    font-family: 'ff-clan-web-pro-narrow';
+    src: url('./UberMove-Light.woff2') format('woff2'),
+      url('./UberMove-Light.woff') format('woff');
+    font-weight: 100;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'ff-clan-web-pro-narrow';
+    src: url('./UberMove-Regular.woff2') format('woff2'),
+      url('./UberMove-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'ff-clan-web-pro-narrow';
+    src: url('./UberMove-Medium.woff2') format('woff2'),
+      url('./UberMove-Medium.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'ff-clan-web-pro-narrow';
+    src: url('./UberMove-Bold.woff2') format('woff2'),
+      url('./UberMove-Bold.woff') format('woff');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'ff-clan-web-pro-narrow';
+    src: url('./UberMove-Bold.woff2') format('woff2'),
+      url('./UberMove-Bold.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  
+  /* ff-clan-web-pro-wide */
+  @font-face {
+    font-family: 'ff-clan-web-pro-wide';
+    src: url('./UberMove-Light.woff2') format('woff2'),
+      url('./UberMove-Light.woff') format('woff');
+    font-weight: 100;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'ff-clan-web-pro-wide';
+    src: url('./UberMove-Regular.woff2') format('woff2'),
+      url('./UberMove-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'ff-clan-web-pro-wide';
+    src: url('./UberMove-Medium.woff2') format('woff2'),
+      url('./UberMove-Medium.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'ff-clan-web-pro-wide';
+    src: url('./UberMove-Bold.woff2') format('woff2'),
+      url('./UberMove-Bold.woff') format('woff');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'ff-clan-web-pro-wide';
+    src: url('./UberMove-Bold.woff2') format('woff2'),
+      url('./UberMove-Bold.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }

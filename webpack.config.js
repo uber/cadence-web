@@ -80,6 +80,15 @@ module.exports = {
         }
       },
       {
+        test: /\.(ttf|otf|eot|woff|woff2)$/,
+        use: {
+          loader: "file-loader",
+          options: {
+            name: "fonts/[name].[ext]",
+          },
+        },
+      },
+      {
         test: /\.styl$/,
         use: ExtractTextPlugin.extract({ use: extractStylus, fallback: 'raw-loader' }),
         include: path.join(__dirname, 'src')
