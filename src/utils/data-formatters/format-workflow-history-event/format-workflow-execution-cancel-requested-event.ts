@@ -19,22 +19,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import formatWorkflowEventId from '../format-workflow-event-id';
+import formatWorkflowCommonEventFields from './format-workflow-common-event-fields';
+import { type WorkflowExecutionCancelRequestedEvent } from './format-workflow-history-event.type';
 
-const formatWorkflowExecutionCancelRequestedEventAttributes = ({
-  externalExecutionInfo,
-  ...eventAttributes
-}: {
-  externalExecutionInfo?:
-    | { initiatedId: string | number; workflowExecution: any }
-    | null
-    | undefined;
-} & Record<string, any>) => ({
-  ...eventAttributes,
-  externalInitiatedEventId: formatWorkflowEventId(
-    externalExecutionInfo?.initiatedId
-  ),
-  externalWorkflowExecution: externalExecutionInfo?.workflowExecution,
-});
+const formatWorkflowExecutionCancelRequestedEvent = ({
+  workflowExecutionCancelRequestedEventAttributes: {
+    externalExecutionInfo,
+    ...eventAttributes
+  },
+  ...eventFields
+}: WorkflowExecutionCancelRequestedEvent) => {
+  return {
+    ...formatWorkflowCommonEventFields(eventFields),
+    ...eventAttributes,
+    externalInitiatedEventId: externalExecutionInfo?.initiatedId
+      ? parseInt(externalExecutionInfo.initiatedId)
+      : null,
+    externalWorkflowExecution: externalExecutionInfo?.workflowExecution,
+  };
+};
 
-export default formatWorkflowExecutionCancelRequestedEventAttributes;
+export default formatWorkflowExecutionCancelRequestedEvent;
