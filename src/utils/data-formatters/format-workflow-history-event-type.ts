@@ -37,7 +37,7 @@ type TransformEventType<T extends string> = CapitalizeFirstLetter<
 const formatWorkflowHistoryEventType = <T extends HistoryEvent['attributes']>(
   attributes: T | null
 ) => {
-  if (!attributes) return null;
+  if (!attributes) return attributes;
 
   return `${attributes[0].toUpperCase()}${attributes.slice(1)}`.replace(
     'EventAttributes',
