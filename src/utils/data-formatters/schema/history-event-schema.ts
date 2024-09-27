@@ -133,12 +133,12 @@ const signalExternalWorkflowExecutionFailedCauseSchema = z.enum([
   SignalExternalWorkflowExecutionFailedCause.SIGNAL_EXTERNAL_WORKFLOW_EXECUTION_FAILED_CAUSE_WORKFLOW_ALREADY_COMPLETED,
 ]);
 
-export const failureSchema = z.object({
+const failureSchema = z.object({
   reason: z.string(),
   details: z.string(),
 });
 
-export const retryPolicySchema = z.object({
+const retryPolicySchema = z.object({
   initialInterval: durationSchema.nullable(),
   backoffCoefficient: z.number(),
   maximumInterval: durationSchema.nullable(),
@@ -147,19 +147,19 @@ export const retryPolicySchema = z.object({
   expirationInterval: durationSchema.nullable(),
 });
 
-export const memoSchema = z.object({
+const memoSchema = z.object({
   fields: z.record(z.string(), payloadSchema),
 });
 
-export const searchAttributesSchema = z.object({
+const searchAttributesSchema = z.object({
   indexedFields: z.record(z.string(), payloadSchema),
 });
 
-export const headerSchema = z.object({
+const headerSchema = z.object({
   fields: z.record(z.string(), payloadSchema),
 });
 
-export const resetPointInfoSchema = z.object({
+const resetPointInfoSchema = z.object({
   binaryChecksum: z.string(),
   runId: z.string(),
   firstDecisionCompletedId: z.string(),
@@ -168,24 +168,24 @@ export const resetPointInfoSchema = z.object({
   resettable: z.boolean(),
 });
 
-export const resetPointsSchema = z.object({
+const resetPointsSchema = z.object({
   points: z.array(resetPointInfoSchema),
 });
 
-export const historyEventBaseSchema = z.object({
+const activityTypeSchema = z.object({
+  name: z.string(),
+});
+
+const externalExecutionInfoSchema = z.object({
+  workflowExecution: workflowExecutionSchema.nullable(),
+  initiatedId: z.string(),
+});
+
+const historyEventBaseSchema = z.object({
   eventId: z.string(),
   eventTime: timestampSchema.nullable(),
   version: z.string(),
   taskId: z.string(),
-});
-
-export const activityTypeSchema = z.object({
-  name: z.string(),
-});
-
-export const externalExecutionInfoSchema = z.object({
-  workflowExecution: workflowExecutionSchema.nullable(),
-  initiatedId: z.string(),
 });
 
 export const workflowExecutionStartedEventSchema =
