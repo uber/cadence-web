@@ -36,7 +36,6 @@ describe('WorkflowHistoryExportJsonButton', () => {
     const { getRequestResolver } = setup({ wait: true });
     fireEvent.click(screen.getByText('Export JSON'));
 
-    // Check if spinner shows when loading
     expect(screen.queryByRole('progressbar')).toBeInTheDocument();
     await act(() => {
       const resolver = getRequestResolver();
@@ -51,7 +50,6 @@ describe('WorkflowHistoryExportJsonButton', () => {
 
     setup({});
 
-    // Simulate button click
     fireEvent.click(screen.getByText('Export JSON'));
 
     await waitFor(() => {
