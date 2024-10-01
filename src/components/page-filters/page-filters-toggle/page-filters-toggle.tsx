@@ -16,7 +16,7 @@ export default function PageFiltersToggle({
       $size="compact"
       kind={isActive ? KIND.primary : KIND.secondary}
       onClick={onClick}
-      startEnhancer={Filter}
+      startEnhancer={<Filter size={16} />}
       overrides={overrides.filtersButton}
     >
       {activeFiltersCount === 0 ? 'Filters' : `Filters (${activeFiltersCount})`}
