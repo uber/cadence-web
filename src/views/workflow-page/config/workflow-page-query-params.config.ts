@@ -1,7 +1,6 @@
 import { type PageQueryParam } from '@/hooks/use-page-query-params/use-page-query-params.types';
 import { WORKFLOW_EVENT_STATUS } from '@/views/workflow-history/workflow-history-event-status-badge/workflow-history-event-status-badge.constants';
 import { type WorkflowEventStatus } from '@/views/workflow-history/workflow-history-event-status-badge/workflow-history-event-status-badge.types';
-import { WORKFLOW_HISTORY_EVENT_FILTERING_STATUS_OPTIONS } from '@/views/workflow-history/workflow-history-filters-status/workflow-history-filters-status.constants';
 import { WORKFLOW_HISTORY_EVENT_FILTERING_TYPES } from '@/views/workflow-history/workflow-history-filters-type/workflow-history-filters-type.constants';
 import { type WokflowHistoryEventFilteringType } from '@/views/workflow-history/workflow-history-filters-type/workflow-history-filters-type.types';
 

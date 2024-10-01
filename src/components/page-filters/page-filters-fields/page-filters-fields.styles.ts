@@ -1,6 +1,5 @@
 import { styled as createStyled, type Theme } from 'baseui';
 import type { ButtonOverrides } from 'baseui/button';
-import { type InputOverrides } from 'baseui/input';
 import { type StyleObject } from 'styletron-react';
 
 export const styled = {
