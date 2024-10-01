@@ -13,6 +13,7 @@ export default function PageFiltersToggle({
 }: Props) {
   return (
     <Button
+      $size="compact"
       kind={isActive ? KIND.primary : KIND.secondary}
       onClick={onClick}
       startEnhancer={Filter}
