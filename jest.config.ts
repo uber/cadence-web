@@ -4,7 +4,7 @@ const config = {
   coveragePathIgnorePatterns: [
     '/node_modules/',
     'src/test-utils',
-    '*.config.ts',
+    '\\.config\\.ts$',
   ],
   coverageProvider: 'v8',
   coverageThreshold: {
