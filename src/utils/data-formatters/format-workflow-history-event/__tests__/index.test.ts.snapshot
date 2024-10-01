@@ -279,6 +279,27 @@ exports[`formatWorkflowHistoryEvent should format workflow decisionTaskCompleted
 }
 `;
 
+exports[`formatWorkflowHistoryEvent should format workflow decisionTaskFailedEventAttributes to match snapshot 1`] = `
+{
+  "baseRunId": "",
+  "binaryChecksum": "ffc875a4c3571872881f79c939921e00398ab360",
+  "cause": "DECISION_TASK_FAILED_CAUSE_BAD_START_CHILD_EXECUTION_ATTRIBUTES",
+  "details": "WorkflowId exceeds length limit.",
+  "eventId": 5,
+  "eventType": "DecisionTaskFailed",
+  "forkEventVersion": 0,
+  "identity": "cadence@958ab341-a375-431b-a27a-ed7d8a97ba91",
+  "newRunId": "",
+  "reason": "",
+  "requestId": "66f7f58b-3d3b-4178-972a-fa7825ceec39",
+  "scheduledEventId": 2,
+  "startedEventId": 3,
+  "taskId": "22647174902",
+  "timestamp": 2024-09-07T22:16:10.599Z,
+  "version": "575102",
+}
+`;
+
 exports[`formatWorkflowHistoryEvent should format workflow decisionTaskScheduledEventAttributes to match snapshot 1`] = `
 {
   "attempt": 0,

@@ -3,7 +3,6 @@ import { completeActivityTaskEvent } from '@/views/workflow-history/__fixtures__
 import formatTimestampToDatetime from '../format-timestamp-to-datetime';
 import formatWorkflowHistory from '../format-workflow-history';
 import formatWorkflowHistoryEvent from '../format-workflow-history-event';
-import formatWorkflowHistoryEventType from '../format-workflow-history-event-type';
 
 jest.mock('../format-timestamp-to-datetime');
 jest.mock('../format-workflow-history-event');
