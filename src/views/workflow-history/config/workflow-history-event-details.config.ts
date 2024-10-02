@@ -3,8 +3,8 @@ import { createElement } from 'react';
 import PrettyJson from '@/components/pretty-json/pretty-json';
 import formatDate from '@/utils/data-formatters/format-date';
 
-import WorkflowHistoryEventDetailsTaskListLink from '../workflow-history-event-details/workflow-history-event-details-task-list-link/workflow-history-event-details-task-list-link';
 import { type WorkflowHistoryEventDetailsConfig } from '../workflow-history-event-details/workflow-history-event-details.types';
+import WorkflowHistoryEventDetailsTaskListLink from '../workflow-history-event-details-task-list-link/workflow-history-event-details-task-list-link';
 
 const workflowHistoryEventDetailsConfig = [
   {
