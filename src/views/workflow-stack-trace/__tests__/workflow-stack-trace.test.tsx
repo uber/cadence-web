@@ -107,9 +107,7 @@ async function setup({
   resultStackTrace?: string;
 }) {
   let requestResolver = () => {};
-  let requestRejector = () => {
-    console.log('rejector');
-  };
+  let requestRejector = () => {};
   const getRequestResolver = () => requestResolver;
   const getRequestRejector = () => requestRejector;
   let requestIndex = -1;
