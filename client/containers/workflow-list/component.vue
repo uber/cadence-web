@@ -353,12 +353,13 @@ export default {
       ) {
         const query = {
           ...this.criteria,
-          filterBy: this.filterBy,
           nextPageToken: this.npt,
         };
 
         if (query.queryString) {
           query.queryString = decodeURI(query.queryString);
+        } else {
+          query.filterBy = this.filterBy;
         }
 
         const { status, workflows: wfs, nextPageToken } = await this.fetch(

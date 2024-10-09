@@ -82,6 +82,7 @@
     "openid-client": "^5.6.5",
     "prismjs": "^1.14.0",
     "promise.prototype.finally": "^3.1.0",
+    "query-string": "^4.3.4",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.1",
     "tchannel": "3.10.1",

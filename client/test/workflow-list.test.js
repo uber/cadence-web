@@ -154,6 +154,7 @@ describe('Workflow list', () => {
         status: 'open',
         query: {
           workflowId: '1234',
+          filterBy: 'StartTime',
         },
         workflows: [
           {
@@ -204,6 +205,7 @@ describe('Workflow list', () => {
             .endOf('hour')
             .toISOString(),
           status: 'FAILED',
+          filterBy: 'CloseTime',
         },
       })
       .go();
@@ -266,7 +268,7 @@ describe('Workflow list', () => {
 
     scenario.withWorkflows({
       status: 'closed',
-      query: { status: 'FAILED' },
+      query: { status: 'FAILED', filterBy: 'CloseTime' },
       workflows: demoWf,
     });
     await statusEl.selectItem('Failed');
@@ -365,6 +367,7 @@ describe('Workflow list', () => {
         query: {
           status: 'FAILED',
           workflowName: 'demo',
+          filterBy: 'CloseTime',
         },
       })
       .go();
