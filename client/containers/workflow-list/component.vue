@@ -197,9 +197,9 @@ export default {
 
       return query.startTime && query.endTime
         ? {
-          startTime: moment(query.startTime),
-          endTime: moment(query.endTime),
-        }
+            startTime: moment(query.startTime),
+            endTime: moment(query.endTime),
+          }
         : query.range;
     },
     startTime() {
@@ -346,12 +346,16 @@ export default {
       }
 
       let workflows = [];
-      
+
       if (
         this.state !== STATE_ALL ||
         this.filterMode === FILTER_MODE_ADVANCED
       ) {
-        const query = { ...this.criteria, filterBy: this.filterBy, nextPageToken: this.npt };
+        const query = {
+          ...this.criteria,
+          filterBy: this.filterBy,
+          nextPageToken: this.npt,
+        };
 
         if (query.queryString) {
           query.queryString = decodeURI(query.queryString);
@@ -370,8 +374,16 @@ export default {
         this.npt = nextPageToken;
       } else {
         const { domain } = this;
-        const queryOpen = { ...this.criteria, filterBy: this.filterBy, nextPageToken: this.npt };
-        const queryClosed = { ...this.criteria, filterBy: this.filterBy, nextPageToken: this.nptAlt };
+        const queryOpen = {
+          ...this.criteria,
+          filterBy: this.filterBy,
+          nextPageToken: this.npt,
+        };
+        const queryClosed = {
+          ...this.criteria,
+          filterBy: this.filterBy,
+          nextPageToken: this.nptAlt,
+        };
 
         const {
           status: openStatus,
