@@ -1,4 +1,4 @@
-FROM node:fermium-bullseye AS BUILD_IMAGE
+FROM node:16.20.2-bookworm AS BUILD_IMAGE
 
 ### Build step ###
 WORKDIR /usr/build
@@ -13,7 +13,7 @@ RUN npm install --no-save --production --unsafe-perm
 RUN npm run build-production
 
 # switch to lite version of node
-FROM node:fermium-bullseye-slim
+FROM node:16.20.2-bookworm-slim
 
 ### Run step ###
 WORKDIR /usr/app
