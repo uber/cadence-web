@@ -351,10 +351,15 @@ export default {
         this.state !== STATE_ALL ||
         this.filterMode === FILTER_MODE_ADVANCED
       ) {
-        const query = { ...this.criteria, nextPageToken: this.npt };
+        const query = {
+          ...this.criteria,
+          nextPageToken: this.npt,
+        };
 
         if (query.queryString) {
           query.queryString = decodeURI(query.queryString);
+        } else {
+          query.filterBy = this.filterBy;
         }
 
         const { status, workflows: wfs, nextPageToken } = await this.fetch(
@@ -370,8 +375,16 @@ export default {
         this.npt = nextPageToken;
       } else {
         const { domain } = this;
-        const queryOpen = { ...this.criteria, nextPageToken: this.npt };
-        const queryClosed = { ...this.criteria, nextPageToken: this.nptAlt };
+        const queryOpen = {
+          ...this.criteria,
+          filterBy: this.filterBy,
+          nextPageToken: this.npt,
+        };
+        const queryClosed = {
+          ...this.criteria,
+          filterBy: this.filterBy,
+          nextPageToken: this.nptAlt,
+        };
 
         const {
           status: openStatus,

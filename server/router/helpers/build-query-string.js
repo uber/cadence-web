@@ -35,14 +35,14 @@ const getStatusQueryValue = status => {
 const buildQueryString = (
   startTime,
   endTime,
-  { isCron, state = 'closed', status, workflowId, workflowName } = {}
+  { isCron, state = 'closed', status, workflowId, workflowName, filterBy } = {}
 ) => {
-  const filterBy = STATE_TO_FILTER_BY_MAP[state];
+  const filterByField = filterBy || STATE_TO_FILTER_BY_MAP[state];
   const statusQueryValue = getStatusQueryValue(status);
 
   return [
-    `${filterBy} >= "${startTime.toISOString()}"`,
-    `${filterBy} <= "${endTime.toISOString()}"`,
+    `${filterByField} >= "${startTime.toISOString()}"`,
+    `${filterByField} <= "${endTime.toISOString()}"`,
     state === 'open' && `CloseTime = missing`,
     statusQueryValue && `CloseStatus = ${statusQueryValue}`,
     isCron !== undefined && `IsCron = "${isCron}"`,

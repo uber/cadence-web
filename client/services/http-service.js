@@ -19,8 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { getQueryStringFromObject } from '~helpers';
-
+import qs from 'query-string';
 const DEFAULT_FETCH_OPTIONS = {
   credentials: 'same-origin',
   headers: {
@@ -45,8 +44,8 @@ class HttpService {
   async request(baseUrl, { query, ...options } = {}) {
     const { origin } = this;
     const fetch = this.fetchOverride ? this.fetchOverride : window.fetch;
-    const queryString = getQueryStringFromObject(query);
-    const path = queryString ? `${baseUrl}${queryString}` : baseUrl;
+    const queryString = qs.stringify(query, { skipNull: true });
+    const path = queryString ? `${baseUrl}?${queryString}` : baseUrl;
     const hasOrigin = baseUrl.startsWith('http');
     const url = hasOrigin ? path : `${origin}${path}`;
     const isCrossOrigin = !url.startsWith(window.location.origin);

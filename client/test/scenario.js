@@ -23,7 +23,7 @@ import Router from 'vue-router';
 import Vue from 'vue';
 import moment from 'moment';
 import fetchMock from 'fetch-mock';
-import qs from 'friendly-querystring';
+import qs from 'query-string';
 import vueModal from 'vue-js-modal';
 import deepmerge from 'deepmerge';
 
@@ -271,9 +271,12 @@ Scenario.prototype.withWorkflows = function withWorkflows({
           endTime: moment()
             .endOf('day')
             .toISOString(),
+          filterBy: 'StartTime',
           ...query,
-        }
+        },
+    { skipNull: true }
   );
+
   const url = `${baseUrl}?${queryString}`;
   const response = Array.isArray(workflows)
     ? { executions: workflows, nextPageToken: '' }
