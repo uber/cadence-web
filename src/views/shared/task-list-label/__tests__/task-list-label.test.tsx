@@ -47,7 +47,8 @@ describe(TaskListLabel.name, () => {
             ...mockTaskList,
             workers: mockTaskList.workers.slice(0, test.numWorkers),
           }}
-        />
+        />,
+        { isSnapshotTest: true }
       );
 
       expect(screen.getByText(test.text)).toBeInTheDocument();

@@ -70,7 +70,8 @@ describe('WorkflowStatusTag', () => {
   tests.forEach((test) => {
     it(test.name, () => {
       const { container } = render(
-        <WorkflowStatusTag status={test.workflowStatus} link={test.link} />
+        <WorkflowStatusTag status={test.workflowStatus} link={test.link} />,
+        { isSnapshotTest: true }
       );
 
       expect(container).toMatchSnapshot();

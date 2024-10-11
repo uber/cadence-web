@@ -3,14 +3,82 @@
 exports[`WorkflowStatusTag should render Canceled correctly 1`] = `
 <div>
   <div
-    class="css-fWeknQ"
+    class="style={
+  '*, *::before, *::after': {
+    '-moz-animation': 'none !important',
+    '-moz-transition': ' none !important',
+    animation: 'none !important',
+    'caret-color': ' transparent !important',
+    transition: ' none !important',
+  },
+}
+"
   >
     <span
-      class="css-cKbFkS"
+      class="style={
+  ':focus': {},
+  ':hover': {},
+  alignItems: 'center',
+  backgroundColor: '#FFF2D9',
+  borderBottomColor: null,
+  borderBottomLeftRadius: '24px',
+  borderBottomRightRadius: '24px',
+  borderBottomStyle: 'solid',
+  borderBottomWidth: 0,
+  borderLeftColor: null,
+  borderLeftStyle: 'solid',
+  borderLeftWidth: 0,
+  borderRadius: '4px',
+  borderRightColor: null,
+  borderRightStyle: 'solid',
+  borderRightWidth: 0,
+  borderTopColor: null,
+  borderTopLeftRadius: '24px',
+  borderTopRightRadius: '24px',
+  borderTopStyle: 'solid',
+  borderTopWidth: 0,
+  boxSizing: 'border-box',
+  color: '#000000',
+  cursor: 'default',
+  display: 'inline-flex',
+  fontFamily: 'UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif',
+  fontSize: '14px',
+  fontWeight: 500,
+  height: '16px',
+  justifyContent: 'space-between',
+  lineHeight: '16px',
+  margin: 0,
+  marginBottom: '5px',
+  marginLeft: '5px',
+  marginRight: '5px',
+  marginTop: '5px',
+  maxWith: 'auto',
+  outline: 'none',
+  paddingBottom: 0,
+  paddingLeft: '4px',
+  paddingRight: '4px',
+  paddingTop: 0,
+}
+"
       data-baseweb="tag"
     >
       <span
-        class="css-gmWpSA"
+        class="style={
+  alignItems: 'center',
+  columnGap: '4px',
+  display: 'flex',
+  flexDirection: 'row',
+  fontFamily: 'UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif',
+  fontSize: '12px',
+  fontWeight: 500,
+  lineHeight: '16px',
+  maxWidth: '128px',
+  order: 0,
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+}
+"
       >
         <div>
           Mock icon 
@@ -25,7 +93,8 @@ exports[`WorkflowStatusTag should render Canceled correctly 1`] = `
     </span>
   </div>
   <div
-    class="css-PKJb"
+    class="style={}
+"
   />
 </div>
 `;
@@ -33,14 +102,82 @@ exports[`WorkflowStatusTag should render Canceled correctly 1`] = `
 exports[`WorkflowStatusTag should render Completed correctly 1`] = `
 <div>
   <div
-    class="css-fWeknQ"
+    class="style={
+  '*, *::before, *::after': {
+    '-moz-animation': 'none !important',
+    '-moz-transition': ' none !important',
+    animation: 'none !important',
+    'caret-color': ' transparent !important',
+    transition: ' none !important',
+  },
+}
+"
   >
     <span
-      class="css-fUPDDz"
+      class="style={
+  ':focus': {},
+  ':hover': {},
+  alignItems: 'center',
+  backgroundColor: '#ADDEC9',
+  borderBottomColor: null,
+  borderBottomLeftRadius: '24px',
+  borderBottomRightRadius: '24px',
+  borderBottomStyle: 'solid',
+  borderBottomWidth: 0,
+  borderLeftColor: null,
+  borderLeftStyle: 'solid',
+  borderLeftWidth: 0,
+  borderRadius: '4px',
+  borderRightColor: null,
+  borderRightStyle: 'solid',
+  borderRightWidth: 0,
+  borderTopColor: null,
+  borderTopLeftRadius: '24px',
+  borderTopRightRadius: '24px',
+  borderTopStyle: 'solid',
+  borderTopWidth: 0,
+  boxSizing: 'border-box',
+  color: '#000000',
+  cursor: 'default',
+  display: 'inline-flex',
+  fontFamily: 'UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif',
+  fontSize: '14px',
+  fontWeight: 500,
+  height: '16px',
+  justifyContent: 'space-between',
+  lineHeight: '16px',
+  margin: 0,
+  marginBottom: '5px',
+  marginLeft: '5px',
+  marginRight: '5px',
+  marginTop: '5px',
+  maxWith: 'auto',
+  outline: 'none',
+  paddingBottom: 0,
+  paddingLeft: '4px',
+  paddingRight: '4px',
+  paddingTop: 0,
+}
+"
       data-baseweb="tag"
     >
       <span
-        class="css-gmWpSA"
+        class="style={
+  alignItems: 'center',
+  columnGap: '4px',
+  display: 'flex',
+  flexDirection: 'row',
+  fontFamily: 'UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif',
+  fontSize: '12px',
+  fontWeight: 500,
+  lineHeight: '16px',
+  maxWidth: '128px',
+  order: 0,
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+}
+"
       >
         <div>
           Mock icon 
@@ -55,7 +192,8 @@ exports[`WorkflowStatusTag should render Completed correctly 1`] = `
     </span>
   </div>
   <div
-    class="css-PKJb"
+    class="style={}
+"
   />
 </div>
 `;
@@ -63,14 +201,82 @@ exports[`WorkflowStatusTag should render Completed correctly 1`] = `
 exports[`WorkflowStatusTag should render Continued As New correctly 1`] = `
 <div>
   <div
-    class="css-fWeknQ"
+    class="style={
+  '*, *::before, *::after': {
+    '-moz-animation': 'none !important',
+    '-moz-transition': ' none !important',
+    animation: 'none !important',
+    'caret-color': ' transparent !important',
+    transition: ' none !important',
+  },
+}
+"
   >
     <span
-      class="css-hqOYwP"
+      class="style={
+  ':focus': {},
+  ':hover': {},
+  alignItems: 'center',
+  backgroundColor: '#EEEEEE',
+  borderBottomColor: null,
+  borderBottomLeftRadius: '24px',
+  borderBottomRightRadius: '24px',
+  borderBottomStyle: 'solid',
+  borderBottomWidth: 0,
+  borderLeftColor: null,
+  borderLeftStyle: 'solid',
+  borderLeftWidth: 0,
+  borderRadius: '4px',
+  borderRightColor: null,
+  borderRightStyle: 'solid',
+  borderRightWidth: 0,
+  borderTopColor: null,
+  borderTopLeftRadius: '24px',
+  borderTopRightRadius: '24px',
+  borderTopStyle: 'solid',
+  borderTopWidth: 0,
+  boxSizing: 'border-box',
+  color: '#000000',
+  cursor: 'default',
+  display: 'inline-flex',
+  fontFamily: 'UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif',
+  fontSize: '14px',
+  fontWeight: 500,
+  height: '16px',
+  justifyContent: 'space-between',
+  lineHeight: '16px',
+  margin: 0,
+  marginBottom: '5px',
+  marginLeft: '5px',
+  marginRight: '5px',
+  marginTop: '5px',
+  maxWith: 'auto',
+  outline: 'none',
+  paddingBottom: 0,
+  paddingLeft: '4px',
+  paddingRight: '4px',
+  paddingTop: 0,
+}
+"
       data-baseweb="tag"
     >
       <span
-        class="css-gmWpSA"
+        class="style={
+  alignItems: 'center',
+  columnGap: '4px',
+  display: 'flex',
+  flexDirection: 'row',
+  fontFamily: 'UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif',
+  fontSize: '12px',
+  fontWeight: 500,
+  lineHeight: '16px',
+  maxWidth: '128px',
+  order: 0,
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+}
+"
       >
         <div>
           Mock icon 
@@ -85,7 +291,8 @@ exports[`WorkflowStatusTag should render Continued As New correctly 1`] = `
     </span>
   </div>
   <div
-    class="css-PKJb"
+    class="style={}
+"
   />
 </div>
 `;
@@ -93,14 +300,82 @@ exports[`WorkflowStatusTag should render Continued As New correctly 1`] = `
 exports[`WorkflowStatusTag should render Failed correctly 1`] = `
 <div>
   <div
-    class="css-fWeknQ"
+    class="style={
+  '*, *::before, *::after': {
+    '-moz-animation': 'none !important',
+    '-moz-transition': ' none !important',
+    animation: 'none !important',
+    'caret-color': ' transparent !important',
+    transition: ' none !important',
+  },
+}
+"
   >
     <span
-      class="css-keNDch"
+      class="style={
+  ':focus': {},
+  ':hover': {},
+  alignItems: 'center',
+  backgroundColor: '#FED7D2',
+  borderBottomColor: null,
+  borderBottomLeftRadius: '24px',
+  borderBottomRightRadius: '24px',
+  borderBottomStyle: 'solid',
+  borderBottomWidth: 0,
+  borderLeftColor: null,
+  borderLeftStyle: 'solid',
+  borderLeftWidth: 0,
+  borderRadius: '4px',
+  borderRightColor: null,
+  borderRightStyle: 'solid',
+  borderRightWidth: 0,
+  borderTopColor: null,
+  borderTopLeftRadius: '24px',
+  borderTopRightRadius: '24px',
+  borderTopStyle: 'solid',
+  borderTopWidth: 0,
+  boxSizing: 'border-box',
+  color: '#000000',
+  cursor: 'default',
+  display: 'inline-flex',
+  fontFamily: 'UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif',
+  fontSize: '14px',
+  fontWeight: 500,
+  height: '16px',
+  justifyContent: 'space-between',
+  lineHeight: '16px',
+  margin: 0,
+  marginBottom: '5px',
+  marginLeft: '5px',
+  marginRight: '5px',
+  marginTop: '5px',
+  maxWith: 'auto',
+  outline: 'none',
+  paddingBottom: 0,
+  paddingLeft: '4px',
+  paddingRight: '4px',
+  paddingTop: 0,
+}
+"
       data-baseweb="tag"
     >
       <span
-        class="css-gmWpSA"
+        class="style={
+  alignItems: 'center',
+  columnGap: '4px',
+  display: 'flex',
+  flexDirection: 'row',
+  fontFamily: 'UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif',
+  fontSize: '12px',
+  fontWeight: 500,
+  lineHeight: '16px',
+  maxWidth: '128px',
+  order: 0,
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+}
+"
       >
         <div>
           Mock icon 
@@ -115,7 +390,8 @@ exports[`WorkflowStatusTag should render Failed correctly 1`] = `
     </span>
   </div>
   <div
-    class="css-PKJb"
+    class="style={}
+"
   />
 </div>
 `;
@@ -123,14 +399,82 @@ exports[`WorkflowStatusTag should render Failed correctly 1`] = `
 exports[`WorkflowStatusTag should render Running correctly 1`] = `
 <div>
   <div
-    class="css-fWeknQ"
+    class="style={
+  '*, *::before, *::after': {
+    '-moz-animation': 'none !important',
+    '-moz-transition': ' none !important',
+    animation: 'none !important',
+    'caret-color': ' transparent !important',
+    transition: ' none !important',
+  },
+}
+"
   >
     <span
-      class="css-nbUAZ"
+      class="style={
+  ':focus': {},
+  ':hover': {},
+  alignItems: 'center',
+  backgroundColor: '#D4E2FC',
+  borderBottomColor: null,
+  borderBottomLeftRadius: '24px',
+  borderBottomRightRadius: '24px',
+  borderBottomStyle: 'solid',
+  borderBottomWidth: 0,
+  borderLeftColor: null,
+  borderLeftStyle: 'solid',
+  borderLeftWidth: 0,
+  borderRadius: '4px',
+  borderRightColor: null,
+  borderRightStyle: 'solid',
+  borderRightWidth: 0,
+  borderTopColor: null,
+  borderTopLeftRadius: '24px',
+  borderTopRightRadius: '24px',
+  borderTopStyle: 'solid',
+  borderTopWidth: 0,
+  boxSizing: 'border-box',
+  color: '#000000',
+  cursor: 'default',
+  display: 'inline-flex',
+  fontFamily: 'UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif',
+  fontSize: '14px',
+  fontWeight: 500,
+  height: '16px',
+  justifyContent: 'space-between',
+  lineHeight: '16px',
+  margin: 0,
+  marginBottom: '5px',
+  marginLeft: '5px',
+  marginRight: '5px',
+  marginTop: '5px',
+  maxWith: 'auto',
+  outline: 'none',
+  paddingBottom: 0,
+  paddingLeft: '4px',
+  paddingRight: '4px',
+  paddingTop: 0,
+}
+"
       data-baseweb="tag"
     >
       <span
-        class="css-gmWpSA"
+        class="style={
+  alignItems: 'center',
+  columnGap: '4px',
+  display: 'flex',
+  flexDirection: 'row',
+  fontFamily: 'UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif',
+  fontSize: '12px',
+  fontWeight: 500,
+  lineHeight: '16px',
+  maxWidth: '128px',
+  order: 0,
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+}
+"
       >
         <div>
           Mock icon 
@@ -145,7 +489,8 @@ exports[`WorkflowStatusTag should render Running correctly 1`] = `
     </span>
   </div>
   <div
-    class="css-PKJb"
+    class="style={}
+"
   />
 </div>
 `;
@@ -153,14 +498,82 @@ exports[`WorkflowStatusTag should render Running correctly 1`] = `
 exports[`WorkflowStatusTag should render Terminated correctly 1`] = `
 <div>
   <div
-    class="css-fWeknQ"
+    class="style={
+  '*, *::before, *::after': {
+    '-moz-animation': 'none !important',
+    '-moz-transition': ' none !important',
+    animation: 'none !important',
+    'caret-color': ' transparent !important',
+    transition: ' none !important',
+  },
+}
+"
   >
     <span
-      class="css-cKbFkS"
+      class="style={
+  ':focus': {},
+  ':hover': {},
+  alignItems: 'center',
+  backgroundColor: '#FFF2D9',
+  borderBottomColor: null,
+  borderBottomLeftRadius: '24px',
+  borderBottomRightRadius: '24px',
+  borderBottomStyle: 'solid',
+  borderBottomWidth: 0,
+  borderLeftColor: null,
+  borderLeftStyle: 'solid',
+  borderLeftWidth: 0,
+  borderRadius: '4px',
+  borderRightColor: null,
+  borderRightStyle: 'solid',
+  borderRightWidth: 0,
+  borderTopColor: null,
+  borderTopLeftRadius: '24px',
+  borderTopRightRadius: '24px',
+  borderTopStyle: 'solid',
+  borderTopWidth: 0,
+  boxSizing: 'border-box',
+  color: '#000000',
+  cursor: 'default',
+  display: 'inline-flex',
+  fontFamily: 'UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif',
+  fontSize: '14px',
+  fontWeight: 500,
+  height: '16px',
+  justifyContent: 'space-between',
+  lineHeight: '16px',
+  margin: 0,
+  marginBottom: '5px',
+  marginLeft: '5px',
+  marginRight: '5px',
+  marginTop: '5px',
+  maxWith: 'auto',
+  outline: 'none',
+  paddingBottom: 0,
+  paddingLeft: '4px',
+  paddingRight: '4px',
+  paddingTop: 0,
+}
+"
       data-baseweb="tag"
     >
       <span
-        class="css-gmWpSA"
+        class="style={
+  alignItems: 'center',
+  columnGap: '4px',
+  display: 'flex',
+  flexDirection: 'row',
+  fontFamily: 'UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif',
+  fontSize: '12px',
+  fontWeight: 500,
+  lineHeight: '16px',
+  maxWidth: '128px',
+  order: 0,
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+}
+"
       >
         <div>
           Mock icon 
@@ -175,7 +588,8 @@ exports[`WorkflowStatusTag should render Terminated correctly 1`] = `
     </span>
   </div>
   <div
-    class="css-PKJb"
+    class="style={}
+"
   />
 </div>
 `;
@@ -183,14 +597,82 @@ exports[`WorkflowStatusTag should render Terminated correctly 1`] = `
 exports[`WorkflowStatusTag should render Timed Out correctly 1`] = `
 <div>
   <div
-    class="css-fWeknQ"
+    class="style={
+  '*, *::before, *::after': {
+    '-moz-animation': 'none !important',
+    '-moz-transition': ' none !important',
+    animation: 'none !important',
+    'caret-color': ' transparent !important',
+    transition: ' none !important',
+  },
+}
+"
   >
     <span
-      class="css-keNDch"
+      class="style={
+  ':focus': {},
+  ':hover': {},
+  alignItems: 'center',
+  backgroundColor: '#FED7D2',
+  borderBottomColor: null,
+  borderBottomLeftRadius: '24px',
+  borderBottomRightRadius: '24px',
+  borderBottomStyle: 'solid',
+  borderBottomWidth: 0,
+  borderLeftColor: null,
+  borderLeftStyle: 'solid',
+  borderLeftWidth: 0,
+  borderRadius: '4px',
+  borderRightColor: null,
+  borderRightStyle: 'solid',
+  borderRightWidth: 0,
+  borderTopColor: null,
+  borderTopLeftRadius: '24px',
+  borderTopRightRadius: '24px',
+  borderTopStyle: 'solid',
+  borderTopWidth: 0,
+  boxSizing: 'border-box',
+  color: '#000000',
+  cursor: 'default',
+  display: 'inline-flex',
+  fontFamily: 'UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif',
+  fontSize: '14px',
+  fontWeight: 500,
+  height: '16px',
+  justifyContent: 'space-between',
+  lineHeight: '16px',
+  margin: 0,
+  marginBottom: '5px',
+  marginLeft: '5px',
+  marginRight: '5px',
+  marginTop: '5px',
+  maxWith: 'auto',
+  outline: 'none',
+  paddingBottom: 0,
+  paddingLeft: '4px',
+  paddingRight: '4px',
+  paddingTop: 0,
+}
+"
       data-baseweb="tag"
     >
       <span
-        class="css-gmWpSA"
+        class="style={
+  alignItems: 'center',
+  columnGap: '4px',
+  display: 'flex',
+  flexDirection: 'row',
+  fontFamily: 'UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif',
+  fontSize: '12px',
+  fontWeight: 500,
+  lineHeight: '16px',
+  maxWidth: '128px',
+  order: 0,
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+}
+"
       >
         <div>
           Mock icon 
@@ -205,7 +687,8 @@ exports[`WorkflowStatusTag should render Timed Out correctly 1`] = `
     </span>
   </div>
   <div
-    class="css-PKJb"
+    class="style={}
+"
   />
 </div>
 `;
@@ -213,10 +696,65 @@ exports[`WorkflowStatusTag should render Timed Out correctly 1`] = `
 exports[`WorkflowStatusTag should work with links correctly 1`] = `
 <div>
   <div
-    class="css-fWeknQ"
+    class="style={
+  '*, *::before, *::after': {
+    '-moz-animation': 'none !important',
+    '-moz-transition': ' none !important',
+    animation: 'none !important',
+    'caret-color': ' transparent !important',
+    transition: ' none !important',
+  },
+}
+"
   >
     <a
-      class="css-ffVmgQ"
+      class="style={
+  ':focus': { boxShadow: 'none' },
+  ':hover': {
+    boxShadow: 'inset 0px 0px 100px rgba(0, 0, 0, 0.08)',
+  },
+  alignItems: 'center',
+  backgroundColor: '#EEEEEE',
+  borderBottomColor: null,
+  borderBottomLeftRadius: '24px',
+  borderBottomRightRadius: '24px',
+  borderBottomStyle: 'solid',
+  borderBottomWidth: 0,
+  borderLeftColor: null,
+  borderLeftStyle: 'solid',
+  borderLeftWidth: 0,
+  borderRadius: '4px',
+  borderRightColor: null,
+  borderRightStyle: 'solid',
+  borderRightWidth: 0,
+  borderTopColor: null,
+  borderTopLeftRadius: '24px',
+  borderTopRightRadius: '24px',
+  borderTopStyle: 'solid',
+  borderTopWidth: 0,
+  boxSizing: 'border-box',
+  color: '#000000',
+  cursor: 'pointer',
+  display: 'inline-flex',
+  fontFamily: 'UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif',
+  fontSize: '14px',
+  fontWeight: 500,
+  height: '16px',
+  justifyContent: 'space-between',
+  lineHeight: '16px',
+  margin: 0,
+  marginBottom: '5px',
+  marginLeft: '5px',
+  marginRight: '5px',
+  marginTop: '5px',
+  maxWith: 'auto',
+  outline: 'none',
+  paddingBottom: 0,
+  paddingLeft: '4px',
+  paddingRight: '4px',
+  paddingTop: 0,
+}
+"
       data-baseweb="tag"
       href="mock_continued_workflow_link"
       rel="noreferrer"
@@ -225,7 +763,22 @@ exports[`WorkflowStatusTag should work with links correctly 1`] = `
       target="_blank"
     >
       <span
-        class="css-gmWpSA"
+        class="style={
+  alignItems: 'center',
+  columnGap: '4px',
+  display: 'flex',
+  flexDirection: 'row',
+  fontFamily: 'UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif',
+  fontSize: '12px',
+  fontWeight: 500,
+  lineHeight: '16px',
+  maxWidth: '128px',
+  order: 0,
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+}
+"
       >
         <div>
           Mock icon 
@@ -240,7 +793,8 @@ exports[`WorkflowStatusTag should work with links correctly 1`] = `
     </a>
   </div>
   <div
-    class="css-PKJb"
+    class="style={}
+"
   />
 </div>
 `;
