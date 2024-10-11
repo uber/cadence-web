@@ -1,0 +1,85 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TaskListLabel should render multiple workers correctly 1`] = `
+<div>
+  <div
+    class="css-fWeknQ"
+  >
+    <div
+      class="css-jpDvSs"
+    >
+      tasklist-1
+      <span
+        class="css-flvYLH"
+        data-baseweb="tag"
+      >
+        <span
+          class="css-doQFsT"
+          title="2 workers"
+        >
+          2 workers
+        </span>
+      </span>
+    </div>
+  </div>
+  <div
+    class="css-PKJb"
+  />
+</div>
+`;
+
+exports[`TaskListLabel should render no workers correctly 1`] = `
+<div>
+  <div
+    class="css-fWeknQ"
+  >
+    <div
+      class="css-jpDvSs"
+    >
+      tasklist-1
+      <span
+        class="css-eghsza"
+        data-baseweb="tag"
+      >
+        <span
+          class="css-doQFsT"
+          title="0 workers"
+        >
+          0 workers
+        </span>
+      </span>
+    </div>
+  </div>
+  <div
+    class="css-PKJb"
+  />
+</div>
+`;
+
+exports[`TaskListLabel should render one worker correctly 1`] = `
+<div>
+  <div
+    class="css-fWeknQ"
+  >
+    <div
+      class="css-jpDvSs"
+    >
+      tasklist-1
+      <span
+        class="css-flvYLH"
+        data-baseweb="tag"
+      >
+        <span
+          class="css-doQFsT"
+          title="1 worker"
+        >
+          1 worker
+        </span>
+      </span>
+    </div>
+  </div>
+  <div
+    class="css-PKJb"
+  />
+</div>
+`;

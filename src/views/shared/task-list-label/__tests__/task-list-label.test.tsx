@@ -8,13 +8,6 @@ import { mockTaskList } from '@/views/task-list-page/__fixtures__/mock-task-list
 
 import TaskListLabel from '../task-list-label';
 
-jest.mock('baseui/tag', () => ({
-  ...jest.requireActual('baseui/tag'),
-  Tag: jest.fn(({ kind, children }) => (
-    <div data-testid={`mock-tag-${kind}`}>{children}</div>
-  )),
-}));
-
 describe(TaskListLabel.name, () => {
   afterEach(() => {
     jest.clearAllMocks();
@@ -48,7 +41,7 @@ describe(TaskListLabel.name, () => {
 
   tests.forEach((test) => {
     it(test.name, () => {
-      render(
+      const { container } = render(
         <TaskListLabel
           taskList={{
             ...mockTaskList,
@@ -58,7 +51,7 @@ describe(TaskListLabel.name, () => {
       );
 
       expect(screen.getByText(test.text)).toBeInTheDocument();
-      expect(screen.getByTestId(`mock-tag-${test.kind}`)).toBeInTheDocument();
+      expect(container).toMatchSnapshot();
     });
   });
 });

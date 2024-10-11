@@ -69,15 +69,13 @@ describe('WorkflowStatusTag', () => {
 
   tests.forEach((test) => {
     it(test.name, () => {
-      render(
+      const { container } = render(
         <WorkflowStatusTag status={test.workflowStatus} link={test.link} />
       );
 
+      expect(container).toMatchSnapshot();
       const tag = screen.getByText(test.text);
       expect(tag).toBeInTheDocument();
-
-      expect(screen.getByText('Mock icon start')).toBeInTheDocument();
-      expect(screen.getByText('Mock icon end')).toBeInTheDocument();
 
       if (test.link) {
         expect(screen.getByRole('button')).toHaveAttribute('href', test.link);

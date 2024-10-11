@@ -1,0 +1,246 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`WorkflowStatusTag should render Canceled correctly 1`] = `
+<div>
+  <div
+    class="css-fWeknQ"
+  >
+    <span
+      class="css-cKbFkS"
+      data-baseweb="tag"
+    >
+      <span
+        class="css-gmWpSA"
+      >
+        <div>
+          Mock icon 
+          start
+        </div>
+        Canceled
+        <div>
+          Mock icon 
+          end
+        </div>
+      </span>
+    </span>
+  </div>
+  <div
+    class="css-PKJb"
+  />
+</div>
+`;
+
+exports[`WorkflowStatusTag should render Completed correctly 1`] = `
+<div>
+  <div
+    class="css-fWeknQ"
+  >
+    <span
+      class="css-fUPDDz"
+      data-baseweb="tag"
+    >
+      <span
+        class="css-gmWpSA"
+      >
+        <div>
+          Mock icon 
+          start
+        </div>
+        Completed
+        <div>
+          Mock icon 
+          end
+        </div>
+      </span>
+    </span>
+  </div>
+  <div
+    class="css-PKJb"
+  />
+</div>
+`;
+
+exports[`WorkflowStatusTag should render Continued As New correctly 1`] = `
+<div>
+  <div
+    class="css-fWeknQ"
+  >
+    <span
+      class="css-hqOYwP"
+      data-baseweb="tag"
+    >
+      <span
+        class="css-gmWpSA"
+      >
+        <div>
+          Mock icon 
+          start
+        </div>
+        Continued As New
+        <div>
+          Mock icon 
+          end
+        </div>
+      </span>
+    </span>
+  </div>
+  <div
+    class="css-PKJb"
+  />
+</div>
+`;
+
+exports[`WorkflowStatusTag should render Failed correctly 1`] = `
+<div>
+  <div
+    class="css-fWeknQ"
+  >
+    <span
+      class="css-keNDch"
+      data-baseweb="tag"
+    >
+      <span
+        class="css-gmWpSA"
+      >
+        <div>
+          Mock icon 
+          start
+        </div>
+        Failed
+        <div>
+          Mock icon 
+          end
+        </div>
+      </span>
+    </span>
+  </div>
+  <div
+    class="css-PKJb"
+  />
+</div>
+`;
+
+exports[`WorkflowStatusTag should render Running correctly 1`] = `
+<div>
+  <div
+    class="css-fWeknQ"
+  >
+    <span
+      class="css-nbUAZ"
+      data-baseweb="tag"
+    >
+      <span
+        class="css-gmWpSA"
+      >
+        <div>
+          Mock icon 
+          start
+        </div>
+        Running
+        <div>
+          Mock icon 
+          end
+        </div>
+      </span>
+    </span>
+  </div>
+  <div
+    class="css-PKJb"
+  />
+</div>
+`;
+
+exports[`WorkflowStatusTag should render Terminated correctly 1`] = `
+<div>
+  <div
+    class="css-fWeknQ"
+  >
+    <span
+      class="css-cKbFkS"
+      data-baseweb="tag"
+    >
+      <span
+        class="css-gmWpSA"
+      >
+        <div>
+          Mock icon 
+          start
+        </div>
+        Terminated
+        <div>
+          Mock icon 
+          end
+        </div>
+      </span>
+    </span>
+  </div>
+  <div
+    class="css-PKJb"
+  />
+</div>
+`;
+
+exports[`WorkflowStatusTag should render Timed Out correctly 1`] = `
+<div>
+  <div
+    class="css-fWeknQ"
+  >
+    <span
+      class="css-keNDch"
+      data-baseweb="tag"
+    >
+      <span
+        class="css-gmWpSA"
+      >
+        <div>
+          Mock icon 
+          start
+        </div>
+        Timed Out
+        <div>
+          Mock icon 
+          end
+        </div>
+      </span>
+    </span>
+  </div>
+  <div
+    class="css-PKJb"
+  />
+</div>
+`;
+
+exports[`WorkflowStatusTag should work with links correctly 1`] = `
+<div>
+  <div
+    class="css-fWeknQ"
+  >
+    <a
+      class="css-ffVmgQ"
+      data-baseweb="tag"
+      href="mock_continued_workflow_link"
+      rel="noreferrer"
+      role="button"
+      tabindex="0"
+      target="_blank"
+    >
+      <span
+        class="css-gmWpSA"
+      >
+        <div>
+          Mock icon 
+          start
+        </div>
+        Continued As New
+        <div>
+          Mock icon 
+          end
+        </div>
+      </span>
+    </a>
+  </div>
+  <div
+    class="css-PKJb"
+  />
+</div>
+`;
