@@ -9,6 +9,10 @@ export default function getGroupedHistoryEventDetails({
   details: object;
   prefix?: string;
 }): object {
+  if (details === null || details === undefined) {
+    return {};
+  }
+
   let result = Object.create({});
 
   Object.entries(details).forEach(([key, value]: [string, any]) => {

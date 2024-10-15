@@ -1,6 +1,8 @@
 'use client';
 import React, { useMemo } from 'react';
 
+import isEmpty from 'lodash/isEmpty';
+
 import useStyletronClasses from '@/hooks/use-styletron-classes';
 import formatWorkflowHistoryEvent from '@/utils/data-formatters/format-workflow-history-event';
 
@@ -22,7 +24,8 @@ export default function WorkflowHistoryEventDetails({
     return getGroupedHistoryEventDetails({ details: result });
   }, [event]);
 
-  if (!eventDetails) return <div className={cls.emptyDetails}>No Details</div>;
+  if (isEmpty(eventDetails))
+    return <div className={cls.emptyDetails}>No Details</div>;
 
   return (
     <WorkflowHistoryEventDetailsRecursive

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { isObjectLike } from 'lodash';
+import isObjectLike from 'lodash/isObjectLike';
 
 import getHistoryEventFieldRenderConfig from '../workflow-history-event-details/helpers/get-history-event-field-render-config';
 import WorkflowHistoryEventDetailsBaseValue from '../workflow-history-event-details-base-value/workflow-history-event-details-base-value';
@@ -32,6 +32,7 @@ export default function WorkflowHistoryEventDetailsRecursive({
 
         return (
           <styled.DetailsRow
+            data-testid="details-row"
             $forceWrap={forceWrap}
             key={`${key}-${path}-${renderConfig?.name}-${index}`}
           >
