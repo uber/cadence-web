@@ -1,4 +1,4 @@
-import { type WorkflowHistoryEventDetailsEntry } from '../workflow-history-event-details.types';
+import { type WorkflowHistoryEventDetailsEntry } from '../../workflow-history-event-details/workflow-history-event-details.types';
 
 export default function getDetailsFieldLabel({
   entry,

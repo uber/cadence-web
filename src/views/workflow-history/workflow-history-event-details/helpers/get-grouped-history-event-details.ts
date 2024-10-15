@@ -6,9 +6,9 @@ export default function getGroupedHistoryEventDetails({
   details,
   prefix = '',
 }: {
-  details: any;
+  details: object;
   prefix?: string;
-}) {
+}): object {
   let result = Object.create({});
 
   Object.entries(details).forEach(([key, value]: [string, any]) => {
@@ -58,5 +58,6 @@ export default function getGroupedHistoryEventDetails({
       result[path] = value;
     }
   });
+
   return result;
 }
