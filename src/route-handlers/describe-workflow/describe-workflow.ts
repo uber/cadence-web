@@ -19,7 +19,7 @@ export default async function describeWorkflow(
   const decodedParams = decodeUrlParams(requestParams.params);
 
   try {
-    const describeResponse = await grpcClient.clusterMethods[
+    const describeWorkflowResponse = await grpcClient.clusterMethods[
       decodedParams.cluster
     ].describeWorkflow({
       domain: decodedParams.domain,
@@ -28,9 +28,10 @@ export default async function describeWorkflow(
         runId: decodedParams.runId,
       },
     });
+
     const res: DescribeUnArchivedWorkflowResponse = merge(
       {},
-      describeResponse,
+      describeWorkflowResponse,
       {
         workflowExecutionInfo: { closeEvent: null, isArchived: false as const },
       }
@@ -58,7 +59,7 @@ export default async function describeWorkflow(
 
     return NextResponse.json(res);
   } catch (e) {
-    //describe workflow depends on a temp datasource, so sometimes data is not available
+    // DescribeWorkflow depends on a temp datasource, so sometimes data is not available
     // to make it more reliable we depend on history to construct similar response in case data is not available
     try {
       if (e instanceof GRPCError && e.httpStatusCode !== 404) {
@@ -80,7 +81,6 @@ export default async function describeWorkflow(
       if (!archivedHistoryEvents[0]?.workflowExecutionStartedEventAttributes) {
         throw e;
       }
-      const { runId, workflowId } = decodedParams;
 
       const {
         eventTime: startTime,
@@ -100,8 +100,8 @@ export default async function describeWorkflow(
         },
         workflowExecutionInfo: {
           workflowExecution: {
-            runId,
-            workflowId,
+            runId: decodedParams.runId,
+            workflowId: decodedParams.workflowId,
           },
           isArchived: true,
           startTime,

@@ -10,6 +10,7 @@ import request from '@/utils/request';
 import { type RequestError } from '@/utils/request/request-error';
 import WorkflowStatusTag from '@/views/shared/workflow-status-tag/workflow-status-tag';
 
+import workflowPageStatusRefreshInterval from '../config/workflow-page-status-refresh-interval.config';
 import getWorkflowStatusTagProps from '../helpers/get-workflow-status-tag-props';
 import type { WorkflowPageParams } from '../workflow-page.types';
 
@@ -43,7 +44,7 @@ export default function WorkflowPageStatusTag() {
         !closeStatus ||
         closeStatus === 'WORKFLOW_EXECUTION_CLOSE_STATUS_INVALID'
       )
-        return 10000; //refetch status each 10 seconds
+        return workflowPageStatusRefreshInterval; //refetch interval
 
       return false;
     },

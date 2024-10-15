@@ -16,6 +16,8 @@ import request from '@/utils/request';
 import { type RequestError } from '@/utils/request/request-error';
 import type { WorkflowPageTabContentProps } from '@/views/workflow-page/workflow-page-tab-content/workflow-page-tab-content.types';
 
+import workflowPageStatusRefreshInterval from '../workflow-page/config/workflow-page-status-refresh-interval.config';
+
 import WorkflowSummaryTabDetails from './workflow-summary-tab-details/workflow-summary-tab-details';
 import WorkflowSummaryTabJsonView from './workflow-summary-tab-json-view/workflow-summary-tab-json-view';
 import { cssStyles } from './workflow-summary-tab.styles';
@@ -58,7 +60,7 @@ export default function WorkflowSummaryTab({
         !closeStatus ||
         closeStatus === 'WORKFLOW_EXECUTION_CLOSE_STATUS_INVALID'
       )
-        return 10000; //refetch status each 10 seconds
+        return workflowPageStatusRefreshInterval; //refetch status interval
 
       return false;
     },
