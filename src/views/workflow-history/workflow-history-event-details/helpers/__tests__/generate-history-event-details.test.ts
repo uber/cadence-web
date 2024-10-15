@@ -1,8 +1,9 @@
 import isObjectLike from 'lodash/isObjectLike';
 
-import generateHistoryEventDetails from '../generate-history-event-details';
+import generateHistoryEventDetails from '../get-grouped-history-event-details';
 import getHistoryEventFieldRenderConfig from '../get-history-event-field-render-config';
 
+// TODO - fix test
 jest.mock('../get-history-event-field-render-config', () => jest.fn());
 jest.mock('lodash/isObjectLike', () => jest.fn());
 

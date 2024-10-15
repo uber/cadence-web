@@ -43,6 +43,10 @@ const cssStylesObj = {
     color: theme.colors.contentTertiary,
     ...theme.typography.LabelXSmall,
   }),
+  indentedDetails: (theme) => ({
+    paddingLeft: theme.sizing.scale400,
+    borderLeft: '2px grey',
+  }),
 } satisfies StyletronCSSObject;
 
 export const cssStyles: StyletronCSSObjectOf<typeof cssStylesObj> =

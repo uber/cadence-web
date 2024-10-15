@@ -7,16 +7,18 @@ export type Props = {
   decodedPageUrlParams: WorfklowHistoryProps['params'];
 };
 
+export type WorkflowHistoryEventDetailsValue = any;
+
 export type WorkflowHistoryEventDetailsFuncArgs = {
   path: string;
   key: string;
-  value: any;
+  value: WorkflowHistoryEventDetailsValue;
 };
 
 export type WorkflowHistoryEventDetailsValueComponentProps = {
   entryKey: string;
   entryPath: string;
-  entryValue: any;
+  entryValue: WorkflowHistoryEventDetailsValue;
 } & WorfklowHistoryProps['params'];
 
 export type WorkflowHistoryEventDetailsConfig = {
@@ -37,6 +39,6 @@ export type WorkflowHistoryEventDetailsConfig = {
 export type WorkflowHistoryEventDetailsEntry = {
   key: string;
   path: string;
-  value: any;
+  value: WorkflowHistoryEventDetailsValue;
   renderConfig?: WorkflowHistoryEventDetailsConfig | null;
 };

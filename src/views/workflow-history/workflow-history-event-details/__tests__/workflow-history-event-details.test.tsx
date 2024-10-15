@@ -3,7 +3,7 @@ import React from 'react';
 import { render, screen } from '@/test-utils/rtl';
 
 import { completeActivityTaskEvent } from '../../__fixtures__/workflow-history-activity-events';
-import generateHistoryEventDetails from '../helpers/generate-history-event-details';
+import getGroupedHistoryEventDetails from '../helpers/get-grouped-history-event-details';
 import WorkflowHistoryEventDetails from '../workflow-history-event-details';
 import {
   type WorkflowHistoryEventDetailsEntry,
@@ -15,9 +15,10 @@ jest.mock('@/utils/data-formatters/format-workflow-history-event', () =>
   jest.fn((event) => (event ? { mockFormatted: true } : null))
 );
 
-jest.mock('../helpers/generate-history-event-details', () => jest.fn());
-const mockGenerateHistoryEventDetails =
-  generateHistoryEventDetails as jest.Mock;
+// TODO - fix test
+jest.mock('../helpers/get-grouped-history-event-details', () => jest.fn());
+const mockGetGroupedHistoryEventDetails =
+  getGroupedHistoryEventDetails as jest.Mock;
 
 describe('WorkflowHistoryEventDetails', () => {
   const mockParams: Props['decodedPageUrlParams'] = {
@@ -33,7 +34,7 @@ describe('WorkflowHistoryEventDetails', () => {
   });
 
   it('renders null when detailsEntries is empty', () => {
-    mockGenerateHistoryEventDetails.mockReturnValue([]);
+    mockGetGroupedHistoryEventDetails.mockReturnValue([]);
 
     render(
       <WorkflowHistoryEventDetails
@@ -45,7 +46,7 @@ describe('WorkflowHistoryEventDetails', () => {
   });
 
   it('renders details with path and value', () => {
-    mockGenerateHistoryEventDetails.mockReturnValue([
+    mockGetGroupedHistoryEventDetails.mockReturnValue([
       {
         key: '1',
         path: 'test/path',
@@ -67,7 +68,7 @@ describe('WorkflowHistoryEventDetails', () => {
   });
 
   it('renders custom label when renderConfig.getLabel is provided', () => {
-    mockGenerateHistoryEventDetails.mockReturnValue([
+    mockGetGroupedHistoryEventDetails.mockReturnValue([
       {
         key: '1',
         path: 'test/path',
@@ -96,7 +97,7 @@ describe('WorkflowHistoryEventDetails', () => {
       <div>{`Custom component for ${entryKey}`}</div>
     )) as WorkflowHistoryEventDetailsConfig['valueComponent'];
 
-    mockGenerateHistoryEventDetails.mockReturnValue([
+    mockGetGroupedHistoryEventDetails.mockReturnValue([
       {
         key: '1',
         path: 'test/path',
