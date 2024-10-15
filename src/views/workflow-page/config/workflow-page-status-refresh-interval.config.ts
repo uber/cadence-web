@@ -1,3 +1,3 @@
-const workflowPageStatusRefreshInterval = 10000;
+const WORKLFLOW_PAGE_STATUS_REFRESH_INTERVAL = 10000;
 
-export default workflowPageStatusRefreshInterval;
+export default WORKLFLOW_PAGE_STATUS_REFRESH_INTERVAL;
