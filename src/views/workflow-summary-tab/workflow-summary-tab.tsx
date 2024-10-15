@@ -60,7 +60,7 @@ export default function WorkflowSummaryTab({
         !closeStatus ||
         closeStatus === 'WORKFLOW_EXECUTION_CLOSE_STATUS_INVALID'
       )
-        return workflowPageStatusRefreshInterval; //refetch status interval
+        return workflowPageStatusRefreshInterval;
 
       return false;
     },

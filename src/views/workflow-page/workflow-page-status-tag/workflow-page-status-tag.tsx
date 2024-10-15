@@ -44,7 +44,7 @@ export default function WorkflowPageStatusTag() {
         !closeStatus ||
         closeStatus === 'WORKFLOW_EXECUTION_CLOSE_STATUS_INVALID'
       )
-        return workflowPageStatusRefreshInterval; //refetch interval
+        return workflowPageStatusRefreshInterval;
 
       return false;
     },
