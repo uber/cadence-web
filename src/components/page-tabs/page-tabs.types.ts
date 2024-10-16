@@ -5,6 +5,7 @@ import { type IconProps } from 'baseui/icon';
 export type PageTab = {
   key: string;
   title: string;
+  badge?: React.ReactNode;
   artwork?: React.ComponentType<{
     size: IconProps['size'];
     color: IconProps['color'];
