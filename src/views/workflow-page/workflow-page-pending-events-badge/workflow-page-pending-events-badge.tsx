@@ -4,18 +4,23 @@ import React from 'react';
 import { Badge } from 'baseui/badge';
 import { useParams } from 'next/navigation';
 
-import useDescribeWorkflow from '@/views/shared/hooks/use-describe-workflow';
 import { type WorkflowPageTabsParams } from '@/views/workflow-page/workflow-page-tabs/workflow-page-tabs.types';
 
-import { overrides } from './workflow-history-pending-badge.styles';
+import useDescribeWorkflow from '../hooks/use-describe-workflow';
 
-export default function WorkflowHistoryPendingBadge() {
+import { overrides } from './workflow-page-pending-events-badge.styles';
+
+export default function WorkflowPagePendingEventsBadge() {
   const params = useParams<WorkflowPageTabsParams>();
   const { workflowTab: _, ...restParams } = params;
 
-  const { data: workflowDetails } = useDescribeWorkflow({
+  const { data: workflowDetails, isError } = useDescribeWorkflow({
     ...restParams,
   });
+
+  if (isError) {
+    return null;
+  }
 
   const totalPending =
     (workflowDetails.pendingDecision ? 1 : 0) +

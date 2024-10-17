@@ -15,8 +15,7 @@ import request from '@/utils/request';
 import { type RequestError } from '@/utils/request/request-error';
 import type { WorkflowPageTabContentProps } from '@/views/workflow-page/workflow-page-tab-content/workflow-page-tab-content.types';
 
-import useDescribeWorkflow from '../shared/hooks/use-describe-workflow';
-import WORKFLOW_PAGE_STATUS_REFRESH_INTERVAL from '../workflow-page/config/workflow-page-status-refresh-interval.config';
+import useDescribeWorkflow from '../workflow-page/hooks/use-describe-workflow';
 
 import WorkflowSummaryTabDetails from './workflow-summary-tab-details/workflow-summary-tab-details';
 import WorkflowSummaryTabJsonView from './workflow-summary-tab-json-view/workflow-summary-tab-json-view';
@@ -45,7 +44,6 @@ export default function WorkflowSummaryTab({
 
   const { data: workflowDetails } = useDescribeWorkflow({
     ...paramsWithoutTab,
-    refreshInterval: WORKFLOW_PAGE_STATUS_REFRESH_INTERVAL,
   });
 
   const historyEvents = workflowHistory?.history?.events || [];

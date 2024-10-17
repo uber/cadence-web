@@ -1,4 +1,4 @@
-import { createElement, Suspense } from 'react';
+import { createElement } from 'react';
 
 import {
   MdListAlt,
@@ -7,8 +7,7 @@ import {
   MdOutlineTerminal,
 } from 'react-icons/md';
 
-import WorkflowHistoryPendingBadge from '@/views/workflow-history/workflow-history-pending-badge/workflow-history-pending-badge';
-
+import WorkflowPagePendingEventsBadge from '../workflow-page-pending-events-badge/workflow-page-pending-events-badge';
 import type { WorkflowPageTabs } from '../workflow-page-tabs/workflow-page-tabs.types';
 
 const workflowPageTabsConfig = [
@@ -20,7 +19,7 @@ const workflowPageTabsConfig = [
   {
     key: 'history',
     title: 'History',
-    badge: createElement(WorkflowHistoryPendingBadge),
+    endEnhancer: createElement(WorkflowPagePendingEventsBadge),
     artwork: MdOutlineHistory,
   },
   {

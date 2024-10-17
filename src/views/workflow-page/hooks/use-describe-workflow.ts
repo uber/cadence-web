@@ -6,18 +6,18 @@ import { type DescribeWorkflowResponse } from '@/route-handlers/describe-workflo
 import request from '@/utils/request';
 import { type RequestError } from '@/utils/request/request-error';
 
-const DEFAULT_REFRESH_INTERVAL_MS = 10000;
+import WORKFLOW_PAGE_STATUS_REFETCH_INTERVAL from '../config/workflow-page-status-refetch-interval.config';
 
 type Props = {
   domain: string;
   cluster: string;
   workflowId: string;
   runId: string;
-  refreshInterval?: number;
+  refetchInterval?: number;
 };
 
 export default function useDescribeWorkflow({
-  refreshInterval = DEFAULT_REFRESH_INTERVAL_MS,
+  refetchInterval = WORKFLOW_PAGE_STATUS_REFETCH_INTERVAL,
   ...params
 }: Props) {
   return useSuspenseQuery<
@@ -37,7 +37,7 @@ export default function useDescribeWorkflow({
         !closeStatus ||
         closeStatus === 'WORKFLOW_EXECUTION_CLOSE_STATUS_INVALID'
       )
-        return refreshInterval;
+        return refetchInterval;
 
       return false;
     },
