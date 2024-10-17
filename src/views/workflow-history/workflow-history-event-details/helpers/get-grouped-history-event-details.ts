@@ -14,6 +14,7 @@ export default function getGroupedHistoryEventDetails({
   }
 
   let result = Object.create({});
+  const renderConfigs = Object.create({});
 
   Object.entries(details).forEach(([key, value]: [string, any]) => {
     const path = prefix ? `${prefix}.${key}` : key;
@@ -39,7 +40,7 @@ export default function getGroupedHistoryEventDetails({
             details: {
               [`${path}.${childKey}`]: childValue,
             },
-            prefix: prefix,
+            prefix: path,
           }),
         };
       } else {
@@ -50,7 +51,7 @@ export default function getGroupedHistoryEventDetails({
               result[path],
               getGroupedHistoryEventDetails({
                 details: { [childKey]: childValue },
-                prefix: prefix,
+                prefix: path,
               })
             );
           } else {

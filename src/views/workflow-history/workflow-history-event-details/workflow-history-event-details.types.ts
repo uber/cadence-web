@@ -41,3 +41,16 @@ export type WorkflowHistoryEventDetailsEntry = {
   value: any;
   renderConfig?: WorkflowHistoryEventDetailsConfig | null;
 };
+
+export type WorkflowHistoryEventDetailsGroupEntry = {
+  key: string;
+  path: string;
+  group: WorkflowHistoryEventDetailsEntries;
+};
+
+export type WorkflowHistoryEventDetailsEntries = Array<
+  WorkflowHistoryEventDetailsEntry | WorkflowHistoryEventDetailsGroupEntry
+>;
+
+// export type WorkflowHistoryEventDetailsEntry1 =
+//   WorkflowHistoryEventDetailsBaseEntry & WorkflowHistoryEventDetailsGroupEntry;
