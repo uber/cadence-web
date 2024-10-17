@@ -16,7 +16,7 @@ const tabList: PageTabsList = [
   {
     key: 'tab4',
     title: 'Tab 4',
-    endEnhancer: <div data-testid="mock-end-enhancer" />,
+    endEnhancer: () => <div data-testid="mock-end-enhancer" />,
   },
 ];
 

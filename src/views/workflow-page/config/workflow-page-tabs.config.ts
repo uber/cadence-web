@@ -1,5 +1,3 @@
-import { createElement } from 'react';
-
 import {
   MdListAlt,
   MdOutlineHistory,
@@ -19,7 +17,7 @@ const workflowPageTabsConfig = [
   {
     key: 'history',
     title: 'History',
-    endEnhancer: createElement(WorkflowPagePendingEventsBadge),
+    endEnhancer: WorkflowPagePendingEventsBadge,
     artwork: MdOutlineHistory,
   },
   {

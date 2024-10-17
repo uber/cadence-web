@@ -18,17 +18,17 @@ export default function PageTabs({
       }}
       overrides={overrides.tabs}
     >
-      {tabList.map(({ key, title, endEnhancer, artwork }) => (
+      {tabList.map((tab) => (
         <Tab
           overrides={overrides.tab}
-          key={key}
+          key={tab.key}
           title={
             <styled.TabTitleContainer>
-              {title}
-              {endEnhancer ?? null}
+              {tab.title}
+              {tab.endEnhancer ? <tab.endEnhancer /> : null}
             </styled.TabTitleContainer>
           }
-          artwork={artwork}
+          artwork={tab.artwork}
         />
       ))}
     </Tabs>
