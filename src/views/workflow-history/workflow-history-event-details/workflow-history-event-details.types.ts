@@ -35,22 +35,26 @@ export type WorkflowHistoryEventDetailsConfig = {
     }
 );
 
-export type WorkflowHistoryEventDetailsEntry = {
+type WorkflowHistoryEventDetailsEntryBase = {
   key: string;
   path: string;
-  value: any;
-  renderConfig?: WorkflowHistoryEventDetailsConfig | null;
+  label: string;
+  isGroup?: boolean;
+  renderConfig: WorkflowHistoryEventDetailsConfig | null;
 };
 
-export type WorkflowHistoryEventDetailsGroupEntry = {
-  key: string;
-  path: string;
-  group: WorkflowHistoryEventDetailsEntries;
-};
+export type WorkflowHistoryEventDetailsEntry =
+  WorkflowHistoryEventDetailsEntryBase & {
+    isGroup: false;
+    value: any;
+  };
+
+export type WorkflowHistoryEventDetailsGroupEntry =
+  WorkflowHistoryEventDetailsEntryBase & {
+    isGroup: true;
+    groupEntries: WorkflowHistoryEventDetailsEntries;
+  };
 
 export type WorkflowHistoryEventDetailsEntries = Array<
   WorkflowHistoryEventDetailsEntry | WorkflowHistoryEventDetailsGroupEntry
 >;
-
-// export type WorkflowHistoryEventDetailsEntry1 =
-//   WorkflowHistoryEventDetailsBaseEntry & WorkflowHistoryEventDetailsGroupEntry;

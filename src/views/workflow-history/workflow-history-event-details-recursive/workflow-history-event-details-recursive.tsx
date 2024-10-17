@@ -1,8 +1,5 @@
 import React from 'react';
 
-import isObjectLike from 'lodash/isObjectLike';
-
-import getHistoryEventFieldRenderConfig from '../workflow-history-event-details/helpers/get-history-event-field-render-config';
 import WorkflowHistoryEventDetailsBaseValue from '../workflow-history-event-details-base-value/workflow-history-event-details-base-value';
 
 import getDetailsFieldLabel from './helpers/get-details-field-label';
@@ -10,56 +7,44 @@ import { styled } from './workflow-history-event-details-recursive.styles';
 import { type Props } from './workflow-history-event-details-recursive.types';
 
 export default function WorkflowHistoryEventDetailsRecursive({
-  details,
-  prefix = '',
+  entries,
   decodedPageUrlParams,
 }: Props) {
   return (
     <>
-      {Object.entries(details).map(([key, value], index) => {
-        const path = (prefix ? prefix + '.' : '') + key;
-
-        const renderConfig = getHistoryEventFieldRenderConfig({
-          key,
-          path,
-          value: value,
-        });
-
-        const isGenericObject =
-          isObjectLike(value) && !renderConfig?.valueComponent;
-
-        const forceWrap = renderConfig?.forceWrap || isGenericObject;
+      {entries.map((entry, index) => {
+        const forceWrap = entry.isGroup ? true : entry.renderConfig?.forceWrap;
 
         return (
           <styled.DetailsRow
             data-testid="details-row"
             $forceWrap={forceWrap}
-            key={`${key}-${path}-${renderConfig?.name}-${index}`}
+            key={`${entry.key}-${entry.path}-${index}${
+              !entry.isGroup && entry.renderConfig
+                ? '-' + entry.renderConfig.name
+                : ''
+            }`}
           >
             <styled.DetailsLabel
               $forceWrap={forceWrap}
-              $useBlackText={isGenericObject}
+              $useBlackText={entry.isGroup}
             >
-              {getDetailsFieldLabel({
-                entry: { key, path, value, renderConfig },
-                isGenericObject,
-              })}
+              {getDetailsFieldLabel(entry)}
             </styled.DetailsLabel>
             <styled.DetailsValue $forceWrap={forceWrap}>
-              {isGenericObject ? (
+              {entry.isGroup ? (
                 <styled.IndentedDetails>
                   <WorkflowHistoryEventDetailsRecursive
-                    details={value}
-                    prefix={path}
+                    entries={entry.groupEntries}
                     decodedPageUrlParams={decodedPageUrlParams}
                   />
                 </styled.IndentedDetails>
               ) : (
                 <WorkflowHistoryEventDetailsBaseValue
-                  entryKey={key}
-                  entryPath={path}
-                  entryValue={value}
-                  renderConfig={renderConfig}
+                  entryKey={entry.key}
+                  entryPath={entry.path}
+                  entryValue={entry.value}
+                  renderConfig={entry.renderConfig}
                   {...decodedPageUrlParams}
                 />
               )}

@@ -1,7 +1,8 @@
 import { type WorkflowPageTabsParams } from '@/views/workflow-page/workflow-page-tabs/workflow-page-tabs.types';
 
+import { type WorkflowHistoryEventDetailsEntries } from '../workflow-history-event-details/workflow-history-event-details.types';
+
 export type Props = {
-  details: object;
-  prefix?: string;
+  entries: WorkflowHistoryEventDetailsEntries;
   decodedPageUrlParams: WorkflowPageTabsParams;
 };

@@ -1,14 +1,12 @@
 'use client';
 import React, { useMemo } from 'react';
 
-import isEmpty from 'lodash/isEmpty';
-
 import useStyletronClasses from '@/hooks/use-styletron-classes';
 import formatWorkflowHistoryEvent from '@/utils/data-formatters/format-workflow-history-event';
 
 import WorkflowHistoryEventDetailsRecursive from '../workflow-history-event-details-recursive/workflow-history-event-details-recursive';
 
-import getGroupedHistoryEventDetails from './helpers/get-grouped-history-event-details';
+import generateHistoryEventDetails from './helpers/generate-history-event-details';
 import { cssStyles } from './workflow-history-event-details.styles';
 import type { Props } from './workflow-history-event-details.types';
 
@@ -18,18 +16,17 @@ export default function WorkflowHistoryEventDetails({
 }: Props) {
   const { cls } = useStyletronClasses(cssStyles);
 
-  const eventDetails = useMemo(() => {
+  const eventDetailsEntries = useMemo(() => {
     const result = formatWorkflowHistoryEvent(event);
-    if (!result) return null;
-    return getGroupedHistoryEventDetails({ details: result });
+    return result ? generateHistoryEventDetails({ details: result }) : [];
   }, [event]);
 
-  if (isEmpty(eventDetails))
+  if (eventDetailsEntries.length === 0)
     return <div className={cls.emptyDetails}>No Details</div>;
 
   return (
     <WorkflowHistoryEventDetailsRecursive
-      details={eventDetails}
+      entries={eventDetailsEntries}
       decodedPageUrlParams={decodedPageUrlParams}
     />
   );

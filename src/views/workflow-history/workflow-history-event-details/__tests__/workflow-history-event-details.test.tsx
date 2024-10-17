@@ -4,21 +4,22 @@ import { render, screen } from '@/test-utils/rtl';
 
 import { completeActivityTaskEvent } from '../../__fixtures__/workflow-history-activity-events';
 import { workflowPageUrlParams } from '../../__fixtures__/workflow-page-url-params';
-import getGroupedHistoryEventDetails from '../helpers/get-grouped-history-event-details';
+import generateHistoryEventDetails from '../helpers/generate-history-event-details';
 import WorkflowHistoryEventDetails from '../workflow-history-event-details';
+import { type WorkflowHistoryEventDetailsEntries } from '../workflow-history-event-details.types';
 
 jest.mock('@/utils/data-formatters/format-workflow-history-event', () =>
   jest.fn((event) => (event ? { mockFormatted: true } : null))
 );
 
-jest.mock('../helpers/get-grouped-history-event-details', () => jest.fn());
-const mockGetGroupedHistoryEventDetails =
-  getGroupedHistoryEventDetails as jest.Mock;
+jest.mock('../helpers/generate-history-event-details', () => jest.fn());
+const mockGenerateHistoryEventDetails =
+  generateHistoryEventDetails as jest.Mock;
 
 jest.mock(
   '../../workflow-history-event-details-recursive/workflow-history-event-details-recursive',
   () =>
-    jest.fn(({ details }) => <div>Mock details: {JSON.stringify(details)}</div>)
+    jest.fn(({ entries }) => <div>Mock details: {JSON.stringify(entries)}</div>)
 );
 
 describe(WorkflowHistoryEventDetails.name, () => {
@@ -27,7 +28,7 @@ describe(WorkflowHistoryEventDetails.name, () => {
   });
 
   it('renders null when detailsEntries is empty', () => {
-    mockGetGroupedHistoryEventDetails.mockReturnValue([]);
+    mockGenerateHistoryEventDetails.mockReturnValue([]);
 
     render(
       <WorkflowHistoryEventDetails
@@ -39,9 +40,19 @@ describe(WorkflowHistoryEventDetails.name, () => {
   });
 
   it('renders details with path and value', () => {
-    mockGetGroupedHistoryEventDetails.mockReturnValue({
-      testKey: 'testValue',
-    });
+    mockGenerateHistoryEventDetails.mockReturnValue([
+      {
+        key: 'testKey',
+        path: 'testPath',
+        label: 'defaultLabel',
+        isGroup: false,
+        value: 'testValue',
+        renderConfig: {
+          name: 'Mock render config without custom label',
+          customMatcher: () => true,
+        },
+      },
+    ] satisfies WorkflowHistoryEventDetailsEntries);
 
     render(
       <WorkflowHistoryEventDetails
@@ -50,6 +61,6 @@ describe(WorkflowHistoryEventDetails.name, () => {
       />
     );
 
-    expect(screen.getByText(/"testKey":"testValue"/)).toBeInTheDocument();
+    expect(screen.getByText(/"testValue"/)).toBeInTheDocument();
   });
 });
