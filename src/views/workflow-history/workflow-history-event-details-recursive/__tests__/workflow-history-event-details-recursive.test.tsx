@@ -2,7 +2,7 @@ import React from 'react';
 
 import { render, screen, within } from '@/test-utils/rtl';
 
-import { testWorkflowHistoryDetailsEntries } from '../../__fixtures__/test-workflow-history-details';
+import { mockWorkflowHistoryDetailsEntries } from '../../__fixtures__/mock-workflow-history-details-entries';
 import { workflowPageUrlParams } from '../../__fixtures__/workflow-page-url-params';
 import WorkflowHistoryEventDetailsRecursive from '../workflow-history-event-details-recursive';
 
@@ -19,7 +19,7 @@ describe(WorkflowHistoryEventDetailsRecursive.name, () => {
   it('renders without crashing', () => {
     render(
       <WorkflowHistoryEventDetailsRecursive
-        entries={testWorkflowHistoryDetailsEntries}
+        entries={mockWorkflowHistoryDetailsEntries}
         decodedPageUrlParams={workflowPageUrlParams}
       />
     );
@@ -28,7 +28,7 @@ describe(WorkflowHistoryEventDetailsRecursive.name, () => {
   it('renders the correct number of divs', () => {
     render(
       <WorkflowHistoryEventDetailsRecursive
-        entries={testWorkflowHistoryDetailsEntries}
+        entries={mockWorkflowHistoryDetailsEntries}
         decodedPageUrlParams={workflowPageUrlParams}
       />
     );
@@ -41,7 +41,7 @@ describe(WorkflowHistoryEventDetailsRecursive.name, () => {
   it('stops recursion if an object has a value component defined in its render config', () => {
     render(
       <WorkflowHistoryEventDetailsRecursive
-        entries={testWorkflowHistoryDetailsEntries}
+        entries={mockWorkflowHistoryDetailsEntries}
         decodedPageUrlParams={workflowPageUrlParams}
       />
     );
@@ -62,7 +62,7 @@ describe(WorkflowHistoryEventDetailsRecursive.name, () => {
   it('renders nested details correctly', () => {
     render(
       <WorkflowHistoryEventDetailsRecursive
-        entries={testWorkflowHistoryDetailsEntries}
+        entries={mockWorkflowHistoryDetailsEntries}
         decodedPageUrlParams={workflowPageUrlParams}
       />
     );

@@ -16,17 +16,17 @@ export default function WorkflowHistoryEventDetails({
 }: Props) {
   const { cls } = useStyletronClasses(cssStyles);
 
-  const eventDetailsEntries = useMemo(() => {
+  const detailsEntries = useMemo(() => {
     const result = formatWorkflowHistoryEvent(event);
     return result ? generateHistoryEventDetails({ details: result }) : [];
   }, [event]);
 
-  if (eventDetailsEntries.length === 0)
+  if (detailsEntries.length === 0)
     return <div className={cls.emptyDetails}>No Details</div>;
 
   return (
     <WorkflowHistoryEventDetailsRecursive
-      entries={eventDetailsEntries}
+      entries={detailsEntries}
       decodedPageUrlParams={decodedPageUrlParams}
     />
   );

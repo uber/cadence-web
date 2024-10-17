@@ -13,7 +13,7 @@ export default function WorkflowHistoryEventDetailsRecursive({
   return (
     <>
       {entries.map((entry, index) => {
-        const forceWrap = entry.isGroup ? true : entry.renderConfig?.forceWrap;
+        const forceWrap = entry.isGroup || entry.renderConfig?.forceWrap;
 
         return (
           <styled.DetailsRow

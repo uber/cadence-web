@@ -8,14 +8,17 @@ export default function getDetailsFieldLabel(
     | WorkflowHistoryEventDetailsEntry
     | WorkflowHistoryEventDetailsGroupEntry
 ) {
-  return (
-    (entry.renderConfig?.getLabel
-      ? entry.renderConfig.getLabel({
-          key: entry.key,
-          path: entry.path,
-          value: entry.isGroup ? undefined : entry.value,
-        })
-      : entry.label) +
-    (entry.isGroup ? ' ' + `(${entry.groupEntries.length})` : '')
-  );
+  const mainLabel = entry.renderConfig?.getLabel
+    ? entry.renderConfig.getLabel({
+        key: entry.key,
+        path: entry.path,
+        value: entry.isGroup ? undefined : entry.value,
+      })
+    : entry.label;
+
+  const groupSuffix = entry.isGroup
+    ? ' ' + `(${entry.groupEntries.length})`
+    : '';
+
+  return mainLabel + groupSuffix;
 }

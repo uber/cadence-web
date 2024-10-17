@@ -49,16 +49,16 @@ describe('getDetailsFieldLabel', () => {
   it('should return the label from renderConfig if getLabel is defined', () => {
     const mockGetLabel = jest.fn().mockReturnValue('Custom Label');
 
-    expect(
-      getDetailsFieldLabel({
-        ...singleEntry,
-        renderConfig: {
-          name: 'Mock render config with custom label',
-          customMatcher: () => true,
-          getLabel: mockGetLabel,
-        },
-      })
-    ).toBe('Custom Label');
+    const entry = {
+      ...singleEntry,
+      renderConfig: {
+        name: 'Mock render config with custom label',
+        customMatcher: () => true,
+        getLabel: mockGetLabel,
+      },
+    };
+
+    expect(getDetailsFieldLabel(entry)).toBe('Custom Label');
 
     expect(mockGetLabel).toHaveBeenCalledWith({
       key: 'testKey',
@@ -72,16 +72,16 @@ describe('getDetailsFieldLabel', () => {
   });
 
   it('should append the number of entries to label for group entries', () => {
-    expect(
-      getDetailsFieldLabel({
-        ...groupEntry,
-        renderConfig: {
-          name: 'Mock render config with custom label',
-          customMatcher: () => true,
-          getLabel: jest.fn().mockReturnValue('Custom Label'),
-        },
-      })
-    ).toBe('Custom Label (2)');
+    const entry = {
+      ...groupEntry,
+      renderConfig: {
+        name: 'Mock render config with custom label',
+        customMatcher: () => true,
+        getLabel: jest.fn().mockReturnValue('Custom Label'),
+      },
+    };
+
+    expect(getDetailsFieldLabel(entry)).toBe('Custom Label (2)');
   });
 
   it('should append the number of entries to default label for group entries', () => {

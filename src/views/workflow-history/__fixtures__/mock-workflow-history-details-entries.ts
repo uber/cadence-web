@@ -1,29 +1,6 @@
 import { type WorkflowHistoryEventDetailsEntries } from '../workflow-history-event-details/workflow-history-event-details.types';
 
-export const testWorkflowHistoryDetails = {
-  version: '1',
-  taskId: '1234567890',
-  eventId: 1,
-  timestamp: new Date('2024-10-14T12:34:18.721Z'),
-  header: {
-    fields: {
-      mockField1: {
-        data: 'mock-data-1',
-      },
-      mockField2: {
-        data: 'mock-data-2',
-      },
-      mockField3: {
-        data: {
-          subField: 'mock-data-3.1',
-          subTimestamp: new Date('2024-10-14T11:34:18.721Z'),
-        },
-      },
-    },
-  },
-};
-
-export const testWorkflowHistoryDetailsEntries: WorkflowHistoryEventDetailsEntries =
+export const mockWorkflowHistoryDetailsEntries: WorkflowHistoryEventDetailsEntries =
   [
     {
       key: 'version',
