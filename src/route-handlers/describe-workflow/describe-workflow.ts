@@ -2,7 +2,6 @@ import merge from 'lodash/merge';
 import { NextResponse, type NextRequest } from 'next/server';
 
 import decodeUrlParams from '@/utils/decode-url-params';
-import * as grpcClient from '@/utils/grpc/grpc-client';
 import { getHTTPStatusCode, GRPCError } from '@/utils/grpc/grpc-error';
 import logger, { type RouteHandlerErrorPayload } from '@/utils/logger';
 
@@ -10,24 +9,25 @@ import {
   type DescribeUnArchivedWorkflowResponse,
   type DescribeArchivedWorkflowResponse,
   type RequestParams,
+  type Context,
 } from './describe-workflow.types';
 
 export default async function describeWorkflow(
   _: NextRequest,
-  requestParams: RequestParams
+  requestParams: RequestParams,
+  context: Context
 ) {
   const decodedParams = decodeUrlParams(requestParams.params);
 
   try {
-    const describeWorkflowResponse = await grpcClient.clusterMethods[
-      decodedParams.cluster
-    ].describeWorkflow({
-      domain: decodedParams.domain,
-      workflowExecution: {
-        workflowId: decodedParams.workflowId,
-        runId: decodedParams.runId,
-      },
-    });
+    const describeWorkflowResponse =
+      await context.grpcClusterMethods.describeWorkflow({
+        domain: decodedParams.domain,
+        workflowExecution: {
+          workflowId: decodedParams.workflowId,
+          runId: decodedParams.runId,
+        },
+      });
 
     const res: DescribeUnArchivedWorkflowResponse = merge(
       {},
@@ -42,9 +42,7 @@ export default async function describeWorkflow(
       res.workflowExecutionInfo.closeStatus !==
         'WORKFLOW_EXECUTION_CLOSE_STATUS_INVALID'
     ) {
-      const closeEventResponse = await grpcClient.clusterMethods[
-        decodedParams.cluster
-      ].getHistory({
+      const closeEventResponse = await context.grpcClusterMethods.getHistory({
         domain: decodedParams.domain,
         workflowExecution: {
           workflowId: decodedParams.workflowId,
@@ -65,16 +63,15 @@ export default async function describeWorkflow(
       if (e instanceof GRPCError && e.httpStatusCode !== 404) {
         throw e;
       }
-      const archivedHistoryResponse = await grpcClient.clusterMethods[
-        decodedParams.cluster
-      ].getHistory({
-        domain: decodedParams.domain,
-        workflowExecution: {
-          workflowId: decodedParams.workflowId,
-          runId: decodedParams.runId,
-        },
-        pageSize: 1,
-      });
+      const archivedHistoryResponse =
+        await context.grpcClusterMethods.getHistory({
+          domain: decodedParams.domain,
+          workflowExecution: {
+            workflowId: decodedParams.workflowId,
+            runId: decodedParams.runId,
+          },
+          pageSize: 1,
+        });
       const archivedHistoryEvents =
         archivedHistoryResponse.history?.events || [];
 
