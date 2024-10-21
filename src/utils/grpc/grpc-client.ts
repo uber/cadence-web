@@ -131,7 +131,7 @@ const clusterServices = CLUSTERS_CONFIGS.reduce((result, c) => {
   return result;
 }, {} as ClusterServices);
 
-const getCMethods = (
+const getClusterServicesMethods = (
   c: string,
   metadata?: GRPCMetadata
 ): GRPCClusterMethods => {
@@ -251,24 +251,11 @@ const getCMethods = (
   };
 };
 
-const getClustersMethods = (metadata?: GRPCMetadata) => {
-  return CLUSTERS_CONFIGS.reduce(
-    (result, { clusterName }) => {
-      const methods = getCMethods(clusterName, metadata);
-      result[clusterName] = methods;
-      return result;
-    },
-    {} as {
-      [k: string]: GRPCClusterMethods;
-    }
-  );
-};
-export const clustersMethods = getClustersMethods();
 export function getClusterMethods(
   cluster: string,
   requestMetadata?: GRPCMetadata
 ): GRPCClusterMethods {
-  const methods = getCMethods(cluster, requestMetadata);
+  const methods = getClusterServicesMethods(cluster, requestMetadata);
   if (!methods) {
     throw new Error(`Invalid cluster provided: ${cluster}`);
   }
