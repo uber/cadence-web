@@ -35,7 +35,8 @@ const GRPC_OPTIONS = {
   'grpc.max_receive_message_length': MAX_MESSAGE_SIZE,
 };
 
-export type GRPCMetadata = Record<string, string>;
+export type GRPCMetadata = Record<string, string | never>;
+
 export type GRPCRequestConfig = {
   serviceName: string;
   metadata?: GRPCMetadata;

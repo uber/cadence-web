@@ -1,4 +1,3 @@
-import { isObjectLike } from 'lodash';
 import { type NextRequest } from 'next/server';
 
 import decodeUrlParams from '@/utils/decode-url-params';
