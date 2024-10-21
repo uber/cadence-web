@@ -4,21 +4,21 @@ import { render, screen, within } from '@/test-utils/rtl';
 
 import { mockWorkflowHistoryDetailsEntries } from '../../__fixtures__/mock-workflow-history-details-entries';
 import { workflowPageUrlParams } from '../../__fixtures__/workflow-page-url-params';
-import WorkflowHistoryEventDetailsRecursive from '../workflow-history-event-details-recursive';
-
-jest.mock(
-  '../../workflow-history-event-details-base-value/workflow-history-event-details-base-value',
-  () => jest.fn(({ entryValue }) => <div>{String(entryValue)}</div>)
-);
+import WorkflowHistoryEventDetailsGroup from '../workflow-history-event-details-group';
 
 jest.mock('../helpers/get-details-field-label', () =>
   jest.fn().mockImplementation(({ label }) => label)
 );
 
-describe(WorkflowHistoryEventDetailsRecursive.name, () => {
+jest.mock(
+  '../../workflow-history-event-details-entry/workflow-history-event-details-entry',
+  () => jest.fn(({ entryValue }) => <div>{String(entryValue)}</div>)
+);
+
+describe(WorkflowHistoryEventDetailsGroup.name, () => {
   it('renders without crashing', () => {
     render(
-      <WorkflowHistoryEventDetailsRecursive
+      <WorkflowHistoryEventDetailsGroup
         entries={mockWorkflowHistoryDetailsEntries}
         decodedPageUrlParams={workflowPageUrlParams}
       />
@@ -27,7 +27,7 @@ describe(WorkflowHistoryEventDetailsRecursive.name, () => {
 
   it('renders the correct number of divs', () => {
     render(
-      <WorkflowHistoryEventDetailsRecursive
+      <WorkflowHistoryEventDetailsGroup
         entries={mockWorkflowHistoryDetailsEntries}
         decodedPageUrlParams={workflowPageUrlParams}
       />
@@ -40,7 +40,7 @@ describe(WorkflowHistoryEventDetailsRecursive.name, () => {
 
   it('stops recursion if an object has a value component defined in its render config', () => {
     render(
-      <WorkflowHistoryEventDetailsRecursive
+      <WorkflowHistoryEventDetailsGroup
         entries={mockWorkflowHistoryDetailsEntries}
         decodedPageUrlParams={workflowPageUrlParams}
       />
@@ -61,7 +61,7 @@ describe(WorkflowHistoryEventDetailsRecursive.name, () => {
 
   it('renders nested details correctly', () => {
     render(
-      <WorkflowHistoryEventDetailsRecursive
+      <WorkflowHistoryEventDetailsGroup
         entries={mockWorkflowHistoryDetailsEntries}
         decodedPageUrlParams={workflowPageUrlParams}
       />

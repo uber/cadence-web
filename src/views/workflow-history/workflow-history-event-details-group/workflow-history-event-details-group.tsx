@@ -1,13 +1,14 @@
 import React from 'react';
 
-import WorkflowHistoryEventDetailsBaseValue from '../workflow-history-event-details-base-value/workflow-history-event-details-base-value';
+import WorkflowHistoryEventDetailsEntry from '../workflow-history-event-details-entry/workflow-history-event-details-entry';
 
 import getDetailsFieldLabel from './helpers/get-details-field-label';
-import { styled } from './workflow-history-event-details-recursive.styles';
-import { type Props } from './workflow-history-event-details-recursive.types';
+import { styled } from './workflow-history-event-details-group.styles';
+import { type Props } from './workflow-history-event-details-group.types';
 
-export default function WorkflowHistoryEventDetailsRecursive({
+export default function WorkflowHistoryEventDetailsGroup({
   entries,
+  parentGroupPath = '',
   decodedPageUrlParams,
 }: Props) {
   return (
@@ -29,18 +30,19 @@ export default function WorkflowHistoryEventDetailsRecursive({
               $forceWrap={forceWrap}
               $useBlackText={entry.isGroup}
             >
-              {getDetailsFieldLabel(entry)}
+              {getDetailsFieldLabel(entry, parentGroupPath)}
             </styled.DetailsLabel>
             <styled.DetailsValue $forceWrap={forceWrap}>
               {entry.isGroup ? (
                 <styled.IndentedDetails>
-                  <WorkflowHistoryEventDetailsRecursive
+                  <WorkflowHistoryEventDetailsGroup
                     entries={entry.groupEntries}
+                    parentGroupPath={entry.path}
                     decodedPageUrlParams={decodedPageUrlParams}
                   />
                 </styled.IndentedDetails>
               ) : (
-                <WorkflowHistoryEventDetailsBaseValue
+                <WorkflowHistoryEventDetailsEntry
                   entryKey={entry.key}
                   entryPath={entry.path}
                   entryValue={entry.value}

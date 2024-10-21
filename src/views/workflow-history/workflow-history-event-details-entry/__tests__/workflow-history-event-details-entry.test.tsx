@@ -4,10 +4,10 @@ import { render } from '@/test-utils/rtl';
 
 import { workflowPageUrlParams } from '../../__fixtures__/workflow-page-url-params';
 import { type WorkflowHistoryEventDetailsValueComponentProps } from '../../workflow-history-event-details/workflow-history-event-details.types';
-import WorkflowHistoryEventDetailsBaseValue from '../workflow-history-event-details-base-value';
-import { type Props } from '../workflow-history-event-details-base-value.types';
+import WorkflowHistoryEventDetailsEntry from '../workflow-history-event-details-entry';
+import { type Props } from '../workflow-history-event-details-entry.types';
 
-describe(WorkflowHistoryEventDetailsBaseValue.name, () => {
+describe(WorkflowHistoryEventDetailsEntry.name, () => {
   it('renders the custom ValueComponent when provided', () => {
     const CustomComponent = ({
       entryKey,
@@ -32,7 +32,7 @@ describe(WorkflowHistoryEventDetailsBaseValue.name, () => {
     };
 
     const { getByText } = render(
-      <WorkflowHistoryEventDetailsBaseValue {...props} />
+      <WorkflowHistoryEventDetailsEntry {...props} />
     );
 
     expect(getByText('key1 - path1 - value1')).toBeInTheDocument();
@@ -51,7 +51,7 @@ describe(WorkflowHistoryEventDetailsBaseValue.name, () => {
     };
 
     const { getByText } = render(
-      <WorkflowHistoryEventDetailsBaseValue {...props} />
+      <WorkflowHistoryEventDetailsEntry {...props} />
     );
 
     expect(getByText('value2')).toBeInTheDocument();

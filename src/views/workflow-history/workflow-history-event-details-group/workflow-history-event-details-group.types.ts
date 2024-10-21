@@ -4,5 +4,6 @@ import { type WorkflowHistoryEventDetailsEntries } from '../workflow-history-eve
 
 export type Props = {
   entries: WorkflowHistoryEventDetailsEntries;
+  parentGroupPath?: string;
   decodedPageUrlParams: WorkflowPageTabsParams;
 };

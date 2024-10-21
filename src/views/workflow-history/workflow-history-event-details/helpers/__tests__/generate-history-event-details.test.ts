@@ -40,7 +40,6 @@ describe(generateHistoryEventDetails.name, () => {
           {
             isGroup: false,
             key: 'data',
-            label: 'subEvent1.data',
             path: 'event1.subEvent1.data',
             renderConfig: { name: 'Mock render config' },
             value: 'value1',
@@ -48,7 +47,6 @@ describe(generateHistoryEventDetails.name, () => {
           {
             isGroup: false,
             key: 'data',
-            label: 'subEvent2.data',
             path: 'event1.subEvent2.data',
             renderConfig: { name: 'Mock render config' },
             value: 'value2',
@@ -56,14 +54,12 @@ describe(generateHistoryEventDetails.name, () => {
         ],
         isGroup: true,
         key: 'event1',
-        label: 'event1',
         path: 'event1',
         renderConfig: { name: 'Mock render config' },
       },
       {
         isGroup: false,
         key: 'event2',
-        label: 'event2',
         path: 'event2',
         renderConfig: { name: 'Mock render config' },
         value: 'value3',
@@ -88,7 +84,6 @@ describe(generateHistoryEventDetails.name, () => {
           {
             isGroup: false,
             key: '0',
-            label: '0',
             path: 'metadata.events.0',
             renderConfig: { name: 'Mock render config' },
             value: 'event1',
@@ -96,7 +91,6 @@ describe(generateHistoryEventDetails.name, () => {
           {
             isGroup: false,
             key: '1',
-            label: '1',
             path: 'metadata.events.1',
             renderConfig: { name: 'Mock render config' },
             value: 'event2',
@@ -104,7 +98,6 @@ describe(generateHistoryEventDetails.name, () => {
           {
             isGroup: false,
             key: '2',
-            label: '2',
             path: 'metadata.events.2',
             renderConfig: { name: 'Mock render config' },
             value: 'event3',
@@ -112,7 +105,6 @@ describe(generateHistoryEventDetails.name, () => {
         ],
         isGroup: true,
         key: 'events',
-        label: 'metadata.events',
         path: 'metadata.events',
         renderConfig: { name: 'Mock render config' },
       },
@@ -135,7 +127,6 @@ describe(generateHistoryEventDetails.name, () => {
       {
         isGroup: false,
         key: 'subSubEvent1',
-        label: 'event1.subEvent1.subSubEvent1',
         path: 'event1.subEvent1.subSubEvent1',
         renderConfig: { name: 'Mock render config' },
         value: 'value1',
@@ -180,7 +171,6 @@ describe(generateHistoryEventDetails.name, () => {
       {
         isGroup: false,
         key: 'event1',
-        label: 'event1',
         path: 'event1',
         renderConfig: {
           name: 'Mock render config with value component that always matches',

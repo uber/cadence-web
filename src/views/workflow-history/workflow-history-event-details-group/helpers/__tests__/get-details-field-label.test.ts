@@ -6,8 +6,7 @@ import getDetailsFieldLabel from '../get-details-field-label';
 
 const singleEntry: WorkflowHistoryEventDetailsEntry = {
   key: 'testKey',
-  path: 'testPath',
-  label: 'defaultLabel',
+  path: 'testKey',
   isGroup: false,
   value: 'testValue',
   renderConfig: {
@@ -18,22 +17,19 @@ const singleEntry: WorkflowHistoryEventDetailsEntry = {
 
 const groupEntry: WorkflowHistoryEventDetailsGroupEntry = {
   key: 'testKey',
-  path: 'testPath',
-  label: 'defaultLabel',
+  path: 'testKey',
   isGroup: true,
   groupEntries: [
     {
       key: 'testKey1',
-      path: 'testKey.testPath1',
-      label: 'defaultLabel1',
+      path: 'testKey.testKey1',
       isGroup: false,
       value: 'testValue1',
       renderConfig: null,
     },
     {
       key: 'testKey2',
-      path: 'testKey.testPath2',
-      label: 'defaultLabel2',
+      path: 'testKey.testKey2',
       isGroup: false,
       value: 'testValue2',
       renderConfig: null,
@@ -62,13 +58,13 @@ describe('getDetailsFieldLabel', () => {
 
     expect(mockGetLabel).toHaveBeenCalledWith({
       key: 'testKey',
-      path: 'testPath',
+      path: 'testKey',
       value: 'testValue',
     });
   });
 
   it('should return the default label if renderConfig.getLabel is not defined', () => {
-    expect(getDetailsFieldLabel(singleEntry)).toBe('defaultLabel');
+    expect(getDetailsFieldLabel(singleEntry)).toBe('testKey');
   });
 
   it('should append the number of entries to label for group entries', () => {
@@ -85,6 +81,12 @@ describe('getDetailsFieldLabel', () => {
   });
 
   it('should append the number of entries to default label for group entries', () => {
-    expect(getDetailsFieldLabel(groupEntry)).toBe('defaultLabel (2)');
+    expect(getDetailsFieldLabel(groupEntry)).toBe('testKey (2)');
+  });
+
+  it('should subtract the parent path correctly for a child path', () => {
+    expect(getDetailsFieldLabel(groupEntry.groupEntries[0], 'testKey')).toBe(
+      'testKey1'
+    );
   });
 });

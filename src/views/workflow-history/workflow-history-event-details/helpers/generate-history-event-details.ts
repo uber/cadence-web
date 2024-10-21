@@ -11,11 +11,9 @@ import getHistoryEventFieldRenderConfig from './get-history-event-field-render-c
 export default function generateHistoryEventDetails({
   details,
   parentPath = '',
-  labelPrefix = '',
 }: {
   details: object;
   parentPath?: string;
-  labelPrefix?: string;
 }): WorkflowHistoryEventDetailsEntries {
   if (details === null || details === undefined) {
     return [];
@@ -25,7 +23,6 @@ export default function generateHistoryEventDetails({
 
   Object.entries(details).forEach(([key, value]) => {
     const path = parentPath ? `${parentPath}.${key}` : key;
-    const label = labelPrefix ? `${labelPrefix}.${key}` : key;
 
     const renderConfig = getHistoryEventFieldRenderConfig({
       key,
@@ -44,14 +41,12 @@ export default function generateHistoryEventDetails({
           ...generateHistoryEventDetails({
             details: value,
             parentPath: path,
-            labelPrefix: label,
           })
         );
       } else {
         const groupEntry: WorkflowHistoryEventDetailsGroupEntry = {
           key,
           path,
-          label,
           isGroup: true,
           groupEntries: generateHistoryEventDetails({
             details: value,
@@ -67,7 +62,6 @@ export default function generateHistoryEventDetails({
     const entry: WorkflowHistoryEventDetailsEntry = {
       key,
       path,
-      label,
       value,
       renderConfig,
       isGroup: false,

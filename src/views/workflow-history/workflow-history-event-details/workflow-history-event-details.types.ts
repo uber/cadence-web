@@ -38,7 +38,6 @@ export type WorkflowHistoryEventDetailsConfig = {
 type WorkflowHistoryEventDetailsEntryBase = {
   key: string;
   path: string;
-  label: string;
   isGroup?: boolean;
   renderConfig: WorkflowHistoryEventDetailsConfig | null;
 };

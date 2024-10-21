@@ -4,7 +4,7 @@ import React, { useMemo } from 'react';
 import useStyletronClasses from '@/hooks/use-styletron-classes';
 import formatWorkflowHistoryEvent from '@/utils/data-formatters/format-workflow-history-event';
 
-import WorkflowHistoryEventDetailsRecursive from '../workflow-history-event-details-recursive/workflow-history-event-details-recursive';
+import WorkflowHistoryEventDetailsGroup from '../workflow-history-event-details-group/workflow-history-event-details-group';
 
 import generateHistoryEventDetails from './helpers/generate-history-event-details';
 import { cssStyles } from './workflow-history-event-details.styles';
@@ -25,7 +25,7 @@ export default function WorkflowHistoryEventDetails({
     return <div className={cls.emptyDetails}>No Details</div>;
 
   return (
-    <WorkflowHistoryEventDetailsRecursive
+    <WorkflowHistoryEventDetailsGroup
       entries={detailsEntries}
       decodedPageUrlParams={decodedPageUrlParams}
     />

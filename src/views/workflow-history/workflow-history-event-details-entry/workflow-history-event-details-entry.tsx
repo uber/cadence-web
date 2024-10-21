@@ -1,6 +1,6 @@
-import { type Props } from './workflow-history-event-details-base-value.types';
+import { type Props } from './workflow-history-event-details-entry.types';
 
-export default function WorkflowHistoryEventDetailsBaseValue({
+export default function WorkflowHistoryEventDetailsEntry({
   entryKey,
   entryPath,
   entryValue,

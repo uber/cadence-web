@@ -17,7 +17,7 @@ const mockGenerateHistoryEventDetails =
   generateHistoryEventDetails as jest.Mock;
 
 jest.mock(
-  '../../workflow-history-event-details-recursive/workflow-history-event-details-recursive',
+  '../../workflow-history-event-details-group/workflow-history-event-details-group',
   () =>
     jest.fn(({ entries }) => <div>Mock details: {JSON.stringify(entries)}</div>)
 );
@@ -44,7 +44,6 @@ describe(WorkflowHistoryEventDetails.name, () => {
       {
         key: 'testKey',
         path: 'testPath',
-        label: 'defaultLabel',
         isGroup: false,
         value: 'testValue',
         renderConfig: {
