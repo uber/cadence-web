@@ -15,12 +15,12 @@ import getWorkersForTaskList from './helpers/get-workers-for-task-list';
 export async function describeTaskList(
   _: NextRequest,
   requestParams: RequestParams,
-  context: Context
+  ctx: Context
 ) {
   const decodedParams = decodeUrlParams(requestParams.params) as RouteParams;
 
   try {
-    const decisionTaskList = await context.grpcClusterMethods.describeTaskList({
+    const decisionTaskList = await ctx.grpcClusterMethods.describeTaskList({
       domain: decodedParams.domain,
       taskList: {
         name: decodedParams.taskListName,
@@ -28,7 +28,7 @@ export async function describeTaskList(
       taskListType: 'TASK_LIST_TYPE_DECISION',
     });
 
-    const activityTaskList = await context.grpcClusterMethods.describeTaskList({
+    const activityTaskList = await ctx.grpcClusterMethods.describeTaskList({
       domain: decodedParams.domain,
       taskList: {
         name: decodedParams.taskListName,

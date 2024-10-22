@@ -13,12 +13,12 @@ import {
 export async function describeDomain(
   _: NextRequest,
   requestParams: RequestParams,
-  context: Context
+  ctx: Context
 ) {
   const decodedParams = decodeUrlParams(requestParams.params) as RouteParams;
 
   try {
-    const res = await context.grpcClusterMethods.describeDomain({
+    const res = await ctx.grpcClusterMethods.describeDomain({
       name: decodedParams.domain,
     });
 

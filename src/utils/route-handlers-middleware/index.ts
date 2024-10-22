@@ -1,3 +1,3 @@
-export { default } from './handle-route-request';
+export { default as routeHandlerWithMiddlewares } from './route-handler-with-middlewares';
 
 export { type DefaultMiddlewaresContext } from './route-handlers-middleware.types';

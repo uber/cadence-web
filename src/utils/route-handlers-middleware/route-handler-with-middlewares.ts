@@ -10,27 +10,27 @@ import type {
   RequestHandlerFunction,
 } from './route-handlers-middleware.types';
 
-async function handleRouteRequest<
+export default async function routeHandlersWithMiddlewares<
   M extends MiddlewareFunction[],
   Options extends { params: Record<string, string> },
 >(
+  requestHandler: RequestHandlerFunction<M, Options>,
   request: NextRequest,
   options: Options,
-  requestHandler: RequestHandlerFunction<M, Options>,
   middlewares: M
 ) {
-  let context: Partial<
+  let ctx: Partial<
     CombineMiddlewareContextType<GetAllMiddlewaresReturnTypes<M>>
   > = {};
   for (const middlewareFunction of middlewares) {
     try {
-      const result = await middlewareFunction(request, options, context);
+      const result = await middlewareFunction(request, options, ctx);
       if (result instanceof NextResponse) {
         return result;
       } else if (Array.isArray(result) && typeof result[0] === 'string') {
         const [key, value] = result;
-        context = {
-          ...context,
+        ctx = {
+          ...ctx,
           [key]: value,
         };
       }
@@ -50,8 +50,6 @@ async function handleRouteRequest<
   return requestHandler(
     request,
     options,
-    context as CombineMiddlewareContextType<GetAllMiddlewaresReturnTypes<M>>
+    ctx as CombineMiddlewareContextType<GetAllMiddlewaresReturnTypes<M>>
   );
 }
-
-export default handleRouteRequest;

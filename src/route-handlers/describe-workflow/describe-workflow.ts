@@ -15,13 +15,13 @@ import {
 export default async function describeWorkflow(
   _: NextRequest,
   requestParams: RequestParams,
-  context: Context
+  ctx: Context
 ) {
   const decodedParams = decodeUrlParams(requestParams.params);
 
   try {
     const describeWorkflowResponse =
-      await context.grpcClusterMethods.describeWorkflow({
+      await ctx.grpcClusterMethods.describeWorkflow({
         domain: decodedParams.domain,
         workflowExecution: {
           workflowId: decodedParams.workflowId,
@@ -42,7 +42,7 @@ export default async function describeWorkflow(
       res.workflowExecutionInfo.closeStatus !==
         'WORKFLOW_EXECUTION_CLOSE_STATUS_INVALID'
     ) {
-      const closeEventResponse = await context.grpcClusterMethods.getHistory({
+      const closeEventResponse = await ctx.grpcClusterMethods.getHistory({
         domain: decodedParams.domain,
         workflowExecution: {
           workflowId: decodedParams.workflowId,
@@ -63,15 +63,14 @@ export default async function describeWorkflow(
       if (e instanceof GRPCError && e.httpStatusCode !== 404) {
         throw e;
       }
-      const archivedHistoryResponse =
-        await context.grpcClusterMethods.getHistory({
-          domain: decodedParams.domain,
-          workflowExecution: {
-            workflowId: decodedParams.workflowId,
-            runId: decodedParams.runId,
-          },
-          pageSize: 1,
-        });
+      const archivedHistoryResponse = await ctx.grpcClusterMethods.getHistory({
+        domain: decodedParams.domain,
+        workflowExecution: {
+          workflowId: decodedParams.workflowId,
+          runId: decodedParams.runId,
+        },
+        pageSize: 1,
+      });
       const archivedHistoryEvents =
         archivedHistoryResponse.history?.events || [];
 

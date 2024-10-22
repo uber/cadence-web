@@ -14,12 +14,12 @@ import { queryTypesDataSchema } from './schemas/query-types-data-schema';
 export default async function fetchWorkflowQueryTypes(
   _: NextRequest,
   requestParams: RequestParams,
-  context: Context
+  ctx: Context
 ) {
   const decodedParams = decodeUrlParams(requestParams.params);
 
   try {
-    const res = await context.grpcClusterMethods.queryWorkflow({
+    const res = await ctx.grpcClusterMethods.queryWorkflow({
       domain: decodedParams.domain,
       workflowExecution: {
         workflowId: decodedParams.workflowId,

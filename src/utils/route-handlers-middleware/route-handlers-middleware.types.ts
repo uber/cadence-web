@@ -11,7 +11,7 @@ export type MiddlewareFunction<
 > = (
   request: NextRequest,
   options: { params: Record<string, string> },
-  context: Record<string, unknown>
+  ctx: Record<string, unknown>
 ) => ReturnT;
 
 export type GetAllMiddlewaresReturnTypes<M extends MiddlewareFunction[]> = {
@@ -28,7 +28,7 @@ export type RequestHandlerFunction<
 > = (
   request: NextRequest,
   options: O,
-  context: CombineMiddlewareContextType<
+  ctx: CombineMiddlewareContextType<
     GetAllMiddlewaresReturnTypes<MiddlewareFunctionsT>
   >
 ) => any;

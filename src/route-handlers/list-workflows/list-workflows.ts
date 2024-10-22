@@ -17,7 +17,7 @@ import listWorkflowsQueryParamSchema from './schemas/list-workflows-query-params
 export async function listWorkflows(
   request: NextRequest,
   requestParams: RequestParams,
-  context: Context
+  ctx: Context
 ) {
   const decodedParams = decodeUrlParams(requestParams.params) as RouteParams;
 
@@ -37,7 +37,7 @@ export async function listWorkflows(
   }
 
   try {
-    const res = await context.grpcClusterMethods.listWorkflows({
+    const res = await ctx.grpcClusterMethods.listWorkflows({
       domain: decodedParams.domain,
       pageSize: queryParams.pageSize,
       nextPageToken: queryParams.nextPage,

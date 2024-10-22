@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
 
 import logger from '../../logger';
-import handleRouteRequest from '../handle-route-request';
+import routeHandlerWithMiddlewares from '../route-handler-with-middlewares';
 import type {
   MiddlewareFunction,
   RequestHandlerFunction,
@@ -17,7 +17,7 @@ const mockRequestHandler: RequestHandlerFunction<any, any> = jest
   .fn()
   .mockResolvedValue(mockResponse);
 
-describe('handleRouteRequest', () => {
+describe('routeHandlerWithMiddlewares', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -27,10 +27,10 @@ describe('handleRouteRequest', () => {
       jest.fn().mockResolvedValue(mockResponse),
     ];
 
-    const result = await handleRouteRequest(
+    const result = await routeHandlerWithMiddlewares(
+      mockRequestHandler,
       mockRequest,
       mockOptions,
-      mockRequestHandler,
       mockMiddleware
     );
 
@@ -43,10 +43,10 @@ describe('handleRouteRequest', () => {
       jest.fn().mockResolvedValue(['key', 'value']),
     ];
 
-    const result = await handleRouteRequest(
+    const result = await routeHandlerWithMiddlewares(
+      mockRequestHandler,
       mockRequest,
       mockOptions,
-      mockRequestHandler,
       mockMiddleware
     );
 
@@ -62,10 +62,10 @@ describe('handleRouteRequest', () => {
       jest.fn().mockRejectedValue(mockError),
     ];
 
-    const result = await handleRouteRequest(
+    const result = await routeHandlerWithMiddlewares(
+      mockRequestHandler,
       mockRequest,
       mockOptions,
-      mockRequestHandler,
       mockMiddleware
     );
 
@@ -83,10 +83,10 @@ describe('handleRouteRequest', () => {
       jest.fn().mockResolvedValue(['grpcClusterMethods', {}]),
     ];
 
-    const result = await handleRouteRequest(
+    const result = await routeHandlerWithMiddlewares(
+      mockRequestHandler,
       mockRequest,
       mockOptions,
-      mockRequestHandler,
       mockMiddleware
     );
 

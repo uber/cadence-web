@@ -14,7 +14,7 @@ import getWorkflowHistoryQueryParamsSchema from './schemas/get-workflow-history-
 export default async function getWorkflowHistory(
   request: NextRequest,
   requestParams: RequestParams,
-  context: Context
+  ctx: Context
 ) {
   const decodedParams = decodeUrlParams<RouteParams>(requestParams.params);
   const { data: queryParams, error } =
@@ -35,7 +35,7 @@ export default async function getWorkflowHistory(
   }
 
   try {
-    const res = await context.grpcClusterMethods.getHistory({
+    const res = await ctx.grpcClusterMethods.getHistory({
       domain: decodedParams.domain,
       workflowExecution: {
         workflowId: decodedParams.workflowId,

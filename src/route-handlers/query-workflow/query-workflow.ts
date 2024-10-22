@@ -14,7 +14,7 @@ import validQueryInputSchema from './schemas/valid-query-input-schema';
 export async function queryWorkflow(
   request: NextRequest,
   requestParams: RequestParams,
-  context: Context
+  ctx: Context
 ) {
   const requestBody = await request.text();
   const { data: queryInput, error } =
@@ -32,7 +32,7 @@ export async function queryWorkflow(
   const decodedParams = decodeUrlParams(requestParams.params);
 
   try {
-    const res = await context.grpcClusterMethods.queryWorkflow({
+    const res = await ctx.grpcClusterMethods.queryWorkflow({
       domain: decodedParams.domain,
       workflowExecution: {
         workflowId: decodedParams.workflowId,
