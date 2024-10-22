@@ -10,9 +10,9 @@ export async function GET(
   options: { params: RouteParams }
 ) {
   return routeHandlerWithMiddlewares(
+    fetchWorkflowQueryTypes,
     request,
     options,
-    fetchWorkflowQueryTypes,
     routeHandlersDefaultMiddlewares
   );
 }
