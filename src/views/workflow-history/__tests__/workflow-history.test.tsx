@@ -83,15 +83,9 @@ describe('WorkflowHistory', () => {
     const { user } = setup({});
     const toggleButton = await screen.findByText('Filter Toggle');
 
-    await userEvent.click(toggleButton);
+    await user.click(toggleButton);
 
     expect(await screen.findByText('Filter Fields')).toBeInTheDocument();
-  });
-
-  it('should scroll to the event in timeline when it is clicked in compact view', async () => {
-    const { user, debug } = setup({});
-    expect(await screen.findByText('Compact group Card')).toBeInTheDocument();
-    debug();
   });
 });
 
