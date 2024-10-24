@@ -21,7 +21,7 @@ jest.mock(
   () => jest.fn(() => <div>Timeline group card</div>)
 );
 jest.mock(
-  '../workflow-history-timeline-load-more/workflow-history-timeline-load-more',
+  '../workflow-history-timeline-footer/workflow-history-timeline-footer',
   () => jest.fn(() => <div>Load more</div>)
 );
 
@@ -67,7 +67,7 @@ describe('WorkflowHistory', () => {
 
   it('throws an error if the request fails', async () => {
     try {
-      await act(() => setup({ error: true }));
+      act(() => setup({ error: true }));
     } catch (error) {
       expect((error as Error)?.message).toBe(
         'Failed to fetch workflow history'
@@ -80,19 +80,18 @@ describe('WorkflowHistory', () => {
   });
 
   it('should show filters on executing toggle button onClick', async () => {
-    setup({});
+    const { user } = setup({});
     const toggleButton = await screen.findByText('Filter Toggle');
 
-    await act(() => {
-      userEvent.click(toggleButton);
-    });
+    await user.click(toggleButton);
 
     expect(await screen.findByText('Filter Fields')).toBeInTheDocument();
   });
 });
 
 function setup({ error }: { error?: boolean }) {
-  render(
+  const user = userEvent.setup();
+  const renderResult = render(
     <Suspense>
       <WorkflowHistory
         params={{
@@ -141,4 +140,6 @@ function setup({ error }: { error?: boolean }) {
       ),
     }
   );
+
+  return { user, ...renderResult };
 }

@@ -1,5 +1,5 @@
 'use client';
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 
 import {
   useSuspenseInfiniteQuery,
@@ -7,7 +7,7 @@ import {
 } from '@tanstack/react-query';
 import { HeadingXSmall } from 'baseui/typography';
 import queryString from 'query-string';
-import { Virtuoso } from 'react-virtuoso';
+import { Virtuoso, type VirtuosoHandle } from 'react-virtuoso';
 
 import usePageFilters from '@/components/page-filters/hooks/use-page-filters';
 import PageFiltersFields from '@/components/page-filters/page-filters-fields/page-filters-fields';
@@ -26,8 +26,8 @@ import workflowHistoryFiltersConfig from './config/workflow-history-filters.conf
 import { groupHistoryEvents } from './helpers/group-history-events';
 import WorkflowHistoryCompactEventCard from './workflow-history-compact-event-card/workflow-history-compact-event-card';
 import WorkflowHistoryExportJsonButton from './workflow-history-export-json-button/workflow-history-export-json-button';
+import WorkflowHistoryTimelineFooter from './workflow-history-timeline-footer/workflow-history-timeline-footer';
 import WorkflowHistoryTimelineGroup from './workflow-history-timeline-group/workflow-history-timeline-group';
-import WorkflowHistoryTimelineLoadMore from './workflow-history-timeline-load-more/workflow-history-timeline-load-more';
 import { cssStyles } from './workflow-history.styles';
 import { type Props } from './workflow-history.types';
 
@@ -108,6 +108,10 @@ export default function WorkflowHistory({ params }: Props) {
 
   const [areFiltersShown, setAreFiltersShown] = useState(false);
 
+  const onEndReached = useCallback(() => fetchNextPage(), [fetchNextPage]);
+
+  const timelineSectionListRef = useRef<VirtuosoHandle>(null);
+
   return (
     <PageSection className={cls.pageContainer}>
       <div className={cls.pageHeader}>
@@ -133,7 +137,7 @@ export default function WorkflowHistory({ params }: Props) {
           <div role="list" className={cls.compactSection}>
             <Virtuoso
               data={filteredGroupedHistoryEventsEntries}
-              itemContent={(_, [groupId, { label, status, timeLabel }]) => (
+              itemContent={(index, [groupId, { label, status, timeLabel }]) => (
                 <div role="listitem" className={cls.compactCardContainer}>
                   <WorkflowHistoryCompactEventCard
                     key={groupId}
@@ -141,15 +145,24 @@ export default function WorkflowHistory({ params }: Props) {
                     label={label}
                     secondaryLabel={timeLabel}
                     showLabelPlaceholder={!label}
+                    onClick={() => {
+                      timelineSectionListRef.current?.scrollToIndex({
+                        index,
+                        align: 'start',
+                        behavior: 'smooth',
+                      });
+                    }}
                   />
                 </div>
               )}
+              endReached={onEndReached}
             />
           </div>
           <section className={cls.timelineSection}>
             <Virtuoso
               useWindowScroll
               data={filteredGroupedHistoryEventsEntries}
+              ref={timelineSectionListRef}
               itemContent={(index, [groupId, group]) => (
                 <WorkflowHistoryTimelineGroup
                   key={groupId}
@@ -167,7 +180,7 @@ export default function WorkflowHistory({ params }: Props) {
               )}
               components={{
                 Footer: () => (
-                  <WorkflowHistoryTimelineLoadMore
+                  <WorkflowHistoryTimelineFooter
                     error={error}
                     fetchNextPage={fetchNextPage}
                     hasNextPage={hasNextPage}
@@ -175,6 +188,7 @@ export default function WorkflowHistory({ params }: Props) {
                   />
                 ),
               }}
+              endReached={onEndReached}
             />
           </section>
         </div>
