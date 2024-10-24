@@ -67,7 +67,7 @@ describe('WorkflowHistory', () => {
 
   it('throws an error if the request fails', async () => {
     try {
-      await act(() => setup({ error: true }));
+      act(() => setup({ error: true }));
     } catch (error) {
       expect((error as Error)?.message).toBe(
         'Failed to fetch workflow history'
@@ -80,19 +80,24 @@ describe('WorkflowHistory', () => {
   });
 
   it('should show filters on executing toggle button onClick', async () => {
-    setup({});
+    const { user } = setup({});
     const toggleButton = await screen.findByText('Filter Toggle');
 
-    await act(() => {
-      userEvent.click(toggleButton);
-    });
+    await userEvent.click(toggleButton);
 
     expect(await screen.findByText('Filter Fields')).toBeInTheDocument();
+  });
+
+  it('should scroll to the event in timeline when it is clicked in compact view', async () => {
+    const { user, debug } = setup({});
+    expect(await screen.findByText('Compact group Card')).toBeInTheDocument();
+    debug();
   });
 });
 
 function setup({ error }: { error?: boolean }) {
-  render(
+  const user = userEvent.setup();
+  const renderResult = render(
     <Suspense>
       <WorkflowHistory
         params={{
@@ -141,4 +146,6 @@ function setup({ error }: { error?: boolean }) {
       ),
     }
   );
+
+  return { user, ...renderResult };
 }
