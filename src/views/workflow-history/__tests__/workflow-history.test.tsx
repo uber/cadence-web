@@ -21,7 +21,7 @@ jest.mock(
   () => jest.fn(() => <div>Timeline group card</div>)
 );
 jest.mock(
-  '../workflow-history-timeline-load-more/workflow-history-timeline-load-more',
+  '../workflow-history-timeline-footer/workflow-history-timeline-footer',
   () => jest.fn(() => <div>Load more</div>)
 );
 

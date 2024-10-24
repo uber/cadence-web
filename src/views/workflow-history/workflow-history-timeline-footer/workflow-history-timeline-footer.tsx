@@ -6,14 +6,6 @@ import { styled } from './workflow-history-timeline-footer.styles';
 import { type Props } from './workflow-history-timeline-footer.types';
 
 export default function WorkflowHistoryTimelineLoadMore(props: Props) {
-  if (props.hasNextPage || props.isFetchingNextPage) {
-    return (
-      <styled.SpinnerContainer>
-        <Spinner data-testid="loading-spinner" />
-      </styled.SpinnerContainer>
-    );
-  }
-
   if (props.error) {
     return (
       <styled.EndMessageContainer $isError={true}>
@@ -26,6 +18,14 @@ export default function WorkflowHistoryTimelineLoadMore(props: Props) {
           Retry manually
         </styled.RetryLink>
       </styled.EndMessageContainer>
+    );
+  }
+
+  if (props.hasNextPage || props.isFetchingNextPage) {
+    return (
+      <styled.SpinnerContainer>
+        <Spinner data-testid="loading-spinner" />
+      </styled.SpinnerContainer>
     );
   }
 
