@@ -1,5 +1,5 @@
 'use client';
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 
 import {
   useSuspenseInfiniteQuery,
@@ -26,8 +26,8 @@ import workflowHistoryFiltersConfig from './config/workflow-history-filters.conf
 import { groupHistoryEvents } from './helpers/group-history-events';
 import WorkflowHistoryCompactEventCard from './workflow-history-compact-event-card/workflow-history-compact-event-card';
 import WorkflowHistoryExportJsonButton from './workflow-history-export-json-button/workflow-history-export-json-button';
-import WorkflowHistoryTimelineFooter from './workflow-history-timeline-footer/workflow-history-timeline-footer';
 import WorkflowHistoryTimelineGroup from './workflow-history-timeline-group/workflow-history-timeline-group';
+import WorkflowHistoryTimelineLoadMore from './workflow-history-timeline-load-more/workflow-history-timeline-load-more';
 import { cssStyles } from './workflow-history.styles';
 import { type Props } from './workflow-history.types';
 
@@ -108,8 +108,6 @@ export default function WorkflowHistory({ params }: Props) {
 
   const [areFiltersShown, setAreFiltersShown] = useState(false);
 
-  const onEndReached = useCallback(() => fetchNextPage(), [fetchNextPage]);
-
   const timelineSectionListRef = useRef<VirtuosoHandle>(null);
 
   return (
@@ -155,7 +153,9 @@ export default function WorkflowHistory({ params }: Props) {
                   />
                 </div>
               )}
-              endReached={onEndReached}
+              endReached={() => {
+                if (!isFetchingNextPage && hasNextPage) fetchNextPage();
+              }}
             />
           </div>
           <section className={cls.timelineSection}>
@@ -180,7 +180,7 @@ export default function WorkflowHistory({ params }: Props) {
               )}
               components={{
                 Footer: () => (
-                  <WorkflowHistoryTimelineFooter
+                  <WorkflowHistoryTimelineLoadMore
                     error={error}
                     fetchNextPage={fetchNextPage}
                     hasNextPage={hasNextPage}
@@ -188,7 +188,6 @@ export default function WorkflowHistory({ params }: Props) {
                   />
                 ),
               }}
-              endReached={onEndReached}
             />
           </section>
         </div>

@@ -20,8 +20,9 @@ jest.mock(
   '../workflow-history-timeline-group/workflow-history-timeline-group',
   () => jest.fn(() => <div>Timeline group card</div>)
 );
+
 jest.mock(
-  '../workflow-history-timeline-footer/workflow-history-timeline-footer',
+  '../workflow-history-timeline-load-more/workflow-history-timeline-load-more',
   () => jest.fn(() => <div>Load more</div>)
 );
 
@@ -74,6 +75,7 @@ describe('WorkflowHistory', () => {
       );
     }
   });
+
   it('should render the page initially with filters hidden', async () => {
     setup({});
     expect(screen.queryByText('Filter Fields')).not.toBeInTheDocument();

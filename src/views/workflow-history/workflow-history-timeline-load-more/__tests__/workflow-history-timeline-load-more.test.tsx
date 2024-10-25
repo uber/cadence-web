@@ -1,9 +1,14 @@
+import {
+  mockIsIntersecting,
+  intersectionMockInstance,
+} from 'react-intersection-observer/test-utils';
+
 import { render, screen, act, fireEvent } from '@/test-utils/rtl';
 
 import { RequestError } from '@/utils/request/request-error';
 
-import WorkflowHistoryTimelineLoadMore from '../workflow-history-timeline-footer';
-import { type Props } from '../workflow-history-timeline-footer.types';
+import WorkflowHistoryTimelineLoadMore from '../workflow-history-timeline-load-more';
+import { type Props } from '../workflow-history-timeline-load-more.types';
 
 describe('WorkflowHistoryTimelineLoadMore', () => {
   it('renders loading state while fetching next page', () => {
@@ -23,6 +28,22 @@ describe('WorkflowHistoryTimelineLoadMore', () => {
       fireEvent.click(screen.getByText(/Retry manually/));
     });
 
+    expect(mockFetchNextPage).toHaveBeenCalled();
+  });
+
+  it('renders loading state with the infinite scroll ref when more workflows can be loaded', () => {
+    const { mockFetchNextPage } = setup({
+      hasNextPage: true,
+      isFetchingNextPage: false,
+    });
+
+    const spinnerDiv = screen.getByTestId('intersection-observer-container');
+    const instance = intersectionMockInstance(spinnerDiv);
+    expect(instance.observe).toHaveBeenCalledWith(spinnerDiv);
+
+    act(() => {
+      mockIsIntersecting(spinnerDiv, 1);
+    });
     expect(mockFetchNextPage).toHaveBeenCalled();
   });
 });
