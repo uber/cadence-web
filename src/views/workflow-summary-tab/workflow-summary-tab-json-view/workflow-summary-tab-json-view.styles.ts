@@ -15,6 +15,9 @@ const cssStylesObj = {
     gap: theme.sizing.scale600,
     marginBottom: theme.sizing.scale700,
   }),
+  spinnerContainer: (theme) => ({
+    paddingLeft: 0,
+  }),
 } satisfies StyletronCSSObject;
 
 export const cssStyles: StyletronCSSObjectOf<typeof cssStylesObj> =

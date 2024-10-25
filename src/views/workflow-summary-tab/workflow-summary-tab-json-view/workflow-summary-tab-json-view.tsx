@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 
 import { Button, KIND as BUTTON_KIND, SHAPE, SIZE } from 'baseui/button';
+import { Spinner } from 'baseui/spinner';
 import { ACCESSIBILITY_TYPE, Tooltip } from 'baseui/tooltip';
 import copy from 'copy-to-clipboard';
 import { MdCopyAll } from 'react-icons/md';
@@ -18,6 +19,7 @@ import type { Props } from './workflow-summary-tab-json-view.types';
 export default function WorkflowSummaryTabJsonView({
   inputJson,
   resultJson,
+  isWorkflowRunning,
 }: Props) {
   const { cls } = useStyletronClasses(cssStyles);
   const [showTooltip, setShowTooltip] = useState(false);
@@ -67,7 +69,13 @@ export default function WorkflowSummaryTabJsonView({
           </Button>
         </Tooltip>
       </div>
-      <PrettyJson json={jsonMap[activeTab]} />
+      {activeTab === 'result' && isWorkflowRunning ? (
+        <div className={cls.spinnerContainer}>
+          <Spinner $size={16} />
+        </div>
+      ) : (
+        <PrettyJson json={jsonMap[activeTab]} />
+      )}
     </div>
   );
 }
