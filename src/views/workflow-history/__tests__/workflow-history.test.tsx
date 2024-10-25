@@ -68,7 +68,7 @@ describe('WorkflowHistory', () => {
 
   it('throws an error if the request fails', async () => {
     try {
-      act(() => setup({ error: true }));
+      await act(() => setup({ error: true }));
     } catch (error) {
       expect((error as Error)?.message).toBe(
         'Failed to fetch workflow history'
