@@ -10,7 +10,12 @@ import WorkflowSummaryTabJsonView from '../workflow-summary-tab-json-view';
 jest.mock('copy-to-clipboard', jest.fn);
 jest.mock(
   '@/components/segmented-control-rounded/segmented-control-rounded',
-  () => jest.fn(({onChange}) => <div onClick={() => onChange({activeKey: 'result'})}>SegmentedControlRounded Mock</div>)
+  () =>
+    jest.fn(({ onChange }) => (
+      <div onClick={() => onChange({ activeKey: 'result' })}>
+        SegmentedControlRounded Mock
+      </div>
+    ))
 );
 jest.mock('@/components/pretty-json/pretty-json', () =>
   jest.fn(() => <div>PrettyJson Mock</div>)
