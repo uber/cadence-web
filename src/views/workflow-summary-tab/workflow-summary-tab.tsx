@@ -2,7 +2,6 @@
 import React from 'react';
 
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { Spinner } from 'baseui/spinner';
 import queryString from 'query-string';
 
 import PageSection from '@/components/page-section/page-section';

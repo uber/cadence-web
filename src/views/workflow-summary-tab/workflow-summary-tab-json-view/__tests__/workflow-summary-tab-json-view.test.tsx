@@ -15,6 +15,9 @@ jest.mock(
 jest.mock('@/components/pretty-json/pretty-json', () =>
   jest.fn(() => <div>PrettyJson Mock</div>)
 );
+jest.mock('@/components/pretty-json-skeleton/pretty-json-skeleton', () =>
+  jest.fn(() => <div>Mock JSON skeleton</div>)
+);
 
 describe('WorkflowSummaryTabJsonView Component', () => {
   const inputJson = { input: 'inputJson' };
@@ -25,6 +28,7 @@ describe('WorkflowSummaryTabJsonView Component', () => {
       <WorkflowSummaryTabJsonView
         inputJson={inputJson}
         resultJson={resultJson}
+        isWorkflowRunning={false}
       />
     );
 
@@ -32,11 +36,25 @@ describe('WorkflowSummaryTabJsonView Component', () => {
     expect(getByText('PrettyJson Mock')).toBeInTheDocument();
   });
 
+  it('renders loading state correctly', () => {
+    const { getByText } = render(
+      <WorkflowSummaryTabJsonView
+        inputJson={inputJson}
+        resultJson={resultJson}
+        isWorkflowRunning={true}
+      />
+    );
+
+    expect(getByText('SegmentedControlRounded Mock')).toBeInTheDocument();
+    expect(getByText('Mock JSON skeleton')).toBeInTheDocument();
+  });
+
   it('handles tab change', () => {
     render(
       <WorkflowSummaryTabJsonView
         inputJson={inputJson}
         resultJson={resultJson}
+        isWorkflowRunning={false}
       />
     );
 
@@ -51,6 +69,7 @@ describe('WorkflowSummaryTabJsonView Component', () => {
       <WorkflowSummaryTabJsonView
         inputJson={inputJson}
         resultJson={resultJson}
+        isWorkflowRunning={false}
       />
     );
 
@@ -67,6 +86,7 @@ describe('WorkflowSummaryTabJsonView Component', () => {
       <WorkflowSummaryTabJsonView
         inputJson={inputJson}
         resultJson={resultJson}
+        isWorkflowRunning={false}
       />
     );
 

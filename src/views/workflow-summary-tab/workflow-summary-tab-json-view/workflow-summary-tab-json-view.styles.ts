@@ -6,7 +6,7 @@ import type {
 const cssStylesObj = {
   jsonViewContainer: (theme) => ({
     padding: theme.sizing.scale600,
-    backgroundColor: theme.colors.backgroundSecondary,
+    backgroundColor: '#F8F8F8',
     borderRadius: theme.borders.radius300,
   }),
   jsonViewHeader: (theme) => ({
@@ -14,9 +14,6 @@ const cssStylesObj = {
     justifyContent: 'space-between',
     gap: theme.sizing.scale600,
     marginBottom: theme.sizing.scale700,
-  }),
-  spinnerContainer: (theme) => ({
-    paddingLeft: 0,
   }),
 } satisfies StyletronCSSObject;
 
