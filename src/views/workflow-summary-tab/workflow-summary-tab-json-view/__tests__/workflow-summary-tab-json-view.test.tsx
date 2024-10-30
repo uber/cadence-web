@@ -10,7 +10,7 @@ import WorkflowSummaryTabJsonView from '../workflow-summary-tab-json-view';
 jest.mock('copy-to-clipboard', jest.fn);
 jest.mock(
   '@/components/segmented-control-rounded/segmented-control-rounded',
-  () => jest.fn(() => <div>SegmentedControlRounded Mock</div>)
+  () => jest.fn(({onChange}) => <div onClick={() => onChange({activeKey: 'result'})}>SegmentedControlRounded Mock</div>)
 );
 jest.mock('@/components/pretty-json/pretty-json', () =>
   jest.fn(() => <div>PrettyJson Mock</div>)
@@ -36,19 +36,6 @@ describe('WorkflowSummaryTabJsonView Component', () => {
     expect(getByText('PrettyJson Mock')).toBeInTheDocument();
   });
 
-  it('renders loading state correctly', () => {
-    const { getByText } = render(
-      <WorkflowSummaryTabJsonView
-        inputJson={inputJson}
-        resultJson={resultJson}
-        isWorkflowRunning={true}
-      />
-    );
-
-    expect(getByText('SegmentedControlRounded Mock')).toBeInTheDocument();
-    expect(getByText('Mock JSON skeleton')).toBeInTheDocument();
-  });
-
   it('handles tab change', () => {
     render(
       <WorkflowSummaryTabJsonView
@@ -62,6 +49,21 @@ describe('WorkflowSummaryTabJsonView Component', () => {
     const segmentedControl = screen.getByText('SegmentedControlRounded Mock');
     fireEvent.click(segmentedControl);
     expect(segmentedControl).toBeInTheDocument();
+  });
+
+  it('renders loading state correctly', () => {
+    const { getByText } = render(
+      <WorkflowSummaryTabJsonView
+        inputJson={inputJson}
+        resultJson={resultJson}
+        isWorkflowRunning={true}
+      />
+    );
+
+    // Mock the onChange event for SegmentedControlRounded
+    const segmentedControl = screen.getByText('SegmentedControlRounded Mock');
+    fireEvent.click(segmentedControl);
+    expect(getByText('Mock JSON skeleton')).toBeInTheDocument();
   });
 
   it('copies JSON to clipboard', () => {
