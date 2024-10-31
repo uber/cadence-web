@@ -5,6 +5,7 @@ import { Breadcrumbs } from 'baseui/breadcrumbs';
 import { StyledLink } from 'baseui/link';
 import Image from 'next/image';
 import Link from 'next/link';
+import queryString from 'query-string';
 
 import cadenceLogoBlack from '@/assets/cadence-logo-black.svg';
 import ErrorBoundary from '@/components/error-boundary/error-boundary';
@@ -23,6 +24,7 @@ export default function WorkflowPageHeader({
   cluster,
 }: Props) {
   const { cls } = useStyletronClasses(cssStyles);
+  const domainLink = `/domains/${encodeURIComponent(domain)}/${encodeURIComponent(cluster)}`;
   return (
     <PageSection>
       <Breadcrumbs
@@ -36,15 +38,19 @@ export default function WorkflowPageHeader({
             alt="Cadence Icon"
             src={cadenceLogoBlack}
           />
-          <StyledLink
-            $as={Link}
-            href={`/domains/${encodeURIComponent(domain)}/${encodeURIComponent(cluster)}`}
-          >
+          <StyledLink $as={Link} href={domainLink}>
             {domain}
           </StyledLink>
         </div>
-        {/** TODO: @assem.hafez change those to actual links */}
-        <StyledLink $as={Link} href="#">
+        <StyledLink
+          $as={Link}
+          href={queryString.stringifyUrl({
+            url: domainLink + '/workflows',
+            query: {
+              search: workflowId,
+            },
+          })}
+        >
           {workflowId}
         </StyledLink>
         <div className={cls.breadcrumbItemContainer}>
