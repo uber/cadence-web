@@ -6,7 +6,7 @@ import type {
 const cssStylesObj = {
   jsonViewContainer: (theme) => ({
     padding: theme.sizing.scale600,
-    backgroundColor: '#F8F8F8',
+    backgroundColor: theme.colors.backgroundSecondary,
     borderRadius: theme.borders.radius300,
   }),
   jsonViewHeader: (theme) => ({
