@@ -5,7 +5,7 @@ import omit from 'lodash/omit';
 import { type HistoryEvent } from '@/__generated__/proto-ts/uber/cadence/api/v1/HistoryEvent';
 
 import {
-  type EventCollapseState,
+  type EventExpansionState,
   type GetIsEventExpanded,
   type ToggleIsEventExpanded,
   type ToggleIsExpandAllEvents,
@@ -15,11 +15,11 @@ export default function useEventExpansionToggle({
   initialState = {},
   visibleEvents,
 }: {
-  initialState?: EventCollapseState;
+  initialState?: EventExpansionState;
   visibleEvents: Pick<HistoryEvent, 'eventId'>[];
 }) {
   const [expandedEvents, setExpandedEvents] =
-    useState<EventCollapseState>(initialState);
+    useState<EventExpansionState>(initialState);
 
   const isExpandAllEvents = expandedEvents === true;
   const toggleIsExpandAllEvents = useCallback<ToggleIsExpandAllEvents>(() => {

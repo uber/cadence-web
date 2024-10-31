@@ -1,4 +1,4 @@
-export type EventCollapseState = Record<string, boolean> | true;
+export type EventExpansionState = Record<string, boolean> | true;
 
 export type ToggleIsExpandAllEvents = () => void;
 
