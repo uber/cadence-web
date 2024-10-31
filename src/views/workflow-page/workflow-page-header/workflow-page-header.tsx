@@ -10,7 +10,9 @@ import queryString from 'query-string';
 import cadenceLogoBlack from '@/assets/cadence-logo-black.svg';
 import ErrorBoundary from '@/components/error-boundary/error-boundary';
 import PageSection from '@/components/page-section/page-section';
+import { type PageQueryParamSetterValues } from '@/hooks/use-page-query-params/use-page-query-params.types';
 import useStyletronClasses from '@/hooks/use-styletron-classes';
+import type domainPageQueryParamsConfig from '@/views/domain-page/config/domain-page-query-params.config';
 
 import WorkflowPageStatusTag from '../workflow-page-status-tag/workflow-page-status-tag';
 
@@ -48,7 +50,9 @@ export default function WorkflowPageHeader({
             url: domainLink + '/workflows',
             query: {
               search: workflowId,
-            },
+            } satisfies Partial<
+              PageQueryParamSetterValues<typeof domainPageQueryParamsConfig>
+            >,
           })}
         >
           {workflowId}
