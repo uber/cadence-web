@@ -13,24 +13,36 @@ export default function WorkflowStatusTag(props: Props) {
     <Tag
       variant={VARIANT.solid}
       closeable={false}
-      overrides={overrides({ status: props.status, link: props.link }).tag}
+      overrides={
+        overrides({
+          status: props.status,
+          link: props.link,
+          isArchived: props.isArchived,
+        }).tag
+      }
       // To render hover & focus effects for the tag, we need to pass an onClick hander
       // However, since we are already passing a link through overrides, we pass a no-op here
       {...(props.link && {
         onClick: () => {},
       })}
     >
-      <WorkflowStatusTagIcon
-        kind="start"
-        status={props.status}
-        link={props.link}
-      />
-      {WORKFLOW_STATUS_NAMES[props.status]}
-      <WorkflowStatusTagIcon
-        kind="end"
-        status={props.status}
-        link={props.link}
-      />
+      {props.isArchived ? (
+        'Archived'
+      ) : (
+        <>
+          <WorkflowStatusTagIcon
+            kind="start"
+            status={props.status}
+            link={props.link}
+          />
+          {WORKFLOW_STATUS_NAMES[props.status]}
+          <WorkflowStatusTagIcon
+            kind="end"
+            status={props.status}
+            link={props.link}
+          />
+        </>
+      )}
     </Tag>
   );
 }
