@@ -6,10 +6,10 @@ import WorkflowSummaryTab from '@/views/workflow-summary-tab/workflow-summary-ta
 import type { WorkflowPageTabsContentsMap } from '../workflow-page-tab-content/workflow-page-tab-content.types';
 
 const workflowPageTabsContentsMapConfig = {
-  summary: WorkflowSummaryTab,
-  history: WorkflowHistory,
-  queries: WorkflowQueries,
-  stackTrace: WorkflowStackTrace,
+  'summary': WorkflowSummaryTab,
+  'history': WorkflowHistory,
+  'queries': WorkflowQueries,
+  'stack-trace': WorkflowStackTrace,
 } as const satisfies WorkflowPageTabsContentsMap;
 
 export default workflowPageTabsContentsMapConfig;

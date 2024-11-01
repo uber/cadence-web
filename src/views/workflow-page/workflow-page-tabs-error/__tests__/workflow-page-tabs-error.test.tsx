@@ -24,17 +24,17 @@ jest.mock(
   '../../config/workflow-page-tabs-error.config',
   () =>
     ({
-      summary: () => ({
+      'summary': () => ({
         message: 'summary error',
       }),
-      history: () => ({
+      'history': () => ({
         message: 'history error',
       }),
-      queries: () => ({
+      'queries': () => ({
         message: 'queries error',
       }),
-      stackTrace: () => ({
-        message: 'stackTrace error',
+      'stack-trace': () => ({
+        message: 'stack trace error',
       }),
     }) as const satisfies WorkflowPageTabsErrorConfig
 );
