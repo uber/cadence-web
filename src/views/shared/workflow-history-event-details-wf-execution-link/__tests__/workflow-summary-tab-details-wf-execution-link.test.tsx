@@ -43,7 +43,6 @@ describe('WorkflowHistoryEventDetailsExecutionLink', () => {
         <WorkflowHistoryEventDetailsExecutionLink {...omit(props, key)} />
       );
       const linkElement = container.querySelector('a');
-      console.log(linkElement);
       expect(linkElement).toHaveAttribute('href', '/');
     });
   });
