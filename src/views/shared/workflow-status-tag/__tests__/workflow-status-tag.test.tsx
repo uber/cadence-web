@@ -86,10 +86,8 @@ describe('WorkflowStatusTag', () => {
 
       const tag = screen.getByText(test.text);
       expect(tag).toBeInTheDocument();
-      if (!test.isArchived) {
-        expect(screen.getByText('Mock icon start')).toBeInTheDocument();
-        expect(screen.getByText('Mock icon end')).toBeInTheDocument();
-      }
+      expect(screen.getByText('Mock icon start')).toBeInTheDocument();
+      expect(screen.getByText('Mock icon end')).toBeInTheDocument();
 
       if (test.link) {
         expect(screen.getByRole('button')).toHaveAttribute('href', test.link);

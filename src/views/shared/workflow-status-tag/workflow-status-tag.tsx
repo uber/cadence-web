@@ -26,23 +26,19 @@ export default function WorkflowStatusTag(props: Props) {
         onClick: () => {},
       })}
     >
-      {props.isArchived ? (
-        'Archived'
-      ) : (
-        <>
-          <WorkflowStatusTagIcon
-            kind="start"
-            status={props.status}
-            link={props.link}
-          />
-          {WORKFLOW_STATUS_NAMES[props.status]}
-          <WorkflowStatusTagIcon
-            kind="end"
-            status={props.status}
-            link={props.link}
-          />
-        </>
-      )}
+      <WorkflowStatusTagIcon
+        kind="start"
+        status={props.status}
+        link={props.link}
+        isArchived={props.isArchived}
+      />
+      {props.isArchived ? 'Archived' : WORKFLOW_STATUS_NAMES[props.status]}
+      <WorkflowStatusTagIcon
+        kind="end"
+        status={props.status}
+        link={props.link}
+        isArchived={props.isArchived}
+      />
     </Tag>
   );
 }
