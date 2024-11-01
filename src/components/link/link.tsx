@@ -12,7 +12,7 @@ export default function Link({
   ...restProps
 }: Props) {
   return (
-    <styled.LinkBase {...restProps} $as={NextLink} href={href} disabled={!href}>
+    <styled.LinkBase {...restProps} $as={NextLink} href={href} disabled={!href} prefetch={prefetch}>
       {children}
     </styled.LinkBase>
   );
