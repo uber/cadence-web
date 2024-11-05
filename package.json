@@ -31,7 +31,7 @@
     "baseui": "^14.0.0",
     "copy-to-clipboard": "^3.3.3",
     "lodash": "^4.17.21",
-    "next": "14.1.0",
+    "next": "14.2.16",
     "next-logger": "^5.0.0",
     "pino": "^9.3.2",
     "query-string": "^9.0.0",
