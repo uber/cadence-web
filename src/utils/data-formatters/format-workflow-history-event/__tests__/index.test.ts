@@ -14,8 +14,8 @@ describe('formatWorkflowHistoryEvent', () => {
     });
   });
   it(`should log error if parsing failed`, () => {
-    //@ts-expect-error pass event with missing fields
     expect(
+      //@ts-expect-error pass event with missing fields
       formatWorkflowHistoryEvent({
         attributes: 'workflowExecutionStartedEventAttributes',
       })
