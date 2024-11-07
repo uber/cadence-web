@@ -16,7 +16,7 @@ jobs:
     steps:
       - name: Check out the repo
         uses: actions/checkout@v2
-      - name: Push to Docker Hub
+      - name: Push stable version to Docker Hub
         if: "!github.event.release.prerelease"
         uses: docker/build-push-action@v1
         with:
@@ -25,3 +25,13 @@ jobs:
           repository: ubercadence/web
           tag_with_ref: true
           tags: latest
+
+      - name: Push beta version to Docker Hub
+        if: github.event.release.prerelease
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.CADENCE_WEB_DOCKERHUB_USERNAME }}
+          password: ${{ secrets.CADENCE_WEB_DOCKERHUB_TOKEN }}
+          repository: ubercadence/web
+          tag_with_ref: true
+          tags: beta
