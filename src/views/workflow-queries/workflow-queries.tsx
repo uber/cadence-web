@@ -13,7 +13,7 @@ import getWorkflowQueryStatus from './helpers/get-workflow-query-status';
 import useWorkflowQueries from './hooks/use-workflow-queries';
 import WorkflowQueriesResultJson from './workflow-queries-result-json/workflow-queries-result-json';
 import WorkflowQueriesTile from './workflow-queries-tile/workflow-queries-tile';
-import { EXCLUDED_QUERY_TYPES } from './workflow-queries.constants';
+import { EXCLUDED_QUERY_TYPES_SET } from './workflow-queries.constants';
 import { styled } from './workflow-queries.styles';
 import { type WorkflowQueryURLParams } from './workflow-queries.types';
 
@@ -34,7 +34,7 @@ export default function WorkflowQueries(props: WorkflowPageTabContentProps) {
   });
 
   const filteredQueryTypes = useMemo(
-    () => queryTypes.filter((q) => !EXCLUDED_QUERY_TYPES.has(q)),
+    () => queryTypes.filter((q) => !EXCLUDED_QUERY_TYPES_SET.has(q)),
     [queryTypes]
   );
 
