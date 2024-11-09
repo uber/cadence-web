@@ -42,11 +42,17 @@ class HttpService {
   }
 
   async request(baseUrl, { query, ...options } = {}) {
-    const { origin } = this;
+    let { origin } = this;
     const fetch = this.fetchOverride ? this.fetchOverride : window.fetch;
     const queryString = qs.stringify(query, { skipNull: true });
     const path = queryString ? `${baseUrl}?${queryString}` : baseUrl;
     const hasOrigin = baseUrl.startsWith('http');
+    const prefixPath = process.env.PREFIX_PATH;
+
+    if (!origin.endsWith(prefixPath)) {
+      origin = `${origin}${prefixPath}`.replace(/\/$/, '');
+    }
+
     const url = hasOrigin ? path : `${origin}${path}`;
     const isCrossOrigin = !url.startsWith(window.location.origin);
 

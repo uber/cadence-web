@@ -4,7 +4,8 @@ const
   ExtractTextPlugin = require('extract-text-webpack-plugin'),
   HtmlWebpackPlugin = require('html-webpack-plugin'),
   extractStylus = 'css-loader?sourceMap!stylus-loader',
-  development = !['production', 'ci'].includes(process.env.NODE_ENV)
+  development = !['production', 'ci'].includes(process.env.NODE_ENV),
+  appPrefixPath = process.env.PREFIX_PATH || '/'
 
 require('babel-polyfill');
 
@@ -17,12 +18,18 @@ module.exports = {
   output: {
     path: path.join(__dirname, 'dist'),
     filename: 'cadence.[hash].js',
-    publicPath: '/'
+    publicPath: appPrefixPath
   },
   plugins: [
     !development && new webpack.DefinePlugin({
       'process.env': {
-        NODE_ENV: '"production"'
+        NODE_ENV: '"production"',
+        PREFIX_PATH: `"${appPrefixPath}"`
+      }
+    }),
+    development && new webpack.DefinePlugin({
+      'process.env': {
+        PREFIX_PATH: `"${appPrefixPath}"`
       }
     }),
     new ExtractTextPlugin({ filename: development ? 'cadence.css' : 'cadence.[hash].css', allChunks: true }),
