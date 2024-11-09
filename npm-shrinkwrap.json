@@ -30,7 +30,7 @@
         "html-webpack-plugin": "^2.30.1",
         "html-webpack-template": "^6.1.0",
         "is-ipv4-node": "^1.0.6",
-        "jsonwebtoken": "^8.5.1",
+        "jsonwebtoken": "^9.0.0",
         "koa": "^2.3.0",
         "koa-better-error-handler": "^1.3.0",
         "koa-bodyparser": "^4.2.0",
@@ -57,6 +57,7 @@
         "openid-client": "^5.6.5",
         "prismjs": "^1.14.0",
         "promise.prototype.finally": "^3.1.0",
+        "query-string": "^4.3.4",
         "stylus": "^0.54.5",
         "stylus-loader": "^3.0.1",
         "tchannel": "3.10.1",
@@ -3956,10 +3957,6 @@
         "node": ">= 6.0.0"
       }
     },
-    "node_modules/cadence-idl": {
-      "version": "0.0.0",
-      "extraneous": true
-    },
     "node_modules/call-bind": {
       "version": "1.0.2",
       "license": "MIT",
@@ -6119,6 +6116,8 @@
     },
     "node_modules/eslint-plugin-header": {
       "version": "3.0.0",
+      "resolved": "https://github.com/just-at-uber/eslint-plugin-header/tarball/aee6a4610ffc1946b821fe869f0ac6b922df303c",
+      "integrity": "sha512-dF7o/KmaGiE2kH6tDNXwre5CDTDngwLHVYA+oocvmbQAsTvN86MlUAHydsfX2Yot88AczNoCD9YO8Ct5GETjBg==",
       "dev": true,
       "license": "MIT",
       "peerDependencies": {
@@ -9894,30 +9893,29 @@
       }
     },
     "node_modules/jsonwebtoken": {
-      "version": "8.5.1",
-      "license": "MIT",
+      "version": "9.0.0",
+      "resolved": "https://registry.npmjs.org/jsonwebtoken/-/jsonwebtoken-9.0.0.tgz",
+      "integrity": "sha512-tuGfYXxkQGDPnLJ7SibiQgVgeDgfbPq2k2ICcbgqW8WxWLBAxKQM/ZCu/IT8SOSwmaYl4dpTFCW5xZv7YbbWUw==",
       "dependencies": {
         "jws": "^3.2.2",
-        "lodash.includes": "^4.3.0",
-        "lodash.isboolean": "^3.0.3",
-        "lodash.isinteger": "^4.0.4",
-        "lodash.isnumber": "^3.0.3",
-        "lodash.isplainobject": "^4.0.6",
-        "lodash.isstring": "^4.0.1",
-        "lodash.once": "^4.0.0",
+        "lodash": "^4.17.21",
         "ms": "^2.1.1",
-        "semver": "^5.6.0"
+        "semver": "^7.3.8"
       },
       "engines": {
-        "node": ">=4",
-        "npm": ">=1.4.28"
+        "node": ">=12",
+        "npm": ">=6"
       }
     },
     "node_modules/jsonwebtoken/node_modules/semver": {
-      "version": "5.7.1",
-      "license": "ISC",
+      "version": "7.6.3",
+      "resolved": "https://registry.npmjs.org/semver/-/semver-7.6.3.tgz",
+      "integrity": "sha512-oVekP1cKtI+CTDvHWYFUcMtsK/00wmAEfyqKfNdARm8u1wNVhSgaX7A8d4UuIlUI5e84iEwOhs7ZPYRmzU9U6A==",
       "bin": {
-        "semver": "bin/semver"
+        "semver": "bin/semver.js"
+      },
+      "engines": {
+        "node": ">=10"
       }
     },
     "node_modules/jsprim": {
@@ -10339,28 +10337,8 @@
       "version": "4.4.2",
       "license": "MIT"
     },
-    "node_modules/lodash.includes": {
-      "version": "4.3.0",
-      "license": "MIT"
-    },
-    "node_modules/lodash.isboolean": {
-      "version": "3.0.3",
-      "license": "MIT"
-    },
     "node_modules/lodash.isequal": {
       "version": "4.5.0",
-      "license": "MIT"
-    },
-    "node_modules/lodash.isinteger": {
-      "version": "4.0.4",
-      "license": "MIT"
-    },
-    "node_modules/lodash.isnumber": {
-      "version": "3.0.3",
-      "license": "MIT"
-    },
-    "node_modules/lodash.isplainobject": {
-      "version": "4.0.6",
       "license": "MIT"
     },
     "node_modules/lodash.isstring": {
@@ -10378,10 +10356,6 @@
     "node_modules/lodash.merge": {
       "version": "4.6.2",
       "dev": true,
-      "license": "MIT"
-    },
-    "node_modules/lodash.once": {
-      "version": "4.1.1",
       "license": "MIT"
     },
     "node_modules/lodash.snakecase": {
@@ -19371,10 +19345,6 @@
         "ylru": "^1.2.0"
       }
     },
-    "cadence-idl": {
-      "version": "0.0.0",
-      "extraneous": true
-    },
     "call-bind": {
       "version": "1.0.2",
       "requires": {
@@ -20993,7 +20963,8 @@
       "requires": {}
     },
     "eslint-plugin-header": {
-      "version": "3.0.0",
+      "version": "https://github.com/just-at-uber/eslint-plugin-header/tarball/aee6a4610ffc1946b821fe869f0ac6b922df303c",
+      "integrity": "sha512-dF7o/KmaGiE2kH6tDNXwre5CDTDngwLHVYA+oocvmbQAsTvN86MlUAHydsfX2Yot88AczNoCD9YO8Ct5GETjBg==",
       "dev": true,
       "requires": {}
     },
@@ -23330,22 +23301,20 @@
       "version": "2.2.1"
     },
     "jsonwebtoken": {
-      "version": "8.5.1",
+      "version": "9.0.0",
+      "resolved": "https://registry.npmjs.org/jsonwebtoken/-/jsonwebtoken-9.0.0.tgz",
+      "integrity": "sha512-tuGfYXxkQGDPnLJ7SibiQgVgeDgfbPq2k2ICcbgqW8WxWLBAxKQM/ZCu/IT8SOSwmaYl4dpTFCW5xZv7YbbWUw==",
       "requires": {
         "jws": "^3.2.2",
-        "lodash.includes": "^4.3.0",
-        "lodash.isboolean": "^3.0.3",
-        "lodash.isinteger": "^4.0.4",
-        "lodash.isnumber": "^3.0.3",
-        "lodash.isplainobject": "^4.0.6",
-        "lodash.isstring": "^4.0.1",
-        "lodash.once": "^4.0.0",
+        "lodash": "^4.17.21",
         "ms": "^2.1.1",
-        "semver": "^5.6.0"
+        "semver": "^7.3.8"
       },
       "dependencies": {
         "semver": {
-          "version": "5.7.1"
+          "version": "7.6.3",
+          "resolved": "https://registry.npmjs.org/semver/-/semver-7.6.3.tgz",
+          "integrity": "sha512-oVekP1cKtI+CTDvHWYFUcMtsK/00wmAEfyqKfNdARm8u1wNVhSgaX7A8d4UuIlUI5e84iEwOhs7ZPYRmzU9U6A=="
         }
       }
     },
@@ -23657,23 +23626,8 @@
     "lodash.get": {
       "version": "4.4.2"
     },
-    "lodash.includes": {
-      "version": "4.3.0"
-    },
-    "lodash.isboolean": {
-      "version": "3.0.3"
-    },
     "lodash.isequal": {
       "version": "4.5.0"
-    },
-    "lodash.isinteger": {
-      "version": "4.0.4"
-    },
-    "lodash.isnumber": {
-      "version": "3.0.3"
-    },
-    "lodash.isplainobject": {
-      "version": "4.0.6"
     },
     "lodash.isstring": {
       "version": "4.0.1"
@@ -23687,9 +23641,6 @@
     "lodash.merge": {
       "version": "4.6.2",
       "dev": true
-    },
-    "lodash.once": {
-      "version": "4.1.1"
     },
     "lodash.snakecase": {
       "version": "4.1.1"
