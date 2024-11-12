@@ -22,11 +22,6 @@ export default function DomainPageContent(props: Props) {
   }
 
   return (
-    <section>
-      <TabContent
-        domain={decodedParams.domain}
-        cluster={decodedParams.cluster}
-      />
-    </section>
+    <TabContent domain={decodedParams.domain} cluster={decodedParams.cluster} />
   );
 }
