@@ -9,15 +9,25 @@ const cssStylesObj = {
     flexDirection: 'column',
     flex: 1,
   },
-  pageHeader: {
+  pageHeader: (theme) => ({
     display: 'flex',
-    alignItems: 'center',
+    flexDirection: 'column',
     justifyContent: 'space-between',
     flexWrap: 'wrap',
-  },
+    gap: theme.sizing.scale500,
+    [theme.mediaQuery.medium]: {
+      alignItems: 'center',
+      flexDirection: 'row',
+    },
+  }),
   headerActions: (theme) => ({
     display: 'flex',
+    flexDirection: 'column',
+    flexWrap: 'wrap',
     gap: theme.sizing.scale500,
+    [theme.mediaQuery.medium]: {
+      flexDirection: 'row',
+    },
   }),
   eventsContainer: (theme) => ({
     display: 'flex',
@@ -25,7 +35,7 @@ const cssStylesObj = {
     // gap: theme.sizing.scale400,
   }),
   compactSection: (theme) => ({
-    display: 'flex',
+    display: 'none',
     flexDirection: 'column',
     width: '362px',
     maxHeight: `calc(100vh - ${theme.sizing.scale900})`, // fill page height excluding page bottom margin
@@ -33,6 +43,9 @@ const cssStylesObj = {
     position: 'sticky',
     top: 0,
     paddingRight: theme.sizing.scale800,
+    [theme.mediaQuery.large]: {
+      display: 'flex',
+    },
   }),
   compactCardContainer: (theme) => ({
     display: 'flex',
