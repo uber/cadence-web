@@ -34,6 +34,7 @@ const cssStylesObj = {
     display: 'flex',
     flexDirection: 'column',
     gap: 0,
+    overflow: 'hidden',
     [theme.mediaQuery.medium]: {
       display: 'flex',
       flexDirection: 'row',
