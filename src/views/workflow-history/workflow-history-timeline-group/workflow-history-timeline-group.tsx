@@ -27,7 +27,7 @@ export default function WorkflowHistoryTimelineGroup({
     <div className={cls.groupContainer}>
       <div className={cls.timelineEventHeader}>
         <WorkflowHistoryEventStatusBadge status={status} size="medium" />
-        <div className={cls.timelineEventLableAndTime}>
+        <div className={cls.timelineEventLabelAndTime}>
           <div className={cls.timelineEventsLabel}>{label}</div>
           <div suppressHydrationWarning className={cls.timelineEventsTime}>
             {timeLabel}

@@ -30,7 +30,7 @@ const cssStylesObj = {
     gap: theme.sizing.scale600,
     padding: `${theme.sizing.scale500} 0`,
   }),
-  timelineEventLableAndTime: (theme) => ({
+  timelineEventLabelAndTime: (theme) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: 0,

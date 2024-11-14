@@ -36,15 +36,15 @@ const cssStylesObj = {
   }),
   compactSection: (theme) => ({
     display: 'none',
-    flexDirection: 'column',
-    width: '362px',
-    maxHeight: `calc(100vh - ${theme.sizing.scale900})`, // fill page height excluding page bottom margin
-    overflow: 'auto',
-    position: 'sticky',
-    top: 0,
-    paddingRight: theme.sizing.scale800,
     [theme.mediaQuery.large]: {
       display: 'flex',
+      flexDirection: 'column',
+      width: '362px',
+      maxHeight: `calc(100vh - ${theme.sizing.scale900})`, // fill page height excluding page bottom margin
+      overflow: 'auto',
+      position: 'sticky',
+      top: 0,
+      paddingRight: theme.sizing.scale800,
     },
   }),
   compactCardContainer: (theme) => ({
