@@ -1,28 +1,36 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Button } from 'baseui/button';
 import { Input } from 'baseui/input';
+import { MdPlayArrow, MdCode } from 'react-icons/md';
 
-export default function DomainWorkflowsQueryInput({
-  value,
-  setValue,
-  onRunButtonClick,
-}: {
-  value: string;
-  setValue: (v: string) => void;
-  onRunButtonClick: () => void;
-}) {
+import { overrides } from './domain-workflows-query-input.styles';
+import { type Props } from './domain-workflows-query-input.types';
+
+export default function DomainWorkflowsQuery({ value, setValue }: Props) {
+  const [queryText, setQueryText] = useState<string>('');
+
+  useEffect(() => {
+    value && setQueryText(value);
+  }, [value]);
+
   return (
     <>
       <Input
-        value={value}
-        onChange={(event) => {
-          setValue(event.target.value.trim());
-        }}
-        placeholder="Query Workflow"
+        value={queryText}
+        onChange={(event) => setQueryText(event.target.value)}
+        startEnhancer={() => <MdCode />}
+        overrides={overrides.input}
+        placeholder="Write a custom query for workflows"
         clearOnEscape
       />
-      <Button onClick={onRunButtonClick} />
+      <Button
+        onClick={() => queryText && setValue(queryText)}
+        overrides={overrides.runButton}
+        startEnhancer={<MdPlayArrow />}
+      >
+        Run Query
+      </Button>
     </>
   );
 }

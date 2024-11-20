@@ -7,13 +7,13 @@ import { type ListWorkflowsResponse } from '@/route-handlers/list-workflows/list
 import type { Props as MSWMocksHandlersProps } from '../../../../test-utils/msw-mock-handlers/msw-mock-handlers.types';
 import { mockDomainWorkflowsQueryParamsValues } from '../../__fixtures__/domain-workflows-query-params';
 import { type Props as EndMessageProps } from '../../domain-workflows-table-end-message/domain-workflows-table-end-message.types';
-import DomainWorkflowsTable from '../domain-workflows-table';
+import DomainWorkflowsTableSearch from '../domain-workflows-table-search';
 
 jest.mock('@/components/error-panel/error-panel', () =>
   jest.fn(({ message }: { message: string }) => <div>{message}</div>)
 );
 
-jest.mock('../helpers/get-workflows-error-panel-props', () =>
+jest.mock('../helpers/get-search-error-panel-props', () =>
   jest.fn().mockImplementation(({ error }) => ({
     message: error ? 'Error loading workflows' : 'No workflows found',
   }))
@@ -40,7 +40,7 @@ jest.mock('@/hooks/use-page-query-params/use-page-query-params', () =>
   jest.fn(() => [mockDomainWorkflowsQueryParamsValues, mockSetQueryParams])
 );
 
-describe(DomainWorkflowsTable.name, () => {
+describe(DomainWorkflowsTableSearch.name, () => {
   it('renders workflows without error', async () => {
     const { user } = setup({});
 
@@ -111,46 +111,52 @@ function setup({
   let currentEventIndex = 0;
   const user = userEvent.setup();
 
-  render(<DomainWorkflowsTable domain="mock-domain" cluster="mock-cluster" />, {
-    endpointsMocks: [
-      {
-        path: '/api/domains/:domain/:cluster/workflows',
-        httpMethod: 'GET',
-        mockOnce: false,
-        httpResolver: async () => {
-          const index = currentEventIndex;
-          currentEventIndex++;
+  render(
+    <DomainWorkflowsTableSearch domain="mock-domain" cluster="mock-cluster" />,
+    {
+      endpointsMocks: [
+        {
+          path: '/api/domains/:domain/:cluster/workflows',
+          httpMethod: 'GET',
+          mockOnce: false,
+          httpResolver: async () => {
+            const index = currentEventIndex;
+            currentEventIndex++;
 
-          switch (errorCase) {
-            case 'no-workflows':
-              return HttpResponse.json({ workflows: [], nextPage: undefined });
-            case 'initial-fetch-error':
-              return HttpResponse.json(
-                { message: 'Request failed' },
-                { status: 500 }
-              );
-            case 'subsequent-fetch-error':
-              if (index === 0) {
-                return HttpResponse.json(pages[0]);
-              } else if (index === 1) {
+            switch (errorCase) {
+              case 'no-workflows':
+                return HttpResponse.json({
+                  workflows: [],
+                  nextPage: undefined,
+                });
+              case 'initial-fetch-error':
                 return HttpResponse.json(
                   { message: 'Request failed' },
                   { status: 500 }
                 );
-              } else {
-                return HttpResponse.json(pages[1]);
-              }
-            default:
-              if (index === 0) {
-                return HttpResponse.json(pages[0]);
-              } else {
-                return HttpResponse.json(pages[1]);
-              }
-          }
+              case 'subsequent-fetch-error':
+                if (index === 0) {
+                  return HttpResponse.json(pages[0]);
+                } else if (index === 1) {
+                  return HttpResponse.json(
+                    { message: 'Request failed' },
+                    { status: 500 }
+                  );
+                } else {
+                  return HttpResponse.json(pages[1]);
+                }
+              default:
+                if (index === 0) {
+                  return HttpResponse.json(pages[0]);
+                } else {
+                  return HttpResponse.json(pages[1]);
+                }
+            }
+          },
         },
-      },
-    ] as MSWMocksHandlersProps['endpointsMocks'],
-  });
+      ] as MSWMocksHandlersProps['endpointsMocks'],
+    }
+  );
 
   return { user };
 }

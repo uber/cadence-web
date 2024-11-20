@@ -1,10 +1,11 @@
 import { type Props as ErrorPanelProps } from '@/components/error-panel/error-panel.types';
+import { type RequestError } from '@/utils/request/request-error';
 
-export default function getWorkflowsErrorPanelProps({
+export default function getSearchErrorPanelProps({
   error,
   areSearchParamsAbsent,
 }: {
-  error: Error | null;
+  error: RequestError | null;
   areSearchParamsAbsent: boolean;
 }): ErrorPanelProps | undefined {
   if (error) {

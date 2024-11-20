@@ -1,10 +1,12 @@
-import getWorkflowsErrorPanelProps from '../get-workflows-error-panel-props';
+import { RequestError } from '@/utils/request/request-error';
 
-describe(getWorkflowsErrorPanelProps.name, () => {
+import getSearchErrorPanelProps from '../../../domain-workflows-table-search/helpers/get-search-error-panel-props';
+
+describe(getSearchErrorPanelProps.name, () => {
   it('returns default error panel props for regular error', () => {
     expect(
-      getWorkflowsErrorPanelProps({
-        error: new Error('Test error'),
+      getSearchErrorPanelProps({
+        error: new RequestError('Test error', 500),
         areSearchParamsAbsent: false,
       })
     ).toEqual({
@@ -15,7 +17,7 @@ describe(getWorkflowsErrorPanelProps.name, () => {
 
   it('returns "not found" error panel props when search params are absent', () => {
     expect(
-      getWorkflowsErrorPanelProps({
+      getSearchErrorPanelProps({
         error: null,
         areSearchParamsAbsent: true,
       })
@@ -34,7 +36,7 @@ describe(getWorkflowsErrorPanelProps.name, () => {
 
   it('returns undefined in all other cases', () => {
     expect(
-      getWorkflowsErrorPanelProps({
+      getSearchErrorPanelProps({
         error: null,
         areSearchParamsAbsent: false,
       })

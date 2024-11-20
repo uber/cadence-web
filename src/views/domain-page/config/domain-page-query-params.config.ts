@@ -1,20 +1,21 @@
 import { type PageQueryParam } from '@/hooks/use-page-query-params/use-page-query-params.types';
 import parseDateQueryParam from '@/utils/datetime/parse-date-query-param';
 import { type SortOrder } from '@/utils/sort-by';
-import { type DomainWorkflowsInputKind } from '@/views/domain-workflows/domain-workflows-input/domain-workflows-input.types';
+import { type DomainWorkflowsHeaderInputType } from '@/views/domain-workflows/domain-workflows-header/domain-workflows-header.types';
 import isWorkflowStatus from '@/views/shared/workflow-status-tag/helpers/is-workflow-status';
 import { type WorkflowStatus } from '@/views/shared/workflow-status-tag/workflow-status-tag.types';
 
 const domainPageQueryParamsConfig: [
-  // Workflows
-  PageQueryParam<'inputType', DomainWorkflowsInputKind>,
+  PageQueryParam<'inputType', DomainWorkflowsHeaderInputType>,
+  // Search input
   PageQueryParam<'search', string>,
   PageQueryParam<'status', WorkflowStatus | undefined>,
   PageQueryParam<'timeRangeStart', Date | undefined>,
   PageQueryParam<'timeRangeEnd', Date | undefined>,
   PageQueryParam<'sortColumn', string>,
   PageQueryParam<'sortOrder', SortOrder>,
-  // Task Lists
+  // Query input
+  PageQueryParam<'query', string>,
 ] = [
   {
     key: 'inputType',
@@ -51,6 +52,10 @@ const domainPageQueryParamsConfig: [
     queryParamKey: 'order',
     defaultValue: 'DESC',
     parseValue: (value: string) => (value === 'ASC' ? 'ASC' : 'DESC'),
+  },
+  {
+    key: 'query',
+    defaultValue: '',
   },
 ] as const;
 
