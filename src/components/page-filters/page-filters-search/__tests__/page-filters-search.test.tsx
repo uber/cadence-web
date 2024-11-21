@@ -9,7 +9,7 @@ import {
 import PageFiltersSearch from '../page-filters-search';
 
 const mockSetQueryParams = jest.fn();
-jest.mock('../../../hooks/use-page-query-params/use-page-query-params', () =>
+jest.mock('@/hooks/use-page-query-params/use-page-query-params', () =>
   jest.fn(() => [mockQueryParamsValues, mockSetQueryParams])
 );
 

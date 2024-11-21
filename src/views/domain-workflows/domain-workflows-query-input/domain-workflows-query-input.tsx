@@ -7,7 +7,7 @@ import { MdPlayArrow, MdCode } from 'react-icons/md';
 import { overrides } from './domain-workflows-query-input.styles';
 import { type Props } from './domain-workflows-query-input.types';
 
-export default function DomainWorkflowsQuery({ value, setValue }: Props) {
+export default function DomainWorkflowsQueryInput({ value, setValue }: Props) {
   const [queryText, setQueryText] = useState<string>('');
 
   useEffect(() => {
@@ -18,10 +18,16 @@ export default function DomainWorkflowsQuery({ value, setValue }: Props) {
     <>
       <Input
         value={queryText}
-        onChange={(event) => setQueryText(event.target.value)}
+        onChange={(event) => {
+          setQueryText(event.target.value);
+          if (!event.target.value) {
+            setValue(undefined);
+          }
+        }}
         startEnhancer={() => <MdCode />}
         overrides={overrides.input}
         placeholder="Write a custom query for workflows"
+        clearable
         clearOnEscape
       />
       <Button

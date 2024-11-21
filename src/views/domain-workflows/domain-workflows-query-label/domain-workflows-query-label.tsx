@@ -65,7 +65,7 @@ export default function DomainWorkflowsQueryLabel() {
         )}
         overrides={overrides.popover}
       >
-        <div>
+        <div data-testid="tooltip-hover-target">
           <MdInfoOutline size={16} display="block" />
         </div>
       </StatefulPopover>

@@ -7,7 +7,7 @@ import { type ListWorkflowsResponse } from '@/route-handlers/list-workflows/list
 import type { Props as MSWMocksHandlersProps } from '../../../../test-utils/msw-mock-handlers/msw-mock-handlers.types';
 import { mockDomainWorkflowsQueryParamsValues } from '../../__fixtures__/domain-workflows-query-params';
 import { type Props as EndMessageProps } from '../../domain-workflows-table-end-message/domain-workflows-table-end-message.types';
-import DomainWorkflowsTableSearch from '../domain-workflows-table-search';
+import DomainWorkflowsTableQuery from '../domain-workflows-table-query';
 
 jest.mock('@/components/error-panel/error-panel', () =>
   jest.fn(({ message }: { message: string }) => <div>{message}</div>)
@@ -18,9 +18,9 @@ jest.mock(
   () => jest.fn(() => <div>Loading...</div>)
 );
 
-jest.mock('../helpers/get-search-error-panel-props', () =>
-  jest.fn().mockImplementation(({ error }) => ({
-    message: error ? 'Error loading workflows' : 'No workflows found',
+jest.mock('../helpers/get-query-error-panel-props', () =>
+  jest.fn().mockImplementation(() => ({
+    message: 'Error loading workflows',
   }))
 );
 
@@ -49,7 +49,7 @@ jest.mock('@/hooks/use-page-query-params/use-page-query-params', () =>
   jest.fn(() => [mockDomainWorkflowsQueryParamsValues, mockSetQueryParams])
 );
 
-describe(DomainWorkflowsTableSearch.name, () => {
+describe(DomainWorkflowsTableQuery.name, () => {
   it('renders workflows without error', async () => {
     const { user } = setup({});
     expect(await screen.findByText('Loading...')).toBeInTheDocument();
@@ -79,10 +79,10 @@ describe(DomainWorkflowsTableSearch.name, () => {
     ).toBeInTheDocument();
   });
 
-  it('renders error panel if no workflows are found', async () => {
+  it('renders empty table if no workflows are found', async () => {
     setup({ errorCase: 'no-workflows' });
 
-    expect(await screen.findByText('No workflows found')).toBeInTheDocument();
+    expect(await screen.findByText('No workflows')).toBeInTheDocument();
   });
 
   it('renders workflows and allows the user to try again if there is an error', async () => {
@@ -122,7 +122,7 @@ function setup({
   const user = userEvent.setup();
 
   render(
-    <DomainWorkflowsTableSearch domain="mock-domain" cluster="mock-cluster" />,
+    <DomainWorkflowsTableQuery domain="mock-domain" cluster="mock-cluster" />,
     {
       endpointsMocks: [
         {

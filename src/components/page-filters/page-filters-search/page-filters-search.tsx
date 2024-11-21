@@ -32,13 +32,13 @@ export default function PageFiltersSearch<
       value={queryParams[searchQueryParamKey]}
       onChange={(event) => {
         const searchValue = event.target.value.replaceAll(searchTrimRegExp, '');
-
         setQueryParams({
           [searchQueryParamKey]: searchValue || undefined,
         } as Partial<PageQueryParamSetterValues<P>>);
       }}
       placeholder={searchPlaceholder}
       startEnhancer={() => <Search />}
+      clearable
       clearOnEscape
       overrides={overrides.searchInput}
     />

@@ -38,7 +38,7 @@ export default function DomainWorkflowsTableQuery(props: Props) {
     return <SectionLoadingIndicator />;
   }
 
-  if (error) {
+  if (error && workflows.length === 0) {
     return (
       <styled.ErrorPanelContainer>
         <ErrorPanel {...getQueryErrorPanelProps({ error })} reset={refetch} />

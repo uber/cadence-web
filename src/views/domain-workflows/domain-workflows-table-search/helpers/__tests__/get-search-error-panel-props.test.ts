@@ -1,6 +1,6 @@
 import { RequestError } from '@/utils/request/request-error';
 
-import getSearchErrorPanelProps from '../../../domain-workflows-table-search/helpers/get-search-error-panel-props';
+import getSearchErrorPanelProps from '../get-search-error-panel-props';
 
 describe(getSearchErrorPanelProps.name, () => {
   it('returns default error panel props for regular error', () => {
