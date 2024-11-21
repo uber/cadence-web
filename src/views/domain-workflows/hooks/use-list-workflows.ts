@@ -42,6 +42,7 @@ export default function useListWorkflows({
       return lastPage.nextPage;
     },
     retry: false,
+    refetchOnWindowFocus: (query) => query.state.status !== 'error',
   });
 
   const workflows = useMemo(() => {

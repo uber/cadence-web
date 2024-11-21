@@ -12,7 +12,7 @@ export const overrides = {
     },
     Input: {
       style: ({ $theme }: { $theme: Theme }): StyleObject => ({
-        ...$theme.typography.ParagraphSmall,
+        ...$theme.typography.MonoParagraphXSmall,
       }),
     },
   } satisfies InputOverrides,
