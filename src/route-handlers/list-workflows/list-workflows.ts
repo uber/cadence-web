@@ -36,6 +36,13 @@ export async function listWorkflows(
     );
   }
 
+  if (queryParams.inputType === 'query' && !queryParams.query) {
+    return NextResponse.json({
+      workflows: [],
+      nextPage: '',
+    } satisfies ListWorkflowsResponse);
+  }
+
   try {
     const res = await ctx.grpcClusterMethods.listWorkflows({
       domain: decodedParams.domain,
