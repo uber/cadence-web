@@ -16,7 +16,7 @@ import { styled } from './domain-workflows-table.styles';
 import { type Props } from './domain-workflows-table.types';
 import getWorkflowsErrorPanelProps from './helpers/get-workflows-error-panel-props';
 
-export default function DomainWorkflowsTable(props: Props) {
+export default function DomainWorkflowsTable({ domain, cluster }: Props) {
   const [queryParams, setQueryParams] = usePageQueryParams(
     domainPageQueryParamsConfig
   );
@@ -30,16 +30,15 @@ export default function DomainWorkflowsTable(props: Props) {
     isFetchingNextPage,
     refetch,
   } = useListWorkflows({
-    params: props,
-    requestQueryParams: {
-      inputType: queryParams.inputType,
-      search: queryParams.search,
-      status: queryParams.status,
-      sortColumn: queryParams.sortColumn,
-      sortOrder: queryParams.sortOrder,
-      timeRangeStart: queryParams.timeRangeStart?.toISOString(),
-      timeRangeEnd: queryParams.timeRangeEnd?.toISOString(),
-    },
+    domain,
+    cluster,
+    inputType: queryParams.inputType,
+    search: queryParams.search,
+    status: queryParams.status,
+    sortColumn: queryParams.sortColumn,
+    sortOrder: queryParams.sortOrder,
+    timeRangeStart: queryParams.timeRangeStart?.toISOString(),
+    timeRangeEnd: queryParams.timeRangeEnd?.toISOString(),
   });
 
   if (isLoading) {

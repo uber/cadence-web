@@ -5,7 +5,6 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import queryString from 'query-string';
 
 import {
-  type RouteParams as ListWorkflowsParams,
   type ListWorkflowsResponse,
   type ListWorkflowsRequestQueryParams,
 } from '@/route-handlers/list-workflows/list-workflows.types';
@@ -13,22 +12,23 @@ import request from '@/utils/request';
 import { type RequestError } from '@/utils/request/request-error';
 
 import DOMAIN_WORKFLOWS_PAGE_SIZE from '../config/domain-workflows-page-size.config';
+import { type UseListWorkflowsParams } from '../domain-workflows.types';
 
 export default function useListWorkflows({
-  params,
-  requestQueryParams,
+  domain,
+  cluster,
   pageSize = DOMAIN_WORKFLOWS_PAGE_SIZE,
-}: {
-  params: ListWorkflowsParams;
-  requestQueryParams: Omit<ListWorkflowsRequestQueryParams, 'pageSize'>;
-  pageSize?: number;
-}) {
+  ...requestQueryParams
+}: UseListWorkflowsParams) {
   const queryResult = useInfiniteQuery<ListWorkflowsResponse, RequestError>({
-    queryKey: ['listWorkflows', { ...params, ...requestQueryParams, pageSize }],
+    queryKey: [
+      'listWorkflows',
+      { domain, cluster, ...requestQueryParams, pageSize },
+    ],
     queryFn: async ({ pageParam }) =>
       request(
         queryString.stringifyUrl({
-          url: `/api/domains/${params.domain}/${params.cluster}/workflows`,
+          url: `/api/domains/${domain}/${cluster}/workflows`,
           query: {
             ...requestQueryParams,
             pageSize: pageSize.toString(),
