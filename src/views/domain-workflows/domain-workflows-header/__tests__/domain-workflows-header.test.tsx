@@ -79,7 +79,7 @@ describe(DomainWorkflowsHeader.name, () => {
 
     render(<DomainWorkflowsHeader />);
 
-    expect(await screen.findByText('Query input')).toBeInTheDocument();
+    expect(await screen.findByText('Query')).toBeInTheDocument();
   });
 
   it('toggles input type when segmented control is used', async () => {
