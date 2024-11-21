@@ -29,11 +29,6 @@ jest.mock(
   () => jest.fn(() => <div>Query input</div>)
 );
 
-jest.mock(
-  '../../domain-workflows-query-label/domain-workflows-query-label',
-  () => jest.fn(() => <div>Query label</div>)
-);
-
 const mockSetQueryParams = jest.fn();
 const mockResetAllFilters = jest.fn();
 const mockActiveFiltersCount = 2;
