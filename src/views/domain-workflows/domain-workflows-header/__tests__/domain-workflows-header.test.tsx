@@ -46,7 +46,7 @@ describe(DomainWorkflowsHeader.name, () => {
     render(<DomainWorkflowsHeader />);
 
     expect(await screen.findByText('Search')).toBeInTheDocument();
-    expect(await screen.findByText('Query label')).toBeInTheDocument();
+    expect(await screen.findByText('Query')).toBeInTheDocument();
   });
 
   it('renders page search and filters button when input type is search', async () => {
