@@ -3,7 +3,6 @@ import React from 'react';
 import { render, screen, fireEvent, act } from '@/test-utils/rtl';
 
 import Table from '../table';
-import { type TableConfig } from '../table.types';
 
 type TestDataT = {
   value: string;
@@ -17,49 +16,18 @@ const SAMPLE_ROWS: Array<TestDataT> = Array.from(
   (_, rowIndex) => ({ value: `test_${rowIndex}` })
 );
 
-function getMockRenderCell(index: number) {
-  return ({ value }: TestDataT) => {
-    return `data_${value}_${index}`;
-  };
-}
-
-const SAMPLE_COLUMNS = [
-  {
-    name: 'Column name 0',
-    id: 'column_id_0',
+const SAMPLE_COLUMNS = Array.from(
+  { length: SAMPLE_DATA_NUM_COLUMNS },
+  (_, colIndex) => ({
+    name: `Column Name ${colIndex}`,
+    id: `column_id_${colIndex}`,
     sortable: true,
-    renderCell: getMockRenderCell(0),
-    width: '20%',
-  },
-  {
-    name: 'Column name 1',
-    id: 'column_id_1',
-    sortable: true,
-    renderCell: getMockRenderCell(1),
-    width: '20%',
-  },
-  {
-    name: 'Column name 2',
-    id: 'column_id_2',
-    sortable: true,
-    renderCell: getMockRenderCell(2),
-    width: '20%',
-  },
-  {
-    name: 'Column name 3',
-    id: 'column_id_3',
-    sortable: true,
-    renderCell: getMockRenderCell(3),
-    width: '20%',
-  },
-  {
-    name: 'Column name 4',
-    id: 'column_id_4',
-    sortable: true,
-    renderCell: getMockRenderCell(4),
-    width: '20%',
-  },
-] as const satisfies TableConfig<TestDataT>;
+    renderCell: ({ value }: TestDataT) => {
+      return `data_${value}_${colIndex}`;
+    },
+    width: `${100 / SAMPLE_DATA_NUM_COLUMNS}%`,
+  })
+);
 
 describe('Table', () => {
   it('should render without error', async () => {
