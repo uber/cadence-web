@@ -10,7 +10,7 @@ export default function TableSortableHeadCell({
   name,
   columnID,
   width,
-  onSort = () => {},
+  onSort,
   sortColumn,
   sortOrder,
 }: Props) {
