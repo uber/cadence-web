@@ -17,7 +17,9 @@ export default function Table<T extends object, C extends TableConfig<T>>({
   columns,
   shouldShowResults,
   endMessage,
-  ...sortParams
+  onSort,
+  sortColumn,
+  sortOrder,
 }: Props<T, C>) {
   return (
     <styled.TableRoot>
@@ -25,14 +27,15 @@ export default function Table<T extends object, C extends TableConfig<T>>({
         <StyledTableHead>
           <StyledTableHeadRow>
             {columns.map((column) =>
-              column.sortable ? (
+              column.sortable && typeof onSort === 'function' ? (
                 <TableSortableHeadCell
                   key={column.id}
                   name={column.name}
                   columnID={column.id}
                   width={column.width}
-                  onSort={() => {}}
-                  {...sortParams}
+                  onSort={onSort}
+                  sortColumn={sortColumn}
+                  sortOrder={sortOrder}
                 />
               ) : (
                 <styled.TableHeadCell
