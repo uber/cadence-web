@@ -1,4 +1,4 @@
-import type { TableColumn } from '@/components/table/table.types';
+import type { TableConfig } from '@/components/table/table.types';
 
 import type { DomainData } from '../domains-page.types';
 
