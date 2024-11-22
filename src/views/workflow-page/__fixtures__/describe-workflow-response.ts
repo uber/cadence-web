@@ -27,7 +27,6 @@ export const describeWorkflowResponse: DescribeWorkflowResponse = {
       lastFailure: null,
       lastWorkerIdentity: 'test-worker-identity-2',
       startedWorkerIdentity: 'test-worker-identity-2',
-      scheduleId: '1234',
     },
     {
       activityId: 'test-activity-1',
@@ -51,7 +50,6 @@ export const describeWorkflowResponse: DescribeWorkflowResponse = {
       lastFailure: null,
       lastWorkerIdentity: 'test-worker-identity-1',
       startedWorkerIdentity: 'test-worker-identity-1',
-      scheduleId: '1234',
     },
   ],
   pendingChildren: [],
