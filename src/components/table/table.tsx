@@ -10,15 +10,18 @@ import {
 
 import TableSortableHeadCell from './table-sortable-head-cell/table-sortable-head-cell';
 import { styled } from './table.styles';
-import type { Props } from './table.types';
+import type { Props, TableColumn } from './table.types';
 
-export default function Table<T extends object>({
+export default function Table<
+  T extends object,
+  C extends Array<TableColumn<T>>,
+>({
   data,
   columns,
   shouldShowResults,
   endMessage,
   ...sortParams
-}: Props<T>) {
+}: Props<T, C>) {
   return (
     <styled.TableRoot>
       <StyledTable>

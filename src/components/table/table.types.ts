@@ -8,13 +8,21 @@ export type TableColumn<T> = {
   sortable?: boolean;
 };
 
-export type Props<T> = {
+type IsTableConfigSortable<T, C extends Array<TableColumn<T>>> = true extends {
+  [K in keyof C]: C[K] extends { sortable: true } ? true : false;
+}[number]
+  ? true
+  : false;
+
+export type Props<T, C extends Array<TableColumn<T>>> = {
   data: Array<T>;
-  columns: Array<TableColumn<T>>;
+  columns: C;
   shouldShowResults: boolean;
   endMessage: React.ReactNode;
   // Sort params
-  onSort: (column: string) => void;
+  onSort: IsTableConfigSortable<T, C> extends true
+    ? (column: string) => void
+    : never;
   sortColumn?: string;
   sortOrder?: SortOrder;
 };
