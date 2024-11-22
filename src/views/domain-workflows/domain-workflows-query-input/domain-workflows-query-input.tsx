@@ -11,7 +11,7 @@ export default function DomainWorkflowsQueryInput({ value, setValue }: Props) {
   const [queryText, setQueryText] = useState<string>('');
 
   useEffect(() => {
-    value && setQueryText(value);
+    setQueryText(value);
   }, [value]);
 
   return (
@@ -20,18 +20,15 @@ export default function DomainWorkflowsQueryInput({ value, setValue }: Props) {
         value={queryText}
         onChange={(event) => {
           setQueryText(event.target.value);
-          if (!event.target.value) {
-            setValue(undefined);
-          }
         }}
         startEnhancer={() => <MdCode />}
         overrides={overrides.input}
-        placeholder="Write a custom query for workflows"
+        placeholder="Filter workflows using a custom query"
         clearable
         clearOnEscape
       />
       <Button
-        onClick={() => queryText && setValue(queryText)}
+        onClick={() => setValue(queryText || undefined)}
         overrides={overrides.runButton}
         startEnhancer={<MdPlayArrow />}
       >
