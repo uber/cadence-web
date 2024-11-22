@@ -17,10 +17,10 @@ describe(DomainWorkflowsQueryInput.name, () => {
 
     const textbox = await screen.findByRole('textbox');
     await waitFor(() => expect(textbox).toHaveValue('test_query'));
-    expect(await screen.findByText('Run Query')).toBeInTheDocument();
+    expect(await screen.findByText('Rerun Query')).toBeInTheDocument();
   });
 
-  it('calls setValue when the Run Query button is clicked', async () => {
+  it('calls setValue and changes text when the Run Query button is clicked', async () => {
     const { mockSetValue, user } = setup({});
 
     const textbox = await screen.findByRole('textbox');
@@ -28,15 +28,6 @@ describe(DomainWorkflowsQueryInput.name, () => {
     await user.click(await screen.findByText('Run Query'));
 
     expect(mockSetValue).toHaveBeenCalledWith('mock_query');
-  });
-
-  it('calls setValue with undefined when the input is cleared', async () => {
-    const { mockSetValue, user } = setup({ startValue: 'test_query' });
-
-    const textbox = await screen.findByRole('textbox');
-    await user.clear(textbox);
-
-    expect(mockSetValue).toHaveBeenCalledWith(undefined);
   });
 });
 

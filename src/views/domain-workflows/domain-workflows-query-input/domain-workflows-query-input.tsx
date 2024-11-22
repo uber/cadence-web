@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import { Button } from 'baseui/button';
 import { Input } from 'baseui/input';
-import { MdPlayArrow, MdCode } from 'react-icons/md';
+import { MdPlayArrow, MdCode, MdRefresh } from 'react-icons/md';
 
 import { overrides } from './domain-workflows-query-input.styles';
 import { type Props } from './domain-workflows-query-input.types';
@@ -13,6 +13,8 @@ export default function DomainWorkflowsQueryInput({ value, setValue }: Props) {
   useEffect(() => {
     setQueryText(value);
   }, [value]);
+
+  const isQueryUnchanged = value && value === queryText;
 
   return (
     <>
@@ -30,9 +32,9 @@ export default function DomainWorkflowsQueryInput({ value, setValue }: Props) {
       <Button
         onClick={() => setValue(queryText || undefined)}
         overrides={overrides.runButton}
-        startEnhancer={<MdPlayArrow />}
+        startEnhancer={isQueryUnchanged ? <MdRefresh /> : <MdPlayArrow />}
       >
-        Run Query
+        {isQueryUnchanged ? 'Rerun Query' : 'Run Query'}
       </Button>
     </>
   );
