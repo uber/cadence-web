@@ -1,3 +1,5 @@
+import losslessJsonStringify from '@/utils/lossless-json-stringify';
+
 import formatPayload from '../format-payload';
 
 describe('formatPayload', () => {
@@ -12,8 +14,11 @@ describe('formatPayload', () => {
   });
 
   it('should parse JSON data correctly', () => {
-    const payload = { data: btoa(JSON.stringify({ key: 'value' })) };
-    expect(formatPayload(payload)).toEqual({ key: 'value' });
+    const payload = { data: btoa('{"key":"value",long:284789263475236586}') };
+    expect(formatPayload(payload)).toEqual({
+      key: 'value',
+      long: BigInt('284789263475236586'),
+    });
   });
 
   it('should remove double quotes from the string if JSON parsing fails', () => {
