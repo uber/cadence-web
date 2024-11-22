@@ -10,12 +10,9 @@ import {
 
 import TableSortableHeadCell from './table-sortable-head-cell/table-sortable-head-cell';
 import { styled } from './table.styles';
-import type { Props, TableColumn } from './table.types';
+import type { Props, TableConfig } from './table.types';
 
-export default function Table<
-  T extends object,
-  C extends Array<TableColumn<T>>,
->({
+export default function Table<T extends object, C extends TableConfig<T>>({
   data,
   columns,
   shouldShowResults,
@@ -34,6 +31,7 @@ export default function Table<
                   name={column.name}
                   columnID={column.id}
                   width={column.width}
+                  onSort={() => {}}
                   {...sortParams}
                 />
               ) : (

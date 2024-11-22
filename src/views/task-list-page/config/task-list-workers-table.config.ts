@@ -40,6 +40,6 @@ const taskListWorkersTableConfig = [
       }),
     width: '10%',
   },
-] as const satisfies Array<TableColumn<Worker>>;
+] as const satisfies TableConfig<Worker>;
 
 export default taskListWorkersTableConfig;
