@@ -1,4 +1,4 @@
-import { expectAssignable, expectNotAssignable } from 'tsd-lite';
+import { expect } from 'tstyche';
 
 import type {
   PageQueryParam,
@@ -10,42 +10,42 @@ import type {
  * */
 
 // it should require defaultValue since the type doesn't include undefined
-expectAssignable<PageQueryParam<'stringParam', string>>({
+expect<PageQueryParam<'stringParam', string>>().type.toBeAssignableWith({
   key: 'stringParam',
   defaultValue: '1',
 } as const);
 
-expectNotAssignable<PageQueryParam<'stringParam', string>>({
+expect<PageQueryParam<'stringParam', string>>().type.not.toBeAssignableWith({
   key: 'stringParam',
   // error: defaultValue is required
 } as const);
 
 // it should accept defaultValue with the same type as the query param
-expectAssignable<PageQueryParam<'stringParam', string>>({
+expect<PageQueryParam<'stringParam', string>>().type.toBeAssignableWith({
   key: 'stringParam',
   defaultValue: 'string',
 } as const);
 
-expectNotAssignable<PageQueryParam<'stringParam', string>>({
+expect<PageQueryParam<'stringParam', string>>().type.not.toBeAssignableWith({
   key: 'stringParam',
   defaultValue: 1, //error: number is not assignable to string
 } as const);
 
 // it should require parseValue since the type is not string
-expectAssignable<PageQueryParam<'numericParam', number>>({
+expect<PageQueryParam<'numericParam', number>>().type.toBeAssignableWith({
   key: 'numericParam',
   parseValue: () => 1,
   defaultValue: 1,
 } as const);
 
-expectNotAssignable<PageQueryParam<'numericParam', number>>({
+expect<PageQueryParam<'numericParam', number>>().type.not.toBeAssignableWith({
   key: 'numericParam',
   defaultValue: 1,
   // error: parseValue is required
 } as const);
 
 // it should allow both string or number types as parseValue return type and defaultValue
-expectAssignable<PageQueryParam<'unionTypes', string | number>>({
+expect<PageQueryParam<'unionTypes', string | number>>().type.toBeAssignableWith({
   key: 'unionTypes',
   parseValue: (value: string) => {
     if (value === 'value') return 'stringValue';
@@ -54,7 +54,7 @@ expectAssignable<PageQueryParam<'unionTypes', string | number>>({
   defaultValue: '1',
 } as const);
 
-expectAssignable<PageQueryParam<'unionTypes', string | number>>({
+expect<PageQueryParam<'unionTypes', string | number>>().type.toBeAssignableWith({
   key: 'unionTypes',
   parseValue: (value: string) => {
     if (value === 'value') return 'stringValue';
@@ -63,7 +63,7 @@ expectAssignable<PageQueryParam<'unionTypes', string | number>>({
   defaultValue: 1,
 } as const);
 
-expectNotAssignable<PageQueryParam<'unionTypes', string | number>>({
+expect<PageQueryParam<'unionTypes', string | number>>().type.not.toBeAssignableWith({
   key: 'unionTypes',
   parseValue: (value: string) => {
     if (value === 'value') return 'stringValue';
@@ -72,53 +72,53 @@ expectNotAssignable<PageQueryParam<'unionTypes', string | number>>({
   defaultValue: true, // error: boolean is not assignable to string | number
 } as const);
 
-expectNotAssignable<PageQueryParam<'unionTypes', string | number>>({
+expect<PageQueryParam<'unionTypes', string | number>>().type.not.toBeAssignableWith({
   key: 'unionTypes',
   parseValue: () => true, // error: boolean is not assignable to string | number
   defaultValue: 1,
 } as const);
 
 // it should accept optional defaultValue since the type includes undefined
-expectAssignable<
+expect<
   PageQueryParam<'optionalUnionTypes', string | number | undefined>
->({
+>().type.toBeAssignableWith({
   key: 'optionalUnionTypes',
 } as const);
 
-expectAssignable<
+expect<
   PageQueryParam<'optionalUnionTypes', string | number | undefined>
->({
+>().type.toBeAssignableWith({
   key: 'optionalUnionTypes',
   defaultValue: undefined,
 } as const);
 
-expectAssignable<
+expect<
   PageQueryParam<'optionalUnionTypes', string | number | undefined>
->({
+>().type.toBeAssignableWith({
   key: 'optionalUnionTypes',
   defaultValue: 1,
 } as const);
 
-expectAssignable<
+expect<
   PageQueryParam<'optionalUnionTypes', string | number | undefined>
->({
+>().type.toBeAssignableWith({
   key: 'optionalUnionTypes',
   defaultValue: '1',
 } as const);
 
 // it accepts union PageQueryParams
-expectAssignable<
+expect<
   | PageQueryParam<'orQueryParam', string>
   | PageQueryParam<'orQueryParam', number>
->({
+>().type.toBeAssignableWith({
   key: 'orQueryParam',
   defaultValue: `1`, // query param is string it will be parsed as string
 } as const);
 
-expectAssignable<
+expect<
   | PageQueryParam<'orQueryParam', string>
   | PageQueryParam<'orQueryParam', number>
->({
+>().type.toBeAssignableWith({
   key: 'orQueryParam',
   queryParamKey: 'sc',
   defaultValue: 1, // query param is number it will be parsed as number
@@ -128,10 +128,10 @@ expectAssignable<
   },
 } as const);
 
-expectNotAssignable<
+expect<
   | PageQueryParam<'orQueryParam', string>
   | PageQueryParam<'orQueryParam', number>
->({
+>().type.not.toBeAssignableWith({
   key: 'orQueryParam',
   queryParamKey: 'sc',
   defaultValue: '1', // error: mixing string and number types in the same configurations
@@ -146,51 +146,51 @@ expectNotAssignable<
  * */
 
 // it should require defaultValue since the type doesn't include undefined
-expectAssignable<PageQueryParamMultiValue<'multiValString', string[]>>({
+expect<PageQueryParamMultiValue<'multiValString', string[]>>().type.toBeAssignableWith({
   key: 'multiValString',
   isMultiValue: true,
   defaultValue: ['a'] as string[],
 } as const);
 
-expectNotAssignable<PageQueryParamMultiValue<'multiValString', string[]>>({
+expect<PageQueryParamMultiValue<'multiValString', string[]>>().type.not.toBeAssignableWith({
   key: 'multiValString',
   isMultiValue: true,
 } as const);
 
-expectNotAssignable<PageQueryParamMultiValue<'multiValString', string[]>>({
+expect<PageQueryParamMultiValue<'multiValString', string[]>>().type.not.toBeAssignableWith({
   key: 'multiValString',
   isMultiValue: true,
   defaultValue: [1] as number[], // number[] is not assignable to string[]
 } as const);
 
 // it should accept optional defaultValue since the type includes undefined
-expectAssignable<
+expect<
   PageQueryParamMultiValue<'multiValStringOptional', string[] | undefined>
->({
+>().type.toBeAssignableWith({
   key: 'multiValStringOptional',
   isMultiValue: true,
 } as const);
 
-expectAssignable<
+expect<
   PageQueryParamMultiValue<'multiValStringOptional', string[] | undefined>
->({
+>().type.toBeAssignableWith({
   key: 'multiValStringOptional',
   isMultiValue: true,
   defaultValue: undefined,
 } as const);
 
-expectAssignable<
+expect<
   PageQueryParamMultiValue<'multiValStringOptional', string[] | undefined>
->({
+>().type.toBeAssignableWith({
   key: 'multiValStringOptional',
   isMultiValue: true,
   defaultValue: ['a'] as string[],
 } as const);
 
 // it should accept number or boolean arrays as return of parseValue and for assigning defaultValue
-expectAssignable<
+expect<
   PageQueryParamMultiValue<'optionalMultivalueUnionTypes', number[] | boolean[]>
->({
+>().type.toBeAssignableWith({
   key: 'optionalMultivalueUnionTypes',
   isMultiValue: true,
   parseValue: (value: string[]) => {
@@ -200,9 +200,9 @@ expectAssignable<
   defaultValue: [1] as number[],
 } as const);
 
-expectAssignable<
+expect<
   PageQueryParamMultiValue<'optionalMultivalueUnionTypes', number[] | boolean[]>
->({
+>().type.toBeAssignableWith({
   key: 'optionalMultivalueUnionTypes',
   isMultiValue: true,
   parseValue: (value: string[]) => {
