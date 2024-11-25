@@ -2,9 +2,10 @@ import { createElement } from 'react';
 
 import FormattedDate from '@/components/formatted-date/formatted-date';
 import Link from '@/components/link/link';
-import { type TableConfig } from '@/components/table/table.types';
 import { type DomainWorkflow } from '@/views/domain-page/domain-page.types';
 import WorkflowStatusTag from '@/views/shared/workflow-status-tag/workflow-status-tag';
+
+import { type DomainWorkflowsQueryTableConfig } from '../domain-workflows-table/domain-workflows-table.types';
 
 const domainWorkflowsQueryTableConfig = [
   {
@@ -53,6 +54,6 @@ const domainWorkflowsQueryTableConfig = [
       createElement(FormattedDate, { timestampMs: row.closeTime }),
     width: '12.5%',
   },
-] as const satisfies TableConfig<DomainWorkflow>;
+] as const satisfies DomainWorkflowsQueryTableConfig;
 
 export default domainWorkflowsQueryTableConfig;
