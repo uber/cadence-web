@@ -3,7 +3,7 @@ import { describe, expect, it } from 'tstyche';
 import type {
   PageQueryParam,
   PageQueryParamMultiValue,
-} from '../use-page-query-params.types.ts';
+} from '../use-page-query-params.types.js';
 
 describe('PageQueryParam', () => {
   it('should require defaultValue since the type does not include undefined', () => {
