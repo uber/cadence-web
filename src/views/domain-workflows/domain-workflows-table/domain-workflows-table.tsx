@@ -7,7 +7,8 @@ import Table from '@/components/table/table';
 import usePageQueryParams from '@/hooks/use-page-query-params/use-page-query-params';
 import domainPageQueryParamsConfig from '@/views/domain-page/config/domain-page-query-params.config';
 
-import domainWorkflowsTableConfig from '../config/domain-workflows-table.config';
+import domainWorkflowsQueryTableConfig from '../config/domain-workflows-query-table.config';
+import domainWorkflowsSearchTableConfig from '../config/domain-workflows-search-table.config';
 import { type Props } from '../domain-workflows-table/domain-workflows-table.types';
 import DomainWorkflowsTableEndMessage from '../domain-workflows-table-end-message/domain-workflows-table-end-message';
 import getNextSortOrder from '../helpers/get-next-sort-order';
@@ -61,7 +62,6 @@ export default function DomainWorkflowsTable({ domain, cluster }: Props) {
     <styled.TableContainer>
       <Table
         data={workflows}
-        columns={domainWorkflowsTableConfig}
         shouldShowResults={!isLoading && workflows.length > 0}
         endMessage={
           <DomainWorkflowsTableEndMessage
@@ -72,21 +72,25 @@ export default function DomainWorkflowsTable({ domain, cluster }: Props) {
             isFetchingNextPage={isFetchingNextPage}
           />
         }
-        // Query input - if onSort isn't passed all columns are rendered unsortable by default
-        {...(inputType === 'search' && {
-          onSort: (column) => {
-            setQueryParams({
-              sortColumn: column,
-              sortOrder: getNextSortOrder({
-                currentColumn: queryParams.sortColumn,
-                nextColumn: column,
-                currentSortOrder: queryParams.sortOrder,
-              }),
-            });
-          },
-          sortColumn: queryParams.sortColumn,
-          sortOrder: queryParams.sortOrder,
-        })}
+        {...(inputType === 'query'
+          ? {
+              columns: domainWorkflowsQueryTableConfig,
+            }
+          : {
+              columns: domainWorkflowsSearchTableConfig,
+              onSort: (column) => {
+                setQueryParams({
+                  sortColumn: column,
+                  sortOrder: getNextSortOrder({
+                    currentColumn: queryParams.sortColumn,
+                    nextColumn: column,
+                    currentSortOrder: queryParams.sortOrder,
+                  }),
+                });
+              },
+              sortColumn: queryParams.sortColumn,
+              sortOrder: queryParams.sortOrder,
+            })}
       />
     </styled.TableContainer>
   );
