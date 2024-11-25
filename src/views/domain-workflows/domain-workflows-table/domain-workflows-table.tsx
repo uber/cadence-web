@@ -61,6 +61,7 @@ export default function DomainWorkflowsTable({ domain, cluster }: Props) {
     <styled.TableContainer>
       <Table
         data={workflows}
+        columns={domainWorkflowsTableConfig}
         shouldShowResults={!isLoading && workflows.length > 0}
         endMessage={
           <DomainWorkflowsTableEndMessage
@@ -71,28 +72,21 @@ export default function DomainWorkflowsTable({ domain, cluster }: Props) {
             isFetchingNextPage={isFetchingNextPage}
           />
         }
-        {...(inputType === 'query'
-          ? {
-              columns: domainWorkflowsTableConfig.map((columnConfig) => ({
-                ...columnConfig,
-                sortable: false,
-              })),
-            }
-          : {
-              columns: domainWorkflowsTableConfig,
-              onSort: (column) => {
-                setQueryParams({
-                  sortColumn: column,
-                  sortOrder: getNextSortOrder({
-                    currentColumn: queryParams.sortColumn,
-                    nextColumn: column,
-                    currentSortOrder: queryParams.sortOrder,
-                  }),
-                });
-              },
-              sortColumn: queryParams.sortColumn,
-              sortOrder: queryParams.sortOrder,
-            })}
+        // Query input - if onSort isn't passed all columns are rendered unsortable by default
+        {...(inputType === 'search' && {
+          onSort: (column) => {
+            setQueryParams({
+              sortColumn: column,
+              sortOrder: getNextSortOrder({
+                currentColumn: queryParams.sortColumn,
+                nextColumn: column,
+                currentSortOrder: queryParams.sortOrder,
+              }),
+            });
+          },
+          sortColumn: queryParams.sortColumn,
+          sortOrder: queryParams.sortOrder,
+        })}
       />
     </styled.TableContainer>
   );
