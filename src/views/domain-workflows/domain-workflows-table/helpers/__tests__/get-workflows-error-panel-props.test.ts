@@ -1,11 +1,12 @@
 import { RequestError } from '@/utils/request/request-error';
 
-import getSearchErrorPanelProps from '../get-search-error-panel-props';
+import getWorkflowsErrorPanelProps from '../get-workflows-error-panel-props';
 
-describe(getSearchErrorPanelProps.name, () => {
+describe(getWorkflowsErrorPanelProps.name, () => {
   it('returns default error panel props for regular error', () => {
     expect(
-      getSearchErrorPanelProps({
+      getWorkflowsErrorPanelProps({
+        inputType: 'search',
         error: new RequestError('Test error', 500),
         areSearchParamsAbsent: false,
       })
@@ -15,9 +16,22 @@ describe(getSearchErrorPanelProps.name, () => {
     });
   });
 
+  it('returns error message directly for bad request error for queries', () => {
+    expect(
+      getWorkflowsErrorPanelProps({
+        inputType: 'query',
+        error: new RequestError('Incorrect query', 400),
+        areSearchParamsAbsent: false,
+      })
+    ).toEqual({
+      message: 'Error in query: Incorrect query',
+    });
+  });
+
   it('returns "not found" error panel props when search params are absent', () => {
     expect(
-      getSearchErrorPanelProps({
+      getWorkflowsErrorPanelProps({
+        inputType: 'search',
         error: null,
         areSearchParamsAbsent: true,
       })
@@ -36,7 +50,8 @@ describe(getSearchErrorPanelProps.name, () => {
 
   it('returns undefined in all other cases', () => {
     expect(
-      getSearchErrorPanelProps({
+      getWorkflowsErrorPanelProps({
+        inputType: 'search',
         error: null,
         areSearchParamsAbsent: false,
       })
