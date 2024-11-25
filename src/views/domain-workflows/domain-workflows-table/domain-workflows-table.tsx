@@ -77,7 +77,6 @@ export default function DomainWorkflowsTable({ domain, cluster }: Props) {
                 ...columnConfig,
                 sortable: false,
               })),
-              onSort: () => {},
             }
           : {
               columns: domainWorkflowsTableConfig,

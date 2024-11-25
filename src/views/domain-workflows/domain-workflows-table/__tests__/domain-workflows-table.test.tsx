@@ -152,54 +152,51 @@ function setup({
   let currentEventIndex = 0;
   const user = userEvent.setup();
 
-  const { debug } = render(
-    <DomainWorkflowsTable domain="mock-domain" cluster="mock-cluster" />,
-    {
-      endpointsMocks: [
-        {
-          path: '/api/domains/:domain/:cluster/workflows',
-          httpMethod: 'GET',
-          mockOnce: false,
-          httpResolver: async () => {
-            const index = currentEventIndex;
-            currentEventIndex++;
+  render(<DomainWorkflowsTable domain="mock-domain" cluster="mock-cluster" />, {
+    endpointsMocks: [
+      {
+        path: '/api/domains/:domain/:cluster/workflows',
+        httpMethod: 'GET',
+        mockOnce: false,
+        httpResolver: async () => {
+          const index = currentEventIndex;
+          currentEventIndex++;
 
-            switch (errorCase) {
-              case 'no-workflows':
-                return HttpResponse.json({
-                  workflows: [],
-                  nextPage: undefined,
-                });
-              case 'initial-fetch-error':
+          switch (errorCase) {
+            case 'no-workflows':
+              return HttpResponse.json({
+                workflows: [],
+                nextPage: undefined,
+              });
+            case 'initial-fetch-error':
+              return HttpResponse.json(
+                { message: 'Request failed' },
+                { status: 500 }
+              );
+            case 'subsequent-fetch-error':
+              if (index === 0) {
+                return HttpResponse.json(pages[0]);
+              } else if (index === 1) {
                 return HttpResponse.json(
                   { message: 'Request failed' },
                   { status: 500 }
                 );
-              case 'subsequent-fetch-error':
-                if (index === 0) {
-                  return HttpResponse.json(pages[0]);
-                } else if (index === 1) {
-                  return HttpResponse.json(
-                    { message: 'Request failed' },
-                    { status: 500 }
-                  );
-                } else {
-                  return HttpResponse.json(pages[1]);
-                }
-              default:
-                if (index === 0) {
-                  return HttpResponse.json(pages[0]);
-                } else {
-                  return HttpResponse.json(pages[1]);
-                }
-            }
-          },
+              } else {
+                return HttpResponse.json(pages[1]);
+              }
+            default:
+              if (index === 0) {
+                return HttpResponse.json(pages[0]);
+              } else {
+                return HttpResponse.json(pages[1]);
+              }
+          }
         },
-      ] as MSWMocksHandlersProps['endpointsMocks'],
-    }
-  );
+      },
+    ] as MSWMocksHandlersProps['endpointsMocks'],
+  });
 
-  return { user, debug };
+  return { user };
 }
 
 // TODO @adhitya.mamallan - Explore using fakerjs.dev for cases like this
