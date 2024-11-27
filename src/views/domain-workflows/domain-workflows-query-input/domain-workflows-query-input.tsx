@@ -11,6 +11,7 @@ export default function DomainWorkflowsQueryInput({
   value,
   setValue,
   refetchQuery,
+  isQueryRunning,
 }: Props) {
   const [queryText, setQueryText] = useState<string>('');
 
@@ -57,6 +58,7 @@ export default function DomainWorkflowsQueryInput({
         onClick={onSubmit}
         overrides={overrides.runButton}
         startEnhancer={isQueryUnchanged ? <MdRefresh /> : <MdPlayArrow />}
+        isLoading={isQueryRunning}
       >
         {isQueryUnchanged ? 'Rerun Query' : 'Run Query'}
       </Button>

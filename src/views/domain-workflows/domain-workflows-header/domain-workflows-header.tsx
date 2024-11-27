@@ -26,7 +26,10 @@ export default function DomainWorkflowsHeader({ domain, cluster }: Props) {
       pageQueryParamsConfig: domainPageQueryParamsConfig,
     });
 
-  const { refetch } = useListWorkflows({ domain, cluster });
+  const { refetch, isFetching } = useListWorkflows({
+    domain,
+    cluster,
+  });
 
   return (
     <styled.HeaderContainer>
@@ -59,6 +62,7 @@ export default function DomainWorkflowsHeader({ domain, cluster }: Props) {
             value={queryParams.query}
             setValue={(v) => setQueryParams({ query: v })}
             refetchQuery={refetch}
+            isQueryRunning={isFetching}
           />
         ) : (
           <>
