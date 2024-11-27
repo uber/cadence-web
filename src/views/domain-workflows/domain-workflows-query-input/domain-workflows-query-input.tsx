@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { Button } from 'baseui/button';
 import { Input } from 'baseui/input';
@@ -20,6 +20,26 @@ export default function DomainWorkflowsQueryInput({
 
   const isQueryUnchanged = value && value === queryText;
 
+  const onSubmit = useCallback(() => {
+    if (!isQueryUnchanged) {
+      setValue(queryText || undefined);
+    }
+    refetchQuery();
+  }, [isQueryUnchanged, setValue, queryText, refetchQuery]);
+
+  useEffect(() => {
+    const keyboardTriggerRequest = (e: KeyboardEvent) => {
+      if (e.key === 'Enter' && e.metaKey) {
+        onSubmit();
+      }
+    };
+
+    document.addEventListener('keydown', keyboardTriggerRequest, true);
+
+    return () =>
+      document.removeEventListener('keydown', keyboardTriggerRequest);
+  }, [onSubmit]);
+
   return (
     <>
       <Input
@@ -34,9 +54,7 @@ export default function DomainWorkflowsQueryInput({
         clearOnEscape
       />
       <Button
-        onClick={() =>
-          isQueryUnchanged ? refetchQuery() : setValue(queryText || undefined)
-        }
+        onClick={onSubmit}
         overrides={overrides.runButton}
         startEnhancer={isQueryUnchanged ? <MdRefresh /> : <MdPlayArrow />}
       >

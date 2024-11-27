@@ -30,6 +30,16 @@ describe(DomainWorkflowsQueryInput.name, () => {
     expect(mockSetValue).toHaveBeenCalledWith('mock_query');
   });
 
+  it('calls setValue and changes text when Cmd+Click is pressed', async () => {
+    const { mockSetValue, user } = setup({});
+
+    const textbox = await screen.findByRole('textbox');
+    await user.type(textbox, 'mock_query');
+    await user.keyboard('{Meta>}{Enter}{/Meta}');
+
+    expect(mockSetValue).toHaveBeenCalledWith('mock_query');
+  });
+
   it('calls refetchQuery when the Rerun Query button is clicked', async () => {
     const { mockRefetch, user } = setup({ startValue: 'test_query' });
 

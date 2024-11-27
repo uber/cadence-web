@@ -62,6 +62,10 @@ export default function useListWorkflows({
     },
     retry: false,
     refetchOnWindowFocus: (query) => query.state.status !== 'error',
+    ...(queryParams.inputType === 'query' && {
+      refetchOnMount: true,
+      gcTime: 0,
+    }),
   });
 
   const workflows = useMemo(() => {
