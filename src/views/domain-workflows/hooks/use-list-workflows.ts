@@ -62,7 +62,6 @@ export default function useListWorkflows({
     },
     retry: false,
     refetchOnWindowFocus: (query) => query.state.status !== 'error',
-    refetchOnMount: true,
     gcTime: 0,
   });
 
