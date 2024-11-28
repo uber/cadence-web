@@ -65,7 +65,7 @@ export default function DomainWorkflowsHeader({ domain, cluster }: Props) {
             isQueryRunning={isFetching}
           />
         ) : (
-          <>
+          <styled.SearchContainer>
             <PageFiltersSearch
               pageQueryParamsConfig={domainPageQueryParamsConfig}
               searchQueryParamKey="search"
@@ -78,7 +78,7 @@ export default function DomainWorkflowsHeader({ domain, cluster }: Props) {
               }}
               activeFiltersCount={activeFiltersCount}
             />
-          </>
+          </styled.SearchContainer>
         )}
       </styled.InputContainer>
       {queryParams.inputType === 'search' && areFiltersShown && (

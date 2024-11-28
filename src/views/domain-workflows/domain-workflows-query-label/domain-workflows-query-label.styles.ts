@@ -70,9 +70,7 @@ export const overrides = {
   popover: {
     Body: {
       style: ({ $theme }) => ({
-        marginLeft: $theme.sizing.scale600,
-        marginRight: $theme.sizing.scale600,
-        marginTop: $theme.sizing.scale600,
+        margin: $theme.sizing.scale600,
       }),
     },
     Inner: {

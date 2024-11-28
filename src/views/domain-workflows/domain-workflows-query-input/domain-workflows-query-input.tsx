@@ -4,7 +4,7 @@ import { Button } from 'baseui/button';
 import { Input } from 'baseui/input';
 import { MdPlayArrow, MdCode, MdRefresh } from 'react-icons/md';
 
-import { overrides } from './domain-workflows-query-input.styles';
+import { styled, overrides } from './domain-workflows-query-input.styles';
 import { type Props } from './domain-workflows-query-input.types';
 
 export default function DomainWorkflowsQueryInput({
@@ -24,25 +24,18 @@ export default function DomainWorkflowsQueryInput({
   const onSubmit = useCallback(() => {
     if (!isQueryUnchanged) {
       setValue(queryText || undefined);
+    } else {
+      refetchQuery();
     }
-    refetchQuery();
   }, [isQueryUnchanged, setValue, queryText, refetchQuery]);
 
-  useEffect(() => {
-    const keyboardTriggerRequest = (e: KeyboardEvent) => {
-      if (e.key === 'Enter' && e.metaKey) {
-        onSubmit();
-      }
-    };
-
-    document.addEventListener('keydown', keyboardTriggerRequest, true);
-
-    return () =>
-      document.removeEventListener('keydown', keyboardTriggerRequest);
-  }, [onSubmit]);
-
   return (
-    <>
+    <styled.QueryForm
+      onSubmit={(e: React.FormEvent) => {
+        e.preventDefault();
+        onSubmit();
+      }}
+    >
       <Input
         value={queryText}
         onChange={(event) => {
@@ -55,13 +48,13 @@ export default function DomainWorkflowsQueryInput({
         clearOnEscape
       />
       <Button
-        onClick={onSubmit}
+        type="submit"
         overrides={overrides.runButton}
         startEnhancer={isQueryUnchanged ? <MdRefresh /> : <MdPlayArrow />}
         isLoading={isQueryRunning}
       >
         {isQueryUnchanged ? 'Rerun Query' : 'Run Query'}
       </Button>
-    </>
+    </styled.QueryForm>
   );
 }

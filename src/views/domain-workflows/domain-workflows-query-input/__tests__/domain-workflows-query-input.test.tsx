@@ -38,12 +38,12 @@ describe(DomainWorkflowsQueryInput.name, () => {
     expect(mockSetValue).toHaveBeenCalledWith('mock_query');
   });
 
-  it('calls setValue and changes text when Cmd+Click is pressed', async () => {
+  it('calls setValue and changes text when Enter is pressed', async () => {
     const { mockSetValue, user } = setup({});
 
     const textbox = await screen.findByRole('textbox');
     await user.type(textbox, 'mock_query');
-    await user.keyboard('{Meta>}{Enter}{/Meta}');
+    await user.keyboard('{Enter}');
 
     expect(mockSetValue).toHaveBeenCalledWith('mock_query');
   });
