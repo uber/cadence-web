@@ -55,17 +55,7 @@ describe(getWorkflowsErrorPanelProps.name, () => {
         error: null,
         areSearchParamsAbsent: true,
       })
-    ).toEqual({
-      message: 'No workflows found for this domain',
-      omitLogging: true,
-      actions: [
-        {
-          kind: 'link-external',
-          label: 'Get started on workflows',
-          link: 'https://cadenceworkflow.io/docs/concepts/workflows',
-        },
-      ],
-    });
+    ).toEqual(undefined);
   });
 
   it('returns undefined in all other cases', () => {
