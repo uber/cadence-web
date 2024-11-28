@@ -38,4 +38,6 @@ export default function getWorkflowsErrorPanelProps({
       omitLogging: true,
     };
   }
+
+  return undefined;
 }
