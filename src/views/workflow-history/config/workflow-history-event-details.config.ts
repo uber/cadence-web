@@ -54,6 +54,12 @@ const workflowHistoryEventDetailsConfig = [
     },
   },
   {
+    name: 'Maximum retry attempts',
+    path: 'retryPolicy.maximumAttempts',
+    valueComponent: ({ entryValue }) =>
+      entryValue === 0 ? 'Unlimited' : entryValue,
+  },
+  {
     name: 'RunIds as link',
     pathRegex: '(firstExecutionRunId|originalExecutionRunId)$',
     valueComponent: ({ entryValue, domain, cluster, workflowId }) => {
