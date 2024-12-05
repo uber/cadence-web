@@ -36,7 +36,7 @@ describe(DomainWorkflowsBasicFiltersStatus.name, () => {
       fireEvent.click(runningOption);
     });
     expect(mockSetValue).toHaveBeenCalledWith({
-      status: 'ALL_CLOSED',
+      statusBasic: 'ALL_CLOSED',
     });
   });
 
@@ -50,7 +50,7 @@ describe(DomainWorkflowsBasicFiltersStatus.name, () => {
     act(() => {
       fireEvent.click(clearButton);
     });
-    expect(mockSetValue).toHaveBeenCalledWith({ status: undefined });
+    expect(mockSetValue).toHaveBeenCalledWith({ statusBasic: undefined });
   });
 });
 
