@@ -2,7 +2,7 @@ import { HttpResponse } from 'msw';
 
 import { render, screen, userEvent, waitFor } from '@/test-utils/rtl';
 
-import { type Props as LoaderProps } from '@/components/table-infinite-scroll-loader/table-infinite-scroll-loader.types';
+import { type Props as LoaderProps } from '@/components/table/table-infinite-scroll-loader/table-infinite-scroll-loader.types';
 import * as usePageQueryParamsModule from '@/hooks/use-page-query-params/use-page-query-params';
 import { type ListWorkflowsResponse } from '@/route-handlers/list-workflows/list-workflows.types';
 
@@ -39,7 +39,7 @@ jest.mock('../helpers/get-workflows-error-panel-props', () =>
 );
 
 jest.mock(
-  '@/components/table-infinite-scroll-loader/table-infinite-scroll-loader',
+  '@/components/table/table-infinite-scroll-loader/table-infinite-scroll-loader',
   () =>
     jest.fn((props: LoaderProps) => (
       <button data-testid="mock-loader" onClick={props.fetchNextPage}>

@@ -4,7 +4,6 @@ import React from 'react';
 import ErrorPanel from '@/components/error-panel/error-panel';
 import SectionLoadingIndicator from '@/components/section-loading-indicator/section-loading-indicator';
 import Table from '@/components/table/table';
-import TableInfiniteScrollLoader from '@/components/table-infinite-scroll-loader/table-infinite-scroll-loader';
 import usePageQueryParams from '@/hooks/use-page-query-params/use-page-query-params';
 import domainPageQueryParamsConfig from '@/views/domain-page/config/domain-page-query-params.config';
 
@@ -63,15 +62,14 @@ export default function DomainWorkflowsTable({ domain, cluster }: Props) {
       <Table
         data={workflows}
         shouldShowResults={!isLoading && workflows.length > 0}
-        endMessage={
-          <TableInfiniteScrollLoader
-            hasData={workflows.length > 0}
-            error={error}
-            fetchNextPage={fetchNextPage}
-            hasNextPage={hasNextPage}
-            isFetchingNextPage={isFetchingNextPage}
-          />
-        }
+        endMessageProps={{
+          kind: 'infinite-scroll',
+          hasData: workflows.length > 0,
+          error,
+          fetchNextPage,
+          hasNextPage,
+          isFetchingNextPage,
+        }}
         {...(inputType === 'query'
           ? {
               columns: domainWorkflowsQueryTableConfig,
