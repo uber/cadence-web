@@ -4,13 +4,13 @@ import React from 'react';
 import ErrorPanel from '@/components/error-panel/error-panel';
 import SectionLoadingIndicator from '@/components/section-loading-indicator/section-loading-indicator';
 import Table from '@/components/table/table';
+import TableInfiniteScrollLoader from '@/components/table-infinite-scroll-loader/table-infinite-scroll-loader';
 import usePageQueryParams from '@/hooks/use-page-query-params/use-page-query-params';
 import domainPageQueryParamsConfig from '@/views/domain-page/config/domain-page-query-params.config';
 
 import domainWorkflowsQueryTableConfig from '../config/domain-workflows-query-table.config';
 import domainWorkflowsSearchTableConfig from '../config/domain-workflows-search-table.config';
 import { type Props } from '../domain-workflows-table/domain-workflows-table.types';
-import DomainWorkflowsTableEndMessage from '../domain-workflows-table-end-message/domain-workflows-table-end-message';
 import getNextSortOrder from '../helpers/get-next-sort-order';
 import useListWorkflows from '../hooks/use-list-workflows';
 
@@ -64,8 +64,8 @@ export default function DomainWorkflowsTable({ domain, cluster }: Props) {
         data={workflows}
         shouldShowResults={!isLoading && workflows.length > 0}
         endMessage={
-          <DomainWorkflowsTableEndMessage
-            hasWorkflows={workflows.length > 0}
+          <TableInfiniteScrollLoader
+            hasData={workflows.length > 0}
             error={error}
             fetchNextPage={fetchNextPage}
             hasNextPage={hasNextPage}
