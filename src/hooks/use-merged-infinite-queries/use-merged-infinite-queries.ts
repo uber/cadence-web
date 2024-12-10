@@ -111,7 +111,12 @@ export default function useMergedInfiniteQueries<TData, TResponse, TPageParam>({
     error: queryResults.some((qr) => qr.isError)
       ? new UseMergedInfiniteQueriesError(
           'One or more infinite queries failed',
-          queryResults.filter((qr) => qr.isError).map((qr) => qr.error)
+          queryResults.reduce((errors: Array<Error>, qr) => {
+            if (qr.isError) {
+              errors.push(qr.error);
+            }
+            return errors;
+          }, [])
         )
       : null,
     refetch: refetchQueriesWithError,
