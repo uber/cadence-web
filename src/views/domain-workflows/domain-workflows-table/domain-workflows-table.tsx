@@ -60,7 +60,7 @@ export default function DomainWorkflowsTable({
     fetchNextPage,
     isFetchingNextPage,
     refetch,
-  } = useListWorkflows({ domain, cluster });
+  } = useListWorkflows({ domain, cluster, isArchival });
 
   if (isLoading) {
     return <SectionLoadingIndicator />;

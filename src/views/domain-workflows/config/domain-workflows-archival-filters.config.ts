@@ -1,38 +1,38 @@
 import { type PageFilterConfig } from '@/components/page-filters/page-filters.types';
 import type domainPageQueryParamsConfig from '@/views/domain-page/config/domain-page-query-params.config';
 
-import DomainWorkflowsFiltersDates from '../domain-workflows-filters-dates/domain-workflows-filters-dates';
-import { type DomainWorkflowsFiltersDatesValue } from '../domain-workflows-filters-dates/domain-workflows-filters-dates.types';
-import DomainWorkflowsFiltersStatus from '../domain-workflows-filters-status/domain-workflows-filters-status';
-import { type DomainWorkflowsFiltersStatusValue } from '../domain-workflows-filters-status/domain-workflows-filters-status.types';
+import DomainWorkflowsArchivalFiltersDates from '../domain-workflows-archival-filters-dates/domain-workflows-archival-filters-dates';
+import { type DomainWorkflowsArchivalFiltersDatesValue } from '../domain-workflows-archival-filters-dates/domain-workflows-archival-filters-dates.types';
+import DomainWorkflowsArchivalFiltersStatus from '../domain-workflows-archival-filters-status/domain-workflows-archival-filters-status';
+import { type DomainWorkflowsArchivalFiltersStatusValue } from '../domain-workflows-archival-filters-status/domain-workflows-archival-filters-status.types';
 
 const domainWorkflowsArchivalFiltersConfig: [
   PageFilterConfig<
     typeof domainPageQueryParamsConfig,
-    DomainWorkflowsFiltersStatusValue
+    DomainWorkflowsArchivalFiltersStatusValue
   >,
   PageFilterConfig<
     typeof domainPageQueryParamsConfig,
-    DomainWorkflowsFiltersDatesValue
+    DomainWorkflowsArchivalFiltersDatesValue
   >,
 ] = [
   {
     id: 'status',
-    getValue: (v) => ({ status: v.statusArchival }),
-    formatValue: (v) => ({ statusArchival: v.status }),
-    component: DomainWorkflowsFiltersStatus,
+    getValue: (v) => ({ statusArchival: v.statusArchival }),
+    formatValue: (v) => ({ statusArchival: v.statusArchival }),
+    component: DomainWorkflowsArchivalFiltersStatus,
   },
   {
     id: 'dates',
     getValue: (v) => ({
-      timeRangeStart: v.timeRangeStartArchival,
-      timeRangeEnd: v.timeRangeEndArchival,
+      timeRangeStartArchival: v.timeRangeStartArchival,
+      timeRangeEndArchival: v.timeRangeEndArchival,
     }),
     formatValue: (v) => ({
-      timeRangeStartArchival: v.timeRangeStart?.toISOString(),
-      timeRangeEndArchival: v.timeRangeEnd?.toISOString(),
+      timeRangeStartArchival: v.timeRangeStartArchival?.toISOString(),
+      timeRangeEndArchival: v.timeRangeEndArchival?.toISOString(),
     }),
-    component: DomainWorkflowsFiltersDates,
+    component: DomainWorkflowsArchivalFiltersDates,
   },
 ] as const;
 

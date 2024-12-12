@@ -9,6 +9,7 @@ import PageFiltersSearch from '@/components/page-filters/page-filters-search/pag
 import PageFiltersToggle from '@/components/page-filters/page-filters-toggle/page-filters-toggle';
 import domainPageQueryParamsConfig from '@/views/domain-page/config/domain-page-query-params.config';
 
+import domainWorkflowsArchivalFiltersConfig from '../config/domain-workflows-archival-filters.config';
 import domainWorkflowsFiltersConfig from '../config/domain-workflows-filters.config';
 import DOMAIN_WORKFLOWS_SEARCH_DEBOUNCE_MS from '../config/domain-workflows-search-debounce-ms.config';
 import DomainWorkflowsQueryInput from '../domain-workflows-query-input/domain-workflows-query-input';
@@ -32,6 +33,9 @@ export default function DomainWorkflowsHeader({
       pageQueryParamsConfig: domainPageQueryParamsConfig,
     });
 
+  // TODO @adhitya.mamallan - see if there's a better way to separate the domain workflows view
+  // from directly depending on query params, since using the isArchival flag in multiple places
+  // can get unmaintainable
   const { inputType, query } = getDomainWorkflowsQueryParamsValues({
     queryParams,
     isArchival,
@@ -40,6 +44,7 @@ export default function DomainWorkflowsHeader({
   const { refetch, isFetching } = useListWorkflows({
     domain,
     cluster,
+    isArchival,
   });
 
   return (
@@ -50,7 +55,7 @@ export default function DomainWorkflowsHeader({
           onChange={({ activeKey }) => {
             setQueryParams(
               {
-                [isArchival ? 'inputType' : 'inputTypeArchival']:
+                [isArchival ? 'inputTypeArchival' : 'inputType']:
                   activeKey === 'query' ? 'query' : 'search',
               },
               { replace: false, pageRerender: true }
@@ -74,7 +79,7 @@ export default function DomainWorkflowsHeader({
             value={query}
             setValue={(v) =>
               setQueryParams({
-                [isArchival ? 'query' : 'queryArchival']: v,
+                [isArchival ? 'queryArchival' : 'query']: v,
               })
             }
             refetchQuery={refetch}
@@ -84,7 +89,7 @@ export default function DomainWorkflowsHeader({
           <styled.SearchContainer>
             <PageFiltersSearch
               pageQueryParamsConfig={domainPageQueryParamsConfig}
-              searchQueryParamKey="search"
+              searchQueryParamKey={isArchival ? 'searchArchival' : 'search'}
               searchPlaceholder="Search for Workflow ID, Run ID, or Workflow Type"
               inputDebounceDurationMs={DOMAIN_WORKFLOWS_SEARCH_DEBOUNCE_MS}
             />
@@ -100,7 +105,11 @@ export default function DomainWorkflowsHeader({
       </styled.InputContainer>
       {inputType === 'search' && areFiltersShown && (
         <PageFiltersFields
-          pageFiltersConfig={domainWorkflowsFiltersConfig}
+          pageFiltersConfig={
+            isArchival
+              ? domainWorkflowsArchivalFiltersConfig
+              : domainWorkflowsFiltersConfig
+          }
           resetAllFilters={resetAllFilters}
           queryParams={queryParams}
           setQueryParams={setQueryParams}

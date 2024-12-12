@@ -18,7 +18,12 @@ export type PageFilterConfig<
 > = {
   id: string;
   getValue: (queryParamsValues: PageQueryParamValues<P>) => V;
-  formatValue: (value: V) => Partial<PageQueryParamSetterValues<P>>;
+  formatValue: (
+    value: V
+  ) => Pick<
+    PageQueryParamSetterValues<P>,
+    keyof V extends string ? keyof V : never
+  >;
   component: React.ComponentType<PageFilterComponentProps<V>>;
 };
 
