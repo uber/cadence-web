@@ -13,12 +13,17 @@ import domainWorkflowsFiltersConfig from '../config/domain-workflows-filters.con
 import DOMAIN_WORKFLOWS_SEARCH_DEBOUNCE_MS from '../config/domain-workflows-search-debounce-ms.config';
 import DomainWorkflowsQueryInput from '../domain-workflows-query-input/domain-workflows-query-input';
 import DomainWorkflowsQueryLabel from '../domain-workflows-query-label/domain-workflows-query-label';
+import getDomainWorkflowsQueryParamsValues from '../helpers/get-domain-workflows-query-params-values';
 import useListWorkflows from '../hooks/use-list-workflows';
 
 import { overrides, styled } from './domain-workflows-header.styles';
 import { type Props } from './domain-workflows-header.types';
 
-export default function DomainWorkflowsHeader({ domain, cluster }: Props) {
+export default function DomainWorkflowsHeader({
+  domain,
+  cluster,
+  isArchival,
+}: Props) {
   const [areFiltersShown, setAreFiltersShown] = useState(false);
 
   const { resetAllFilters, activeFiltersCount, queryParams, setQueryParams } =
@@ -26,6 +31,11 @@ export default function DomainWorkflowsHeader({ domain, cluster }: Props) {
       pageFiltersConfig: domainWorkflowsFiltersConfig,
       pageQueryParamsConfig: domainPageQueryParamsConfig,
     });
+
+  const { inputType, query } = getDomainWorkflowsQueryParamsValues({
+    queryParams,
+    isArchival,
+  });
 
   const { refetch, isFetching } = useListWorkflows({
     domain,
@@ -36,11 +46,12 @@ export default function DomainWorkflowsHeader({ domain, cluster }: Props) {
     <styled.HeaderContainer>
       <styled.InputContainer>
         <SegmentedControl
-          activeKey={queryParams.inputType}
+          activeKey={inputType}
           onChange={({ activeKey }) => {
             setQueryParams(
               {
-                inputType: activeKey === 'query' ? 'query' : 'search',
+                [isArchival ? 'inputType' : 'inputTypeArchival']:
+                  activeKey === 'query' ? 'query' : 'search',
               },
               { replace: false, pageRerender: true }
             );
@@ -58,10 +69,14 @@ export default function DomainWorkflowsHeader({ domain, cluster }: Props) {
             label={<DomainWorkflowsQueryLabel />}
           />
         </SegmentedControl>
-        {queryParams.inputType === 'query' ? (
+        {inputType === 'query' ? (
           <DomainWorkflowsQueryInput
-            value={queryParams.query}
-            setValue={(v) => setQueryParams({ query: v })}
+            value={query}
+            setValue={(v) =>
+              setQueryParams({
+                [isArchival ? 'query' : 'queryArchival']: v,
+              })
+            }
             refetchQuery={refetch}
             isQueryRunning={isFetching}
           />
@@ -83,7 +98,7 @@ export default function DomainWorkflowsHeader({ domain, cluster }: Props) {
           </styled.SearchContainer>
         )}
       </styled.InputContainer>
-      {queryParams.inputType === 'search' && areFiltersShown && (
+      {inputType === 'search' && areFiltersShown && (
         <PageFiltersFields
           pageFiltersConfig={domainWorkflowsFiltersConfig}
           resetAllFilters={resetAllFilters}

@@ -15,27 +15,40 @@ import domainPageQueryParamsConfig from '@/views/domain-page/config/domain-page-
 
 import DOMAIN_WORKFLOWS_PAGE_SIZE from '../config/domain-workflows-page-size.config';
 import { type UseListWorkflowsParams } from '../domain-workflows.types';
+import getDomainWorkflowsQueryParamsValues from '../helpers/get-domain-workflows-query-params-values';
 
 export default function useListWorkflows({
   domain,
   cluster,
+  isArchival,
   pageSize = DOMAIN_WORKFLOWS_PAGE_SIZE,
 }: UseListWorkflowsParams) {
   const [queryParams] = usePageQueryParams(domainPageQueryParamsConfig);
 
+  const {
+    inputType,
+    query,
+    search,
+    status,
+    sortColumn,
+    sortOrder,
+    timeRangeStart,
+    timeRangeEnd,
+  } = getDomainWorkflowsQueryParamsValues({ queryParams, isArchival });
+
   const requestQueryParams = {
-    inputType: queryParams.inputType,
-    ...(queryParams.inputType === 'query'
+    inputType,
+    ...(inputType === 'query'
       ? {
-          query: queryParams.query,
+          query,
         }
       : {
-          search: queryParams.search,
-          status: queryParams.status,
-          sortColumn: queryParams.sortColumn,
-          sortOrder: queryParams.sortOrder,
-          timeRangeStart: queryParams.timeRangeStart?.toISOString(),
-          timeRangeEnd: queryParams.timeRangeEnd?.toISOString(),
+          search,
+          status,
+          sortColumn,
+          sortOrder,
+          timeRangeStart: timeRangeStart?.toISOString(),
+          timeRangeEnd: timeRangeEnd?.toISOString(),
         }),
   };
 

@@ -18,6 +18,11 @@ const domainPageTabsConfig = [
     title: 'Settings',
     artwork: MdSettings,
   },
+  {
+    key: 'archival',
+    title: 'Archival',
+    artwork: MdSort,
+  },
 ] as const satisfies DomainPageTabs;
 
 export default domainPageTabsConfig;

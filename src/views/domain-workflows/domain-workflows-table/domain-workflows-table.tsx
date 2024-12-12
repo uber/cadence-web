@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import ErrorPanel from '@/components/error-panel/error-panel';
 import SectionLoadingIndicator from '@/components/section-loading-indicator/section-loading-indicator';
@@ -10,18 +10,47 @@ import domainPageQueryParamsConfig from '@/views/domain-page/config/domain-page-
 import domainWorkflowsQueryTableConfig from '../config/domain-workflows-query-table.config';
 import domainWorkflowsSearchTableConfig from '../config/domain-workflows-search-table.config';
 import { type Props } from '../domain-workflows-table/domain-workflows-table.types';
+import getDomainWorkflowsQueryParamsValues from '../helpers/get-domain-workflows-query-params-values';
 import getNextSortOrder from '../helpers/get-next-sort-order';
 import useListWorkflows from '../hooks/use-list-workflows';
 
 import { styled } from './domain-workflows-table.styles';
 import getWorkflowsErrorPanelProps from './helpers/get-workflows-error-panel-props';
 
-export default function DomainWorkflowsTable({ domain, cluster }: Props) {
+export default function DomainWorkflowsTable({
+  domain,
+  cluster,
+  isArchival,
+}: Props) {
   const [queryParams, setQueryParams] = usePageQueryParams(
     domainPageQueryParamsConfig
   );
 
-  const inputType = queryParams.inputType;
+  const {
+    inputType,
+    search,
+    status,
+    sortColumn,
+    sortOrder,
+    timeRangeStart,
+    timeRangeEnd,
+  } = getDomainWorkflowsQueryParamsValues({
+    queryParams,
+    isArchival,
+  });
+
+  const onSort = useCallback(
+    (column: string) =>
+      setQueryParams({
+        [isArchival ? 'sortColumnArchival' : 'sortColumn']: column,
+        [isArchival ? 'sortOrderArchival' : 'sortOrder']: getNextSortOrder({
+          currentColumn: sortColumn,
+          nextColumn: column,
+          currentSortOrder: sortOrder,
+        }),
+      }),
+    [isArchival, sortColumn, sortOrder, setQueryParams]
+  );
 
   const {
     workflows,
@@ -42,10 +71,7 @@ export default function DomainWorkflowsTable({ domain, cluster }: Props) {
       inputType,
       error,
       areSearchParamsAbsent:
-        !queryParams.search &&
-        !queryParams.status &&
-        !queryParams.timeRangeStart &&
-        !queryParams.timeRangeEnd,
+        !search && !status && !timeRangeStart && !timeRangeEnd,
     });
 
     if (errorPanelProps) {
@@ -76,18 +102,9 @@ export default function DomainWorkflowsTable({ domain, cluster }: Props) {
             }
           : {
               columns: domainWorkflowsSearchTableConfig,
-              onSort: (column) => {
-                setQueryParams({
-                  sortColumn: column,
-                  sortOrder: getNextSortOrder({
-                    currentColumn: queryParams.sortColumn,
-                    nextColumn: column,
-                    currentSortOrder: queryParams.sortOrder,
-                  }),
-                });
-              },
-              sortColumn: queryParams.sortColumn,
-              sortOrder: queryParams.sortOrder,
+              onSort,
+              sortColumn: sortColumn,
+              sortOrder: sortOrder,
             })}
       />
     </styled.TableContainer>
