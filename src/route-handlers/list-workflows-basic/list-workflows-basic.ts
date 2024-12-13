@@ -67,13 +67,12 @@ export async function listWorkflowsBasic(
       queryParams.kind === 'closed'
         ? await ctx.grpcClusterMethods.closedWorkflows({
             ...baseParams,
-            ...(queryParams.kind === 'closed' &&
-              queryParams.closeStatus && {
-                filters: 'statusFilter',
-                statusFilter: {
-                  status: queryParams.closeStatus,
-                },
-              }),
+            ...(queryParams.closeStatus && {
+              filters: 'statusFilter',
+              statusFilter: {
+                status: queryParams.closeStatus,
+              },
+            }),
           })
         : await ctx.grpcClusterMethods.openWorkflows({ ...baseParams });
 
