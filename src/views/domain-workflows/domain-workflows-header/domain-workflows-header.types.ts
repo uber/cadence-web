@@ -6,4 +6,5 @@ export type DomainWorkflowsHeaderInputType =
 export type Props = {
   domain: string;
   cluster: string;
+  isArchival?: boolean;
 };
