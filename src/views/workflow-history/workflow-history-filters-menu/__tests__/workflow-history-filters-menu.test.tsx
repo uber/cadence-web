@@ -106,6 +106,13 @@ describe(WorkflowHistoryFiltersMenu.name, () => {
     expect(screen.getByText('Filters (5)')).toBeInTheDocument();
   });
 
+  it('displays the anti-selection hint', () => {
+    setup();
+    expect(
+      screen.getByText('Tip: ⌘/Ctrl + click a tag to select all others')
+    ).toBeInTheDocument();
+  });
+
   it('displays reset button', () => {
     setup();
     expect(screen.getByText('Reset')).toBeInTheDocument();
