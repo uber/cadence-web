@@ -1,40 +1,46 @@
 import parseTrustedHeaderGrpcMetadataMap from '@/utils/auth/strategies/trusted-header/parse-trusted-header-grpc-metadata-map';
 import { TRUSTED_HEADER_GRPC_METADATA_ENV } from '@/utils/auth/strategies/trusted-header/parse-trusted-header-grpc-metadata-map.constants';
 
-import authStrategy from '../auth-strategy';
 import trustedHeaderAuthConfig from '../trusted-header-auth-config';
 
-jest.mock('../auth-strategy', () => jest.fn(() => 'trusted-header'));
 jest.mock(
   '@/utils/auth/strategies/trusted-header/parse-trusted-header-grpc-metadata-map',
   () => jest.fn(() => [{ inboundHeader: 'x-user', outboundKey: 'user' }])
 );
 
-const mockAuthStrategy = authStrategy as jest.Mock;
 const mockParse = parseTrustedHeaderGrpcMetadataMap as jest.Mock;
 
+const AUTH_STRATEGY_ENV = 'CADENCE_WEB_AUTH_STRATEGY';
+
+const ENV_KEYS = [AUTH_STRATEGY_ENV, TRUSTED_HEADER_GRPC_METADATA_ENV] as const;
+
 describe(trustedHeaderAuthConfig.name, () => {
-  const originalEnv = process.env[TRUSTED_HEADER_GRPC_METADATA_ENV];
+  const originalEnv = Object.fromEntries(
+    ENV_KEYS.map((key) => [key, process.env[key]])
+  );
 
   beforeEach(() => {
     jest.clearAllMocks();
-    delete process.env[TRUSTED_HEADER_GRPC_METADATA_ENV];
-    mockAuthStrategy.mockReturnValue('trusted-header');
+    ENV_KEYS.forEach((key) => delete process.env[key]);
+    process.env[AUTH_STRATEGY_ENV] = 'trusted-header';
     mockParse.mockReturnValue([
       { inboundHeader: 'x-user', outboundKey: 'user' },
     ]);
   });
 
   afterEach(() => {
-    if (originalEnv === undefined) {
-      delete process.env[TRUSTED_HEADER_GRPC_METADATA_ENV];
-    } else {
-      process.env[TRUSTED_HEADER_GRPC_METADATA_ENV] = originalEnv;
-    }
+    ENV_KEYS.forEach((key) => {
+      const value = originalEnv[key];
+      if (value === undefined) {
+        delete process.env[key];
+      } else {
+        process.env[key] = value;
+      }
+    });
   });
 
   it('returns null when the strategy is not trusted-header', () => {
-    mockAuthStrategy.mockReturnValue('jwt');
+    process.env[AUTH_STRATEGY_ENV] = 'jwt';
 
     expect(trustedHeaderAuthConfig()).toBeNull();
     expect(mockParse).not.toHaveBeenCalled();
