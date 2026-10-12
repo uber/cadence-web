@@ -8,7 +8,7 @@ import { type AuthenticatedUserInfo } from './get-authenticated-user-info.types'
 /**
  * Identity for `/api/auth/me`.
  *
- * TODO: replace this body with the Cadence WhoAmI RPC and cluster failover.
+ * TODO: replace this body with the Cadence backed RPC.
  * Identity must come from the backend, not headers.
  */
 export default async function getAuthenticatedUserInfo(
@@ -19,7 +19,6 @@ export default async function getAuthenticatedUserInfo(
     return null;
   }
 
-  // Temporary fake response with the shape expected from Cadence WhoAmI.
   return {
     id: 'trusted-header-user',
     userName: 'Trusted Header User',

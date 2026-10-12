@@ -23,12 +23,15 @@ function parseGrpcMetadataMap(
 }
 
 /**
- * trusted-header config, parsed at serverStart. Identity comes from Cadence,
- * not headers. Inert until trusted-header is a registered strategy value.
+ * Parse trusted-header env at serverStart. Null when strategy ≠ trusted-header.
+ *
+ * Only map headers the proxy overwrites. Node `headers.get` joins duplicates
+ * with ", ", so if the proxy appends, a client-supplied prefix reaches gRPC
+ * metadata (e.g. client `X-User-Id: evil` + proxy append → `"evil, real"`).
  */
 export default function trustedHeaderAuthConfig(): TrustedHeaderAuthConfig | null {
-  // Widen the compare: trusted-header is not a registered strategy value yet,
-  // so unknown env values still resolve to disabled and this stays inert.
+  // cast to string:trusted-header is not registered yet.
+  // TODO: remove cast once trusted-header is registered.
   const strategy: string = authStrategy();
   if (strategy !== 'trusted-header') {
     return null;
