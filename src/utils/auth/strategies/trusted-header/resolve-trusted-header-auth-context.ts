@@ -11,9 +11,8 @@ const UNAUTHENTICATED_CONTEXT: AuthContext = {
 };
 
 /**
- * Build auth context from the identity adapter (the seam for Cadence WhoAmI),
- * not headers. The perimeter must strip client-supplied trusted headers; the
- * web tier only forwards them when this context is valid.
+ * Resolve trusted-header auth context from getAuthenticatedUserInfo.
+ * That call will become Cadence WhoAmI; identity is not read from headers here.
  */
 export default async function resolveTrustedHeaderAuthContext(
   request: AuthRequest
