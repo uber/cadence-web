@@ -18,9 +18,6 @@ const trustedHeaderServerPolicy: AuthServerPolicy = {
     authContext,
     request
   ): Promise<GRPCMetadata | undefined> {
-    // Forwarding gate: configured headers reach Cadence only when the web
-    // tier's own auth decision is valid — forged headers change pixels,
-    // never permissions.
     if (!authContext.authEnabled || !authContext.auth.isValidToken) {
       return undefined;
     }
@@ -28,21 +25,18 @@ const trustedHeaderServerPolicy: AuthServerPolicy = {
   },
 
   getLoginRedirectIfNeeded(authContext) {
-    // No login form exists for this strategy — an invalid context means the
-    // perimeter is misconfigured, so pages redirect to the status page.
+    // No login form exists for this strategy. An invalid context means the
+    // perimeter is misconfigured, so pages redirect to the unavailable status page.
     return authContext.auth.isValidToken ? null : AUTH_UNAVAILABLE_PATH;
   },
 
-  // Unreachable: the client policy's onUnauthorized is false. A direct call
-  // is a bug — fail closed and loud.
+  // Unreachable while onUnauthorized is false. Calling this is a bug.
   recoverSession: () =>
     Promise.reject(
       new Error('trusted-header strategy has no session to recover')
     ),
 
   async getSessionKey(request) {
-    // Session memo keys on the backend identity, not a header — per-user
-    // once the adapter calls Cadence.
     const info = await getAuthenticatedUserInfo(request);
     return info?.id;
   },

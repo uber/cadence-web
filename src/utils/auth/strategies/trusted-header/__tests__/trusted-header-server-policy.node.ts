@@ -106,7 +106,7 @@ describe('trustedHeaderServerPolicy', () => {
   });
 
   describe('recoverSession', () => {
-    it('fails loud — the strategy has no session to recover', async () => {
+    it('rejects because the strategy has no session to recover', async () => {
       await expect(
         trustedHeaderServerPolicy.recoverSession(request, {})
       ).rejects.toThrow('trusted-header strategy has no session to recover');

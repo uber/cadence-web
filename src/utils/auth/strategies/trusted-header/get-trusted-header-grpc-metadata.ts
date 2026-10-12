@@ -5,9 +5,8 @@ import getConfigValue from '@/utils/config/get-config-value';
 import { type GRPCMetadata } from '@/utils/grpc/grpc-service';
 
 /**
- * The configured inbound-header → outbound-key mapping, verbatim values.
- * Callers own the forwarding gate (context validity) — this is the pure map,
- * and the only surface configured headers may leave on.
+ * Copy configured request headers into gRPC metadata keys.
+ * Callers must check auth context before forwarding; this just applies the map.
  */
 export default async function getTrustedHeaderGrpcMetadata(
   request: AuthRequest
