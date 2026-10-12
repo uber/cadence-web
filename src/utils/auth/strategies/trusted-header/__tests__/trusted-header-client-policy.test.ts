@@ -19,7 +19,7 @@ describe('trustedHeaderClientPolicy', () => {
     expect(assign).toHaveBeenCalledWith(AUTH_UNAVAILABLE_PATH);
   });
 
-  it('logout is a no-op — sign-out happens at the perimeter', async () => {
+  it('logout is a no-op because sign-out happens at the perimeter', async () => {
     const assign = mockLocationAssign();
 
     await trustedHeaderClientPolicy.logout();

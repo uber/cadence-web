@@ -2,8 +2,8 @@ import { AUTH_UNAVAILABLE_PATH } from '@/utils/auth/auth.constants';
 import { type AuthClientPolicy } from '@/utils/auth/auth.types';
 
 /**
- * Browser half of trusted-header. Credentials come from the perimeter, so
- * when identity disappears the browser can only land on the status page.
+ * Client policy for trusted-header. There is no login form and no session to
+ * clear; when identity is gone, send the browser to the unavailable status page.
  */
 const trustedHeaderClientPolicy: AuthClientPolicy = {
   supportsSessionRecovery: false,

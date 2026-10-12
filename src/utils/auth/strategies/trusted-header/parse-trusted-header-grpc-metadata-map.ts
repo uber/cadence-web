@@ -6,7 +6,7 @@ import {
 import { type TrustedHeaderGrpcMetadataMapping } from './parse-trusted-header-grpc-metadata-map.types';
 
 /**
- * Parse `inbound-header:outbound-key` pairs for trusted-header → gRPC metadata.
+ * Parse inbound-header:outbound-key pairs for trusted-header gRPC metadata.
  * Throws on malformed entries so bad config fails at boot.
  */
 export default function parseTrustedHeaderGrpcMetadataMap(
