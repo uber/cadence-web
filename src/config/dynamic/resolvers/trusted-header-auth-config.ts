@@ -5,13 +5,11 @@ import authStrategy from './auth-strategy';
 import { type TrustedHeaderAuthConfig } from './trusted-header-auth-config.types';
 
 /**
- * Parse trusted-header env at serverStart. Null when the strategy is not
- * trusted-header.
+ * Parse trusted-header env at serverStart. Null when strategy ≠ trusted-header.
  *
- * Only map headers the proxy overwrites. Node headers.get joins duplicates
- * with ", ", so if the proxy appends, a client-supplied prefix can reach gRPC
- * metadata (for example client X-User-Id: evil plus proxy append becomes
- * "evil, real").
+ * Only map headers the proxy overwrites. Node `headers.get` joins duplicates
+ * with ", ", so if the proxy appends, a client-supplied prefix reaches gRPC
+ * metadata (e.g. client `X-User-Id: evil` + proxy append → `"evil, real"`).
  */
 export default function trustedHeaderAuthConfig(): TrustedHeaderAuthConfig | null {
   if (authStrategy() !== 'trusted-header') {
