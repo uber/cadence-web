@@ -30,6 +30,8 @@ export default function parseTrustedHeaderGrpcMetadataMap(
         `${source} entry "${pair}" has an invalid inbound header "${inboundHeader}": not a valid HTTP header name`
       );
     }
+    // -bin keys require Buffer values; GRPCMetadata is string-only, so
+    // grpc-js would throw on every call if we allowed them here.
     if (
       !GRPC_METADATA_KEY_PATTERN.test(outboundKey) ||
       outboundKey.toLowerCase().endsWith('-bin')
