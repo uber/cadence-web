@@ -23,9 +23,6 @@ const optionsConfig = {
     label: 'Yellow',
     startEnhancer: ({ theme }) => <MdCircle color={theme.colors.yellow400} />,
   },
-  NONE: {
-    label: 'None',
-  },
 } as const satisfies Record<string, TagFilterOptionConfig>;
 
 type Option = keyof typeof optionsConfig;
@@ -78,7 +75,7 @@ export const SomeSelected: Story = {
 
 export const AllButOneSelected: Story = {
   args: {
-    values: ['RED', 'GREEN', 'BLUE', 'YELLOW'],
+    values: ['RED', 'GREEN', 'BLUE'],
   },
 };
 
