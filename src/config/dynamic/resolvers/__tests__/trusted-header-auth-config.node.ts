@@ -1,105 +1,51 @@
+import { TRUSTED_HEADER_GRPC_METADATA_ENV } from '@/utils/auth/strategies/trusted-header/parse-trusted-header-grpc-metadata-map.constants';
+import parseTrustedHeaderGrpcMetadataMap from '@/utils/auth/strategies/trusted-header/parse-trusted-header-grpc-metadata-map';
+
 import authStrategy from '../auth-strategy';
 import trustedHeaderAuthConfig from '../trusted-header-auth-config';
 
 jest.mock('../auth-strategy', () => jest.fn(() => 'trusted-header'));
+jest.mock(
+  '@/utils/auth/strategies/trusted-header/parse-trusted-header-grpc-metadata-map',
+  () => jest.fn(() => [{ inboundHeader: 'x-user', outboundKey: 'user' }])
+);
 
 const mockAuthStrategy = authStrategy as jest.Mock;
-
-const ENV_KEYS = [
-  'CADENCE_WEB_AUTH_STRATEGY',
-  'CADENCE_WEB_TRUSTED_HEADER_GRPC_METADATA',
-] as const;
+const mockParse = parseTrustedHeaderGrpcMetadataMap as jest.Mock;
 
 describe(trustedHeaderAuthConfig.name, () => {
-  const originalEnv = Object.fromEntries(
-    ENV_KEYS.map((key) => [key, process.env[key]])
-  );
+  const originalEnv = process.env[TRUSTED_HEADER_GRPC_METADATA_ENV];
 
   beforeEach(() => {
     jest.clearAllMocks();
-    ENV_KEYS.forEach((key) => delete process.env[key]);
+    delete process.env[TRUSTED_HEADER_GRPC_METADATA_ENV];
     mockAuthStrategy.mockReturnValue('trusted-header');
+    mockParse.mockReturnValue([
+      { inboundHeader: 'x-user', outboundKey: 'user' },
+    ]);
   });
 
   afterEach(() => {
-    ENV_KEYS.forEach((key) => {
-      const value = originalEnv[key];
-      if (value === undefined) {
-        delete process.env[key];
-      } else {
-        process.env[key] = value;
-      }
-    });
+    if (originalEnv === undefined) {
+      delete process.env[TRUSTED_HEADER_GRPC_METADATA_ENV];
+    } else {
+      process.env[TRUSTED_HEADER_GRPC_METADATA_ENV] = originalEnv;
+    }
   });
 
   it('returns null when the strategy is not trusted-header', () => {
     mockAuthStrategy.mockReturnValue('jwt');
 
     expect(trustedHeaderAuthConfig()).toBeNull();
+    expect(mockParse).not.toHaveBeenCalled();
   });
 
-  it('resolves an empty metadata map', () => {
-    expect(trustedHeaderAuthConfig()).toEqual([]);
-  });
-
-  it('parses the gRPC metadata map', () => {
-    process.env.CADENCE_WEB_TRUSTED_HEADER_GRPC_METADATA =
-      'x-cadence-user-id:cadence-user, x-cadence-groups:cadence-groups';
+  it('parses the trusted-header gRPC metadata env when strategy matches', () => {
+    process.env[TRUSTED_HEADER_GRPC_METADATA_ENV] = 'x-user:user';
 
     expect(trustedHeaderAuthConfig()).toEqual([
-      { inboundHeader: 'x-cadence-user-id', outboundKey: 'cadence-user' },
-      { inboundHeader: 'x-cadence-groups', outboundKey: 'cadence-groups' },
+      { inboundHeader: 'x-user', outboundKey: 'user' },
     ]);
-  });
-
-  it('throws on a malformed gRPC metadata map entry', () => {
-    process.env.CADENCE_WEB_TRUSTED_HEADER_GRPC_METADATA = 'x-cadence-user-id';
-
-    expect(() => trustedHeaderAuthConfig()).toThrow(
-      /must be "inbound-header:outbound-key"/
-    );
-  });
-
-  it('throws when a map entry has extra colon segments', () => {
-    process.env.CADENCE_WEB_TRUSTED_HEADER_GRPC_METADATA =
-      'x-cadence-user-id:cadence-user:extra';
-
-    expect(() => trustedHeaderAuthConfig()).toThrow(
-      /must be "inbound-header:outbound-key"/
-    );
-  });
-
-  it('throws on an invalid inbound header name', () => {
-    process.env.CADENCE_WEB_TRUSTED_HEADER_GRPC_METADATA =
-      'x cadence user id:cadence-user';
-
-    expect(() => trustedHeaderAuthConfig()).toThrow(
-      /entry "x cadence user id:cadence-user" has an invalid inbound header/
-    );
-  });
-
-  it('throws on an invalid outbound gRPC metadata key', () => {
-    process.env.CADENCE_WEB_TRUSTED_HEADER_GRPC_METADATA =
-      'x-cadence-user-id:cadence user';
-
-    expect(() => trustedHeaderAuthConfig()).toThrow(
-      /has an invalid outbound key/
-    );
-  });
-
-  it('throws on a -bin outbound gRPC metadata key', () => {
-    process.env.CADENCE_WEB_TRUSTED_HEADER_GRPC_METADATA =
-      'x-cadence-user-id:cadence-user-bin';
-
-    expect(() => trustedHeaderAuthConfig()).toThrow(/-bin/);
-  });
-
-  it('preserves the outbound key casing', () => {
-    process.env.CADENCE_WEB_TRUSTED_HEADER_GRPC_METADATA =
-      'x-cadence-user-id:Cadence-User';
-
-    expect(trustedHeaderAuthConfig()).toEqual([
-      { inboundHeader: 'x-cadence-user-id', outboundKey: 'Cadence-User' },
-    ]);
+    expect(mockParse).toHaveBeenCalledWith('x-user:user');
   });
 });

@@ -1,51 +1,8 @@
+import { TRUSTED_HEADER_GRPC_METADATA_ENV } from '@/utils/auth/strategies/trusted-header/parse-trusted-header-grpc-metadata-map.constants';
+import parseTrustedHeaderGrpcMetadataMap from '@/utils/auth/strategies/trusted-header/parse-trusted-header-grpc-metadata-map';
+
 import authStrategy from './auth-strategy';
-import {
-  type TrustedHeaderAuthConfig,
-  type TrustedHeaderGrpcMetadataMapping,
-} from './trusted-header-auth-config.types';
-
-// RFC 9110 token — a valid HTTP header name. Invalid names throw per request
-// in Headers.get; boot validation turns that into a boot failure.
-const HTTP_HEADER_NAME_PATTERN = /^[!#$%&'*+\-.^_`|~0-9A-Za-z]+$/;
-// grpc-js metadata keys. -bin keys require Buffer values, which this
-// string-only mapping cannot produce — grpc-js throws per call on both.
-const GRPC_METADATA_KEY_PATTERN = /^[0-9a-z_.-]+$/i;
-
-function assertValidHeaderName(name: string, entry: string): void {
-  if (!HTTP_HEADER_NAME_PATTERN.test(name)) {
-    throw new Error(
-      `CADENCE_WEB_TRUSTED_HEADER_GRPC_METADATA entry "${entry}" has an invalid inbound header "${name}": not a valid HTTP header name`
-    );
-  }
-}
-
-function parseGrpcMetadataMap(
-  raw: string | undefined
-): TrustedHeaderGrpcMetadataMapping[] {
-  if (!raw?.trim()) {
-    return [];
-  }
-
-  return raw.split(',').map((pair) => {
-    const parts = pair.split(':').map((s) => s.trim());
-    const [inboundHeader, outboundKey] = parts;
-    if (parts.length !== 2 || !inboundHeader || !outboundKey) {
-      throw new Error(
-        `CADENCE_WEB_TRUSTED_HEADER_GRPC_METADATA entry "${pair}" must be "inbound-header:outbound-key"`
-      );
-    }
-    assertValidHeaderName(inboundHeader, pair);
-    if (
-      !GRPC_METADATA_KEY_PATTERN.test(outboundKey) ||
-      outboundKey.toLowerCase().endsWith('-bin')
-    ) {
-      throw new Error(
-        `CADENCE_WEB_TRUSTED_HEADER_GRPC_METADATA entry "${pair}" has an invalid outbound key "${outboundKey}": keys must match ${GRPC_METADATA_KEY_PATTERN} and string values cannot use the -bin suffix`
-      );
-    }
-    return { inboundHeader, outboundKey };
-  });
-}
+import { type TrustedHeaderAuthConfig } from './trusted-header-auth-config.types';
 
 /**
  * Parse trusted-header env at serverStart. Null when strategy ≠ trusted-header.
@@ -62,7 +19,7 @@ export default function trustedHeaderAuthConfig(): TrustedHeaderAuthConfig | nul
     return null;
   }
 
-  return parseGrpcMetadataMap(
-    process.env.CADENCE_WEB_TRUSTED_HEADER_GRPC_METADATA
+  return parseTrustedHeaderGrpcMetadataMap(
+    process.env[TRUSTED_HEADER_GRPC_METADATA_ENV]
   );
 }
