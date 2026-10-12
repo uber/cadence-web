@@ -11,9 +11,11 @@ const HTTP_HEADER_NAME_PATTERN = /^[!#$%&'*+\-.^_`|~0-9A-Za-z]+$/;
 // string-only mapping cannot produce — grpc-js throws per call on both.
 const GRPC_METADATA_KEY_PATTERN = /^[0-9a-z_.-]+$/i;
 
-function assertValidHeaderName(name: string, source: string): void {
+function assertValidHeaderName(name: string, entry: string): void {
   if (!HTTP_HEADER_NAME_PATTERN.test(name)) {
-    throw new Error(`${source} is not a valid HTTP header name: "${name}"`);
+    throw new Error(
+      `CADENCE_WEB_TRUSTED_HEADER_GRPC_METADATA entry "${entry}" has an invalid inbound header "${name}": not a valid HTTP header name`
+    );
   }
 }
 
@@ -32,10 +34,7 @@ function parseGrpcMetadataMap(
         `CADENCE_WEB_TRUSTED_HEADER_GRPC_METADATA entry "${pair}" must be "inbound-header:outbound-key"`
       );
     }
-    assertValidHeaderName(
-      inboundHeader,
-      'CADENCE_WEB_TRUSTED_HEADER_GRPC_METADATA inbound header'
-    );
+    assertValidHeaderName(inboundHeader, pair);
     if (
       !GRPC_METADATA_KEY_PATTERN.test(outboundKey) ||
       outboundKey.toLowerCase().endsWith('-bin')

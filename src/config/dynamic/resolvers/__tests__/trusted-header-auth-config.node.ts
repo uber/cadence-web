@@ -74,7 +74,7 @@ describe(trustedHeaderAuthConfig.name, () => {
       'x cadence user id:cadence-user';
 
     expect(() => trustedHeaderAuthConfig()).toThrow(
-      /is not a valid HTTP header name/
+      /entry "x cadence user id:cadence-user" has an invalid inbound header/
     );
   });
 
