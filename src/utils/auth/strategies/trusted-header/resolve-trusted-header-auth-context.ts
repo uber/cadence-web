@@ -11,8 +11,9 @@ const UNAUTHENTICATED_CONTEXT: AuthContext = {
 };
 
 /**
- * Build auth context from the identity adapter (Cadence WhoAmI), not headers.
- * Perimeter header stripping is enforced when the metadata map is applied.
+ * Build auth context from the identity adapter (the seam for Cadence WhoAmI),
+ * not headers. The perimeter must strip client-supplied trusted headers; the
+ * web tier only forwards them when this context is valid.
  */
 export default async function resolveTrustedHeaderAuthContext(
   request: AuthRequest
