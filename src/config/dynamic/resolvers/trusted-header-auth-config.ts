@@ -1,26 +1,8 @@
+import parseTrustedHeaderGrpcMetadataMap from '@/utils/auth/strategies/trusted-header/parse-trusted-header-grpc-metadata-map';
+import { TRUSTED_HEADER_GRPC_METADATA_ENV } from '@/utils/auth/strategies/trusted-header/parse-trusted-header-grpc-metadata-map.constants';
+
 import authStrategy from './auth-strategy';
-import {
-  type TrustedHeaderAuthConfig,
-  type TrustedHeaderGrpcMetadataMapping,
-} from './trusted-header-auth-config.types';
-
-function parseGrpcMetadataMap(
-  raw: string | undefined
-): TrustedHeaderGrpcMetadataMapping[] {
-  if (!raw?.trim()) {
-    return [];
-  }
-
-  return raw.split(',').map((pair) => {
-    const [inboundHeader, outboundKey] = pair.split(':').map((s) => s.trim());
-    if (!inboundHeader || !outboundKey) {
-      throw new Error(
-        `CADENCE_WEB_TRUSTED_HEADER_GRPC_METADATA entry "${pair}" must be "inbound-header:outbound-key"`
-      );
-    }
-    return { inboundHeader, outboundKey };
-  });
-}
+import { type TrustedHeaderAuthConfig } from './trusted-header-auth-config.types';
 
 /**
  * Parse trusted-header env at serverStart. Null when strategy ≠ trusted-header.
@@ -37,7 +19,7 @@ export default function trustedHeaderAuthConfig(): TrustedHeaderAuthConfig | nul
     return null;
   }
 
-  return parseGrpcMetadataMap(
-    process.env.CADENCE_WEB_TRUSTED_HEADER_GRPC_METADATA
+  return parseTrustedHeaderGrpcMetadataMap(
+    process.env[TRUSTED_HEADER_GRPC_METADATA_ENV]
   );
 }
