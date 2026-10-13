@@ -1,52 +1,36 @@
 'use client';
 import { useCallback } from 'react';
 
-import request from '@/utils/request';
+import { type AuthLogoutNotice } from '@/utils/auth/auth.types';
+import getAuthClientPolicy from '@/utils/auth/strategies/get-auth-client-policy';
 import useUserInfo from '@/views/shared/hooks/use-user-info/use-user-info';
 
-import { type AuthLifecycle } from '../use-auth-lifecycle.types';
+import { type AuthLifecycle } from './use-auth-lifecycle.types';
 
 export default function useAuthLifecycle(): AuthLifecycle {
-  const { data: authInfo, isLoading: isAuthLoading, refetch } = useUserInfo();
+  const { data: authInfo, isLoading: isAuthLoading } = useUserInfo();
 
-  const isAuthEnabled = authInfo?.authEnabled === true;
-  const isValidToken = authInfo?.auth?.isValidToken === true;
-  const isAdmin = authInfo?.isAdmin === true;
-  const userName = authInfo?.userName;
-  const expiresAtMs =
-    typeof authInfo?.auth?.expiresAtMs === 'number'
-      ? authInfo.auth.expiresAtMs
-      : undefined;
+  const policy = getAuthClientPolicy(authInfo?.authStrategy);
 
-  const saveToken = useCallback(
-    async (token: string) => {
-      await request('/api/auth/token', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ token }),
-      });
-      const { data } = await refetch();
-      return data?.auth?.isValidToken === true;
+  const logout = useCallback(
+    async (options?: { notice?: AuthLogoutNotice }) => {
+      await policy?.logout(options);
     },
-    [refetch]
+    [policy]
   );
 
-  const logout = useCallback(async () => {
-    try {
-      await request('/api/auth/token', { method: 'DELETE' });
-    } finally {
-      await refetch();
-    }
-  }, [refetch]);
+  const expireSession = useCallback(() => {
+    const { pathname, search, hash } = window.location;
+    policy?.login(`${pathname}${search}${hash}`, 'session-expired');
+  }, [policy]);
 
   return {
-    isAuthEnabled,
-    isValidToken,
+    isAuthEnabled: authInfo?.authEnabled === true,
+    isValidToken: authInfo?.auth?.isValidToken === true,
     isAuthLoading,
-    isAdmin,
-    userName,
-    expiresAtMs,
-    saveToken,
+    isAdmin: authInfo?.isAdmin === true,
+    userName: authInfo?.userName,
     logout,
+    expireSession,
   };
 }
