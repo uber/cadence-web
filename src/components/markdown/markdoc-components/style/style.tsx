@@ -1,10 +1,11 @@
 import { type StyleProps } from './style.types';
 
 // Validates CSS color values to prevent injection of unexpected values.
-// Accepts named colors, hex codes, and rgb/rgba/hsl/hsla functions.
+// Accepts named colors, hex (3/4/6/8), and rgb/rgba/hsl/hsla with numeric args only.
 function isValidCssColor(value: string): boolean {
-  return /^(#[0-9a-fA-F]{3,8}|rgb\(.*\)|rgba\(.*\)|hsl\(.*\)|hsla\(.*\)|[a-zA-Z]+)$/.test(
-    value.trim()
+  const v = value.trim();
+  return /^(#[0-9a-fA-F]{3}|#[0-9a-fA-F]{4}|#[0-9a-fA-F]{6}|#[0-9a-fA-F]{8}|rgba?\([0-9,.\s%]+\)|hsla?\([0-9,.\s%]+\)|[a-zA-Z]+)$/.test(
+    v
   );
 }
 

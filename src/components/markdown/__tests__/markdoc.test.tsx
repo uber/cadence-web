@@ -167,6 +167,34 @@ console.log('Hello');
     const innerEl = screen.getByText('inner');
     expect(innerEl).toBeInTheDocument();
     expect(innerEl).toHaveStyle({ color: 'red' });
+    expect(innerEl.parentElement).toHaveStyle({ color: 'blue' });
+  });
+
+  it('preserves color when nesting background inside color', () => {
+    const content =
+      '{% style color="blue" %}Blue text with {% style bg="yellow" %}yellow highlight{% /style %}{% /style %}';
+    render(<Markdown markdown={content} />);
+
+    const highlightEl = screen.getByText('yellow highlight');
+    expect(highlightEl).toHaveStyle({ backgroundColor: 'yellow' });
+    expect(highlightEl.parentElement).toHaveStyle({ color: 'blue' });
+  });
+
+  it('rejects invalid color values', () => {
+    const cases = [
+      '{% style color="rgb(0,0,0) ; position: fixed)" %}text{% /style %}',
+      '{% style color="javascript:alert(1)" %}text{% /style %}',
+      '{% style color="" %}text{% /style %}',
+      '{% style color=" " %}text{% /style %}',
+    ];
+
+    for (const content of cases) {
+      const { unmount } = render(<Markdown markdown={content} />);
+      const el = screen.getByText('text');
+      expect(el).toBeInTheDocument();
+      expect((el as HTMLElement).style.color).toBe('');
+      unmount();
+    }
   });
 
   describe('markdown context propagation', () => {
