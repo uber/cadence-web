@@ -1,6 +1,6 @@
 # Cadence Web authentication
 
-How Cadence authorizes API calls, how Cadence Web forwards credentials, how operators configure `disabled` and `jwt`, and how developers add a strategy.
+This document covers how Cadence authorizes API calls, how Cadence Web forwards credentials, how operators configure `disabled` and `jwt`, and how developers add a strategy.
 
 ---
 
@@ -29,7 +29,7 @@ Auth is strategy-based. `CADENCE_WEB_AUTH_STRATEGY` is resolved once at server s
 | `disabled` (default) | No login required. No token is read from a cookie or sent to Cadence. Domain/action resolvers treat the user as having full access for UI purposes. |
 | `jwt` | Auth is on. A JWT in the `cadence-authorization` HttpOnly cookie is decoded. If valid and not expired, it is attached to gRPC calls. |
 
-Other strategy values may exist in the codebase for specific deployments. This document covers only `disabled` and `jwt` as operator-ready flows. See [Adding a new auth strategy](#5-adding-a-new-auth-strategy) for how to wire another one.
+Other strategy values may exist in the codebase for specific deployments. This document covers only `disabled` and `jwt` as operator-ready flows. See [Adding a new auth strategy](#5-adding-a-new-auth-strategy) for how to add another one.
 
 **Cookie and token handling (`jwt`).** The cookie name is `cadence-authorization`. Server-side code reads the cookie, base64-decodes the JWT payload, and validates the shape with a small schema (for example `sub` or `name` required; optional `admin`, `groups`, `exp`). Expired or malformed tokens are dropped. The raw JWT and the caller's groups stay on the server in the private auth context. The client only sees public fields via `GET /api/auth/me` (for example `authEnabled`, `authStrategy`, `isAdmin`, `userName`, `id`, `auth.isValidToken`, `auth.expiresAtMs`). The response never includes the token string or groups.
 
@@ -222,8 +222,8 @@ Adding a strategy touches the strategy-values union, both registries, strategy-o
 - Do not branch shared UI on the strategy string. Add a policy field if you need a new behavior.
 - Do not write cookies inside the policy. Return `cookieMutations` / `cleanupMutations` from `recoverSession`, or use the shared cookie helpers from routes, so validation and budget checks stay in one place.
 - When `resolveAuthContext` or `getGrpcMetadata` is called without a `request`, use `getImplicitAuthRequest()` (current Next.js cookies/headers). Treating a missing argument as signed out breaks the layout redirect and domain-access resolvers.
-- Gate gRPC credential forwarding on a valid auth context so a forged or missing session never forwards identity to Cadence.
-- Reject loudly from `recoverSession` when recovery is unreachable for that strategy (see `disabled`).
+- Forward gRPC credentials only on a valid auth context, so a forged or missing session never forwards identity to Cadence.
+- Have `recoverSession` reject with an `Error` when recovery is unreachable for that strategy (see `disabled`).
 
 ### Minimal skeleton
 
