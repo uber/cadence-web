@@ -31,7 +31,7 @@ Auth is strategy-based. `CADENCE_WEB_AUTH_STRATEGY` is resolved once at server s
 
 Other strategy values may exist in the codebase for specific deployments. This document covers only `disabled` and `jwt` as operator-ready flows. See [Adding a new auth strategy](#5-adding-a-new-auth-strategy) for how to wire another one.
 
-**Cookie and token handling (`jwt`).** The cookie name is `cadence-authorization`. Server-side code reads the cookie, base64-decodes the JWT payload, and validates the shape with a small schema (for example `sub` or `name` required; optional `admin`, `groups`, `exp`). Expired or malformed tokens are dropped. The raw JWT stays on the server in the private auth context. The client only sees public fields via `GET /api/auth/me` (for example `authEnabled`, `groups`, `isAdmin`, `userName`, `id`, `auth.isValidToken`, `auth.expiresAtMs`). The response never includes the token string.
+**Cookie and token handling (`jwt`).** The cookie name is `cadence-authorization`. Server-side code reads the cookie, base64-decodes the JWT payload, and validates the shape with a small schema (for example `sub` or `name` required; optional `admin`, `groups`, `exp`). Expired or malformed tokens are dropped. The raw JWT and the caller's groups stay on the server in the private auth context. The client only sees public fields via `GET /api/auth/me` (for example `authEnabled`, `authStrategy`, `isAdmin`, `userName`, `id`, `auth.isValidToken`, `auth.expiresAtMs`). The response never includes the token string or groups.
 
 **Backend calls.** When strategy is `jwt` and a valid token is present, gRPC metadata includes `cadence-authorization: <JWT>` so Cadence can authorize the request.
 
@@ -154,8 +154,8 @@ src/utils/auth/
 
 | Method | Role |
 | ------ | ---- |
-| `resolveAuthContext` | Build private `AuthContext` from the request (cookies/headers). |
-| `getGrpcMetadata` | Credential(s) for Cadence gRPC, or `undefined`. |
+| `resolveAuthContext` | Build private `AuthContext` from the request (cookies/headers). When `request` is omitted (layout gate, dynamic-config resolvers), fall back to `getImplicitAuthRequest()` — do not treat a missing argument as signed out. |
+| `getGrpcMetadata` | Credential(s) for Cadence gRPC, or `undefined`. Same omitted-`request` fallback as `resolveAuthContext`. |
 | `getLoginRedirectIfNeeded` | Layout gate. Redirect URL, or `null` if the request may proceed. |
 | `recoverSession` | Pure recovery decision plus optional cookie mutations. The route writes cookies. |
 | `getSessionKey` | Stable per-session id for server-only memoization. Never exposed to the browser. |
@@ -221,6 +221,7 @@ Adding a strategy touches the strategy-values union, both registries, strategy-o
 
 - Do not branch shared UI on the strategy string. Add a policy field if you need a new behavior.
 - Do not write cookies inside the policy. Return `cookieMutations` / `cleanupMutations` from `recoverSession`, or use the shared cookie helpers from routes, so validation and budget checks stay in one place.
+- When `resolveAuthContext` or `getGrpcMetadata` is called without a `request`, use `getImplicitAuthRequest()` (current Next.js cookies/headers). Treating a missing argument as signed out breaks the layout redirect and domain-access resolvers.
 - Gate gRPC credential forwarding on a valid auth context so a forged or missing session never forwards identity to Cadence.
 - Reject loudly from `recoverSession` when recovery is unreachable for that strategy (see `disabled`).
 
@@ -230,13 +231,18 @@ Adding a strategy touches the strategy-values union, both registries, strategy-o
 // src/utils/auth/strategies/my-strategy/my-strategy-server-policy.ts
 import 'server-only';
 
+import getImplicitAuthRequest from '@/utils/auth/helpers/get-implicit-auth-request';
 import { type AuthServerPolicy } from '@/utils/auth/auth.types';
 
 const myStrategyServerPolicy: AuthServerPolicy = {
   resolveAuthContext: async (request) => {
-    /* build AuthContext from request */
+    // request is omitted by layout/dynamic-config callers; read the
+    // current Next.js request instead of treating it as signed out.
+    const req = request ?? getImplicitAuthRequest();
+    /* build AuthContext from req */
   },
   getGrpcMetadata: (authContext, request) => {
+    const req = request ?? getImplicitAuthRequest();
     /* return metadata or undefined */
   },
   getLoginRedirectIfNeeded: (authContext, returnTo, notice) => {
