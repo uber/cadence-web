@@ -6,12 +6,16 @@ export default function ScheduleCronExpression({ cronExpression }: Props) {
   const parts = getScheduleCronExpressionParts(cronExpression);
 
   if (!parts) {
-    return <styled.CronExpression>{cronExpression}</styled.CronExpression>;
+    return (
+      <styled.Root>
+        <styled.CronExpression>{cronExpression}</styled.CronExpression>
+      </styled.Root>
+    );
   }
 
   return (
     <styled.Root>
-      {parts.description}, {parts.timezone}
+      {parts.description}, {parts.timezone}{' '}
       <styled.CronExpression>{parts.expression}</styled.CronExpression>
     </styled.Root>
   );

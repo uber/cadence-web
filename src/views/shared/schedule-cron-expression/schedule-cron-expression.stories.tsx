@@ -49,7 +49,7 @@ export const NarrowContainer: Story = {
   },
   decorators: [
     (Story) => (
-      <div style={{ maxWidth: 240 }}>
+      <div style={{ maxWidth: 320 }}>
         <Story />
       </div>
     ),
