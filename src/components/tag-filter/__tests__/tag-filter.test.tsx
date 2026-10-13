@@ -88,6 +88,52 @@ describe(TagFilter.name, () => {
     expect(mockOnChangeValues).toHaveBeenCalledWith([]);
   });
 
+  it('selects all other tags on Cmd + click', async () => {
+    const { user, mockOnChangeValues } = setup({ values: [] });
+
+    await user.keyboard('{Meta>}');
+    await user.click(screen.getByText('Option 1'));
+
+    expect(mockOnChangeValues).toHaveBeenCalledWith(['opt2', 'opt3']);
+  });
+
+  it('selects all other tags on Ctrl + click', async () => {
+    const { user, mockOnChangeValues } = setup({ values: [] });
+
+    await user.keyboard('{Control>}');
+    await user.click(screen.getByText('Option 1'));
+
+    expect(mockOnChangeValues).toHaveBeenCalledWith(['opt2', 'opt3']);
+  });
+
+  it('clears selection on Cmd + click when all other tags are already selected', async () => {
+    const { user, mockOnChangeValues } = setup({ values: ['opt2', 'opt3'] });
+
+    await user.keyboard('{Meta>}');
+    await user.click(screen.getByText('Option 1'));
+
+    expect(mockOnChangeValues).toHaveBeenCalledWith([]);
+  });
+
+  it('selects all other tags on Cmd + click when the clicked tag is selected', async () => {
+    const { user, mockOnChangeValues } = setup({ values: ['opt1'] });
+
+    await user.keyboard('{Meta>}');
+    await user.click(screen.getByText('Option 1'));
+
+    expect(mockOnChangeValues).toHaveBeenCalledWith(['opt2', 'opt3']);
+  });
+
+  it('selects all other tags on Cmd + Enter on a focused tag', async () => {
+    const { user, mockOnChangeValues } = setup({ values: [] });
+
+    await user.tab();
+    await user.tab();
+    await user.keyboard('{Meta>}{Enter}{/Meta}');
+
+    expect(mockOnChangeValues).toHaveBeenCalledWith(['opt2', 'opt3']);
+  });
+
   it('does not render "Show all" tag when hideShowAll is true', () => {
     setup({
       hideShowAll: true,

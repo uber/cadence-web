@@ -9,3 +9,6 @@ export const WORKFLOW_HISTORY_EVENT_STATUS_TO_GROUP_STATUS_MAP = {
   ONGOING: 'PENDING',
   WAITING: 'PENDING',
 } as const satisfies Record<WorkflowEventStatus, EventGroupStatus>;
+
+export const FILTERS_MENU_HINT =
+  'Tip: ⌘/Ctrl + click a tag to select all others';
