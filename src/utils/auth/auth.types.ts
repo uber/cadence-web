@@ -22,6 +22,7 @@ export type AuthContext = {
   isAdmin: boolean;
   userName?: string;
   id?: string;
+  email?: string;
   pictureUrl?: string;
   /** Group names used for access checks on the server. Not sent to the browser. */
   groups: string[];
@@ -66,7 +67,7 @@ export type AuthServerPolicy = {
 export type AuthClientPolicy = {
   supportsSessionRecovery: boolean;
   unauthenticatedRemedy: 'login' | 'unavailable';
-  login(returnTo?: string): void;
+  login(returnTo?: string, notice?: AuthLogoutNotice): void;
   logout(options?: { notice?: AuthLogoutNotice }): Promise<void>;
   onUnauthorized(response: Response): boolean;
 };
