@@ -40,6 +40,7 @@ export default function DomainSchedulesCreateForm({
   domain,
   cluster,
   scheduleIdReadOnly,
+  prefillWorkerSDKLanguage = true,
 }: Props) {
   const { errors: fieldErrors, isSubmitted } = useFormState({ control });
 
@@ -105,7 +106,7 @@ export default function DomainSchedulesCreateForm({
               onChange={(value) => {
                 field.onChange(value);
                 // If form is submitted, trigger the validation to show fix immediately
-                if (isSubmitted) trigger('cronExpression');
+                if (isSubmitted) trigger?.('cronExpression');
               }}
               onBlur={field.onBlur}
               error={cronExpressionError}
@@ -160,11 +161,14 @@ export default function DomainSchedulesCreateForm({
       <DomainSchedulesHorizontalField
         label="Worker SDK"
         description={CREATE_SCHEDULE_MAIN_FIELD_DESCRIPTIONS.workerSDK}
+        error={getFieldErrorMessage(fieldErrors, 'workerSDKLanguage')}
       >
         <Controller
           name="workerSDKLanguage"
           control={control}
-          defaultValue={WORKER_SDK_LANGUAGES[0]}
+          defaultValue={
+            prefillWorkerSDKLanguage ? WORKER_SDK_LANGUAGES[0] : undefined
+          }
           render={({ field: { value, onChange, ref, ...field } }) => (
             <RadioGroup
               {...field}
@@ -212,7 +216,7 @@ export default function DomainSchedulesCreateForm({
               value={field.value}
               onChange={(value) => {
                 field.onChange(value);
-                if (isSubmitted) trigger('input');
+                if (isSubmitted) trigger?.('input');
               }}
               error={inputError}
               addButtonText="Add argument"
@@ -256,50 +260,6 @@ export default function DomainSchedulesCreateForm({
                 getFieldErrorMessage(
                   fieldErrors,
                   'executionStartToCloseTimeoutSeconds'
-                )
-              )}
-              size="compact"
-              placeholder="Enter timeout in seconds"
-              endEnhancer={<LabelXSmall>Seconds</LabelXSmall>}
-            />
-          )}
-        />
-      </DomainSchedulesHorizontalField>
-
-      <DomainSchedulesHorizontalField
-        label="Task Start-to-Close Timeout"
-        description={
-          CREATE_SCHEDULE_MAIN_FIELD_DESCRIPTIONS.taskStartToCloseTimeout
-        }
-        htmlFor={CREATE_SCHEDULE_FORM_FIELD_IDS.taskStartToCloseTimeout}
-        error={getFieldErrorMessage(
-          fieldErrors,
-          'taskStartToCloseTimeoutSeconds'
-        )}
-      >
-        <Controller
-          name="taskStartToCloseTimeoutSeconds"
-          control={control}
-          render={({ field: { ref, ...field } }) => (
-            <Input
-              {...field}
-              id={CREATE_SCHEDULE_FORM_FIELD_IDS.taskStartToCloseTimeout}
-              value={field.value ?? ''}
-              // @ts-expect-error - inputRef expects ref object while ref is a callback. It should support both.
-              inputRef={ref}
-              aria-label="Task Start-to-Close Timeout"
-              type="number"
-              min={1}
-              onChange={(e) =>
-                field.onChange(
-                  e.target.value ? parseInt(e.target.value, 10) : undefined
-                )
-              }
-              onBlur={field.onBlur}
-              error={Boolean(
-                getFieldErrorMessage(
-                  fieldErrors,
-                  'taskStartToCloseTimeoutSeconds'
                 )
               )}
               size="compact"

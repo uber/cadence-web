@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
+import AUTH_STRATEGY_VALUES_CONFIG from '@/config/auth/auth-strategy-values.config';
+
 import { type ResolverSchemas } from '../../../../utils/config/config.types';
-import AUTH_STRATEGY_VALUES_CONFIG from '../auth-strategy-values.config';
-import HISTORY_PAGE_V2_ENABLED_VALUES_CONFIG from '../history-page-v2-enabled-values.config';
 import SCHEDULE_ACTIONS_DISABLED_VALUES_CONFIG from '../schedule-actions-disabled-values.config';
 import WORKFLOW_ACTIONS_DISABLED_VALUES_CONFIG from '../workflow-actions-disabled-values.config';
 
@@ -77,6 +77,7 @@ const resolverSchemas: ResolverSchemas = {
       delete: scheduleActionsEnabledValueSchema,
       backfill: scheduleActionsEnabledValueSchema,
       start: scheduleActionsEnabledValueSchema,
+      edit: scheduleActionsEnabledValueSchema,
     }),
   },
   CRON_LIST_ENABLED: {
@@ -97,6 +98,10 @@ const resolverSchemas: ResolverSchemas = {
     args: z.undefined(),
     returnType: z.boolean(),
   },
+  WORKFLOW_DIAGNOSTICS_IN_HISTORY_ENABLED: {
+    args: z.undefined(),
+    returnType: z.boolean(),
+  },
   ARCHIVAL_DEFAULT_SEARCH_ENABLED: {
     args: z.undefined(),
     returnType: z.boolean(),
@@ -112,10 +117,6 @@ const resolverSchemas: ResolverSchemas = {
     args: z.undefined(),
     returnType: z.boolean(),
   },
-  HISTORY_PAGE_V2_ENABLED: {
-    args: z.undefined(),
-    returnType: z.enum(HISTORY_PAGE_V2_ENABLED_VALUES_CONFIG),
-  },
   SCHEDULES_ENABLED: {
     args: z.object({
       cluster: z.string(),
@@ -130,6 +131,17 @@ const resolverSchemas: ResolverSchemas = {
   LIST_WORKFLOWS_PARTIAL_MATCH_ENABLED: {
     args: z.undefined(),
     returnType: z.boolean(),
+  },
+  TRUSTED_HEADER_AUTH_CONFIG: {
+    args: z.undefined(),
+    returnType: z
+      .array(
+        z.object({
+          inboundHeader: z.string(),
+          outboundKey: z.string(),
+        })
+      )
+      .nullable(),
   },
 };
 

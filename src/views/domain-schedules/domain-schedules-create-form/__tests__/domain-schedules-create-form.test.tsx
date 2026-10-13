@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-import { useForm, type FieldPath } from 'react-hook-form';
+import { type FieldError, type FieldPath, useForm } from 'react-hook-form';
 
 import {
   fireEvent,
@@ -9,6 +9,8 @@ import {
   userEvent,
   waitFor,
 } from '@/test-utils/rtl';
+
+import { WORKER_SDK_LANGUAGES } from '@/route-handlers/start-workflow/start-workflow.constants';
 
 import { type DomainSchedulesCreateFormData } from '../../domain-schedules-create-modal/domain-schedules-create-modal.types';
 import DomainSchedulesCreateForm from '../domain-schedules-create-form';
@@ -22,16 +24,6 @@ jest.mock(
 
 const MOCK_DOMAIN = 'test-domain';
 const MOCK_CLUSTER = 'test-cluster';
-
-/** Required fields rendered by `DomainSchedulesCreateForm` (excludes optional input / pause / prefix / SDK default). */
-const REQUIRED_FORM_FIELD_PATHS: FieldPath<DomainSchedulesCreateFormData>[] = [
-  'workflowType.name',
-  'taskList.name',
-  'executionStartToCloseTimeoutSeconds',
-  'taskStartToCloseTimeoutSeconds',
-  'cronExpression',
-  'input',
-];
 
 describe('DomainSchedulesCreateForm', () => {
   beforeEach(() => {
@@ -53,10 +45,10 @@ describe('DomainSchedulesCreateForm', () => {
       })
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('spinbutton', {
+      screen.queryByRole('spinbutton', {
         name: 'Task Start-to-Close Timeout',
       })
-    ).toBeInTheDocument();
+    ).not.toBeInTheDocument();
     expect(
       screen.getByRole('radiogroup', { name: 'Worker SDK' })
     ).toBeInTheDocument();
@@ -70,7 +62,17 @@ describe('DomainSchedulesCreateForm', () => {
   });
 
   it('displays field errors wired from react-hook-form state', async () => {
-    await setup({ injectFieldErrors: true });
+    await setup({
+      fieldErrors: {
+        'workflowType.name': { type: 'required', message: 'required' },
+        'taskList.name': { type: 'required', message: 'required' },
+        executionStartToCloseTimeoutSeconds: {
+          type: 'required',
+          message: 'required',
+        },
+        cronExpression: { type: 'custom', message: 'required' },
+      },
+    });
 
     await waitFor(() => {
       expect(
@@ -86,12 +88,6 @@ describe('DomainSchedulesCreateForm', () => {
     expect(
       screen.getByRole('spinbutton', {
         name: 'Execution Start-to-Close Timeout',
-      })
-    ).toHaveAttribute('aria-invalid', 'true');
-
-    expect(
-      screen.getByRole('spinbutton', {
-        name: 'Task Start-to-Close Timeout',
       })
     ).toHaveAttribute('aria-invalid', 'true');
 
@@ -120,12 +116,6 @@ describe('DomainSchedulesCreateForm', () => {
     });
     fireEvent.change(executionTimeout, { target: { value: '400' } });
     expect(executionTimeout).toHaveValue(400);
-
-    const taskTimeout = screen.getByRole('spinbutton', {
-      name: 'Task Start-to-Close Timeout',
-    });
-    fireEvent.change(taskTimeout, { target: { value: '90' } });
-    expect(taskTimeout).toHaveValue(90);
   });
 
   it('renders with default worker SDK and pause-on-failure defaults', async () => {
@@ -184,25 +174,52 @@ describe('DomainSchedulesCreateForm', () => {
 
     expect(screen.getByLabelText('Schedule ID')).toBeDisabled();
   });
+
+  it('leaves Worker SDK unset when prefillWorkerSDKLanguage is false', async () => {
+    await setup({ prefillWorkerSDKLanguage: false });
+
+    for (const language of WORKER_SDK_LANGUAGES) {
+      expect(screen.getByRole('radio', { name: language })).not.toBeChecked();
+    }
+  });
+
+  it('displays worker SDK error when unset and validation fails', async () => {
+    await setup({
+      prefillWorkerSDKLanguage: false,
+      fieldErrors: {
+        workerSDKLanguage: {
+          type: 'required',
+          message: 'Worker SDK is required',
+        },
+      },
+    });
+
+    expect(screen.getByText('Worker SDK is required')).toBeInTheDocument();
+  });
 });
 
 type SetupProps = {
   defaultValues?: Partial<DomainSchedulesCreateFormData>;
-  /** Applies fixed `setError` calls (same role as passing `fieldErrors` into start form tests). */
-  injectFieldErrors?: boolean;
+  fieldErrors?: Partial<
+    Record<FieldPath<DomainSchedulesCreateFormData>, FieldError>
+  >;
   taskListValidation?: ReturnType<typeof mockUseTaskListFieldValidation>;
   scheduleIdReadOnly?: boolean;
+  prefillWorkerSDKLanguage?: boolean;
 };
 
 function TestWrapper({
   defaultValues,
-  injectFieldErrors,
+  fieldErrors,
   scheduleIdReadOnly,
-}: {
-  defaultValues?: Partial<DomainSchedulesCreateFormData>;
-  injectFieldErrors?: boolean;
-  scheduleIdReadOnly?: boolean;
-}) {
+  prefillWorkerSDKLanguage,
+}: Pick<
+  SetupProps,
+  | 'defaultValues'
+  | 'fieldErrors'
+  | 'scheduleIdReadOnly'
+  | 'prefillWorkerSDKLanguage'
+>) {
   const { control, trigger, setError, clearErrors } =
     useForm<DomainSchedulesCreateFormData>({
       defaultValues: { ...defaultValues },
@@ -210,11 +227,12 @@ function TestWrapper({
     });
 
   useEffect(() => {
-    if (!injectFieldErrors) return;
-    for (const path of REQUIRED_FORM_FIELD_PATHS) {
-      setError(path, { type: 'required', message: 'is required' });
+    if (!fieldErrors) return;
+    for (const [path, error] of Object.entries(fieldErrors)) {
+      if (!error) continue;
+      setError(path as FieldPath<DomainSchedulesCreateFormData>, error);
     }
-  }, [injectFieldErrors, setError]);
+  }, [fieldErrors, setError]);
 
   return (
     <DomainSchedulesCreateForm
@@ -224,14 +242,16 @@ function TestWrapper({
       domain={MOCK_DOMAIN}
       cluster={MOCK_CLUSTER}
       scheduleIdReadOnly={scheduleIdReadOnly}
+      prefillWorkerSDKLanguage={prefillWorkerSDKLanguage}
     />
   );
 }
 
 async function setup({
   defaultValues,
-  injectFieldErrors = false,
+  fieldErrors,
   scheduleIdReadOnly,
+  prefillWorkerSDKLanguage,
   taskListValidation = {
     isTaskListLoading: false,
     taskListCaptionMessage: null,
@@ -244,8 +264,9 @@ async function setup({
   render(
     <TestWrapper
       defaultValues={defaultValues}
-      injectFieldErrors={injectFieldErrors}
+      fieldErrors={fieldErrors}
       scheduleIdReadOnly={scheduleIdReadOnly}
+      prefillWorkerSDKLanguage={prefillWorkerSDKLanguage}
     />
   );
 

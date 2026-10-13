@@ -19,7 +19,6 @@ describe(transformDomainSchedulesCreateFormToBody.name, () => {
     taskList: { name: 'demo-tl' },
     workerSDKLanguage: 'GO',
     executionStartToCloseTimeoutSeconds: 3600,
-    taskStartToCloseTimeoutSeconds: 45,
     pauseOnFailure: false,
     overlapPolicy: ScheduleOverlapPolicy.SCHEDULE_OVERLAP_POLICY_SKIP_NEW,
     catchUpPolicy: ScheduleCatchUpPolicy.SCHEDULE_CATCH_UP_POLICY_SKIP,
@@ -39,9 +38,26 @@ describe(transformDomainSchedulesCreateFormToBody.name, () => {
         taskList: { name: 'demo-tl' },
         workerSDKLanguage: 'GO',
         executionStartToCloseTimeoutSeconds: 3600,
-        taskStartToCloseTimeoutSeconds: 45,
+        taskStartToCloseTimeoutSeconds: undefined,
       },
     });
+  });
+
+  it('includes a task start-to-close timeout when the form has one', () => {
+    const result = transformDomainSchedulesCreateFormToBody({
+      ...mockDomainSchedulesCreateFormData,
+      taskStartToCloseTimeoutSeconds: 30,
+    });
+
+    expect(result.startWorkflow.taskStartToCloseTimeoutSeconds).toBe(30);
+  });
+
+  it('omits the task start-to-close timeout when the form has none', () => {
+    const result = transformDomainSchedulesCreateFormToBody(
+      mockDomainSchedulesCreateFormData
+    );
+
+    expect(result.startWorkflow.taskStartToCloseTimeoutSeconds).toBeUndefined();
   });
 
   it('includes parsed JSON inputs when provided', () => {
@@ -127,24 +143,24 @@ describe(transformDomainSchedulesCreateFormToBody.name, () => {
     expect(result.bufferLimit).toBeUndefined();
   });
 
-  it('maps catch-up window days to seconds for non-skip catch-up policy', () => {
+  it('maps catch-up window seconds for non-skip catch-up policy', () => {
     const result = transformDomainSchedulesCreateFormToBody({
       ...mockDomainSchedulesCreateFormData,
       catchUpPolicy: ScheduleCatchUpPolicy.SCHEDULE_CATCH_UP_POLICY_ONE,
-      catchUpWindowDays: '14',
+      catchUpWindowSeconds: '1.04',
     });
 
     expect(result.catchUpPolicy).toBe(
       ScheduleCatchUpPolicy.SCHEDULE_CATCH_UP_POLICY_ONE
     );
-    expect(result.catchUpWindowSeconds).toBe(14 * 24 * 60 * 60);
+    expect(result.catchUpWindowSeconds).toBe(1.04);
   });
 
   it('omits catch-up window seconds for skip catch-up policy', () => {
     const result = transformDomainSchedulesCreateFormToBody({
       ...mockDomainSchedulesCreateFormData,
       catchUpPolicy: ScheduleCatchUpPolicy.SCHEDULE_CATCH_UP_POLICY_SKIP,
-      catchUpWindowDays: '14',
+      catchUpWindowSeconds: '1209600',
     });
 
     expect(result.catchUpPolicy).toBe(

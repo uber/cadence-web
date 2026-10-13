@@ -58,7 +58,7 @@ To integrate an upstream proxy / IdP, set the cookie for the cadence-web origin:
 Set-Cookie: cadence-authorization=<JWT>; Path=/; HttpOnly; SameSite=Lax; Secure
 ```
 
-You can also set/clear the cookie via `POST /api/auth/token` and `DELETE /api/auth/token`; or use `Login with JWT` button in the UI.
+You can also set/clear the cookie via `POST /api/auth/token` and `DELETE /api/auth/token`, or paste a JWT on the `/login` page. Requests without a valid session are redirected there.
 
 #### Feature flags
 
@@ -70,8 +70,10 @@ Feature flags control various UI features and functionality in `cadence-web`. Th
 | **Workflow Diagnostics**        | Workflow diagnostics APIs and UI for debugging workflows                                                                                                                                                        | `CADENCE_WORKFLOW_DIAGNOSTICS_ENABLED=true`                       | 1.2.13+ (1.3.1+ for full functionality) |
 | **Default Archival Search**     | Shows the default workflow search input and query input for archival workflows page. Default search is disabled by default as it doesn't work well with S3 implementation                                       | `CADENCE_ARCHIVAL_DEFAULT_SEARCH_ENABLED=true`                    | N/A                                     |
 | **Failover History List**       | List and filter domain failovers                                                                                                                                                                                | `CADENCE_FAILOVER_HISTORY_ENABLED=true`                           | 1.4.0+                                  |
-| **New Workflow History View**   | New and improved UI for viewing workflow history                                                                                                                                                                | `CADENCE_HISTORY_PAGE_V2_ENABLED=ENABLED` (or `OPT_IN`/`OPT_OUT`) | N/A                                     |
-| **Batch Actions**               | View/hide batch actions (terminate/cancel/signal) UI for workflows.only works for users with access for cadence-system domain. Access can be scoped: everyone, domain admins, or users with domain write access | `CADENCE_BATCH_ACTIONS_UI_ENABLED=ENABLED` (or `ADMIN`/`WRITE`)   | 1.4.0+                                  |
+| **Batch Actions**               | View/hide batch actions (terminate/cancel/signal) UI for workflows. Only works for users with access for cadence-system domain. Access can be scoped: everyone, domain admins, or users with domain write access | `CADENCE_BATCH_ACTIONS_UI_ENABLED=ENABLED` (or `ADMIN`/`WRITE`)   | 1.4.0+                                  |
+| **Schedules**                   | UI for viewing and managing Cadence Schedules (create, list, pause/unpause, view schedule details and runs)                                                                                                     | `CADENCE_SCHEDULES_ENABLED=true`                                  | 1.4.1+                                  |
+| **Workflows List**              | New & customizable Workflows List for viewing workflows                                                                                                                                                         | `CADENCE_WORKFLOWS_LIST_ENABLED=true`                             | N/A                                     |
+| **List Workflows Partial Match** | Partial (prefix) matching on workflow search inputs when listing workflows. Requires advanced visibility to be enabled on the cluster                                                                           | `CADENCE_LIST_WORKFLOWS_PARTIAL_MATCH_ENABLED=true`               | 1.4.1+                                  |
 
 **Note:** For advanced customization, feature flags can be modified through resolvers in the dynamic config system ([`src/config/dynamic/resolvers`](src/config/dynamic/resolvers)).
 
@@ -176,6 +178,28 @@ You can customize the YAML file or reuse configurations from the [cadence reposi
 
 After running `cadence`, start `cadence-web` for development using one of the previous methods ([Running development environment](#running-development-environment), [VSCode Dev Containers](#using-vscode-dev-containers))
 
+### Storybook
+
+Storybook shows UI components on their own, with mock data.
+
+To run Storybook locally:
+
+```
+npm run storybook
+```
+
+Open `localhost:6006` to view it.
+
+To build a static Storybook site:
+
+```
+npm run build-storybook
+```
+
+This writes static files to `storybook-static`.
+
+To share a live preview link from your fork, see [Publish a personal Storybook preview](./CONTRIBUTING.md#publish-a-personal-storybook-preview) in `CONTRIBUTING.md`.
+
 ### Updating IDLs
 
 To update the Cadence IDL files:
@@ -219,6 +243,8 @@ npm run lint && npm run typecheck && npm run test
 | test:unit:node    | Run only node unit tests                                                                         |
 | lint              | Run eslint                                                                                       |
 | typecheck         | Run typescript checks                                                                            |
+| storybook         | Run Storybook locally on port 6006                                                               |
+| build-storybook   | Build a static Storybook site into `storybook-static`                                            |
 
 ## Contributing
 

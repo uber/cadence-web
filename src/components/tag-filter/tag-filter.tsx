@@ -3,6 +3,7 @@ import { useCallback, useMemo } from 'react';
 import { useStyletron } from 'baseui';
 import { FormControl } from 'baseui/form-control';
 
+import isAntiSelectEvent from './helpers/is-anti-select-event';
 import SelectableTag from './selectable-tag/selectable-tag';
 import { overrides, styled } from './tag-filter.styles';
 import { type Props } from './tag-filter.types';
@@ -33,6 +34,22 @@ export default function TagFilter<T extends string>({
     [values, onChangeValues]
   );
 
+  const onClickTag = useCallback(
+    (value: T, event: Event) => {
+      if (!isAntiSelectEvent(event)) {
+        onChangeSingleValue(value);
+        return;
+      }
+
+      const others = tagKeys.filter((k) => k !== value);
+      const isAllButValue =
+        values.length === others.length &&
+        others.every((k) => values.includes(k));
+      onChangeValues(isAllButValue ? [] : others);
+    },
+    [tagKeys, values, onChangeValues, onChangeSingleValue]
+  );
+
   return (
     <styled.FormControlContainer>
       <FormControl label={label} overrides={overrides.formControl}>
@@ -49,7 +66,7 @@ export default function TagFilter<T extends string>({
               <SelectableTag
                 key={tagKey}
                 value={values.includes(tagKey)}
-                onClick={() => onChangeSingleValue(tagKey)}
+                onClick={(e) => onClickTag(tagKey, e)}
                 {...(StartEnhancer
                   ? { startEnhancer: () => <StartEnhancer theme={theme} /> }
                   : {})}

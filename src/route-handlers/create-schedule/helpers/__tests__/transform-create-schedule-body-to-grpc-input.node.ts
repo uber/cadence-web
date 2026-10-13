@@ -1,6 +1,7 @@
 import { ScheduleCatchUpPolicy } from '@/__generated__/proto-ts/uber/cadence/api/v1/ScheduleCatchUpPolicy';
 import { ScheduleOverlapPolicy } from '@/__generated__/proto-ts/uber/cadence/api/v1/ScheduleOverlapPolicy';
 
+import { DEFAULT_TASK_START_TO_CLOSE_TIMEOUT_SECONDS } from '../../../start-workflow/start-workflow.constants';
 import { type CreateScheduleRequestBody } from '../../create-schedule.types';
 import transformCreateScheduleBodyToGrpcInput from '../transform-create-schedule-body-to-grpc-input';
 
@@ -13,7 +14,6 @@ function minimalStartWorkflow(
     workerSDKLanguage: 'GO',
     workflowIdPrefix: 'scheduled-demo-',
     executionStartToCloseTimeoutSeconds: 3600,
-    taskStartToCloseTimeoutSeconds: 30,
     ...overrides,
   };
 }
@@ -50,13 +50,40 @@ describe(transformCreateScheduleBodyToGrpcInput.name, () => {
         taskList: { name: 'demo-task-list' },
         workflowIdPrefix: 'scheduled-demo-',
         executionStartToCloseTimeout: { seconds: 3600, nanos: 0 },
-        taskStartToCloseTimeout: { seconds: 30, nanos: 0 },
         retryPolicy: undefined,
         memo: undefined,
         searchAttributes: undefined,
         input: undefined,
       })
     );
+  });
+
+  it('defaults the task start-to-close timeout when the body omits it', () => {
+    const grpc = transformCreateScheduleBodyToGrpcInput({
+      domain: 'd',
+      body: minimalBody(),
+    });
+
+    expect(grpc.action?.startWorkflow?.taskStartToCloseTimeout).toEqual({
+      seconds: DEFAULT_TASK_START_TO_CLOSE_TIMEOUT_SECONDS,
+      nanos: 0,
+    });
+  });
+
+  it('maps the task start-to-close timeout when the body provides it', () => {
+    const grpc = transformCreateScheduleBodyToGrpcInput({
+      domain: 'd',
+      body: minimalBody({
+        startWorkflow: minimalStartWorkflow({
+          taskStartToCloseTimeoutSeconds: 30,
+        }),
+      }),
+    });
+
+    expect(grpc.action?.startWorkflow?.taskStartToCloseTimeout).toEqual({
+      seconds: 30,
+      nanos: 0,
+    });
   });
 
   it('maps ISO schedule bounds and jitter to spec timestamps and duration', () => {

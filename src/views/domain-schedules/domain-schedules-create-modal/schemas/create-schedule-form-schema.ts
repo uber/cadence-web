@@ -7,7 +7,7 @@ import {
 } from '@/route-handlers/create-schedule/create-schedule.constants';
 // TODO(refactor): WORKER_SDK_LANGUAGES is imported from start-workflow — extract to shared constants once both features stabilise
 import { WORKER_SDK_LANGUAGES } from '@/route-handlers/start-workflow/start-workflow.constants';
-import { MAX_CATCH_UP_WINDOW_DAYS } from '@/views/domain-schedules/domain-schedules-create-advanced-form/domain-schedules-create-advanced-form.constants';
+import { MAX_CATCH_UP_WINDOW_SECONDS } from '@/views/domain-schedules/domain-schedules-create-advanced-form/domain-schedules-create-advanced-form.constants';
 import refineCreateScheduleForm from '@/views/domain-schedules/domain-schedules-create-modal/helpers/refine-create-schedule-form';
 import { retryPolicyFormFieldsShape } from '@/views/shared/retry-policy-fields/schemas/retry-policy-form-schema';
 import { getCronFieldsError } from '@/views/workflow-actions/workflow-action-start-form/helpers/get-cron-fields-error';
@@ -82,13 +82,14 @@ export const createScheduleFormFieldsSchema = z.object({
       required_error: 'Execution timeout is required',
     })
     .positive('Execution timeout must be positive'),
-  taskStartToCloseTimeoutSeconds: z
-    .number({
-      required_error: 'Task timeout is required',
-    })
-    .positive('Task timeout must be positive'),
+  // Hidden on create/edit: Cadence requires a decision-task timeout, and edit
+  // must round-trip the existing value so a full-replace update does not clobber it.
+  taskStartToCloseTimeoutSeconds: z.number().positive().optional(),
   // TODO(refactor): WORKER_SDK_LANGUAGES imported from start-workflow — extract to shared constants
-  workerSDKLanguage: z.enum(WORKER_SDK_LANGUAGES),
+  workerSDKLanguage: z.enum(WORKER_SDK_LANGUAGES, {
+    required_error: 'Worker SDK is required',
+    invalid_type_error: 'Worker SDK is required',
+  }),
   input: z
     .array(z.string())
     .optional()
@@ -119,13 +120,14 @@ export const createScheduleFormFieldsSchema = z.object({
   bufferLimit: z.string().optional(),
   concurrencyLimit: z.string().optional(),
   catchUpPolicy: z.enum(SCHEDULE_CATCH_UP_POLICIES).optional(),
-  catchUpWindowDays: z
+  catchUpWindowSeconds: z
     .string()
     .refine(
       (v) =>
-        v === '' || (Number(v) >= 1 && Number(v) <= MAX_CATCH_UP_WINDOW_DAYS),
+        v === '' ||
+        (Number(v) >= 1 && Number(v) <= MAX_CATCH_UP_WINDOW_SECONDS),
       {
-        message: `Catch-up window must be between 1 and ${MAX_CATCH_UP_WINDOW_DAYS} days`,
+        message: `Catch-up window must be between 1 and ${MAX_CATCH_UP_WINDOW_SECONDS} seconds`,
       }
     )
     .optional(),
