@@ -24,6 +24,10 @@ export const styled = {
     flexDirection: 'column',
     gap: $theme.sizing.scale500,
   })),
+  MenuHint: createStyled('div', ({ $theme }: { $theme: Theme }) => ({
+    ...$theme.typography.ParagraphXSmall,
+    color: $theme.colors.contentTertiary,
+  })),
   MenuFilterContainer: createStyled('div', ({ $theme }: { $theme: Theme }) => ({
     paddingBottom: $theme.sizing.scale500,
     ':not(:last-child)': {
