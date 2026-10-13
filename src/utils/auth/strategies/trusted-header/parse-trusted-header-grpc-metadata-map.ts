@@ -40,6 +40,13 @@ export default function parseTrustedHeaderGrpcMetadataMap(
         `${source} entry "${pair}" has an invalid outbound key "${outboundKey}": keys must match ${GRPC_METADATA_KEY_PATTERN} and string values cannot use the -bin suffix`
       );
     }
+    // __proto__ matches the key pattern but assignment on a plain object
+    // hits Object.prototype.__proto__ and silently drops the entry.
+    if (outboundKey.toLowerCase() === '__proto__') {
+      throw new Error(
+        `${source} entry "${pair}" has an invalid outbound key "${outboundKey}"`
+      );
+    }
     return { inboundHeader, outboundKey };
   });
 }
