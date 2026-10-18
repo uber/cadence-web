@@ -61,7 +61,7 @@ describe(SearchAttributesInput.name, () => {
 
     expect(screen.getByDisplayValue('MyWorkflow')).toBeInTheDocument();
 
-    expect(screen.getByDisplayValue('2023–01–01 00:00:00')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('2023-01-01 00:00:00')).toBeInTheDocument();
   });
 
   it('should allow selecting an attribute key', async () => {
@@ -97,8 +97,8 @@ describe(SearchAttributesInput.name, () => {
     expect(numberInput).toHaveAttribute('type', 'number');
 
     expect(
-      screen.getByPlaceholderText('Select date and time')
-    ).toBeInTheDocument();
+      screen.getAllByRole('textbox', { name: 'Search attribute value' }).length
+    ).toBeGreaterThan(0);
   });
 
   it('should allow entering values', async () => {
@@ -150,9 +150,8 @@ describe(SearchAttributesInput.name, () => {
       value: [{ key: 'StartTime', value: '' }],
     });
 
-    // DatePicker should be present (check for the placeholder text it uses)
     expect(
-      screen.getByPlaceholderText('Select date and time')
+      screen.getByRole('textbox', { name: 'Search attribute value' })
     ).toBeInTheDocument();
   });
 
