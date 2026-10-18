@@ -53,10 +53,9 @@ module.exports = {
               'Datepicker',
               'StatefulDatePicker',
               'Datepicker_DO_NOT_USE',
-              'DatepickerOverrides',
             ],
             message:
-              'Banned for React 19. Use @/components/date-time-picker or StatefulCalendar / Calendar / TimePicker / TimezonePicker.',
+              'Banned for React 19. Use @/components/date-time-picker or StatefulCalendar / Calendar / TimePicker / TimezonePicker. DatepickerOverrides remains allowed for Calendar styling.',
           },
           {
             name: 'baseui/input',
