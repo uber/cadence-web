@@ -99,6 +99,8 @@ export default function DateTimePicker({
       <div>
         <Input
           id={id}
+          // baseui Input types inputRef as RefObject; RHF often passes a callback ref.
+          // @ts-expect-error callback refs are runtime-supported
           inputRef={inputRef}
           aria-label={ariaLabel}
           size={size}
