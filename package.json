@@ -29,7 +29,7 @@
     "npm": ">=11.10.0"
   },
   "dependencies": {
-    "@grpc/grpc-js": "^1.14.4",
+    "@grpc/grpc-js": "^1.14.6",
     "@grpc/proto-loader": "^0.8.1",
     "@hookform/resolvers": "^3.6.0",
     "@markdoc/markdoc": "^0.5.4",
