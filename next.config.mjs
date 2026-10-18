@@ -18,7 +18,9 @@ const nextConfig = {
       ...config.resolve.alias,
       '@': path.resolve(__dirname, './src'),
     };
-    if (options.isServer) {
+    // Keep Node-only externals off the Edge middleware bundle — string
+    // externals become invalid `module.exports = @opentelemetry/api` there.
+    if (options.isServer && options.nextRuntime === 'nodejs') {
       config.externals.push(
         '@grpc/grpc-js',
         'require-in-the-middle',
