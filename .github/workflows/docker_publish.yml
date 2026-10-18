@@ -12,6 +12,23 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v4
 
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Composition gate: fail-closed Open Source High/Critical on the release lockfile.
+      # Dismissals live in in-repo `.snyk` (owner + expiry). Requires SNYK_TOKEN.
+      - name: Snyk Open Source (fail-closed High/Critical)
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high --file=package-lock.json --policy-path=.snyk
+
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
@@ -45,3 +62,13 @@ jobs:
           tags: |
             ubercadence/web:beta
             ubercadence/web:${{ github.event.release.tag_name }}
+
+      # Container (Debian layer) scan is report-only until sibling A1 lands.
+      - name: Snyk Container (report-only until A1)
+        continue-on-error: true
+        uses: snyk/actions/docker@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          image: ubercadence/web:${{ github.event.release.tag_name }}
+          args: --severity-threshold=high
