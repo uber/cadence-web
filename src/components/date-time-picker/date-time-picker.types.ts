@@ -1,13 +1,8 @@
 import { type Ref } from 'react';
 
-import {
-  DATE_TIME_FORMAT_MINUTES,
-  DATE_TIME_FORMAT_SECONDS,
-} from './date-time-picker.constants';
+import { type DateTimeDisplayFormat } from './date-time-picker.constants';
 
-export type DateTimeDisplayFormat =
-  | typeof DATE_TIME_FORMAT_MINUTES
-  | typeof DATE_TIME_FORMAT_SECONDS;
+export type { DateTimeDisplayFormat };
 
 export type Props = {
   value?: string;

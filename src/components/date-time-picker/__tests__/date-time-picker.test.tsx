@@ -2,8 +2,8 @@ import { type ComponentProps } from 'react';
 
 import { render, screen, userEvent } from '@/test-utils/rtl';
 
-import { DATE_TIME_FORMAT_MINUTES } from '../date-time-picker.constants';
 import DateTimePicker from '../date-time-picker';
+import { DATE_TIME_FORMAT_MINUTES } from '../date-time-picker.constants';
 
 jest.mock('baseui/datepicker', () => ({
   StatefulCalendar: () => <div data-testid="calendar" />,
