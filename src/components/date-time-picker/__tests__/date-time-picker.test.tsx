@@ -6,7 +6,7 @@ import DateTimePicker from '../date-time-picker';
 import { DATE_TIME_FORMAT_MINUTES } from '../date-time-picker.constants';
 
 jest.mock('baseui/datepicker', () => ({
-  StatefulCalendar: () => <div data-testid="calendar" />,
+  Calendar: () => <div data-testid="calendar" />,
   TimePicker: () => <div data-testid="time-picker" />,
 }));
 
@@ -31,6 +31,15 @@ describe(DateTimePicker.name, () => {
     await user.clear(input);
     await user.tab();
     expect(onChange).toHaveBeenCalledWith(undefined);
+  });
+
+  it('does not re-commit on blur when draft matches formatted value', async () => {
+    const value = '2024-06-15T14:30:45.123Z';
+    const { user, onChange } = setup({ value });
+    onChange.mockClear();
+    await user.click(screen.getByRole('textbox'));
+    await user.tab();
+    expect(onChange).not.toHaveBeenCalled();
   });
 });
 

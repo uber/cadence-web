@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-import { StatefulCalendar, TimePicker } from 'baseui/datepicker';
+import { Calendar, TimePicker } from 'baseui/datepicker';
 import { Input } from 'baseui/input';
 import { StatefulPopover } from 'baseui/popover';
 
@@ -35,6 +35,9 @@ export default function DateTimePicker({
     setDraft(formatDateTimeValue(value, displayFormat));
   }, [value, displayFormat]);
 
+  const isBeforeMin = (next: Date) =>
+    Boolean(minDate && dayjs(next).isBefore(dayjs(minDate)));
+
   const commitDate = (next: Date | null | undefined) => {
     if (!next || Number.isNaN(next.getTime())) {
       if (clearable) {
@@ -43,6 +46,7 @@ export default function DateTimePicker({
       }
       return;
     }
+    if (isBeforeMin(next)) return;
     const iso = dayjs(next).toISOString();
     onChange(iso);
     setDraft(formatDateTimeValue(iso, displayFormat));
@@ -58,7 +62,8 @@ export default function DateTimePicker({
       ignoreBoundary
       content={() => (
         <styled.PopoverBody>
-          <StatefulCalendar
+          {/* Controlled Calendar — StatefulCalendar ignores `value` in baseui 18. */}
+          <Calendar
             density="high"
             value={selectedDate}
             minDate={minDate}
@@ -110,18 +115,21 @@ export default function DateTimePicker({
           value={draft}
           onChange={(e) => setDraft(e.currentTarget.value)}
           onBlur={() => {
+            const formatted = formatDateTimeValue(value, displayFormat);
             if (!draft.trim()) {
               if (clearable) onChange(undefined);
-              else setDraft(formatDateTimeValue(value, displayFormat));
+              else setDraft(formatted);
               return;
             }
+            // Unchanged draft — do not re-parse (would drop seconds/ms under minutes format).
+            if (draft === formatted) return;
             const iso = parseDateTimeValue(draft, displayFormat);
-            setDraft(
-              iso
-                ? formatDateTimeValue(iso, displayFormat)
-                : formatDateTimeValue(value, displayFormat)
-            );
-            if (iso) onChange(iso);
+            if (iso && !isBeforeMin(dayjs(iso).toDate())) {
+              onChange(iso);
+              setDraft(formatDateTimeValue(iso, displayFormat));
+              return;
+            }
+            setDraft(formatted);
           }}
         />
       </div>
