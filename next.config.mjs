@@ -18,7 +18,7 @@ const nextConfig = {
       ...config.resolve.alias,
       '@': path.resolve(__dirname, './src'),
     };
-    if (options.isServer && options.nextRuntime === 'nodejs') {
+    if (options.isServer) {
       config.externals.push(
         '@grpc/grpc-js',
         'require-in-the-middle',
@@ -77,9 +77,6 @@ const nextConfig = {
     ];
   },
   output: BUILD_OUTPUT,
-  experimental: {
-    instrumentationHook: true,
-  },
 };
 
 export default nextConfig;
