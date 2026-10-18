@@ -97,4 +97,20 @@ describe('usePageQueryParams', () => {
       multiValDefaulted: ['a'],
     });
   });
+
+  it('writes History with null state so Next can sync search params', async () => {
+    const pushState = jest.spyOn(window.history, 'pushState');
+    const { result } = renderHook(() => usePageQueryParams(queryParamsConfig));
+    const [, setValues] = result.current;
+
+    await act(async () => {
+      setValues({ sortBy: 'from-history' });
+      await Promise.resolve();
+    });
+
+    expect(pushState).toHaveBeenCalled();
+    const stateArg = pushState.mock.calls.at(-1)?.[0];
+    expect(stateArg).toBeNull();
+    pushState.mockRestore();
+  });
 });
