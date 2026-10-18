@@ -18,7 +18,11 @@ function buildDomainDescriptionQueryOptions({
       string,
       UseDomainDescriptionParams,
     ],
-    queryFn: ({ queryKey: [_, params] }: { queryKey: [string, UseDomainDescriptionParams] }) =>
+    queryFn: ({
+      queryKey: [_, params],
+    }: {
+      queryKey: [string, UseDomainDescriptionParams];
+    }) =>
       request(`/api/domains/${params.domain}/${params.cluster}`).then((res) =>
         res.json()
       ),

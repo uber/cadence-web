@@ -36,7 +36,9 @@ function buildDescribeWorkflowQueryOptions({
       request(
         `/api/domains/${p.domain}/${p.cluster}/workflows/${p.workflowId}/${p.runId}`
       ).then((res) => res.json()),
-    refetchInterval: (query: { state: { data?: DescribeWorkflowResponse } }) => {
+    refetchInterval: (query: {
+      state: { data?: DescribeWorkflowResponse };
+    }) => {
       const { closeStatus } = query.state.data?.workflowExecutionInfo || {};
       if (
         !closeStatus ||

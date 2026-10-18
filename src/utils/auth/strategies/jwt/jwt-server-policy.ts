@@ -12,9 +12,7 @@ import resolveJwtAuthContext from './resolve-jwt-auth-context';
 
 const jwtServerPolicy: AuthServerPolicy = {
   async resolveAuthContext(request) {
-    return resolveJwtAuthContext(
-      request ?? (await getImplicitAuthRequest())
-    );
+    return resolveJwtAuthContext(request ?? (await getImplicitAuthRequest()));
   },
 
   async getGrpcMetadata(authContext, request) {
