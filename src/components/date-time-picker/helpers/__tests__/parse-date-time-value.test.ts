@@ -6,7 +6,10 @@ import parseDateTimeValue from '../parse-date-time-value';
 
 describe(parseDateTimeValue.name, () => {
   it('parses minutes format strictly and emits UTC ISO', () => {
-    const iso = parseDateTimeValue('2024/06/15 14:30', DATE_TIME_FORMAT_MINUTES);
+    const iso = parseDateTimeValue(
+      '2024/06/15 14:30',
+      DATE_TIME_FORMAT_MINUTES
+    );
     expect(iso).toBeDefined();
     expect(iso).toMatch(/^\d{4}-\d{2}-\d{2}T/);
   });
@@ -18,7 +21,9 @@ describe(parseDateTimeValue.name, () => {
   });
 
   it('rejects partial and date-fns token leftovers', () => {
-    expect(parseDateTimeValue('2024/06/15', DATE_TIME_FORMAT_MINUTES)).toBeUndefined();
+    expect(
+      parseDateTimeValue('2024/06/15', DATE_TIME_FORMAT_MINUTES)
+    ).toBeUndefined();
     expect(
       parseDateTimeValue('yyyy/MM/dd HH:mm', DATE_TIME_FORMAT_MINUTES)
     ).toBeUndefined();
