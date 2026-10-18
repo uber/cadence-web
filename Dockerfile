@@ -20,6 +20,9 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/*
 COPY package.json package-lock.json ./
 RUN npm ci
+# Composition gate: fail dishonest Next / React / postcss trees before build.
+RUN npm ls --depth=0 "next@>=15.5 <16" "react@^19" "react-dom@^19" \
+  && npm ls --depth=0 "postcss@>=8.5.0"
 RUN npm run install-idl
 COPY . .
 
