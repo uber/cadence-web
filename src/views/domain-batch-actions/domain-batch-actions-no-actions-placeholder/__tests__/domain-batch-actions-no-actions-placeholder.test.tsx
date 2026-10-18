@@ -42,7 +42,9 @@ describe(DomainBatchActionsNoActionsPlaceholder.name, () => {
         description: expect.stringContaining(
           'Click the button below to get started'
         ),
-      }), undefined);
+      }),
+      undefined
+    );
   });
 
   it('passes a single callback action labeled "New batch action"', () => {

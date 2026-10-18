@@ -34,7 +34,9 @@ describe(ScheduleRunsTable.name, () => {
         ],
         columns: scheduleRunsTableConfig,
         shouldShowResults: true,
-      }), undefined);
+      }),
+      undefined
+    );
   });
 
   it('passes empty state to Table', () => {
@@ -45,7 +47,9 @@ describe(ScheduleRunsTable.name, () => {
         data: [],
         shouldShowResults: false,
         endMessageProps: expect.objectContaining({ hasData: false }),
-      }), undefined);
+      }),
+      undefined
+    );
   });
 
   it('passes pagination props to Table', () => {
@@ -62,7 +66,9 @@ describe(ScheduleRunsTable.name, () => {
           hasNextPage: true,
           isFetchingNextPage: true,
         },
-      }), undefined);
+      }),
+      undefined
+    );
   });
 });
 
