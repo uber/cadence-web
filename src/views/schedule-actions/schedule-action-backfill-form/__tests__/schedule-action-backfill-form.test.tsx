@@ -26,11 +26,15 @@ describe(ScheduleActionBackfillForm.name, () => {
     const { user } = setup();
 
     await user.click(screen.getByLabelText('Backfill period start'));
-    expect(document.querySelector('[data-baseweb="calendar"]')).toBeInTheDocument();
+    expect(
+      document.querySelector('[data-baseweb="calendar"]')
+    ).toBeInTheDocument();
 
     await user.keyboard('{Escape}');
     await user.click(screen.getByLabelText('Backfill period end'));
-    expect(document.querySelector('[data-baseweb="calendar"]')).toBeInTheDocument();
+    expect(
+      document.querySelector('[data-baseweb="calendar"]')
+    ).toBeInTheDocument();
   });
 });
 

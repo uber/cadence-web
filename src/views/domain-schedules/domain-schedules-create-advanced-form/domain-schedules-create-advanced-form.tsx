@@ -16,8 +16,8 @@ import { MdExpandLess, MdExpandMore } from 'react-icons/md';
 
 import { ScheduleCatchUpPolicy } from '@/__generated__/proto-ts/uber/cadence/api/v1/ScheduleCatchUpPolicy';
 import { ScheduleOverlapPolicy } from '@/__generated__/proto-ts/uber/cadence/api/v1/ScheduleOverlapPolicy';
-import { DATE_TIME_FORMAT_MINUTES } from '@/components/date-time-picker/date-time-picker.constants';
 import DateTimePicker from '@/components/date-time-picker/date-time-picker';
+import { DATE_TIME_FORMAT_MINUTES } from '@/components/date-time-picker/date-time-picker.constants';
 import DomainSchedulesHorizontalField from '@/views/domain-schedules/domain-schedules-horizontal-field/domain-schedules-horizontal-field';
 import useSearchAttributes from '@/views/shared/hooks/use-search-attributes/use-search-attributes';
 import RetryPolicyFields from '@/views/shared/retry-policy-fields/retry-policy-fields';

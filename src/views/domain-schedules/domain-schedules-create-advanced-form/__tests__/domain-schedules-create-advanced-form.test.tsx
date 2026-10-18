@@ -220,11 +220,15 @@ describe(DomainSchedulesCreateAdvancedForm.name, () => {
     );
 
     await user.click(screen.getByLabelText('Schedule period start'));
-    expect(document.querySelector('[data-baseweb="calendar"]')).toBeInTheDocument();
+    expect(
+      document.querySelector('[data-baseweb="calendar"]')
+    ).toBeInTheDocument();
 
     await user.keyboard('{Escape}');
     await user.click(screen.getByLabelText('Schedule period end'));
-    expect(document.querySelector('[data-baseweb="calendar"]')).toBeInTheDocument();
+    expect(
+      document.querySelector('[data-baseweb="calendar"]')
+    ).toBeInTheDocument();
   });
 
   it('shows per-option descriptions for overlap and catch-up policies', async () => {
