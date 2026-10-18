@@ -1,0 +1,49 @@
+import { type ComponentProps } from 'react';
+
+import { render, screen, userEvent } from '@/test-utils/rtl';
+
+import { DATE_TIME_FORMAT_MINUTES } from '../date-time-picker.constants';
+import DateTimePicker from '../date-time-picker';
+
+jest.mock('baseui/datepicker', () => ({
+  StatefulCalendar: () => <div data-testid="calendar" />,
+  TimePicker: () => <div data-testid="time-picker" />,
+}));
+
+describe(DateTimePicker.name, () => {
+  it('commits typed display-format input on blur', async () => {
+    const { user, onChange } = setup();
+    const input = screen.getByRole('textbox');
+    await user.clear(input);
+    await user.type(input, '2024/06/15 14:30');
+    await user.tab();
+    expect(onChange.mock.calls.at(-1)?.[0]).toMatch(/^\d{4}-\d{2}-\d{2}T/);
+  });
+
+  it('rejects partial input and clears when emptied', async () => {
+    const { user, onChange } = setup({ value: '2024-01-01T00:00:00.000Z' });
+    onChange.mockClear();
+    const input = screen.getByRole('textbox');
+    await user.clear(input);
+    await user.type(input, '2024/06');
+    await user.tab();
+    expect(onChange).not.toHaveBeenCalled();
+    await user.clear(input);
+    await user.tab();
+    expect(onChange).toHaveBeenCalledWith(undefined);
+  });
+});
+
+function setup(props: Partial<ComponentProps<typeof DateTimePicker>> = {}) {
+  const onChange = jest.fn();
+  const user = userEvent.setup();
+  render(
+    <DateTimePicker
+      aria-label="When"
+      displayFormat={DATE_TIME_FORMAT_MINUTES}
+      onChange={onChange}
+      {...props}
+    />
+  );
+  return { user, onChange };
+}
