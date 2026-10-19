@@ -1,6 +1,7 @@
 # Snyk Open Source policy for the release composition gate (P5).
-# High/Critical findings must be fixed or dismissed here with owner + expiry.
-# See .agents/features/nextjs-upgrade/design.md § Publish composition gate.
+# High/Critical findings must be fixed or dismissed here. To dismiss, add an
+# ignore entry below with the finding ID, a reason, an owner, and an expiry
+# of 6-12 months.
 version: v1.25.0
 exclude:
   global: []

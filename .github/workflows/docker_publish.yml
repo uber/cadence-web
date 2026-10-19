@@ -23,7 +23,9 @@ jobs:
       # Composition gate: fail-closed Open Source High/Critical on the release lockfile.
       # Dismissals live in in-repo `.snyk` (owner + expiry). Requires SNYK_TOKEN.
       - name: Snyk Open Source (fail-closed High/Critical)
-        uses: snyk/actions/node@master
+        # Pinned SHA (snyk/actions master 2026-10-07): this job holds
+        # SNYK_TOKEN and runs after Docker Hub login, so no floating refs.
+        uses: snyk/actions/node@11b673cfb4b0dc0d860a1323caa199d54950dcce
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
@@ -66,7 +68,7 @@ jobs:
       # Container (Debian layer) scan is report-only until sibling A1 lands.
       - name: Snyk Container (report-only until A1)
         continue-on-error: true
-        uses: snyk/actions/docker@master
+        uses: snyk/actions/docker@11b673cfb4b0dc0d860a1323caa199d54950dcce
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
