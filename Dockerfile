@@ -21,8 +21,15 @@ RUN apt-get update \
 COPY package.json package-lock.json ./
 RUN npm ci
 # Composition gate: fail dishonest Next / React / postcss trees before build.
-RUN npm ls --depth=0 "next@>=15.5 <16" "react@^19" "react-dom@^19" \
-  && npm ls "postcss@>=8.5.0"
+# One spec per npm ls call: multiple specs are an OR filter that exits 0
+# when any one matches, so a missing/wrong react would pass a combined call.
+# postcss is transitive-only, where npm ls ignores version ranges (npm 11),
+# so query every copy and fail if any is below the floor.
+RUN npm ls --depth=0 "next@>=15.5 <16" \
+  && npm ls --depth=0 "react@^19" \
+  && npm ls --depth=0 "react-dom@^19" \
+  && npm query "#postcss:not(:semver(>=8.5.0))" > /tmp/below-floor.json \
+  && ! grep -q '"name"' /tmp/below-floor.json
 RUN npm run install-idl
 COPY . .
 
