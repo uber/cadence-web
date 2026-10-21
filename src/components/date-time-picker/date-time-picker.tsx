@@ -8,7 +8,7 @@ import {
   type MouseEvent,
 } from 'react';
 
-import { Calendar, TimePicker } from 'baseui/datepicker';
+import { Calendar } from 'baseui/datepicker';
 import { Input } from 'baseui/input';
 import { Popover } from 'baseui/popover';
 
@@ -76,7 +76,6 @@ export default function DateTimePicker({
   };
 
   const selectedDate = value ? dayjs(value).toDate() : null;
-  const baseDay = selectedDate ? dayjs(selectedDate) : dayjs().startOf('day');
 
   return (
     <Popover
@@ -98,35 +97,21 @@ export default function DateTimePicker({
             value={selectedDate}
             minDate={minDate}
             autoFocusCalendar={calendarFocused}
+            timeSelectStart
+            trapTabbing
+            overrides={{
+              TimeSelect: {
+                props: {
+                  size: 'compact',
+                  creatable: true,
+                  nullable: clearable,
+                  disabled,
+                },
+              },
+            }}
             onChange={({ date }) => {
               const d = Array.isArray(date) ? date[0] : date;
-              if (!d) return commitDate(null);
-              commitDate(
-                dayjs(d)
-                  .hour(baseDay.hour())
-                  .minute(baseDay.minute())
-                  .second(baseDay.second())
-                  .millisecond(0)
-                  .toDate()
-              );
-            }}
-          />
-          <TimePicker
-            size="compact"
-            creatable
-            nullable={clearable}
-            disabled={disabled}
-            value={selectedDate}
-            onChange={(time) => {
-              if (!time) return commitDate(null);
-              commitDate(
-                baseDay
-                  .hour(time.getHours())
-                  .minute(time.getMinutes())
-                  .second(time.getSeconds())
-                  .millisecond(0)
-                  .toDate()
-              );
+              commitDate(d ?? null);
             }}
           />
         </styled.PopoverBody>

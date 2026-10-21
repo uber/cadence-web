@@ -31,7 +31,6 @@ jest.mock('baseui/datepicker', () => ({
       </button>
     );
   },
-  TimePicker: () => <div data-testid="time-picker" />,
 }));
 
 describe(DateTimePicker.name, () => {
