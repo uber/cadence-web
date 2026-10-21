@@ -1,10 +1,7 @@
-import { createRequire } from 'module';
-
 import { ESLint } from 'eslint';
 
 import baseuiIncompatibleComponents from '../baseui-incompatible-components';
-
-const requireEslintrc = createRequire(__filename);
+import eslintrc from '../../.eslintrc.js';
 
 describe('baseui incompatible components', () => {
   it.each([
@@ -58,8 +55,6 @@ describe('baseui incompatible components', () => {
   });
 
   it('is wired into .eslintrc.js', () => {
-    const eslintrc = requireEslintrc('../../.eslintrc.js');
-
     expect(eslintrc.rules['no-restricted-imports']).toEqual([
       'error',
       baseuiIncompatibleComponents,
