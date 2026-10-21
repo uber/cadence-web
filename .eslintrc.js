@@ -35,53 +35,9 @@ module.exports = {
     'import/no-unresolved': 'error',
     'import/no-duplicates': 'error',
     'import/named': 'error',
-    // React 19: stock DatePicker → MaskedInput → react-input-mask → findDOMNode.
-    // Use DateTimePicker or StatefulCalendar / Calendar / TimePicker instead.
     'no-restricted-imports': [
       'error',
-      {
-        paths: [
-          {
-            name: 'react-input-mask',
-            message:
-              'react-input-mask uses findDOMNode (removed in React 19). Do not import it.',
-          },
-          {
-            name: 'baseui/datepicker',
-            importNames: [
-              'DatePicker',
-              'Datepicker',
-              'StatefulDatePicker',
-              'Datepicker_DO_NOT_USE',
-            ],
-            message:
-              'Banned for React 19. Use @/components/date-time-picker or StatefulCalendar / Calendar / TimePicker / TimezonePicker. DatepickerOverrides remains allowed for Calendar styling.',
-          },
-          {
-            name: 'baseui/input',
-            importNames: ['MaskedInput'],
-            message:
-              'MaskedInput pulls react-input-mask (findDOMNode). Use baseui Input instead.',
-          },
-        ],
-        patterns: [
-          {
-            group: ['baseui/datepicker/*', 'baseui/datepicker/**'],
-            message:
-              'Do not deep-import baseui/datepicker. Use DateTimePicker or allowed calendar/time exports from baseui/datepicker.',
-          },
-          {
-            group: [
-              'baseui/input/masked-input',
-              'baseui/input/masked-input/*',
-              '**/react-input-mask',
-              '**/react-input-mask/*',
-            ],
-            message:
-              'Masked input / react-input-mask is banned (findDOMNode / React 19).',
-          },
-        ],
-      },
+      require('./eslint/baseui-incompatible-components'),
     ],
     'import/order': [
       'error',
