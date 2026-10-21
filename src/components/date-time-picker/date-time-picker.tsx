@@ -11,7 +11,7 @@ import {
 
 import { Calendar, TimePicker } from 'baseui/datepicker';
 import { Input } from 'baseui/input';
-import { StatefulPopover } from 'baseui/popover';
+import { Popover } from 'baseui/popover';
 
 import dayjs from '@/utils/datetime/dayjs';
 
@@ -46,6 +46,10 @@ export default function DateTimePicker({
   const [draft, setDraft] = useState(() =>
     formatDateTimeValue(value, displayFormat)
   );
+  const [isOpen, setIsOpen] = useState(false);
+  // Same pattern as baseui DatePicker: click keeps caret in the input;
+  // ArrowDown/Enter moves focus into the calendar.
+  const [calendarFocused, setCalendarFocused] = useState(false);
   const inputElRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
@@ -56,6 +60,11 @@ export default function DateTimePicker({
     assignRef(inputRef, inputElRef.current);
     return () => assignRef(inputRef, null);
   }, [inputRef]);
+
+  const closePopover = () => {
+    setIsOpen(false);
+    setCalendarFocused(false);
+  };
 
   const commitClear = () => {
     if (!clearable) return;
@@ -81,18 +90,26 @@ export default function DateTimePicker({
   const baseDay = selectedDate ? dayjs(selectedDate) : dayjs().startOf('day');
 
   return (
-    <StatefulPopover
+    <Popover
       triggerType="click"
-      dismissOnClickOutside
       ignoreBoundary
       autoFocus={false}
       returnFocus={false}
-      content={() => (
+      isOpen={isOpen}
+      onClick={() => {
+        setIsOpen((open) => !open);
+        setCalendarFocused(false);
+      }}
+      onClickOutside={closePopover}
+      onEsc={closePopover}
+      content={
         <styled.PopoverBody>
           <Calendar
             density="high"
             value={selectedDate}
             minDate={minDate}
+            autoFocusCalendar={calendarFocused}
+            trapTabbing
             onChange={({ date }) => {
               const d = Array.isArray(date) ? date[0] : date;
               if (!d) return commitDate(null);
@@ -125,7 +142,7 @@ export default function DateTimePicker({
             }}
           />
         </styled.PopoverBody>
-      )}
+      }
     >
       <div>
         <Input
@@ -140,6 +157,17 @@ export default function DateTimePicker({
           value={draft}
           onChange={(e) => {
             setDraft(e.currentTarget.value);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'ArrowDown' || (isOpen && e.key === 'Enter')) {
+              e.preventDefault();
+              setIsOpen(true);
+              setCalendarFocused(true);
+              return;
+            }
+            if (isOpen && e.key === 'Tab') {
+              closePopover();
+            }
           }}
           overrides={{
             ClearIcon: {
@@ -176,6 +204,6 @@ export default function DateTimePicker({
           }}
         />
       </div>
-    </StatefulPopover>
+    </Popover>
   );
 }

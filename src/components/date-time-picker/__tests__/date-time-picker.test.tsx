@@ -1,4 +1,4 @@
-import { type ComponentProps } from 'react';
+import { useEffect, useRef, type ComponentProps } from 'react';
 
 import { render, screen, userEvent } from '@/test-utils/rtl';
 
@@ -7,21 +7,30 @@ import { DATE_TIME_FORMAT_MINUTES } from '../date-time-picker.constants';
 import formatDateTimeValue from '../helpers/format-date-time-value';
 
 jest.mock('baseui/datepicker', () => ({
-  Calendar: ({
+  Calendar: function MockCalendar({
     onChange,
+    autoFocusCalendar,
   }: {
     onChange?: (args: { date: Date }) => void;
-  }) => (
-    <button
-      type="button"
-      data-testid="calendar-pick-day"
-      onClick={() =>
-        onChange?.({ date: new Date('2024-06-15T00:00:00.000Z') })
-      }
-    >
-      pick day
-    </button>
-  ),
+    autoFocusCalendar?: boolean;
+  }) {
+    const ref = useRef<HTMLButtonElement>(null);
+    useEffect(() => {
+      if (autoFocusCalendar) ref.current?.focus();
+    }, [autoFocusCalendar]);
+    return (
+      <button
+        ref={ref}
+        type="button"
+        data-testid="calendar-pick-day"
+        onClick={() =>
+          onChange?.({ date: new Date('2024-06-15T00:00:00.000Z') })
+        }
+      >
+        pick day
+      </button>
+    );
+  },
   TimePicker: () => <div data-testid="time-picker" />,
 }));
 
@@ -105,6 +114,15 @@ describe(DateTimePicker.name, () => {
     await user.keyboard('2024/06/15 14:30');
     await user.tab();
     expect(onChange.mock.calls.at(-1)?.[0]).toMatch(/^\d{4}-\d{2}-\d{2}T/);
+  });
+
+  it('moves focus to the calendar on ArrowDown', async () => {
+    const { user } = setup({ value: '2024-01-01T00:00:00.000Z' });
+    const input = screen.getByRole('textbox');
+    await user.click(input);
+    expect(input).toHaveFocus();
+    await user.keyboard('{ArrowDown}');
+    expect(screen.getByTestId('calendar-pick-day')).toHaveFocus();
   });
 
   it('does not re-commit on blur when draft matches formatted value', async () => {
