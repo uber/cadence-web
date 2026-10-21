@@ -183,7 +183,14 @@ describe(DateTimePicker.name, () => {
     expect(inputRef.current).toBeInstanceOf(HTMLInputElement);
   });
 
-  it('renders a placeholder when provided', () => {
+  it('defaults placeholder to the display format', () => {
+    setup({});
+    expect(
+      screen.getByPlaceholderText('YYYY/MM/DD HH:mm')
+    ).toBeInTheDocument();
+  });
+
+  it('renders a custom placeholder when provided', () => {
     setup({ placeholder: 'Select date and time' });
     expect(
       screen.getByPlaceholderText('Select date and time')

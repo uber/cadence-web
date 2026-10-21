@@ -32,7 +32,7 @@ export default function DateTimePicker({
   error,
   id,
   'aria-label': ariaLabel,
-  placeholder,
+  placeholder = displayFormat,
   size = 'compact',
   inputRef,
 }: Props) {
