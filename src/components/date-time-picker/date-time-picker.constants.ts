@@ -1,4 +1,4 @@
-/** Closed display formats (dayjs tokens). Sites must not pass free strings. */
+/** Closed dayjs tokens. Do not accept free-form format strings. */
 export const DATE_TIME_FORMAT_MINUTES = 'YYYY/MM/DD HH:mm' as const;
 export const DATE_TIME_FORMAT_SECONDS = 'YYYY-MM-DD HH:mm:ss' as const;
 

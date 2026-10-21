@@ -62,7 +62,6 @@ export default function DateTimePicker({
       ignoreBoundary
       content={() => (
         <styled.PopoverBody>
-          {/* Controlled Calendar — StatefulCalendar ignores `value` in baseui 18. */}
           <Calendar
             density="high"
             value={selectedDate}
@@ -104,8 +103,7 @@ export default function DateTimePicker({
       <div>
         <Input
           id={id}
-          // baseui Input types inputRef as RefObject; RHF often passes a callback ref.
-          // @ts-expect-error callback refs are runtime-supported
+          // @ts-expect-error baseui types RefObject; callback refs work at runtime
           inputRef={inputRef}
           aria-label={ariaLabel}
           size={size}
@@ -121,7 +119,7 @@ export default function DateTimePicker({
               else setDraft(formatted);
               return;
             }
-            // Unchanged draft — do not re-parse (would drop seconds/ms under minutes format).
+            // Skip re-parse when unchanged (minutes format would drop seconds/ms).
             if (draft === formatted) return;
             const iso = parseDateTimeValue(draft, displayFormat);
             if (iso && !isBeforeMin(dayjs(iso).toDate())) {

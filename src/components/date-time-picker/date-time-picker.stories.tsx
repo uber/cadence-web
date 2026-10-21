@@ -46,7 +46,6 @@ const meta = {
   ],
   render: function Render(args: Props) {
     const [{ value }, updateArgs] = useArgs<Props>();
-    // Storybook date controls emit a timestamp number, not a Date.
     const minDate =
       args.minDate == null
         ? undefined

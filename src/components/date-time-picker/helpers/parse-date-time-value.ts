@@ -2,9 +2,7 @@ import dayjs from '@/utils/datetime/dayjs';
 
 import { type DateTimeDisplayFormat } from '../date-time-picker.types';
 
-/**
- * Strict display-format parse only (no ISO/Z paste). Returns UTC ISO or undefined.
- */
+/** Strict display-format parse only. No ISO/Z paste. */
 export default function parseDateTimeValue(
   text: string,
   displayFormat: DateTimeDisplayFormat
