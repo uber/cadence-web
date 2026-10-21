@@ -117,14 +117,33 @@ export default function DateTimePicker({
                 props: {
                   size: 'compact',
                   creatable: true,
-                  nullable: clearable,
+                  nullable: false,
                   disabled,
                 },
               },
             }}
             onChange={({ date }) => {
               const d = Array.isArray(date) ? date[0] : date;
-              commitDate(d ?? null);
+              if (!d) return commitDate(null);
+              if (!selectedDate) return commitDate(d);
+
+              const emitted = dayjs(d);
+              const current = dayjs(selectedDate);
+              const timeChanged =
+                emitted.isSame(current, 'day') &&
+                (emitted.hour() !== current.hour() ||
+                  emitted.minute() !== current.minute() ||
+                  emitted.second() !== current.second());
+              if (timeChanged) return commitDate(d);
+
+              commitDate(
+                emitted
+                  .hour(current.hour())
+                  .minute(current.minute())
+                  .second(current.second())
+                  .millisecond(0)
+                  .toDate()
+              );
             }}
           />
         </styled.PopoverBody>
@@ -175,7 +194,7 @@ export default function DateTimePicker({
           onBlur={() => {
             const formatted = formatDateTimeValue(value, displayFormat);
             if (!draft.trim()) {
-              if (clearable) onChange(undefined);
+              if (clearable) commitClear();
               else setDraft(formatted);
               return;
             }

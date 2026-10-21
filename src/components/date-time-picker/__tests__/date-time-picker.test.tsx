@@ -167,6 +167,16 @@ describe(DateTimePicker.name, () => {
     expect(onChange).toHaveBeenCalledWith(maxDate.toISOString());
   });
 
+  it('keeps the committed time when a calendar day is picked', async () => {
+    const value = '2024-06-20T14:30:00.000Z';
+    const { user, onChange } = setup({ value });
+    onChange.mockClear();
+    await user.click(screen.getByRole('textbox'));
+    await user.click(screen.getByTestId('calendar-pick-day'));
+    const iso = onChange.mock.calls.at(-1)?.[0] as string;
+    expect(iso).toMatch(/^2024-06-15T14:30:00/);
+  });
+
   it('forwards an object inputRef to the underlying input', () => {
     const inputRef = { current: null as HTMLInputElement | null };
     setup({ inputRef });
