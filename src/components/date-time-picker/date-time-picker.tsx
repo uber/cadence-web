@@ -38,12 +38,16 @@ export default function DateTimePicker({
   const [draft, setDraft] = useState(() =>
     formatDateTimeValue(value, displayFormat)
   );
+  const [selectedDate, setSelectedDate] = useState<Date | null>(() =>
+    value ? dayjs(value).toDate() : null
+  );
   const [isOpen, setIsOpen] = useState(false);
   const [calendarFocused, setCalendarFocused] = useState(false);
   const inputElRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     setDraft(formatDateTimeValue(value, displayFormat));
+    setSelectedDate(value ? dayjs(value).toDate() : null);
   }, [value, displayFormat]);
 
   useEffect(() => {
@@ -61,6 +65,7 @@ export default function DateTimePicker({
   const commitClear = () => {
     if (!clearable) return;
     setDraft('');
+    setSelectedDate(null);
     onChange(undefined);
   };
 
@@ -73,11 +78,10 @@ export default function DateTimePicker({
     if (minDate && dayjs(clamped).isBefore(dayjs(minDate))) clamped = minDate;
     if (maxDate && dayjs(clamped).isAfter(dayjs(maxDate))) clamped = maxDate;
     const iso = dayjs(clamped).toISOString();
-    onChange(iso);
+    setSelectedDate(clamped);
     setDraft(formatDateTimeValue(iso, displayFormat));
+    onChange(iso);
   };
-
-  const selectedDate = value ? dayjs(value).toDate() : null;
 
   return (
     <Popover
@@ -97,6 +101,7 @@ export default function DateTimePicker({
           <Calendar
             density="high"
             value={selectedDate}
+            highlightedDate={selectedDate ?? undefined}
             minDate={minDate}
             maxDate={maxDate}
             autoFocusCalendar={calendarFocused}

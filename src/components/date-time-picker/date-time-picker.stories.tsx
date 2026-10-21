@@ -1,5 +1,6 @@
+import { useEffect, useState } from 'react';
+
 import type { Meta, StoryObj } from '@storybook/nextjs';
-import { useArgs } from 'storybook/preview-api';
 import { fn } from 'storybook/test';
 
 import dayjs from '@/utils/datetime/dayjs';
@@ -14,6 +15,27 @@ import { type Props } from './date-time-picker.types';
 function toDate(value: Date | number | undefined): Date | undefined {
   if (value == null) return undefined;
   return value instanceof Date ? value : new Date(value);
+}
+
+function StatefulDateTimePicker(args: Props) {
+  const [value, setValue] = useState(args.value);
+
+  useEffect(() => {
+    setValue(args.value);
+  }, [args.value]);
+
+  return (
+    <DateTimePicker
+      {...args}
+      minDate={toDate(args.minDate as Date | number | undefined)}
+      maxDate={toDate(args.maxDate as Date | number | undefined)}
+      value={value}
+      onChange={(next) => {
+        setValue(next);
+        args.onChange(next);
+      }}
+    />
+  );
 }
 
 const meta = {
@@ -58,22 +80,7 @@ const meta = {
       </div>
     ),
   ],
-  render: function Render(args: Props) {
-    const [{ value }, updateArgs] = useArgs<Props>();
-
-    return (
-      <DateTimePicker
-        {...args}
-        minDate={toDate(args.minDate as Date | number | undefined)}
-        maxDate={toDate(args.maxDate as Date | number | undefined)}
-        value={value}
-        onChange={(next) => {
-          args.onChange(next);
-          updateArgs({ value: next });
-        }}
-      />
-    );
-  },
+  render: (args: Props) => <StatefulDateTimePicker {...args} />,
 } satisfies Meta<typeof DateTimePicker>;
 
 export default meta;
@@ -88,21 +95,10 @@ export const SecondsFormat: Story = {
 
 export const BoundedRange: Story = {
   render: function BoundedRangeRender(args: Props) {
-    const [{ value }, updateArgs] = useArgs<Props>();
     const minDate = new Date();
     const maxDate = dayjs(minDate).add(5, 'day').toDate();
-
     return (
-      <DateTimePicker
-        {...args}
-        minDate={minDate}
-        maxDate={maxDate}
-        value={value}
-        onChange={(next) => {
-          args.onChange(next);
-          updateArgs({ value: next });
-        }}
-      />
+      <StatefulDateTimePicker {...args} minDate={minDate} maxDate={maxDate} />
     );
   },
 };
