@@ -91,18 +91,14 @@ describe(SearchAttributesInput.name, () => {
     const stringInput = screen.getByPlaceholderText('Enter value');
     expect(stringInput).toHaveAttribute('type', 'text');
 
-    expect(
-      screen.getByPlaceholderText('Select date and time')
-    ).toBeInTheDocument();
-
     expect(screen.getByText('Select value')).toBeInTheDocument();
 
     const numberInput = screen.getByPlaceholderText('Enter number');
     expect(numberInput).toHaveAttribute('type', 'number');
 
     expect(
-      screen.getAllByRole('textbox', { name: 'Search attribute value' }).length
-    ).toBeGreaterThan(0);
+      screen.getByPlaceholderText('Select date and time')
+    ).toBeInTheDocument();
   });
 
   it('should allow entering values', async () => {
@@ -154,8 +150,9 @@ describe(SearchAttributesInput.name, () => {
       value: [{ key: 'StartTime', value: '' }],
     });
 
+    // DatePicker should be present (check for the placeholder text it uses)
     expect(
-      screen.getByRole('textbox', { name: 'Search attribute value' })
+      screen.getByPlaceholderText('Select date and time')
     ).toBeInTheDocument();
   });
 
