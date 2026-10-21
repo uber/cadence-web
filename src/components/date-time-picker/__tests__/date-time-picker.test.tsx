@@ -155,6 +155,18 @@ describe(DateTimePicker.name, () => {
     expect(onChange).toHaveBeenCalledWith(minDate.toISOString());
   });
 
+  it('clamps calendar day selection to maxDate when the pick is too late', async () => {
+    const maxDate = new Date('2024-06-10T12:00:00.000Z');
+    const { user, onChange } = setup({
+      value: '2024-06-01T00:00:00.000Z',
+      maxDate,
+    });
+    onChange.mockClear();
+    await user.click(screen.getByRole('textbox'));
+    await user.click(screen.getByTestId('calendar-pick-day'));
+    expect(onChange).toHaveBeenCalledWith(maxDate.toISOString());
+  });
+
   it('forwards an object inputRef to the underlying input', () => {
     const inputRef = { current: null as HTMLInputElement | null };
     setup({ inputRef });

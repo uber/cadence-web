@@ -9,6 +9,7 @@ export type Props = {
   onChange: (next: string | undefined) => void;
   displayFormat?: DateTimeDisplayFormat;
   minDate?: Date;
+  maxDate?: Date;
   clearable?: boolean;
   disabled?: boolean;
   error?: boolean;

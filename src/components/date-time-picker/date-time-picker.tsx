@@ -26,6 +26,7 @@ export default function DateTimePicker({
   onChange,
   displayFormat = DATE_TIME_FORMAT_MINUTES,
   minDate,
+  maxDate,
   clearable = true,
   disabled,
   error,
@@ -68,8 +69,9 @@ export default function DateTimePicker({
       commitClear();
       return;
     }
-    const clamped =
-      minDate && dayjs(next).isBefore(dayjs(minDate)) ? minDate : next;
+    let clamped = next;
+    if (minDate && dayjs(clamped).isBefore(dayjs(minDate))) clamped = minDate;
+    if (maxDate && dayjs(clamped).isAfter(dayjs(maxDate))) clamped = maxDate;
     const iso = dayjs(clamped).toISOString();
     onChange(iso);
     setDraft(formatDateTimeValue(iso, displayFormat));
@@ -96,6 +98,7 @@ export default function DateTimePicker({
             density="high"
             value={selectedDate}
             minDate={minDate}
+            maxDate={maxDate}
             autoFocusCalendar={calendarFocused}
             timeSelectStart
             trapTabbing

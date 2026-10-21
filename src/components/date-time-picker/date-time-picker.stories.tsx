@@ -2,12 +2,19 @@ import type { Meta, StoryObj } from '@storybook/nextjs';
 import { useArgs } from 'storybook/preview-api';
 import { fn } from 'storybook/test';
 
+import dayjs from '@/utils/datetime/dayjs';
+
 import DateTimePicker from './date-time-picker';
 import {
   DATE_TIME_FORMAT_MINUTES,
   DATE_TIME_FORMAT_SECONDS,
 } from './date-time-picker.constants';
 import { type Props } from './date-time-picker.types';
+
+function toDate(value: Date | number | undefined): Date | undefined {
+  if (value == null) return undefined;
+  return value instanceof Date ? value : new Date(value);
+}
 
 const meta = {
   title: 'Components/DateTimePicker',
@@ -42,6 +49,7 @@ const meta = {
       options: ['mini', 'compact', 'default', 'large'],
     },
     minDate: { control: 'date' },
+    maxDate: { control: 'date' },
   },
   decorators: [
     (Story) => (
@@ -52,17 +60,12 @@ const meta = {
   ],
   render: function Render(args: Props) {
     const [{ value }, updateArgs] = useArgs<Props>();
-    const minDate =
-      args.minDate == null
-        ? undefined
-        : args.minDate instanceof Date
-          ? args.minDate
-          : new Date(args.minDate as unknown as number);
 
     return (
       <DateTimePicker
         {...args}
-        minDate={minDate}
+        minDate={toDate(args.minDate as Date | number | undefined)}
+        maxDate={toDate(args.maxDate as Date | number | undefined)}
         value={value}
         onChange={(next) => {
           args.onChange(next);
@@ -76,14 +79,6 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Empty: Story = {};
-
-export const WithValue: Story = {
-  args: {
-    value: '2024-06-15T14:30:00.000Z',
-  },
-};
-
 export const SecondsFormat: Story = {
   args: {
     value: '2024-06-15T14:30:45.000Z',
@@ -91,10 +86,24 @@ export const SecondsFormat: Story = {
   },
 };
 
-export const MinDate: Story = {
-  args: {
-    value: '2024-06-15T14:30:00.000Z',
-    minDate: new Date('2024-06-01T00:00:00.000Z'),
+export const BoundedRange: Story = {
+  render: function BoundedRangeRender(args: Props) {
+    const [{ value }, updateArgs] = useArgs<Props>();
+    const minDate = new Date();
+    const maxDate = dayjs(minDate).add(5, 'day').toDate();
+
+    return (
+      <DateTimePicker
+        {...args}
+        minDate={minDate}
+        maxDate={maxDate}
+        value={value}
+        onChange={(next) => {
+          args.onChange(next);
+          updateArgs({ value: next });
+        }}
+      />
+    );
   },
 };
 
