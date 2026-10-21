@@ -15,6 +15,7 @@ export type Props = {
   error?: boolean;
   id?: string;
   'aria-label'?: string;
+  placeholder?: string;
   size?: 'compact' | 'default' | 'large' | 'mini';
   inputRef?: Ref<HTMLInputElement>;
 };

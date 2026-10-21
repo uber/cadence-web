@@ -182,6 +182,13 @@ describe(DateTimePicker.name, () => {
     setup({ inputRef });
     expect(inputRef.current).toBeInstanceOf(HTMLInputElement);
   });
+
+  it('renders a placeholder when provided', () => {
+    setup({ placeholder: 'Select date and time' });
+    expect(
+      screen.getByPlaceholderText('Select date and time')
+    ).toBeInTheDocument();
+  });
 });
 
 function setup(props: Partial<ComponentProps<typeof DateTimePicker>> = {}) {
