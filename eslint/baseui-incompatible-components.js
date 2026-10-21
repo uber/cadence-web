@@ -1,16 +1,9 @@
-/**
- * Base UI incompatible components (React 19): DatePicker → MaskedInput →
- * react-input-mask → findDOMNode. Prefer DateTimePicker or StatefulCalendar /
- * Calendar / TimePicker / TimezonePicker; DatepickerOverrides stays allowed.
- *
- * Consumed by `.eslintrc.js` as `no-restricted-imports` options.
- */
 module.exports = {
   paths: [
     {
       name: 'react-input-mask',
       message:
-        'Base UI incompatible: react-input-mask uses findDOMNode (removed in React 19). Do not import it.',
+        'Do not import react-input-mask. It uses findDOMNode, which React 19 removed.',
     },
     {
       name: 'baseui/datepicker',
@@ -21,20 +14,20 @@ module.exports = {
         'Datepicker_DO_NOT_USE',
       ],
       message:
-        'Base UI incompatible component. Use @/components/date-time-picker or StatefulCalendar / Calendar / TimePicker / TimezonePicker. DatepickerOverrides remains allowed for Calendar styling.',
+        'Do not import this DatePicker. Use @/components/date-time-picker or StatefulCalendar, Calendar, TimePicker, or TimezonePicker. DatepickerOverrides is still allowed for Calendar styling.',
     },
     {
       name: 'baseui/input',
       importNames: ['MaskedInput'],
       message:
-        'Base UI incompatible component: MaskedInput pulls react-input-mask (findDOMNode). Use baseui Input instead.',
+        'Do not import MaskedInput. It pulls in react-input-mask, which uses findDOMNode. Use baseui Input instead.',
     },
   ],
   patterns: [
     {
       group: ['baseui/datepicker/*', 'baseui/datepicker/**'],
       message:
-        'Do not deep-import baseui/datepicker. Use DateTimePicker or allowed calendar/time exports from baseui/datepicker.',
+        'Do not deep-import baseui/datepicker. Use DateTimePicker or allowed calendar and time exports from baseui/datepicker.',
     },
     {
       group: [
@@ -44,7 +37,7 @@ module.exports = {
         '**/react-input-mask/*',
       ],
       message:
-        'Base UI incompatible: masked input / react-input-mask is banned (findDOMNode / React 19).',
+        'Do not import masked input or react-input-mask. They use findDOMNode, which React 19 removed.',
     },
   ],
 };
