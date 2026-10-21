@@ -27,7 +27,6 @@ function assignRef<T>(ref: Ref<T> | undefined, value: T | null) {
     ref(value);
     return;
   }
-  // RefObject.current is typed readonly; callback/object refs both work at runtime.
   (ref as { current: T | null }).current = value;
 }
 
@@ -53,7 +52,6 @@ export default function DateTimePicker({
     setDraft(formatDateTimeValue(value, displayFormat));
   }, [value, displayFormat]);
 
-  // baseui BaseInput reads inputRef.current; a callback ref has no .current.
   useEffect(() => {
     assignRef(inputRef, inputElRef.current);
     return () => assignRef(inputRef, null);
@@ -87,7 +85,6 @@ export default function DateTimePicker({
       triggerType="click"
       dismissOnClickOutside
       ignoreBoundary
-      // Keep caret in the input on first click (baseui defaults autoFocus).
       autoFocus={false}
       returnFocus={false}
       content={() => (
@@ -139,7 +136,6 @@ export default function DateTimePicker({
           disabled={disabled}
           error={error}
           clearable={clearable}
-          // Clearing is the X / empty blur only — not Escape.
           clearOnEscape={false}
           value={draft}
           onChange={(e) => {
@@ -148,7 +144,6 @@ export default function DateTimePicker({
           overrides={{
             ClearIcon: {
               props: {
-                // Replace baseui clear: stop popover toggle and commit empty.
                 onMouseDown: (e: MouseEvent) => e.stopPropagation(),
                 onClick: (e: MouseEvent) => {
                   e.stopPropagation();
@@ -170,7 +165,7 @@ export default function DateTimePicker({
               else setDraft(formatted);
               return;
             }
-            // Skip re-parse when unchanged (minutes format would drop seconds/ms).
+            // Minutes format would drop seconds/ms if we re-parse an unchanged draft.
             if (draft === formatted) return;
             const iso = parseDateTimeValue(draft, displayFormat);
             if (iso && !isBeforeMin(dayjs(iso).toDate())) {

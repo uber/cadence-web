@@ -13,8 +13,7 @@ const meta = {
   title: 'Components/DateTimePicker',
   component: DateTimePicker,
   parameters: {
-    // `centered` puts the input mid-viewport so the calendar opens into the
-    // bottom half and Storybook's preview overflow clips it.
+    // Avoid layout:centered. It clips the calendar under the preview edge.
     layout: 'padded',
     docs: {
       story: {
