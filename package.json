@@ -11,7 +11,6 @@
     "post-build-standalone": "tsx scripts/update-server-host.ts",
     "start": "CADENCE_WEB_PORT=${CADENCE_WEB_PORT:-8088} next start -p ${CADENCE_WEB_PORT:-8088} -H ${CADENCE_WEB_HOSTNAME:-0.0.0.0}",
     "lint": "next lint",
-    "lint:datepicker-ban": "node scripts/assert-datepicker-ban.js",
     "typecheck": "tsc --noemit",
     "install-idl": "mkdir -p node_modules && cd node_modules && npx --yes github:Assem-Uber/tiged#release/v3.0.0-rc.01 https://github.com/cadence-workflow/cadence-idl#$npm_package_config_cadence_idl_version cadence-idl --force",
     "generate:idl": "mkdir -p src/__generated__/idl && npm run generate:idl:proto && npm run generate:idl:proto:types",
