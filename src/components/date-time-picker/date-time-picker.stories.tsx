@@ -13,7 +13,14 @@ const meta = {
   title: 'Components/DateTimePicker',
   component: DateTimePicker,
   parameters: {
-    layout: 'centered',
+    // `centered` puts the input mid-viewport so the calendar opens into the
+    // bottom half and Storybook's preview overflow clips it.
+    layout: 'padded',
+    docs: {
+      story: {
+        height: '520px',
+      },
+    },
   },
   tags: ['autodocs'],
   args: {
@@ -39,7 +46,7 @@ const meta = {
   },
   decorators: [
     (Story) => (
-      <div style={{ minWidth: 280, minHeight: 420 }}>
+      <div style={{ minWidth: 280, minHeight: 520 }}>
         <Story />
       </div>
     ),
