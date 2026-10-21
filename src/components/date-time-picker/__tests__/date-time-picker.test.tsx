@@ -22,15 +22,32 @@ describe(DateTimePicker.name, () => {
 
   it('rejects partial input and clears when emptied', async () => {
     const { user, onChange } = setup({ value: '2024-01-01T00:00:00.000Z' });
-    onChange.mockClear();
     const input = screen.getByRole('textbox');
     await user.clear(input);
+    onChange.mockClear();
     await user.type(input, '2024/06');
     await user.tab();
     expect(onChange).not.toHaveBeenCalled();
     await user.clear(input);
-    await user.tab();
     expect(onChange).toHaveBeenCalledWith(undefined);
+  });
+
+  it('commits clear from the clear icon without waiting for blur', async () => {
+    const { user, onChange } = setup({ value: '2024-01-01T00:00:00.000Z' });
+    onChange.mockClear();
+    await user.click(screen.getByLabelText('Clear value'));
+    expect(onChange).toHaveBeenCalledWith(undefined);
+    expect(screen.getByRole('textbox')).toHaveValue('');
+  });
+
+  it('does not clear on Escape', async () => {
+    const { user, onChange } = setup({ value: '2024-01-01T00:00:00.000Z' });
+    onChange.mockClear();
+    const input = screen.getByRole('textbox');
+    await user.click(input);
+    await user.keyboard('{Escape}');
+    expect(onChange).not.toHaveBeenCalled();
+    expect(input).not.toHaveValue('');
   });
 
   it('does not re-commit on blur when draft matches formatted value', async () => {

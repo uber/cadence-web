@@ -1,6 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type MouseEvent,
+  type Ref,
+} from 'react';
 
 import { Calendar, TimePicker } from 'baseui/datepicker';
 import { Input } from 'baseui/input';
@@ -13,6 +20,20 @@ import { styled } from './date-time-picker.styles';
 import { type Props } from './date-time-picker.types';
 import formatDateTimeValue from './helpers/format-date-time-value';
 import parseDateTimeValue from './helpers/parse-date-time-value';
+
+function assignRef<T>(ref: Ref<T> | undefined, value: T | null) {
+  if (!ref) return;
+  if (typeof ref === 'function') {
+    ref(value);
+    return;
+  }
+  // RefObject.current is typed readonly; callback/object refs both work at runtime.
+  (ref as { current: T | null }).current = value;
+}
+
+const stopEscapePropagation = (e: globalThis.KeyboardEvent) => {
+  if (e.key === 'Escape') e.stopPropagation();
+};
 
 export default function DateTimePicker({
   value,
@@ -30,10 +51,28 @@ export default function DateTimePicker({
   const [draft, setDraft] = useState(() =>
     formatDateTimeValue(value, displayFormat)
   );
+  const inputElRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     setDraft(formatDateTimeValue(value, displayFormat));
   }, [value, displayFormat]);
+
+  const setInputRef = useCallback(
+    (node: HTMLInputElement | null) => {
+      if (inputElRef.current) {
+        inputElRef.current.removeEventListener(
+          'keydown',
+          stopEscapePropagation
+        );
+      }
+      inputElRef.current = node;
+      // Native listener (same path as baseui clearOnEscape) so Escape does not
+      // bubble to a parent modal after we disable clear-on-escape.
+      if (node) node.addEventListener('keydown', stopEscapePropagation);
+      assignRef(inputRef, node);
+    },
+    [inputRef]
+  );
 
   const isBeforeMin = (next: Date) =>
     Boolean(minDate && dayjs(next).isBefore(dayjs(minDate)));
@@ -104,14 +143,36 @@ export default function DateTimePicker({
         <Input
           id={id}
           // @ts-expect-error baseui types RefObject; callback refs work at runtime
-          inputRef={inputRef}
+          inputRef={setInputRef}
           aria-label={ariaLabel}
           size={size}
           disabled={disabled}
           error={error}
           clearable={clearable}
+          // Clearing is the X / empty blur only — not Escape.
+          clearOnEscape={false}
           value={draft}
-          onChange={(e) => setDraft(e.currentTarget.value)}
+          onChange={(e) => {
+            const next = e.currentTarget.value;
+            setDraft(next);
+            // Empty input (including baseui clearValue) must commit immediately so
+            // parent value cannot repopulate the draft when the popover opens.
+            if (clearable && !next.trim()) onChange(undefined);
+          }}
+          overrides={{
+            ClearIcon: {
+              props: {
+                // Replace baseui clear click: stop popover toggle and commit empty.
+                onMouseDown: (e: MouseEvent) => e.stopPropagation(),
+                onClick: (e: MouseEvent) => {
+                  e.stopPropagation();
+                  if (!clearable) return;
+                  setDraft('');
+                  onChange(undefined);
+                },
+              },
+            },
+          }}
           onBlur={() => {
             const formatted = formatDateTimeValue(value, displayFormat);
             if (!draft.trim()) {
