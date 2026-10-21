@@ -57,22 +57,22 @@ export default function DateTimePicker({
     return () => assignRef(inputRef, null);
   }, [inputRef]);
 
-  const isBeforeMin = (next: Date) =>
-    Boolean(minDate && dayjs(next).isBefore(dayjs(minDate)));
-
   const commitClear = () => {
     if (!clearable) return;
     setDraft('');
     onChange(undefined);
   };
 
+  // Calendar day picks keep the prior clock time; that can land before minDate
+  // on "today" (midnight < now) even though the day cell is enabled. Clamp.
   const commitDate = (next: Date | null | undefined) => {
     if (!next || Number.isNaN(next.getTime())) {
       commitClear();
       return;
     }
-    if (isBeforeMin(next)) return;
-    const iso = dayjs(next).toISOString();
+    const clamped =
+      minDate && dayjs(next).isBefore(dayjs(minDate)) ? minDate : next;
+    const iso = dayjs(clamped).toISOString();
     onChange(iso);
     setDraft(formatDateTimeValue(iso, displayFormat));
   };
@@ -168,12 +168,11 @@ export default function DateTimePicker({
             // Minutes format would drop seconds/ms if we re-parse an unchanged draft.
             if (draft === formatted) return;
             const iso = parseDateTimeValue(draft, displayFormat);
-            if (iso && !isBeforeMin(dayjs(iso).toDate())) {
-              onChange(iso);
-              setDraft(formatDateTimeValue(iso, displayFormat));
+            if (!iso) {
+              setDraft(formatted);
               return;
             }
-            setDraft(formatted);
+            commitDate(dayjs(iso).toDate());
           }}
         />
       </div>

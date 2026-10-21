@@ -7,7 +7,21 @@ import { DATE_TIME_FORMAT_MINUTES } from '../date-time-picker.constants';
 import formatDateTimeValue from '../helpers/format-date-time-value';
 
 jest.mock('baseui/datepicker', () => ({
-  Calendar: () => <div data-testid="calendar" />,
+  Calendar: ({
+    onChange,
+  }: {
+    onChange?: (args: { date: Date }) => void;
+  }) => (
+    <button
+      type="button"
+      data-testid="calendar-pick-day"
+      onClick={() =>
+        onChange?.({ date: new Date('2024-06-15T00:00:00.000Z') })
+      }
+    >
+      pick day
+    </button>
+  ),
   TimePicker: () => <div data-testid="time-picker" />,
 }));
 
@@ -100,6 +114,18 @@ describe(DateTimePicker.name, () => {
     await user.click(screen.getByRole('textbox'));
     await user.tab();
     expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it('clamps calendar day selection to minDate when kept time is too early', async () => {
+    const minDate = new Date('2024-06-15T18:00:00.000Z');
+    const { user, onChange } = setup({
+      value: '2024-06-20T00:00:00.000Z',
+      minDate,
+    });
+    onChange.mockClear();
+    await user.click(screen.getByRole('textbox'));
+    await user.click(screen.getByTestId('calendar-pick-day'));
+    expect(onChange).toHaveBeenCalledWith(minDate.toISOString());
   });
 
   it('forwards an object inputRef to the underlying input', () => {
