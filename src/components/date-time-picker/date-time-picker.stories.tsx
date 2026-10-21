@@ -13,7 +13,7 @@ const meta = {
   title: 'Components/DateTimePicker',
   component: DateTimePicker,
   parameters: {
-    // Avoid layout:centered. It clips the calendar under the preview edge.
+    // centered clips the calendar under the preview edge
     layout: 'padded',
     docs: {
       story: {

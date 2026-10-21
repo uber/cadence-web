@@ -47,8 +47,6 @@ export default function DateTimePicker({
     formatDateTimeValue(value, displayFormat)
   );
   const [isOpen, setIsOpen] = useState(false);
-  // Same pattern as baseui DatePicker: click keeps caret in the input;
-  // ArrowDown/Enter moves focus into the calendar.
   const [calendarFocused, setCalendarFocused] = useState(false);
   const inputElRef = useRef<HTMLInputElement | null>(null);
 
@@ -72,8 +70,6 @@ export default function DateTimePicker({
     onChange(undefined);
   };
 
-  // Calendar day picks keep the prior clock time; that can land before minDate
-  // on "today" (midnight < now) even though the day cell is enabled. Clamp.
   const commitDate = (next: Date | null | undefined) => {
     if (!next || Number.isNaN(next.getTime())) {
       commitClear();
@@ -193,7 +189,7 @@ export default function DateTimePicker({
               else setDraft(formatted);
               return;
             }
-            // Minutes format would drop seconds/ms if we re-parse an unchanged draft.
+            // Re-parsing an unchanged minutes draft would zero seconds/ms.
             if (draft === formatted) return;
             const iso = parseDateTimeValue(draft, displayFormat);
             if (!iso) {
