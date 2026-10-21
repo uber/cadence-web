@@ -8,25 +8,25 @@ describe('baseui incompatible components', () => {
       name: 'DatePicker from baseui/datepicker',
       code: `import { DatePicker } from 'baseui/datepicker';\n`,
       error:
-        "'DatePicker' import from 'baseui/datepicker' is restricted. Base UI incompatible component. Use @/components/date-time-picker or StatefulCalendar / Calendar / TimePicker / TimezonePicker. DatepickerOverrides remains allowed for Calendar styling.",
+        "'DatePicker' import from 'baseui/datepicker' is restricted. Do not import this DatePicker. Use @/components/date-time-picker or StatefulCalendar, Calendar, TimePicker, or TimezonePicker. DatepickerOverrides is still allowed for Calendar styling.",
     },
     {
       name: 'StatefulDatePicker from baseui/datepicker',
       code: `import { StatefulDatePicker } from 'baseui/datepicker';\n`,
       error:
-        "'StatefulDatePicker' import from 'baseui/datepicker' is restricted. Base UI incompatible component. Use @/components/date-time-picker or StatefulCalendar / Calendar / TimePicker / TimezonePicker. DatepickerOverrides remains allowed for Calendar styling.",
+        "'StatefulDatePicker' import from 'baseui/datepicker' is restricted. Do not import this DatePicker. Use @/components/date-time-picker or StatefulCalendar, Calendar, TimePicker, or TimezonePicker. DatepickerOverrides is still allowed for Calendar styling.",
     },
     {
       name: 'MaskedInput from baseui/input',
       code: `import { MaskedInput } from 'baseui/input';\n`,
       error:
-        "'MaskedInput' import from 'baseui/input' is restricted. Base UI incompatible component: MaskedInput pulls react-input-mask (findDOMNode). Use baseui Input instead.",
+        "'MaskedInput' import from 'baseui/input' is restricted. Do not import MaskedInput. It pulls in react-input-mask, which uses findDOMNode. Use baseui Input instead.",
     },
     {
       name: 'react-input-mask default import',
       code: `import InputMask from 'react-input-mask';\n`,
       error:
-        "'react-input-mask' import is restricted from being used. Base UI incompatible: react-input-mask uses findDOMNode (removed in React 19). Do not import it.",
+        "'react-input-mask' import is restricted from being used. Do not import react-input-mask. It uses findDOMNode, which React 19 removed.",
     },
   ])('bans $name', async ({ code, error }) => {
     const messages = await lintRestrictedImports(code);
