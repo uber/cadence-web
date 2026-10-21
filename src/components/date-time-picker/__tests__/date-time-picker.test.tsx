@@ -50,6 +50,18 @@ describe(DateTimePicker.name, () => {
     expect(input).not.toHaveValue('');
   });
 
+  it('keeps focus on the input after the first click opens the popover', async () => {
+    const { user, onChange } = setup({ value: '2024-01-01T00:00:00.000Z' });
+    onChange.mockClear();
+    const input = screen.getByRole('textbox');
+    await user.click(input);
+    expect(input).toHaveFocus();
+    await user.keyboard('{Control>}a{/Control}');
+    await user.keyboard('2024/06/15 14:30');
+    await user.tab();
+    expect(onChange.mock.calls.at(-1)?.[0]).toMatch(/^\d{4}-\d{2}-\d{2}T/);
+  });
+
   it('does not re-commit on blur when draft matches formatted value', async () => {
     const value = '2024-06-15T14:30:45.123Z';
     const { user, onChange } = setup({ value });

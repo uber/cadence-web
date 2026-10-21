@@ -99,6 +99,9 @@ export default function DateTimePicker({
       triggerType="click"
       dismissOnClickOutside
       ignoreBoundary
+      // Keep caret in the input on first click (baseui defaults autoFocus).
+      autoFocus={false}
+      returnFocus={false}
       content={() => (
         <styled.PopoverBody>
           <Calendar
