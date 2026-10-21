@@ -125,6 +125,16 @@ describe(DateTimePicker.name, () => {
     expect(screen.getByTestId('calendar-pick-day')).toHaveFocus();
   });
 
+  it('returns focus to the input when Escape closes after ArrowDown', async () => {
+    const { user } = setup({ value: '2024-01-01T00:00:00.000Z' });
+    const input = screen.getByRole('textbox');
+    await user.click(input);
+    await user.keyboard('{ArrowDown}');
+    expect(screen.getByTestId('calendar-pick-day')).toHaveFocus();
+    await user.keyboard('{Escape}');
+    expect(input).toHaveFocus();
+  });
+
   it('does not re-commit on blur when draft matches formatted value', async () => {
     const value = '2024-06-15T14:30:45.123Z';
     const { user, onChange } = setup({ value });

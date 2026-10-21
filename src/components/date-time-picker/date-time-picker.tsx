@@ -6,7 +6,6 @@ import {
   useState,
   type KeyboardEvent,
   type MouseEvent,
-  type Ref,
 } from 'react';
 
 import { Calendar, TimePicker } from 'baseui/datepicker';
@@ -18,17 +17,9 @@ import dayjs from '@/utils/datetime/dayjs';
 import { DATE_TIME_FORMAT_MINUTES } from './date-time-picker.constants';
 import { styled } from './date-time-picker.styles';
 import { type Props } from './date-time-picker.types';
+import assignRef from './helpers/assign-ref';
 import formatDateTimeValue from './helpers/format-date-time-value';
 import parseDateTimeValue from './helpers/parse-date-time-value';
-
-function assignRef<T>(ref: Ref<T> | undefined, value: T | null) {
-  if (!ref) return;
-  if (typeof ref === 'function') {
-    ref(value);
-    return;
-  }
-  (ref as { current: T | null }).current = value;
-}
 
 export default function DateTimePicker({
   value,
@@ -60,8 +51,10 @@ export default function DateTimePicker({
   }, [inputRef]);
 
   const closePopover = () => {
+    const shouldRefocus = calendarFocused;
     setIsOpen(false);
     setCalendarFocused(false);
+    if (shouldRefocus) inputElRef.current?.focus();
   };
 
   const commitClear = () => {
@@ -105,7 +98,6 @@ export default function DateTimePicker({
             value={selectedDate}
             minDate={minDate}
             autoFocusCalendar={calendarFocused}
-            trapTabbing
             onChange={({ date }) => {
               const d = Array.isArray(date) ? date[0] : date;
               if (!d) return commitDate(null);
