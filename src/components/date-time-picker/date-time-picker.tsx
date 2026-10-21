@@ -100,6 +100,11 @@ export default function DateTimePicker({
             timeSelectStart
             trapTabbing
             overrides={{
+              TimeSelectFormControl: {
+                props: {
+                  label: 'Time',
+                },
+              },
               TimeSelect: {
                 props: {
                   size: 'compact',
