@@ -1,10 +1,10 @@
 'use client';
 
 import {
-  useCallback,
   useEffect,
   useRef,
   useState,
+  type KeyboardEvent,
   type MouseEvent,
   type Ref,
 } from 'react';
@@ -31,10 +31,6 @@ function assignRef<T>(ref: Ref<T> | undefined, value: T | null) {
   (ref as { current: T | null }).current = value;
 }
 
-const stopEscapePropagation = (e: globalThis.KeyboardEvent) => {
-  if (e.key === 'Escape') e.stopPropagation();
-};
-
 export default function DateTimePicker({
   value,
   onChange,
@@ -57,32 +53,24 @@ export default function DateTimePicker({
     setDraft(formatDateTimeValue(value, displayFormat));
   }, [value, displayFormat]);
 
-  const setInputRef = useCallback(
-    (node: HTMLInputElement | null) => {
-      if (inputElRef.current) {
-        inputElRef.current.removeEventListener(
-          'keydown',
-          stopEscapePropagation
-        );
-      }
-      inputElRef.current = node;
-      // Native listener (same path as baseui clearOnEscape) so Escape does not
-      // bubble to a parent modal after we disable clear-on-escape.
-      if (node) node.addEventListener('keydown', stopEscapePropagation);
-      assignRef(inputRef, node);
-    },
-    [inputRef]
-  );
+  // baseui BaseInput reads inputRef.current; a callback ref has no .current.
+  useEffect(() => {
+    assignRef(inputRef, inputElRef.current);
+    return () => assignRef(inputRef, null);
+  }, [inputRef]);
 
   const isBeforeMin = (next: Date) =>
     Boolean(minDate && dayjs(next).isBefore(dayjs(minDate)));
 
+  const commitClear = () => {
+    if (!clearable) return;
+    setDraft('');
+    onChange(undefined);
+  };
+
   const commitDate = (next: Date | null | undefined) => {
     if (!next || Number.isNaN(next.getTime())) {
-      if (clearable) {
-        onChange(undefined);
-        setDraft('');
-      }
+      commitClear();
       return;
     }
     if (isBeforeMin(next)) return;
@@ -145,8 +133,7 @@ export default function DateTimePicker({
       <div>
         <Input
           id={id}
-          // @ts-expect-error baseui types RefObject; callback refs work at runtime
-          inputRef={setInputRef}
+          inputRef={inputElRef}
           aria-label={ariaLabel}
           size={size}
           disabled={disabled}
@@ -156,22 +143,22 @@ export default function DateTimePicker({
           clearOnEscape={false}
           value={draft}
           onChange={(e) => {
-            const next = e.currentTarget.value;
-            setDraft(next);
-            // Empty input (including baseui clearValue) must commit immediately so
-            // parent value cannot repopulate the draft when the popover opens.
-            if (clearable && !next.trim()) onChange(undefined);
+            setDraft(e.currentTarget.value);
           }}
           overrides={{
             ClearIcon: {
               props: {
-                // Replace baseui clear click: stop popover toggle and commit empty.
+                // Replace baseui clear: stop popover toggle and commit empty.
                 onMouseDown: (e: MouseEvent) => e.stopPropagation(),
                 onClick: (e: MouseEvent) => {
                   e.stopPropagation();
-                  if (!clearable) return;
-                  setDraft('');
-                  onChange(undefined);
+                  commitClear();
+                },
+                onKeyDown: (e: KeyboardEvent) => {
+                  if (e.key !== 'Enter' && e.key !== ' ') return;
+                  e.preventDefault();
+                  e.stopPropagation();
+                  commitClear();
                 },
               },
             },
