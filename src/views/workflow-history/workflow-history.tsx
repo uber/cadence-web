@@ -20,8 +20,10 @@ import workflowHistoryFiltersConfig from './config/workflow-history-filters.conf
 import { WORKFLOW_HISTORY_PAGE_SIZE_CONFIG } from './config/workflow-history-page-size.config';
 import WORKFLOW_HISTORY_RENDER_FETCHED_EVENTS_THROTTLE_MS_CONFIG from './config/workflow-history-render-fetched-events-throttle-ms.config';
 import WORKFLOW_HISTORY_SET_RANGE_THROTTLE_MS_CONFIG from './config/workflow-history-set-range-throttle-ms.config';
+import applyDiagnosticsToGroup from './helpers/apply-diagnostics-to-group';
 import getDiagnosticsIssueExpansionId from './helpers/get-diagnostics-issue-expansion-id';
 import getDiagnosticsIssuesByEventId from './helpers/get-diagnostics-issues-by-event-id';
+import getNavigationBarDiagnosticsMenuItems from './helpers/get-navigation-bar-diagnostics-menu-items';
 import getNavigationBarEventsMenuItems from './helpers/get-navigation-bar-events-menu-items';
 import getSortableEventId from './helpers/get-sortable-event-id';
 import pendingActivitiesInfoToEvents from './helpers/pending-activities-info-to-events';
@@ -37,11 +39,13 @@ import filterGroupsByStatus from './workflow-history-filters-menu/helpers/filter
 import WorkflowHistoryGroupedTable from './workflow-history-grouped-table/workflow-history-grouped-table';
 import WorkflowHistoryHeader from './workflow-history-header/workflow-history-header';
 import WorkflowHistoryNavigationBar from './workflow-history-navigation-bar/workflow-history-navigation-bar';
+import { type NavigationBarEventsSubMenuItem } from './workflow-history-navigation-bar-events-menu/workflow-history-navigation-bar-events-menu.types';
 import compareUngroupedEvents from './workflow-history-ungrouped-table/helpers/compare-ungrouped-events';
 import WorkflowHistoryUngroupedTable from './workflow-history-ungrouped-table/workflow-history-ungrouped-table';
 import { type UngroupedEventInfo } from './workflow-history-ungrouped-table/workflow-history-ungrouped-table.types';
 import { styled } from './workflow-history.styles';
 import {
+  type EventGroupEntry,
   type VisibleHistoryRanges,
   type Props,
   type WorkflowDiagnosticsIssuesByEventId,
@@ -99,11 +103,16 @@ export default function WorkflowHistory({ params }: Props) {
 
   const workflowDiagnosticsByEventIdMap: WorkflowDiagnosticsIssuesByEventId =
     useMemo(() => {
-      if (workflowDiagnostics?.parsingError || !workflowDiagnostics?.result)
+      // Other components can fill the diagnose query cache, so check the flag here too.
+      if (
+        !isDiagnosticsInHistoryEnabled ||
+        workflowDiagnostics?.parsingError ||
+        !workflowDiagnostics?.result
+      )
         return {};
 
       return getDiagnosticsIssuesByEventId(workflowDiagnostics.result);
-    }, [workflowDiagnostics]);
+    }, [isDiagnosticsInHistoryEnabled, workflowDiagnostics]);
 
   const {
     eventGroups,
@@ -169,7 +178,7 @@ export default function WorkflowHistory({ params }: Props) {
     });
   }, [wfExecutionDescription, updateGrouperPendingEvents]);
 
-  const sortedEventGroupsEntries = useMemo(
+  const sortedRawEventGroupsEntries = useMemo(
     () =>
       sortBy(
         Object.entries(eventGroups),
@@ -179,21 +188,26 @@ export default function WorkflowHistory({ params }: Props) {
     [eventGroups]
   );
 
+  const sortedEventGroupsEntries = useMemo(
+    () =>
+      sortedRawEventGroupsEntries.map(
+        ([groupId, group]): EventGroupEntry => [
+          groupId,
+          applyDiagnosticsToGroup(group, workflowDiagnosticsByEventIdMap),
+        ]
+      ),
+    [sortedRawEventGroupsEntries, workflowDiagnosticsByEventIdMap]
+  );
+
   const filteredEventGroupsEntries = useMemo(
     () =>
       sortedEventGroupsEntries.filter(([, g]) =>
         enabledWorkflowHistoryFiltersConfig.every((f) =>
-          f.filterFunc(
-            g,
-            {
-              historyEventTypes: queryParams.historyEventTypes,
-              historyEventStatuses: queryParams.historyEventStatuses,
-              historyEventIssues: queryParams.historyEventIssues,
-            },
-            {
-              diagnosticsByEventId: workflowDiagnosticsByEventIdMap,
-            }
-          )
+          f.filterFunc(g, {
+            historyEventTypes: queryParams.historyEventTypes,
+            historyEventStatuses: queryParams.historyEventStatuses,
+            historyEventIssues: queryParams.historyEventIssues,
+          })
         )
       ),
     [
@@ -201,7 +215,6 @@ export default function WorkflowHistory({ params }: Props) {
       queryParams.historyEventTypes,
       queryParams.historyEventStatuses,
       queryParams.historyEventIssues,
-      workflowDiagnosticsByEventIdMap,
       enabledWorkflowHistoryFiltersConfig,
     ]
   );
@@ -401,6 +414,15 @@ export default function WorkflowHistory({ params }: Props) {
     [sortedEventGroupsEntries]
   );
 
+  const diagnosticsMenuItems = useMemo(
+    () =>
+      getNavigationBarDiagnosticsMenuItems(
+        sortedEventGroupsEntries,
+        workflowDiagnosticsByEventIdMap
+      ),
+    [sortedEventGroupsEntries, workflowDiagnosticsByEventIdMap]
+  );
+
   const handleClickNavMenuEvent = useCallback(
     (eventId: string) => {
       const isEventVisible = filteredEventGroupsEntries.some(
@@ -430,6 +452,20 @@ export default function WorkflowHistory({ params }: Props) {
       scrollToTableEvent,
       getIsItemExpanded,
       toggleIsItemExpanded,
+    ]
+  );
+
+  const handleClickNavMenuDiagnosticsIssue = useCallback(
+    (subItem: NavigationBarEventsSubMenuItem) => {
+      handleClickNavMenuEvent(subItem.eventId);
+      if (!getIsDiagnosticsIssueExpanded(subItem.id)) {
+        toggleIsDiagnosticsIssueExpanded(subItem.id);
+      }
+    },
+    [
+      handleClickNavMenuEvent,
+      getIsDiagnosticsIssueExpanded,
+      toggleIsDiagnosticsIssueExpanded,
     ]
   );
 
@@ -469,7 +505,6 @@ export default function WorkflowHistory({ params }: Props) {
         setIsTimelineShown={setIsTimelineShown}
         timelineVirtuosoRef={timelineVirtuosoRef}
         timelineItemToHighlightId={timelineScrollTargetEventGroupId}
-        workflowDiagnosticsByEventIdMap={workflowDiagnosticsByEventIdMap}
         getIsDiagnosticsIssueExpanded={getIsDiagnosticsIssueExpanded}
         toggleIsDiagnosticsIssueExpanded={toggleIsDiagnosticsIssueExpanded}
       />
@@ -501,7 +536,6 @@ export default function WorkflowHistory({ params }: Props) {
             fetchMoreEvents={startLoadingHistory}
             isFetchingMoreEvents={isFetchingNextPage}
             onClickShowGroupInTimeline={handleShowGroupInTimeline}
-            workflowDiagnosticsByEventIdMap={workflowDiagnosticsByEventIdMap}
             getIsDiagnosticsIssueExpanded={getIsDiagnosticsIssueExpanded}
             toggleIsDiagnosticsIssueExpanded={toggleIsDiagnosticsIssueExpanded}
           />
@@ -533,7 +567,6 @@ export default function WorkflowHistory({ params }: Props) {
             fetchMoreEvents={startLoadingHistory}
             isFetchingMoreEvents={isFetchingNextPage}
             onClickShowGroupInTimeline={handleShowGroupInTimeline}
-            workflowDiagnosticsByEventIdMap={workflowDiagnosticsByEventIdMap}
             getIsDiagnosticsIssueExpanded={getIsDiagnosticsIssueExpanded}
             toggleIsDiagnosticsIssueExpanded={toggleIsDiagnosticsIssueExpanded}
           />
@@ -559,7 +592,9 @@ export default function WorkflowHistory({ params }: Props) {
         isUngroupedView={isUngroupedHistoryViewEnabled}
         failedEventsMenuItems={failedEventsMenuItems}
         pendingEventsMenuItems={pendingEventsMenuItems}
+        diagnosticsMenuItems={diagnosticsMenuItems}
         onClickEvent={handleClickNavMenuEvent}
+        onClickDiagnosticsIssue={handleClickNavMenuDiagnosticsIssue}
       />
     </styled.Container>
   );

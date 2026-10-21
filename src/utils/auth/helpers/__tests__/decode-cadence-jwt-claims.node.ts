@@ -36,6 +36,33 @@ describe(decodeCadenceJwtClaims.name, () => {
     expect(decodeCadenceJwtClaims(token)).toBeUndefined();
   });
 
+  it.each(['', 'not-an-email', 123])(
+    'drops an invalid email claim (%j) instead of rejecting the token',
+    (email) => {
+      const token = buildToken({
+        name: 'test-user',
+        email,
+      });
+
+      expect(decodeCadenceJwtClaims(token)).toEqual({
+        name: 'test-user',
+        email: undefined,
+      });
+    }
+  );
+
+  it('keeps a valid email claim', () => {
+    const token = buildToken({
+      name: 'test-user',
+      email: 'user@example.com',
+    });
+
+    expect(decodeCadenceJwtClaims(token)).toEqual({
+      name: 'test-user',
+      email: 'user@example.com',
+    });
+  });
+
   it('returns undefined for empty claims objects', () => {
     const token = buildToken({});
 

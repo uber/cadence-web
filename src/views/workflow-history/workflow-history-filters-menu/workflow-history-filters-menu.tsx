@@ -5,6 +5,7 @@ import { MdReplay } from 'react-icons/md';
 import useEnabledWorkflowHistoryFiltersConfig from '../hooks/use-enabled-workflow-history-filters-config';
 import { type WorkflowHistoryFilterConfig } from '../workflow-history.types';
 
+import { FILTERS_MENU_HINT } from './workflow-history-filters-menu.constants';
 import { styled } from './workflow-history-filters-menu.styles';
 import { type Props } from './workflow-history-filters-menu.types';
 
@@ -47,6 +48,7 @@ export default function WorkflowHistoryFiltersMenu({
           )
         )}
       </styled.MenuFilters>
+      <styled.MenuHint>{FILTERS_MENU_HINT}</styled.MenuHint>
     </styled.MenuContainer>
   );
 }

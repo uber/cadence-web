@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import { Panel } from 'baseui/accordion';
 import { MdOutlineCircle } from 'react-icons/md';
@@ -12,6 +12,7 @@ import WorkflowHistoryRemainingDurationBadge from '@/views/workflow-history/work
 import WorkflowHistoryTimelineResetButton from '@/views/workflow-history/workflow-history-timeline-reset-button/workflow-history-timeline-reset-button';
 
 import workflowHistoryEventGroupCategoryColorsConfig from '../config/workflow-history-event-group-category-colors.config';
+import getEventDiagnosticsIssues from '../helpers/get-event-diagnostics-issues';
 import getEventGroupCategory from '../helpers/get-event-group-category';
 import useGroupDetailsEntries from '../hooks/use-group-details-entries';
 import WorkflowHistoryDetailsRow from '../workflow-history-details-row/workflow-history-details-row';
@@ -36,13 +37,20 @@ export default function WorkflowHistoryUngroupedEvent({
   isExpanded,
   toggleIsExpanded,
   onClickShowInTimeline,
-  workflowDiagnosticsByEventIdMap,
   getIsDiagnosticsIssueExpanded,
   toggleIsDiagnosticsIssueExpanded,
 }: Props) {
   const eventGroupCategory = getEventGroupCategory(eventInfo.eventGroup);
 
   const overrides = getOverrides(eventGroupCategory, animateOnEnter);
+
+  const handleExpand = useCallback(() => {
+    if (!isExpanded) toggleIsExpanded();
+  }, [isExpanded, toggleIsExpanded]);
+
+  const handleCollapse = useCallback(() => {
+    if (isExpanded) toggleIsExpanded();
+  }, [isExpanded, toggleIsExpanded]);
 
   const handleReset = useCallback(() => {
     if (onReset) {
@@ -57,7 +65,10 @@ export default function WorkflowHistoryUngroupedEvent({
     ([eventId]) => eventId === eventInfo.id
   )?.[1].eventDetails;
 
-  const diagnosticsIssues = workflowDiagnosticsByEventIdMap[eventInfo.id];
+  const diagnosticsIssues = useMemo(
+    () => getEventDiagnosticsIssues(eventInfo.eventGroup, eventInfo.id),
+    [eventInfo.eventGroup, eventInfo.id]
+  );
 
   const isPendingEvent = isPendingHistoryEvent(eventInfo.event);
 
@@ -114,10 +125,13 @@ export default function WorkflowHistoryUngroupedEvent({
           </styled.ElapsedContainer>
           <styled.SummarizedDetailsContainer>
             {(eventSummaryDetails && eventSummaryDetails.length > 0) ||
-            (diagnosticsIssues && diagnosticsIssues.length > 0) ? (
+            diagnosticsIssues.length > 0 ? (
               <WorkflowHistoryDetailsRow
                 detailsEntries={eventSummaryDetails ?? []}
                 diagnosticsIssues={diagnosticsIssues}
+                isEventExpanded={isExpanded}
+                onExpandEvent={handleExpand}
+                onCollapseEvent={handleCollapse}
                 {...decodedPageUrlParams}
               />
             ) : (
@@ -151,7 +165,6 @@ export default function WorkflowHistoryUngroupedEvent({
             workflowPageParams={decodedPageUrlParams}
             onClose={() => toggleIsExpanded()}
             onClickShowInTimeline={onClickShowInTimeline}
-            diagnosticsIssuesByEventId={workflowDiagnosticsByEventIdMap}
             getIsDiagnosticsIssueExpanded={getIsDiagnosticsIssueExpanded}
             toggleIsDiagnosticsIssueExpanded={toggleIsDiagnosticsIssueExpanded}
           />

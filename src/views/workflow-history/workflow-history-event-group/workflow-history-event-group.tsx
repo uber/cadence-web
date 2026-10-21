@@ -33,7 +33,6 @@ export default function WorkflowHistoryEventGroup({
   getIsEventExpanded,
   toggleIsEventExpanded,
   onClickShowInTimeline,
-  workflowDiagnosticsByEventIdMap,
   getIsDiagnosticsIssueExpanded,
   toggleIsDiagnosticsIssueExpanded,
 }: Props) {
@@ -72,17 +71,26 @@ export default function WorkflowHistoryEventGroup({
     [events, getIsEventExpanded, toggleIsEventExpanded]
   );
 
+  const handleExpandGroup = useCallback(
+    () => handleGroupExpansionStateChange(true),
+    [handleGroupExpansionStateChange]
+  );
+
+  const handleCollapseGroup = useCallback(
+    () => handleGroupExpansionStateChange(false),
+    [handleGroupExpansionStateChange]
+  );
+
+  const isGroupExpanded = events.some(
+    ({ eventId }) => eventId && getIsEventExpanded(eventId)
+  );
+
   const animateOnEnter = useMemo(
     () =>
       groupDetailsEntriesWithSummary.some(
         ([eventId]) => eventId === selectedEventId
       ),
     [groupDetailsEntriesWithSummary, selectedEventId]
-  );
-
-  const diagnosticsIssues = useMemo(
-    () => Object.values(workflowDiagnosticsByEventIdMap).flat(),
-    [workflowDiagnosticsByEventIdMap]
   );
 
   const overrides = getOverrides(eventGroupCategory, animateOnEnter);
@@ -124,7 +132,10 @@ export default function WorkflowHistoryEventGroup({
           <styled.SummarizedDetailsContainer>
             <WorkflowHistoryDetailsRow
               detailsEntries={groupSummaryDetails}
-              diagnosticsIssues={diagnosticsIssues}
+              diagnosticsIssues={eventGroup.diagnosticsIssues}
+              isEventExpanded={isGroupExpanded}
+              onExpandEvent={handleExpandGroup}
+              onCollapseEvent={handleCollapseGroup}
               {...decodedPageUrlParams}
             />
           </styled.SummarizedDetailsContainer>
@@ -141,9 +152,7 @@ export default function WorkflowHistoryEventGroup({
           </styled.ActionsContainer>
         </styled.HeaderContent>
       }
-      expanded={events.some(
-        ({ eventId }) => eventId && getIsEventExpanded(eventId)
-      )}
+      expanded={isGroupExpanded}
       onChange={({ expanded }) => handleGroupExpansionStateChange(expanded)}
       overrides={overrides.panel}
     >
@@ -156,7 +165,6 @@ export default function WorkflowHistoryEventGroup({
             workflowPageParams={decodedPageUrlParams}
             onClose={() => handleGroupExpansionStateChange(false)}
             onClickShowInTimeline={onClickShowInTimeline}
-            diagnosticsIssuesByEventId={workflowDiagnosticsByEventIdMap}
             getIsDiagnosticsIssueExpanded={getIsDiagnosticsIssueExpanded}
             toggleIsDiagnosticsIssueExpanded={toggleIsDiagnosticsIssueExpanded}
           />

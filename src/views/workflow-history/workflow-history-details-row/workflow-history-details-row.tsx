@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 
 import { StatefulTooltip } from 'baseui/tooltip';
 
+import getDiagnosticsIssuesDetailsEntry from './helpers/get-diagnostics-issues-details-entry';
 import getParsedDetailsRowItems from './helpers/get-parsed-details-row-items';
 import { overrides, styled } from './workflow-history-details-row.styles';
 import { type Props } from './workflow-history-details-row.types';
@@ -9,10 +10,21 @@ import { type Props } from './workflow-history-details-row.types';
 export default function WorkflowHistoryDetailsRow({
   detailsEntries,
   diagnosticsIssues,
+  isEventExpanded,
+  onExpandEvent,
+  onCollapseEvent,
   ...workflowPageParams
 }: Props) {
   const rowItems = useMemo(
-    () => getParsedDetailsRowItems(detailsEntries, diagnosticsIssues),
+    () =>
+      getParsedDetailsRowItems(
+        diagnosticsIssues && diagnosticsIssues.length > 0
+          ? [
+              ...detailsEntries,
+              getDiagnosticsIssuesDetailsEntry(diagnosticsIssues),
+            ]
+          : detailsEntries
+      ),
     [detailsEntries, diagnosticsIssues]
   );
 
@@ -36,14 +48,18 @@ export default function WorkflowHistoryDetailsRow({
         return (
           <StatefulTooltip
             key={item.path}
-            content={
+            content={({ close }) => (
               <item.renderTooltip
                 label={item.label}
                 value={item.value}
                 isNegative={isNegative}
+                onCloseTooltip={close}
+                isEventExpanded={isEventExpanded}
+                onExpandEvent={onExpandEvent}
+                onCollapseEvent={onCollapseEvent}
                 {...workflowPageParams}
               />
-            }
+            )}
             ignoreBoundary
             placement="bottom"
             showArrow

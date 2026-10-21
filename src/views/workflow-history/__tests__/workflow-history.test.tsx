@@ -17,6 +17,7 @@ import * as usePageFiltersModule from '@/components/page-filters/hooks/use-page-
 import { type PageQueryParamValues } from '@/hooks/use-page-query-params/use-page-query-params.types';
 import { mockWorkflowDiagnosticsResult } from '@/route-handlers/diagnose-workflow/__fixtures__/mock-workflow-diagnostics-result';
 import { type GetWorkflowHistoryResponse } from '@/route-handlers/get-workflow-history/get-workflow-history.types';
+import useDiagnoseWorkflow from '@/views/workflow-diagnostics/hooks/use-diagnose-workflow/use-diagnose-workflow';
 import { mockDescribeWorkflowResponse } from '@/views/workflow-page/__fixtures__/describe-workflow-response';
 import type workflowPageQueryParamsConfig from '@/views/workflow-page/config/workflow-page-query-params.config';
 
@@ -34,10 +35,12 @@ import {
   pendingActivityTaskStartEvent,
   pendingDecisionTaskStartEvent,
 } from '../__fixtures__/workflow-history-pending-events';
+import { startWorkflowExecutionEvent } from '../__fixtures__/workflow-history-single-events';
 import WorkflowHistory from '../workflow-history';
 import { WorkflowHistoryContext } from '../workflow-history-context-provider/workflow-history-context-provider';
 import { type Props as NavbarProps } from '../workflow-history-navigation-bar/workflow-history-navigation-bar.types';
 import {
+  type HistoryEventsGroup,
   type PendingActivityTaskStartEvent,
   type PendingDecisionTaskStartEvent,
 } from '../workflow-history.types';
@@ -110,15 +113,24 @@ jest.mock(
       ({
         selectedEventId,
         getIsDiagnosticsIssueExpanded,
+        eventGroupsById,
       }: {
         selectedEventId?: string;
         getIsDiagnosticsIssueExpanded: (issueExpansionId: string) => boolean;
+        eventGroupsById: Array<[string, HistoryEventsGroup]>;
       }) => (
         <div data-testid="workflow-history-grouped-table">
           Grouped Table
           {selectedEventId && (
             <div data-testid="grouped-selected-event-id">{selectedEventId}</div>
           )}
+          <div data-testid="grouped-issues-count">
+            {eventGroupsById.reduce(
+              (count, [, group]) =>
+                count + (group.diagnosticsIssues?.length ?? 0),
+              0
+            )}
+          </div>
           <div data-testid="grouped-diagnostics-issue-expanded">
             {String(getIsDiagnosticsIssueExpanded('mock-issue'))}
           </div>
@@ -147,6 +159,7 @@ jest.mock(
       ({
         failedEventsMenuItems,
         pendingEventsMenuItems,
+        diagnosticsMenuItems,
         onToggleAllItemsExpanded,
       }: NavbarProps) => (
         <div data-testid="workflow-history-navigation-bar">
@@ -161,6 +174,11 @@ jest.mock(
           {pendingEventsMenuItems && pendingEventsMenuItems.length > 0 && (
             <div data-testid="pending-events-menu-items-count">
               {pendingEventsMenuItems.length} pending events
+            </div>
+          )}
+          {diagnosticsMenuItems && diagnosticsMenuItems.length > 0 && (
+            <div data-testid="diagnostics-menu-items-count">
+              {diagnosticsMenuItems.length} groups with issues
             </div>
           )}
         </div>
@@ -519,7 +537,68 @@ describe(WorkflowHistory.name, () => {
     await user.click(screen.getByText('Toggle all expanded'));
     expect(issueExpandedState).toHaveTextContent('false');
   });
+
+  it('passes diagnostics menu items to the navigation bar when diagnostics issues exist', async () => {
+    await setup({
+      historyEvents: [
+        startWorkflowExecutionEvent,
+        ...completedActivityTaskEvents,
+      ],
+      isDiagnosticsInHistoryEnabled: true,
+    });
+
+    const diagnosticsItemsCounter = await screen.findByTestId(
+      'diagnostics-menu-items-count'
+    );
+    expect(diagnosticsItemsCounter).toHaveTextContent('1 groups with issues');
+  });
+
+  it('attaches diagnostics issues to the grouped table groups', async () => {
+    await setup({
+      historyEvents: [
+        startWorkflowExecutionEvent,
+        ...completedActivityTaskEvents,
+      ],
+      isDiagnosticsInHistoryEnabled: true,
+    });
+
+    await waitFor(() => {
+      expect(screen.getByTestId('grouped-issues-count')).toHaveTextContent(
+        /^[1-9]\d*$/
+      );
+    });
+  });
+
+  it('does not show diagnostics issues when the flag is off even if diagnose data is cached by another component', async () => {
+    await setup({
+      historyEvents: [
+        startWorkflowExecutionEvent,
+        ...completedActivityTaskEvents,
+      ],
+      isDiagnosticsInHistoryEnabled: false,
+      isDiagnosticsFetchedElsewhere: true,
+    });
+
+    await screen.findByTestId('diagnostics-fetched-elsewhere');
+
+    expect(
+      screen.queryByTestId('diagnostics-menu-items-count')
+    ).not.toBeInTheDocument();
+
+    expect(screen.getByTestId('grouped-issues-count')).toHaveTextContent('0');
+  });
 });
+
+// TODO: delete this once the old Workflow Diagnostics view has been deleted
+function MockDiagnosticsFetcher() {
+  const { data } = useDiagnoseWorkflow({
+    domain: 'test-domain',
+    cluster: 'test-cluster',
+    workflowId: 'test-workflowId',
+    runId: 'test-runid',
+  });
+  return data ? <div data-testid="diagnostics-fetched-elsewhere" /> : null;
+}
 
 async function setup({
   error,
@@ -532,6 +611,8 @@ async function setup({
   pendingActivities,
   pendingDecision,
   isDiagnosticsInHistoryEnabled = false,
+  // TODO: delete this once the old Workflow Diagnostics view has been deleted
+  isDiagnosticsFetchedElsewhere = false,
 }: {
   error?: boolean;
   summaryError?: boolean;
@@ -545,6 +626,8 @@ async function setup({
   pendingActivities?: Array<PendingActivityTaskStartEvent>;
   pendingDecision?: PendingDecisionTaskStartEvent | null;
   isDiagnosticsInHistoryEnabled?: boolean;
+  // TODO: delete this once the old Workflow Diagnostics view has been deleted
+  isDiagnosticsFetchedElsewhere?: boolean;
 } = {}) {
   const user = userEvent.setup();
 
@@ -574,6 +657,8 @@ async function setup({
 
   const renderResult = render(
     <Suspense fallback={'Suspense placeholder'}>
+      {/* TODO: delete this once the old Workflow Diagnostics view has been deleted */}
+      {isDiagnosticsFetchedElsewhere && <MockDiagnosticsFetcher />}
       <WorkflowHistoryContext.Provider
         value={{
           ungroupedViewUserPreference: ungroupedViewPreference ?? null,
