@@ -185,9 +185,7 @@ describe(DateTimePicker.name, () => {
 
   it('defaults placeholder to the display format', () => {
     setup({});
-    expect(
-      screen.getByPlaceholderText('YYYY/MM/DD HH:mm')
-    ).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('YYYY/MM/DD HH:mm')).toBeInTheDocument();
   });
 
   it('renders a custom placeholder when provided', () => {
