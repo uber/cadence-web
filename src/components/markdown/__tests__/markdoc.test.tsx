@@ -131,6 +131,34 @@ console.log('Hello');
     expect(screen.getByText('italic text')).toBeInTheDocument();
   });
 
+  it('renders link, image, table, and inline code through styled components', () => {
+    const content = `[Cadence](https://cadenceworkflow.io "Docs")
+
+![Logo](https://example.com/logo.png)
+
+| Name | Value |
+| ---- | ----- |
+| a    | b     |
+
+Use \`code\` here.`;
+    render(<Markdown markdown={content} />);
+
+    expect(screen.getByRole('link', { name: 'Cadence' })).toHaveAttribute(
+      'href',
+      'https://cadenceworkflow.io'
+    );
+    expect(screen.getByRole('img', { name: 'Logo' })).toHaveAttribute(
+      'src',
+      'https://example.com/logo.png'
+    );
+    expect(screen.getByRole('table')).toBeInTheDocument();
+    expect(
+      screen.getByRole('columnheader', { name: 'Name' })
+    ).toBeInTheDocument();
+    expect(screen.getByRole('cell', { name: 'b' })).toBeInTheDocument();
+    expect(screen.getByText('code').tagName).toBe('CODE');
+  });
+
   describe('markdown context propagation', () => {
     it('provides domain/cluster/workflowId/runId props to MarkdownContext for descendants', () => {
       const content = '{% signal signalName="test" label="Go" /%}';
