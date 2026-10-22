@@ -159,58 +159,56 @@ Use \`code\` here.`;
     expect(screen.getByText('code').tagName).toBe('CODE');
   });
 
-  describe('markdown context propagation', () => {
-    it('provides domain/cluster/workflowId/runId props to MarkdownContext for descendants', () => {
-      const content = '{% signal signalName="test" label="Go" /%}';
-      render(
-        <Markdown
-          markdown={content}
-          domain="my-domain"
-          cluster="cluster0"
-          workflowId="wf-123"
-          runId="run-456"
-        />
-      );
+  it('provides domain/cluster/workflowId/runId props to MarkdownContext for descendants', () => {
+    const content = '{% signal signalName="test" label="Go" /%}';
+    render(
+      <Markdown
+        markdown={content}
+        domain="my-domain"
+        cluster="cluster0"
+        workflowId="wf-123"
+        runId="run-456"
+      />
+    );
 
-      expect(screen.getByTestId('signal-button')).toBeInTheDocument();
-      expect(screen.getByTestId('markdown-context')).toHaveTextContent(
-        JSON.stringify({
-          domain: 'my-domain',
-          cluster: 'cluster0',
-          workflowId: 'wf-123',
-          runId: 'run-456',
-        })
-      );
-    });
+    expect(screen.getByTestId('signal-button')).toBeInTheDocument();
+    expect(screen.getByTestId('markdown-context')).toHaveTextContent(
+      JSON.stringify({
+        domain: 'my-domain',
+        cluster: 'cluster0',
+        workflowId: 'wf-123',
+        runId: 'run-456',
+      })
+    );
+  });
 
-    it('provides an empty context when <Markdown> receives no page params', () => {
-      const content = '{% signal signalName="test" label="Go" /%}';
-      render(<Markdown markdown={content} />);
+  it('provides an empty context when <Markdown> receives no page params', () => {
+    const content = '{% signal signalName="test" label="Go" /%}';
+    render(<Markdown markdown={content} />);
 
-      expect(screen.getByTestId('markdown-context')).toHaveTextContent('{}');
-    });
+    expect(screen.getByTestId('markdown-context')).toHaveTextContent('{}');
+  });
 
-    it('passes explicit tag attributes through regardless of markdown context', () => {
-      const content =
-        '{% signal signalName="s" label="L" domain="other" cluster="c1" workflowId="w1" runId="r1" /%}';
-      render(
-        <Markdown
-          markdown={content}
-          domain="page-domain"
-          cluster="page-cluster"
-          workflowId="page-wf"
-          runId="page-run"
-        />
-      );
+  it('passes explicit tag attributes through regardless of markdown context', () => {
+    const content =
+      '{% signal signalName="s" label="L" domain="other" cluster="c1" workflowId="w1" runId="r1" /%}';
+    render(
+      <Markdown
+        markdown={content}
+        domain="page-domain"
+        cluster="page-cluster"
+        workflowId="page-wf"
+        runId="page-run"
+      />
+    );
 
-      expect(
-        JSON.parse(screen.getByTestId('signal-button-props').textContent ?? '')
-      ).toMatchObject({
-        domain: 'other',
-        cluster: 'c1',
-        workflowId: 'w1',
-        runId: 'r1',
-      });
+    expect(
+      JSON.parse(screen.getByTestId('signal-button-props').textContent ?? '')
+    ).toMatchObject({
+      domain: 'other',
+      cluster: 'c1',
+      workflowId: 'w1',
+      runId: 'r1',
     });
   });
 });
