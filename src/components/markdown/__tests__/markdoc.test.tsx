@@ -131,58 +131,84 @@ console.log('Hello');
     expect(screen.getByText('italic text')).toBeInTheDocument();
   });
 
-  describe('markdown context propagation', () => {
-    it('provides domain/cluster/workflowId/runId props to MarkdownContext for descendants', () => {
-      const content = '{% signal signalName="test" label="Go" /%}';
-      render(
-        <Markdown
-          markdown={content}
-          domain="my-domain"
-          cluster="cluster0"
-          workflowId="wf-123"
-          runId="run-456"
-        />
-      );
+  it('renders link, image, table, and inline code through styled components', () => {
+    const content = `[Cadence](https://cadenceworkflow.io "Docs")
 
-      expect(screen.getByTestId('signal-button')).toBeInTheDocument();
-      expect(screen.getByTestId('markdown-context')).toHaveTextContent(
-        JSON.stringify({
-          domain: 'my-domain',
-          cluster: 'cluster0',
-          workflowId: 'wf-123',
-          runId: 'run-456',
-        })
-      );
-    });
+![Logo](https://example.com/logo.png)
 
-    it('provides an empty context when <Markdown> receives no page params', () => {
-      const content = '{% signal signalName="test" label="Go" /%}';
-      render(<Markdown markdown={content} />);
+| Name | Value |
+| ---- | ----- |
+| a    | b     |
 
-      expect(screen.getByTestId('markdown-context')).toHaveTextContent('{}');
-    });
+Use \`code\` here.`;
+    render(<Markdown markdown={content} />);
 
-    it('passes explicit tag attributes through regardless of markdown context', () => {
-      const content =
-        '{% signal signalName="s" label="L" domain="other" cluster="c1" workflowId="w1" runId="r1" /%}';
-      render(
-        <Markdown
-          markdown={content}
-          domain="page-domain"
-          cluster="page-cluster"
-          workflowId="page-wf"
-          runId="page-run"
-        />
-      );
+    expect(screen.getByRole('link', { name: 'Cadence' })).toHaveAttribute(
+      'href',
+      'https://cadenceworkflow.io'
+    );
+    expect(screen.getByRole('img', { name: 'Logo' })).toHaveAttribute(
+      'src',
+      'https://example.com/logo.png'
+    );
+    expect(screen.getByRole('table')).toBeInTheDocument();
+    expect(
+      screen.getByRole('columnheader', { name: 'Name' })
+    ).toBeInTheDocument();
+    expect(screen.getByRole('cell', { name: 'b' })).toBeInTheDocument();
+    expect(screen.getByText('code').tagName).toBe('CODE');
+  });
 
-      expect(
-        JSON.parse(screen.getByTestId('signal-button-props').textContent ?? '')
-      ).toMatchObject({
-        domain: 'other',
-        cluster: 'c1',
-        workflowId: 'w1',
-        runId: 'r1',
-      });
+  it('provides domain/cluster/workflowId/runId props to MarkdownContext for descendants', () => {
+    const content = '{% signal signalName="test" label="Go" /%}';
+    render(
+      <Markdown
+        markdown={content}
+        domain="my-domain"
+        cluster="cluster0"
+        workflowId="wf-123"
+        runId="run-456"
+      />
+    );
+
+    expect(screen.getByTestId('signal-button')).toBeInTheDocument();
+    expect(screen.getByTestId('markdown-context')).toHaveTextContent(
+      JSON.stringify({
+        domain: 'my-domain',
+        cluster: 'cluster0',
+        workflowId: 'wf-123',
+        runId: 'run-456',
+      })
+    );
+  });
+
+  it('provides an empty context when <Markdown> receives no page params', () => {
+    const content = '{% signal signalName="test" label="Go" /%}';
+    render(<Markdown markdown={content} />);
+
+    expect(screen.getByTestId('markdown-context')).toHaveTextContent('{}');
+  });
+
+  it('passes explicit tag attributes through regardless of markdown context', () => {
+    const content =
+      '{% signal signalName="s" label="L" domain="other" cluster="c1" workflowId="w1" runId="r1" /%}';
+    render(
+      <Markdown
+        markdown={content}
+        domain="page-domain"
+        cluster="page-cluster"
+        workflowId="page-wf"
+        runId="page-run"
+      />
+    );
+
+    expect(
+      JSON.parse(screen.getByTestId('signal-button-props').textContent ?? '')
+    ).toMatchObject({
+      domain: 'other',
+      cluster: 'c1',
+      workflowId: 'w1',
+      runId: 'r1',
     });
   });
 });

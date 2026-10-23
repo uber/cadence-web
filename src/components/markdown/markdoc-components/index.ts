@@ -1,3 +1,5 @@
+import { styled } from '../markdown.styles';
+
 import Br from './br/br';
 import CodeBlock from './code-block/code-block';
 import Heading from './heading/heading';
@@ -17,6 +19,16 @@ export const markdocComponents = {
   InlineCode,
   Image,
   Br,
+  Paragraph: styled.Paragraph,
+  Link: styled.Link,
+  ListItem: styled.ListItem,
+  Strong: styled.Strong,
+  Em: styled.Em,
+  Blockquote: styled.Blockquote,
+  Hr: styled.Hr,
+  Table: styled.Table,
+  Th: styled.Th,
+  Td: styled.Td,
 };
 
 export type MarkdocComponents = typeof markdocComponents;

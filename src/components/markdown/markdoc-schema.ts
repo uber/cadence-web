@@ -19,26 +19,26 @@ export const markdocConfig: Config = {
   nodes: {
     // Standard HTML nodes
     paragraph: {
-      render: 'p',
+      render: 'Paragraph',
     },
     link: {
-      render: 'a',
+      render: 'Link',
       attributes: {
         href: { type: String, required: true },
         title: { type: String },
       },
     },
     item: {
-      render: 'li',
+      render: 'ListItem',
     },
     strong: {
-      render: 'strong',
+      render: 'Strong',
     },
     em: {
-      render: 'em',
+      render: 'Em',
     },
     image: {
-      render: 'img',
+      render: 'Image',
       attributes: {
         src: { type: String, required: true },
         alt: { type: String },
@@ -48,13 +48,13 @@ export const markdocConfig: Config = {
       },
     },
     blockquote: {
-      render: 'blockquote',
+      render: 'Blockquote',
     },
     hr: {
-      render: 'hr',
+      render: 'Hr',
     },
     table: {
-      render: 'table',
+      render: 'Table',
     },
     thead: {
       render: 'thead',
@@ -66,13 +66,13 @@ export const markdocConfig: Config = {
       render: 'tr',
     },
     th: {
-      render: 'th',
+      render: 'Th',
       attributes: {
         align: { type: String },
       },
     },
     td: {
-      render: 'td',
+      render: 'Td',
       attributes: {
         align: { type: String },
       },
